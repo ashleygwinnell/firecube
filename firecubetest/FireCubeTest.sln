@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FireCubeTest", "FireCubeTest.vcproj", "{D9F81EBC-3BC0-4722-9E9A-E1D0FA0EC87D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D9F81EBC-3BC0-4722-9E9A-E1D0FA0EC87D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D9F81EBC-3BC0-4722-9E9A-E1D0FA0EC87D}.Debug|Win32.Build.0 = Debug|Win32
+		{D9F81EBC-3BC0-4722-9E9A-E1D0FA0EC87D}.Release|Win32.ActiveCfg = Release|Win32
+		{D9F81EBC-3BC0-4722-9E9A-E1D0FA0EC87D}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		VisualSVNWorkingCopyRoot = 
+	EndGlobalSection
+EndGlobal
