@@ -1,0 +1,102 @@
+#ifndef MESH_H
+#define MESH_H
+
+#pragma warning(push)
+#pragma warning(disable:4251)
+
+#define PRIMARY 0x4d4d
+#define EDIT3DS 0x3d3d
+#define KEYF3DS 0xb000
+
+#define NAMED_OBJECT 0x4000
+#define OBJ_MESH 0x4100
+#define MESH_VERTICES 0x4110
+#define MESH_FACES 0x4120
+#define MESH_MATERIAL 0x4130
+#define MESH_TEX_VERT 0x4140
+
+#define MATERIAL 0xafff
+#define MAT_NAME 0xa000
+#define MAT_AMBIENT 0xa010
+#define MAT_DIFFUSE 0xa020
+#define MAT_SPECULAR 0xa030
+#define MAT_SHININESS 0xa040
+#define MAT_TEXMAP 0xa200
+#define MAT_TEXFLNM 0xa300
+#define MAT_SHIN2PCT 0xa041
+#define MAT_SHIN3PCT 0xa042
+class ModelResource;
+typedef ResourceManager<ModelResource> ModelManager;
+typedef boost::shared_ptr<ModelResource> Model;
+
+
+class FIRECUBE_API Material
+{
+public:
+	Material();
+	~Material();
+	
+	string name;
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+	float shininess;
+	Texture tex;
+};
+class FIRECUBE_API Edge
+{
+public:
+	DWORD v[2];
+};
+class FIRECUBE_API Face
+{
+public:
+	Face();
+	~Face();
+
+	DWORD v[3];
+	vec3 normal;
+};
+class FIRECUBE_API Mesh
+{
+public:
+	Mesh();
+	~Mesh();
+	
+	Material *material;
+	vector<Face> face;
+	Buffer indexBuffer;
+};
+class FIRECUBE_API Object
+{
+public:
+	string name;
+	vector<vec3> vertex;
+	vector<vec3> normal;
+	vector<Mesh> mesh;
+	vector<Face> face;
+	vector<vec2> uv;
+	Buffer vertexBuffer;
+	Buffer uvBuffer;
+	Buffer normalBuffer;
+};
+class FIRECUBE_API ModelResource
+{
+public:
+	ModelResource();
+	~ModelResource();
+	
+	bool Load(const string &filename);
+	DWORD ProcessChunk(char *buffer);
+	Material *GetMaterialByName(const string &name);
+	Model Reduce();	
+	void CalculateNormals();
+	void ApplyTransformation(mat4 &transform);
+
+	vector<Object> object;
+	vector<Material> material;	
+};
+
+#pragma warning(pop)
+
+#endif
