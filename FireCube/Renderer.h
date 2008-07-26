@@ -36,7 +36,7 @@ public:
 	*/
 	void Create();
 	/**
-	* Creates the program and attaches it to two shaders.
+	* Creates the program and attaches two shaders to it.
 	*/
 	void Create(Shader shader1,Shader shader2);
 	/**
