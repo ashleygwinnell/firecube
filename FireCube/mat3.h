@@ -1,6 +1,9 @@
 #ifndef MAT3_H
 #define MAT3_H
 static inline vec3 proj(const vec3 & v1, const vec3 & v2);
+/**
+A 3x3 matrix.
+*/
 class FIRECUBE_API mat3
 {
 public:

@@ -1,5 +1,8 @@
 #ifndef MAT4_H
 #define MAT4_H
+/**
+A 4x4 matrix.
+*/
 class FIRECUBE_API mat4
 {
 public:

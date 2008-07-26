@@ -1,6 +1,8 @@
 #ifndef VEC3_H
 #define VEC3_H
-
+/**
+A 3d vector.
+*/
 class FIRECUBE_API vec3
 {
 public:
