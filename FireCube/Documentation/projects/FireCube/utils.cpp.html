@@ -1,0 +1,32 @@
+<HTML>
+<HEAD>
+<TITLE>
+utils.cpp
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#include</font> <font color="maroon">&#60;string&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;vector&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
+<font color="blue">using</font> <font color="blue">namespace</font> std;
+<font color="blue">#include</font> <font color="maroon">&#60;SDL/SDL.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;windows.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">"GLee.h"</font>
+<font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
+<font color="blue">using</font> <font color="blue">namespace</font> FireCube;
+
+<font color="blue">inline</font> <font color="blue">bool</font> FireCube<font color="black">:</font><font color="black">:</font>IsFinite<font color="black">(</font><font color="blue">float</font> val<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> <font color="black">(</font><font color="black">(</font>val <font color="black">&#60;</font> 1e8<font color="black">)</font> <font color="black">&</font><font color="black">&</font> <font color="black">(</font>val <font color="black">&#62;</font> <font color="maroon">-1</font>e8<font color="black">)</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">inline</font> <font color="blue">float</font> FireCube<font color="black">:</font><font color="black">:</font>RangedRandom<font color="black">(</font><font color="blue">float</font> v1,<font color="blue">float</font> v2<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> v1 <font color="black">+</font> <font color="black">(</font>v2<font color="black">-</font>v1<font color="black">)</font><font color="black">*</font><font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>rand<font color="black">(</font><font color="black">)</font><font color="black">)</font><font color="black">/</font><font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>RAND_MAX<font color="black">)</font>;
+<font color="black">}</font>
+
+</PRE>
+</BODY>
+</HTML>

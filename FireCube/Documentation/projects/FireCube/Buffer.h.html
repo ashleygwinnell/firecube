@@ -1,0 +1,40 @@
+<HTML>
+<HEAD>
+<TITLE>
+Buffer.h
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#ifndef</font> BUFFER_H
+<font color="blue">#define</font> BUFFER_H
+<font color="blue">enum</font> BufferType
+<font color="black">{</font>
+    STATIC,DYNAMIC,STREAM
+<font color="black">}</font>;
+<font color="blue">enum</font> RenderMode
+<font color="black">{</font>
+    POINTS,LINES,TRIANGLES,TRIANGLE_STRIP,QUADS,LINE_LOOP,TRIANGLE_FAN
+<font color="black">}</font>;
+<font color="blue">class</font> FIRECUBE_API Buffer
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font> 
+    Buffer<font color="black">(</font><font color="black">)</font>;
+    ~Buffer<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> Create<font color="black">(</font><font color="black">)</font>;  
+    <font color="blue">void</font> LoadData<font color="black">(</font><font color="blue">void</font> <font color="black">*</font>data,DWORD size,BufferType bt<font color="black">)</font>;
+    <font color="blue">void</font> LoadIndexData<font color="black">(</font><font color="blue">void</font> <font color="black">*</font>data,DWORD count,BufferType bt<font color="black">)</font>;
+    <font color="blue">void</font> SetVertexStream<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> SetNormalStream<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> SetColorStream<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> SetTexCoordStream<font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> unit<font color="black">)</font>;
+    <font color="blue">void</font> RenderIndexStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
+    <font color="blue">void</font> Destroy<font color="black">(</font><font color="black">)</font>;
+
+    GLuint buffer;
+<font color="black">}</font>;
+
+<font color="blue">#endif</font>
+</PRE>
+</BODY>
+</HTML>

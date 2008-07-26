@@ -1,0 +1,55 @@
+<HTML>
+<HEAD>
+<TITLE>
+Application.h
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#ifndef</font> APPLICATION_H
+<font color="blue">#define</font> APPLICATION_H
+
+<font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>push<font color="black">)</font>
+<font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
+
+<font color="blue">class</font> FIRECUBE_API ApplicationContext
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font>
+    ApplicationContext<font color="black">(</font><font color="black">)</font>;
+    ApplicationContext<font color="black">(</font>TextureManager <font color="black">*</font>textureManager,ShaderManager <font color="black">*</font>shaderManager<font color="black">)</font>;
+    TextureManager <font color="black">*</font>textureManager;
+    ShaderManager <font color="black">*</font>shaderManager;
+<font color="black">}</font>;
+<font color="blue">class</font> FIRECUBE_API Application
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font>
+    Application<font color="black">(</font><font color="black">)</font>;
+    virtual ~Application<font color="black">(</font><font color="black">)</font>;
+
+    <font color="blue">bool</font> Initialize<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">bool</font> Destroy<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> Run<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> SetTitle<font color="black">(</font>string <font color="black">&</font>title<font color="black">)</font>;
+    <font color="blue">float</font> GetFps<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">static</font> <font color="blue">void</font> SetContext<font color="black">(</font>ApplicationContext <font color="black">&</font>context<font color="black">)</font>;
+    <font color="blue">static</font> ApplicationContext GetContext<font color="black">(</font><font color="black">)</font>;
+    virtual <font color="blue">bool</font> HandleInput<font color="black">(</font><font color="blue">float</font> time<font color="black">)</font> <font color="black">=</font> <font color="maroon">0</font>;
+    virtual <font color="blue">bool</font> Update<font color="black">(</font><font color="blue">float</font> time<font color="black">)</font> <font color="black">=</font> <font color="maroon">0</font>;
+    virtual <font color="blue">bool</font> Render<font color="black">(</font><font color="blue">float</font> time<font color="black">)</font> <font color="black">=</font> <font color="maroon">0</font>;
+<font color="blue">private</font><font color="black">:</font>
+    Timer timer;    
+    <font color="blue">bool</font> running;
+    <font color="blue">float</font> deltaTime;;
+    <font color="blue">float</font> fps;
+    <font color="blue">float</font> fpsTime;
+    <font color="blue">float</font> frameCount;
+    ApplicationContext defaultContext;
+    TextureManager defaultTextureManager;
+    ShaderManager defaultShaderManager;
+    <font color="blue">static</font> ApplicationContext <font color="black">*</font>currentContext;
+<font color="black">}</font>;
+<font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>pop<font color="black">)</font>
+<font color="blue">#endif</font>
+</PRE>
+</BODY>
+</HTML>

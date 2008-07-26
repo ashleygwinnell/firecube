@@ -1,0 +1,64 @@
+<HTML>
+<HEAD>
+<TITLE>
+Renderer.h
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#ifndef</font> RENDERER_H
+<font color="blue">#define</font> RENDERER_H
+
+<font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>push<font color="black">)</font>
+<font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
+
+<font color="blue">class</font> FIRECUBE_API ShaderResource
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font>
+    ShaderResource<font color="black">(</font><font color="black">)</font>;
+    ~ShaderResource<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">bool</font> Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>;
+    GLuint id;
+<font color="black">}</font>;
+
+<font color="blue">typedef</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>ShaderResource<font color="black">&#62;</font> Shader;
+<font color="blue">typedef</font> ResourceManager<font color="black">&#60;</font>ShaderResource<font color="black">&#62;</font> ShaderManager;
+
+<font color="blue">class</font> FIRECUBE_API Program
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font>
+    Program<font color="black">(</font><font color="black">)</font>;
+    ~Program<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> Create<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> Create<font color="black">(</font>Shader shader1,Shader shader2<font color="black">)</font>;
+    <font color="blue">void</font> Attach<font color="black">(</font>Shader shader<font color="black">)</font>;
+    <font color="blue">void</font> Link<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> Use<font color="black">(</font><font color="blue">bool</font> useShaders<font color="black">=</font><font color="blue">true</font><font color="black">)</font>;
+    <font color="blue">void</font> Uniform1f<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">float</font> value<font color="black">)</font>;
+    <font color="blue">void</font> Uniform1i<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">int</font> value<font color="black">)</font>;   
+    GLuint id;
+    map<font color="black">&#60;</font>string,GLint<font color="black">&#62;</font> variables;
+<font color="black">}</font>;
+<font color="blue">class</font> FIRECUBE_API Renderer
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font>
+    Renderer<font color="black">(</font><font color="black">)</font>;
+    ~Renderer<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> Clear<font color="black">(</font><font color="black">)</font>;
+
+    <font color="blue">void</font> Render<font color="black">(</font>Model model<font color="black">)</font>;
+    <font color="blue">void</font> SetModelViewMatrix<font color="black">(</font>mat4 <font color="black">&</font>m<font color="black">)</font>;
+    <font color="blue">void</font> SetProjectionMatrix<font color="black">(</font>mat4 <font color="black">&</font>m<font color="black">)</font>;
+    <font color="blue">void</font> SaveModelViewMatrix<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> RestoreModelViewMatrix<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> MultiplyModelViewMatrix<font color="black">(</font>mat4 <font color="black">&</font>mat<font color="black">)</font>;
+<font color="blue">private</font><font color="black">:</font>    
+<font color="black">}</font>;
+
+
+<font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>pop<font color="black">)</font>
+
+<font color="blue">#endif</font>
+</PRE>
+</BODY>
+</HTML>

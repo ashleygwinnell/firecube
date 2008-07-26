@@ -1,0 +1,204 @@
+<HTML>
+<HEAD>
+<TITLE>
+Renderer.cpp
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#include</font> <font color="maroon">&#60;string&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;vector&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;fstream&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
+<font color="blue">using</font> <font color="blue">namespace</font> std;
+<font color="blue">#include</font> <font color="maroon">&#60;SDL/SDL.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;windows.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">"GLee.h"</font>
+<font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
+<font color="blue">using</font> <font color="blue">namespace</font> FireCube;
+
+ShaderResource<font color="black">:</font><font color="black">:</font>ShaderResource<font color="black">(</font><font color="black">)</font> <font color="black">:</font> id<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>
+<font color="black">{</font>   
+<font color="black">}</font>
+ShaderResource<font color="black">:</font><font color="black">:</font>~ShaderResource<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    glDeleteShader<font color="black">(</font>id<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">bool</font> ShaderResource<font color="black">:</font><font color="black">:</font>Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>
+<font color="black">{</font>
+    GLenum shaderType;
+    <font color="blue">if</font> <font color="black">(</font>id<font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
+        glDeleteShader<font color="black">(</font>id<font color="black">)</font>;
+    
+    string<font color="black">:</font><font color="black">:</font>size_type d;
+    d<font color="black">=</font>filename.find_last_of<font color="black">(</font><font color="maroon">"."</font><font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>d<font color="black">!</font><font color="black">=</font>string<font color="black">:</font><font color="black">:</font>npos<font color="black">)</font>
+    <font color="black">{</font>
+        string ext<font color="black">=</font>filename.substr<font color="black">(</font>d<font color="black">+</font><font color="maroon">1</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>ext<font color="black">=</font><font color="black">=</font><font color="maroon">"vshader"</font><font color="black">)</font>
+            shaderType<font color="black">=</font>GL_VERTEX_SHADER;
+        <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>ext<font color="black">=</font><font color="black">=</font><font color="maroon">"pshader"</font><font color="black">)</font>
+            shaderType<font color="black">=</font>GL_FRAGMENT_SHADER;
+        <font color="blue">else</font>
+            <font color="blue">return</font> <font color="blue">false</font>;
+    <font color="black">}</font>
+
+    id<font color="black">=</font>glCreateShader<font color="black">(</font>shaderType<font color="black">)</font>;
+    ifstream f<font color="black">(</font>filename.c_str<font color="black">(</font><font color="black">)</font>,ios<font color="black">:</font><font color="black">:</font>in<font color="black">|</font>ios<font color="black">:</font><font color="black">:</font>binary<font color="black">|</font>ios<font color="black">:</font><font color="black">:</font>ate<font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>f.is_open<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+    <font color="black">{</font>       
+        <font color="blue">return</font> <font color="blue">false</font>;
+    <font color="black">}</font>   
+    DWORD l<font color="black">=</font>f.tellg<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">char</font> <font color="black">*</font>buffer<font color="black">=</font><font color="blue">new</font> <font color="blue">char</font><font color="black">[</font>l<font color="black">+</font><font color="maroon">1</font><font color="black">]</font>;
+    f.seekg<font color="black">(</font><font color="maroon">0</font>,ios_base<font color="black">:</font><font color="black">:</font>beg<font color="black">)</font>;
+    f.read<font color="black">(</font>buffer,l<font color="black">)</font>;
+    buffer<font color="black">[</font>l<font color="black">]</font><font color="black">=</font><font color="maroon">0</font>;
+    glShaderSource<font color="black">(</font>id,<font color="maroon">1</font>,<font color="black">(</font><font color="blue">const</font> <font color="blue">char</font><font color="black">*</font><font color="black">*</font><font color="black">)</font><font color="black">&</font>buffer,NULL<font color="black">)</font>;        
+    glCompileShader<font color="black">(</font>id<font color="black">)</font>;
+    <font color="blue">delete</font> <font color="black">[</font><font color="black">]</font> buffer;
+
+    <font color="blue">return</font> <font color="blue">true</font>;
+<font color="black">}</font>
+Program<font color="black">:</font><font color="black">:</font>Program<font color="black">(</font><font color="black">)</font> <font color="black">:</font> id<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>
+<font color="black">{</font>
+
+<font color="black">}</font>
+Program<font color="black">:</font><font color="black">:</font>~Program<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    glDeleteProgram<font color="black">(</font>id<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Program<font color="black">:</font><font color="black">:</font>Create<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">if</font> <font color="black">(</font>id<font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
+        glDeleteProgram<font color="black">(</font>id<font color="black">)</font>;
+    
+    id<font color="black">=</font>glCreateProgram<font color="black">(</font><font color="black">)</font>;
+    variables.clear<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Program<font color="black">:</font><font color="black">:</font>Create<font color="black">(</font>Shader shader1,Shader shader2<font color="black">)</font>
+<font color="black">{</font>
+    Create<font color="black">(</font><font color="black">)</font>;
+    Attach<font color="black">(</font>shader1<font color="black">)</font>;
+    Attach<font color="black">(</font>shader2<font color="black">)</font>;
+    Link<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Program<font color="black">:</font><font color="black">:</font>Attach<font color="black">(</font>Shader shader<font color="black">)</font>
+<font color="black">{</font>
+    glAttachShader<font color="black">(</font>id,shader<font color="black">-</font><font color="black">&#62;</font>id<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Program<font color="black">:</font><font color="black">:</font>Link<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    glLinkProgram<font color="black">(</font>id<font color="black">)</font>;  
+<font color="black">}</font>
+<font color="blue">void</font> Program<font color="black">:</font><font color="black">:</font>Use<font color="black">(</font><font color="blue">bool</font> useShaders<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">if</font> <font color="black">(</font>useShaders<font color="black">=</font><font color="black">=</font><font color="blue">false</font><font color="black">)</font>
+        glUseProgram<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>;
+    <font color="blue">else</font>
+        glUseProgram<font color="black">(</font>id<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Program<font color="black">:</font><font color="black">:</font>Uniform1f<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">float</font> value<font color="black">)</font>
+<font color="black">{</font>
+    GLint location<font color="black">=</font><font color="maroon">0</font>;
+    map<font color="black">&#60;</font>string,GLint<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>variables.find<font color="black">(</font><font color="blue">name</font><font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>i<font color="black">!</font><font color="black">=</font>variables.end<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+        location<font color="black">=</font>i<font color="black">-</font><font color="black">&#62;</font>second;
+    <font color="blue">else</font>
+    <font color="black">{</font>
+        location<font color="black">=</font>glGetUniformLocation<font color="black">(</font>id,<font color="blue">name</font>.c_str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
+            variables<font color="black">[</font><font color="blue">name</font><font color="black">]</font><font color="black">=</font>location;
+    <font color="black">}</font>
+    <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
+        glUniform1f<font color="black">(</font>location,value<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Program<font color="black">:</font><font color="black">:</font>Uniform1i<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">int</font> value<font color="black">)</font>
+<font color="black">{</font>
+    GLint location<font color="black">=</font><font color="maroon">0</font>;
+    map<font color="black">&#60;</font>string,GLint<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>variables.find<font color="black">(</font><font color="blue">name</font><font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>i<font color="black">!</font><font color="black">=</font>variables.end<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+        location<font color="black">=</font>i<font color="black">-</font><font color="black">&#62;</font>second;
+    <font color="blue">else</font>
+    <font color="black">{</font>
+        location<font color="black">=</font>glGetUniformLocation<font color="black">(</font>id,<font color="blue">name</font>.c_str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
+            variables<font color="black">[</font><font color="blue">name</font><font color="black">]</font><font color="black">=</font>location;
+    <font color="black">}</font>
+    <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
+        glUniform1i<font color="black">(</font>location,value<font color="black">)</font>;
+<font color="black">}</font>
+Renderer<font color="black">:</font><font color="black">:</font>Renderer<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+<font color="black">}</font>
+Renderer<font color="black">:</font><font color="black">:</font>~Renderer<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+<font color="black">}</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>Clear<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    glClear<font color="black">(</font>GL_COLOR_BUFFER_BIT <font color="black">|</font> GL_DEPTH_BUFFER_BIT<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetModelViewMatrix<font color="black">(</font>mat4 <font color="black">&</font>m<font color="black">)</font>
+<font color="black">{</font>
+    glMatrixMode<font color="black">(</font>GL_MODELVIEW<font color="black">)</font>;
+    glLoadMatrixf<font color="black">(</font>m.m<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetProjectionMatrix<font color="black">(</font>mat4 <font color="black">&</font>m<font color="black">)</font>
+<font color="black">{</font>
+    glMatrixMode<font color="black">(</font>GL_PROJECTION<font color="black">)</font>;
+    glLoadMatrixf<font color="black">(</font>m.m<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>Render<font color="black">(</font>Model model<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>model<font color="black">)</font>
+        <font color="blue">return</font>;
+
+    vector<font color="black">&#60;</font>Object<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>model<font color="black">-</font><font color="black">&#62;</font>object.begin<font color="black">(</font><font color="black">)</font>;   
+    
+    <font color="blue">for</font> <font color="black">(</font>;i<font color="black">!</font><font color="black">=</font>model<font color="black">-</font><font color="black">&#62;</font>object.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>   
+        vector<font color="black">&#60;</font>Mesh<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator j<font color="black">=</font>i<font color="black">-</font><font color="black">&#62;</font>mesh.begin<font color="black">(</font><font color="black">)</font>;
+        i<font color="black">-</font><font color="black">&#62;</font>vertexBuffer.SetVertexStream<font color="black">(</font><font color="black">)</font>;
+        i<font color="black">-</font><font color="black">&#62;</font>uvBuffer.SetTexCoordStream<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>;
+        i<font color="black">-</font><font color="black">&#62;</font>normalBuffer.SetNormalStream<font color="black">(</font><font color="black">)</font>;
+        <font color="blue">for</font> <font color="black">(</font>;j<font color="black">!</font><font color="black">=</font>i<font color="black">-</font><font color="black">&#62;</font>mesh.end<font color="black">(</font><font color="black">)</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">{</font>
+            <font color="blue">float</font> ambient<font color="black">[</font><font color="black">]</font><font color="black">=</font><font color="black">{</font>j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">-</font><font color="black">&#62;</font>ambient.x,j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">-</font><font color="black">&#62;</font>ambient.y,j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">-</font><font color="black">&#62;</font>ambient.z,<font color="maroon">1</font>.0f<font color="black">}</font>;
+            <font color="blue">float</font> diffuse<font color="black">[</font><font color="black">]</font><font color="black">=</font><font color="black">{</font>j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">-</font><font color="black">&#62;</font>diffuse.x,j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">-</font><font color="black">&#62;</font>diffuse.y,j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">-</font><font color="black">&#62;</font>diffuse.z,<font color="maroon">1</font>.0f<font color="black">}</font>;
+            <font color="blue">float</font> specular<font color="black">[</font><font color="black">]</font><font color="black">=</font><font color="black">{</font>j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">-</font><font color="black">&#62;</font>specular.x,j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">-</font><font color="black">&#62;</font>specular.y,j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">-</font><font color="black">&#62;</font>specular.z,<font color="maroon">1</font>.0f<font color="black">}</font>;            
+            glMaterialfv<font color="black">(</font>GL_FRONT,GL_AMBIENT,ambient<font color="black">)</font>;
+            glMaterialfv<font color="black">(</font>GL_FRONT,GL_DIFFUSE,diffuse<font color="black">)</font>;
+            glMaterialfv<font color="black">(</font>GL_FRONT,GL_SPECULAR,specular<font color="black">)</font>;
+            glMaterialf<font color="black">(</font>GL_FRONT,GL_SHININESS,j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">-</font><font color="black">&#62;</font>shininess<font color="black">)</font>;
+            <font color="blue">if</font> <font color="black">(</font>j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">-</font><font color="black">&#62;</font>tex<font color="black">)</font>
+            <font color="black">{</font>
+                glEnable<font color="black">(</font>GL_TEXTURE_2D<font color="black">)</font>;
+                glBindTexture<font color="black">(</font>GL_TEXTURE_2D,j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">-</font><font color="black">&#62;</font>tex<font color="black">-</font><font color="black">&#62;</font>id<font color="black">)</font>;
+            <font color="black">}</font>
+            <font color="blue">else</font>
+                glDisable<font color="black">(</font>GL_TEXTURE_2D<font color="black">)</font>;
+
+            j<font color="black">-</font><font color="black">&#62;</font>indexBuffer.RenderIndexStream<font color="black">(</font>TRIANGLES,j<font color="black">-</font><font color="black">&#62;</font>face.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">3</font><font color="black">)</font>;
+        <font color="black">}</font>
+    <font color="black">}</font>
+<font color="black">}</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SaveModelViewMatrix<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    glMatrixMode<font color="black">(</font>GL_MODELVIEW<font color="black">)</font>;
+    glPushMatrix<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RestoreModelViewMatrix<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    glMatrixMode<font color="black">(</font>GL_MODELVIEW<font color="black">)</font>;
+    glPopMatrix<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>MultiplyModelViewMatrix<font color="black">(</font>mat4 <font color="black">&</font>mat<font color="black">)</font>
+<font color="black">{</font>
+    glMatrixMode<font color="black">(</font>GL_MODELVIEW<font color="black">)</font>;
+    glMultMatrixf<font color="black">(</font>mat.m<font color="black">)</font>;
+<font color="black">}</font>
+</PRE>
+</BODY>
+</HTML>

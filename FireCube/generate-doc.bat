@@ -1,0 +1,1 @@
+cppdoc_cmd.exe -title=FireCube -classdir=projects -module="cppdoc-standard" -extensions="c,cpp,cxx,cc,h,hpp,hxx" -languages="c=cpp,cc=cpp,cpp=cpp,cs=csharp,cxx=cpp,h=cpp,hpp=cpp,hxx=cpp,java=java" "..\FireCube" #Debug #Release #.svn #glee.c #glee.h ".\Documentation\index.html"
