@@ -9,10 +9,11 @@ Buffer.h
 <font color="blue">#ifndef</font> BUFFER_H
 <font color="blue">#define</font> BUFFER_H
 <font color="green">/** 
-Buffer type:
-STATIC:  Data is send once and stored on the graphics card.
-DYNAMIC: Graphics driver will choose the location for the data.
-STREAM:  Data is send each time.
+* Specifies how data is handled.&#60;br&#62;
+* Buffer type:&#60;br&#62;
+* STATIC:  Data is sent once and stored on the graphics card.&#60;br&#62;
+* DYNAMIC: Graphics driver will choose the location for the data.&#60;br&#62;
+* STREAM:  Data is sent each time.
 */</font>
 <font color="blue">enum</font> BufferType
 <font color="black">{</font>
@@ -23,7 +24,7 @@ STREAM:  Data is send each time.
     POINTS,LINES,TRIANGLES,TRIANGLE_STRIP,QUADS,LINE_LOOP,TRIANGLE_FAN
 <font color="black">}</font>;
 <font color="green">/**
-A buffer of data used for rendering.
+* A buffer of data used for rendering.
 */</font>
 <font color="blue">class</font> FIRECUBE_API Buffer
 <font color="black">{</font>
@@ -31,48 +32,48 @@ A buffer of data used for rendering.
     Buffer<font color="black">(</font><font color="black">)</font>;
     ~Buffer<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
-    Creates a new buffer.
+    * Creates a new buffer.
     */</font>
     <font color="blue">void</font> Create<font color="black">(</font><font color="black">)</font>;  
     <font color="green">/**
-    Loads the specified data to the buffer.
-    @param data Pointer to the data to be stored.
-    @param size Size of the data in bytes.
-    @param bt The buffer type.
+    * Loads the specified data to the buffer.
+    * @param data Pointer to the data to be stored.
+    * @param size Size of the data in bytes.
+    * @param bt The buffer type.
     */</font>
     <font color="blue">void</font> LoadData<font color="black">(</font><font color="blue">void</font> <font color="black">*</font>data,DWORD size,BufferType bt<font color="black">)</font>;
     <font color="green">/**
-    Specific function to load index data.
-    @param data Pointer to the indices to be stored.
-    @param size Number of indices.
-    @param bt The buffer type.
+    * Specific function to load index data.
+    * @param data Pointer to the indices to be stored.
+    * @param size Number of indices.
+    * @param bt The buffer type.
     */</font>
     <font color="blue">void</font> LoadIndexData<font color="black">(</font><font color="blue">void</font> <font color="black">*</font>data,DWORD count,BufferType bt<font color="black">)</font>;
     <font color="green">/**
-    Binds the buffer as a vertex stream.
+    * Binds the buffer as a vertex stream.
     */</font>
     <font color="blue">void</font> SetVertexStream<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
-    Binds the buffer as a normal stream.
+    * Binds the buffer as a normal stream.
     */</font>
     <font color="blue">void</font> SetNormalStream<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
-    Binds the buffer as a color stream.
+    * Binds the buffer as a color stream.
     */</font>
     <font color="blue">void</font> SetColorStream<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
-    Binds the buffer as a texture coordinate stream.
-    @param unit Specifies the texture unit.
+    * Binds the buffer as a texture coordinate stream.
+    * @param unit Specifies the texture unit.
     */</font>
     <font color="blue">void</font> SetTexCoordStream<font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> unit<font color="black">)</font>;
     <font color="green">/**
-    Renders an index stream.
-    @param mode The rendering mode.
-    @param count The number of indices to render.
+    * Renders an index stream.
+    * @param mode The rendering mode.
+    * @param count The number of indices to render.
     */</font>
     <font color="blue">void</font> RenderIndexStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
     <font color="green">/**
-    Destroys the buffer.
+    * Destroys the buffer.
     */</font>
     <font color="blue">void</font> Destroy<font color="black">(</font><font color="black">)</font>;
 

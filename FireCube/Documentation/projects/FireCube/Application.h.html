@@ -13,9 +13,9 @@ Application.h
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
 
 <font color="green">/** 
-Define an application context.
-Contains pointers to various resource managers(textures,shaders).
-The context is used by various resource loading functions.
+* Defines an application context.&#60;br&#62;
+* Contains pointers to various resource managers(textures,shaders).&#60;br&#62;
+* The context is used by various resource loading functions.
 */</font>
 <font color="blue">class</font> FIRECUBE_API ApplicationContext
 <font color="black">{</font>
@@ -26,7 +26,7 @@ The context is used by various resource loading functions.
     ShaderManager <font color="black">*</font>shaderManager;
 <font color="black">}</font>;
 <font color="green">/** 
-This class is reponsible for the intialization and running of the application.
+This class is responsible for the intialization and running of the application.
 */</font>
 <font color="blue">class</font> FIRECUBE_API Application
 <font color="black">{</font>
@@ -34,48 +34,48 @@ This class is reponsible for the intialization and running of the application.
     Application<font color="black">(</font><font color="black">)</font>;
     virtual ~Application<font color="black">(</font><font color="black">)</font>;
     <font color="green">/** 
-    Creates a default windows and intializes OpenGL.
-    @return true on success, false otherwise.
+    * Creates a default windows and intializes OpenGL.
+    * @return true on success, false otherwise.
     */</font>
     <font color="blue">bool</font> Initialize<font color="black">(</font><font color="black">)</font>;
     <font color="green">/** 
-    Destroy the window and it's associated OpenGL context.
-    @return true on success, false otherwise.
+    * Destroy the window and it's associated OpenGL context.
+    * @return true on success, false otherwise.
     */</font>
     <font color="blue">bool</font> Destroy<font color="black">(</font><font color="black">)</font>;
     <font color="green">/** 
-    Enters the main rendering loop.
+    * Enters the main rendering loop.
     */</font>
     <font color="blue">void</font> Run<font color="black">(</font><font color="black">)</font>;
     <font color="green">/** 
-    Sets the title of the window.
+    * Sets the title of the window.
     */</font>
     <font color="blue">void</font> SetTitle<font color="black">(</font>string <font color="black">&</font>title<font color="black">)</font>;
     <font color="green">/** 
-    Returns the current frames per second.
+    * Returns the current frames per second.
     */</font>
     <font color="blue">float</font> GetFps<font color="black">(</font><font color="black">)</font>;
     <font color="green">/** 
-    Sets the current application context.
+    * Sets the current application context.
     */</font>
     <font color="blue">static</font> <font color="blue">void</font> SetContext<font color="black">(</font>ApplicationContext <font color="black">&</font>context<font color="black">)</font>;
     <font color="green">/** 
-    Returns the current application context.
+    * Returns the current application context.
     */</font>
     <font color="blue">static</font> ApplicationContext GetContext<font color="black">(</font><font color="black">)</font>;
     <font color="green">/** 
-    User should override this to handle the input.
-    Called once per frame.
+    * User should override this to handle the input.
+    * Called once per frame.
     */</font>
     virtual <font color="blue">bool</font> HandleInput<font color="black">(</font><font color="blue">float</font> time<font color="black">)</font> <font color="black">=</font> <font color="maroon">0</font>;
     <font color="green">/** 
-    User should override this to handle the game logic.
-    Called once per frame.
+    * User should override this to handle the game logic.
+    * Called once per frame.
     */</font>
     virtual <font color="blue">bool</font> Update<font color="black">(</font><font color="blue">float</font> time<font color="black">)</font> <font color="black">=</font> <font color="maroon">0</font>;
     <font color="green">/** 
-    User should override this to redner the game world.
-    Called once per frame.
+    * User should override this to redner the game world.
+    * Called once per frame.
     */</font>
     virtual <font color="blue">bool</font> Render<font color="black">(</font><font color="blue">float</font> time<font color="black">)</font> <font color="black">=</font> <font color="maroon">0</font>;
 <font color="blue">private</font><font color="black">:</font>

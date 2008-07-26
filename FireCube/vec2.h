@@ -1,7 +1,7 @@
 #ifndef VEC2_H
 #define VEC2_H
 /**
-A 2d vector.
+* A 2d vector.
 */
 class FIRECUBE_API vec2
 {
