@@ -105,11 +105,26 @@ public:
 	ModelResource();
 	~ModelResource();
 	
+	/**
+	* Loads a 3ds file.
+	* @param filename The file to load.
+	*/
 	bool Load(const string &filename);
 	DWORD ProcessChunk(char *buffer);
 	Material *GetMaterialByName(const string &name);
+	/**
+	* Reduces the model by removing duplicated vertices.
+	* @return The reduced mesh.
+	*/
 	Model Reduce();	
+	/**
+	* Calculates face and vertex normals.
+	*/
 	void CalculateNormals();
+	/**
+	* Applies a transformation to the model vertices.
+	* @param transform The transformation matrix.
+	*/
 	void ApplyTransformation(mat4 &transform);
 
 	vector<Object> object;

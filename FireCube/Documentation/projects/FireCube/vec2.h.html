@@ -72,28 +72,77 @@ vec2.h
 
     <font color="blue">inline</font> vec2 <font color="blue">operator</font><font color="black">-</font><font color="black">(</font><font color="black">)</font> <font color="blue">const</font> <font color="black">{</font><font color="blue">return</font> vec2<font color="black">(</font><font color="black">-</font>x, <font color="black">-</font>y<font color="black">)</font>;<font color="black">}</font>
     <font color="blue">operator</font> vec3<font color="black">(</font><font color="black">)</font>;
-
+    
+    <font color="green">/**
+    * Returns a pointer the the coordinates.
+    */</font>
     <font color="blue">inline</font> <font color="blue">const</font> <font color="blue">float</font> <font color="black">*</font> GetData<font color="black">(</font><font color="black">)</font> <font color="black">{</font><font color="blue">return</font> <font color="black">&</font>x;<font color="black">}</font> 
+    <font color="green">/**
+    * Returns a const pointer the the coordinates.
+    */</font>
     <font color="blue">inline</font> <font color="blue">const</font> <font color="blue">float</font> <font color="black">*</font> GetData<font color="black">(</font><font color="black">)</font> <font color="blue">const</font> <font color="black">{</font><font color="blue">return</font> <font color="black">&</font>x;<font color="black">}</font> 
+    <font color="green">/**
+    * Sets the vector to (0,0).
+    */</font>
     <font color="blue">void</font> Clear<font color="black">(</font><font color="black">)</font> <font color="black">{</font>x<font color="black">=</font>y<font color="black">=</font><font color="maroon">0</font>;<font color="black">}</font>
+    <font color="green">/**
+    * Normalizes the vector.
+    */</font>
     vec2 Normalize<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Returns the length of the vector
+    */</font>
     <font color="blue">float</font> Length<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
+    <font color="green">/**
+    * Returns the squared length of the vector
+    */</font>
     <font color="blue">float</font> Length2<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
+    <font color="green">/**
+    * Performs a dot product between two vectors.
+    */</font>
     <font color="blue">float</font> Dot<font color="black">(</font><font color="blue">const</font> vec2 <font color="black">&</font>v<font color="black">)</font> <font color="blue">const</font>
     <font color="black">{</font><font color="blue">return</font> <font color="black">(</font>x<font color="black">*</font>v.x<font color="black">+</font>y<font color="black">*</font>v.y<font color="black">)</font>;<font color="black">}</font>
 
+    <font color="green">/**
+    * Performs a cross product between two vectors.
+    */</font>
     <font color="blue">float</font> Cross<font color="black">(</font><font color="blue">const</font> vec2 <font color="black">&</font>p,<font color="blue">const</font> vec2 <font color="black">&</font>q<font color="black">)</font>;
     <font color="blue">void</font> Set<font color="black">(</font><font color="blue">float</font> nx,<font color="blue">float</font> ny<font color="black">)</font>
     <font color="black">{</font>x<font color="black">=</font>nx;y<font color="black">=</font>ny;<font color="black">}</font>
+    <font color="green">/**
+    * Sets all coordinates.
+    */</font>
     <font color="blue">void</font> Set<font color="black">(</font><font color="blue">float</font> nv<font color="black">)</font>
-    <font color="black">{</font>x<font color="black">=</font>nv;y<font color="black">=</font>nv;<font color="black">}</font>    
+    <font color="black">{</font>x<font color="black">=</font>nv;y<font color="black">=</font>nv;<font color="black">}</font>
+    <font color="green">/**
+    * Converts to a vec3 by setting the z component to zero.
+    */</font>
     vec3 ToVec3<font color="black">(</font><font color="black">)</font>;
-
+    <font color="green">/**
+    * Sets the length of the vector.
+    */</font>
     <font color="blue">void</font> SetLength<font color="black">(</font><font color="blue">float</font> l<font color="black">)</font>;
+    <font color="green">/**
+    * Rotates the vector.
+    * @param ang The amount to rotate in radians.
+    */</font>
     <font color="blue">void</font> Rotate<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>;
+    <font color="green">/**
+    * Creates a vector from an angle.
+    */</font>
     <font color="blue">void</font> FromAngle<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>;
+    <font color="green">/**
+    * Transforms the vector by a matrix treating it as a vertex.&#60;br&#62;
+    * Multiplies the 3d vector (x,y,1) by the matrix and then divides it by the w component.
+    */</font>
     vec2 TransformCoordinate<font color="black">(</font>mat4 m<font color="black">)</font>;
+    <font color="green">/**
+    * Transforms the vector by a matrix treating it as a normal.
+    */</font>
     vec2 TransformNormal<font color="black">(</font>mat4 m<font color="black">)</font>;
+    <font color="green">/**
+    * Checks whether the vector contain valid floating point numbers.
+    */</font>
     <font color="blue">inline</font> <font color="blue">bool</font> Sensible<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
     
     <font color="blue">float</font> x,y;  
@@ -102,7 +151,13 @@ vec2 FIRECUBE_API <font color="blue">operator</font><font color="black">+</font>
 vec2 FIRECUBE_API <font color="blue">operator</font><font color="black">-</font><font color="black">(</font><font color="blue">const</font> vec2 <font color="black">&</font>a,<font color="blue">const</font> vec2 <font color="black">&</font>b<font color="black">)</font>;
 vec2 FIRECUBE_API <font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">const</font> vec2 <font color="black">&</font>a,<font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font>b<font color="black">)</font>;
 vec2 FIRECUBE_API <font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font>a,<font color="blue">const</font> vec2 <font color="black">&</font>b<font color="black">)</font>;
+<font color="green">/**
+* Performs a cross product between two vectors.
+*/</font>
 <font color="blue">float</font> FIRECUBE_API Cross<font color="black">(</font><font color="blue">const</font> vec2 a,<font color="blue">const</font> vec2 b<font color="black">)</font>;
+<font color="green">/**
+* Performs a dot product between two vectors.
+*/</font>
 <font color="blue">float</font> FIRECUBE_API Dot<font color="black">(</font><font color="blue">const</font> vec2 a,<font color="blue">const</font> vec2 b<font color="black">)</font>;
 <font color="blue">#endif</font>
 </PRE>

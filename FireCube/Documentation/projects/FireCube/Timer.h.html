@@ -8,11 +8,24 @@ Timer.h
 <PRE>
 <font color="blue">#ifndef</font> __TIMER_H
 <font color="blue">#define</font> __TIMER_H
+
+<font color="green">/**
+* A class for a timer.
+*/</font>
 <font color="blue">class</font> FIRECUBE_API Timer
 <font color="black">{</font>
 <font color="blue">public</font><font color="black">:</font>
+    <font color="green">/**
+    * Initializes the timer.
+    */</font>
     <font color="blue">void</font> Init<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Resets the timer.
+    */</font>
     <font color="blue">void</font> Update<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Retunns the time that has passed since the last call to Update() in seconds.
+    */</font>
     <font color="blue">double</font> Passed<font color="black">(</font><font color="black">)</font>;
     
     LARGE_INTEGER now;

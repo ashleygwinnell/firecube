@@ -11,14 +11,22 @@ Texture.h
 
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>push<font color="black">)</font>
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
-
+<font color="green">/**
+* A 2d texture.
+*/</font>
 <font color="blue">class</font> FIRECUBE_API TextureResource
 <font color="black">{</font>
 <font color="blue">public</font><font color="black">:</font>
     TextureResource<font color="black">(</font><font color="black">)</font>;
     ~TextureResource<font color="black">(</font><font color="black">)</font>;
-
+    <font color="green">/**
+    * Loads a texture.
+    * @param filename The file to load.
+    */</font>
     <font color="blue">bool</font> Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>;
+    <font color="green">/**
+    * Returns whether the texture is valid.
+    */</font>
     <font color="blue">bool</font> IsValid<font color="black">(</font><font color="black">)</font>; 
     GLuint id;
 <font color="black">}</font>;  
