@@ -14,12 +14,27 @@ mat4.h
 <font color="blue">class</font> FIRECUBE_API mat4
 <font color="black">{</font>
 <font color="blue">public</font><font color="black">:</font>
+    <font color="green">/**
+    * Initializes the matrix to the identity matrix.
+    */</font>
     mat4<font color="black">(</font><font color="black">)</font> <font color="black">{</font>Identity<font color="black">(</font><font color="black">)</font>;<font color="black">}</font>
     mat4<font color="black">(</font><font color="blue">float</font> nv<font color="black">)</font> <font color="black">{</font> Set<font color="black">(</font>nv<font color="black">)</font>; <font color="black">}</font>
+    <font color="green">/**
+    * Zeroes the matrix.
+    */</font>
     <font color="blue">void</font> Clear<font color="black">(</font><font color="black">)</font> <font color="black">{</font>memset<font color="black">(</font>m,<font color="maroon">0</font>,<font color="blue">sizeof</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">*</font><font color="maroon">16</font><font color="black">)</font>;<font color="black">}</font>
     <font color="blue">void</font> Set<font color="black">(</font><font color="blue">float</font> <font color="black">*</font>src<font color="black">)</font> <font color="black">{</font>memcpy<font color="black">(</font>m,src,<font color="blue">sizeof</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">*</font><font color="maroon">16</font><font color="black">)</font>;<font color="black">}</font>
+    <font color="green">/**
+    * Sets all values.
+    */</font>
     <font color="blue">void</font> Set<font color="black">(</font><font color="blue">float</font> nv<font color="black">)</font> <font color="black">{</font>m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">9</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">10</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">11</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">12</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">13</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">14</font><font color="black">]</font><font color="black">=</font>nv;m<font color="black">[</font><font color="maroon">15</font><font color="black">]</font><font color="black">=</font>nv;<font color="black">}</font>
+    <font color="green">/**
+    * Zeroes the matrix.
+    */</font>
     <font color="blue">inline</font> <font color="blue">void</font> Zero<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Sets the matrix to the identity matrix.
+    */</font>
     <font color="blue">inline</font> <font color="blue">void</font> Identity<font color="black">(</font><font color="black">)</font>;
     <font color="blue">inline</font> mat4 <font color="blue">operator</font><font color="black">=</font><font color="black">(</font>mat4 <font color="black">&</font>src<font color="black">)</font>;
     <font color="blue">inline</font> mat4 <font color="blue">operator</font><font color="black">+</font><font color="black">(</font>mat4 <font color="black">&</font>src<font color="black">)</font>;
@@ -33,19 +48,84 @@ mat4.h
     <font color="blue">float</font> <font color="black">&</font> <font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="blue">const</font> <font color="blue">unsigned</font> <font color="blue">int</font> i, <font color="blue">const</font> <font color="blue">unsigned</font> <font color="blue">int</font> j<font color="black">)</font> <font color="black">{</font><font color="blue">return</font> m<font color="black">[</font>i <font color="black">+</font> <font color="maroon">4</font><font color="black">*</font>j<font color="black">]</font>;<font color="black">}</font>
     <font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font> <font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="blue">const</font> <font color="blue">unsigned</font> <font color="blue">int</font> i, <font color="blue">const</font> <font color="blue">unsigned</font> <font color="blue">int</font> j<font color="black">)</font> <font color="blue">const</font> <font color="black">{</font><font color="blue">return</font> m<font color="black">[</font>i <font color="black">+</font> <font color="maroon">4</font><font color="black">*</font>j<font color="black">]</font>;<font color="black">}</font>
     <font color="blue">operator</font> mat3<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Creates a translation matrix.
+    * @param x Translation along the X axis.
+    * @param y Translation along the Y axis.
+    * @param z Translation along the Z axis.
+    */</font>
     <font color="blue">void</font> Translate<font color="black">(</font><font color="blue">float</font> x,<font color="blue">float</font> y,<font color="blue">float</font> z<font color="black">)</font>;
+    <font color="green">/**
+    * Creates a translation matrix.
+    * @param t A vec3 representing the translation.
+    */</font>
     <font color="blue">void</font> Translate<font color="black">(</font>vec3 t<font color="black">)</font>;
+    <font color="green">/**
+    * Creates a scaling matrix.
+    * @param x Scaling along the X axis.
+    * @param y Scaling along the Y axis.
+    * @param z Scaling along the Z axis.
+    */</font>
     <font color="blue">void</font> Scale<font color="black">(</font><font color="blue">float</font> x,<font color="blue">float</font> y,<font color="blue">float</font> z<font color="black">)</font>;
+    <font color="green">/**
+    * Creates a rotation matrix along the X axis.
+    * @param ang The amount to rotate in radians.
+    */</font>
     <font color="blue">void</font> RotateX<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>;
+    <font color="green">/**
+    * Creates a rotation matrix along the Y axis.
+    * @param ang The amount to rotate in radians.
+    */</font>
     <font color="blue">void</font> RotateY<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>;
+    <font color="green">/**
+    * Creates a rotation matrix along the Z axis.
+    * @param ang The amount to rotate in radians.
+    */</font>
     <font color="blue">void</font> RotateZ<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>;
+    <font color="green">/**
+    * Transposes the matrix.
+    */</font>
     <font color="blue">void</font> Transpose<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Inverts the matrix.
+    */</font>
     <font color="blue">void</font> Inverse<font color="black">(</font><font color="black">)</font>; 
+    <font color="green">/**
+    * Returns the translation in the matrix.
+    */</font>
     vec3 GetPos<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Returns the direction of the look at vector.
+    */</font>
     vec3 GetDir<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Generates a perpective projection matrix.
+    * @param fov The field of view in degrees.
+    * @param aspect The aspect ratio.
+    * @param nearz The near clipping plane.
+    * @param farz The far clipping plane.
+    */</font>
     <font color="blue">void</font> GeneratePerspective<font color="black">(</font><font color="blue">float</font> fov,<font color="blue">float</font> aspect,<font color="blue">float</font> nearz,<font color="blue">float</font> farz<font color="black">)</font>;
+    <font color="green">/**
+    * Generates a othographic projection matrix.
+    * @param left The left side of the view.
+    * @param right The right side of the view.
+    * @param bottom The bottom side of the view.
+    * @param top The top side of the view.  
+    * @param zNear The near clipping plane.
+    * @param zFar The far clipping plane.
+    */</font>
     <font color="blue">void</font> GenerateOrthographic<font color="black">(</font><font color="blue">float</font> left,<font color="blue">float</font> right,<font color="blue">float</font> bottom,<font color="blue">float</font> top,<font color="blue">float</font> zNear,<font color="blue">float</font> zFar<font color="black">)</font>;
+    <font color="green">/**
+    * Generates a look-at matrix.
+    * @param pos Position of the camera.
+    * @param at The look-at location of the camera.
+    * @param up The up axis for the camera.
+    */</font>
     <font color="blue">void</font> LookAt<font color="black">(</font>vec3 pos,vec3 at,vec3 up<font color="black">)</font>;
+    <font color="green">/*
+    * Converts to a mat3 by stripping the translation part.
+    */</font>
     mat3 ToMatrix3<font color="black">(</font><font color="black">)</font>;
     <font color="blue">float</font> m<font color="black">[</font><font color="maroon">16</font><font color="black">]</font>;
 <font color="black">}</font>;

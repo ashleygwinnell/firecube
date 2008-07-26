@@ -37,7 +37,9 @@ Mesh.h
 <font color="blue">typedef</font> ResourceManager<font color="black">&#60;</font>ModelResource<font color="black">&#62;</font> ModelManager;
 <font color="blue">typedef</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>ModelResource<font color="black">&#62;</font> Model;
 
-
+<font color="green">/**
+* Stores information about a material.
+*/</font>
 <font color="blue">class</font> FIRECUBE_API Material
 <font color="black">{</font>
 <font color="blue">public</font><font color="black">:</font>
@@ -51,11 +53,18 @@ Mesh.h
     <font color="blue">float</font> shininess;
     Texture tex;
 <font color="black">}</font>;
+
+<font color="green">/**
+* Defines an edge in a mesh.
+*/</font>
 <font color="blue">class</font> FIRECUBE_API Edge
 <font color="black">{</font>
 <font color="blue">public</font><font color="black">:</font>
     DWORD v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
 <font color="black">}</font>;
+<font color="green">/**
+* Defines a face in a mesh.
+*/</font>
 <font color="blue">class</font> FIRECUBE_API Face
 <font color="black">{</font>
 <font color="blue">public</font><font color="black">:</font>
@@ -65,6 +74,9 @@ Mesh.h
     DWORD v<font color="black">[</font><font color="maroon">3</font><font color="black">]</font>;
     vec3 normal;
 <font color="black">}</font>;
+<font color="green">/**
+* Stores a set of geometry sharing the same material.
+*/</font>
 <font color="blue">class</font> FIRECUBE_API Mesh
 <font color="black">{</font>
 <font color="blue">public</font><font color="black">:</font>
@@ -75,6 +87,10 @@ Mesh.h
     vector<font color="black">&#60;</font>Face<font color="black">&#62;</font> face;
     Buffer indexBuffer;
 <font color="black">}</font>;
+<font color="green">/**
+* A 3d object.&#60;br&#62;
+* The object is composed of various meshes.
+*/</font>
 <font color="blue">class</font> FIRECUBE_API Object
 <font color="black">{</font>
 <font color="blue">public</font><font color="black">:</font>
@@ -88,6 +104,9 @@ Mesh.h
     Buffer uvBuffer;
     Buffer normalBuffer;
 <font color="black">}</font>;
+<font color="green">/**
+* A class representing a model resource.
+*/</font>
 <font color="blue">class</font> FIRECUBE_API ModelResource
 <font color="black">{</font>
 <font color="blue">public</font><font color="black">:</font>

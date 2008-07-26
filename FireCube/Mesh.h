@@ -29,7 +29,9 @@ class ModelResource;
 typedef ResourceManager<ModelResource> ModelManager;
 typedef boost::shared_ptr<ModelResource> Model;
 
-
+/**
+* Stores information about a material.
+*/
 class FIRECUBE_API Material
 {
 public:
@@ -43,11 +45,18 @@ public:
 	float shininess;
 	Texture tex;
 };
+
+/**
+* Defines an edge in a mesh.
+*/
 class FIRECUBE_API Edge
 {
 public:
 	DWORD v[2];
 };
+/**
+* Defines a face in a mesh.
+*/
 class FIRECUBE_API Face
 {
 public:
@@ -57,6 +66,9 @@ public:
 	DWORD v[3];
 	vec3 normal;
 };
+/**
+* Stores a set of geometry sharing the same material.
+*/
 class FIRECUBE_API Mesh
 {
 public:
@@ -67,6 +79,10 @@ public:
 	vector<Face> face;
 	Buffer indexBuffer;
 };
+/**
+* A 3d object.<br>
+* The object is composed of various meshes.
+*/
 class FIRECUBE_API Object
 {
 public:
@@ -80,6 +96,9 @@ public:
 	Buffer uvBuffer;
 	Buffer normalBuffer;
 };
+/**
+* A class representing a model resource.
+*/
 class FIRECUBE_API ModelResource
 {
 public:

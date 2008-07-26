@@ -326,7 +326,7 @@ static inline vec3 FireCube::proj(const vec3 & v1, const vec3 & v2)
 	return v1.Dot(v2) * v1 / v1.Length2();
 }
 
-inline void mat3::Orthonormalise()
+inline void mat3::Orthonormalize()
 {
 	vec3 u1(operator()(0, 0), operator()(1, 0), operator()(2, 0));
 	vec3 u2(operator()(0, 1), operator()(1, 1), operator()(2, 1));
