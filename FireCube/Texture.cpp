@@ -9,6 +9,8 @@ using namespace std;
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <windows.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 #include "GLee.h"
 #include "FireCube.h"
 using namespace FireCube;

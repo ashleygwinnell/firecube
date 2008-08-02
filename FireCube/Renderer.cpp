@@ -7,6 +7,8 @@
 using namespace std;
 #include <SDL/SDL.h>
 #include <windows.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 #include "GLee.h"
 #include "FireCube.h"
 using namespace FireCube;
@@ -28,7 +30,7 @@ bool ShaderResource::Load(const string &filename)
 	d=filename.find_last_of(".");
 	if (d!=string::npos)
 	{
-		string ext=filename.substr(d+1);
+		string ext=ToLower(filename.substr(d+1));
 		if (ext=="vshader")
 			shaderType=GL_VERTEX_SHADER;
 		else if (ext=="pshader")
@@ -152,7 +154,7 @@ void Renderer::Render(Model model)
 	for (;i!=model->object.end();i++)
 	{	
 		vector<Mesh>::iterator j=i->mesh.begin();
-		i->vertexBuffer.SetVertexStream();
+		i->vertexBuffer.SetVertexStream(3);
 		i->uvBuffer.SetTexCoordStream(0);
 		i->normalBuffer.SetNormalStream();
 		for (;j!=i->mesh.end();j++)
@@ -167,7 +169,7 @@ void Renderer::Render(Model model)
 			if (j->material->tex)
 			{
 				glEnable(GL_TEXTURE_2D);
-				glBindTexture(GL_TEXTURE_2D,j->material->tex->id);
+				UseTexture(j->material->tex,0);
 			}
 			else
 				glDisable(GL_TEXTURE_2D);
@@ -190,4 +192,68 @@ void Renderer::MultiplyModelViewMatrix(mat4 &mat)
 {
 	glMatrixMode(GL_MODELVIEW);
 	glMultMatrixf(mat.m);
+}
+void Renderer::UseTexture(Texture tex,unsigned int unit)
+{
+	glActiveTexture(GL_TEXTURE0+unit);
+	glBindTexture(GL_TEXTURE_2D,tex->id);
+}
+void Renderer::RenderText(Font font,vec2 pos,const string &str)
+{	
+	Buffer vb,uvb;
+	vb.Create();
+	uvb.Create();
+	int numQuads=0;
+	vec2 *vBuffer=new vec2[str.size()*4];
+	vec2 *uvBuffer=new vec2[str.size()*4];
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_COLOR,GL_ONE_MINUS_SRC_COLOR);
+	glEnable(GL_TEXTURE_2D);
+	UseTexture(font->page->tex,0);	
+	vec2 curPos=pos;
+	FT_Long useKerning = FT_HAS_KERNING( font->face ); 
+	FT_UInt previous = 0; 
+	for (string::const_iterator i=str.begin();i!=str.end();i++)
+	{
+		char c=*i;
+		if (c==32)
+		{
+			curPos.x+=font->glyph[c].advance;
+			continue;
+		}
+		if (font->glyph[c].size!=vec2(0,0))
+		{
+
+			FT_UInt glyphIndex = FT_Get_Char_Index( font->face, c ); 
+			/* retrieve kerning distance and move pen position */  
+			if ( useKerning && previous && glyphIndex ) 
+			{ 
+				FT_Vector delta; 
+				FT_Get_Kerning( font->face, previous, glyphIndex, FT_KERNING_DEFAULT, &delta ); 
+				curPos.x += delta.x >> 6; 
+			} 
+			vBuffer[numQuads*4+0]=vec2(font->glyph[c].bitmapOffset.x+curPos.x,font->glyph[c].bitmapOffset.y+curPos.y);
+			vBuffer[numQuads*4+1]=vec2(font->glyph[c].bitmapOffset.x+curPos.x,font->glyph[c].bitmapOffset.y+curPos.y+font->glyph[c].size.y);
+			vBuffer[numQuads*4+2]=vec2(font->glyph[c].bitmapOffset.x+curPos.x+font->glyph[c].size.x,font->glyph[c].bitmapOffset.y+curPos.y+font->glyph[c].size.y);
+			vBuffer[numQuads*4+3]=vec2(font->glyph[c].bitmapOffset.x+curPos.x+font->glyph[c].size.x,font->glyph[c].bitmapOffset.y+curPos.y);
+			uvBuffer[numQuads*4+0]=vec2(font->glyph[c].uv.x,font->glyph[c].uv.y);
+			uvBuffer[numQuads*4+1]=vec2(font->glyph[c].uv.x,font->glyph[c].uv.y+font->glyph[c].size.y/512.0f);
+			uvBuffer[numQuads*4+2]=vec2(font->glyph[c].uv.x+font->glyph[c].size.x/512.0f,font->glyph[c].uv.y+font->glyph[c].size.y/512.0f);
+			uvBuffer[numQuads*4+3]=vec2(font->glyph[c].uv.x+font->glyph[c].size.x/512.0f,font->glyph[c].uv.y);
+			numQuads++;
+			curPos.x+=font->glyph[c].advance;
+			previous=glyphIndex;
+		}		
+	}	
+	vb.LoadData(vBuffer,numQuads*4*2*sizeof(float),STREAM);
+	uvb.LoadData(uvBuffer,numQuads*4*2*sizeof(float),STREAM);
+	uvb.SetTexCoordStream(0);
+	vb.SetVertexStream(2);
+	vb.RenderStream(QUADS,numQuads*4);
+	glDisable(GL_BLEND);
+	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);	
+	delete [] vBuffer;
+	delete [] uvBuffer;
 }

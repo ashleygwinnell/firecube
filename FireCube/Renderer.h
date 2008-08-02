@@ -103,9 +103,22 @@ public:
 	*/
 	void RestoreModelViewMatrix();
 	/**
-	* Multiples the current modelview matrix by a given matrix.	
+	* Multiplies the current modelview matrix by a given matrix.	
 	*/
 	void MultiplyModelViewMatrix(mat4 &mat);
+	/**
+	* Binds the specified texture.
+	* @param texture The texture to bind
+	* @param unit Specifies the texture unit.
+	*/
+	void UseTexture(Texture tex,unsigned int unit);
+	/**
+	* Renders text.
+	* @param font The font to use.
+	* @param pos The position of the text.
+	* @param str The string to output.
+	*/
+	void RenderText(Font font,vec2 pos,const string &str);
 private:	
 };
 

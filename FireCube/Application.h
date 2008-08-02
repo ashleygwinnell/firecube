@@ -6,16 +6,17 @@
 
 /** 
 * Defines an application context.<br>
-* Contains pointers to various resource managers(textures,shaders).<br>
+* Contains pointers to various resource managers(textures,shaders,fonts).<br>
 * The context is used by various resource loading functions.
 */
 class FIRECUBE_API ApplicationContext
 {
 public:
 	ApplicationContext();
-	ApplicationContext(TextureManager *textureManager,ShaderManager *shaderManager);
+	ApplicationContext(TextureManager *textureManager,ShaderManager *shaderManager,FontManager *fontManager);
 	TextureManager *textureManager;
 	ShaderManager *shaderManager;
+	FontManager *fontManager;
 };
 /** 
 This class is responsible for the intialization and running of the application.
@@ -80,6 +81,7 @@ private:
 	ApplicationContext defaultContext;
 	TextureManager defaultTextureManager;
 	ShaderManager defaultShaderManager;
+	FontManager defaultFontManager;
 	static ApplicationContext *currentContext;
 };
 #pragma warning(pop)

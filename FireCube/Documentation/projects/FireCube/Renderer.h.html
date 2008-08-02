@@ -44,7 +44,7 @@ Renderer.h
     */</font>
     <font color="blue">void</font> Create<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
-    * Creates the program and attaches it to two shaders.
+    * Creates the program and attaches two shaders to it.
     */</font>
     <font color="blue">void</font> Create<font color="black">(</font>Shader shader1,Shader shader2<font color="black">)</font>;
     <font color="green">/**
@@ -111,9 +111,22 @@ Renderer.h
     */</font>
     <font color="blue">void</font> RestoreModelViewMatrix<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
-    * Multiples the current modelview matrix by a given matrix. 
+    * Multiplies the current modelview matrix by a given matrix.    
     */</font>
     <font color="blue">void</font> MultiplyModelViewMatrix<font color="black">(</font>mat4 <font color="black">&</font>mat<font color="black">)</font>;
+    <font color="green">/**
+    * Binds the specified texture.
+    * @param texture The texture to bind
+    * @param unit Specifies the texture unit.
+    */</font>
+    <font color="blue">void</font> UseTexture<font color="black">(</font>Texture tex,<font color="blue">unsigned</font> <font color="blue">int</font> unit<font color="black">)</font>;
+    <font color="green">/**
+    * Renders text.
+    * @param font The font to use.
+    * @param pos The position of the text.
+    * @param str The string to output.
+    */</font>
+    <font color="blue">void</font> RenderText<font color="black">(</font>Font font,vec2 pos,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
 <font color="blue">private</font><font color="black">:</font>    
 <font color="black">}</font>;
 

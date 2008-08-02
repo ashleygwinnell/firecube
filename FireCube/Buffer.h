@@ -37,14 +37,15 @@ public:
 	/**
 	* Specific function to load index data.
 	* @param data Pointer to the indices to be stored.
-	* @param size Number of indices.
+	* @param count Number of indices.
 	* @param bt The buffer type.
 	*/
 	void LoadIndexData(void *data,DWORD count,BufferType bt);
 	/**
 	* Binds the buffer as a vertex stream.
+	* @param numCoords The number of coordinates per vertex.
 	*/
-	void SetVertexStream();
+	void SetVertexStream(int numCoords);
 	/**
 	* Binds the buffer as a normal stream.
 	*/
@@ -64,6 +65,12 @@ public:
 	* @param count The number of indices to render.
 	*/
 	void RenderIndexStream(RenderMode mode,DWORD count);
+	/**
+	* Renders a stream.
+	* @param mode The rendering mode.
+	* @param count The number of indices to render.
+	*/
+	void RenderStream(RenderMode mode,DWORD count);
 	/**
 	* Destroys the buffer.
 	*/

@@ -9,6 +9,8 @@ using namespace std;
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <windows.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 #include "GLee.h"
 #include <GL/GLU.h>
 #include "FireCube.h"
@@ -48,43 +50,53 @@ ModelResource::~ModelResource()
 
 bool ModelResource::Load(const string &filename)
 {
-	ifstream f(filename.c_str(),ios::in|ios::binary|ios::ate);
-	if (!f.is_open())
-	{		
-		return false;
-	}	
-	DWORD l=f.tellg();
-	char *buffer=new char[l];
-	f.seekg(0,ios_base::beg);
-	f.read(buffer,l);
-
-	ProcessChunk(buffer);	
-	for (DWORD k=0;k<object.size();k++)
+	string::size_type d;
+	d=filename.find_last_of(".");
+	if (d!=string::npos)
 	{
-		for (DWORD i=0;i<object[k].mesh.size();i++)
-		{
-			Mesh *sm=&object[k].mesh[i];		
-			for (DWORD j=0;j<sm->face.size();j++)
+		string ext=ToLower(filename.substr(d+1));
+		if (ext=="3ds")
+		{		
+			ifstream f(filename.c_str(),ios::in|ios::binary|ios::ate);
+			if (!f.is_open())
+			{		
+				return false;
+			}	
+			DWORD l=f.tellg();
+			char *buffer=new char[l];
+			f.seekg(0,ios_base::beg);
+			f.read(buffer,l);
+
+			ProcessChunk(buffer);	
+			for (DWORD k=0;k<object.size();k++)
 			{
-				DWORD idx=sm->face[j].v[0];
-				sm->face[j]=object[k].face[idx];				
+				for (DWORD i=0;i<object[k].mesh.size();i++)
+				{
+					Mesh *sm=&object[k].mesh[i];		
+					for (DWORD j=0;j<sm->face.size();j++)
+					{
+						DWORD idx=sm->face[j].v[0];
+						sm->face[j]=object[k].face[idx];				
+					}
+					sm->indexBuffer.Create();
+					vector<DWORD> tmp;
+					tmp.resize(sm->face.size()*3);
+					for (DWORD f=0;f<sm->face.size();f++)
+					{
+						tmp[f*3+0]=sm->face[f].v[0];
+						tmp[f*3+1]=sm->face[f].v[1];
+						tmp[f*3+2]=sm->face[f].v[2];
+					}
+					sm->indexBuffer.LoadIndexData(&tmp[0],tmp.size(),STATIC);
+				}
 			}
-			sm->indexBuffer.Create();
-			vector<DWORD> tmp;
-			tmp.resize(sm->face.size()*3);
-			for (DWORD f=0;f<sm->face.size();f++)
-			{
-				tmp[f*3+0]=sm->face[f].v[0];
-				tmp[f*3+1]=sm->face[f].v[1];
-				tmp[f*3+2]=sm->face[f].v[2];
-			}
-			sm->indexBuffer.LoadIndexData(&tmp[0],tmp.size(),STATIC);
+			CalculateNormals();
+
+			delete [] buffer;		
+			return true;
 		}
 	}
-	CalculateNormals();
-	
-	delete [] buffer;		
-	return true;
+	return false;
 }
 void ModelResource::CalculateNormals()
 {	

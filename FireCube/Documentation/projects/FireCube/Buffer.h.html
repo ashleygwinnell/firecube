@@ -45,14 +45,15 @@ Buffer.h
     <font color="green">/**
     * Specific function to load index data.
     * @param data Pointer to the indices to be stored.
-    * @param size Number of indices.
+    * @param count Number of indices.
     * @param bt The buffer type.
     */</font>
     <font color="blue">void</font> LoadIndexData<font color="black">(</font><font color="blue">void</font> <font color="black">*</font>data,DWORD count,BufferType bt<font color="black">)</font>;
     <font color="green">/**
     * Binds the buffer as a vertex stream.
+    * @param numCoords The number of coordinates per vertex.
     */</font>
-    <font color="blue">void</font> SetVertexStream<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> SetVertexStream<font color="black">(</font><font color="blue">int</font> numCoords<font color="black">)</font>;
     <font color="green">/**
     * Binds the buffer as a normal stream.
     */</font>
@@ -72,6 +73,12 @@ Buffer.h
     * @param count The number of indices to render.
     */</font>
     <font color="blue">void</font> RenderIndexStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
+    <font color="green">/**
+    * Renders a stream.
+    * @param mode The rendering mode.
+    * @param count The number of indices to render.
+    */</font>
+    <font color="blue">void</font> RenderStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
     <font color="green">/**
     * Destroys the buffer.
     */</font>

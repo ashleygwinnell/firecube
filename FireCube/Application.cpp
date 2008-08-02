@@ -7,6 +7,8 @@ using namespace std;
 #include <Windows.h>
 #include <SDL/SDL.h>
 #include "GLee.h"
+#include <ft2build.h>
+#include FT_FREETYPE_H
 #include "FireCube.h"
 using namespace FireCube;
 
@@ -15,13 +17,14 @@ ApplicationContext::ApplicationContext()
 {
 
 }
-ApplicationContext::ApplicationContext(TextureManager *textureManager,ShaderManager *shaderManager)
+ApplicationContext::ApplicationContext(TextureManager *textureManager,ShaderManager *shaderManager,FontManager *fontManager)
 {	
 	this->textureManager=textureManager;
 	this->shaderManager=shaderManager;
+	this->fontManager=fontManager;
 }
 
-Application::Application() : running(false), frameCount(0), fpsTime(0), defaultContext(&defaultTextureManager,&defaultShaderManager)
+Application::Application() : running(false), frameCount(0), fpsTime(0), defaultContext(&defaultTextureManager,&defaultShaderManager,&defaultFontManager)
 {
 	SetContext(defaultContext);
 }
