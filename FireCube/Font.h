@@ -23,17 +23,22 @@ public:
 };
 class FIRECUBE_API FontManager : public ResourceManager<FontResource>
 {
+	friend class FontResource;
+	friend class Renderer;
 public:
 	FontManager();	
+private:
 	vector<FontPage> page;
 	FontPage *CreateNewPage();
 	FT_Library  library;
 };
 class FIRECUBE_API FontResource
 {
+	friend class Renderer;
 public:
 	FontResource();
 	bool Load(const string &name);	
+private:
 	bool AddChar(char c);
 	vector<Glyph> glyph;
 	FontPage *page;
