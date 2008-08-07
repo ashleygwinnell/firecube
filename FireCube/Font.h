@@ -5,7 +5,7 @@
 #pragma warning(disable:4251)
 
 class FontResource;
-
+/* CPPDOC_BEGIN_EXCLUDE */
 class FIRECUBE_API Glyph
 {
 public:
@@ -21,6 +21,7 @@ public:
 	vec2 curPos;
 	int textureSize;
 };
+/* CPPDOC_END_EXCLUDE */
 class FIRECUBE_API FontManager : public ResourceManager<FontResource>
 {
 	friend class FontResource;
