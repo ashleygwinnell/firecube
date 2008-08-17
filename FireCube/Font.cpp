@@ -15,10 +15,10 @@ using namespace std;
 #include <FireCube.h>
 using namespace FireCube;
 
-
+FT_Library  freeTypeLibrary;
 FontManager::FontManager()
 {
-	FT_Init_FreeType(&library);	
+	
 }
 FontPage *FontManager::CreateNewPage()
 {
@@ -38,10 +38,14 @@ FontResource::FontResource()
 {	
 	glyph.resize(256);
 }
+FontResource::~FontResource()
+{
+
+}
 bool FontResource::AddChar(char c)
 {
 	int error;
-	FT_UInt glyph_index;	
+	FT_UInt glyph_index;
 	glyph_index=FT_Get_Char_Index(face,c);
 	error=FT_Load_Glyph(face,glyph_index,FT_LOAD_DEFAULT);
 	if (error)
@@ -54,37 +58,33 @@ bool FontResource::AddChar(char c)
 	error=FT_Render_Glyph(face->glyph,FT_RENDER_MODE_NORMAL);
 	if (error)
 		return false;
-	glTexSubImage2D(GL_TEXTURE_2D,0,(int)page->curPos.x,(int)page->curPos.y,face->glyph->bitmap.width,face->glyph->bitmap.rows,GL_LUMINANCE,GL_UNSIGNED_BYTE,face->glyph->bitmap.buffer);		
+	if (page->textureSize-page->curPos.x<face->glyph->bitmap.width)
+	{
+		page->curPos.x=0;
+		page->curPos.y+=size;
+	}
+	if (page->textureSize-page->curPos.y<face->glyph->bitmap.rows)
+		return false;
+	glTexSubImage2D(GL_TEXTURE_2D,0,(int)page->curPos.x,(int)page->curPos.y,face->glyph->bitmap.width,face->glyph->bitmap.rows,GL_LUMINANCE,GL_UNSIGNED_BYTE,face->glyph->bitmap.buffer);
 	glyph[c].uv=page->curPos/512.0f;
 	glyph[c].size=vec2((float)face->glyph->bitmap.width,(float)face->glyph->bitmap.rows);
 	glyph[c].bitmapOffset=vec2((float)face->glyph->bitmap_left,size-(float)face->glyph->bitmap_top);
 	glyph[c].advance=face->glyph->advance.x>>6;
 	page->curPos.x+=face->glyph->advance.x>>6;		
-	if (page->textureSize-page->curPos.x<size)
-	{
-		page->curPos.x=0;
-		page->curPos.y+=size;
-	}
-	if (page->textureSize-page->curPos.y<size)
-		return false;
-
+	
 	return true;
 }
-bool FontResource::Load(const string &name)
-{
-	int size=0;
-	string::size_type d;
-	d=name.find_last_of(":");
-	if (d==string::npos)
-		return false;
-	string ssize=name.substr(d+1);
-	string fontName=name.substr(0,d);	
-	size=atoi(ssize.c_str());
+bool FontResource::Load(const string &name,int size)
+{	
+	int error=0;
 	char text[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-=_+[]{};:'\"\\|,./<>?/*. ";
-	this->size=size;	
-	
-	FT_New_Face(Application::GetContext().fontManager->library,fontName.c_str(),0,&face);			
-	FT_Set_Pixel_Sizes(face,0,size);
+	this->size=size;		
+	error=FT_New_Face(freeTypeLibrary,name.c_str(),0,&face);	
+	if (error)
+		return false;
+	error=FT_Set_Pixel_Sizes(face,0,size);
+	if (error)
+		return false;
 	vector<FontPage>::iterator p=Application::GetContext().fontManager->page.begin();
 	bool found=false;
 	for (;p!=Application::GetContext().fontManager->page.end();p++)
@@ -113,4 +113,16 @@ bool FontResource::Load(const string &name)
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP);
 	return true;
+}
+bool FontResource::Load(const string &name)
+{
+	int size=0;
+	string::size_type d;
+	d=name.find_last_of(":");
+	if (d==string::npos)
+		return false;
+	string ssize=name.substr(d+1);
+	string fontName=name.substr(0,d);	
+	size=atoi(ssize.c_str());
+	return Load(fontName,size);
 }

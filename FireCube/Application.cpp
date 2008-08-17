@@ -12,6 +12,7 @@ using namespace std;
 #include "FireCube.h"
 using namespace FireCube;
 
+extern FT_Library freeTypeLibrary;
 ApplicationContext *Application::currentContext=NULL;
 ApplicationContext::ApplicationContext()
 {
@@ -33,6 +34,10 @@ Application::~Application()
 	Destroy();
 }
 bool Application::Initialize()
+{	
+	return Initialize(800,600,32,false);
+}
+bool Application::Initialize(int width,int height,int bpp,bool fullscreen)
 {
 	SDL_Surface *screen;
 	if (SDL_Init(SDL_INIT_VIDEO)!=0)
@@ -42,25 +47,26 @@ bool Application::Initialize()
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-	screen=SDL_SetVideoMode(800,600,32,SDL_OPENGL);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);	
+	
+	screen=SDL_SetVideoMode(width,height,bpp,SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : 0));
 	if (!screen)
 		return false;
-	
+
 	timer.Init();
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 	glClearDepth(1.0f);
-	glViewport(0,0,800,600);
+	glViewport(0,0,width,height);
 	mat4 mat;
-	mat.GeneratePerspective(90.0f,800.0f/600.0f,0.1f,100);	
+	mat.GeneratePerspective(90.0f,(float)width/(float)height,0.1f,100);	
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(mat.m);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glEnable(GL_CULL_FACE);
 	srand(GetTickCount());
+	FT_Init_FreeType(&freeTypeLibrary);	
 	return true;
 }
 bool Application::Destroy()

@@ -113,6 +113,17 @@ Renderer.h
     <font color="green">/**
     * Multiplies the current modelview matrix by a given matrix.    
     */</font>
+    <font color="green">/**
+    * Pushes the the current projection matrix to the stack.
+    */</font>
+    <font color="blue">void</font> SaveProjectionMatrix<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Pops the top projection matrix from the stack and sets it to be the current matrix.
+    */</font>
+    <font color="blue">void</font> RestoreProjectionMatrix<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Multiplies the current modelview matrix by a given matrix.    
+    */</font>
     <font color="blue">void</font> MultiplyModelViewMatrix<font color="black">(</font>mat4 <font color="black">&</font>mat<font color="black">)</font>;
     <font color="green">/**
     * Binds the specified texture.
@@ -127,6 +138,19 @@ Renderer.h
     * @param str The string to output.
     */</font>
     <font color="blue">void</font> RenderText<font color="black">(</font>Font font,vec2 pos,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
+    <font color="green">/**
+    * Renders an index stream.
+    * @param buffer A buffer containing an index stream.
+    * @param mode The rendering mode.
+    * @param count The number of indices to render.
+    */</font>
+    <font color="blue">void</font> RenderIndexStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
+    <font color="green">/**
+    * Renders a stream.
+    * @param mode The rendering mode.
+    * @param count The number of indices to render.
+    */</font>
+    <font color="blue">void</font> RenderStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
 <font color="blue">private</font><font color="black">:</font>    
 <font color="black">}</font>;
 

@@ -183,11 +183,18 @@ vec2 vec3::ToVec2()
 {
 	return vec2(x,y);
 }
+vec4 vec3::ToVec4()
+{
+	return vec4(x,y,z,0);
+}
 vec3::operator vec2()
 {
 	return vec2(x,y);
 }
-
+vec3::operator vec4()
+{
+	return vec4(x,y,z,0);
+}
 float & vec3::operator[](unsigned int i)
 {
 	return *(&x+i);

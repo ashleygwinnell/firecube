@@ -233,6 +233,10 @@
 				RelativePath=".\vec3.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\vec4.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -301,6 +305,10 @@
 			</File>
 			<File
 				RelativePath=".\vec3.h"
+				>
+			</File>
+			<File
+				RelativePath=".\vec4.h"
 				>
 			</File>
 		</Filter>

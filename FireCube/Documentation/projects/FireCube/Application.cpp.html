@@ -20,6 +20,7 @@ Application.cpp
 <font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
 <font color="blue">using</font> <font color="blue">namespace</font> FireCube;
 
+<font color="blue">extern</font> FT_Library freeTypeLibrary;
 ApplicationContext <font color="black">*</font>Application<font color="black">:</font><font color="black">:</font>currentContext<font color="black">=</font>NULL;
 ApplicationContext<font color="black">:</font><font color="black">:</font>ApplicationContext<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
@@ -41,6 +42,10 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
     Destroy<font color="black">(</font><font color="black">)</font>;
 <font color="black">}</font>
 <font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>Initialize<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>   
+    <font color="blue">return</font> Initialize<font color="black">(</font><font color="maroon">800</font>,<font color="maroon">600</font>,<font color="maroon">32</font>,<font color="blue">false</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>Initialize<font color="black">(</font><font color="blue">int</font> width,<font color="blue">int</font> height,<font color="blue">int</font> bpp,<font color="blue">bool</font> fullscreen<font color="black">)</font>
 <font color="black">{</font>
     SDL_Surface <font color="black">*</font>screen;
     <font color="blue">if</font> <font color="black">(</font>SDL_Init<font color="black">(</font>SDL_INIT_VIDEO<font color="black">)</font><font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
@@ -50,25 +55,26 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
     SDL_GL_SetAttribute<font color="black">(</font>SDL_GL_BLUE_SIZE, <font color="maroon">8</font><font color="black">)</font>;
     SDL_GL_SetAttribute<font color="black">(</font>SDL_GL_ALPHA_SIZE, <font color="maroon">8</font><font color="black">)</font>;
     SDL_GL_SetAttribute<font color="black">(</font>SDL_GL_DEPTH_SIZE, <font color="maroon">24</font><font color="black">)</font>;
-    SDL_GL_SetAttribute<font color="black">(</font>SDL_GL_DOUBLEBUFFER, <font color="maroon">1</font><font color="black">)</font>;
-
-    screen<font color="black">=</font>SDL_SetVideoMode<font color="black">(</font><font color="maroon">800</font>,<font color="maroon">600</font>,<font color="maroon">32</font>,SDL_OPENGL<font color="black">)</font>;
+    SDL_GL_SetAttribute<font color="black">(</font>SDL_GL_DOUBLEBUFFER, <font color="maroon">1</font><font color="black">)</font>;    
+    
+    screen<font color="black">=</font>SDL_SetVideoMode<font color="black">(</font>width,height,bpp,SDL_OPENGL <font color="black">|</font> <font color="black">(</font>fullscreen ? SDL_FULLSCREEN <font color="black">:</font> <font color="maroon">0</font><font color="black">)</font><font color="black">)</font>;
     <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>screen<font color="black">)</font>
         <font color="blue">return</font> <font color="blue">false</font>;
-    
+
     timer.Init<font color="black">(</font><font color="black">)</font>;
     glEnable<font color="black">(</font>GL_DEPTH_TEST<font color="black">)</font>;
     glClearColor<font color="black">(</font><font color="maroon">0</font>.0f,<font color="maroon">0</font>.0f,<font color="maroon">0</font>.0f,<font color="maroon">1</font>.0f<font color="black">)</font>;
     glClearDepth<font color="black">(</font><font color="maroon">1</font>.0f<font color="black">)</font>;
-    glViewport<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font>,<font color="maroon">800</font>,<font color="maroon">600</font><font color="black">)</font>;
+    glViewport<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font>,width,height<font color="black">)</font>;
     mat4 mat;
-    mat.GeneratePerspective<font color="black">(</font><font color="maroon">90</font>.0f,<font color="maroon">800</font>.0f<font color="black">/</font><font color="maroon">600</font>.0f,<font color="maroon">0</font>.1f,<font color="maroon">100</font><font color="black">)</font>;  
+    mat.GeneratePerspective<font color="black">(</font><font color="maroon">90</font>.0f,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>width<font color="black">/</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>height,<font color="maroon">0</font>.1f,<font color="maroon">100</font><font color="black">)</font>; 
     glMatrixMode<font color="black">(</font>GL_PROJECTION<font color="black">)</font>;
     glLoadMatrixf<font color="black">(</font>mat.m<font color="black">)</font>;
     glMatrixMode<font color="black">(</font>GL_MODELVIEW<font color="black">)</font>;
     glLoadIdentity<font color="black">(</font><font color="black">)</font>;
     glEnable<font color="black">(</font>GL_CULL_FACE<font color="black">)</font>;
     srand<font color="black">(</font>GetTickCount<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+    FT_Init_FreeType<font color="black">(</font><font color="black">&</font>freeTypeLibrary<font color="black">)</font>; 
     <font color="blue">return</font> <font color="blue">true</font>;
 <font color="black">}</font>
 <font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>Destroy<font color="black">(</font><font color="black">)</font>

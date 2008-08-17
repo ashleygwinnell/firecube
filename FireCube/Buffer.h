@@ -58,19 +58,11 @@ public:
 	* Binds the buffer as a texture coordinate stream.
 	* @param unit Specifies the texture unit.
 	*/
-	void SetTexCoordStream(unsigned int unit);
+	void SetTexCoordStream(unsigned int unit);	
 	/**
-	* Renders an index stream.
-	* @param mode The rendering mode.
-	* @param count The number of indices to render.
+	* Binds the buffer as an index stream.
 	*/
-	void RenderIndexStream(RenderMode mode,DWORD count);
-	/**
-	* Renders a stream.
-	* @param mode The rendering mode.
-	* @param count The number of indices to render.
-	*/
-	void RenderStream(RenderMode mode,DWORD count);
+	void SetIndexStream();
 	/**
 	* Destroys the buffer.
 	*/

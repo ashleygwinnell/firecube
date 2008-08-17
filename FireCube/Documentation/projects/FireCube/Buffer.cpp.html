@@ -85,64 +85,9 @@ Buffer<font color="black">:</font><font color="black">:</font>~Buffer<font color
     glBindBuffer<font color="black">(</font>GL_ARRAY_BUFFER,buffer<font color="black">)</font>;
     glColorPointer<font color="black">(</font><font color="maroon">3</font>,GL_FLOAT,<font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;
 <font color="black">}</font>
-<font color="blue">void</font> Buffer<font color="black">:</font><font color="black">:</font>RenderIndexStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>
+<font color="blue">void</font> Buffer<font color="black">:</font><font color="black">:</font>SetIndexStream<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
-    GLenum glmode;
-    <font color="blue">switch</font> <font color="black">(</font>mode<font color="black">)</font>
-    <font color="black">{</font>
-    <font color="blue">case</font> POINTS<font color="black">:</font>
-        glmode<font color="black">=</font>GL_POINTS;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> LINES<font color="black">:</font>
-        glmode<font color="black">=</font>GL_LINES;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> TRIANGLES<font color="black">:</font>
-        glmode<font color="black">=</font>GL_TRIANGLES;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> TRIANGLE_STRIP<font color="black">:</font>
-        glmode<font color="black">=</font>GL_TRIANGLE_STRIP;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> QUADS<font color="black">:</font>
-        glmode<font color="black">=</font>GL_QUADS;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> LINE_LOOP<font color="black">:</font>
-        glmode<font color="black">=</font>GL_LINE_LOOP;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> TRIANGLE_FAN<font color="black">:</font>
-        glmode<font color="black">=</font>GL_TRIANGLE_FAN;
-        <font color="blue">break</font>;
-    <font color="black">}</font>
-    glBindBuffer<font color="black">(</font>GL_ELEMENT_ARRAY_BUFFER,buffer<font color="black">)</font>;
-    glDrawElements<font color="black">(</font>glmode,count,GL_UNSIGNED_INT,<font color="maroon">0</font><font color="black">)</font>;
-<font color="black">}</font>
-<font color="blue">void</font> Buffer<font color="black">:</font><font color="black">:</font>RenderStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>
-<font color="black">{</font>
-    GLenum glmode;
-    <font color="blue">switch</font> <font color="black">(</font>mode<font color="black">)</font>
-    <font color="black">{</font>
-    <font color="blue">case</font> POINTS<font color="black">:</font>
-        glmode<font color="black">=</font>GL_POINTS;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> LINES<font color="black">:</font>
-        glmode<font color="black">=</font>GL_LINES;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> TRIANGLES<font color="black">:</font>
-        glmode<font color="black">=</font>GL_TRIANGLES;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> TRIANGLE_STRIP<font color="black">:</font>
-        glmode<font color="black">=</font>GL_TRIANGLE_STRIP;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> QUADS<font color="black">:</font>
-        glmode<font color="black">=</font>GL_QUADS;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> LINE_LOOP<font color="black">:</font>
-        glmode<font color="black">=</font>GL_LINE_LOOP;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> TRIANGLE_FAN<font color="black">:</font>
-        glmode<font color="black">=</font>GL_TRIANGLE_FAN;
-        <font color="blue">break</font>;
-    <font color="black">}</font>   
-    glDrawArrays<font color="black">(</font>glmode,<font color="maroon">0</font>,count<font color="black">)</font>;
+    glBindBuffer<font color="black">(</font>GL_ELEMENT_ARRAY_BUFFER,buffer<font color="black">)</font>;   
 <font color="black">}</font>
 <font color="blue">void</font> Buffer<font color="black">:</font><font color="black">:</font>Destroy<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>

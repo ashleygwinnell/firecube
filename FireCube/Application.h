@@ -27,10 +27,15 @@ public:
 	Application();
 	virtual ~Application();
 	/** 
-	* Creates a default windows and intializes OpenGL.
+	* Creates a default window and intializes OpenGL.
 	* @return true on success, false otherwise.
 	*/
 	bool Initialize();
+	/** 
+	* Creates a window and intializes OpenGL.
+	* @return true on success, false otherwise.
+	*/
+	bool Initialize(int width,int height,int bpp,bool fullscreen);
 	/** 
 	* Destroy the window and it's associated OpenGL context.
 	* @return true on success, false otherwise.

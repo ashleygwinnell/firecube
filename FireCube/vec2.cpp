@@ -151,9 +151,17 @@ vec3 vec2::ToVec3()
 {
 	return vec3(x,y,0);
 }
+vec4 vec2::ToVec4() 
+{
+	return vec4(x,y,0,0);
+}
 vec2::operator vec3()
 {
 	return vec3(x,y,0);
+}
+vec2::operator vec4()
+{
+	return vec4(x,y,0,0);
 }
 float & vec2::operator[](unsigned int i)
 {

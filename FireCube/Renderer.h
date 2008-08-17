@@ -105,6 +105,17 @@ public:
 	/**
 	* Multiplies the current modelview matrix by a given matrix.	
 	*/
+	/**
+	* Pushes the the current projection matrix to the stack.
+	*/
+	void SaveProjectionMatrix();
+	/**
+	* Pops the top projection matrix from the stack and sets it to be the current matrix.
+	*/
+	void RestoreProjectionMatrix();
+	/**
+	* Multiplies the current modelview matrix by a given matrix.	
+	*/
 	void MultiplyModelViewMatrix(mat4 &mat);
 	/**
 	* Binds the specified texture.
@@ -119,6 +130,19 @@ public:
 	* @param str The string to output.
 	*/
 	void RenderText(Font font,vec2 pos,const string &str);
+	/**
+	* Renders an index stream.
+	* @param buffer A buffer containing an index stream.
+	* @param mode The rendering mode.
+	* @param count The number of indices to render.
+	*/
+	void RenderIndexStream(RenderMode mode,DWORD count);
+	/**
+	* Renders a stream.
+	* @param mode The rendering mode.
+	* @param count The number of indices to render.
+	*/
+	void RenderStream(RenderMode mode,DWORD count);
 private:	
 };
 

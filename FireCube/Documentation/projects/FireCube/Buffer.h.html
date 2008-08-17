@@ -66,19 +66,11 @@ Buffer.h
     * Binds the buffer as a texture coordinate stream.
     * @param unit Specifies the texture unit.
     */</font>
-    <font color="blue">void</font> SetTexCoordStream<font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> unit<font color="black">)</font>;
+    <font color="blue">void</font> SetTexCoordStream<font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> unit<font color="black">)</font>;  
     <font color="green">/**
-    * Renders an index stream.
-    * @param mode The rendering mode.
-    * @param count The number of indices to render.
+    * Binds the buffer as an index stream.
     */</font>
-    <font color="blue">void</font> RenderIndexStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
-    <font color="green">/**
-    * Renders a stream.
-    * @param mode The rendering mode.
-    * @param count The number of indices to render.
-    */</font>
-    <font color="blue">void</font> RenderStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
+    <font color="blue">void</font> SetIndexStream<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
     * Destroys the buffer.
     */</font>

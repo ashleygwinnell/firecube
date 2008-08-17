@@ -22,6 +22,9 @@ public:
 	int textureSize;
 };
 /* CPPDOC_END_EXCLUDE */
+/**
+* Manages the various fonts.
+*/
 class FIRECUBE_API FontManager : public ResourceManager<FontResource>
 {
 	friend class FontResource;
@@ -30,15 +33,28 @@ public:
 	FontManager();	
 private:
 	vector<FontPage> page;
-	FontPage *CreateNewPage();
-	FT_Library  library;
+	FontPage *CreateNewPage();	
 };
+/**
+* Holds the data for a single font face.
+*/
 class FIRECUBE_API FontResource
 {
 	friend class Renderer;
 public:
 	FontResource();
+	~FontResource();
+	/**
+	* Loads a font.
+	* @param name The file to load separated with : and an integer representing the font size.
+	*/
 	bool Load(const string &name);	
+	/**
+	* Loads a font.
+	* @param name The file to load.
+	* @param size The size of the font.
+	*/
+	bool Load(const string &name,int size);	
 private:
 	bool AddChar(char c);
 	vector<Glyph> glyph;

@@ -64,6 +64,7 @@ public:
 
 	inline vec3 operator-() const {return vec3(-x, -y, -z);}
 	operator vec2();
+	operator vec4();
 
 	/**
 	* Returns a pointer the the coordinates.
@@ -110,7 +111,10 @@ public:
 	* Converts to a vec2 by ignoring the z coordinate.
 	*/
 	vec2 ToVec2();
-	
+	/**
+	* Converts to a vec4 by setting the w component to zero.
+	*/
+	vec4 ToVec4();	
 	/**
 	* Sets the length of the vector.
 	*/

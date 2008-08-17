@@ -35,10 +35,15 @@ This class is responsible for the intialization and running of the application.
     Application<font color="black">(</font><font color="black">)</font>;
     virtual ~Application<font color="black">(</font><font color="black">)</font>;
     <font color="green">/** 
-    * Creates a default windows and intializes OpenGL.
+    * Creates a default window and intializes OpenGL.
     * @return true on success, false otherwise.
     */</font>
     <font color="blue">bool</font> Initialize<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/** 
+    * Creates a window and intializes OpenGL.
+    * @return true on success, false otherwise.
+    */</font>
+    <font color="blue">bool</font> Initialize<font color="black">(</font><font color="blue">int</font> width,<font color="blue">int</font> height,<font color="blue">int</font> bpp,<font color="blue">bool</font> fullscreen<font color="black">)</font>;
     <font color="green">/** 
     * Destroy the window and it's associated OpenGL context.
     * @return true on success, false otherwise.

@@ -173,8 +173,9 @@ void Renderer::Render(Model model)
 			}
 			else
 				glDisable(GL_TEXTURE_2D);
-
-			j->indexBuffer.RenderIndexStream(TRIANGLES,j->face.size()*3);
+			
+			j->indexBuffer.SetIndexStream();
+			RenderIndexStream(TRIANGLES,j->face.size()*3);			
 		}
 	}
 }
@@ -188,6 +189,17 @@ void Renderer::RestoreModelViewMatrix()
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 }
+void Renderer::SaveProjectionMatrix()
+{
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+}
+void Renderer::RestoreProjectionMatrix()
+{
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+}
+
 void Renderer::MultiplyModelViewMatrix(mat4 &mat)
 {
 	glMatrixMode(GL_MODELVIEW);
@@ -200,6 +212,8 @@ void Renderer::UseTexture(Texture tex,unsigned int unit)
 }
 void Renderer::RenderText(Font font,vec2 pos,const string &str)
 {	
+	if (!font)
+		return;
 	Buffer vb,uvb;
 	vb.Create();
 	uvb.Create();
@@ -211,8 +225,8 @@ void Renderer::RenderText(Font font,vec2 pos,const string &str)
 	glBlendFunc(GL_SRC_COLOR,GL_ONE_MINUS_SRC_COLOR);
 	glEnable(GL_TEXTURE_2D);
 	UseTexture(font->page->tex,0);	
-	vec2 curPos=pos;
-	FT_Long useKerning = FT_HAS_KERNING( font->face ); 
+	vec2 curPos=pos;	
+	FT_Long useKerning = FT_HAS_KERNING(font->face);
 	FT_UInt previous = 0; 
 	for (string::const_iterator i=str.begin();i!=str.end();i++)
 	{
@@ -250,10 +264,68 @@ void Renderer::RenderText(Font font,vec2 pos,const string &str)
 	uvb.LoadData(uvBuffer,numQuads*4*2*sizeof(float),STREAM);
 	uvb.SetTexCoordStream(0);
 	vb.SetVertexStream(2);
-	vb.RenderStream(QUADS,numQuads*4);
+	RenderStream(QUADS,numQuads*4);
 	glDisable(GL_BLEND);
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);	
 	delete [] vBuffer;
 	delete [] uvBuffer;
+}
+void Renderer::RenderIndexStream(RenderMode mode,DWORD count)
+{
+	GLenum glmode;
+	switch (mode)
+	{
+	case POINTS:
+		glmode=GL_POINTS;
+		break;
+	case LINES:
+		glmode=GL_LINES;
+		break;
+	case TRIANGLES:
+		glmode=GL_TRIANGLES;
+		break;
+	case TRIANGLE_STRIP:
+		glmode=GL_TRIANGLE_STRIP;
+		break;
+	case QUADS:
+		glmode=GL_QUADS;
+		break;
+	case LINE_LOOP:
+		glmode=GL_LINE_LOOP;
+		break;
+	case TRIANGLE_FAN:
+		glmode=GL_TRIANGLE_FAN;
+		break;
+	}	
+	glDrawElements(glmode,count,GL_UNSIGNED_INT,0);
+}
+void Renderer::RenderStream(RenderMode mode,DWORD count)
+{
+	GLenum glmode;
+	switch (mode)
+	{
+	case POINTS:
+		glmode=GL_POINTS;
+		break;
+	case LINES:
+		glmode=GL_LINES;
+		break;
+	case TRIANGLES:
+		glmode=GL_TRIANGLES;
+		break;
+	case TRIANGLE_STRIP:
+		glmode=GL_TRIANGLE_STRIP;
+		break;
+	case QUADS:
+		glmode=GL_QUADS;
+		break;
+	case LINE_LOOP:
+		glmode=GL_LINE_LOOP;
+		break;
+	case TRIANGLE_FAN:
+		glmode=GL_TRIANGLE_FAN;
+		break;
+	}	
+	glDrawArrays(glmode,0,count);
 }

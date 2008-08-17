@@ -181,8 +181,9 @@ Renderer<font color="black">:</font><font color="black">:</font>~Renderer<font c
             <font color="black">}</font>
             <font color="blue">else</font>
                 glDisable<font color="black">(</font>GL_TEXTURE_2D<font color="black">)</font>;
-
-            j<font color="black">-</font><font color="black">&#62;</font>indexBuffer.RenderIndexStream<font color="black">(</font>TRIANGLES,j<font color="black">-</font><font color="black">&#62;</font>face.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">3</font><font color="black">)</font>;
+            
+            j<font color="black">-</font><font color="black">&#62;</font>indexBuffer.SetIndexStream<font color="black">(</font><font color="black">)</font>;
+            RenderIndexStream<font color="black">(</font>TRIANGLES,j<font color="black">-</font><font color="black">&#62;</font>face.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">3</font><font color="black">)</font>;          
         <font color="black">}</font>
     <font color="black">}</font>
 <font color="black">}</font>
@@ -196,6 +197,17 @@ Renderer<font color="black">:</font><font color="black">:</font>~Renderer<font c
     glMatrixMode<font color="black">(</font>GL_MODELVIEW<font color="black">)</font>;
     glPopMatrix<font color="black">(</font><font color="black">)</font>;
 <font color="black">}</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SaveProjectionMatrix<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    glMatrixMode<font color="black">(</font>GL_PROJECTION<font color="black">)</font>;
+    glPushMatrix<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RestoreProjectionMatrix<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    glMatrixMode<font color="black">(</font>GL_PROJECTION<font color="black">)</font>;
+    glPopMatrix<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+
 <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>MultiplyModelViewMatrix<font color="black">(</font>mat4 <font color="black">&</font>mat<font color="black">)</font>
 <font color="black">{</font>
     glMatrixMode<font color="black">(</font>GL_MODELVIEW<font color="black">)</font>;
@@ -208,6 +220,8 @@ Renderer<font color="black">:</font><font color="black">:</font>~Renderer<font c
 <font color="black">}</font>
 <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RenderText<font color="black">(</font>Font font,vec2 pos,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>
 <font color="black">{</font>   
+    <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>font<font color="black">)</font>
+        <font color="blue">return</font>;
     Buffer vb,uvb;
     vb.Create<font color="black">(</font><font color="black">)</font>;
     uvb.Create<font color="black">(</font><font color="black">)</font>;
@@ -219,8 +233,8 @@ Renderer<font color="black">:</font><font color="black">:</font>~Renderer<font c
     glBlendFunc<font color="black">(</font>GL_SRC_COLOR,GL_ONE_MINUS_SRC_COLOR<font color="black">)</font>;
     glEnable<font color="black">(</font>GL_TEXTURE_2D<font color="black">)</font>;
     UseTexture<font color="black">(</font>font<font color="black">-</font><font color="black">&#62;</font>page<font color="black">-</font><font color="black">&#62;</font>tex,<font color="maroon">0</font><font color="black">)</font>;  
-    vec2 curPos<font color="black">=</font>pos;
-    FT_Long useKerning <font color="black">=</font> FT_HAS_KERNING<font color="black">(</font> font<font color="black">-</font><font color="black">&#62;</font>face <font color="black">)</font>; 
+    vec2 curPos<font color="black">=</font>pos;    
+    FT_Long useKerning <font color="black">=</font> FT_HAS_KERNING<font color="black">(</font>font<font color="black">-</font><font color="black">&#62;</font>face<font color="black">)</font>;
     FT_UInt previous <font color="black">=</font> <font color="maroon">0</font>; 
     <font color="blue">for</font> <font color="black">(</font>string<font color="black">:</font><font color="black">:</font>const_iterator i<font color="black">=</font>str.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>str.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
     <font color="black">{</font>
@@ -258,12 +272,70 @@ Renderer<font color="black">:</font><font color="black">:</font>~Renderer<font c
     uvb.LoadData<font color="black">(</font>uvBuffer,numQuads<font color="black">*</font><font color="maroon">4</font><font color="black">*</font><font color="maroon">2</font><font color="black">*</font><font color="blue">sizeof</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>,STREAM<font color="black">)</font>;
     uvb.SetTexCoordStream<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>;
     vb.SetVertexStream<font color="black">(</font><font color="maroon">2</font><font color="black">)</font>;
-    vb.RenderStream<font color="black">(</font>QUADS,numQuads<font color="black">*</font><font color="maroon">4</font><font color="black">)</font>;
+    RenderStream<font color="black">(</font>QUADS,numQuads<font color="black">*</font><font color="maroon">4</font><font color="black">)</font>;
     glDisable<font color="black">(</font>GL_BLEND<font color="black">)</font>;
     glDisable<font color="black">(</font>GL_TEXTURE_2D<font color="black">)</font>;
     glEnable<font color="black">(</font>GL_DEPTH_TEST<font color="black">)</font>;    
     <font color="blue">delete</font> <font color="black">[</font><font color="black">]</font> vBuffer;
     <font color="blue">delete</font> <font color="black">[</font><font color="black">]</font> uvBuffer;
+<font color="black">}</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RenderIndexStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>
+<font color="black">{</font>
+    GLenum glmode;
+    <font color="blue">switch</font> <font color="black">(</font>mode<font color="black">)</font>
+    <font color="black">{</font>
+    <font color="blue">case</font> POINTS<font color="black">:</font>
+        glmode<font color="black">=</font>GL_POINTS;
+        <font color="blue">break</font>;
+    <font color="blue">case</font> LINES<font color="black">:</font>
+        glmode<font color="black">=</font>GL_LINES;
+        <font color="blue">break</font>;
+    <font color="blue">case</font> TRIANGLES<font color="black">:</font>
+        glmode<font color="black">=</font>GL_TRIANGLES;
+        <font color="blue">break</font>;
+    <font color="blue">case</font> TRIANGLE_STRIP<font color="black">:</font>
+        glmode<font color="black">=</font>GL_TRIANGLE_STRIP;
+        <font color="blue">break</font>;
+    <font color="blue">case</font> QUADS<font color="black">:</font>
+        glmode<font color="black">=</font>GL_QUADS;
+        <font color="blue">break</font>;
+    <font color="blue">case</font> LINE_LOOP<font color="black">:</font>
+        glmode<font color="black">=</font>GL_LINE_LOOP;
+        <font color="blue">break</font>;
+    <font color="blue">case</font> TRIANGLE_FAN<font color="black">:</font>
+        glmode<font color="black">=</font>GL_TRIANGLE_FAN;
+        <font color="blue">break</font>;
+    <font color="black">}</font>   
+    glDrawElements<font color="black">(</font>glmode,count,GL_UNSIGNED_INT,<font color="maroon">0</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RenderStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>
+<font color="black">{</font>
+    GLenum glmode;
+    <font color="blue">switch</font> <font color="black">(</font>mode<font color="black">)</font>
+    <font color="black">{</font>
+    <font color="blue">case</font> POINTS<font color="black">:</font>
+        glmode<font color="black">=</font>GL_POINTS;
+        <font color="blue">break</font>;
+    <font color="blue">case</font> LINES<font color="black">:</font>
+        glmode<font color="black">=</font>GL_LINES;
+        <font color="blue">break</font>;
+    <font color="blue">case</font> TRIANGLES<font color="black">:</font>
+        glmode<font color="black">=</font>GL_TRIANGLES;
+        <font color="blue">break</font>;
+    <font color="blue">case</font> TRIANGLE_STRIP<font color="black">:</font>
+        glmode<font color="black">=</font>GL_TRIANGLE_STRIP;
+        <font color="blue">break</font>;
+    <font color="blue">case</font> QUADS<font color="black">:</font>
+        glmode<font color="black">=</font>GL_QUADS;
+        <font color="blue">break</font>;
+    <font color="blue">case</font> LINE_LOOP<font color="black">:</font>
+        glmode<font color="black">=</font>GL_LINE_LOOP;
+        <font color="blue">break</font>;
+    <font color="blue">case</font> TRIANGLE_FAN<font color="black">:</font>
+        glmode<font color="black">=</font>GL_TRIANGLE_FAN;
+        <font color="blue">break</font>;
+    <font color="black">}</font>   
+    glDrawArrays<font color="black">(</font>glmode,<font color="maroon">0</font>,count<font color="black">)</font>;
 <font color="black">}</font>
 </PRE>
 </BODY>

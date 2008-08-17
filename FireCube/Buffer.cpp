@@ -77,64 +77,9 @@ void Buffer::SetColorStream()
 	glBindBuffer(GL_ARRAY_BUFFER,buffer);
 	glColorPointer(3,GL_FLOAT,0,0);
 }
-void Buffer::RenderIndexStream(RenderMode mode,DWORD count)
+void Buffer::SetIndexStream()
 {
-	GLenum glmode;
-	switch (mode)
-	{
-	case POINTS:
-		glmode=GL_POINTS;
-		break;
-	case LINES:
-		glmode=GL_LINES;
-		break;
-	case TRIANGLES:
-		glmode=GL_TRIANGLES;
-		break;
-	case TRIANGLE_STRIP:
-		glmode=GL_TRIANGLE_STRIP;
-		break;
-	case QUADS:
-		glmode=GL_QUADS;
-		break;
-	case LINE_LOOP:
-		glmode=GL_LINE_LOOP;
-		break;
-	case TRIANGLE_FAN:
-		glmode=GL_TRIANGLE_FAN;
-		break;
-	}
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,buffer);
-	glDrawElements(glmode,count,GL_UNSIGNED_INT,0);
-}
-void Buffer::RenderStream(RenderMode mode,DWORD count)
-{
-	GLenum glmode;
-	switch (mode)
-	{
-	case POINTS:
-		glmode=GL_POINTS;
-		break;
-	case LINES:
-		glmode=GL_LINES;
-		break;
-	case TRIANGLES:
-		glmode=GL_TRIANGLES;
-		break;
-	case TRIANGLE_STRIP:
-		glmode=GL_TRIANGLE_STRIP;
-		break;
-	case QUADS:
-		glmode=GL_QUADS;
-		break;
-	case LINE_LOOP:
-		glmode=GL_LINE_LOOP;
-		break;
-	case TRIANGLE_FAN:
-		glmode=GL_TRIANGLE_FAN;
-		break;
-	}	
-	glDrawArrays(glmode,0,count);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,buffer);	
 }
 void Buffer::Destroy()
 {

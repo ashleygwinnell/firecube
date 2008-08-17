@@ -72,6 +72,7 @@ vec3.h
 
     <font color="blue">inline</font> vec3 <font color="blue">operator</font><font color="black">-</font><font color="black">(</font><font color="black">)</font> <font color="blue">const</font> <font color="black">{</font><font color="blue">return</font> vec3<font color="black">(</font><font color="black">-</font>x, <font color="black">-</font>y, <font color="black">-</font>z<font color="black">)</font>;<font color="black">}</font>
     <font color="blue">operator</font> vec2<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">operator</font> vec4<font color="black">(</font><font color="black">)</font>;
 
     <font color="green">/**
     * Returns a pointer the the coordinates.
@@ -118,7 +119,10 @@ vec3.h
     * Converts to a vec2 by ignoring the z coordinate.
     */</font>
     vec2 ToVec2<font color="black">(</font><font color="black">)</font>;
-    
+    <font color="green">/**
+    * Converts to a vec4 by setting the w component to zero.
+    */</font>
+    vec4 ToVec4<font color="black">(</font><font color="black">)</font>;  
     <font color="green">/**
     * Sets the length of the vector.
     */</font>
