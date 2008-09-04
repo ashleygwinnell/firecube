@@ -7,8 +7,6 @@ using namespace std;
 #include <SDL/SDL.h>
 #include <windows.h>
 #include "GLee.h"
-#include <ft2build.h>
-#include FT_FREETYPE_H
 #include "FireCube.h"
 using namespace FireCube;
 #include <math.h>

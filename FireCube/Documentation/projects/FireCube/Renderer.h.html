@@ -13,71 +13,6 @@ Renderer.h
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
 
 <font color="green">/**
-* A class Representing a single shader.
-*/</font>
-<font color="blue">class</font> FIRECUBE_API ShaderResource
-<font color="black">{</font>
-<font color="blue">public</font><font color="black">:</font>
-    ShaderResource<font color="black">(</font><font color="black">)</font>;
-    ~ShaderResource<font color="black">(</font><font color="black">)</font>;
-    <font color="green">/**
-    * Loads a shader from a file. the shader type is determined by the extension of the file: .vshader for a vertex shader, .pshader for a pixel shader.
-    * @param filename The file to load.
-    */</font>
-    <font color="blue">bool</font> Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>;
-    GLuint id;
-<font color="black">}</font>;
-
-<font color="blue">typedef</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>ShaderResource<font color="black">&#62;</font> Shader;
-<font color="blue">typedef</font> ResourceManager<font color="black">&#60;</font>ShaderResource<font color="black">&#62;</font> ShaderManager;
-
-<font color="green">/**
-* A class representing a gpu program.
-*/</font>
-<font color="blue">class</font> FIRECUBE_API Program
-<font color="black">{</font>
-<font color="blue">public</font><font color="black">:</font>
-    Program<font color="black">(</font><font color="black">)</font>;
-    ~Program<font color="black">(</font><font color="black">)</font>;
-    <font color="green">/**
-    * Creates the program.
-    */</font>
-    <font color="blue">void</font> Create<font color="black">(</font><font color="black">)</font>;
-    <font color="green">/**
-    * Creates the program and attaches two shaders to it.
-    */</font>
-    <font color="blue">void</font> Create<font color="black">(</font>Shader shader1,Shader shader2<font color="black">)</font>;
-    <font color="green">/**
-    * Attaches a shader to the program.
-    * @param shader The shader to attach.
-    */</font>
-    <font color="blue">void</font> Attach<font color="black">(</font>Shader shader<font color="black">)</font>;
-    <font color="green">/**
-    * Links the program.
-    */</font>
-    <font color="blue">void</font> Link<font color="black">(</font><font color="black">)</font>;
-    <font color="green">/**
-    * Uses the program.
-    * @param useShaders Default to true. when set to false the rendering reverts to the fixed functionality pipeline.
-    */</font>
-    <font color="blue">void</font> Use<font color="black">(</font><font color="blue">bool</font> useShaders<font color="black">=</font><font color="blue">true</font><font color="black">)</font>;
-    <font color="green">/**
-    * Sets a 1d uniform float.
-    * @param name The name of the variable.
-    * @param value The value to assign for it.
-    */</font>
-    <font color="blue">void</font> Uniform1f<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">float</font> value<font color="black">)</font>;
-    <font color="green">/**
-    * Sets a 1d uniform integer.
-    * @param name The name of the variable.
-    * @param value The value to assign for it.
-    */</font>
-    <font color="blue">void</font> Uniform1i<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">int</font> value<font color="black">)</font>;   
-    GLuint id;
-    map<font color="black">&#60;</font>string,GLint<font color="black">&#62;</font> variables;
-<font color="black">}</font>;
-
-<font color="green">/**
 * A class responsible for the rendering pipeline.
 */</font>
 <font color="blue">class</font> FIRECUBE_API Renderer
@@ -151,6 +86,16 @@ Renderer.h
     * @param count The number of indices to render.
     */</font>
     <font color="blue">void</font> RenderStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
+    <font color="green">/**
+    * Uses a program.
+    * @param program The program to use.
+    */</font>
+    <font color="blue">void</font> UseProgram<font color="black">(</font><font color="blue">const</font> Program <font color="black">&</font>program<font color="black">)</font>;
+    <font color="green">/**
+    * Uses a material.
+    * @param material The material to use.
+    */</font>
+    <font color="blue">void</font> UseMaterial<font color="black">(</font><font color="blue">const</font> Material <font color="black">&</font>material<font color="black">)</font>;
 <font color="blue">private</font><font color="black">:</font>    
 <font color="black">}</font>;
 

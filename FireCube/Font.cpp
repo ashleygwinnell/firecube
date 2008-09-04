@@ -13,9 +13,11 @@ using namespace std;
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <FireCube.h>
+#include "privateFont.h"
 using namespace FireCube;
 
 FT_Library  freeTypeLibrary;
+
 FontManager::FontManager()
 {
 	
@@ -37,40 +39,41 @@ FontPage *FontManager::CreateNewPage()
 FontResource::FontResource()
 {	
 	glyph.resize(256);
+	fontImpl=new FontImpl;
 }
 FontResource::~FontResource()
 {
-
+	delete fontImpl;
 }
 bool FontResource::AddChar(char c)
 {
 	int error;
 	FT_UInt glyph_index;
-	glyph_index=FT_Get_Char_Index(face,c);
-	error=FT_Load_Glyph(face,glyph_index,FT_LOAD_DEFAULT);
+	glyph_index=FT_Get_Char_Index(fontImpl->face,c);
+	error=FT_Load_Glyph(fontImpl->face,glyph_index,FT_LOAD_DEFAULT);
 	if (error)
 		return false;
 	if (c==32)
 	{
-		glyph[c].advance=face->glyph->advance.x>>6;
+		glyph[c].advance=fontImpl->face->glyph->advance.x>>6;
 		return true;
 	}	
-	error=FT_Render_Glyph(face->glyph,FT_RENDER_MODE_NORMAL);
+	error=FT_Render_Glyph(fontImpl->face->glyph,FT_RENDER_MODE_NORMAL);
 	if (error)
 		return false;
-	if (page->textureSize-page->curPos.x<face->glyph->bitmap.width)
+	if (page->textureSize-page->curPos.x<fontImpl->face->glyph->bitmap.width)
 	{
 		page->curPos.x=0;
 		page->curPos.y+=size;
 	}
-	if (page->textureSize-page->curPos.y<face->glyph->bitmap.rows)
+	if (page->textureSize-page->curPos.y<fontImpl->face->glyph->bitmap.rows)
 		return false;
-	glTexSubImage2D(GL_TEXTURE_2D,0,(int)page->curPos.x,(int)page->curPos.y,face->glyph->bitmap.width,face->glyph->bitmap.rows,GL_LUMINANCE,GL_UNSIGNED_BYTE,face->glyph->bitmap.buffer);
+	glTexSubImage2D(GL_TEXTURE_2D,0,(int)page->curPos.x,(int)page->curPos.y,fontImpl->face->glyph->bitmap.width,fontImpl->face->glyph->bitmap.rows,GL_LUMINANCE,GL_UNSIGNED_BYTE,fontImpl->face->glyph->bitmap.buffer);
 	glyph[c].uv=page->curPos/512.0f;
-	glyph[c].size=vec2((float)face->glyph->bitmap.width,(float)face->glyph->bitmap.rows);
-	glyph[c].bitmapOffset=vec2((float)face->glyph->bitmap_left,size-(float)face->glyph->bitmap_top);
-	glyph[c].advance=face->glyph->advance.x>>6;
-	page->curPos.x+=face->glyph->advance.x>>6;		
+	glyph[c].size=vec2((float)fontImpl->face->glyph->bitmap.width,(float)fontImpl->face->glyph->bitmap.rows);
+	glyph[c].bitmapOffset=vec2((float)fontImpl->face->glyph->bitmap_left,size-(float)fontImpl->face->glyph->bitmap_top);
+	glyph[c].advance=fontImpl->face->glyph->advance.x>>6;
+	page->curPos.x+=fontImpl->face->glyph->advance.x>>6;		
 	
 	return true;
 }
@@ -79,10 +82,10 @@ bool FontResource::Load(const string &name,int size)
 	int error=0;
 	char text[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-=_+[]{};:'\"\\|,./<>?/*. ";
 	this->size=size;		
-	error=FT_New_Face(freeTypeLibrary,name.c_str(),0,&face);	
+	error=FT_New_Face(freeTypeLibrary,name.c_str(),0,&(fontImpl->face));
 	if (error)
 		return false;
-	error=FT_Set_Pixel_Sizes(face,0,size);
+	error=FT_Set_Pixel_Sizes(fontImpl->face,0,size);
 	if (error)
 		return false;
 	vector<FontPage>::iterator p=Application::GetContext().fontManager->page.begin();

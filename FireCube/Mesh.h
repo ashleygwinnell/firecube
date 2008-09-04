@@ -28,7 +28,6 @@
 class ModelResource;
 typedef ResourceManager<ModelResource> ModelManager;
 typedef boost::shared_ptr<ModelResource> Model;
-
 /**
 * Stores information about a material.
 */
@@ -44,6 +43,7 @@ public:
 	vec3 specular;
 	float shininess;
 	Texture tex;
+	Program program;
 };
 
 /**
@@ -101,6 +101,7 @@ public:
 */
 class FIRECUBE_API ModelResource
 {
+	friend class Renderer;
 public:
 	ModelResource();
 	~ModelResource();
@@ -109,9 +110,7 @@ public:
 	* Loads a 3ds file.
 	* @param filename The file to load.
 	*/
-	bool Load(const string &filename);
-	DWORD ProcessChunk(char *buffer);
-	Material *GetMaterialByName(const string &name);
+	bool Load(const string &filename);	
 	/**
 	* Reduces the model by removing duplicated vertices.
 	* @return The reduced mesh.
@@ -126,9 +125,16 @@ public:
 	* @param transform The transformation matrix.
 	*/
 	void ApplyTransformation(mat4 &transform);
-
+	/**
+	* Sets a program to each material.
+	* @param program The program to use.
+	*/
+	void SetProgram(const Program &program);
 	vector<Object> object;
 	vector<Material> material;	
+private:
+	DWORD ProcessChunk(char *buffer);
+	Material *GetMaterialByName(const string &name);	
 };
 
 #pragma warning(pop)

@@ -16,7 +16,7 @@ public:
 	*/
 	void Update();
 	/**
-	* Retunns the time that has passed since the last call to Update() in seconds.
+	* Returns the time that has passed since the last call to Update() in seconds.
 	*/
 	double Passed();
 	

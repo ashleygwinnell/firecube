@@ -36,7 +36,6 @@ Mesh.h
 <font color="blue">class</font> ModelResource;
 <font color="blue">typedef</font> ResourceManager<font color="black">&#60;</font>ModelResource<font color="black">&#62;</font> ModelManager;
 <font color="blue">typedef</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>ModelResource<font color="black">&#62;</font> Model;
-
 <font color="green">/**
 * Stores information about a material.
 */</font>
@@ -52,6 +51,7 @@ Mesh.h
     vec3 specular;
     <font color="blue">float</font> shininess;
     Texture tex;
+    Program program;
 <font color="black">}</font>;
 
 <font color="green">/**
@@ -109,6 +109,7 @@ Mesh.h
 */</font>
 <font color="blue">class</font> FIRECUBE_API ModelResource
 <font color="black">{</font>
+    <font color="blue">friend</font> <font color="blue">class</font> Renderer;
 <font color="blue">public</font><font color="black">:</font>
     ModelResource<font color="black">(</font><font color="black">)</font>;
     ~ModelResource<font color="black">(</font><font color="black">)</font>;
@@ -117,9 +118,7 @@ Mesh.h
     * Loads a 3ds file.
     * @param filename The file to load.
     */</font>
-    <font color="blue">bool</font> Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>;
-    DWORD ProcessChunk<font color="black">(</font><font color="blue">char</font> <font color="black">*</font>buffer<font color="black">)</font>;
-    Material <font color="black">*</font>GetMaterialByName<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>;
+    <font color="blue">bool</font> Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>;  
     <font color="green">/**
     * Reduces the model by removing duplicated vertices.
     * @return The reduced mesh.
@@ -134,9 +133,16 @@ Mesh.h
     * @param transform The transformation matrix.
     */</font>
     <font color="blue">void</font> ApplyTransformation<font color="black">(</font>mat4 <font color="black">&</font>transform<font color="black">)</font>;
-
+    <font color="green">/**
+    * Sets a program to each material.
+    * @param program The program to use.
+    */</font>
+    <font color="blue">void</font> SetProgram<font color="black">(</font><font color="blue">const</font> Program <font color="black">&</font>program<font color="black">)</font>;
     vector<font color="black">&#60;</font>Object<font color="black">&#62;</font> object;
     vector<font color="black">&#60;</font>Material<font color="black">&#62;</font> material;  
+<font color="blue">private</font><font color="black">:</font>
+    DWORD ProcessChunk<font color="black">(</font><font color="blue">char</font> <font color="black">*</font>buffer<font color="black">)</font>;
+    Material <font color="black">*</font>GetMaterialByName<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>;    
 <font color="black">}</font>;
 
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>pop<font color="black">)</font>

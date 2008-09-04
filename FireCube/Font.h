@@ -6,6 +6,8 @@
 
 class FontResource;
 /* CPPDOC_BEGIN_EXCLUDE */
+class FontImpl;
+
 class FIRECUBE_API Glyph
 {
 public:
@@ -59,7 +61,7 @@ private:
 	bool AddChar(char c);
 	vector<Glyph> glyph;
 	FontPage *page;
-	FT_Face face;
+	FontImpl *fontImpl;
 	int size;
 };
 

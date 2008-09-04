@@ -9,8 +9,6 @@ using namespace std;
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <windows.h>
-#include <ft2build.h>
-#include FT_FREETYPE_H
 #include "GLee.h"
 #include <GL/GLU.h>
 #include "FireCube.h"
@@ -341,4 +339,12 @@ Model ModelResource::Reduce()
 		}
 	}
 	return model;
+}
+void ModelResource::SetProgram(const Program &program)
+{	
+	vector<Material>::iterator i=material.begin();
+	for (;i!=material.end();i++)
+	{				
+		i->program=program;
+	}
 }

@@ -280,11 +280,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\privateFont.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Renderer.h"
 				>
 			</File>
 			<File
 				RelativePath=".\ResourceManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Shaders.h"
 				>
 			</File>
 			<File

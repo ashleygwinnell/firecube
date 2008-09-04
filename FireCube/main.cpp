@@ -6,8 +6,6 @@
 using namespace std;
 #include <SDL/SDL.h>
 #include <windows.h>
-#include <ft2build.h>
-#include FT_FREETYPE_H
 #include "GLee.h"
 #include "FireCube.h"
 bool APIENTRY DllMain( HANDLE hModule, 

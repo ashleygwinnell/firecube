@@ -11,6 +11,7 @@ using namespace std;
 #include FT_FREETYPE_H
 #include "GLee.h"
 #include "FireCube.h"
+#include "privateFont.h"
 using namespace FireCube;
 
 ShaderResource::ShaderResource() : id(0)
@@ -87,13 +88,6 @@ void Program::Link()
 {
 	glLinkProgram(id);	
 }
-void Program::Use(bool useShaders)
-{
-	if (useShaders==false)
-		glUseProgram(0);
-	else
-		glUseProgram(id);
-}
 void Program::Uniform1f(const string &name,float value)
 {
 	GLint location=0;
@@ -123,6 +117,10 @@ void Program::Uniform1i(const string &name,int value)
 	}
 	if (location!=0)
 		glUniform1i(location,value);
+}
+bool Program::IsValid() const
+{
+	return id!=0;
 }
 Renderer::Renderer()
 {
@@ -159,21 +157,7 @@ void Renderer::Render(Model model)
 		i->normalBuffer.SetNormalStream();
 		for (;j!=i->mesh.end();j++)
 		{
-			float ambient[]={j->material->ambient.x,j->material->ambient.y,j->material->ambient.z,1.0f};
-			float diffuse[]={j->material->diffuse.x,j->material->diffuse.y,j->material->diffuse.z,1.0f};
-			float specular[]={j->material->specular.x,j->material->specular.y,j->material->specular.z,1.0f};			
-			glMaterialfv(GL_FRONT,GL_AMBIENT,ambient);
-			glMaterialfv(GL_FRONT,GL_DIFFUSE,diffuse);
-			glMaterialfv(GL_FRONT,GL_SPECULAR,specular);
-			glMaterialf(GL_FRONT,GL_SHININESS,j->material->shininess);
-			if (j->material->tex)
-			{
-				glEnable(GL_TEXTURE_2D);
-				UseTexture(j->material->tex,0);
-			}
-			else
-				glDisable(GL_TEXTURE_2D);
-			
+			UseMaterial(*j->material);
 			j->indexBuffer.SetIndexStream();
 			RenderIndexStream(TRIANGLES,j->face.size()*3);			
 		}
@@ -226,7 +210,7 @@ void Renderer::RenderText(Font font,vec2 pos,const string &str)
 	glEnable(GL_TEXTURE_2D);
 	UseTexture(font->page->tex,0);	
 	vec2 curPos=pos;	
-	FT_Long useKerning = FT_HAS_KERNING(font->face);
+	FT_Long useKerning = FT_HAS_KERNING(font->fontImpl->face);
 	FT_UInt previous = 0; 
 	for (string::const_iterator i=str.begin();i!=str.end();i++)
 	{
@@ -239,12 +223,12 @@ void Renderer::RenderText(Font font,vec2 pos,const string &str)
 		if (font->glyph[c].size!=vec2(0,0))
 		{
 
-			FT_UInt glyphIndex = FT_Get_Char_Index( font->face, c ); 
+			FT_UInt glyphIndex = FT_Get_Char_Index( font->fontImpl->face, c ); 
 			/* retrieve kerning distance and move pen position */  
 			if ( useKerning && previous && glyphIndex ) 
 			{ 
 				FT_Vector delta; 
-				FT_Get_Kerning( font->face, previous, glyphIndex, FT_KERNING_DEFAULT, &delta ); 
+				FT_Get_Kerning( font->fontImpl->face, previous, glyphIndex, FT_KERNING_DEFAULT, &delta ); 
 				curPos.x += delta.x >> 6; 
 			} 
 			vBuffer[numQuads*4+0]=vec2(font->glyph[c].bitmapOffset.x+curPos.x,font->glyph[c].bitmapOffset.y+curPos.y);
@@ -328,4 +312,28 @@ void Renderer::RenderStream(RenderMode mode,DWORD count)
 		break;
 	}	
 	glDrawArrays(glmode,0,count);
+}
+void Renderer::UseProgram(const Program &program)
+{
+	glUseProgram(program.id);	
+}
+void Renderer::UseMaterial(const Material &material)
+{
+	float ambient[]={material.ambient.x,material.ambient.y,material.ambient.z,1.0f};
+	float diffuse[]={material.diffuse.x,material.diffuse.y,material.diffuse.z,1.0f};
+	float specular[]={material.specular.x,material.specular.y,material.specular.z,1.0f};			
+	glMaterialfv(GL_FRONT,GL_AMBIENT,ambient);
+	glMaterialfv(GL_FRONT,GL_DIFFUSE,diffuse);
+	glMaterialfv(GL_FRONT,GL_SPECULAR,specular);
+	glMaterialf(GL_FRONT,GL_SHININESS,material.shininess);
+	if ((material.tex) && (material.tex->IsValid()))
+	{
+		glEnable(GL_TEXTURE_2D);
+		UseTexture(material.tex,0);
+	}
+	else
+		glDisable(GL_TEXTURE_2D);
+
+	if (material.program.IsValid())
+		UseProgram(material.program);
 }
