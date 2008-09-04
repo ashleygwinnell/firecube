@@ -20,8 +20,7 @@ int main(int argc, char *argv[])
 {	
 	if (!app.Initialize())
 		return 0;
-	app.SetTitle(string("FireCube Test Application"));
-	glClearColor(0.2f,0.2f,0.6f,1.0f);	
+	app.SetTitle(string("FireCube Test Application"));	
 	model=app.modelManager.Create("1.3ds");
 	font=Application::GetContext().fontManager->Create("c:\\windows\\fonts\\arial.ttf:18");		
 	app.Run();		
@@ -34,20 +33,16 @@ bool App::Update(float t)
 }
 bool App::Render(float t)
 {		
-	renderer.Clear();
-	mat4 p;
-	p.GeneratePerspective(90.0f,800.0f/600.0f,0.1f,100.0f);
-	renderer.SetProjectionMatrix(p);
+	renderer.Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
+	renderer.SetPerspectiveProjection(90.0f,0.1f,100.0f);	
 	mat4 m;	
 	m.Translate(vec3(0,0,rot.z));
 	m.RotateX(rot.x);
 	m.RotateY(rot.y);	
 	renderer.SetModelViewMatrix(m);		
 	renderer.Render(model);
-	p.Identity();
-	renderer.SetModelViewMatrix(p);
-	p.GenerateOrthographic(0,800.0f,600.0f,0,0,1);
-	renderer.SetProjectionMatrix(p);	
+	renderer.SetModelViewMatrix(mat4());
+	renderer.SetOrthographicProjection();
 	
 	ostringstream oss;
 	oss << "FPS:"<<app.GetFps();	
