@@ -9,8 +9,6 @@
 #include <boost/weak_ptr.hpp>
 #include <windows.h>
 using namespace std;
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
 #include <gl/gl.h>
 #include <FireCube.h>
 using namespace FireCube;
@@ -46,7 +44,7 @@ void Simulator::ResetForcesAndTorques()
 	{
 		RigidBody *b=*i;
 		b->torque=vec3(0,0,0);
-		b->force=b->mass*vec3(0,-0.2f,0);
+		b->force=vec3(0,0,0);
 	}
 }
 void Simulator::Update(float t)

@@ -8,8 +8,6 @@ using namespace std;
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include <windows.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
 #include <gl/gl.h>
 #include <FireCube.h>
 using namespace FireCube;
@@ -31,13 +29,16 @@ RigidBody body1;
 RigidBody body2;
 vector <CollisionInfo> collisions;
 Simulator s;
+Font font;
 int main(int argc, char *argv[])
 {
 	if (!app.Initialize())
 		return 0;	
+	app.SetTitle(string("Physics Test"));
 	vShader=app.GetContext().shaderManager->Create("v.vshader");
 	pShader=app.GetContext().shaderManager->Create("p.pshader");	
 	pShader2=app.GetContext().shaderManager->Create("p2.pshader");
+	font=app.GetContext().fontManager->Create("c:\\windows\\fonts\\arial.ttf:18");
 	program.Create(vShader,pShader);
 	program2.Create(vShader,pShader2);	
 	glClearColor(0.2f,0.2f,0.6f,1.0f);
@@ -49,20 +50,20 @@ int main(int argc, char *argv[])
 	body2.Init(model,&cube);
 	body2.position.Set(2,0,0);
 	s.Add(&body1);
-	s.Add(&body2);
+	s.Add(&body2);	
 	app.Run();
 	return 0;
 }
 bool App::Update(float t)
 {
-	ostringstream ss;	
-	ss << "FireCube Test Application FPS:"<<app.GetFps();
-	s.Update(t);
-	app.SetTitle(ss.str());
+	s.Update(t);	
 	return true;
 }
 bool App::Render(float t)
 {	
+	mat4 p,mi;	
+	p.GeneratePerspective(90,800.0f/600.0f,0.1f,100.0f);
+	renderer.SetProjectionMatrix(p);
 	static float appTime=0;
 	appTime+=t;
 	renderer.Clear();
@@ -71,9 +72,15 @@ bool App::Render(float t)
 	m.RotateY(rot.y);
 	m.Translate(-camPos);
 	renderer.SetModelViewMatrix(m);
-	program.Use();
+	renderer.UseProgram(program);
 	program.Uniform1i("tex0",0);
-	s.Render(renderer);
+	s.Render(renderer);	
+	p.GenerateOrthographic(0,800,600,0,-1,1);
+	renderer.SetProjectionMatrix(p);
+	renderer.SetModelViewMatrix(mi);
+	ostringstream oss;
+	oss << "FPS:" << app.GetFps();
+	renderer.RenderText(font,vec2(0,0),oss.str());
 	return true;
 }
 bool App::HandleInput(float t)

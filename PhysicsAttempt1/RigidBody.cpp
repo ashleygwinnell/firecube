@@ -9,8 +9,6 @@
 #include <boost/weak_ptr.hpp>
 #include <windows.h>
 using namespace std;
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
 #include <gl/gl.h>
 #include <FireCube.h>
 using namespace FireCube;
