@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="firecube.lib sdl.lib sdlmain.lib opengl32.lib freetype.lib"
+				AdditionalDependencies="firecube.lib sdl.lib opengl32.lib freetype.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
