@@ -22,8 +22,10 @@ Renderer.h
     ~Renderer<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
     * Clears the depth and color buffer.
+    * @param color The color to clear the framebuffer.
+    * @depth The depth to set the depth buffer.
     */</font>
-    <font color="blue">void</font> Clear<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> Clear<font color="black">(</font>vec4 color,<font color="blue">float</font> depth<font color="black">)</font>;
     <font color="green">/**
     * Renders a model.
     * @param model The model to render.
@@ -96,7 +98,19 @@ Renderer.h
     * @param material The material to use.
     */</font>
     <font color="blue">void</font> UseMaterial<font color="black">(</font><font color="blue">const</font> Material <font color="black">&</font>material<font color="black">)</font>;
+    <font color="green">/**
+    * Sets a perspective projection.
+    * @param fov The field of view in degrees.
+    * @param zNear The near clipping plane.
+    * @param zFar The far clipping plane.
+    */</font>
+    <font color="blue">void</font> SetPerspectiveProjection<font color="black">(</font><font color="blue">float</font> fov,<font color="blue">float</font> zNear,<font color="blue">float</font> zFar<font color="black">)</font>;    
+    <font color="green">/**
+    * Sets an orthographic projection with a one to one pixel ratio.    
+    */</font>
+    <font color="blue">void</font> SetOrthographicProjection<font color="black">(</font><font color="black">)</font>;
 <font color="blue">private</font><font color="black">:</font>    
+    Program textShader;
 <font color="black">}</font>;
 
 

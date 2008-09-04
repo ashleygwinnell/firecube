@@ -55,8 +55,6 @@ bool Application::Initialize(int width,int height,int bpp,bool fullscreen)
 
 	timer.Init();
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.0f,0.0f,0.0f,1.0f);
-	glClearDepth(1.0f);
 	glViewport(0,0,width,height);
 	mat4 mat;
 	mat.GeneratePerspective(90.0f,(float)width/(float)height,0.1f,100);	

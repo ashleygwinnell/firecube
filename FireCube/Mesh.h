@@ -28,6 +28,7 @@
 class ModelResource;
 typedef ResourceManager<ModelResource> ModelManager;
 typedef boost::shared_ptr<ModelResource> Model;
+const unsigned int MAX_TEXTURES=8;
 /**
 * Stores information about a material.
 */
@@ -42,7 +43,7 @@ public:
 	vec3 diffuse;
 	vec3 specular;
 	float shininess;
-	Texture tex;
+	Texture texture[MAX_TEXTURES];
 	Program program;
 };
 

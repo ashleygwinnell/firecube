@@ -36,6 +36,7 @@ Mesh.h
 <font color="blue">class</font> ModelResource;
 <font color="blue">typedef</font> ResourceManager<font color="black">&#60;</font>ModelResource<font color="black">&#62;</font> ModelManager;
 <font color="blue">typedef</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>ModelResource<font color="black">&#62;</font> Model;
+<font color="blue">const</font> <font color="blue">unsigned</font> <font color="blue">int</font> MAX_TEXTURES<font color="black">=</font><font color="maroon">8</font>;
 <font color="green">/**
 * Stores information about a material.
 */</font>
@@ -50,7 +51,7 @@ Mesh.h
     vec3 diffuse;
     vec3 specular;
     <font color="blue">float</font> shininess;
-    Texture tex;
+    Texture texture<font color="black">[</font>MAX_TEXTURES<font color="black">]</font>;
     Program program;
 <font color="black">}</font>;
 

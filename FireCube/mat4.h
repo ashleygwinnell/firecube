@@ -91,7 +91,7 @@ public:
 	*/
 	vec3 GetDir();
 	/**
-	* Generates a perpective projection matrix.
+	* Generates a perspective projection matrix.
 	* @param fov The field of view in degrees.
 	* @param aspect The aspect ratio.
 	* @param nearz The near clipping plane.
@@ -99,7 +99,7 @@ public:
 	*/
 	void GeneratePerspective(float fov,float aspect,float nearz,float farz);
 	/**
-	* Generates a othographic projection matrix.
+	* Generates a orthographic projection matrix.
 	* @param left The left side of the view.
 	* @param right The right side of the view.
 	* @param bottom The bottom side of the view.

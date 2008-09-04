@@ -40,6 +40,21 @@ public:
 			return boost::shared_ptr<T>();
 	}
 	/**
+	* Adds a new resource without loading it.
+	* @param name The name identifying the resource.
+	* @return The newly created resource.
+	*/
+	boost::shared_ptr<T> Add(const string &name)
+	{
+		map<string,boost::weak_ptr<T>>::iterator i=resources.find(name);
+		if (i!=resources.end())
+			if (!i->second.expired())
+				return i->second.lock();
+		boost::shared_ptr<T> ret(new T);
+		resources[name]=ret;
+		return ret;		
+	}
+	/**
 	* Adds an already existing resource.
 	* @param filename The filename/name identifying the resource.
 	* @param res The resource itself.

@@ -14,8 +14,10 @@ public:
 	~Renderer();
 	/**
 	* Clears the depth and color buffer.
+	* @param color The color to clear the framebuffer.
+	* @depth The depth to set the depth buffer.
 	*/
-	void Clear();
+	void Clear(vec4 color,float depth);
 	/**
 	* Renders a model.
 	* @param model The model to render.
@@ -88,7 +90,19 @@ public:
 	* @param material The material to use.
 	*/
 	void UseMaterial(const Material &material);
+	/**
+	* Sets a perspective projection.
+	* @param fov The field of view in degrees.
+	* @param zNear The near clipping plane.
+	* @param zFar The far clipping plane.
+	*/
+	void SetPerspectiveProjection(float fov,float zNear,float zFar);	
+	/**
+	* Sets an orthographic projection with a one to one pixel ratio.	
+	*/
+	void SetOrthographicProjection();
 private:	
+	Program textShader;
 };
 
 

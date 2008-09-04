@@ -57,6 +57,27 @@ bool ShaderResource::Load(const string &filename)
 
 	return true;
 }
+bool ShaderResource::Create(ShaderType type,const string &source)
+{
+	GLenum glShaderType;
+	if (id!=0)
+		glDeleteShader(id);
+	
+	if (type==VERTEX_SHADER)
+		glShaderType=GL_VERTEX_SHADER;
+	else if (type==PIXEL_SHADER)
+		glShaderType=GL_FRAGMENT_SHADER;
+	else
+			return false;
+	
+	const char *buffer=source.c_str();
+	id=glCreateShader(glShaderType);	
+	glShaderSource(id,1,(const char**)&buffer,NULL);		
+	glCompileShader(id);	
+
+	return true;
+
+}
 Program::Program() : id(0)
 {
 
@@ -128,8 +149,10 @@ Renderer::Renderer()
 Renderer::~Renderer()
 {
 }
-void Renderer::Clear()
+void Renderer::Clear(vec4 color,float depth)
 {
+	glClearColor(color.x,color.y,color.z,color.w);
+	glClearDepth(depth);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void Renderer::SetModelViewMatrix(mat4 &m)
@@ -198,6 +221,28 @@ void Renderer::RenderText(Font font,vec2 pos,const string &str)
 {	
 	if (!font)
 		return;
+	if (textShader.IsValid())
+		UseProgram(textShader);
+	else
+	{
+		Shader vshader=Shader(new ShaderResource);
+		Shader pshader=Shader(new ShaderResource);				
+
+		vshader->Create(VERTEX_SHADER,"void main() \
+		{	\
+			gl_TexCoord[0]=gl_MultiTexCoord0; \
+			gl_Position = ftransform(); \
+		} ");
+		
+		pshader->Create(PIXEL_SHADER,"uniform sampler2D tex0; \
+		void main() \
+		{ \
+		gl_FragColor = texture2D(tex0,gl_TexCoord[0].st);  \
+		} ");
+		textShader.Create(vshader,pshader);
+		UseProgram(textShader);
+	}
+	textShader.Uniform1i("tex0",0);
 	Buffer vb,uvb;
 	vb.Create();
 	uvb.Create();
@@ -206,9 +251,9 @@ void Renderer::RenderText(Font font,vec2 pos,const string &str)
 	vec2 *uvBuffer=new vec2[str.size()*4];
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_COLOR,GL_ONE_MINUS_SRC_COLOR);
-	glEnable(GL_TEXTURE_2D);
+	glBlendFunc(GL_SRC_COLOR,GL_ONE_MINUS_SRC_COLOR);	
 	UseTexture(font->page->tex,0);	
+	glEnable(GL_TEXTURE_2D);
 	vec2 curPos=pos;	
 	FT_Long useKerning = FT_HAS_KERNING(font->fontImpl->face);
 	FT_UInt previous = 0; 
@@ -326,14 +371,36 @@ void Renderer::UseMaterial(const Material &material)
 	glMaterialfv(GL_FRONT,GL_DIFFUSE,diffuse);
 	glMaterialfv(GL_FRONT,GL_SPECULAR,specular);
 	glMaterialf(GL_FRONT,GL_SHININESS,material.shininess);
-	if ((material.tex) && (material.tex->IsValid()))
-	{
-		glEnable(GL_TEXTURE_2D);
-		UseTexture(material.tex,0);
+	for (int i=0;i<MAX_TEXTURES;i++)
+	{	
+		if ((material.texture[i]) && (material.texture[i]->IsValid()))
+		{
+			UseTexture(material.texture[i],i);
+			glEnable(GL_TEXTURE_2D);			
+		}
+		else
+		{
+			glActiveTexture(GL_TEXTURE0+i);
+			glDisable(GL_TEXTURE_2D);
+		}
 	}
-	else
-		glDisable(GL_TEXTURE_2D);
 
 	if (material.program.IsValid())
 		UseProgram(material.program);
+}
+void Renderer::SetPerspectiveProjection(float fov,float zNear,float zFar)
+{
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT,viewport);
+	mat4 p;
+	p.GeneratePerspective(fov,(float)viewport[2]/(float)viewport[3],zNear,zFar);
+	SetProjectionMatrix(p);
+}
+void Renderer::SetOrthographicProjection()
+{
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT,viewport);
+	mat4 p;
+	p.GenerateOrthographic(0,(float)viewport[2],(float)viewport[3],0,0,1);
+	SetProjectionMatrix(p);
 }

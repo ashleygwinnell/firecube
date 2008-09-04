@@ -14,7 +14,7 @@ using namespace std;
 #include "FireCube.h"
 using namespace FireCube;
 
-Material::Material() : tex()
+Material::Material()
 {
 	
 }
@@ -278,7 +278,7 @@ DWORD ModelResource::ProcessChunk(char *buffer)
 		break;
 	case MAT_TEXFLNM:
 		matPtr=&material[0];						
-		matPtr->tex=Application::GetContext().textureManager->Create(buffer+i);		
+		matPtr->texture[0]=Application::GetContext().textureManager->Create(buffer+i);		
 		i+=(DWORD)strlen(buffer+i)+1;
 		break;
 	default:	
