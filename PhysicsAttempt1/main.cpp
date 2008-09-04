@@ -40,8 +40,7 @@ int main(int argc, char *argv[])
 	pShader2=app.GetContext().shaderManager->Create("p2.pshader");
 	font=app.GetContext().fontManager->Create("c:\\windows\\fonts\\arial.ttf:18");
 	program.Create(vShader,pShader);
-	program2.Create(vShader,pShader2);	
-	glClearColor(0.2f,0.2f,0.6f,1.0f);
+	program2.Create(vShader,pShader2);		
 	model=app.modelManager.Create("1.3ds");
 	sphere=app.modelManager.Create("sphere2.3ds");
 	cube.FromModel(model->Reduce(),20,20,20,1.1f);		
@@ -66,7 +65,7 @@ bool App::Render(float t)
 	renderer.SetProjectionMatrix(p);
 	static float appTime=0;
 	appTime+=t;
-	renderer.Clear();
+	renderer.Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
 	mat4 m;	
 	m.RotateX(rot.x);
 	m.RotateY(rot.y);
