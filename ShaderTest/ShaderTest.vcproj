@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib sdlmain.lib sdl.lib sdl_image.lib"
+				AdditionalDependencies="opengl32.lib sdl.lib sdl_image.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"

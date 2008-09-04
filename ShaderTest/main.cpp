@@ -1,15 +1,11 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include <iostream>
 #include <map>
-#include <fstream>
 #include <boost/shared_array.hpp>
 #include <boost/weak_ptr.hpp>
 #include <windows.h>
 using namespace std;
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
 #include <gl/gl.h>
 #include <FireCube.h>
 using namespace FireCube;
@@ -19,43 +15,41 @@ Model model;
 Renderer renderer;
 vec3 lastPos;
 vec3 rot(0,0,-3);
-Shader vShader,pShader;
-Program program;
+Font font;
 int main(int argc, char *argv[])
-{
+{	
 	if (!app.Initialize())
 		return 0;
-	vShader=app.GetContext().shaderManager->Create("v.vshader");
-	pShader=app.GetContext().shaderManager->Create("p.pshader");
-	program.Create();
-	program.Attach(vShader);
-	program.Attach(pShader);
-	program.Link();
-	glClearColor(0.2f,0.2f,0.6f,1.0f);
+	app.SetTitle(string("ShaderTest"));
+	font=Application::GetContext().fontManager->Create("c:\\windows\\fonts\\arial.ttf:18");
+	Program program;
+	program.Create(Application::GetContext().shaderManager->Create("v.vshader"),Application::GetContext().shaderManager->Create("p.pshader"));		
 	model=app.modelManager.Create("teapot2.3ds");
+	model->SetProgram(program);
 	app.Run();
 	return 0;
 }
 bool App::Update(float t)
-{
-	ostringstream ss;	
-	ss << "FireCube Test Application FPS:"<<app.GetFps();
-	app.SetTitle(ss.str());
+{		
 	return true;
 }
 bool App::Render(float t)
 {	
+	renderer.SetPerspectiveProjection(90.0f,0.1f,100.0f);
 	static float appTime=0;
 	appTime+=t;
-	renderer.Clear();
+	renderer.Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
 	mat4 m;
 	m.Translate(vec3(0,0,rot.z));
 	m.RotateX(rot.x);
 	m.RotateY(rot.y);
-	renderer.SetModelViewMatrix(m);
-	program.Use();
-	program.Uniform1i("tex0",0);
+	renderer.SetModelViewMatrix(m);	
 	renderer.Render(model);	
+	ostringstream ss;
+	ss << "FPS:"<<app.GetFps();
+	renderer.SetModelViewMatrix(mat4());
+	renderer.SetOrthographicProjection();
+	renderer.RenderText(font,vec2(0,0),ss.str());
 	return true;
 }
 bool App::HandleInput(float t)
