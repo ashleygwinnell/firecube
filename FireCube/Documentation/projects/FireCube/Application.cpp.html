@@ -75,6 +75,15 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
     FT_Init_FreeType<font color="black">(</font><font color="black">&</font>freeTypeLibrary<font color="black">)</font>; 
     <font color="blue">return</font> <font color="blue">true</font>;
 <font color="black">}</font>
+<font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>InitializeNoWindow<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>   
+    timer.Init<font color="black">(</font><font color="black">)</font>;
+    glEnable<font color="black">(</font>GL_DEPTH_TEST<font color="black">)</font>;    
+    glEnable<font color="black">(</font>GL_CULL_FACE<font color="black">)</font>;
+    srand<font color="black">(</font>GetTickCount<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+    FT_Init_FreeType<font color="black">(</font><font color="black">&</font>freeTypeLibrary<font color="black">)</font>; 
+    <font color="blue">return</font> <font color="blue">true</font>;
+<font color="black">}</font>
 <font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>Destroy<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
     SDL_Quit<font color="black">(</font><font color="black">)</font>;
@@ -83,7 +92,7 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
 <font color="blue">void</font> Application<font color="black">:</font><font color="black">:</font>Run<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>   
     running<font color="black">=</font><font color="blue">true</font>;
-    SDL_Event event;
+    SDL_Event event;    
     <font color="blue">while</font> <font color="black">(</font>running<font color="black">)</font>
     <font color="black">{</font>       
         deltaTime<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>timer.Passed<font color="black">(</font><font color="black">)</font>;        
@@ -111,8 +120,8 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
             fps<font color="black">=</font>frameCount<font color="black">/</font>fpsTime;
             fpsTime<font color="black">-</font><font color="black">=</font><font color="maroon">1</font>.0f;
             frameCount<font color="black">=</font><font color="maroon">0</font>;
-        <font color="black">}</font>
-    <font color="black">}</font>
+        <font color="black">}</font>       
+    <font color="black">}</font>   
 <font color="black">}</font>
 <font color="blue">void</font> Application<font color="black">:</font><font color="black">:</font>SetTitle<font color="black">(</font>string <font color="black">&</font>title<font color="black">)</font>
 <font color="black">{</font>

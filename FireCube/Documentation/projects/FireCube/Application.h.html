@@ -48,6 +48,11 @@ This class is responsible for the intialization and running of the application.
     * Destroy the window and it's associated OpenGL context.
     * @return true on success, false otherwise.
     */</font>
+    <font color="blue">bool</font> InitializeNoWindow<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/** 
+    * Initializes without creating a window (assumes there is already an active rendering context).
+    * @return true on success, false otherwise.
+    */</font>
     <font color="blue">bool</font> Destroy<font color="black">(</font><font color="black">)</font>;
     <font color="green">/** 
     * Enters the main rendering loop.
@@ -80,11 +85,11 @@ This class is responsible for the intialization and running of the application.
     */</font>
     virtual <font color="blue">bool</font> Update<font color="black">(</font><font color="blue">float</font> time<font color="black">)</font> <font color="black">=</font> <font color="maroon">0</font>;
     <font color="green">/** 
-    * User should override this to redner the game world.
+    * User should override this to render the game world.
     * Called once per frame.
     */</font>
     virtual <font color="blue">bool</font> Render<font color="black">(</font><font color="blue">float</font> time<font color="black">)</font> <font color="black">=</font> <font color="maroon">0</font>;
-<font color="blue">private</font><font color="black">:</font>
+<font color="green">//private:</font>
     Timer timer;    
     <font color="blue">bool</font> running;
     <font color="blue">float</font> deltaTime;;
