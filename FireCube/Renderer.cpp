@@ -34,7 +34,7 @@ bool ShaderResource::Load(const string &filename)
 		string ext=ToLower(filename.substr(d+1));
 		if (ext=="vshader")
 			shaderType=GL_VERTEX_SHADER;
-		else if (ext=="pshader")
+		else if (ext=="fshader")
 			shaderType=GL_FRAGMENT_SHADER;
 		else
 			return false;
@@ -65,7 +65,7 @@ bool ShaderResource::Create(ShaderType type,const string &source)
 	
 	if (type==VERTEX_SHADER)
 		glShaderType=GL_VERTEX_SHADER;
-	else if (type==PIXEL_SHADER)
+	else if (type==FRAGMENT_SHADER)
 		glShaderType=GL_FRAGMENT_SHADER;
 	else
 			return false;
@@ -234,7 +234,7 @@ void Renderer::RenderText(Font font,vec2 pos,const string &str)
 			gl_Position = ftransform(); \
 		} ");
 		
-		pshader->Create(PIXEL_SHADER,"uniform sampler2D tex0; \
+		pshader->Create(FRAGMENT_SHADER,"uniform sampler2D tex0; \
 		void main() \
 		{ \
 		gl_FragColor = texture2D(tex0,gl_TexCoord[0].st);  \

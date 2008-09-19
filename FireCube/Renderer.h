@@ -68,8 +68,7 @@ public:
 	*/
 	void RenderText(Font font,vec2 pos,const string &str);
 	/**
-	* Renders an index stream.
-	* @param buffer A buffer containing an index stream.
+	* Renders an index stream.	
 	* @param mode The rendering mode.
 	* @param count The number of indices to render.
 	*/

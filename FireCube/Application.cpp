@@ -67,6 +67,15 @@ bool Application::Initialize(int width,int height,int bpp,bool fullscreen)
 	FT_Init_FreeType(&freeTypeLibrary);	
 	return true;
 }
+bool Application::InitializeNoWindow()
+{	
+	timer.Init();
+	glEnable(GL_DEPTH_TEST);	
+	glEnable(GL_CULL_FACE);
+	srand(GetTickCount());
+	FT_Init_FreeType(&freeTypeLibrary);	
+	return true;
+}
 bool Application::Destroy()
 {
 	SDL_Quit();
@@ -75,7 +84,7 @@ bool Application::Destroy()
 void Application::Run()
 {	
 	running=true;
-	SDL_Event event;
+	SDL_Event event;	
 	while (running)
 	{		
 		deltaTime=(float)timer.Passed();		
@@ -103,8 +112,8 @@ void Application::Run()
 			fps=frameCount/fpsTime;
 			fpsTime-=1.0f;
 			frameCount=0;
-		}
-	}
+		}		
+	}	
 }
 void Application::SetTitle(string &title)
 {

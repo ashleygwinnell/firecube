@@ -9,7 +9,7 @@
 */
 enum ShaderType
 {
-	VERTEX_SHADER,PIXEL_SHADER
+	VERTEX_SHADER,FRAGMENT_SHADER
 };
 
 /**
@@ -22,12 +22,12 @@ public:
 	ShaderResource();
 	~ShaderResource();
 	/**
-	* Loads a shader from a file. the shader type is determined by the extension of the file: .vshader for a vertex shader, .pshader for a pixel shader.
+	* Loads a shader from a file. the shader type is determined by the extension of the file: .vshader for a vertex shader, .fshader for a fragment shader.
 	* @param filename The file to load.
 	*/
 	bool Load(const string &filename);
 	/**
-	* Creates a shader from source. the shader type is determined by the extension of the file: .vshader for a vertex shader, .pshader for a pixel shader.
+	* Creates a shader from source.
 	* @param shaderType The type of the shader.
 	* @param source The source of the shader.
 	*/
