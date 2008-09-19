@@ -194,7 +194,7 @@
 			>
 		</Filter>
 		<File
-			RelativePath=".\p.pshader"
+			RelativePath=".\p.fshader"
 			>
 		</File>
 		<File

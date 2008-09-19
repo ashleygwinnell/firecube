@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 	app.SetTitle(string("ShaderTest"));
 	font=Application::GetContext().fontManager->Create("c:\\windows\\fonts\\arial.ttf:18");
 	Program program;
-	program.Create(Application::GetContext().shaderManager->Create("v.vshader"),Application::GetContext().shaderManager->Create("p.pshader"));		
+	program.Create(Application::GetContext().shaderManager->Create("v.vshader"),Application::GetContext().shaderManager->Create("p.fshader"));		
 	model=app.modelManager.Create("teapot2.3ds");
 	model->SetProgram(program);
 	app.Run();
