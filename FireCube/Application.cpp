@@ -12,22 +12,14 @@ using namespace std;
 #include "FireCube.h"
 using namespace FireCube;
 
+extern void InitializeRenderer();
+extern void DestroyRenderer();
 extern FT_Library freeTypeLibrary;
-ApplicationContext *Application::currentContext=NULL;
-ApplicationContext::ApplicationContext()
+Application::Application() : running(false), frameCount(0), fpsTime(0)
 {
-
-}
-ApplicationContext::ApplicationContext(TextureManager *textureManager,ShaderManager *shaderManager,FontManager *fontManager)
-{	
-	this->textureManager=textureManager;
-	this->shaderManager=shaderManager;
-	this->fontManager=fontManager;
-}
-
-Application::Application() : running(false), frameCount(0), fpsTime(0), defaultContext(&defaultTextureManager,&defaultShaderManager,&defaultFontManager)
-{
-	SetContext(defaultContext);
+	Renderer::SetTextureManager(&defaultTextureManager);
+	Renderer::SetShaderManager(&defaultShaderManager);
+	Renderer::SetFontManager(&defaultFontManager);
 }
 Application::~Application()
 {
@@ -52,9 +44,7 @@ bool Application::Initialize(int width,int height,int bpp,bool fullscreen)
 	screen=SDL_SetVideoMode(width,height,bpp,SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : 0));
 	if (!screen)
 		return false;
-
-	timer.Init();
-	glEnable(GL_DEPTH_TEST);
+		
 	glViewport(0,0,width,height);
 	mat4 mat;
 	mat.GeneratePerspective(90.0f,(float)width/(float)height,0.1f,100);	
@@ -62,29 +52,34 @@ bool Application::Initialize(int width,int height,int bpp,bool fullscreen)
 	glLoadMatrixf(mat.m);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glEnable(GL_CULL_FACE);
-	srand(GetTickCount());
-	FT_Init_FreeType(&freeTypeLibrary);	
+	InitializeNoWindow();
+
 	return true;
 }
 bool Application::InitializeNoWindow()
 {	
+	Logger::Init("log.txt");
+	Logger::Write(string("Initializing application.\n"));	
 	timer.Init();
 	glEnable(GL_DEPTH_TEST);	
 	glEnable(GL_CULL_FACE);
 	srand(GetTickCount());
 	FT_Init_FreeType(&freeTypeLibrary);	
+	InitializeRenderer();	
 	return true;
 }
 bool Application::Destroy()
-{
-	SDL_Quit();
+{		
+	DestroyRenderer();	
+	Logger::Write(string("Destroying application.\n"));	
+	SDL_Quit();	
 	return true;
 }
 void Application::Run()
 {	
 	running=true;
 	SDL_Event event;	
+	Logger::Write(string("Entering main loop...\n"));
 	while (running)
 	{		
 		deltaTime=(float)timer.Passed();		
@@ -114,6 +109,7 @@ void Application::Run()
 			frameCount=0;
 		}		
 	}	
+	Logger::Write(string("Exiting main loop...\n"));
 }
 void Application::SetTitle(string &title)
 {
@@ -122,12 +118,4 @@ void Application::SetTitle(string &title)
 float Application::GetFps()
 {
 	return fps;
-}
-void Application::SetContext(ApplicationContext &context)
-{
-	currentContext=&context;
-}
-ApplicationContext Application::GetContext()
-{
-	return *currentContext;
 }

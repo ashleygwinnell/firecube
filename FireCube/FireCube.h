@@ -10,6 +10,7 @@
 
 namespace FireCube
 {	
+	#include "Logger.h"
 	#include "ResourceManager.h"
 	#include "Timer.h"
 	#include "MyMath.h"	

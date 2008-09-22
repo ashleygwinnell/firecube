@@ -5,7 +5,13 @@
 #pragma warning(disable:4251)
 
 class FontResource;
+typedef boost::shared_ptr<FontResource> Font;
 /* CPPDOC_BEGIN_EXCLUDE */
+namespace Renderer
+{
+	void FIRECUBE_API RenderText(Font font,vec2 pos,const string &str);
+}
+
 class FontImpl;
 
 class FIRECUBE_API Glyph
@@ -30,19 +36,19 @@ public:
 class FIRECUBE_API FontManager : public ResourceManager<FontResource>
 {
 	friend class FontResource;
-	friend class Renderer;
+	friend void Renderer::RenderText(Font font,vec2 pos,const string &str);
 public:
 	FontManager();	
 private:
-	vector<FontPage> page;
-	FontPage *CreateNewPage();	
+	vector<boost::weak_ptr<FontPage>> page;
+	boost::shared_ptr<FontPage> CreateNewPage();	
 };
 /**
 * Holds the data for a single font face.
 */
 class FIRECUBE_API FontResource
 {
-	friend class Renderer;
+	friend void Renderer::RenderText(Font font,vec2 pos,const string &str);
 public:
 	FontResource();
 	~FontResource();
@@ -60,12 +66,10 @@ public:
 private:
 	bool AddChar(char c);
 	vector<Glyph> glyph;
-	FontPage *page;
+	boost::shared_ptr<FontPage> page;
 	FontImpl *fontImpl;
 	int size;
 };
-
-typedef boost::shared_ptr<FontResource> Font;
 
 #pragma warning(pop)
 #endif

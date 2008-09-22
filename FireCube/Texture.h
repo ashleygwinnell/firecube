@@ -20,6 +20,10 @@ public:
 	* Returns whether the texture is valid.
 	*/
 	bool IsValid();	
+	/**
+	* Creates a new texture.
+	*/
+	bool Create();
 	GLuint id;
 };	
 

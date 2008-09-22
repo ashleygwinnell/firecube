@@ -4,6 +4,16 @@
 #pragma warning(push)
 #pragma warning(disable:4251)
 
+class ProgramResource;
+typedef boost::shared_ptr<ProgramResource> Program;
+
+/* CPPDOC_BEGIN_EXCLUDE */
+namespace Renderer
+{
+	void FIRECUBE_API UseProgram(Program program);
+}
+/* CPPDOC_END_EXCLUDE */
+
 /** 
 * Specifies the type of a shader.
 */
@@ -17,7 +27,7 @@ enum ShaderType
 */
 class FIRECUBE_API ShaderResource
 {
-	friend class Program;
+	friend class ProgramResource;
 public:
 	ShaderResource();
 	~ShaderResource();
@@ -42,12 +52,12 @@ typedef ResourceManager<ShaderResource> ShaderManager;
 /**
 * A class representing a gpu program.
 */
-class FIRECUBE_API Program
+class FIRECUBE_API ProgramResource
 {
-	friend class Renderer;
+	friend void Renderer::UseProgram(Program program);
 public:
-	Program();
-	~Program();
+	ProgramResource();
+	~ProgramResource();
 	/**
 	* Creates the program.
 	*/
@@ -86,5 +96,4 @@ private:
 	GLuint id;
 	map<string,GLint> variables;
 };
-
 #endif

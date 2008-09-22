@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <map>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
@@ -44,12 +45,19 @@ ModelResource::ModelResource()
 }
 ModelResource::~ModelResource()
 {	
+	Logger::Write(string("Destroyed model with name:"));
+	Logger::Write(name);
+	Logger::Write(".\n");
 }
 
 bool ModelResource::Load(const string &filename)
 {
 	string::size_type d;
 	d=filename.find_last_of(".");
+	name=filename;
+	ostringstream ss;
+	ss<< "Created model with name:"<<filename<<endl;
+	Logger::Write(ss.str());
 	if (d!=string::npos)
 	{
 		string ext=ToLower(filename.substr(d+1));
@@ -159,7 +167,7 @@ DWORD ModelResource::ProcessChunk(char *buffer)
 	Object *curObject=NULL;
 	if (object.size()>0)
 		curObject=&object[object.size()-1];
-	DWORD i=0,j=0;
+	DWORD i=0,j=0;	
 	Material mat;
 	Material *matPtr;
 	Mesh sm;
@@ -236,10 +244,10 @@ DWORD ModelResource::ProcessChunk(char *buffer)
 		break;
 	case MATERIAL:
 		break;
-	case MAT_NAME:		
+	case MAT_NAME:				
 		mat.name=buffer+i;		
 		this->material.insert(this->material.begin(),mat);		
-		i+=(DWORD)strlen(buffer+i)+1;
+		i+=(DWORD)strlen(buffer+i)+1;		
 		break;
 	case MAT_AMBIENT:
 		i+=6;
@@ -278,7 +286,7 @@ DWORD ModelResource::ProcessChunk(char *buffer)
 		break;
 	case MAT_TEXFLNM:
 		matPtr=&material[0];						
-		matPtr->texture[0]=Application::GetContext().textureManager->Create(buffer+i);		
+		matPtr->texture[0]=Renderer::GetTextureManager()->Create(buffer+i);		
 		i+=(DWORD)strlen(buffer+i)+1;
 		break;
 	default:	

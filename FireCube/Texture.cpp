@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <map>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
@@ -18,11 +19,22 @@ TextureResource::TextureResource() : id(0)
 }
 TextureResource::~TextureResource()
 {		
+	ostringstream ss;
+	ss<< "Destroyed texture with id="<<id<<endl;
+	Logger::Write(ss.str());
 	glDeleteTextures(1,&id);
 	id=0;
 }
 bool TextureResource::IsValid()
 {
+	return id!=0;
+}
+bool TextureResource::Create()
+{
+	glGenTextures(1,&id);
+	ostringstream ss;
+	ss<< "Created texture with id="<<id<<endl;
+	Logger::Write(ss.str());
 	return id!=0;
 }
 bool TextureResource::Load(const std::string &filename)
@@ -32,7 +44,7 @@ bool TextureResource::Load(const std::string &filename)
 	if(image) 
 	{
 		GLenum format;
-		glGenTextures(1,&id);
+		Create();
 
 		if (image->format->BytesPerPixel==4)
 			format=GL_RGBA;
@@ -44,7 +56,7 @@ bool TextureResource::Load(const std::string &filename)
 		glTexImage2D(GL_TEXTURE_2D,0,format,image->w,image->h,0,format,GL_UNSIGNED_BYTE,image->pixels);		
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR_MIPMAP_LINEAR);			
-		SDL_FreeSurface(image);
+		SDL_FreeSurface(image);		
 		return true;
 	}
 	return false;

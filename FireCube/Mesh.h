@@ -101,8 +101,7 @@ public:
 * A class representing a model resource.
 */
 class FIRECUBE_API ModelResource
-{
-	friend class Renderer;
+{	
 public:
 	ModelResource();
 	~ModelResource();
@@ -133,6 +132,7 @@ public:
 	void SetProgram(const Program &program);
 	vector<Object> object;
 	vector<Material> material;	
+	string name;
 private:
 	DWORD ProcessChunk(char *buffer);
 	Material *GetMaterialByName(const string &name);	

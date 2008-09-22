@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <fstream>
+#include <sstream>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 using namespace std;
@@ -13,6 +14,10 @@ using namespace std;
 #include "FireCube.h"
 #include "privateFont.h"
 using namespace FireCube;
+Program textShader;
+TextureManager *currentTextureManager=NULL;
+ShaderManager *currentShaderManager=NULL;
+FontManager *currentFontManager=NULL;
 
 ShaderResource::ShaderResource() : id(0)
 {	
@@ -78,38 +83,45 @@ bool ShaderResource::Create(ShaderType type,const string &source)
 	return true;
 
 }
-Program::Program() : id(0)
+ProgramResource::ProgramResource() : id(0)
 {
 
 }
-Program::~Program()
+ProgramResource::~ProgramResource()
 {
+	ostringstream ss;
+	ss<< "Destroyed program with id="<<id<<endl;
+	Logger::Write(ss.str());
 	glDeleteProgram(id);
+	id=0;
 }
-void Program::Create()
+void ProgramResource::Create()
 {
 	if (id!=0)
 		glDeleteProgram(id);
 	
 	id=glCreateProgram();
 	variables.clear();
+	ostringstream ss;
+	ss<< "Created program with id="<<id<<endl;
+	Logger::Write(ss.str());
 }
-void Program::Create(Shader shader1,Shader shader2)
+void ProgramResource::Create(Shader shader1,Shader shader2)
 {
 	Create();
 	Attach(shader1);
 	Attach(shader2);
 	Link();
 }
-void Program::Attach(Shader shader)
+void ProgramResource::Attach(Shader shader)
 {
 	glAttachShader(id,shader->id);
 }
-void Program::Link()
+void ProgramResource::Link()
 {
 	glLinkProgram(id);	
 }
-void Program::Uniform1f(const string &name,float value)
+void ProgramResource::Uniform1f(const string &name,float value)
 {
 	GLint location=0;
 	map<string,GLint>::iterator i=variables.find(name);
@@ -124,7 +136,7 @@ void Program::Uniform1f(const string &name,float value)
 	if (location!=0)
 		glUniform1f(location,value);
 }
-void Program::Uniform1i(const string &name,int value)
+void ProgramResource::Uniform1i(const string &name,int value)
 {
 	GLint location=0;
 	map<string,GLint>::iterator i=variables.find(name);
@@ -139,15 +151,9 @@ void Program::Uniform1i(const string &name,int value)
 	if (location!=0)
 		glUniform1i(location,value);
 }
-bool Program::IsValid() const
+bool ProgramResource::IsValid() const
 {
 	return id!=0;
-}
-Renderer::Renderer()
-{
-}
-Renderer::~Renderer()
-{
 }
 void Renderer::Clear(vec4 color,float depth)
 {
@@ -220,29 +226,12 @@ void Renderer::UseTexture(Texture tex,unsigned int unit)
 void Renderer::RenderText(Font font,vec2 pos,const string &str)
 {	
 	if (!font)
-		return;
-	if (textShader.IsValid())
-		UseProgram(textShader);
-	else
+		return;	
+	if (textShader->IsValid())
 	{
-		Shader vshader=Shader(new ShaderResource);
-		Shader pshader=Shader(new ShaderResource);				
-
-		vshader->Create(VERTEX_SHADER,"void main() \
-		{	\
-			gl_TexCoord[0]=gl_MultiTexCoord0; \
-			gl_Position = ftransform(); \
-		} ");
-		
-		pshader->Create(FRAGMENT_SHADER,"uniform sampler2D tex0; \
-		void main() \
-		{ \
-		gl_FragColor = texture2D(tex0,gl_TexCoord[0].st);  \
-		} ");
-		textShader.Create(vshader,pshader);
-		UseProgram(textShader);
+		UseProgram(textShader);	
+		textShader->Uniform1i("tex0",0);
 	}
-	textShader.Uniform1i("tex0",0);
 	Buffer vb,uvb;
 	vb.Create();
 	uvb.Create();
@@ -358,9 +347,10 @@ void Renderer::RenderStream(RenderMode mode,DWORD count)
 	}	
 	glDrawArrays(glmode,0,count);
 }
-void Renderer::UseProgram(const Program &program)
+void Renderer::UseProgram(Program program)
 {
-	glUseProgram(program.id);	
+	if (program)
+		glUseProgram(program->id);	
 }
 void Renderer::UseMaterial(const Material &material)
 {
@@ -385,7 +375,7 @@ void Renderer::UseMaterial(const Material &material)
 		}
 	}
 
-	if (material.program.IsValid())
+	if ((material.program) && (material.program->IsValid()))
 		UseProgram(material.program);
 }
 void Renderer::SetPerspectiveProjection(float fov,float zNear,float zFar)
@@ -403,4 +393,52 @@ void Renderer::SetOrthographicProjection()
 	mat4 p;
 	p.GenerateOrthographic(0,(float)viewport[2],(float)viewport[3],0,0,1);
 	SetProjectionMatrix(p);
+}
+void InitializeRenderer()
+{
+	textShader=Program(new ProgramResource);
+	Shader vshader=Shader(new ShaderResource);
+	Shader pshader=Shader(new ShaderResource);				
+
+	vshader->Create(VERTEX_SHADER,"void main() \
+								  {	\
+								  gl_TexCoord[0]=gl_MultiTexCoord0; \
+								  gl_Position = ftransform(); \
+								  } ");
+
+	pshader->Create(FRAGMENT_SHADER,"uniform sampler2D tex0; \
+									void main() \
+									{ \
+									gl_FragColor = texture2D(tex0,gl_TexCoord[0].st);  \
+									} ");
+	textShader->Create(vshader,pshader);	
+	
+}
+void Renderer::SetTextureManager(TextureManager *textureManager)
+{
+	currentTextureManager=textureManager;
+}
+TextureManager *Renderer::GetTextureManager()
+{
+	return currentTextureManager;
+}
+void Renderer::SetShaderManager(ShaderManager *shaderManager)
+{
+	currentShaderManager=shaderManager;
+}
+ShaderManager *Renderer::GetShaderManager()
+{
+	return currentShaderManager;
+}
+void Renderer::SetFontManager(FontManager *fontManager)
+{
+	currentFontManager=fontManager;
+}
+FontManager *Renderer::GetFontManager()
+{
+	return currentFontManager;
+}
+void DestroyRenderer()
+{
+	textShader.reset();
 }

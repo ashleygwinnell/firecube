@@ -22,19 +22,19 @@ FontManager::FontManager()
 {
 	
 }
-FontPage *FontManager::CreateNewPage()
+boost::shared_ptr<FontPage> FontManager::CreateNewPage()
 {
-	FontPage p;
-	p.tex=Texture(new TextureResource);	
-	glGenTextures(1,&p.tex->id);
-	glBindTexture(GL_TEXTURE_2D,p.tex->id);
+	boost::shared_ptr<FontPage> p(new FontPage);
+	p->tex=Texture(new TextureResource);	
+	p->tex->Create();
+	glBindTexture(GL_TEXTURE_2D,p->tex->id);
 	unsigned char empty[512*512];
 	ZeroMemory(empty,512*512);
 	glTexImage2D(GL_TEXTURE_2D,0,1,512,512,0,GL_LUMINANCE,GL_UNSIGNED_BYTE,empty);	
-	p.textureSize=512;
-	p.curPos=vec2(0,0);
+	p->textureSize=512;
+	p->curPos=vec2(0,0);
 	page.push_back(p);
-	return &page[page.size()-1];
+	return p;
 }
 FontResource::FontResource()
 {	
@@ -43,6 +43,7 @@ FontResource::FontResource()
 }
 FontResource::~FontResource()
 {
+	Logger::Write("Destroying font.\n");
 	delete fontImpl;
 }
 bool FontResource::AddChar(char c)
@@ -79,6 +80,9 @@ bool FontResource::AddChar(char c)
 }
 bool FontResource::Load(const string &name,int size)
 {	
+	Logger::Write("Loading font with name:");
+	Logger::Write(name);
+	Logger::Write("\n");
 	int error=0;
 	char text[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-=_+[]{};:'\"\\|,./<>?/*. ";
 	this->size=size;		
@@ -88,22 +92,26 @@ bool FontResource::Load(const string &name,int size)
 	error=FT_Set_Pixel_Sizes(fontImpl->face,0,size);
 	if (error)
 		return false;
-	vector<FontPage>::iterator p=Application::GetContext().fontManager->page.begin();
+	vector<boost::weak_ptr<FontPage>>::iterator p=Renderer::GetFontManager()->page.begin();
 	bool found=false;
-	for (;p!=Application::GetContext().fontManager->page.end();p++)
+	for (;p!=Renderer::GetFontManager()->page.end();p++)
 	{
-		int availSpace=(p->textureSize-((int)p->curPos.y+size))*p->textureSize+(p->textureSize-((int)p->curPos.x+size))*size;
-		if (availSpace>=(int)strlen(text)*size*size)
+		if (!p->expired())
 		{
-			found=true;
-			break;
+			boost::shared_ptr<FontPage> pg=p->lock();
+			int availSpace=(pg->textureSize-((int)pg->curPos.y+size))*pg->textureSize+(pg->textureSize-((int)pg->curPos.x+size))*size;
+			if (availSpace>=(int)strlen(text)*size*size)
+			{
+				found=true;
+				break;
+			}
 		}
 	}
 	if (found)
-		page=&(*p);
+		page=(*p).lock();
 	else
 	{
-		page=Application::GetContext().fontManager->CreateNewPage();
+		page=Renderer::GetFontManager()->CreateNewPage();
 	}
 	glBindTexture(GL_TEXTURE_2D,page->tex->id);	
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
