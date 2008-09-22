@@ -26,12 +26,11 @@ public:
 	FireCube::Model model;
 	FireCube::Font font;
 	FireCube::Shader vshader,fshader;
+	FireCube::Program program;
 	FireCube::ModelManager mm;
 	FireCube::vec4 bgColor;
 	GLenum renderingMode;
-private:
-	
-	FireCube::Renderer renderer;
+private:		
 	bool init;
 	FireCube::vec3 rot;
 	FireCube::vec2 lastpos;

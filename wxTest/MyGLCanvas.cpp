@@ -47,8 +47,7 @@ MyGLCanvas::~MyGLCanvas()
 
 void MyGLCanvas::Render()
 {	
-	FireCubeApp *app=&(((MyApp*)wxTheApp)->fireCubeApp);
-	static FireCube::Program pr;
+	FireCubeApp *app=&(((MyApp*)wxTheApp)->fireCubeApp);	
 	wxPaintDC dc(this);
 	if (!GetContext()) return;
 	SetCurrent();
@@ -57,36 +56,37 @@ void MyGLCanvas::Render()
 		init=true;		
 		app->InitializeNoWindow();
 		model=mm.Create("teapot2.3ds");				
-		vshader=FireCube::Application::GetContext().shaderManager->Create("v.vshader");
-		fshader=FireCube::Application::GetContext().shaderManager->Create("p.fshader");
-		pr.Create(vshader,fshader);
-		model->SetProgram(pr);
+		vshader=FireCube::Renderer::GetShaderManager()->Create("v.vshader");
+		fshader=FireCube::Renderer::GetShaderManager()->Create("p.fshader");
+		program=FireCube::Program(new FireCube::ProgramResource);
+		program->Create(vshader,fshader);
+		model->SetProgram(program);
 		rot=FireCube::vec3(0,0,-5);
-		font=FireCube::Application::GetContext().fontManager->Create("c:\\windows\\fonts\\arial.ttf:18");
+		font=FireCube::Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf:18");
 		bgColor=FireCube::vec4(0.249f,0.521f,1.0f,1.0f);
 		renderingMode=GL_FILL;
 	}	
 	glPolygonMode(GL_FRONT_AND_BACK,renderingMode);
-	renderer.Clear(bgColor,1.0f);
+	FireCube::Renderer::Clear(bgColor,1.0f);
 	FireCube::mat4 mat;
 	mat.Identity();
-	renderer.SetPerspectiveProjection(90.0f,0.1f,100.0f);		
+	FireCube::Renderer::SetPerspectiveProjection(90.0f,0.1f,100.0f);		
 	mat.Translate(FireCube::vec3(0,0,rot.z));
 	mat.RotateX(rot.x);
 	mat.RotateY(rot.y);	
-	renderer.SetModelViewMatrix(mat);
-	renderer.Render(model);	
+	FireCube::Renderer::SetModelViewMatrix(mat);
+	FireCube::Renderer::Render(model);	
 
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-	renderer.SetModelViewMatrix(FireCube::mat4());
-	renderer.SetOrthographicProjection();
+	FireCube::Renderer::SetModelViewMatrix(FireCube::mat4());
+	FireCube::Renderer::SetOrthographicProjection();
 	ostringstream oss,oss2,oss3;
 	oss << glGetString(GL_RENDERER);
-	renderer.RenderText(font,FireCube::vec2(0,0),oss.str());	
+	FireCube::Renderer::RenderText(font,FireCube::vec2(0,0),oss.str());	
 	oss2 << "Num vertices:" << model->object[0].vertex.size();
-	renderer.RenderText(font,FireCube::vec2(0,20),oss2.str());	
+	FireCube::Renderer::RenderText(font,FireCube::vec2(0,20),oss2.str());	
 	oss3 << "Num faces:" << model->object[0].face.size();
-	renderer.RenderText(font,FireCube::vec2(0,40),oss3.str());
+	FireCube::Renderer::RenderText(font,FireCube::vec2(0,40),oss3.str());
 	SwapBuffers();
 }
 
