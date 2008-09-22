@@ -11,19 +11,17 @@ using namespace std;
 using namespace FireCube;
 #include "app.h"
 App app;
-Model model;
-Renderer renderer;
+#include <fstream>
 vec3 lastPos;
 vec3 rot(0,0,-3);
-Font font;
 int main(int argc, char *argv[])
 {	
 	if (!app.Initialize())
-		return 0;
+		return 0;	
 	app.SetTitle(string("FireCube Test Application"));	
-	model=app.modelManager.Create("1.3ds");
-	font=Application::GetContext().fontManager->Create("c:\\windows\\fonts\\arial.ttf:18");		
-	app.Run();		
+	app.model=app.modelManager.Create("1.3ds");
+	app.font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf:18");		
+	app.Run();			
 	return 0;
 }
 bool App::Update(float t)
@@ -33,20 +31,20 @@ bool App::Update(float t)
 }
 bool App::Render(float t)
 {		
-	renderer.Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
-	renderer.SetPerspectiveProjection(90.0f,0.1f,100.0f);	
+	Renderer::Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
+	Renderer::SetPerspectiveProjection(90.0f,0.1f,100.0f);	
 	mat4 m;	
 	m.Translate(vec3(0,0,rot.z));
 	m.RotateX(rot.x);
 	m.RotateY(rot.y);	
-	renderer.SetModelViewMatrix(m);		
-	renderer.Render(model);
-	renderer.SetModelViewMatrix(mat4());
-	renderer.SetOrthographicProjection();
+	Renderer::SetModelViewMatrix(m);		
+	Renderer::Render(app.model);
+	Renderer::SetModelViewMatrix(mat4());
+	Renderer::SetOrthographicProjection();
 	
 	ostringstream oss;
 	oss << "FPS:"<<app.GetFps();	
-	renderer.RenderText(font,vec2(0,0),oss.str());
+	Renderer::RenderText(app.font,vec2(0,0),oss.str());
 	return true;
 }
 bool App::HandleInput(float t)
