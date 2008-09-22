@@ -6,7 +6,7 @@ public:
 	Simulator();
 	
 	void Add(RigidBody *body);
-	void Render(Renderer &renderer);
+	void Render();
 	void Update(float t);
 	void ResetForcesAndTorques();
 

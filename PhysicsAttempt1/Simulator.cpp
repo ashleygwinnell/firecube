@@ -23,13 +23,13 @@ Simulator::Simulator()
 {
 
 }
-void Simulator::Render(Renderer &renderer)
+void Simulator::Render()
 {
 	vector<RigidBody *>::iterator i=rigidBodies.begin();
 
 	for (;i!=rigidBodies.end();i++)
 	{
-		(*i)->Render(renderer);
+		(*i)->Render();
 	}
 }
 void Simulator::Add(RigidBody *body)

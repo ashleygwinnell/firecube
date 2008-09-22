@@ -18,35 +18,32 @@ using namespace FireCube;
 #include "Simulator.h"
 
 App app;
-Model model,sphere;
 CollisionShape cube;
-Renderer renderer;
 vec3 lastPos;
 vec3 rot(0,0,0),camPos(0,0,3.0f);
-Shader vShader,pShader,pShader2;
-Program program,program2;
 RigidBody body1;
 RigidBody body2;
 vector <CollisionInfo> collisions;
 Simulator s;
-Font font;
 int main(int argc, char *argv[])
 {
 	if (!app.Initialize())
 		return 0;	
 	app.SetTitle(string("Physics Test"));
-	vShader=app.GetContext().shaderManager->Create("v.vshader");
-	pShader=app.GetContext().shaderManager->Create("p.pshader");	
-	pShader2=app.GetContext().shaderManager->Create("p2.pshader");
-	font=app.GetContext().fontManager->Create("c:\\windows\\fonts\\arial.ttf:18");
-	program.Create(vShader,pShader);
-	program2.Create(vShader,pShader2);		
-	model=app.modelManager.Create("1.3ds");
-	sphere=app.modelManager.Create("sphere2.3ds");
-	cube.FromModel(model->Reduce(),20,20,20,1.1f);		
-	body1.Init(model,&cube);
+	app.vShader=Renderer::GetShaderManager()->Create("v.vshader");
+	app.pShader=Renderer::GetShaderManager()->Create("p.fshader");	
+	app.pShader2=Renderer::GetShaderManager()->Create("p2.fshader");
+	app.font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf:18");
+	app.program=Program(new ProgramResource);
+	app.program2=Program(new ProgramResource);
+	app.program->Create(app.vShader,app.pShader);
+	app.program2->Create(app.vShader,app.pShader2);		
+	app.model=app.modelManager.Create("1.3ds");
+	app.sphere=app.modelManager.Create("sphere2.3ds");
+	cube.FromModel(app.model->Reduce(),20,20,20,1.1f);		
+	body1.Init(app.model,&cube);
 	body1.position.Set(-2,0,0);
-	body2.Init(model,&cube);
+	body2.Init(app.model,&cube);
 	body2.position.Set(2,0,0);
 	s.Add(&body1);
 	s.Add(&body2);	
@@ -62,24 +59,24 @@ bool App::Render(float t)
 {	
 	mat4 p,mi;	
 	p.GeneratePerspective(90,800.0f/600.0f,0.1f,100.0f);
-	renderer.SetProjectionMatrix(p);
+	Renderer::SetProjectionMatrix(p);
 	static float appTime=0;
 	appTime+=t;
-	renderer.Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
+	Renderer::Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
 	mat4 m;	
 	m.RotateX(rot.x);
 	m.RotateY(rot.y);
 	m.Translate(-camPos);
-	renderer.SetModelViewMatrix(m);
-	renderer.UseProgram(program);
-	program.Uniform1i("tex0",0);
-	s.Render(renderer);	
+	Renderer::SetModelViewMatrix(m);
+	Renderer::UseProgram(program);
+	app.program->Uniform1i("tex0",0);
+	s.Render();	
 	p.GenerateOrthographic(0,800,600,0,-1,1);
-	renderer.SetProjectionMatrix(p);
-	renderer.SetModelViewMatrix(mi);
+	Renderer::SetProjectionMatrix(p);
+	Renderer::SetModelViewMatrix(mi);
 	ostringstream oss;
 	oss << "FPS:" << app.GetFps();
-	renderer.RenderText(font,vec2(0,0),oss.str());
+	Renderer::RenderText(font,vec2(0,0),oss.str());
 	return true;
 }
 bool App::HandleInput(float t)

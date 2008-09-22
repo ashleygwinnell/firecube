@@ -8,7 +8,7 @@ public:
 	void Init(Model m,CollisionShape *cs);
 	bool GetPointInfo(vec3 pos, vec3 &dir, float &dist);
 	void GetBoundingSphere(vec3 &pos,float &radius);
-	void Render(Renderer &renderer);
+	void Render();
 
 	mat3 orientaion;
 	mat3 inverseOrientation;

@@ -230,11 +230,11 @@
 			>
 		</Filter>
 		<File
-			RelativePath=".\p.pshader"
+			RelativePath=".\p.fshader"
 			>
 		</File>
 		<File
-			RelativePath=".\p2.pshader"
+			RelativePath=".\p2.fshader"
 			>
 		</File>
 		<File
