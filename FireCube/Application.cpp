@@ -41,7 +41,7 @@ bool Application::Initialize(int width,int height,int bpp,bool fullscreen)
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);	
 	
-	screen=SDL_SetVideoMode(width,height,bpp,SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : 0));
+	screen=SDL_SetVideoMode(width,height,bpp,SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : SDL_RESIZABLE));
 	if (!screen)
 		return false;
 		
@@ -92,6 +92,10 @@ void Application::Run()
 				{
 					running=false;
 				}
+			}
+			if (event.type==SDL_VIDEORESIZE)
+			{
+				glViewport(0,0,event.resize.w,event.resize.h);
 			}
 			if (event.type==SDL_QUIT) 
 				running=false;
