@@ -13,20 +13,6 @@ Application.h
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
 
 <font color="green">/** 
-* Defines an application context.&#60;br&#62;
-* Contains pointers to various resource managers(textures,shaders,fonts).&#60;br&#62;
-* The context is used by various resource loading functions.
-*/</font>
-<font color="blue">class</font> FIRECUBE_API ApplicationContext
-<font color="black">{</font>
-<font color="blue">public</font><font color="black">:</font>
-    ApplicationContext<font color="black">(</font><font color="black">)</font>;
-    ApplicationContext<font color="black">(</font>TextureManager <font color="black">*</font>textureManager,ShaderManager <font color="black">*</font>shaderManager,FontManager <font color="black">*</font>fontManager<font color="black">)</font>;
-    TextureManager <font color="black">*</font>textureManager;
-    ShaderManager <font color="black">*</font>shaderManager;
-    FontManager <font color="black">*</font>fontManager;
-<font color="black">}</font>;
-<font color="green">/** 
 This class is responsible for the intialization and running of the application.
 */</font>
 <font color="blue">class</font> FIRECUBE_API Application
@@ -65,15 +51,7 @@ This class is responsible for the intialization and running of the application.
     <font color="green">/** 
     * Returns the current frames per second.
     */</font>
-    <font color="blue">float</font> GetFps<font color="black">(</font><font color="black">)</font>;
-    <font color="green">/** 
-    * Sets the current application context.
-    */</font>
-    <font color="blue">static</font> <font color="blue">void</font> SetContext<font color="black">(</font>ApplicationContext <font color="black">&</font>context<font color="black">)</font>;
-    <font color="green">/** 
-    * Returns the current application context.
-    */</font>
-    <font color="blue">static</font> ApplicationContext GetContext<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">float</font> GetFps<font color="black">(</font><font color="black">)</font>; 
     <font color="green">/** 
     * User should override this to handle the input.
     * Called once per frame.
@@ -95,12 +73,10 @@ This class is responsible for the intialization and running of the application.
     <font color="blue">float</font> deltaTime;;
     <font color="blue">float</font> fps;
     <font color="blue">float</font> fpsTime;
-    <font color="blue">float</font> frameCount;
-    ApplicationContext defaultContext;
+    <font color="blue">float</font> frameCount;   
     TextureManager defaultTextureManager;
     ShaderManager defaultShaderManager;
-    FontManager defaultFontManager;
-    <font color="blue">static</font> ApplicationContext <font color="black">*</font>currentContext;
+    FontManager defaultFontManager; 
 <font color="black">}</font>;
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>pop<font color="black">)</font>
 <font color="blue">#endif</font>

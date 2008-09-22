@@ -109,8 +109,7 @@ Mesh.h
 * A class representing a model resource.
 */</font>
 <font color="blue">class</font> FIRECUBE_API ModelResource
-<font color="black">{</font>
-    <font color="blue">friend</font> <font color="blue">class</font> Renderer;
+<font color="black">{</font>   
 <font color="blue">public</font><font color="black">:</font>
     ModelResource<font color="black">(</font><font color="black">)</font>;
     ~ModelResource<font color="black">(</font><font color="black">)</font>;
@@ -141,6 +140,7 @@ Mesh.h
     <font color="blue">void</font> SetProgram<font color="black">(</font><font color="blue">const</font> Program <font color="black">&</font>program<font color="black">)</font>;
     vector<font color="black">&#60;</font>Object<font color="black">&#62;</font> object;
     vector<font color="black">&#60;</font>Material<font color="black">&#62;</font> material;  
+    string <font color="blue">name</font>;
 <font color="blue">private</font><font color="black">:</font>
     DWORD ProcessChunk<font color="black">(</font><font color="blue">char</font> <font color="black">*</font>buffer<font color="black">)</font>;
     Material <font color="black">*</font>GetMaterialByName<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>;    

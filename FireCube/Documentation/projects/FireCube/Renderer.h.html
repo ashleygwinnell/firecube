@@ -13,103 +13,119 @@ Renderer.h
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
 
 <font color="green">/**
-* A class responsible for the rendering pipeline.
+* A namespace containing various functions responsible for the rendering pipeline.
 */</font>
-<font color="blue">class</font> FIRECUBE_API Renderer
+<font color="blue">namespace</font> Renderer
 <font color="black">{</font>
-<font color="blue">public</font><font color="black">:</font>
-    Renderer<font color="black">(</font><font color="black">)</font>;
-    ~Renderer<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
     * Clears the depth and color buffer.
     * @param color The color to clear the framebuffer.
     * @depth The depth to set the depth buffer.
     */</font>
-    <font color="blue">void</font> Clear<font color="black">(</font>vec4 color,<font color="blue">float</font> depth<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API Clear<font color="black">(</font>vec4 color,<font color="blue">float</font> depth<font color="black">)</font>;
     <font color="green">/**
     * Renders a model.
     * @param model The model to render.
     */</font>
-    <font color="blue">void</font> Render<font color="black">(</font>Model model<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API Render<font color="black">(</font>Model model<font color="black">)</font>;
     <font color="green">/**
     * Sets the current modelview matrix.
     */</font>
-    <font color="blue">void</font> SetModelViewMatrix<font color="black">(</font>mat4 <font color="black">&</font>m<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API SetModelViewMatrix<font color="black">(</font>mat4 <font color="black">&</font>m<font color="black">)</font>;
     <font color="green">/**
     * Sets the current projection matrix.
     */</font>
-    <font color="blue">void</font> SetProjectionMatrix<font color="black">(</font>mat4 <font color="black">&</font>m<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API SetProjectionMatrix<font color="black">(</font>mat4 <font color="black">&</font>m<font color="black">)</font>;
     <font color="green">/**
     * Pushes the the current modelview matrix to the stack.
     */</font>
-    <font color="blue">void</font> SaveModelViewMatrix<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API SaveModelViewMatrix<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
     * Pops the top modelview matrix from the stack and sets it to be the current matrix.
     */</font>
-    <font color="blue">void</font> RestoreModelViewMatrix<font color="black">(</font><font color="black">)</font>;
-    <font color="green">/**
-    * Multiplies the current modelview matrix by a given matrix.    
-    */</font>
+    <font color="blue">void</font> FIRECUBE_API RestoreModelViewMatrix<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
     * Pushes the the current projection matrix to the stack.
     */</font>
-    <font color="blue">void</font> SaveProjectionMatrix<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API SaveProjectionMatrix<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
     * Pops the top projection matrix from the stack and sets it to be the current matrix.
     */</font>
-    <font color="blue">void</font> RestoreProjectionMatrix<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API RestoreProjectionMatrix<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
     * Multiplies the current modelview matrix by a given matrix.    
     */</font>
-    <font color="blue">void</font> MultiplyModelViewMatrix<font color="black">(</font>mat4 <font color="black">&</font>mat<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API MultiplyModelViewMatrix<font color="black">(</font>mat4 <font color="black">&</font>mat<font color="black">)</font>;
     <font color="green">/**
     * Binds the specified texture.
     * @param texture The texture to bind
     * @param unit Specifies the texture unit.
     */</font>
-    <font color="blue">void</font> UseTexture<font color="black">(</font>Texture tex,<font color="blue">unsigned</font> <font color="blue">int</font> unit<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API UseTexture<font color="black">(</font>Texture tex,<font color="blue">unsigned</font> <font color="blue">int</font> unit<font color="black">)</font>;
     <font color="green">/**
     * Renders text.
     * @param font The font to use.
     * @param pos The position of the text.
     * @param str The string to output.
     */</font>
-    <font color="blue">void</font> RenderText<font color="black">(</font>Font font,vec2 pos,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API RenderText<font color="black">(</font>Font font,vec2 pos,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
     <font color="green">/**
     * Renders an index stream.  
     * @param mode The rendering mode.
     * @param count The number of indices to render.
     */</font>
-    <font color="blue">void</font> RenderIndexStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API RenderIndexStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
     <font color="green">/**
     * Renders a stream.
     * @param mode The rendering mode.
     * @param count The number of indices to render.
     */</font>
-    <font color="blue">void</font> RenderStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API RenderStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
     <font color="green">/**
     * Uses a program.
     * @param program The program to use.
     */</font>
-    <font color="blue">void</font> UseProgram<font color="black">(</font><font color="blue">const</font> Program <font color="black">&</font>program<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API UseProgram<font color="black">(</font>Program program<font color="black">)</font>;
     <font color="green">/**
     * Uses a material.
     * @param material The material to use.
     */</font>
-    <font color="blue">void</font> UseMaterial<font color="black">(</font><font color="blue">const</font> Material <font color="black">&</font>material<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API UseMaterial<font color="black">(</font><font color="blue">const</font> Material <font color="black">&</font>material<font color="black">)</font>;
     <font color="green">/**
     * Sets a perspective projection.
     * @param fov The field of view in degrees.
     * @param zNear The near clipping plane.
     * @param zFar The far clipping plane.
     */</font>
-    <font color="blue">void</font> SetPerspectiveProjection<font color="black">(</font><font color="blue">float</font> fov,<font color="blue">float</font> zNear,<font color="blue">float</font> zFar<font color="black">)</font>;    
+    <font color="blue">void</font> FIRECUBE_API SetPerspectiveProjection<font color="black">(</font><font color="blue">float</font> fov,<font color="blue">float</font> zNear,<font color="blue">float</font> zFar<font color="black">)</font>;   
     <font color="green">/**
     * Sets an orthographic projection with a one to one pixel ratio.    
     */</font>
-    <font color="blue">void</font> SetOrthographicProjection<font color="black">(</font><font color="black">)</font>;
-<font color="blue">private</font><font color="black">:</font>    
-    Program textShader;
+    <font color="blue">void</font> FIRECUBE_API SetOrthographicProjection<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Sets the current texture manager.
+    */</font>
+    <font color="blue">void</font> FIRECUBE_API SetTextureManager<font color="black">(</font>TextureManager <font color="black">*</font>textureManager<font color="black">)</font>;
+    <font color="green">/**
+    * Gets the current texture manager.
+    */</font>
+    TextureManager FIRECUBE_API <font color="black">*</font>GetTextureManager<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Sets the current shader manager.
+    */</font>
+    <font color="blue">void</font> FIRECUBE_API SetShaderManager<font color="black">(</font>ShaderManager <font color="black">*</font>shaderManager<font color="black">)</font>;
+    <font color="green">/**
+    * Gets the current shader manager.
+    */</font>
+    ShaderManager FIRECUBE_API <font color="black">*</font>GetShaderManager<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Sets the current font manager.
+    */</font>
+    <font color="blue">void</font> FIRECUBE_API SetFontManager<font color="black">(</font>FontManager <font color="black">*</font>fontManager<font color="black">)</font>;
+    <font color="green">/**
+    * Gets the current font manager.
+    */</font>
+    FontManager FIRECUBE_API <font color="black">*</font>GetFontManager<font color="black">(</font><font color="black">)</font>;
 <font color="black">}</font>;
 
 
