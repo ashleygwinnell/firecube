@@ -39,8 +39,7 @@ void MyMainFrame::MenuItem2Clicked( wxCommandEvent& event )
 		string path=sfile.substr(0,d+1);
 		wxSetWorkingDirectory(path.c_str());
 	}
-	glCanvas->model=glCanvas->mm.Create(sfile);		
-	glCanvas->model->SetProgram(glCanvas->program);
+	glCanvas->LoadModel(sfile);
 }
 void MyMainFrame::MenuItem3Clicked( wxCommandEvent& event )
 {	
@@ -76,15 +75,23 @@ void MyMainFrame::MenuItem5Clicked( wxCommandEvent& event )
 void MyMainFrame::MenuItem6Clicked( wxCommandEvent& event )
 {
 	glCanvas->renderingMode=GL_POINT;
+	glCanvas->cullFaceEnabled=false;
 	glCanvas->Refresh();
 }
 void MyMainFrame::MenuItem7Clicked( wxCommandEvent& event )
 {
 	glCanvas->renderingMode=GL_LINE;
+	glCanvas->cullFaceEnabled=false;
 	glCanvas->Refresh();
 }
 void MyMainFrame::MenuItem8Clicked( wxCommandEvent& event )
 {
 	glCanvas->renderingMode=GL_FILL;
+	glCanvas->cullFaceEnabled=true;
+	glCanvas->Refresh();
+}
+void MyMainFrame::MenuItem9Clicked( wxCommandEvent& event )
+{
+	glCanvas->renderNormals=!glCanvas->renderNormals;
 	glCanvas->Refresh();
 }

@@ -44,29 +44,56 @@ MyGLCanvas::MyGLCanvas(wxWindow *parent, const MyGLCanvas *other,
 MyGLCanvas::~MyGLCanvas()
 {
 }
-
-void MyGLCanvas::Render()
-{	
+void MyGLCanvas::Init()
+{
 	FireCubeApp *app=&(((MyApp*)wxTheApp)->fireCubeApp);	
+	app->InitializeNoWindow();	
+
+	rot=FireCube::vec3(0,0,-5);
+	font=FireCube::Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf:18");
+	bgColor=FireCube::vec4(0.249f,0.521f,1.0f,1.0f);
+	renderingMode=GL_FILL;
+	cullFaceEnabled=true;
+	renderNormals=false;
+
+	vshader=FireCube::Renderer::GetShaderManager()->Create("v.vshader");
+	fshader=FireCube::Renderer::GetShaderManager()->Create("p.fshader");
+	program=FireCube::Program(new FireCube::ProgramResource);
+	program->Create(vshader,fshader);	
+	
+	normalRenderingBuffer=FireCube::Buffer(new FireCube::BufferResource);
+	normalRenderingBuffer->Create();
+	normalRenderingProgram=FireCube::Program(new FireCube::ProgramResource);
+	FireCube::Shader nvShader(new FireCube::ShaderResource);
+	FireCube::Shader nfShader(new FireCube::ShaderResource);
+	nvShader->Create(FireCube::VERTEX_SHADER,"void main() \
+								  {	\
+									gl_Position = ftransform(); \
+								  } ");
+
+	nfShader->Create(FireCube::FRAGMENT_SHADER,"uniform sampler2D tex0; \
+									void main() \
+									{ \
+									gl_FragColor = vec4(1.0,1.0,1.0,1.0);  \
+									} ");
+	normalRenderingProgram->Create(nvShader,nfShader);	
+	LoadModel("teapot2.3ds");		
+}
+void MyGLCanvas::Render()
+{		
 	wxPaintDC dc(this);
 	if (!GetContext()) return;
 	SetCurrent();
 	if (!init)
 	{		
-		init=true;		
-		app->InitializeNoWindow();
-		model=mm.Create("teapot2.3ds");				
-		vshader=FireCube::Renderer::GetShaderManager()->Create("v.vshader");
-		fshader=FireCube::Renderer::GetShaderManager()->Create("p.fshader");
-		program=FireCube::Program(new FireCube::ProgramResource);
-		program->Create(vshader,fshader);
-		model->SetProgram(program);
-		rot=FireCube::vec3(0,0,-5);
-		font=FireCube::Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf:18");
-		bgColor=FireCube::vec4(0.249f,0.521f,1.0f,1.0f);
-		renderingMode=GL_FILL;
+		init=true;
+		Init();
 	}	
 	glPolygonMode(GL_FRONT_AND_BACK,renderingMode);
+	if (cullFaceEnabled)
+		glEnable(GL_CULL_FACE);
+	else
+		glDisable(GL_CULL_FACE);
 	FireCube::Renderer::Clear(bgColor,1.0f);
 	FireCube::mat4 mat;
 	mat.Identity();
@@ -76,7 +103,12 @@ void MyGLCanvas::Render()
 	mat.RotateY(rot.y);	
 	FireCube::Renderer::SetModelViewMatrix(mat);
 	FireCube::Renderer::Render(model);	
-
+	if (renderNormals)
+	{
+		FireCube::Renderer::UseProgram(normalRenderingProgram);
+		normalRenderingBuffer->SetVertexStream(3);
+		FireCube::Renderer::RenderStream(FireCube::LINES,normalRenderingBufferSize);
+	}
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	FireCube::Renderer::SetModelViewMatrix(FireCube::mat4());
 	FireCube::Renderer::SetOrthographicProjection();
@@ -100,7 +132,19 @@ void MyGLCanvas::OnPaint( wxPaintEvent& WXUNUSED(event) )
 {
 	Render();
 }
-
+void MyGLCanvas::LoadModel(const string &filename)
+{
+	model=mm.Create(filename);		
+	model->SetProgram(program);	
+	vector<FireCube::vec3> normals;
+	for (unsigned int i=0;i<model->object[0].vertex.size();i++)
+	{
+		normals.push_back(model->object[0].vertex[i]);
+		normals.push_back(model->object[0].vertex[i]+model->object[0].normal[i]*0.07f);
+	}
+	normalRenderingBuffer->LoadData(&normals[0],normals.size()*sizeof(FireCube::vec3),FireCube::STATIC);
+	normalRenderingBufferSize=normals.size();
+}
 void MyGLCanvas::OnSize(wxSizeEvent& event)
 {
 	if (!IsShownOnScreen())
@@ -128,15 +172,18 @@ void MyGLCanvas::OnMotion(wxMouseEvent& event)
 	FireCube::vec2 curpos(event.GetPosition().x,event.GetPosition().y);
 	if (event.LeftIsDown())	
 	{		
-		rot.x-=(curpos.y-lastpos.y)/20.0f;
-		rot.y-=(curpos.x-lastpos.x)/20.0f;
+		rot.x-=(curpos.y-lastpos.y)/30.0f;
+		rot.y-=(curpos.x-lastpos.x)/30.0f;
 	}
 	lastpos=curpos;
 	this->Refresh(false);
 }
 void MyGLCanvas::OnMouseWheel(wxMouseEvent& event)
-{
+{	
 	int r=event.GetWheelRotation();
-	rot.z+=(float)r/150.0f;
+	if (event.ShiftDown())
+		rot.z+=(float)r/400.0f;
+	else	
+		rot.z+=(float)r/150.0f;
 	this->Refresh(false);	
 }

@@ -21,6 +21,7 @@ protected:
 	void MenuItem6Clicked( wxCommandEvent& event );
 	void MenuItem7Clicked( wxCommandEvent& event );
 	void MenuItem8Clicked( wxCommandEvent& event );
+	void MenuItem9Clicked( wxCommandEvent& event );
 
 public:
 	/** Constructor */

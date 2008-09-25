@@ -32,7 +32,7 @@
             <property name="minimum_size"></property>
             <property name="name">MainFrame</property>
             <property name="pos"></property>
-            <property name="size">618,596</property>
+            <property name="size">627,596</property>
             <property name="style">wxDEFAULT_FRAME_STYLE</property>
             <property name="subclass"></property>
             <property name="title"></property>
@@ -273,6 +273,24 @@
                         <property name="label">Rendering</property>
                         <property name="name">menu14</property>
                         <property name="permission">protected</property>
+                        <object class="wxMenuItem" expanded="1">
+                            <property name="bitmap"></property>
+                            <property name="checked">0</property>
+                            <property name="enabled">1</property>
+                            <property name="help"></property>
+                            <property name="id">wxID_ANY</property>
+                            <property name="kind">wxITEM_CHECK</property>
+                            <property name="label">Normals</property>
+                            <property name="name">menuItem9</property>
+                            <property name="permission">none</property>
+                            <property name="shortcut"></property>
+                            <property name="unchecked_bitmap"></property>
+                            <event name="OnMenuSelection">MenuItem9Clicked</event>
+                            <event name="OnUpdateUI"></event>
+                        </object>
+                        <object class="separator" expanded="1">
+                            <property name="permission">none</property>
+                        </object>
                         <object class="wxMenuItem" expanded="1">
                             <property name="bitmap"></property>
                             <property name="checked">0</property>
