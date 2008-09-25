@@ -14,7 +14,7 @@ public:
 	}
 	virtual ~ResourceManager<T>()
 	{
-		Logger::Write("Destroying resource manager\n");
+		Logger::Write("Destroying resource manager.\n");
 	}
 	ResourceManager<T>(const ResourceManager<T> &r)
 	{

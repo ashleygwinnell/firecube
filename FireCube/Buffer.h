@@ -18,11 +18,11 @@ enum RenderMode
 /**
 * A buffer of data used for rendering.
 */
-class FIRECUBE_API Buffer
+class FIRECUBE_API BufferResource
 {
 public:	
-	Buffer();
-	~Buffer();
+	BufferResource();
+	~BufferResource();
 	/**
 	* Creates a new buffer.
 	*/
@@ -68,7 +68,9 @@ public:
 	*/
 	void Destroy();
 
-	GLuint buffer;
+	GLuint id;
 };
+
+typedef boost::shared_ptr<BufferResource> Buffer;
 
 #endif

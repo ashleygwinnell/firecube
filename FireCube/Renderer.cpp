@@ -15,6 +15,8 @@ using namespace std;
 #include "privateFont.h"
 using namespace FireCube;
 Program textShader;
+Buffer textVertexBuffer;
+Buffer textUvBuffer;
 TextureManager *currentTextureManager=NULL;
 ShaderManager *currentShaderManager=NULL;
 FontManager *currentFontManager=NULL;
@@ -181,13 +183,17 @@ void Renderer::Render(Model model)
 	for (;i!=model->object.end();i++)
 	{	
 		vector<Mesh>::iterator j=i->mesh.begin();
-		i->vertexBuffer.SetVertexStream(3);
-		i->uvBuffer.SetTexCoordStream(0);
-		i->normalBuffer.SetNormalStream();
+		if (i->vertexBuffer)
+			i->vertexBuffer->SetVertexStream(3);
+		if (i->uvBuffer)
+			i->uvBuffer->SetTexCoordStream(0);
+		if (i->normalBuffer)
+			i->normalBuffer->SetNormalStream();
 		for (;j!=i->mesh.end();j++)
 		{
 			UseMaterial(*j->material);
-			j->indexBuffer.SetIndexStream();
+			if (j->indexBuffer)
+				j->indexBuffer->SetIndexStream();
 			RenderIndexStream(TRIANGLES,j->face.size()*3);			
 		}
 	}
@@ -231,10 +237,7 @@ void Renderer::RenderText(Font font,vec2 pos,const string &str)
 	{
 		UseProgram(textShader);	
 		textShader->Uniform1i("tex0",0);
-	}
-	Buffer vb,uvb;
-	vb.Create();
-	uvb.Create();
+	}	
 	int numQuads=0;
 	vec2 *vBuffer=new vec2[str.size()*4];
 	vec2 *uvBuffer=new vec2[str.size()*4];
@@ -278,10 +281,10 @@ void Renderer::RenderText(Font font,vec2 pos,const string &str)
 			previous=glyphIndex;
 		}		
 	}	
-	vb.LoadData(vBuffer,numQuads*4*2*sizeof(float),STREAM);
-	uvb.LoadData(uvBuffer,numQuads*4*2*sizeof(float),STREAM);
-	uvb.SetTexCoordStream(0);
-	vb.SetVertexStream(2);
+	textVertexBuffer->LoadData(vBuffer,numQuads*4*2*sizeof(float),STREAM);
+	textUvBuffer->LoadData(uvBuffer,numQuads*4*2*sizeof(float),STREAM);
+	textUvBuffer->SetTexCoordStream(0);
+	textVertexBuffer->SetVertexStream(2);
 	RenderStream(QUADS,numQuads*4);
 	glDisable(GL_BLEND);
 	glDisable(GL_TEXTURE_2D);
@@ -397,21 +400,25 @@ void Renderer::SetOrthographicProjection()
 void InitializeRenderer()
 {
 	textShader=Program(new ProgramResource);
-	Shader vshader=Shader(new ShaderResource);
-	Shader pshader=Shader(new ShaderResource);				
+	Shader vShader=Shader(new ShaderResource);
+	Shader fShader=Shader(new ShaderResource);				
+	textVertexBuffer=Buffer(new BufferResource);
+	textUvBuffer=Buffer(new BufferResource);
 
-	vshader->Create(VERTEX_SHADER,"void main() \
+	textVertexBuffer->Create();
+	textUvBuffer->Create();
+	vShader->Create(VERTEX_SHADER,"void main() \
 								  {	\
 								  gl_TexCoord[0]=gl_MultiTexCoord0; \
 								  gl_Position = ftransform(); \
 								  } ");
 
-	pshader->Create(FRAGMENT_SHADER,"uniform sampler2D tex0; \
+	fShader->Create(FRAGMENT_SHADER,"uniform sampler2D tex0; \
 									void main() \
 									{ \
 									gl_FragColor = texture2D(tex0,gl_TexCoord[0].st);  \
 									} ");
-	textShader->Create(vshader,pshader);	
+	textShader->Create(vShader,fShader);	
 	
 }
 void Renderer::SetTextureManager(TextureManager *textureManager)
@@ -440,5 +447,7 @@ FontManager *Renderer::GetFontManager()
 }
 void DestroyRenderer()
 {
+	textVertexBuffer.reset();
+	textUvBuffer.reset();
 	textShader.reset();
 }

@@ -59,6 +59,10 @@ public:
 	* Called once per frame.
 	*/
 	virtual bool Render(float time) = 0;
+	/**
+	* Called once initialization is complete to execute user specific intialization.
+	*/
+	virtual bool Init();
 //private:
 	Timer timer;	
 	bool running;

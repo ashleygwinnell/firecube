@@ -67,6 +67,10 @@ This class is responsible for the intialization and running of the application.
     * Called once per frame.
     */</font>
     virtual <font color="blue">bool</font> Render<font color="black">(</font><font color="blue">float</font> time<font color="black">)</font> <font color="black">=</font> <font color="maroon">0</font>;
+    <font color="green">/**
+    * Called once initialization is complete to execute user specific intialization.
+    */</font>
+    virtual <font color="blue">bool</font> Init<font color="black">(</font><font color="black">)</font>;
 <font color="green">//private:</font>
     Timer timer;    
     <font color="blue">bool</font> running;

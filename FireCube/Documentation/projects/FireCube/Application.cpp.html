@@ -49,7 +49,7 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
     SDL_GL_SetAttribute<font color="black">(</font>SDL_GL_DEPTH_SIZE, <font color="maroon">24</font><font color="black">)</font>;
     SDL_GL_SetAttribute<font color="black">(</font>SDL_GL_DOUBLEBUFFER, <font color="maroon">1</font><font color="black">)</font>;    
     
-    screen<font color="black">=</font>SDL_SetVideoMode<font color="black">(</font>width,height,bpp,SDL_OPENGL <font color="black">|</font> <font color="black">(</font>fullscreen ? SDL_FULLSCREEN <font color="black">:</font> <font color="maroon">0</font><font color="black">)</font><font color="black">)</font>;
+    screen<font color="black">=</font>SDL_SetVideoMode<font color="black">(</font>width,height,bpp,SDL_OPENGL <font color="black">|</font> <font color="black">(</font>fullscreen ? SDL_FULLSCREEN <font color="black">:</font> SDL_RESIZABLE<font color="black">)</font><font color="black">)</font>;
     <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>screen<font color="black">)</font>
         <font color="blue">return</font> <font color="blue">false</font>;
         
@@ -59,10 +59,8 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
     glMatrixMode<font color="black">(</font>GL_PROJECTION<font color="black">)</font>;
     glLoadMatrixf<font color="black">(</font>mat.m<font color="black">)</font>;
     glMatrixMode<font color="black">(</font>GL_MODELVIEW<font color="black">)</font>;
-    glLoadIdentity<font color="black">(</font><font color="black">)</font>;
-    InitializeNoWindow<font color="black">(</font><font color="black">)</font>;
-
-    <font color="blue">return</font> <font color="blue">true</font>;
+    glLoadIdentity<font color="black">(</font><font color="black">)</font>;   
+    <font color="blue">return</font> InitializeNoWindow<font color="black">(</font><font color="black">)</font>;;
 <font color="black">}</font>
 <font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>InitializeNoWindow<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>   
@@ -73,8 +71,8 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
     glEnable<font color="black">(</font>GL_CULL_FACE<font color="black">)</font>;
     srand<font color="black">(</font>GetTickCount<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
     FT_Init_FreeType<font color="black">(</font><font color="black">&</font>freeTypeLibrary<font color="black">)</font>; 
-    InitializeRenderer<font color="black">(</font><font color="black">)</font>;   
-    <font color="blue">return</font> <font color="blue">true</font>;
+    InitializeRenderer<font color="black">(</font><font color="black">)</font>;       
+    <font color="blue">return</font> Init<font color="black">(</font><font color="black">)</font>;
 <font color="black">}</font>
 <font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>Destroy<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>       
@@ -101,6 +99,10 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
                     running<font color="black">=</font><font color="blue">false</font>;
                 <font color="black">}</font>
             <font color="black">}</font>
+            <font color="blue">if</font> <font color="black">(</font>event.type<font color="black">=</font><font color="black">=</font>SDL_VIDEORESIZE<font color="black">)</font>
+            <font color="black">{</font>
+                glViewport<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font>,event.resize.w,event.resize.h<font color="black">)</font>;
+            <font color="black">}</font>
             <font color="blue">if</font> <font color="black">(</font>event.type<font color="black">=</font><font color="black">=</font>SDL_QUIT<font color="black">)</font> 
                 running<font color="black">=</font><font color="blue">false</font>;
         <font color="black">}</font>       
@@ -126,6 +128,10 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
 <font color="blue">float</font> Application<font color="black">:</font><font color="black">:</font>GetFps<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
     <font color="blue">return</font> fps;
+<font color="black">}</font>
+<font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>Init<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> <font color="blue">true</font>;
 <font color="black">}</font>
 </PRE>
 </BODY>

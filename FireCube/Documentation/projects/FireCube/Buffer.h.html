@@ -26,11 +26,11 @@ Buffer.h
 <font color="green">/**
 * A buffer of data used for rendering.
 */</font>
-<font color="blue">class</font> FIRECUBE_API Buffer
+<font color="blue">class</font> FIRECUBE_API BufferResource
 <font color="black">{</font>
 <font color="blue">public</font><font color="black">:</font> 
-    Buffer<font color="black">(</font><font color="black">)</font>;
-    ~Buffer<font color="black">(</font><font color="black">)</font>;
+    BufferResource<font color="black">(</font><font color="black">)</font>;
+    ~BufferResource<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
     * Creates a new buffer.
     */</font>
@@ -76,8 +76,10 @@ Buffer.h
     */</font>
     <font color="blue">void</font> Destroy<font color="black">(</font><font color="black">)</font>;
 
-    GLuint buffer;
+    GLuint id;
 <font color="black">}</font>;
+
+<font color="blue">typedef</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>BufferResource<font color="black">&#62;</font> Buffer;
 
 <font color="blue">#endif</font>
 </PRE>

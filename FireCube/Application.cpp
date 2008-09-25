@@ -51,10 +51,8 @@ bool Application::Initialize(int width,int height,int bpp,bool fullscreen)
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(mat.m);
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	InitializeNoWindow();
-
-	return true;
+	glLoadIdentity();	
+	return InitializeNoWindow();;
 }
 bool Application::InitializeNoWindow()
 {	
@@ -65,8 +63,8 @@ bool Application::InitializeNoWindow()
 	glEnable(GL_CULL_FACE);
 	srand(GetTickCount());
 	FT_Init_FreeType(&freeTypeLibrary);	
-	InitializeRenderer();	
-	return true;
+	InitializeRenderer();		
+	return Init();
 }
 bool Application::Destroy()
 {		
@@ -122,4 +120,8 @@ void Application::SetTitle(string &title)
 float Application::GetFps()
 {
 	return fps;
+}
+bool Application::Init()
+{
+	return true;
 }

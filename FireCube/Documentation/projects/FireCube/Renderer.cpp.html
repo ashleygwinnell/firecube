@@ -23,6 +23,8 @@ Renderer.cpp
 <font color="blue">#include</font> <font color="maroon">"privateFont.h"</font>
 <font color="blue">using</font> <font color="blue">namespace</font> FireCube;
 Program textShader;
+Buffer textVertexBuffer;
+Buffer textUvBuffer;
 TextureManager <font color="black">*</font>currentTextureManager<font color="black">=</font>NULL;
 ShaderManager <font color="black">*</font>currentShaderManager<font color="black">=</font>NULL;
 FontManager <font color="black">*</font>currentFontManager<font color="black">=</font>NULL;
@@ -189,13 +191,17 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
     <font color="blue">for</font> <font color="black">(</font>;i<font color="black">!</font><font color="black">=</font>model<font color="black">-</font><font color="black">&#62;</font>object.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
     <font color="black">{</font>   
         vector<font color="black">&#60;</font>Mesh<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator j<font color="black">=</font>i<font color="black">-</font><font color="black">&#62;</font>mesh.begin<font color="black">(</font><font color="black">)</font>;
-        i<font color="black">-</font><font color="black">&#62;</font>vertexBuffer.SetVertexStream<font color="black">(</font><font color="maroon">3</font><font color="black">)</font>;
-        i<font color="black">-</font><font color="black">&#62;</font>uvBuffer.SetTexCoordStream<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>;
-        i<font color="black">-</font><font color="black">&#62;</font>normalBuffer.SetNormalStream<font color="black">(</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>i<font color="black">-</font><font color="black">&#62;</font>vertexBuffer<font color="black">)</font>
+            i<font color="black">-</font><font color="black">&#62;</font>vertexBuffer<font color="black">-</font><font color="black">&#62;</font>SetVertexStream<font color="black">(</font><font color="maroon">3</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>i<font color="black">-</font><font color="black">&#62;</font>uvBuffer<font color="black">)</font>
+            i<font color="black">-</font><font color="black">&#62;</font>uvBuffer<font color="black">-</font><font color="black">&#62;</font>SetTexCoordStream<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>i<font color="black">-</font><font color="black">&#62;</font>normalBuffer<font color="black">)</font>
+            i<font color="black">-</font><font color="black">&#62;</font>normalBuffer<font color="black">-</font><font color="black">&#62;</font>SetNormalStream<font color="black">(</font><font color="black">)</font>;
         <font color="blue">for</font> <font color="black">(</font>;j<font color="black">!</font><font color="black">=</font>i<font color="black">-</font><font color="black">&#62;</font>mesh.end<font color="black">(</font><font color="black">)</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
         <font color="black">{</font>
             UseMaterial<font color="black">(</font><font color="black">*</font>j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">)</font>;
-            j<font color="black">-</font><font color="black">&#62;</font>indexBuffer.SetIndexStream<font color="black">(</font><font color="black">)</font>;
+            <font color="blue">if</font> <font color="black">(</font>j<font color="black">-</font><font color="black">&#62;</font>indexBuffer<font color="black">)</font>
+                j<font color="black">-</font><font color="black">&#62;</font>indexBuffer<font color="black">-</font><font color="black">&#62;</font>SetIndexStream<font color="black">(</font><font color="black">)</font>;
             RenderIndexStream<font color="black">(</font>TRIANGLES,j<font color="black">-</font><font color="black">&#62;</font>face.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">3</font><font color="black">)</font>;          
         <font color="black">}</font>
     <font color="black">}</font>
@@ -239,10 +245,7 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
     <font color="black">{</font>
         UseProgram<font color="black">(</font>textShader<font color="black">)</font>; 
         textShader<font color="black">-</font><font color="black">&#62;</font>Uniform1i<font color="black">(</font><font color="maroon">"tex0"</font>,<font color="maroon">0</font><font color="black">)</font>;
-    <font color="black">}</font>
-    Buffer vb,uvb;
-    vb.Create<font color="black">(</font><font color="black">)</font>;
-    uvb.Create<font color="black">(</font><font color="black">)</font>;
+    <font color="black">}</font>   
     <font color="blue">int</font> numQuads<font color="black">=</font><font color="maroon">0</font>;
     vec2 <font color="black">*</font>vBuffer<font color="black">=</font><font color="blue">new</font> vec2<font color="black">[</font>str.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">4</font><font color="black">]</font>;
     vec2 <font color="black">*</font>uvBuffer<font color="black">=</font><font color="blue">new</font> vec2<font color="black">[</font>str.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">4</font><font color="black">]</font>;
@@ -286,10 +289,10 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
             previous<font color="black">=</font>glyphIndex;
         <font color="black">}</font>       
     <font color="black">}</font>   
-    vb.LoadData<font color="black">(</font>vBuffer,numQuads<font color="black">*</font><font color="maroon">4</font><font color="black">*</font><font color="maroon">2</font><font color="black">*</font><font color="blue">sizeof</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>,STREAM<font color="black">)</font>;
-    uvb.LoadData<font color="black">(</font>uvBuffer,numQuads<font color="black">*</font><font color="maroon">4</font><font color="black">*</font><font color="maroon">2</font><font color="black">*</font><font color="blue">sizeof</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>,STREAM<font color="black">)</font>;
-    uvb.SetTexCoordStream<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>;
-    vb.SetVertexStream<font color="black">(</font><font color="maroon">2</font><font color="black">)</font>;
+    textVertexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font>vBuffer,numQuads<font color="black">*</font><font color="maroon">4</font><font color="black">*</font><font color="maroon">2</font><font color="black">*</font><font color="blue">sizeof</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>,STREAM<font color="black">)</font>;
+    textUvBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font>uvBuffer,numQuads<font color="black">*</font><font color="maroon">4</font><font color="black">*</font><font color="maroon">2</font><font color="black">*</font><font color="blue">sizeof</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>,STREAM<font color="black">)</font>;
+    textUvBuffer<font color="black">-</font><font color="black">&#62;</font>SetTexCoordStream<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>;
+    textVertexBuffer<font color="black">-</font><font color="black">&#62;</font>SetVertexStream<font color="black">(</font><font color="maroon">2</font><font color="black">)</font>;
     RenderStream<font color="black">(</font>QUADS,numQuads<font color="black">*</font><font color="maroon">4</font><font color="black">)</font>;
     glDisable<font color="black">(</font>GL_BLEND<font color="black">)</font>;
     glDisable<font color="black">(</font>GL_TEXTURE_2D<font color="black">)</font>;
@@ -405,21 +408,25 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
 <font color="blue">void</font> InitializeRenderer<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
     textShader<font color="black">=</font>Program<font color="black">(</font><font color="blue">new</font> ProgramResource<font color="black">)</font>;
-    Shader vshader<font color="black">=</font>Shader<font color="black">(</font><font color="blue">new</font> ShaderResource<font color="black">)</font>;
-    Shader pshader<font color="black">=</font>Shader<font color="black">(</font><font color="blue">new</font> ShaderResource<font color="black">)</font>;              
+    Shader vShader<font color="black">=</font>Shader<font color="black">(</font><font color="blue">new</font> ShaderResource<font color="black">)</font>;
+    Shader fShader<font color="black">=</font>Shader<font color="black">(</font><font color="blue">new</font> ShaderResource<font color="black">)</font>;              
+    textVertexBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
+    textUvBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
 
-    vshader<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font>VERTEX_SHADER,<font color="maroon">"void main() \
+    textVertexBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
+    textUvBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
+    vShader<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font>VERTEX_SHADER,<font color="maroon">"void main() \
                                   { \
                                   gl_TexCoord[0]=gl_MultiTexCoord0; \
                                   gl_Position = ftransform(); \
                                   } "</font><font color="black">)</font>;
 
-    pshader<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font>FRAGMENT_SHADER,<font color="maroon">"uniform sampler2D tex0; \
+    fShader<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font>FRAGMENT_SHADER,<font color="maroon">"uniform sampler2D tex0; \
                                     void main() \
                                     { \
                                     gl_FragColor = texture2D(tex0,gl_TexCoord[0].st);  \
                                     } "</font><font color="black">)</font>;
-    textShader<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font>vshader,pshader<font color="black">)</font>;    
+    textShader<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font>vShader,fShader<font color="black">)</font>;    
     
 <font color="black">}</font>
 <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetTextureManager<font color="black">(</font>TextureManager <font color="black">*</font>textureManager<font color="black">)</font>
@@ -448,6 +455,8 @@ FontManager <font color="black">*</font>Renderer<font color="black">:</font><fon
 <font color="black">}</font>
 <font color="blue">void</font> DestroyRenderer<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
+    textVertexBuffer.reset<font color="black">(</font><font color="black">)</font>;
+    textUvBuffer.reset<font color="black">(</font><font color="black">)</font>;
     textShader.reset<font color="black">(</font><font color="black">)</font>;
 <font color="black">}</font>
 </PRE>

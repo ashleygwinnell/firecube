@@ -84,7 +84,8 @@ bool ModelResource::Load(const string &filename)
 						DWORD idx=sm->face[j].v[0];
 						sm->face[j]=object[k].face[idx];				
 					}
-					sm->indexBuffer.Create();
+					sm->indexBuffer=Buffer(new BufferResource);
+					sm->indexBuffer->Create();
 					vector<DWORD> tmp;
 					tmp.resize(sm->face.size()*3);
 					for (DWORD f=0;f<sm->face.size();f++)
@@ -93,7 +94,7 @@ bool ModelResource::Load(const string &filename)
 						tmp[f*3+1]=sm->face[f].v[1];
 						tmp[f*3+2]=sm->face[f].v[2];
 					}
-					sm->indexBuffer.LoadIndexData(&tmp[0],tmp.size(),STATIC);
+					sm->indexBuffer->LoadIndexData(&tmp[0],tmp.size(),STATIC);
 				}
 			}
 			CalculateNormals();
@@ -146,8 +147,9 @@ void ModelResource::CalculateNormals()
 		{			
 			object[k].normal[n].Normalize();		
 		}	
-		object[k].normalBuffer.Create();
-		object[k].normalBuffer.LoadData(&object[k].normal[0],sizeof(vec3)*object[k].normal.size(),STATIC);
+		object[k].normalBuffer=Buffer(new BufferResource);
+		object[k].normalBuffer->Create();
+		object[k].normalBuffer->LoadData(&object[k].normal[0],sizeof(vec3)*object[k].normal.size(),STATIC);
 	}
 }
 void ModelResource::ApplyTransformation(mat4 &transform)
@@ -158,7 +160,7 @@ void ModelResource::ApplyTransformation(mat4 &transform)
 		{
 			object[k].vertex[i]=object[k].vertex[i]*transform;
 		}
-		object[k].vertexBuffer.LoadData(&object[k].vertex[0],sizeof(vec3)*object[k].vertex.size(),STATIC);
+		object[k].vertexBuffer->LoadData(&object[k].vertex[0],sizeof(vec3)*object[k].vertex.size(),STATIC);
 	}
 	CalculateNormals();
 }
@@ -201,8 +203,9 @@ DWORD ModelResource::ProcessChunk(char *buffer)
 			curObject->vertex[j].Set(x,y,z);
 			i+=12;
 		}
-		curObject->vertexBuffer.Create();
-		curObject->vertexBuffer.LoadData(&curObject->vertex[0],sizeof(vec3)*numVertices,STATIC);
+		curObject->vertexBuffer=Buffer(new BufferResource);
+		curObject->vertexBuffer->Create();
+		curObject->vertexBuffer->LoadData(&curObject->vertex[0],sizeof(vec3)*numVertices,STATIC);
 		break;
 	case MESH_FACES:			
 		numFaces=*(WORD*)(buffer+i);
@@ -226,8 +229,9 @@ DWORD ModelResource::ProcessChunk(char *buffer)
 			curObject->uv[j].y=1.0f-*(float*)(buffer+i+4);
 			i+=8;
 		}
-		curObject->uvBuffer.Create();
-		curObject->uvBuffer.LoadData(&curObject->uv[0],sizeof(vec2)*numtexcoords,STATIC);
+		curObject->uvBuffer=Buffer(new BufferResource);
+		curObject->uvBuffer->Create();
+		curObject->uvBuffer->LoadData(&curObject->uv[0],sizeof(vec2)*numtexcoords,STATIC);
 		break;
 	case MESH_MATERIAL:		
 		sm.material=GetMaterialByName(buffer+i);
