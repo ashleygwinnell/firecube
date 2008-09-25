@@ -4,6 +4,7 @@
 #include <map>
 #include <boost/shared_array.hpp>
 #include <boost/weak_ptr.hpp>
+#include <iostream>
 using namespace std;
 #include <windows.h>
 #include <gl/gl.h>
@@ -17,7 +18,7 @@ vec3 rot(0,0,-3);
 int main(int argc, char *argv[])
 {	
 	if (!app.Initialize())
-		return 0;	
+		return 0;		
 	app.SetTitle(string("FireCube Test Application"));	
 	app.model=app.modelManager.Create("1.3ds");
 	app.font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf:18");		
@@ -40,8 +41,7 @@ bool App::Render(float t)
 	Renderer::SetModelViewMatrix(m);		
 	Renderer::Render(app.model);
 	Renderer::SetModelViewMatrix(mat4());
-	Renderer::SetOrthographicProjection();
-	
+	Renderer::SetOrthographicProjection();		
 	ostringstream oss;
 	oss << "FPS:"<<app.GetFps();	
 	Renderer::RenderText(app.font,vec2(0,0),oss.str());
