@@ -12,7 +12,7 @@ using namespace std;
 #include <gl/gl.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include <FireCube.h>
+#include "FireCube.h"
 #include "privateFont.h"
 using namespace FireCube;
 

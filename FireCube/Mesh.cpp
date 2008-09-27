@@ -15,11 +15,11 @@ using namespace std;
 #include "FireCube.h"
 using namespace FireCube;
 
-Material::Material()
+MaterialResource::MaterialResource()
 {
 	
 }
-Material::~Material()
+MaterialResource::~MaterialResource()
 {
 
 }
@@ -31,7 +31,7 @@ Face::~Face()
 {
 
 }
-Mesh::Mesh() : material(NULL)
+Mesh::Mesh() : material(Material())
 {
 	
 }
@@ -171,7 +171,7 @@ DWORD ModelResource::ProcessChunk(char *buffer)
 		curObject=&object[object.size()-1];
 	DWORD i=0,j=0;	
 	Material mat;
-	Material *matPtr;
+	Material matPtr;
 	Mesh sm;
 	DWORD numtexcoords,numFaces,numVertices;
 	WORD id=*(WORD*)(buffer+i);
@@ -249,25 +249,26 @@ DWORD ModelResource::ProcessChunk(char *buffer)
 	case MATERIAL:
 		break;
 	case MAT_NAME:				
-		mat.name=buffer+i;		
+		mat=Material(new MaterialResource);
+		mat->name=buffer+i;		
 		this->material.insert(this->material.begin(),mat);		
 		i+=(DWORD)strlen(buffer+i)+1;		
 		break;
 	case MAT_AMBIENT:
 		i+=6;
-		matPtr=&this->material[0];		
+		matPtr=this->material[0];		
 		matPtr->ambient=vec3((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f);
 		i+=3;
 		break;
 	case MAT_DIFFUSE:
 		i+=6;
-		matPtr=&this->material[0];		
+		matPtr=this->material[0];		
 		matPtr->diffuse=vec3((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f);
 		i+=3;
 		break;
 	case MAT_SPECULAR:
 		i+=6;
-		matPtr=&this->material[0];		
+		matPtr=this->material[0];		
 		matPtr->specular=vec3((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f);
 		i+=3;
 		break;
@@ -277,7 +278,7 @@ DWORD ModelResource::ProcessChunk(char *buffer)
 		break;
 	case MAT_SHIN2PCT:
 		i+=6;
-		matPtr=&this->material[0];
+		matPtr=this->material[0];
 		matPtr->shininess=(float)(*(WORD*)(buffer+i));
 		i+=2;
 		break;
@@ -289,7 +290,7 @@ DWORD ModelResource::ProcessChunk(char *buffer)
 		i+=8;
 		break;
 	case MAT_TEXFLNM:
-		matPtr=&material[0];						
+		matPtr=material[0];						
 		matPtr->texture[0]=Renderer::GetTextureManager()->Create(buffer+i);		
 		i+=(DWORD)strlen(buffer+i)+1;
 		break;
@@ -303,14 +304,14 @@ DWORD ModelResource::ProcessChunk(char *buffer)
 
 	return len;
 }
-Material *ModelResource::GetMaterialByName(const string &name)
+Material ModelResource::GetMaterialByName(const string &name)
 {
 	for (DWORD i=0;i<material.size();i++)
 	{
-		if (material[i].name==name)
-			return &material[i];
+		if (material[i]->name==name)
+			return material[i];
 	}
-	return NULL;
+	return Material();
 }
 Model ModelResource::Reduce()
 {
@@ -357,6 +358,6 @@ void ModelResource::SetProgram(const Program &program)
 	vector<Material>::iterator i=material.begin();
 	for (;i!=material.end();i++)
 	{				
-		i->program=program;
+		(*i)->program=program;
 	}
 }

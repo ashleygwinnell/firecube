@@ -82,7 +82,7 @@ namespace Renderer
 	* Uses a material.
 	* @param material The material to use.
 	*/
-	void FIRECUBE_API UseMaterial(const Material &material);
+	void FIRECUBE_API UseMaterial(Material material);
 	/**
 	* Sets a perspective projection.
 	* @param fov The field of view in degrees.

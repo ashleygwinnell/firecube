@@ -191,7 +191,7 @@ void Renderer::Render(Model model)
 			i->normalBuffer->SetNormalStream();
 		for (;j!=i->mesh.end();j++)
 		{
-			UseMaterial(*j->material);
+			UseMaterial(j->material);
 			if (j->indexBuffer)
 				j->indexBuffer->SetIndexStream();
 			RenderIndexStream(TRIANGLES,j->face.size()*3);			
@@ -355,20 +355,22 @@ void Renderer::UseProgram(Program program)
 	if (program)
 		glUseProgram(program->id);	
 }
-void Renderer::UseMaterial(const Material &material)
+void Renderer::UseMaterial(Material material)
 {
-	float ambient[]={material.ambient.x,material.ambient.y,material.ambient.z,1.0f};
-	float diffuse[]={material.diffuse.x,material.diffuse.y,material.diffuse.z,1.0f};
-	float specular[]={material.specular.x,material.specular.y,material.specular.z,1.0f};			
+	if (!material)
+		return;
+	float ambient[]={material->ambient.x,material->ambient.y,material->ambient.z,1.0f};
+	float diffuse[]={material->diffuse.x,material->diffuse.y,material->diffuse.z,1.0f};
+	float specular[]={material->specular.x,material->specular.y,material->specular.z,1.0f};			
 	glMaterialfv(GL_FRONT,GL_AMBIENT,ambient);
 	glMaterialfv(GL_FRONT,GL_DIFFUSE,diffuse);
 	glMaterialfv(GL_FRONT,GL_SPECULAR,specular);
-	glMaterialf(GL_FRONT,GL_SHININESS,material.shininess);
+	glMaterialf(GL_FRONT,GL_SHININESS,material->shininess);
 	for (int i=0;i<MAX_TEXTURES;i++)
-	{	
-		if ((material.texture[i]) && (material.texture[i]->IsValid()))
+	{		
+		if ((material->texture[i]) && (material->texture[i]->IsValid()))
 		{
-			UseTexture(material.texture[i],i);
+			UseTexture(material->texture[i],i);
 			glEnable(GL_TEXTURE_2D);			
 		}
 		else
@@ -378,8 +380,8 @@ void Renderer::UseMaterial(const Material &material)
 		}
 	}
 
-	if ((material.program) && (material.program->IsValid()))
-		UseProgram(material.program);
+	if ((material->program) && (material->program->IsValid()))
+		UseProgram(material->program);
 }
 void Renderer::SetPerspectiveProjection(float fov,float zNear,float zFar)
 {

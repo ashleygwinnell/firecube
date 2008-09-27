@@ -32,11 +32,11 @@ const unsigned int MAX_TEXTURES=8;
 /**
 * Stores information about a material.
 */
-class FIRECUBE_API Material
+class FIRECUBE_API MaterialResource
 {
 public:
-	Material();
-	~Material();
+	MaterialResource();
+	~MaterialResource();
 	
 	string name;
 	vec3 ambient;
@@ -46,7 +46,7 @@ public:
 	Texture texture[MAX_TEXTURES];
 	Program program;
 };
-
+typedef boost::shared_ptr<MaterialResource> Material;
 /**
 * Defines an edge in a mesh.
 */
@@ -76,7 +76,7 @@ public:
 	Mesh();
 	~Mesh();
 	
-	Material *material;
+	Material material;
 	vector<Face> face;
 	Buffer indexBuffer;
 };
@@ -135,7 +135,7 @@ public:
 	string name;
 private:
 	DWORD ProcessChunk(char *buffer);
-	Material *GetMaterialByName(const string &name);	
+	Material GetMaterialByName(const string &name);	
 };
 
 #pragma warning(pop)
