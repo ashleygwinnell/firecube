@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 		return 0;		
 	app.SetTitle(string("FireCube Test Application"));	
 	app.model=app.modelManager.Create("1.3ds");
-	app.font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf:18");		
+	app.font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);		
 	app.Run();			
 	return 0;
 }
@@ -38,13 +38,14 @@ bool App::Render(float t)
 	m.Translate(vec3(0,0,rot.z));
 	m.RotateX(rot.x);
 	m.RotateY(rot.y);	
+	Renderer::UseProgram(Program(new ProgramResource));
 	Renderer::SetModelViewMatrix(m);		
 	Renderer::Render(app.model);
 	Renderer::SetModelViewMatrix(mat4());
 	Renderer::SetOrthographicProjection();		
 	ostringstream oss;
 	oss << "FPS:"<<app.GetFps();	
-	Renderer::RenderText(app.font,vec2(0,0),oss.str());
+	Renderer::RenderText(app.font,vec2(0,0),vec4(1,1,1,1),oss.str());
 	return true;
 }
 bool App::HandleInput(float t)
