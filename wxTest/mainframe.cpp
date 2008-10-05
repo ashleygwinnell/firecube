@@ -15,11 +15,51 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	wxFlexGridSizer* fgSizer1;
 	fgSizer1 = new wxFlexGridSizer( 2, 2, 0, 0 );
+	fgSizer1->AddGrowableCol( 0 );
+	fgSizer1->AddGrowableRow( 0 );
 	fgSizer1->SetFlexibleDirection( wxBOTH );
 	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	glCanvas = new MyGLCanvas(this, wxID_ANY,wxDefaultPosition,wxSize(2000,2000));
+	glCanvas = new MyGLCanvas(this, wxID_ANY,wxDefaultPosition,wxSize(1,1));
 	fgSizer1->Add( glCanvas, 0, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer( wxVERTICAL );
+	
+	notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	panel1 = new wxPanel( notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxGridSizer* gSizer1;
+	gSizer1 = new wxGridSizer( 2, 2, 0, 0 );
+	
+	gSizer1->SetMinSize( wxSize( 100,-1 ) ); 
+	staticText1 = new wxStaticText( panel1, wxID_ANY, wxT("Vertices:"), wxDefaultPosition, wxDefaultSize, 0 );
+	staticText1->Wrap( -1 );
+	gSizer1->Add( staticText1, 0, wxALL, 5 );
+	
+	textCtrl1 = new wxTextCtrl( panel1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	textCtrl1->Enable( false );
+	
+	gSizer1->Add( textCtrl1, 0, wxALL, 1 );
+	
+	staticText2 = new wxStaticText( panel1, wxID_ANY, wxT("Faces:"), wxDefaultPosition, wxDefaultSize, 0 );
+	staticText2->Wrap( -1 );
+	gSizer1->Add( staticText2, 0, wxALL, 5 );
+	
+	textCtrl2 = new wxTextCtrl( panel1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	textCtrl2->Enable( false );
+	
+	gSizer1->Add( textCtrl2, 0, wxALL, 1 );
+	
+	panel1->SetSizer( gSizer1 );
+	panel1->Layout();
+	gSizer1->Fit( panel1 );
+	notebook1->AddPage( panel1, wxT("Info"), false );
+	panel2 = new wxPanel( notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	notebook1->AddPage( panel2, wxT("Rendering"), true );
+	
+	bSizer2->Add( notebook1, 1, wxEXPAND | wxALL, 5 );
+	
+	fgSizer1->Add( bSizer2, 1, wxEXPAND, 5 );
 	
 	this->SetSizer( fgSizer1 );
 	this->Layout();
@@ -77,7 +117,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	this->SetMenuBar( menuBar );
 	
-	m_statusBar1 = this->CreateStatusBar( 1, wxST_SIZEGRIP, wxID_ANY );
+	statusBar1 = this->CreateStatusBar( 1, wxST_SIZEGRIP, wxID_ANY );
 	
 	// Connect Events
 	this->Connect( menuItem2->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem2Clicked ) );

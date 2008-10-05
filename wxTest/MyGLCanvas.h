@@ -22,20 +22,12 @@ public:
 	void OnEnterWindow(wxMouseEvent& event);
 	void OnMotion(wxMouseEvent& event);
 	void OnMouseWheel(wxMouseEvent& event);	
-	void Render();
-	void LoadModel(const string &filename);
+	void Render();	
 	void Init();
-	FireCube::Model model;
-	FireCube::Font font;
-	FireCube::Shader vshader,fshader;
-	FireCube::Program program;
-	FireCube::ModelManager mm;
+	
 	FireCube::vec4 bgColor;
 	GLenum renderingMode;
-	bool cullFaceEnabled;
-	FireCube::Buffer normalRenderingBuffer;
-	int normalRenderingBufferSize;
-	FireCube::Program normalRenderingProgram;
+	bool cullFaceEnabled;	
 	bool renderNormals;
 private:		
 	bool init;

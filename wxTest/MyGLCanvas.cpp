@@ -46,24 +46,25 @@ MyGLCanvas::~MyGLCanvas()
 }
 void MyGLCanvas::Init()
 {
-	FireCubeApp *app=&(((MyApp*)wxTheApp)->fireCubeApp);	
-	app->InitializeNoWindow();	
+	FireCubeApp *fcApp=&(((MyApp*)wxTheApp)->fireCubeApp);	
+	MyApp *app=(MyApp*)wxTheApp;
+	fcApp->InitializeNoWindow();	
 
 	rot=FireCube::vec3(0,0,-5);
-	font=FireCube::Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf:18");
+	fcApp->font=FireCube::Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);
 	bgColor=FireCube::vec4(0.249f,0.521f,1.0f,1.0f);
 	renderingMode=GL_FILL;
 	cullFaceEnabled=true;
 	renderNormals=false;
 
-	vshader=FireCube::Renderer::GetShaderManager()->Create("v.vshader");
-	fshader=FireCube::Renderer::GetShaderManager()->Create("p.fshader");
-	program=FireCube::Program(new FireCube::ProgramResource);
-	program->Create(vshader,fshader);	
+	fcApp->vshader=FireCube::Renderer::GetShaderManager()->Create("v.vshader");
+	fcApp->fshader=FireCube::Renderer::GetShaderManager()->Create("p.fshader");
+	fcApp->program=FireCube::Program(new FireCube::ProgramResource);
+	fcApp->program->Create(fcApp->vshader,fcApp->fshader);	
 	
-	normalRenderingBuffer=FireCube::Buffer(new FireCube::BufferResource);
-	normalRenderingBuffer->Create();
-	normalRenderingProgram=FireCube::Program(new FireCube::ProgramResource);
+	fcApp->normalRenderingBuffer=FireCube::Buffer(new FireCube::BufferResource);
+	fcApp->normalRenderingBuffer->Create();
+	fcApp->normalRenderingProgram=FireCube::Program(new FireCube::ProgramResource);
 	FireCube::Shader nvShader(new FireCube::ShaderResource);
 	FireCube::Shader nfShader(new FireCube::ShaderResource);
 	nvShader->Create(FireCube::VERTEX_SHADER,"void main() \
@@ -76,11 +77,12 @@ void MyGLCanvas::Init()
 									{ \
 									gl_FragColor = vec4(1.0,1.0,1.0,1.0);  \
 									} ");
-	normalRenderingProgram->Create(nvShader,nfShader);	
-	LoadModel("teapot2.3ds");		
+	fcApp->normalRenderingProgram->Create(nvShader,nfShader);	
+	fcApp->LoadModel("teapot2.3ds");			
 }
 void MyGLCanvas::Render()
-{		
+{	
+	FireCubeApp *fcApp=&(((MyApp*)wxTheApp)->fireCubeApp);
 	wxPaintDC dc(this);
 	if (!GetContext()) return;
 	SetCurrent();
@@ -102,23 +104,19 @@ void MyGLCanvas::Render()
 	mat.RotateX(rot.x);
 	mat.RotateY(rot.y);	
 	FireCube::Renderer::SetModelViewMatrix(mat);
-	FireCube::Renderer::Render(model);	
+	FireCube::Renderer::Render(fcApp->model);	
 	if (renderNormals)
 	{
-		FireCube::Renderer::UseProgram(normalRenderingProgram);
-		normalRenderingBuffer->SetVertexStream(3);
-		FireCube::Renderer::RenderStream(FireCube::LINES,normalRenderingBufferSize);
+		FireCube::Renderer::UseProgram(fcApp->normalRenderingProgram);
+		fcApp->normalRenderingBuffer->SetVertexStream(3);
+		FireCube::Renderer::RenderStream(FireCube::LINES,fcApp->normalRenderingBufferSize);
 	}
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	FireCube::Renderer::SetModelViewMatrix(FireCube::mat4());
 	FireCube::Renderer::SetOrthographicProjection();
 	ostringstream oss,oss2,oss3;
 	oss << glGetString(GL_RENDERER);
-	FireCube::Renderer::RenderText(font,FireCube::vec2(0,0),oss.str());	
-	oss2 << "Num vertices:" << model->object[0].vertex.size();
-	FireCube::Renderer::RenderText(font,FireCube::vec2(0,20),oss2.str());	
-	oss3 << "Num faces:" << model->object[0].face.size();
-	FireCube::Renderer::RenderText(font,FireCube::vec2(0,40),oss3.str());
+	FireCube::Renderer::RenderText(fcApp->font,FireCube::vec2(0,0),FireCube::vec4(1,1,1,1),oss.str());	
 	SwapBuffers();
 }
 
@@ -131,19 +129,6 @@ void MyGLCanvas::OnEnterWindow( wxMouseEvent& event )
 void MyGLCanvas::OnPaint( wxPaintEvent& WXUNUSED(event) )
 {
 	Render();
-}
-void MyGLCanvas::LoadModel(const string &filename)
-{
-	model=mm.Create(filename);		
-	model->SetProgram(program);	
-	vector<FireCube::vec3> normals;
-	for (unsigned int i=0;i<model->object[0].vertex.size();i++)
-	{
-		normals.push_back(model->object[0].vertex[i]);
-		normals.push_back(model->object[0].vertex[i]+model->object[0].normal[i]*0.07f);
-	}
-	normalRenderingBuffer->LoadData(&normals[0],normals.size()*sizeof(FireCube::vec3),FireCube::STATIC);
-	normalRenderingBufferSize=normals.size();
 }
 void MyGLCanvas::OnSize(wxSizeEvent& event)
 {
