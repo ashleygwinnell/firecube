@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	app.vShader=Renderer::GetShaderManager()->Create("v.vshader");
 	app.pShader=Renderer::GetShaderManager()->Create("p.fshader");	
 	app.pShader2=Renderer::GetShaderManager()->Create("p2.fshader");
-	app.font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf:18");
+	app.font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);
 	app.program=Program(new ProgramResource);
 	app.program2=Program(new ProgramResource);
 	app.program->Create(app.vShader,app.pShader);
@@ -57,9 +57,7 @@ bool App::Update(float t)
 }
 bool App::Render(float t)
 {	
-	mat4 p,mi;	
-	p.GeneratePerspective(90,800.0f/600.0f,0.1f,100.0f);
-	Renderer::SetProjectionMatrix(p);
+	Renderer::SetPerspectiveProjection(90.0f,0.1f,100.0f);
 	static float appTime=0;
 	appTime+=t;
 	Renderer::Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
@@ -71,12 +69,12 @@ bool App::Render(float t)
 	Renderer::UseProgram(program);
 	app.program->Uniform1i("tex0",0);
 	s.Render();	
-	p.GenerateOrthographic(0,800,600,0,-1,1);
-	Renderer::SetProjectionMatrix(p);
-	Renderer::SetModelViewMatrix(mi);
+	
+	Renderer::SetOrthographicProjection();
+	Renderer::SetModelViewMatrix(mat4());
 	ostringstream oss;
 	oss << "FPS:" << app.GetFps();
-	Renderer::RenderText(font,vec2(0,0),oss.str());
+	Renderer::RenderText(font,vec2(0,0),vec4(1,1,1,1),oss.str());
 	return true;
 }
 bool App::HandleInput(float t)
