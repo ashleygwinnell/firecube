@@ -16,17 +16,17 @@ vec3 rot(0,0,-3);
 int main(int argc, char *argv[])
 {	
 	if (!app.Initialize())
-		return 0;	
+		return 0;		
 	app.Run();
 	return 0;
 }
 bool App::Init()
 {
 	SetTitle(string("ShaderTest"));
-	font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf:18");
+	font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\micross.ttf",18);
 	Program program(new ProgramResource);
 	program->Create(Renderer::GetShaderManager()->Create("v.vshader"),Renderer::GetShaderManager()->Create("p.fshader"));		
-	model=app.modelManager.Create("teapot2.3ds");
+	model=modelManager.Create("teapot2.3ds");
 	model->SetProgram(program);
 	return true;
 }
@@ -50,7 +50,7 @@ bool App::Render(float t)
 	ss << "FPS:"<<app.GetFps();
 	Renderer::SetModelViewMatrix(mat4());
 	Renderer::SetOrthographicProjection();
-	Renderer::RenderText(font,vec2(0,0),ss.str());
+	Renderer::RenderText(font,vec2(0,0),vec4(1,1,0,1.0f),ss.str());
 	return true;
 }
 bool App::HandleInput(float t)
