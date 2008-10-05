@@ -55,7 +55,7 @@ bool Application::Initialize(int width,int height,int bpp,bool fullscreen)
 	return InitializeNoWindow();;
 }
 bool Application::InitializeNoWindow()
-{	
+{		
 	Logger::Init("log.txt");
 	Logger::Write(string("Initializing application.\n"));	
 	timer.Init();
@@ -113,7 +113,7 @@ void Application::Run()
 	}	
 	Logger::Write(string("Exiting main loop...\n"));
 }
-void Application::SetTitle(string &title)
+void Application::SetTitle(const string &title)
 {
 	SDL_WM_SetCaption(title.c_str(),NULL);
 }

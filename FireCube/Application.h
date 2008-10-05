@@ -23,12 +23,12 @@ public:
 	*/
 	bool Initialize(int width,int height,int bpp,bool fullscreen);
 	/** 
-	* Destroy the window and it's associated OpenGL context.
+	* Initializes without creating a window (assumes there is already an active rendering context).
 	* @return true on success, false otherwise.
 	*/
 	bool InitializeNoWindow();
 	/** 
-	* Initializes without creating a window (assumes there is already an active rendering context).
+	* Destroy the window and it's associated OpenGL context.
 	* @return true on success, false otherwise.
 	*/
 	bool Destroy();
@@ -39,7 +39,7 @@ public:
 	/** 
 	* Sets the title of the window.
 	*/
-	void SetTitle(string &title);
+	void SetTitle(const string &title);
 	/** 
 	* Returns the current frames per second.
 	*/

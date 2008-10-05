@@ -30,11 +30,17 @@ boost::shared_ptr<FontPage> FontManager::CreateNewPage()
 	glBindTexture(GL_TEXTURE_2D,p->tex->id);
 	unsigned char empty[512*512];
 	ZeroMemory(empty,512*512);
-	glTexImage2D(GL_TEXTURE_2D,0,1,512,512,0,GL_LUMINANCE,GL_UNSIGNED_BYTE,empty);	
+	glTexImage2D(GL_TEXTURE_2D,0,GL_ALPHA,512,512,0,GL_ALPHA,GL_UNSIGNED_BYTE,empty);	
 	p->textureSize=512;
 	p->curPos=vec2(0,0);
 	page.push_back(p);
 	return p;
+}
+boost::shared_ptr<FontResource> FontManager::Create(const string &filename,int size)
+{
+	ostringstream oss;
+	oss << filename << ":" << size;
+	return ResourceManager<FontResource>::Create(oss.str());
 }
 FontResource::FontResource()
 {	
@@ -69,7 +75,7 @@ bool FontResource::AddChar(char c)
 	}
 	if (page->textureSize-page->curPos.y<fontImpl->face->glyph->bitmap.rows)
 		return false;
-	glTexSubImage2D(GL_TEXTURE_2D,0,(int)page->curPos.x,(int)page->curPos.y,fontImpl->face->glyph->bitmap.width,fontImpl->face->glyph->bitmap.rows,GL_LUMINANCE,GL_UNSIGNED_BYTE,fontImpl->face->glyph->bitmap.buffer);
+	glTexSubImage2D(GL_TEXTURE_2D,0,(int)page->curPos.x,(int)page->curPos.y,fontImpl->face->glyph->bitmap.width,fontImpl->face->glyph->bitmap.rows,GL_ALPHA,GL_UNSIGNED_BYTE,fontImpl->face->glyph->bitmap.buffer);
 	glyph[c].uv=page->curPos/512.0f;
 	glyph[c].size=vec2((float)fontImpl->face->glyph->bitmap.width,(float)fontImpl->face->glyph->bitmap.rows);
 	glyph[c].bitmapOffset=vec2((float)fontImpl->face->glyph->bitmap_left,size-(float)fontImpl->face->glyph->bitmap_top);
@@ -119,8 +125,8 @@ bool FontResource::Load(const string &name,int size)
 	{		
 		AddChar(text[i]);
 	}	
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP);
 	return true;

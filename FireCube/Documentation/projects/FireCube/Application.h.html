@@ -31,12 +31,12 @@ This class is responsible for the intialization and running of the application.
     */</font>
     <font color="blue">bool</font> Initialize<font color="black">(</font><font color="blue">int</font> width,<font color="blue">int</font> height,<font color="blue">int</font> bpp,<font color="blue">bool</font> fullscreen<font color="black">)</font>;
     <font color="green">/** 
-    * Destroy the window and it's associated OpenGL context.
+    * Initializes without creating a window (assumes there is already an active rendering context).
     * @return true on success, false otherwise.
     */</font>
     <font color="blue">bool</font> InitializeNoWindow<font color="black">(</font><font color="black">)</font>;
     <font color="green">/** 
-    * Initializes without creating a window (assumes there is already an active rendering context).
+    * Destroy the window and it's associated OpenGL context.
     * @return true on success, false otherwise.
     */</font>
     <font color="blue">bool</font> Destroy<font color="black">(</font><font color="black">)</font>;

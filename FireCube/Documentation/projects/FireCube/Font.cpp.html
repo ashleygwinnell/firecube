@@ -20,7 +20,7 @@ Font.cpp
 <font color="blue">#include</font> <font color="maroon">&#60;gl/gl.h&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;ft2build.h&#62;</font>
 <font color="blue">#include</font> FT_FREETYPE_H
-<font color="blue">#include</font> <font color="maroon">&#60;FireCube.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
 <font color="blue">#include</font> <font color="maroon">"privateFont.h"</font>
 <font color="blue">using</font> <font color="blue">namespace</font> FireCube;
 
@@ -38,11 +38,17 @@ boost<font color="black">:</font><font color="black">:</font>shared_ptr<font col
     glBindTexture<font color="black">(</font>GL_TEXTURE_2D,p<font color="black">-</font><font color="black">&#62;</font>tex<font color="black">-</font><font color="black">&#62;</font>id<font color="black">)</font>;
     <font color="blue">unsigned</font> <font color="blue">char</font> empty<font color="black">[</font><font color="maroon">512</font><font color="black">*</font><font color="maroon">512</font><font color="black">]</font>;
     ZeroMemory<font color="black">(</font>empty,<font color="maroon">512</font><font color="black">*</font><font color="maroon">512</font><font color="black">)</font>;
-    glTexImage2D<font color="black">(</font>GL_TEXTURE_2D,<font color="maroon">0</font>,<font color="maroon">1</font>,<font color="maroon">512</font>,<font color="maroon">512</font>,<font color="maroon">0</font>,GL_LUMINANCE,GL_UNSIGNED_BYTE,empty<font color="black">)</font>;  
+    glTexImage2D<font color="black">(</font>GL_TEXTURE_2D,<font color="maroon">0</font>,GL_ALPHA,<font color="maroon">512</font>,<font color="maroon">512</font>,<font color="maroon">0</font>,GL_ALPHA,GL_UNSIGNED_BYTE,empty<font color="black">)</font>;   
     p<font color="black">-</font><font color="black">&#62;</font>textureSize<font color="black">=</font><font color="maroon">512</font>;
     p<font color="black">-</font><font color="black">&#62;</font>curPos<font color="black">=</font>vec2<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;
     page.push_back<font color="black">(</font>p<font color="black">)</font>;
     <font color="blue">return</font> p;
+<font color="black">}</font>
+boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FontResource<font color="black">&#62;</font> FontManager<font color="black">:</font><font color="black">:</font>Create<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename,<font color="blue">int</font> size<font color="black">)</font>
+<font color="black">{</font>
+    ostringstream oss;
+    oss <font color="black">&#60;</font><font color="black">&#60;</font> filename <font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">":"</font> <font color="black">&#60;</font><font color="black">&#60;</font> size;
+    <font color="blue">return</font> ResourceManager<font color="black">&#60;</font>FontResource<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>Create<font color="black">(</font>oss.str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
 <font color="black">}</font>
 FontResource<font color="black">:</font><font color="black">:</font>FontResource<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>   
@@ -77,7 +83,7 @@ FontResource<font color="black">:</font><font color="black">:</font>~FontResourc
     <font color="black">}</font>
     <font color="blue">if</font> <font color="black">(</font>page<font color="black">-</font><font color="black">&#62;</font>textureSize<font color="black">-</font>page<font color="black">-</font><font color="black">&#62;</font>curPos.y<font color="black">&#60;</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.rows<font color="black">)</font>
         <font color="blue">return</font> <font color="blue">false</font>;
-    glTexSubImage2D<font color="black">(</font>GL_TEXTURE_2D,<font color="maroon">0</font>,<font color="black">(</font><font color="blue">int</font><font color="black">)</font>page<font color="black">-</font><font color="black">&#62;</font>curPos.x,<font color="black">(</font><font color="blue">int</font><font color="black">)</font>page<font color="black">-</font><font color="black">&#62;</font>curPos.y,fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.width,fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.rows,GL_LUMINANCE,GL_UNSIGNED_BYTE,fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.buffer<font color="black">)</font>;
+    glTexSubImage2D<font color="black">(</font>GL_TEXTURE_2D,<font color="maroon">0</font>,<font color="black">(</font><font color="blue">int</font><font color="black">)</font>page<font color="black">-</font><font color="black">&#62;</font>curPos.x,<font color="black">(</font><font color="blue">int</font><font color="black">)</font>page<font color="black">-</font><font color="black">&#62;</font>curPos.y,fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.width,fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.rows,GL_ALPHA,GL_UNSIGNED_BYTE,fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.buffer<font color="black">)</font>;
     glyph<font color="black">[</font>c<font color="black">]</font>.uv<font color="black">=</font>page<font color="black">-</font><font color="black">&#62;</font>curPos<font color="black">/</font><font color="maroon">512</font>.0f;
     glyph<font color="black">[</font>c<font color="black">]</font>.size<font color="black">=</font>vec2<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.width,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.rows<font color="black">)</font>;
     glyph<font color="black">[</font>c<font color="black">]</font>.bitmapOffset<font color="black">=</font>vec2<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap_left,size<font color="black">-</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap_top<font color="black">)</font>;
@@ -127,8 +133,8 @@ FontResource<font color="black">:</font><font color="black">:</font>~FontResourc
     <font color="black">{</font>       
         AddChar<font color="black">(</font>text<font color="black">[</font>i<font color="black">]</font><font color="black">)</font>;
     <font color="black">}</font>   
-    glTexParameteri<font color="black">(</font>GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR<font color="black">)</font>;
-    glTexParameteri<font color="black">(</font>GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR<font color="black">)</font>;
+    glTexParameteri<font color="black">(</font>GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST<font color="black">)</font>;
+    glTexParameteri<font color="black">(</font>GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST<font color="black">)</font>;
     glTexParameteri<font color="black">(</font>GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP<font color="black">)</font>;
     glTexParameteri<font color="black">(</font>GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP<font color="black">)</font>;
     <font color="blue">return</font> <font color="blue">true</font>;

@@ -161,6 +161,21 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
     <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
         glUniform1i<font color="black">(</font>location,value<font color="black">)</font>;
 <font color="black">}</font>
+<font color="blue">void</font> ProgramResource<font color="black">:</font><font color="black">:</font>Uniform4f<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,vec4 value<font color="black">)</font>
+<font color="black">{</font>
+    GLint location<font color="black">=</font><font color="maroon">0</font>;
+    map<font color="black">&#60;</font>string,GLint<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>variables.find<font color="black">(</font><font color="blue">name</font><font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>i<font color="black">!</font><font color="black">=</font>variables.end<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+        location<font color="black">=</font>i<font color="black">-</font><font color="black">&#62;</font>second;
+    <font color="blue">else</font>
+    <font color="black">{</font>
+        location<font color="black">=</font>glGetUniformLocation<font color="black">(</font>id,<font color="blue">name</font>.c_str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
+            variables<font color="black">[</font><font color="blue">name</font><font color="black">]</font><font color="black">=</font>location;
+    <font color="black">}</font>
+    <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
+        glUniform4fv<font color="black">(</font>location,<font color="maroon">1</font>,<font color="black">&</font>value.x<font color="black">)</font>;
+<font color="black">}</font>
 <font color="blue">bool</font> ProgramResource<font color="black">:</font><font color="black">:</font>IsValid<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>
 <font color="black">{</font>
     <font color="blue">return</font> id<font color="black">!</font><font color="black">=</font><font color="maroon">0</font>;
@@ -199,7 +214,7 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
             i<font color="black">-</font><font color="black">&#62;</font>normalBuffer<font color="black">-</font><font color="black">&#62;</font>SetNormalStream<font color="black">(</font><font color="black">)</font>;
         <font color="blue">for</font> <font color="black">(</font>;j<font color="black">!</font><font color="black">=</font>i<font color="black">-</font><font color="black">&#62;</font>mesh.end<font color="black">(</font><font color="black">)</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
         <font color="black">{</font>
-            UseMaterial<font color="black">(</font><font color="black">*</font>j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">)</font>;
+            UseMaterial<font color="black">(</font>j<font color="black">-</font><font color="black">&#62;</font>material<font color="black">)</font>;
             <font color="blue">if</font> <font color="black">(</font>j<font color="black">-</font><font color="black">&#62;</font>indexBuffer<font color="black">)</font>
                 j<font color="black">-</font><font color="black">&#62;</font>indexBuffer<font color="black">-</font><font color="black">&#62;</font>SetIndexStream<font color="black">(</font><font color="black">)</font>;
             RenderIndexStream<font color="black">(</font>TRIANGLES,j<font color="black">-</font><font color="black">&#62;</font>face.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">3</font><font color="black">)</font>;          
@@ -237,23 +252,26 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
     glActiveTexture<font color="black">(</font>GL_TEXTURE0<font color="black">+</font>unit<font color="black">)</font>;
     glBindTexture<font color="black">(</font>GL_TEXTURE_2D,tex<font color="black">-</font><font color="black">&#62;</font>id<font color="black">)</font>;
 <font color="black">}</font>
-<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RenderText<font color="black">(</font>Font font,vec2 pos,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RenderText<font color="black">(</font>Font font,vec2 pos,vec4 color,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>
 <font color="black">{</font>   
+    <font color="blue">static</font> vector<font color="black">&#60;</font>vec2<font color="black">&#62;</font> vBuffer;
+    <font color="blue">static</font> vector<font color="black">&#60;</font>vec2<font color="black">&#62;</font> uvBuffer;
+    vBuffer.resize<font color="black">(</font>str.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">4</font><font color="black">)</font>;
+    uvBuffer.resize<font color="black">(</font>str.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">4</font><font color="black">)</font>;
     <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>font<font color="black">)</font>
         <font color="blue">return</font>; 
     <font color="blue">if</font> <font color="black">(</font>textShader<font color="black">-</font><font color="black">&#62;</font>IsValid<font color="black">(</font><font color="black">)</font><font color="black">)</font>
     <font color="black">{</font>
         UseProgram<font color="black">(</font>textShader<font color="black">)</font>; 
         textShader<font color="black">-</font><font color="black">&#62;</font>Uniform1i<font color="black">(</font><font color="maroon">"tex0"</font>,<font color="maroon">0</font><font color="black">)</font>;
+        textShader<font color="black">-</font><font color="black">&#62;</font>Uniform4f<font color="black">(</font><font color="maroon">"textColor"</font>,color<font color="black">)</font>;
     <font color="black">}</font>   
     <font color="blue">int</font> numQuads<font color="black">=</font><font color="maroon">0</font>;
-    vec2 <font color="black">*</font>vBuffer<font color="black">=</font><font color="blue">new</font> vec2<font color="black">[</font>str.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">4</font><font color="black">]</font>;
-    vec2 <font color="black">*</font>uvBuffer<font color="black">=</font><font color="blue">new</font> vec2<font color="black">[</font>str.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">4</font><font color="black">]</font>;
+    
     glDisable<font color="black">(</font>GL_DEPTH_TEST<font color="black">)</font>;
     glEnable<font color="black">(</font>GL_BLEND<font color="black">)</font>;
-    glBlendFunc<font color="black">(</font>GL_SRC_COLOR,GL_ONE_MINUS_SRC_COLOR<font color="black">)</font>;   
-    UseTexture<font color="black">(</font>font<font color="black">-</font><font color="black">&#62;</font>page<font color="black">-</font><font color="black">&#62;</font>tex,<font color="maroon">0</font><font color="black">)</font>;  
-    glEnable<font color="black">(</font>GL_TEXTURE_2D<font color="black">)</font>;
+    glBlendFunc<font color="black">(</font>GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA<font color="black">)</font>;   
+    UseTexture<font color="black">(</font>font<font color="black">-</font><font color="black">&#62;</font>page<font color="black">-</font><font color="black">&#62;</font>tex,<font color="maroon">0</font><font color="black">)</font>;      
     vec2 curPos<font color="black">=</font>pos;    
     FT_Long useKerning <font color="black">=</font> FT_HAS_KERNING<font color="black">(</font>font<font color="black">-</font><font color="black">&#62;</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">)</font>;
     FT_UInt previous <font color="black">=</font> <font color="maroon">0</font>; 
@@ -289,16 +307,13 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
             previous<font color="black">=</font>glyphIndex;
         <font color="black">}</font>       
     <font color="black">}</font>   
-    textVertexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font>vBuffer,numQuads<font color="black">*</font><font color="maroon">4</font><font color="black">*</font><font color="maroon">2</font><font color="black">*</font><font color="blue">sizeof</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>,STREAM<font color="black">)</font>;
-    textUvBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font>uvBuffer,numQuads<font color="black">*</font><font color="maroon">4</font><font color="black">*</font><font color="maroon">2</font><font color="black">*</font><font color="blue">sizeof</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>,STREAM<font color="black">)</font>;
+    textVertexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>vBuffer<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,numQuads<font color="black">*</font><font color="maroon">4</font><font color="black">*</font><font color="blue">sizeof</font><font color="black">(</font>vec2<font color="black">)</font>,STREAM<font color="black">)</font>;
+    textUvBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>uvBuffer<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,numQuads<font color="black">*</font><font color="maroon">4</font><font color="black">*</font><font color="blue">sizeof</font><font color="black">(</font>vec2<font color="black">)</font>,STREAM<font color="black">)</font>;
     textUvBuffer<font color="black">-</font><font color="black">&#62;</font>SetTexCoordStream<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>;
     textVertexBuffer<font color="black">-</font><font color="black">&#62;</font>SetVertexStream<font color="black">(</font><font color="maroon">2</font><font color="black">)</font>;
     RenderStream<font color="black">(</font>QUADS,numQuads<font color="black">*</font><font color="maroon">4</font><font color="black">)</font>;
-    glDisable<font color="black">(</font>GL_BLEND<font color="black">)</font>;
-    glDisable<font color="black">(</font>GL_TEXTURE_2D<font color="black">)</font>;
-    glEnable<font color="black">(</font>GL_DEPTH_TEST<font color="black">)</font>;    
-    <font color="blue">delete</font> <font color="black">[</font><font color="black">]</font> vBuffer;
-    <font color="blue">delete</font> <font color="black">[</font><font color="black">]</font> uvBuffer;
+    glDisable<font color="black">(</font>GL_BLEND<font color="black">)</font>;    
+    glEnable<font color="black">(</font>GL_DEPTH_TEST<font color="black">)</font>;        
 <font color="black">}</font>
 <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RenderIndexStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>
 <font color="black">{</font>
@@ -363,20 +378,22 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
     <font color="blue">if</font> <font color="black">(</font>program<font color="black">)</font>
         glUseProgram<font color="black">(</font>program<font color="black">-</font><font color="black">&#62;</font>id<font color="black">)</font>;  
 <font color="black">}</font>
-<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>UseMaterial<font color="black">(</font><font color="blue">const</font> Material <font color="black">&</font>material<font color="black">)</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>UseMaterial<font color="black">(</font>Material material<font color="black">)</font>
 <font color="black">{</font>
-    <font color="blue">float</font> ambient<font color="black">[</font><font color="black">]</font><font color="black">=</font><font color="black">{</font>material.ambient.x,material.ambient.y,material.ambient.z,<font color="maroon">1</font>.0f<font color="black">}</font>;
-    <font color="blue">float</font> diffuse<font color="black">[</font><font color="black">]</font><font color="black">=</font><font color="black">{</font>material.diffuse.x,material.diffuse.y,material.diffuse.z,<font color="maroon">1</font>.0f<font color="black">}</font>;
-    <font color="blue">float</font> specular<font color="black">[</font><font color="black">]</font><font color="black">=</font><font color="black">{</font>material.specular.x,material.specular.y,material.specular.z,<font color="maroon">1</font>.0f<font color="black">}</font>;            
+    <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>material<font color="black">)</font>
+        <font color="blue">return</font>;
+    <font color="blue">float</font> ambient<font color="black">[</font><font color="black">]</font><font color="black">=</font><font color="black">{</font>material<font color="black">-</font><font color="black">&#62;</font>ambient.x,material<font color="black">-</font><font color="black">&#62;</font>ambient.y,material<font color="black">-</font><font color="black">&#62;</font>ambient.z,<font color="maroon">1</font>.0f<font color="black">}</font>;
+    <font color="blue">float</font> diffuse<font color="black">[</font><font color="black">]</font><font color="black">=</font><font color="black">{</font>material<font color="black">-</font><font color="black">&#62;</font>diffuse.x,material<font color="black">-</font><font color="black">&#62;</font>diffuse.y,material<font color="black">-</font><font color="black">&#62;</font>diffuse.z,<font color="maroon">1</font>.0f<font color="black">}</font>;
+    <font color="blue">float</font> specular<font color="black">[</font><font color="black">]</font><font color="black">=</font><font color="black">{</font>material<font color="black">-</font><font color="black">&#62;</font>specular.x,material<font color="black">-</font><font color="black">&#62;</font>specular.y,material<font color="black">-</font><font color="black">&#62;</font>specular.z,<font color="maroon">1</font>.0f<font color="black">}</font>;         
     glMaterialfv<font color="black">(</font>GL_FRONT,GL_AMBIENT,ambient<font color="black">)</font>;
     glMaterialfv<font color="black">(</font>GL_FRONT,GL_DIFFUSE,diffuse<font color="black">)</font>;
     glMaterialfv<font color="black">(</font>GL_FRONT,GL_SPECULAR,specular<font color="black">)</font>;
-    glMaterialf<font color="black">(</font>GL_FRONT,GL_SHININESS,material.shininess<font color="black">)</font>;
+    glMaterialf<font color="black">(</font>GL_FRONT,GL_SHININESS,material<font color="black">-</font><font color="black">&#62;</font>shininess<font color="black">)</font>;
     <font color="blue">for</font> <font color="black">(</font><font color="blue">int</font> i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>MAX_TEXTURES;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
-    <font color="black">{</font>   
-        <font color="blue">if</font> <font color="black">(</font><font color="black">(</font>material.texture<font color="black">[</font>i<font color="black">]</font><font color="black">)</font> <font color="black">&</font><font color="black">&</font> <font color="black">(</font>material.texture<font color="black">[</font>i<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>IsValid<font color="black">(</font><font color="black">)</font><font color="black">)</font><font color="black">)</font>
+    <font color="black">{</font>       
+        <font color="blue">if</font> <font color="black">(</font><font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>i<font color="black">]</font><font color="black">)</font> <font color="black">&</font><font color="black">&</font> <font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>i<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>IsValid<font color="black">(</font><font color="black">)</font><font color="black">)</font><font color="black">)</font>
         <font color="black">{</font>
-            UseTexture<font color="black">(</font>material.texture<font color="black">[</font>i<font color="black">]</font>,i<font color="black">)</font>;
+            UseTexture<font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>i<font color="black">]</font>,i<font color="black">)</font>;
             glEnable<font color="black">(</font>GL_TEXTURE_2D<font color="black">)</font>;            
         <font color="black">}</font>
         <font color="blue">else</font>
@@ -386,8 +403,8 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
         <font color="black">}</font>
     <font color="black">}</font>
 
-    <font color="blue">if</font> <font color="black">(</font><font color="black">(</font>material.program<font color="black">)</font> <font color="black">&</font><font color="black">&</font> <font color="black">(</font>material.program<font color="black">-</font><font color="black">&#62;</font>IsValid<font color="black">(</font><font color="black">)</font><font color="black">)</font><font color="black">)</font>
-        UseProgram<font color="black">(</font>material.program<font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font><font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>program<font color="black">)</font> <font color="black">&</font><font color="black">&</font> <font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>program<font color="black">-</font><font color="black">&#62;</font>IsValid<font color="black">(</font><font color="black">)</font><font color="black">)</font><font color="black">)</font>
+        UseProgram<font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>program<font color="black">)</font>;
 <font color="black">}</font>
 <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetPerspectiveProjection<font color="black">(</font><font color="blue">float</font> fov,<font color="blue">float</font> zNear,<font color="blue">float</font> zFar<font color="black">)</font>
 <font color="black">{</font>
@@ -421,10 +438,12 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
                                   gl_Position = ftransform(); \
                                   } "</font><font color="black">)</font>;
 
-    fShader<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font>FRAGMENT_SHADER,<font color="maroon">"uniform sampler2D tex0; \
+    fShader<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font>FRAGMENT_SHADER,<font color="maroon">"uniform vec4 textColor; \
+                                    uniform sampler2D tex0; \
                                     void main() \
                                     { \
-                                    gl_FragColor = texture2D(tex0,gl_TexCoord[0].st);  \
+                                    float alpha=texture2D(tex0,gl_TexCoord[0].st).a; \
+                                    gl_FragColor = vec4(textColor.r,textColor.g,textColor.b,textColor.a*alpha);  \
                                     } "</font><font color="black">)</font>;
     textShader<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font>vShader,fShader<font color="black">)</font>;    
     

@@ -86,7 +86,13 @@ public:
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
-	void Uniform1i(const string &name,int value);	
+	void Uniform1i(const string &name,int value);
+	/**
+	* Sets a 4f uniform integer.
+	* @param name The name of the variable.
+	* @param value The value to assign for it.
+	*/
+	void Uniform4f(const string &name,vec4 value);
 	/**
 	* Returns whether the program is valid.
 	*/

@@ -60,7 +60,7 @@ namespace Renderer
 	* @param pos The position of the text.
 	* @param str The string to output.
 	*/
-	void FIRECUBE_API RenderText(Font font,vec2 pos,const string &str);
+	void FIRECUBE_API RenderText(Font font,vec2 pos,vec4 color,const string &str);
 	/**
 	* Renders an index stream.	
 	* @param mode The rendering mode.

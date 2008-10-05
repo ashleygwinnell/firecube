@@ -153,6 +153,21 @@ void ProgramResource::Uniform1i(const string &name,int value)
 	if (location!=0)
 		glUniform1i(location,value);
 }
+void ProgramResource::Uniform4f(const string &name,vec4 value)
+{
+	GLint location=0;
+	map<string,GLint>::iterator i=variables.find(name);
+	if (i!=variables.end())
+		location=i->second;
+	else
+	{
+		location=glGetUniformLocation(id,name.c_str());
+		if (location!=0)
+			variables[name]=location;
+	}
+	if (location!=0)
+		glUniform4fv(location,1,&value.x);
+}
 bool ProgramResource::IsValid() const
 {
 	return id!=0;
@@ -229,23 +244,26 @@ void Renderer::UseTexture(Texture tex,unsigned int unit)
 	glActiveTexture(GL_TEXTURE0+unit);
 	glBindTexture(GL_TEXTURE_2D,tex->id);
 }
-void Renderer::RenderText(Font font,vec2 pos,const string &str)
+void Renderer::RenderText(Font font,vec2 pos,vec4 color,const string &str)
 {	
+	static vector<vec2> vBuffer;
+	static vector<vec2> uvBuffer;
+	vBuffer.resize(str.size()*4);
+	uvBuffer.resize(str.size()*4);
 	if (!font)
 		return;	
 	if (textShader->IsValid())
 	{
 		UseProgram(textShader);	
 		textShader->Uniform1i("tex0",0);
+		textShader->Uniform4f("textColor",color);
 	}	
 	int numQuads=0;
-	vec2 *vBuffer=new vec2[str.size()*4];
-	vec2 *uvBuffer=new vec2[str.size()*4];
+	
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_COLOR,GL_ONE_MINUS_SRC_COLOR);	
-	UseTexture(font->page->tex,0);	
-	glEnable(GL_TEXTURE_2D);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);	
+	UseTexture(font->page->tex,0);		
 	vec2 curPos=pos;	
 	FT_Long useKerning = FT_HAS_KERNING(font->fontImpl->face);
 	FT_UInt previous = 0; 
@@ -281,16 +299,13 @@ void Renderer::RenderText(Font font,vec2 pos,const string &str)
 			previous=glyphIndex;
 		}		
 	}	
-	textVertexBuffer->LoadData(vBuffer,numQuads*4*2*sizeof(float),STREAM);
-	textUvBuffer->LoadData(uvBuffer,numQuads*4*2*sizeof(float),STREAM);
+	textVertexBuffer->LoadData(&vBuffer[0],numQuads*4*sizeof(vec2),STREAM);
+	textUvBuffer->LoadData(&uvBuffer[0],numQuads*4*sizeof(vec2),STREAM);
 	textUvBuffer->SetTexCoordStream(0);
 	textVertexBuffer->SetVertexStream(2);
 	RenderStream(QUADS,numQuads*4);
-	glDisable(GL_BLEND);
-	glDisable(GL_TEXTURE_2D);
-	glEnable(GL_DEPTH_TEST);	
-	delete [] vBuffer;
-	delete [] uvBuffer;
+	glDisable(GL_BLEND);	
+	glEnable(GL_DEPTH_TEST);		
 }
 void Renderer::RenderIndexStream(RenderMode mode,DWORD count)
 {
@@ -415,10 +430,12 @@ void InitializeRenderer()
 								  gl_Position = ftransform(); \
 								  } ");
 
-	fShader->Create(FRAGMENT_SHADER,"uniform sampler2D tex0; \
+	fShader->Create(FRAGMENT_SHADER,"uniform vec4 textColor; \
+									uniform sampler2D tex0; \
 									void main() \
 									{ \
-									gl_FragColor = texture2D(tex0,gl_TexCoord[0].st);  \
+									float alpha=texture2D(tex0,gl_TexCoord[0].st).a; \
+									gl_FragColor = vec4(textColor.r,textColor.g,textColor.b,textColor.a*alpha);  \
 									} ");
 	textShader->Create(vShader,fShader);	
 	

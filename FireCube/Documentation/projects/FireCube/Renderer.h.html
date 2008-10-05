@@ -68,7 +68,7 @@ Renderer.h
     * @param pos The position of the text.
     * @param str The string to output.
     */</font>
-    <font color="blue">void</font> FIRECUBE_API RenderText<font color="black">(</font>Font font,vec2 pos,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API RenderText<font color="black">(</font>Font font,vec2 pos,vec4 color,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
     <font color="green">/**
     * Renders an index stream.  
     * @param mode The rendering mode.
@@ -90,7 +90,7 @@ Renderer.h
     * Uses a material.
     * @param material The material to use.
     */</font>
-    <font color="blue">void</font> FIRECUBE_API UseMaterial<font color="black">(</font><font color="blue">const</font> Material <font color="black">&</font>material<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API UseMaterial<font color="black">(</font>Material material<font color="black">)</font>;
     <font color="green">/**
     * Sets a perspective projection.
     * @param fov The field of view in degrees.
