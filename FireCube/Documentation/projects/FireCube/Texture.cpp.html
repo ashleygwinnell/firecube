@@ -69,7 +69,11 @@ TextureResource<font color="black">:</font><font color="black">:</font>~TextureR
     <font color="black">}</font>
     <font color="blue">return</font> <font color="blue">false</font>;
 <font color="black">}</font>
-
+<font color="blue">void</font> TextureResource<font color="black">:</font><font color="black">:</font>GenerateMipMaps<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    glBindTexture<font color="black">(</font>GL_TEXTURE_2D,id<font color="black">)</font>;
+    glGenerateMipmapEXT<font color="black">(</font>GL_TEXTURE_2D<font color="black">)</font>;
+<font color="black">}</font>
 </PRE>
 </BODY>
 </HTML>

@@ -190,6 +190,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FrameBuffer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GLee.c"
 				>
 			</File>
@@ -261,6 +265,10 @@
 			</File>
 			<File
 				RelativePath=".\Font.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FrameBuffer.h"
 				>
 			</File>
 			<File

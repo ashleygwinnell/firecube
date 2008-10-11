@@ -470,3 +470,13 @@ void DestroyRenderer()
 	textUvBuffer.reset();
 	textShader.reset();
 }
+void Renderer::UseFrameBuffer(FrameBuffer frameBuffer)
+{
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,frameBuffer->id);
+	glViewport(0,0,frameBuffer->width,frameBuffer->height);
+}
+void Renderer::RestoreFrameBuffer(const Application &application)
+{
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
+	glViewport(0,0,application.GetWidth(),application.GetHeight());
+}

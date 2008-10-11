@@ -4,6 +4,7 @@
 #pragma warning(push)
 #pragma warning(disable:4251)
 
+class Application;
 /**
 * A namespace containing various functions responsible for the rendering pipeline.
 */
@@ -83,6 +84,15 @@ namespace Renderer
 	* @param material The material to use.
 	*/
 	void FIRECUBE_API UseMaterial(Material material);
+	/**
+	* Uses a frame buffer.
+	* @param frameBuffer The frame buffer to use.
+	*/
+	void FIRECUBE_API UseFrameBuffer(FrameBuffer frameBuffer);
+	/**
+	* Restores the default render buffer.
+	*/
+	void FIRECUBE_API RestoreFrameBuffer(const Application &application);
 	/**
 	* Sets a perspective projection.
 	* @param fov The field of view in degrees.

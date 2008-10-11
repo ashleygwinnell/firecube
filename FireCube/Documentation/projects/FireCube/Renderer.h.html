@@ -12,6 +12,7 @@ Renderer.h
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>push<font color="black">)</font>
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
 
+<font color="blue">class</font> Application;
 <font color="green">/**
 * A namespace containing various functions responsible for the rendering pipeline.
 */</font>
@@ -91,6 +92,15 @@ Renderer.h
     * @param material The material to use.
     */</font>
     <font color="blue">void</font> FIRECUBE_API UseMaterial<font color="black">(</font>Material material<font color="black">)</font>;
+    <font color="green">/**
+    * Uses a frame buffer.
+    * @param frameBuffer The frame buffer to use.
+    */</font>
+    <font color="blue">void</font> FIRECUBE_API UseFrameBuffer<font color="black">(</font>FrameBuffer frameBuffer<font color="black">)</font>;
+    <font color="green">/**
+    * Restores the default render buffer.
+    */</font>
+    <font color="blue">void</font> FIRECUBE_API RestoreFrameBuffer<font color="black">(</font><font color="blue">const</font> Application <font color="black">&</font>application<font color="black">)</font>;
     <font color="green">/**
     * Sets a perspective projection.
     * @param fov The field of view in degrees.

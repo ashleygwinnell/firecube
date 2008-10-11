@@ -29,8 +29,11 @@ BufferResource<font color="black">:</font><font color="black">:</font>~BufferRes
 <font color="black">}</font>
 
 <font color="blue">void</font> BufferResource<font color="black">:</font><font color="black">:</font>Create<font color="black">(</font><font color="black">)</font>
-<font color="black">{</font>   
-    glGenBuffers<font color="black">(</font><font color="maroon">1</font>,<font color="black">&</font>id<font color="black">)</font>;    
+<font color="black">{</font>       
+    glGenBuffers<font color="black">(</font><font color="maroon">1</font>,<font color="black">&</font>id<font color="black">)</font>;
+    ostringstream ss;
+    ss<font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">"Created buffer with id="</font><font color="black">&#60;</font><font color="black">&#60;</font>id<font color="black">&#60;</font><font color="black">&#60;</font>endl;
+    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>ss.str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
 <font color="black">}</font>
 <font color="blue">void</font> BufferResource<font color="black">:</font><font color="black">:</font>LoadIndexData<font color="black">(</font><font color="blue">void</font> <font color="black">*</font>data,DWORD count,BufferType bt<font color="black">)</font>
 <font color="black">{</font>

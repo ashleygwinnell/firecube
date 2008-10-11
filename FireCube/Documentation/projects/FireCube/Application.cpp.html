@@ -60,6 +60,8 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
     glLoadMatrixf<font color="black">(</font>mat.m<font color="black">)</font>;
     glMatrixMode<font color="black">(</font>GL_MODELVIEW<font color="black">)</font>;
     glLoadIdentity<font color="black">(</font><font color="black">)</font>;   
+    <font color="blue">this</font><font color="black">-</font><font color="black">&#62;</font>width<font color="black">=</font>width;
+    <font color="blue">this</font><font color="black">-</font><font color="black">&#62;</font>height<font color="black">=</font>height;
     <font color="blue">return</font> InitializeNoWindow<font color="black">(</font><font color="black">)</font>;;
 <font color="black">}</font>
 <font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>InitializeNoWindow<font color="black">(</font><font color="black">)</font>
@@ -101,6 +103,8 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
             <font color="black">}</font>
             <font color="blue">if</font> <font color="black">(</font>event.type<font color="black">=</font><font color="black">=</font>SDL_VIDEORESIZE<font color="black">)</font>
             <font color="black">{</font>
+                width<font color="black">=</font>event.resize.w;
+                height<font color="black">=</font>event.resize.h;
                 glViewport<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font>,event.resize.w,event.resize.h<font color="black">)</font>;
             <font color="black">}</font>
             <font color="blue">if</font> <font color="black">(</font>event.type<font color="black">=</font><font color="black">=</font>SDL_QUIT<font color="black">)</font> 
@@ -121,17 +125,25 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
     <font color="black">}</font>   
     Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>string<font color="black">(</font><font color="maroon">"Exiting main loop...\n"</font><font color="black">)</font><font color="black">)</font>;
 <font color="black">}</font>
-<font color="blue">void</font> Application<font color="black">:</font><font color="black">:</font>SetTitle<font color="black">(</font>string <font color="black">&</font>title<font color="black">)</font>
+<font color="blue">void</font> Application<font color="black">:</font><font color="black">:</font>SetTitle<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>title<font color="black">)</font>
 <font color="black">{</font>
     SDL_WM_SetCaption<font color="black">(</font>title.c_str<font color="black">(</font><font color="black">)</font>,NULL<font color="black">)</font>;
 <font color="black">}</font>
-<font color="blue">float</font> Application<font color="black">:</font><font color="black">:</font>GetFps<font color="black">(</font><font color="black">)</font>
+<font color="blue">float</font> Application<font color="black">:</font><font color="black">:</font>GetFps<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>
 <font color="black">{</font>
     <font color="blue">return</font> fps;
 <font color="black">}</font>
 <font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>Init<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
     <font color="blue">return</font> <font color="blue">true</font>;
+<font color="black">}</font>
+<font color="blue">int</font> Application<font color="black">:</font><font color="black">:</font>GetWidth<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">return</font> width;
+<font color="black">}</font>
+<font color="blue">int</font> Application<font color="black">:</font><font color="black">:</font>GetHeight<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">return</font> height;
 <font color="black">}</font>
 </PRE>
 </BODY>

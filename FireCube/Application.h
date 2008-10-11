@@ -43,7 +43,15 @@ public:
 	/** 
 	* Returns the current frames per second.
 	*/
-	float GetFps();	
+	float GetFps() const;
+	/** 
+	* Returns the window's width.
+	*/
+	int GetWidth() const;
+	/** 
+	* Returns the window's height.
+	*/
+	int GetHeight() const;
 	/** 
 	* User should override this to handle the input.
 	* Called once per frame.
@@ -70,6 +78,7 @@ public:
 	float fps;
 	float fpsTime;
 	float frameCount;	
+	int width,height;
 	TextureManager defaultTextureManager;
 	ShaderManager defaultShaderManager;
 	FontManager defaultFontManager;	

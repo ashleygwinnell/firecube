@@ -24,6 +24,11 @@ public:
 	* Creates a new texture.
 	*/
 	bool Create();
+	/**
+	* Generates mipmaps for the texture.
+	*/
+	void GenerateMipMaps();
+
 	GLuint id;
 };	
 

@@ -130,6 +130,7 @@ public:
 	* @param program The program to use.
 	*/
 	void SetProgram(const Program &program);
+	
 	vector<Object> object;
 	vector<Material> material;	
 	string name;

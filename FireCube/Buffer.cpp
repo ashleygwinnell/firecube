@@ -21,8 +21,11 @@ BufferResource::~BufferResource()
 }
 
 void BufferResource::Create()
-{	
-	glGenBuffers(1,&id);	
+{		
+	glGenBuffers(1,&id);
+	ostringstream ss;
+	ss<< "Created buffer with id="<<id<<endl;
+	Logger::Write(ss.str());
 }
 void BufferResource::LoadIndexData(void *data,DWORD count,BufferType bt)
 {

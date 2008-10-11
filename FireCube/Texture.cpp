@@ -61,3 +61,8 @@ bool TextureResource::Load(const std::string &filename)
 	}
 	return false;
 }
+void TextureResource::GenerateMipMaps()
+{
+	glBindTexture(GL_TEXTURE_2D,id);
+	glGenerateMipmapEXT(GL_TEXTURE_2D);
+}

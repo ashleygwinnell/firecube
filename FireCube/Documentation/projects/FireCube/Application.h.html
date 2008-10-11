@@ -47,11 +47,19 @@ This class is responsible for the intialization and running of the application.
     <font color="green">/** 
     * Sets the title of the window.
     */</font>
-    <font color="blue">void</font> SetTitle<font color="black">(</font>string <font color="black">&</font>title<font color="black">)</font>;
+    <font color="blue">void</font> SetTitle<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>title<font color="black">)</font>;
     <font color="green">/** 
     * Returns the current frames per second.
     */</font>
-    <font color="blue">float</font> GetFps<font color="black">(</font><font color="black">)</font>; 
+    <font color="blue">float</font> GetFps<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
+    <font color="green">/** 
+    * Returns the window's width.
+    */</font>
+    <font color="blue">int</font> GetWidth<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
+    <font color="green">/** 
+    * Returns the window's height.
+    */</font>
+    <font color="blue">int</font> GetHeight<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
     <font color="green">/** 
     * User should override this to handle the input.
     * Called once per frame.
@@ -78,6 +86,7 @@ This class is responsible for the intialization and running of the application.
     <font color="blue">float</font> fps;
     <font color="blue">float</font> fpsTime;
     <font color="blue">float</font> frameCount;   
+    <font color="blue">int</font> width,height;
     TextureManager defaultTextureManager;
     ShaderManager defaultShaderManager;
     FontManager defaultFontManager; 

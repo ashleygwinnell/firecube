@@ -52,6 +52,8 @@ bool Application::Initialize(int width,int height,int bpp,bool fullscreen)
 	glLoadMatrixf(mat.m);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	
+	this->width=width;
+	this->height=height;
 	return InitializeNoWindow();;
 }
 bool Application::InitializeNoWindow()
@@ -93,6 +95,8 @@ void Application::Run()
 			}
 			if (event.type==SDL_VIDEORESIZE)
 			{
+				width=event.resize.w;
+				height=event.resize.h;
 				glViewport(0,0,event.resize.w,event.resize.h);
 			}
 			if (event.type==SDL_QUIT) 
@@ -117,11 +121,19 @@ void Application::SetTitle(const string &title)
 {
 	SDL_WM_SetCaption(title.c_str(),NULL);
 }
-float Application::GetFps()
+float Application::GetFps() const
 {
 	return fps;
 }
 bool Application::Init()
 {
 	return true;
+}
+int Application::GetWidth() const
+{
+	return width;
+}
+int Application::GetHeight() const
+{
+	return height;
 }
