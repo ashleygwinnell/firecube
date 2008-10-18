@@ -53,7 +53,7 @@ FrameBufferResource<font color="black">:</font><font color="black">:</font>~Fram
     glTexParameteri<font color="black">(</font>GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR<font color="black">)</font>;   
     glTexParameteri<font color="black">(</font>GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR<font color="black">)</font>;     
 
-    glFramebufferTexture2DEXT<font color="black">(</font>GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0_EXT,GL_TEXTURE_2D,texture<font color="black">-</font><font color="black">&#62;</font>id,<font color="maroon">0</font><font color="black">)</font>;
+    glFramebufferTexture2DEXT<font color="black">(</font>GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0<font color="black">+</font>attachmnetPoint,GL_TEXTURE_2D,texture<font color="black">-</font><font color="black">&#62;</font>id,<font color="maroon">0</font><font color="black">)</font>;
 <font color="black">}</font>
 <font color="blue">void</font> FrameBufferResource<font color="black">:</font><font color="black">:</font>AddDepthBuffer<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
@@ -65,7 +65,7 @@ FrameBufferResource<font color="black">:</font><font color="black">:</font>~Fram
 <font color="black">}</font>
 <font color="blue">void</font> FrameBufferResource<font color="black">:</font><font color="black">:</font>AddRenderTarget<font color="black">(</font><font color="blue">int</font> attachmnetPoint<font color="black">)</font>
 <font color="black">{</font>
-    glBindFramebufferEXT<font color="black">(</font>GL_FRAMEBUFFER_EXT,id<font color="black">)</font>;
+    glBindFramebuffer<font color="black">(</font>GL_FRAMEBUFFER_EXT,id<font color="black">)</font>;
     texture<font color="black">[</font>attachmnetPoint<font color="black">]</font><font color="black">=</font>Texture<font color="black">(</font><font color="blue">new</font> TextureResource<font color="black">)</font>;
     texture<font color="black">[</font>attachmnetPoint<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
     Renderer<font color="black">:</font><font color="black">:</font>UseTexture<font color="black">(</font>texture<font color="black">[</font>attachmnetPoint<font color="black">]</font>,<font color="maroon">0</font><font color="black">)</font>;   
@@ -75,14 +75,31 @@ FrameBufferResource<font color="black">:</font><font color="black">:</font>~Fram
     glTexParameteri<font color="black">(</font>GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR<font color="black">)</font>;   
     glTexParameteri<font color="black">(</font>GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR<font color="black">)</font>;     
 
-    glFramebufferTexture2DEXT<font color="black">(</font>GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0_EXT,GL_TEXTURE_2D,texture<font color="black">[</font>attachmnetPoint<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>id,<font color="maroon">0</font><font color="black">)</font>;    
+    glFramebufferTexture2DEXT<font color="black">(</font>GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0_EXT<font color="black">+</font>attachmnetPoint,GL_TEXTURE_2D,texture<font color="black">[</font>attachmnetPoint<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>id,<font color="maroon">0</font><font color="black">)</font>;    
 
 <font color="black">}</font>
 Texture FrameBufferResource<font color="black">:</font><font color="black">:</font>GetRenderTarget<font color="black">(</font><font color="blue">int</font> attachmnetPoint<font color="black">)</font>
 <font color="black">{</font>
     <font color="blue">return</font> texture<font color="black">[</font>attachmnetPoint<font color="black">]</font>;
 <font color="black">}</font>
-
+<font color="blue">bool</font> FrameBufferResource<font color="black">:</font><font color="black">:</font>IsValid<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">if</font> <font color="black">(</font>id<font color="black">=</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
+        <font color="blue">return</font> <font color="blue">false</font>;
+    
+    glBindFramebuffer<font color="black">(</font>GL_FRAMEBUFFER_EXT,id<font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>glCheckFramebufferStatusEXT<font color="black">(</font>GL_FRAMEBUFFER_EXT<font color="black">)</font><font color="black">!</font><font color="black">=</font>GL_FRAMEBUFFER_COMPLETE_EXT<font color="black">)</font>
+        <font color="blue">return</font> <font color="blue">false</font>;
+    <font color="blue">return</font> <font color="blue">true</font>;
+<font color="black">}</font>
+<font color="blue">int</font> FrameBufferResource<font color="black">:</font><font color="black">:</font>GetWidth<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> width;
+<font color="black">}</font>
+<font color="blue">int</font> FrameBufferResource<font color="black">:</font><font color="black">:</font>GetHeight<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> height;
+<font color="black">}</font>
 </PRE>
 </BODY>
 </HTML>

@@ -4,3 +4,6 @@ cd projects
 cd FireCube
 svn add *.html
 svn propset svn:mime-type "text/html" *.html
+cd..
+cd..
+cd..

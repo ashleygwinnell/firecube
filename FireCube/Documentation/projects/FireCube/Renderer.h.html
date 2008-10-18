@@ -100,7 +100,11 @@ Renderer.h
     <font color="green">/**
     * Restores the default render buffer.
     */</font>
-    <font color="blue">void</font> FIRECUBE_API RestoreFrameBuffer<font color="black">(</font><font color="blue">const</font> Application <font color="black">&</font>application<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API RestoreFrameBuffer<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Sets the rendering viewport.
+    */</font>
+    <font color="blue">void</font> FIRECUBE_API SetViewport<font color="black">(</font><font color="blue">int</font> width,<font color="blue">int</font> height<font color="black">)</font>;
     <font color="green">/**
     * Sets a perspective projection.
     * @param fov The field of view in degrees.

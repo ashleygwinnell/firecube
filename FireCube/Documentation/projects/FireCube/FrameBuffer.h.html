@@ -54,6 +54,18 @@ FrameBuffer.h
     * Returns a texture from an attachment point.
     */</font>
     Texture GetRenderTarget<font color="black">(</font><font color="blue">int</font> attachmnetPoint<font color="black">)</font>;   
+    <font color="green">/**
+    * Checks whether the frame buffer is valid and can be rendered to. 
+    */</font>
+    <font color="blue">bool</font> IsValid<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Returns the width of the frame buffer.
+    */</font>
+    <font color="blue">int</font> GetWidth<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Returns the height of the frame buffer.
+    */</font>
+    <font color="blue">int</font> GetHeight<font color="black">(</font><font color="black">)</font>;
 <font color="blue">private</font><font color="black">:</font>
     <font color="blue">int</font> width,height;
     GLuint id;

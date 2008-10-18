@@ -1,0 +1,84 @@
+<HTML>
+<HEAD>
+<TITLE>
+Image.cpp
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#include</font> <font color="maroon">&#60;string&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;vector&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;sstream&#62;</font>
+<font color="blue">using</font> <font color="blue">namespace</font> std;
+<font color="blue">#include</font> <font color="maroon">&#60;SDL/SDL.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;SDL/SDL_image.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;windows.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">"GLee.h"</font>
+<font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
+<font color="blue">using</font> <font color="blue">namespace</font> FireCube;
+
+Image<font color="black">:</font><font color="black">:</font>Image<font color="black">(</font><font color="black">)</font> <font color="black">:</font> width<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>, height<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>, bpp<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>
+<font color="black">{</font>
+    
+<font color="black">}</font>
+<font color="blue">bool</font> Image<font color="black">:</font><font color="black">:</font>Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>
+<font color="black">{</font>
+    SDL_Surface <font color="black">*</font>image;
+    image<font color="black">=</font>IMG_Load<font color="black">(</font>filename.c_str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>image<font color="black">)</font>
+    <font color="black">{</font>
+        bpp<font color="black">=</font>image<font color="black">-</font><font color="black">&#62;</font>format<font color="black">-</font><font color="black">&#62;</font>BitsPerPixel;
+        width<font color="black">=</font>image<font color="black">-</font><font color="black">&#62;</font>w;
+        height<font color="black">=</font>image<font color="black">-</font><font color="black">&#62;</font>h;
+        data.resize<font color="black">(</font>width<font color="black">*</font>height<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">)</font>;    
+        <font color="blue">for</font> <font color="black">(</font><font color="blue">int</font> i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>width<font color="black">*</font>height<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">{</font>
+            data<font color="black">[</font>i<font color="black">]</font><font color="black">=</font><font color="black">(</font><font color="black">(</font><font color="blue">unsigned</font> <font color="blue">char</font><font color="black">*</font><font color="black">)</font><font color="black">(</font>image<font color="black">-</font><font color="black">&#62;</font>pixels<font color="black">)</font><font color="black">)</font><font color="black">[</font>i<font color="black">]</font>;
+        <font color="black">}</font>
+        SDL_FreeSurface<font color="black">(</font>image<font color="black">)</font>;
+        <font color="blue">return</font> <font color="blue">true</font>;
+    <font color="black">}</font>
+    <font color="blue">return</font> <font color="blue">false</font>;
+<font color="black">}</font>
+<font color="blue">int</font> Image<font color="black">:</font><font color="black">:</font>GetWidth<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> width;
+<font color="black">}</font>
+<font color="blue">int</font> Image<font color="black">:</font><font color="black">:</font>GetHeight<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> height;
+<font color="black">}</font>
+<font color="blue">int</font> Image<font color="black">:</font><font color="black">:</font>GetBPP<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> bpp;
+<font color="black">}</font>
+vector<font color="black">&#60;</font><font color="blue">unsigned</font> <font color="blue">char</font><font color="black">&#62;</font> <font color="black">&</font>Image<font color="black">:</font><font color="black">:</font>GetPixels<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> data;
+<font color="black">}</font>
+vec4 Image<font color="black">:</font><font color="black">:</font>GetPixel<font color="black">(</font><font color="blue">int</font> x,<font color="blue">int</font> y<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">if</font> <font color="black">(</font>bpp<font color="black">=</font><font color="black">=</font><font color="maroon">8</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">return</font> vec4<font color="black">(</font>GetPixels<font color="black">(</font><font color="black">)</font><font color="black">[</font>y<font color="black">*</font>width<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>x<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font><font color="maroon">0</font><font color="black">]</font>,<font color="maroon">0</font>.0f,<font color="maroon">0</font>.0f,<font color="maroon">1</font>.0f<font color="black">)</font><font color="black">/</font><font color="maroon">255</font>.0f;
+    <font color="black">}</font>
+    <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>bpp<font color="black">=</font><font color="black">=</font><font color="maroon">16</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">return</font> vec4<font color="black">(</font>GetPixels<font color="black">(</font><font color="black">)</font><font color="black">[</font>y<font color="black">*</font>width<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>x<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font><font color="maroon">0</font><font color="black">]</font>,GetPixels<font color="black">(</font><font color="black">)</font><font color="black">[</font>y<font color="black">*</font>width<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>x<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font><font color="maroon">1</font><font color="black">]</font>,<font color="maroon">0</font>.0f,<font color="maroon">1</font>.0f<font color="black">)</font><font color="black">/</font><font color="maroon">255</font>.0f;
+    <font color="black">}</font>
+    <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>bpp<font color="black">=</font><font color="black">=</font><font color="maroon">24</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">return</font> vec4<font color="black">(</font>GetPixels<font color="black">(</font><font color="black">)</font><font color="black">[</font>y<font color="black">*</font>width<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>x<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font><font color="maroon">0</font><font color="black">]</font>,GetPixels<font color="black">(</font><font color="black">)</font><font color="black">[</font>y<font color="black">*</font>width<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>x<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font><font color="maroon">1</font><font color="black">]</font>,GetPixels<font color="black">(</font><font color="black">)</font><font color="black">[</font>y<font color="black">*</font>width<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>x<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font><font color="maroon">2</font><font color="black">]</font>,<font color="maroon">1</font>.0f<font color="black">)</font><font color="black">/</font><font color="maroon">255</font>.0f;
+    <font color="black">}</font>
+    <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>bpp<font color="black">=</font><font color="black">=</font><font color="maroon">32</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">return</font> vec4<font color="black">(</font>GetPixels<font color="black">(</font><font color="black">)</font><font color="black">[</font>y<font color="black">*</font>width<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>x<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font><font color="maroon">0</font><font color="black">]</font>,GetPixels<font color="black">(</font><font color="black">)</font><font color="black">[</font>y<font color="black">*</font>width<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>x<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font><font color="maroon">1</font><font color="black">]</font>,GetPixels<font color="black">(</font><font color="black">)</font><font color="black">[</font>y<font color="black">*</font>width<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>x<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font><font color="maroon">2</font><font color="black">]</font>,GetPixels<font color="black">(</font><font color="black">)</font><font color="black">[</font>y<font color="black">*</font>width<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>x<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font><font color="maroon">3</font><font color="black">]</font><font color="black">)</font><font color="black">/</font><font color="maroon">255</font>.0f;
+    <font color="black">}</font>
+    <font color="blue">return</font> vec4<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+</PRE>
+</BODY>
+</HTML>

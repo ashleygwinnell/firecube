@@ -83,6 +83,10 @@ void BufferResource::SetIndexStream()
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,id);	
 }
+bool BufferResource::IsValid()
+{
+	return id!=0;
+}
 void BufferResource::Destroy()
 {
 	ostringstream ss;

@@ -198,6 +198,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Image.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Logger.cpp"
 				>
 			</File>
@@ -273,6 +277,10 @@
 			</File>
 			<File
 				RelativePath=".\GLee.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Image.h"
 				>
 			</File>
 			<File

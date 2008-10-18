@@ -257,19 +257,19 @@ DWORD ModelResource::ProcessChunk(char *buffer)
 	case MAT_AMBIENT:
 		i+=6;
 		matPtr=this->material[0];		
-		matPtr->ambient=vec3((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f);
+		matPtr->ambient=vec4((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f,1.0f);
 		i+=3;
 		break;
 	case MAT_DIFFUSE:
 		i+=6;
 		matPtr=this->material[0];		
-		matPtr->diffuse=vec3((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f);
+		matPtr->diffuse=vec4((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f,1.0f);
 		i+=3;
 		break;
 	case MAT_SPECULAR:
 		i+=6;
 		matPtr=this->material[0];		
-		matPtr->specular=vec3((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f);
+		matPtr->specular=vec4((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f,1.0f);
 		i+=3;
 		break;
 	case MAT_SHININESS:
@@ -333,7 +333,7 @@ Model ModelResource::Reduce()
 				unsigned int k;
 				for (k=0;k<curObject->vertex.size();k++)
 				{
-					if (curObject->vertex[k]==v)
+					if ((curObject->vertex[k]-v).Length2()==0.0f)
 					{
 						found=true;
 						break;

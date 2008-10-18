@@ -45,7 +45,7 @@ void FrameBufferResource::SetRenderTarget(Texture texture,int attachmnetPoint)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);		
 
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0_EXT,GL_TEXTURE_2D,texture->id,0);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0+attachmnetPoint,GL_TEXTURE_2D,texture->id,0);
 }
 void FrameBufferResource::AddDepthBuffer()
 {
@@ -57,7 +57,7 @@ void FrameBufferResource::AddDepthBuffer()
 }
 void FrameBufferResource::AddRenderTarget(int attachmnetPoint)
 {
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,id);
+	glBindFramebuffer(GL_FRAMEBUFFER_EXT,id);
 	texture[attachmnetPoint]=Texture(new TextureResource);
 	texture[attachmnetPoint]->Create();
 	Renderer::UseTexture(texture[attachmnetPoint],0);	
@@ -67,10 +67,28 @@ void FrameBufferResource::AddRenderTarget(int attachmnetPoint)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);		
 
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0_EXT,GL_TEXTURE_2D,texture[attachmnetPoint]->id,0);	
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0_EXT+attachmnetPoint,GL_TEXTURE_2D,texture[attachmnetPoint]->id,0);	
 
 }
 Texture FrameBufferResource::GetRenderTarget(int attachmnetPoint)
 {
 	return texture[attachmnetPoint];
+}
+bool FrameBufferResource::IsValid()
+{
+	if (id==0)
+		return false;
+	
+	glBindFramebuffer(GL_FRAMEBUFFER_EXT,id);
+	if (glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT)!=GL_FRAMEBUFFER_COMPLETE_EXT)
+		return false;
+	return true;
+}
+int FrameBufferResource::GetWidth()
+{
+	return width;
+}
+int FrameBufferResource::GetHeight()
+{
+	return height;
 }

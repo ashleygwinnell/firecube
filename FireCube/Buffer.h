@@ -64,6 +64,10 @@ public:
 	*/
 	void SetIndexStream();
 	/**
+	* Returns whether the buffer is valid.
+	*/
+	bool IsValid();	
+	/**
 	* Destroys the buffer.
 	*/
 	void Destroy();

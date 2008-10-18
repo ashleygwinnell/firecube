@@ -46,6 +46,18 @@ public:
 	* Returns a texture from an attachment point.
 	*/
 	Texture GetRenderTarget(int attachmnetPoint);	
+	/**
+	* Checks whether the frame buffer is valid and can be rendered to. 
+	*/
+	bool IsValid();
+	/**
+	* Returns the width of the frame buffer.
+	*/
+	int GetWidth();
+	/**
+	* Returns the height of the frame buffer.
+	*/
+	int GetHeight();
 private:
 	int width,height;
 	GLuint id;

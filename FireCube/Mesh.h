@@ -39,9 +39,9 @@ public:
 	~MaterialResource();
 	
 	string name;
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
+	vec4 ambient;
+	vec4 diffuse;
+	vec4 specular;
 	float shininess;
 	Texture texture[MAX_TEXTURES];
 	Program program;

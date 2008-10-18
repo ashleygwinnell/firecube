@@ -65,7 +65,7 @@ bool Application::InitializeNoWindow()
 	glEnable(GL_CULL_FACE);
 	srand(GetTickCount());
 	FT_Init_FreeType(&freeTypeLibrary);	
-	InitializeRenderer();		
+	InitializeRenderer();
 	return Init();
 }
 bool Application::Destroy()

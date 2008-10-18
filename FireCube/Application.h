@@ -56,17 +56,17 @@ public:
 	* User should override this to handle the input.
 	* Called once per frame.
 	*/
-	virtual bool HandleInput(float time) = 0;
+	virtual void HandleInput(float time) = 0;
 	/** 
 	* User should override this to handle the game logic.
 	* Called once per frame.
 	*/
-	virtual bool Update(float time) = 0;
+	virtual void Update(float time) = 0;
 	/** 
 	* User should override this to render the game world.
 	* Called once per frame.
 	*/
-	virtual bool Render(float time) = 0;
+	virtual void Render(float time) = 0;
 	/**
 	* Called once initialization is complete to execute user specific intialization.
 	*/

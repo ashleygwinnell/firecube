@@ -92,7 +92,11 @@ namespace Renderer
 	/**
 	* Restores the default render buffer.
 	*/
-	void FIRECUBE_API RestoreFrameBuffer(const Application &application);
+	void FIRECUBE_API RestoreFrameBuffer();
+	/**
+	* Sets the rendering viewport.
+	*/
+	void FIRECUBE_API SetViewport(int width,int height);
 	/**
 	* Sets a perspective projection.
 	* @param fov The field of view in degrees.

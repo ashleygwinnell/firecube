@@ -19,6 +19,7 @@ namespace FireCube
 	#include "Shaders.h"
 	#include "Mesh.h"
 	#include "FrameBuffer.h"
+	#include "Image.h"
 	#include "Font.h"
 	#include "Renderer.h"			
 	#include "utils.h"	

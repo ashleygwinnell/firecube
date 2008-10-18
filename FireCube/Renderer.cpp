@@ -121,51 +121,52 @@ void ProgramResource::Attach(Shader shader)
 }
 void ProgramResource::Link()
 {
+	variables.clear();
 	glLinkProgram(id);	
 }
-void ProgramResource::Uniform1f(const string &name,float value)
+void ProgramResource::SetUniform(const string &name,float value)
 {
-	GLint location=0;
+	GLint location=-1;
 	map<string,GLint>::iterator i=variables.find(name);
 	if (i!=variables.end())
 		location=i->second;
 	else
 	{
 		location=glGetUniformLocation(id,name.c_str());
-		if (location!=0)
+		if (location!=-1)
 			variables[name]=location;
 	}
-	if (location!=0)
+	if (location!=-1)
 		glUniform1f(location,value);
 }
-void ProgramResource::Uniform1i(const string &name,int value)
+void ProgramResource::SetUniform(const string &name,int value)
 {
-	GLint location=0;
+	GLint location=-1;
 	map<string,GLint>::iterator i=variables.find(name);
 	if (i!=variables.end())
 		location=i->second;
 	else
 	{
 		location=glGetUniformLocation(id,name.c_str());
-		if (location!=0)
+		if (location!=-1)
 			variables[name]=location;
 	}
-	if (location!=0)
+	if (location!=-1)
 		glUniform1i(location,value);
 }
-void ProgramResource::Uniform4f(const string &name,vec4 value)
+void ProgramResource::SetUniform(const string &name,vec4 value)
 {
-	GLint location=0;
+	GLint location=-1;
 	map<string,GLint>::iterator i=variables.find(name);
 	if (i!=variables.end())
 		location=i->second;
 	else
 	{
 		location=glGetUniformLocation(id,name.c_str());
-		if (location!=0)
+		if (location!=-1)
 			variables[name]=location;
 	}
-	if (location!=0)
+	if (location!=-1)
 		glUniform4fv(location,1,&value.x);
 }
 bool ProgramResource::IsValid() const
@@ -241,6 +242,8 @@ void Renderer::MultiplyModelViewMatrix(mat4 &mat)
 }
 void Renderer::UseTexture(Texture tex,unsigned int unit)
 {
+	if (!tex)
+		return;
 	glActiveTexture(GL_TEXTURE0+unit);
 	glBindTexture(GL_TEXTURE_2D,tex->id);
 }
@@ -255,8 +258,8 @@ void Renderer::RenderText(Font font,vec2 pos,vec4 color,const string &str)
 	if (textShader->IsValid())
 	{
 		UseProgram(textShader);	
-		textShader->Uniform1i("tex0",0);
-		textShader->Uniform4f("textColor",color);
+		textShader->SetUniform("tex0",0);
+		textShader->SetUniform("textColor",color);
 	}	
 	int numQuads=0;
 	
@@ -374,9 +377,9 @@ void Renderer::UseMaterial(Material material)
 {
 	if (!material)
 		return;
-	float ambient[]={material->ambient.x,material->ambient.y,material->ambient.z,1.0f};
-	float diffuse[]={material->diffuse.x,material->diffuse.y,material->diffuse.z,1.0f};
-	float specular[]={material->specular.x,material->specular.y,material->specular.z,1.0f};			
+	float ambient[]={material->ambient.x,material->ambient.y,material->ambient.z,material->ambient.w};
+	float diffuse[]={material->diffuse.x,material->diffuse.y,material->diffuse.z,material->diffuse.w};
+	float specular[]={material->specular.x,material->specular.y,material->specular.z,material->specular.w};
 	glMaterialfv(GL_FRONT,GL_AMBIENT,ambient);
 	glMaterialfv(GL_FRONT,GL_DIFFUSE,diffuse);
 	glMaterialfv(GL_FRONT,GL_SPECULAR,specular);
@@ -475,8 +478,11 @@ void Renderer::UseFrameBuffer(FrameBuffer frameBuffer)
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,frameBuffer->id);
 	glViewport(0,0,frameBuffer->width,frameBuffer->height);
 }
-void Renderer::RestoreFrameBuffer(const Application &application)
+void Renderer::RestoreFrameBuffer()
 {
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
-	glViewport(0,0,application.GetWidth(),application.GetHeight());
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);	
+}
+void Renderer::SetViewport(int width,int height)
+{
+	glViewport(0,0,width,height);
 }

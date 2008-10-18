@@ -88,19 +88,19 @@ Shaders.h
     * @param name The name of the variable.
     * @param value The value to assign for it.
     */</font>
-    <font color="blue">void</font> Uniform1f<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">float</font> value<font color="black">)</font>;
+    <font color="blue">void</font> SetUniform<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">float</font> value<font color="black">)</font>;
     <font color="green">/**
     * Sets a 1d uniform integer.
     * @param name The name of the variable.
     * @param value The value to assign for it.
     */</font>
-    <font color="blue">void</font> Uniform1i<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">int</font> value<font color="black">)</font>;
+    <font color="blue">void</font> SetUniform<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">int</font> value<font color="black">)</font>;
     <font color="green">/**
-    * Sets a 4f uniform integer.
+    * Sets a 4d uniform float.
     * @param name The name of the variable.
     * @param value The value to assign for it.
     */</font>
-    <font color="blue">void</font> Uniform4f<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,vec4 value<font color="black">)</font>;
+    <font color="blue">void</font> SetUniform<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,vec4 value<font color="black">)</font>;
     <font color="green">/**
     * Returns whether the program is valid.
     */</font>

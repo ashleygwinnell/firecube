@@ -91,6 +91,10 @@ BufferResource<font color="black">:</font><font color="black">:</font>~BufferRes
 <font color="black">{</font>
     glBindBuffer<font color="black">(</font>GL_ELEMENT_ARRAY_BUFFER,id<font color="black">)</font>;   
 <font color="black">}</font>
+<font color="blue">bool</font> BufferResource<font color="black">:</font><font color="black">:</font>IsValid<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> id<font color="black">!</font><font color="black">=</font><font color="maroon">0</font>;
+<font color="black">}</font>
 <font color="blue">void</font> BufferResource<font color="black">:</font><font color="black">:</font>Destroy<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
     ostringstream ss;
