@@ -1,9 +1,9 @@
 class FireCubeApp : public FireCube::Application
 {
 public:
-	bool HandleInput(float t);
-	bool Render(float t);
-	bool Update(float t);
+	void HandleInput(float t);
+	void Render(float t);
+	void Update(float t);
 	void LoadModel(const string &filename);
 
 	FireCube::Model model;

@@ -23,17 +23,14 @@ bool MyApp::OnInit()
 	frame->Show(true);
 	return true;
 }
-bool FireCubeApp::HandleInput(float t)
-{
-	return true;
+void FireCubeApp::HandleInput(float t)
+{	
 }
-bool FireCubeApp::Render(float t)
-{
-	return true;
+void FireCubeApp::Render(float t)
+{	
 }
-bool FireCubeApp::Update(float t)
-{
-	return true;
+void FireCubeApp::Update(float t)
+{	
 }
 void FireCubeApp::LoadModel(const string &filename)
 {
