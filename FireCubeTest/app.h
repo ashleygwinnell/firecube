@@ -1,9 +1,9 @@
 class App : public Application
 {
 public:
-	bool HandleInput(float t);
-	bool Render(float t);
-	bool Update(float t);
+	void HandleInput(float t);
+	void Render(float t);
+	void Update(float t);
 	ModelManager modelManager;
 	Model model;	
 	Font font;

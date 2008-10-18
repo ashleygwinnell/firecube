@@ -25,12 +25,10 @@ int main(int argc, char *argv[])
 	app.Run();			
 	return 0;
 }
-bool App::Update(float t)
+void App::Update(float t)
 {	
-	
-	return true;
 }
-bool App::Render(float t)
+void App::Render(float t)
 {		
 	Renderer::Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
 	Renderer::SetPerspectiveProjection(90.0f,0.1f,100.0f);	
@@ -46,9 +44,8 @@ bool App::Render(float t)
 	ostringstream oss;
 	oss << "FPS:"<<app.GetFps();	
 	Renderer::RenderText(app.font,vec2(0,0),vec4(1,1,1,1),oss.str());
-	return true;
 }
-bool App::HandleInput(float t)
+void App::HandleInput(float t)
 {
 	POINT p;
 	vec3 m;	
@@ -68,6 +65,5 @@ bool App::HandleInput(float t)
 	if (GetAsyncKeyState(2))	
 		rot.z+=t*(lastPos.y-m.y)*2.0f;
 
-	lastPos=m;
-	return true;
+	lastPos=m;	
 }
