@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 }
 bool App::Init()
 {
-	SetTitle(string("ShaderTest"));
+	SetTitle("ShaderTest");
 	font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\micross.ttf",18);
 	Program program(new ProgramResource);
 	program->Create(Renderer::GetShaderManager()->Create("v.vshader"),Renderer::GetShaderManager()->Create("p.fshader"));		
@@ -30,11 +30,10 @@ bool App::Init()
 	model->SetProgram(program);
 	return true;
 }
-bool App::Update(float t)
+void App::Update(float t)
 {		
-	return true;
 }
-bool App::Render(float t)
+void App::Render(float t)
 {	
 	Renderer::SetPerspectiveProjection(90.0f,0.1f,100.0f);
 	static float appTime=0;
@@ -51,9 +50,8 @@ bool App::Render(float t)
 	Renderer::SetModelViewMatrix(mat4());
 	Renderer::SetOrthographicProjection();
 	Renderer::RenderText(font,vec2(0,0),vec4(1,1,0,1.0f),ss.str());
-	return true;
 }
-bool App::HandleInput(float t)
+void App::HandleInput(float t)
 {
 	POINT p;
 	vec3 m;
@@ -74,5 +72,4 @@ bool App::HandleInput(float t)
 		rot.z+=t*(lastPos.y-m.y)*2.0f;
 
 	lastPos=m;
-	return true;
 }
