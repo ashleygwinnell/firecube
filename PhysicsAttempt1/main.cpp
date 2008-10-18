@@ -50,16 +50,13 @@ int main(int argc, char *argv[])
 	app.Run();
 	return 0;
 }
-bool App::Update(float t)
+void App::Update(float t)
 {
 	s.Update(t);	
-	return true;
 }
-bool App::Render(float t)
+void App::Render(float t)
 {	
 	Renderer::SetPerspectiveProjection(90.0f,0.1f,100.0f);
-	static float appTime=0;
-	appTime+=t;
 	Renderer::Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
 	mat4 m;	
 	m.RotateX(rot.x);
@@ -67,17 +64,16 @@ bool App::Render(float t)
 	m.Translate(-camPos);
 	Renderer::SetModelViewMatrix(m);
 	Renderer::UseProgram(program);
-	app.program->Uniform1i("tex0",0);
+	app.program->SetUniform("tex0",0);
 	s.Render();	
 	
 	Renderer::SetOrthographicProjection();
 	Renderer::SetModelViewMatrix(mat4());
 	ostringstream oss;
 	oss << "FPS:" << app.GetFps();
-	Renderer::RenderText(font,vec2(0,0),vec4(1,1,1,1),oss.str());
-	return true;
+	Renderer::RenderText(font,vec2(0,0),vec4(1,1,1,1),oss.str());	
 }
-bool App::HandleInput(float t)
+void App::HandleInput(float t)
 {
 	body1.CalculateWorldProperties();
 	body2.CalculateWorldProperties();
@@ -102,6 +98,5 @@ bool App::HandleInput(float t)
 		v.FromAngles(rot.x,rot.y);
 		camPos+=v*(lastPos.y-m.y)*t;
 	}		
-	lastPos=m;
-	return true;
+	lastPos=m;	
 }
