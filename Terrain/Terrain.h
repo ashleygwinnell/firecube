@@ -6,8 +6,11 @@ public:
 	Terrain();
 	bool GenerateTerrain(const string &heightmap,const string &texture,const string &detailMap,vec3 sizeVertices,vec2 sizeUv);
 	bool GenerateTerrain(const string &heightmap,vec3 sizeVertices,vec2 sizeUv);
+	void PrepareRender();
 	void Render();
 	float GetHeight(float x,float y);
+	int GetWidth();
+	int GetHeight();
 private:
 	vec3 terrainScale;
 	Image heightmapImage;
