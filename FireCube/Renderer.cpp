@@ -154,6 +154,21 @@ void ProgramResource::SetUniform(const string &name,int value)
 	if (location!=-1)
 		glUniform1i(location,value);
 }
+void ProgramResource::SetUniform(const string &name,vec3 value)
+{
+	GLint location=-1;
+	map<string,GLint>::iterator i=variables.find(name);
+	if (i!=variables.end())
+		location=i->second;
+	else
+	{
+		location=glGetUniformLocation(id,name.c_str());
+		if (location!=-1)
+			variables[name]=location;
+	}
+	if (location!=-1)
+		glUniform3fv(location,1,&value.x);
+}
 void ProgramResource::SetUniform(const string &name,vec4 value)
 {
 	GLint location=-1;

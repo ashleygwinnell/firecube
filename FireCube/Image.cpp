@@ -26,12 +26,20 @@ bool Image::Load(const string &filename)
 		width=image->w;
 		height=image->h;
 		data.resize(width*height*bpp/8);	
-		for (int i=0;i<width*height*bpp/8;i++)
+		for (int y=0;y<height;y++)
 		{
-			data[i]=((unsigned char*)(image->pixels))[i];
+			for (int x=0;x<width;x++)
+			{
+				for (int j=0;j<bpp/8;j++)
+				{				
+					DWORD i=y*height*bpp/8+x*bpp/8+j;
+					data[i]=((unsigned char*)(image->pixels))[y*image->pitch+x*bpp/8+j];
+				}
+			}
 		}
 		SDL_FreeSurface(image);
-		return true;
+
+		return true;		
 	}
 	return false;
 }

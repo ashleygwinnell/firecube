@@ -88,6 +88,12 @@ public:
 	*/
 	void SetUniform(const string &name,int value);
 	/**
+	* Sets a 3d uniform float.
+	* @param name The name of the variable.
+	* @param value The value to assign for it.
+	*/
+	void SetUniform(const string &name,vec3 value);
+	/**
 	* Sets a 4d uniform float.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
