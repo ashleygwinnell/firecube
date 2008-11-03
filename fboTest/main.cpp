@@ -73,7 +73,7 @@ void App::Render(float time)
 	Renderer::RenderText(font,vec2(0,0),vec4(1,1,1,1.0f),"FBO Test.");
  	
 	Renderer::RestoreFrameBuffer();
-	Renderer::SetViewport(app.GetWidth(),app.GetHeight());
+	Renderer::SetViewport(0,0,app.GetWidth(),app.GetHeight());
  	t.Identity();	
  	t.Translate(vec3(0,0,-2.5f));
 	t.RotateY(ang/3.0f);
@@ -83,7 +83,7 @@ void App::Render(float time)
  	Renderer::UseProgram(program); 	
  	vBuffer->SetVertexStream(3);
  	uvBuffer->SetTexCoordStream(0); 	
-	fbo->GetRenderTarget(0)->GenerateMipMaps();
+	fbo->GetRenderTarget(0)->GenerateMipMaps();	
 	Renderer::UseTexture(fbo->GetRenderTarget(0),0);	
  	Renderer::RenderStream(QUADS,8);
 
