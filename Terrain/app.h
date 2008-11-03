@@ -5,8 +5,10 @@ public:
 	void HandleInput(float time);
 	void Update(float time);
 	void Render(float time);		
-		
-	QuadTree qt;
+	
+	Model model;	
+	Program program;
+	ModelManager mm;	
 	Font font;
 	Terrain terrain;	
 };

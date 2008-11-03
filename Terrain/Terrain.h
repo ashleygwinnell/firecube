@@ -3,25 +3,22 @@
 class Terrain
 {
 public:
-	Terrain();
-	bool GenerateTerrain(const string &heightmap,const string &texture,const string &detailMap,vec3 sizeVertices,vec2 sizeUv);
-	bool GenerateTerrain(const string &heightmap,vec3 sizeVertices,vec2 sizeUv);
-	void PrepareRender();
-	void Render();
-	float GetHeight(float x,float y);
+	Terrain();			
+	bool GenerateTerrain(const string &heightmap,const string &diffuse,vec3 sizeVertices,vec2 sizeUv);
+	DWORD Render(Frustum &frustum);
+	float GetHeight(vec2 pos);
 	int GetWidth();
 	int GetHeight();
+	vec3 GetNormal(vec2 pos);
 private:
+	QuadTree quadtree;
+	Material material;
+	Texture diffuseTexture;
 	vec3 terrainScale;
 	Image heightmapImage;
-	Texture heightmap;
-	Texture terrainTexture;
-	Texture detailMap;
-	Buffer vertexBuffer;
-	Buffer indexBuffer;
+	Buffer vertexBuffer;	
 	Buffer uvBuffer;
-	Buffer normalBuffer;
-	Program program;
+	Buffer normalBuffer;	
 	DWORD width,height;
 };
 #endif

@@ -13,15 +13,13 @@ using namespace std;
 #include <FireCube.h>
 using namespace FireCube;
 #include "Frustum.h"
-#include "Terrain.h"
 #include "QuadTree.h"
 
-QuadTree::QuadTree() : plainColor(new ProgramResource)
+QuadTree::QuadTree() : plainColor(new ProgramResource),indexBuffer(new BufferResource)
 {
 }
 void QuadTree::Initialize()
-{
-	indexBuffer=Buffer(new BufferResource);
+{	
 	indexBuffer->Create();
 	plainColor->Create(Renderer::GetShaderManager()->Create("plainColor.vshader"),Renderer::GetShaderManager()->Create("plainColor.fshader"));
 }
@@ -72,7 +70,7 @@ void QuadTree::Build(NodePtr node,float minSize,DWORD maxNumerOfFaces)
 	for (DWORD i=0;i<node->face->size();i++)
 	{		
 		for (DWORD j=0;j<4;j++)
-		{			
+		{	
 			vec2 f=(*node->face)[i];
 			vec2 f2=(*node->face)[i]+vec2(1.0f/aspect.x,1.0f/aspect.y);
 			if (((f.x>=child[j]->min.x) && (f.y>=child[j]->min.y) && (f.x<=child[j]->max.x) && (f.y<=child[j]->max.y) ) || ((f2.x>=child[j]->min.x) && (f2.y>=child[j]->min.y) && (f2.x<=child[j]->max.x) && (f2.y<=child[j]->max.y)))
@@ -92,7 +90,7 @@ void QuadTree::Build(NodePtr node,float minSize,DWORD maxNumerOfFaces)
 		if (node->child[i])
 			Build(node->child[i],minSize,maxNumerOfFaces);
 }
-int QuadTree::Render(Frustum &frustum)
+DWORD QuadTree::Render(Frustum &frustum)
 {
 	currentIndex=0;
 	Render(root,frustum);
@@ -115,7 +113,7 @@ void QuadTree::Render(NodePtr node,Frustum &frustum)
 		{	
 			if (indicesToRender.size()-currentIndex<node->indices.size())
 				indicesToRender.resize(indicesToRender.size()+node->indices.size());
-			std::copy(node->indices.begin(),node->indices.end(),indicesToRender.begin()+currentIndex);
+			std::copy(node->indices.begin(),node->indices.end(),indicesToRender.begin()+currentIndex);			
 			currentIndex+=node->indices.size();
 		}
 		else
@@ -199,9 +197,35 @@ void QuadTree::Save(NodePtr node,ofstream &file)
 	file.write((const char*)&node->min,sizeof(vec2));
 	file.write((const char*)&node->max,sizeof(vec2));
 	file.write((const char*)&children,1);
-	file.write((const char*)&numIndices,sizeof(DWORD));
+	file.write((const char*)&numIndices,sizeof(DWORD));	
 	if (numIndices>0)
-		file.write((const char*)&node->indices[0],numIndices*sizeof(DWORD));
+	{
+		DWORD lastIndex=node->indices[0];
+		for (DWORD i=1;i<node->indices.size();i++)
+		{
+			if (node->indices[i]!=node->indices[i-1]+1)
+			{
+				file.write((const char *)&lastIndex,sizeof(DWORD));
+				DWORD j=node->indices[i-1];
+				file.write((const char *)&j,sizeof(DWORD));
+				lastIndex=node->indices[i];
+				if (i==node->indices.size()-1)
+				{
+					file.write((const char *)&lastIndex,sizeof(DWORD));
+					file.write((const char *)&lastIndex,sizeof(DWORD));
+				}
+			}
+			else
+			{
+				 if (i==node->indices.size()-1)
+				 {
+					 file.write((const char *)&lastIndex,sizeof(DWORD));
+					 DWORD j=node->indices[i];
+					 file.write((const char *)&j,sizeof(DWORD));					 
+				 }
+			}
+		}		
+	}
 	for (DWORD i=0;i<4;i++)
 		if (node->child[i])
 			Save(node->child[i],file);
@@ -209,42 +233,64 @@ void QuadTree::Save(NodePtr node,ofstream &file)
 void QuadTree::Load(const string &filename)
 {
 	ifstream file(filename.c_str(),ios::binary);
-	file.read((char*)&size,sizeof(vec2));
-	file.read((char*)&aspect,sizeof(vec2));
+	file.seekg(0,ios_base::end);
+	DWORD size=file.tellg(),currentIndex=0;
+	vector<unsigned char> buffer;
+	buffer.resize(size);
+	file.seekg(0,ios_base::beg);
+	file.read((char*)&buffer[0],size);
+	this->size=*(vec2*)&buffer[currentIndex];
+	currentIndex+=sizeof(vec2);	
+	aspect=*(vec2*)&buffer[currentIndex];
+	currentIndex+=sizeof(vec2);	
 	root=NodePtr(new Node);
-	Load(root,file);
+	Load(buffer,currentIndex,root);
 }
-void QuadTree::Load(NodePtr node,ifstream &file)
+void QuadTree::Load(const vector<unsigned char> &buffer,DWORD &currentIndex,NodePtr node)
 {
 	unsigned char children;
 	DWORD numIndices;
-	file.read((char*)&node->min,sizeof(vec2));
-	file.read((char*)&node->max,sizeof(vec2));
-	file.read((char*)&children,1);
-	file.read((char*)&numIndices,sizeof(DWORD));
+	node->min=*(vec2*)&buffer[currentIndex];
+	currentIndex+=sizeof(vec2);		
+	node->max=*(vec2*)&buffer[currentIndex];
+	currentIndex+=sizeof(vec2);
+	children=*(unsigned char*)&buffer[currentIndex];
+	currentIndex+=1;
+	numIndices=*(DWORD*)&buffer[currentIndex];
+	currentIndex+=sizeof(DWORD);
 	if (numIndices>0)
 	{
 		node->indices.resize(numIndices);
-		file.read((char*)&node->indices[0],sizeof(DWORD)*numIndices);		
+		DWORD startIndex,endIndex,nodeCurrentIndex=0;
+		while (nodeCurrentIndex!=numIndices)
+		{
+
+			startIndex=*(DWORD*)&buffer[currentIndex];
+			currentIndex+=sizeof(DWORD);
+			endIndex=*(DWORD*)&buffer[currentIndex];
+			currentIndex+=sizeof(DWORD);			
+			for (DWORD i=startIndex;i<=endIndex;i++)
+				node->indices[nodeCurrentIndex++]=i;
+		}
 	}
 	if (children&1)
 	{
 		node->child[0]=NodePtr(new Node);
-		Load(node->child[0],file);
+		Load(buffer,currentIndex,node->child[0]);
 	}
 	if (children&2)
 	{
 		node->child[1]=NodePtr(new Node);
-		Load(node->child[1],file);
+		Load(buffer,currentIndex,node->child[1]);
 	}
 	if (children&4)
 	{
 		node->child[2]=NodePtr(new Node);
-		Load(node->child[2],file);
+		Load(buffer,currentIndex,node->child[2]);
 	}
 	if (children&8)
 	{
 		node->child[3]=NodePtr(new Node);
-		Load(node->child[3],file);
+		Load(buffer,currentIndex,node->child[3]);
 	}
 }

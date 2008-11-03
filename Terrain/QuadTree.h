@@ -20,24 +20,24 @@ public:
 	void Initialize();
 	void Init(vec2 size,vec2 verticesSize);
 	void Build(float minSize,DWORD maxNumerOfFaces);
-	int Render(Frustum &frustum);
+	DWORD Render(Frustum &frustum);
 	void RenderLines();
 	void Save(const string &filename);
-	void Load(const string &filename);
+	void Load(const string &filename);	
 private:
-	void Load(NodePtr node,ifstream &file);
+	void Load(const vector<unsigned char> &buffer,DWORD &currentIndex,NodePtr node);
 	void Save(NodePtr node,ofstream &file);
 	void Build(NodePtr node,float minSize,DWORD maxNumerOfFaces);
 	void BuildIndices(NodePtr node);
 	void Render(NodePtr node,Frustum &frustum);
-	void RenderLines(NodePtr node);
-	Program plainColor;
+	void RenderLines(NodePtr node);	
 	NodePtr root;
 	vec2 size;
 	vector<DWORD> indicesToRender;	
 	Buffer indexBuffer;
 	vec2 aspect;
 	DWORD currentIndex;
+	Program plainColor;
 };
 
 #endif

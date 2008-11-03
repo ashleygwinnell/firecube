@@ -2,6 +2,8 @@
 #include <map>
 #include <vector>
 #include <sstream>
+#include <iostream>
+#include <fstream>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include <Windows.h>
@@ -9,174 +11,179 @@
 using namespace std;
 #include <FireCube.h>
 using namespace FireCube;
+#include "Frustum.h"
+#include "QuadTree.h"
 #include "Terrain.h"
 
-Terrain::Terrain() : indexBuffer(new BufferResource), vertexBuffer(new BufferResource), uvBuffer(new BufferResource),normalBuffer(new BufferResource),program(new ProgramResource)
-{	
-}
-bool Terrain::GenerateTerrain(const string &heightmap,const string &texture,const string &detailMap,vec3 sizeVertices,vec2 sizeUv)
-{	
-	terrainScale=sizeVertices;
-	program->Create(Renderer::GetShaderManager()->Create("1.vshader"),Renderer::GetShaderManager()->Create("1.fshader"));
-	vertexBuffer->Create();
-	indexBuffer->Create();
-	uvBuffer->Create();
-	terrainTexture=Renderer::GetTextureManager()->Create(texture);
-	this->detailMap=Renderer::GetTextureManager()->Create(detailMap);
-	if (!heightmapImage.Load(heightmap))
-		return false;
-	width=heightmapImage.GetWidth();
-	height=heightmapImage.GetHeight();
-	vector<vec3> vertex;
-	vector<DWORD> index;
-	vector<vec2> uv;
-	vertex.resize(width*height);	
-	uv.resize(width*height);
-	for (DWORD y=0;y<height;y++)
-	{
-		for (DWORD x=0;x<width;x++)
-		{
-			vertex[y*width+x]=vec3((float)x/(float)(width-1)*sizeVertices.x,heightmapImage.GetPixel(x,y).x*sizeVertices.y,(float)y/(float)(height-1)*sizeVertices.z);
-		}
-	}
-	vertexBuffer->LoadData(&vertex[0],vertex.size()*sizeof(vec3),STATIC);
-	for (DWORD y=0;y<height;y++)
-	{
-		for (DWORD x=0;x<width;x++)
-		{
-			uv[y*width+x]=vec2((float)x/(float)(width-1)*sizeUv.x,(float)y/(float)(height-1)*sizeUv.y);
-		}
-	}
-	uvBuffer->LoadData(&uv[0],uv.size()*sizeof(vec2),STATIC);
-	index.resize((width-1)*(height-1)*2*3);	
-	DWORD currentIndex=0;
-	for (DWORD y=0;y<height-1;y++)
-	{
-		for (DWORD x=0;x<width-1;x++)
-		{
-			DWORD i0=y*width+x;
-			DWORD i1=i0+1;
-			DWORD i2=(y+1)*width+x;
-			DWORD i3=i2+1;
-			index[currentIndex++]=i0;
-			index[currentIndex++]=i2;
-			index[currentIndex++]=i1;
-
-			index[currentIndex++]=i1;
-			index[currentIndex++]=i2;
-			index[currentIndex++]=i3;
-		}
-	}	
-	indexBuffer->LoadIndexData(&index[0],index.size(),STATIC);	
-	return true;
-}
-bool Terrain::GenerateTerrain(const string &heightmap,vec3 sizeVertices,vec2 sizeUv)
+Terrain::Terrain() : vertexBuffer(new BufferResource), uvBuffer(new BufferResource),normalBuffer(new BufferResource),material(new MaterialResource)
 {
+	material->ambient=vec4(0.2f,0.2f,0.2f,1.0f);
+	material->diffuse=vec4(0.5f,0.5f,0.5f,1.0f);	
+}
+bool Terrain::GenerateTerrain(const string &heightmap,const string &diffuse,vec3 sizeVertices,vec2 sizeUv)
+{	
+	Timer timer;
+	timer.Init();
+	float t;
+
+	timer.Update();
+	diffuseTexture=Renderer::GetTextureManager()->Create(diffuse);
+	diffuseTexture->SetFiltering(NEAREST,NEAREST);
 	terrainScale=sizeVertices;
-	program->Create(Renderer::GetShaderManager()->Create("2.vshader"),Renderer::GetShaderManager()->Create("2.fshader"));
+	material->program=Program(new ProgramResource);
+	material->program->Create(Renderer::GetShaderManager()->Create("terrain.vshader"),Renderer::GetShaderManager()->Create("terrain.fshader"));	
 	normalBuffer=Buffer(new BufferResource);
 	normalBuffer->Create();
-	vertexBuffer->Create();
-	indexBuffer->Create();
+	vertexBuffer->Create();	
 	uvBuffer->Create();	
 	if (!heightmapImage.Load(heightmap))
 		return false;
 	width=heightmapImage.GetWidth();
 	height=heightmapImage.GetHeight();
-	vector<vec3> vertex;
-	vector<vec3> normal;
-	vector<DWORD> index;
-	vector<vec2> uv;
+	vector<float> vertex((width-1)*(height-1)*2*3*3);
+	vector<float> normal((width-1)*(height-1)*2*3*3);		
+	vector<float> uv((width-1)*(height-1)*2*3*2);
 	DWORD currentIndex=0;
 	DWORD normalCurrentIndex=0;
-	DWORD uvCurrentIndex=0;
-	vertex.resize((width-1)*(height-1)*2*3);
-	normal.resize((width-1)*(height-1)*2*3);
-	uv.resize((width-1)*(height-1)*2*3);
+	DWORD uvCurrentIndex=0;	
+	vec2 verticesDiff(1.0f/(float)(width-1)*sizeVertices.x,1.0f/(float)(height-1)*sizeVertices.z);
+	vec2 uvDiff(1.0f/(float)(width-1)*sizeUv.x,1.0f/(float)(height-1)*sizeUv.y);	
 	for (DWORD y=0;y<height-1;y++)
 	{
 		for (DWORD x=0;x<width-1;x++)
-		{
-			vertex[currentIndex++]=vec3((float)x/(float)(width-1)*sizeVertices.x,heightmapImage.GetPixel(x,y).x*sizeVertices.y,(float)y/(float)(height-1)*sizeVertices.z);
-			vertex[currentIndex++]=vec3((float)x/(float)(width-1)*sizeVertices.x,heightmapImage.GetPixel(x,y+1).x*sizeVertices.y,(float)(y+1)/(float)(height-1)*sizeVertices.z);
-			vertex[currentIndex++]=vec3((float)(x+1)/(float)(width-1)*sizeVertices.x,heightmapImage.GetPixel(x+1,y).x*sizeVertices.y,(float)y/(float)(height-1)*sizeVertices.z);
+		{			
+			vertex[currentIndex++]=(float)x*verticesDiff.x;
+			vertex[currentIndex++]=heightmapImage.GetPixel(x,y).x*sizeVertices.y;
+			vertex[currentIndex++]=(float)y*verticesDiff.y;
+			vec3 v0(vertex[currentIndex-3],vertex[currentIndex-2],vertex[currentIndex-1]);
 
-			vertex[currentIndex++]=vec3((float)(x+1)/(float)(width-1)*sizeVertices.x,heightmapImage.GetPixel(x+1,y).x*sizeVertices.y,(float)y/(float)(height-1)*sizeVertices.z);
-			vertex[currentIndex++]=vec3((float)x/(float)(width-1)*sizeVertices.x,heightmapImage.GetPixel(x,y+1).x*sizeVertices.y,(float)(y+1)/(float)(height-1)*sizeVertices.z);
-			vertex[currentIndex++]=vec3((float)(x+1)/(float)(width-1)*sizeVertices.x,heightmapImage.GetPixel(x+1,y+1).x*sizeVertices.y,(float)(y+1)/(float)(height-1)*sizeVertices.z);
+			vertex[currentIndex++]=(float)x*verticesDiff.x;
+			vertex[currentIndex++]=heightmapImage.GetPixel(x,y+1).x*sizeVertices.y;
+			vertex[currentIndex++]=(float)(y+1)*verticesDiff.y;
+			vec3 v1(vertex[currentIndex-3],vertex[currentIndex-2],vertex[currentIndex-1]);
 
-			vec3 n1=-Cross(vertex[normalCurrentIndex+2]-vertex[normalCurrentIndex],vertex[normalCurrentIndex+1]-vertex[normalCurrentIndex]).Normalize();
-			normal[normalCurrentIndex++]=n1;
-			normal[normalCurrentIndex++]=n1;
-			normal[normalCurrentIndex++]=n1;
+			vertex[currentIndex++]=(float)(x+1)*verticesDiff.x;
+			vertex[currentIndex++]=heightmapImage.GetPixel(x+1,y).x*sizeVertices.y;
+			vertex[currentIndex++]=(float)y*verticesDiff.y;
+			vec3 v2(vertex[currentIndex-3],vertex[currentIndex-2],vertex[currentIndex-1]);
+			
+			vertex[currentIndex++]=vertex[currentIndex-4];
+			vertex[currentIndex++]=vertex[currentIndex-4];
+			vertex[currentIndex++]=vertex[currentIndex-4];			
+		
+			vertex[currentIndex++]=vertex[currentIndex-10];
+			vertex[currentIndex++]=vertex[currentIndex-10];
+			vertex[currentIndex++]=vertex[currentIndex-10];			
+			
+			vertex[currentIndex++]=(float)(x+1)*verticesDiff.x;
+			vertex[currentIndex++]=heightmapImage.GetPixel(x+1,y+1).x*sizeVertices.y;
+			vertex[currentIndex++]=(float)(y+1)*verticesDiff.y;
+			vec3 v3(vertex[currentIndex-3],vertex[currentIndex-2],vertex[currentIndex-1]);
 
-			vec3 n2=-Cross(vertex[normalCurrentIndex+2]-vertex[normalCurrentIndex],vertex[normalCurrentIndex+1]-vertex[normalCurrentIndex]).Normalize();
-			normal[normalCurrentIndex++]=n2;
-			normal[normalCurrentIndex++]=n2;
-			normal[normalCurrentIndex++]=n2;
+			vec3 n1=-Cross(v2-v0,v1-v0).Normalize();
+			normal[normalCurrentIndex++]=n1.x;
+			normal[normalCurrentIndex++]=n1.y;
+			normal[normalCurrentIndex++]=n1.z;
 
-			uv[uvCurrentIndex++]=vec2((float)x/(float)(width-1)*sizeUv.x,(float)y/(float)(height-1)*sizeUv.y);
-			uv[uvCurrentIndex++]=vec2((float)x/(float)(width-1)*sizeUv.x,(float)(y+1)/(float)(height-1)*sizeUv.y);
-			uv[uvCurrentIndex++]=vec2((float)(x+1)/(float)(width-1)*sizeUv.x,(float)y/(float)(height-1)*sizeUv.y);
+			normal[normalCurrentIndex++]=n1.x;
+			normal[normalCurrentIndex++]=n1.y;
+			normal[normalCurrentIndex++]=n1.z;
 
-			uv[uvCurrentIndex++]=vec2((float)(x+1)/(float)(width-1)*sizeUv.x,(float)y/(float)(height-1)*sizeUv.y);
-			uv[uvCurrentIndex++]=vec2((float)x/(float)(width-1)*sizeUv.x,(float)(y+1)/(float)(height-1)*sizeUv.y);
-			uv[uvCurrentIndex++]=vec2((float)(x+1)/(float)(width-1)*sizeUv.x,(float)(y+1)/(float)(height-1)*sizeUv.y);
+			normal[normalCurrentIndex++]=n1.x;
+			normal[normalCurrentIndex++]=n1.y;
+			normal[normalCurrentIndex++]=n1.z;
+
+			vec3 n2=-Cross(v3-v2,v1-v2).Normalize();
+			normal[normalCurrentIndex++]=n2.x;
+			normal[normalCurrentIndex++]=n2.y;
+			normal[normalCurrentIndex++]=n2.z;
+
+			normal[normalCurrentIndex++]=n2.x;
+			normal[normalCurrentIndex++]=n2.y;
+			normal[normalCurrentIndex++]=n2.z;
+
+			normal[normalCurrentIndex++]=n2.x;
+			normal[normalCurrentIndex++]=n2.y;
+			normal[normalCurrentIndex++]=n2.z;
+
+			vec2 uvPos((float)x*uvDiff.x,(float)y*uvDiff.y);
+			uv[uvCurrentIndex++]=uvPos.x;
+			uv[uvCurrentIndex++]=uvPos.y;
+			
+			uv[uvCurrentIndex++]=uvPos.x;
+			uv[uvCurrentIndex++]=uvPos.y;
+
+			uv[uvCurrentIndex++]=uvPos.x;
+			uv[uvCurrentIndex++]=uvPos.y;
+
+			uv[uvCurrentIndex++]=uvPos.x;
+			uv[uvCurrentIndex++]=uvPos.y;
+
+			uv[uvCurrentIndex++]=uvPos.x;
+			uv[uvCurrentIndex++]=uvPos.y;
+
+			uv[uvCurrentIndex++]=uvPos.x;
+			uv[uvCurrentIndex++]=uvPos.y;
 		}
 	}
-	vertexBuffer->LoadData(&vertex[0],vertex.size()*sizeof(vec3),STATIC);		
-	normalBuffer->LoadData(&normal[0],normal.size()*sizeof(vec3),STATIC);		
-	uvBuffer->LoadData(&uv[0],uv.size()*sizeof(vec2),STATIC);
+	vertexBuffer->LoadData(&vertex[0],vertex.size()*sizeof(float),STATIC);		
+	normalBuffer->LoadData(&normal[0],normal.size()*sizeof(float),STATIC);		
+	uvBuffer->LoadData(&uv[0],uv.size()*sizeof(float),STATIC);
+	t=(float)timer.Passed();
+	cout << "Generating terrain took " << t << " seconds" << endl;
+	timer.Update();
 
-	index.resize((width-1)*(height-1)*2*3);	
-	currentIndex=0;
-	for (DWORD i=0;i<(width-1)*(height-1)*2*3;i++)
+	quadtree.Initialize();
+	string::size_type d;
+	d=heightmap.find_last_of(".");	
+	if (d!=string::npos)
 	{
-		index[i]=i;
-	}	
-	indexBuffer->LoadIndexData(&index[0],index.size(),STATIC);	
+		string quadfile=heightmap.substr(0,d+1);
+		quadfile.append("bin");
+		ifstream f(quadfile.c_str(),ios::binary);
+		if (f.is_open())
+		{
+			f.close();
+			quadtree.Load(quadfile);
+		}
+		else
+		{
+			quadtree.Init(vec2((float)GetWidth(),(float)GetHeight()),vec2(sizeVertices.x,sizeVertices.z));
+			quadtree.Build(sizeVertices.x/32.0f,1);
+			quadtree.Save(quadfile);
+		}
+	}
+	else
+		return false;
+	
+	t=(float)timer.Passed();
+	cout << "Generating/Loading quadtree took " << t << " seconds" << endl;
+
 	return true;
 }
-void Terrain::PrepareRender()
+DWORD Terrain::Render(Frustum &frustum)
 {
+	Renderer::UseMaterial(material);
 	vertexBuffer->SetVertexStream(3);
 	uvBuffer->SetTexCoordStream(0);	
-	if (normalBuffer->IsValid())
-		normalBuffer->SetNormalStream();
-	Renderer::UseProgram(program);
-	program->SetUniform("terrainMap",0);
-	program->SetUniform("detailMap",1);	
-	program->SetUniform("fogDensity",0.01f);
-	program->SetUniform("fogColor",vec4(0.30f,0.42f,0.95f,1.0f));
-	program->SetUniform("lightDir",vec3(1,-1,1));
-	Renderer::UseTexture(terrainTexture,0);	
-	Renderer::UseTexture(detailMap,1);		
+	normalBuffer->SetNormalStream();	
+	material->program->SetUniform("fogDensity",0.01f);
+	material->program->SetUniform("fogColor",vec4(0.30f,0.42f,0.95f,1.0f));
+	mat4 m=Renderer::GetModelViewMatrix();
+	material->program->SetUniform("lightDir",m*vec3(1,-1,1));
+	material->program->SetUniform("tex",0);
+	Renderer::UseTexture(diffuseTexture,0);	
+
+	return quadtree.Render(frustum);
 }
-void Terrain::Render()
+float Terrain::GetHeight(vec2 pos)
 {
-	vertexBuffer->SetVertexStream(3);
-	uvBuffer->SetTexCoordStream(0);
-	indexBuffer->SetIndexStream();
-	if (normalBuffer->IsValid())
-		normalBuffer->SetNormalStream();
-	Renderer::UseProgram(program);
-	program->SetUniform("terrainMap",0);
-	program->SetUniform("detailMap",1);	
-	program->SetUniform("fogDensity",0.007f);
-	program->SetUniform("fogColor",vec4(0.30f,0.42f,0.95f,1.0f));
-	program->SetUniform("lightDir",vec3(1,-1,1));
-	Renderer::UseTexture(terrainTexture,0);	
-	Renderer::UseTexture(detailMap,1);	
-	Renderer::RenderIndexStream(TRIANGLES,(width-1)*(height-1)*2*3);
-}
-float Terrain::GetHeight(float x,float y)
-{
-	if ((x<0) || (x>=terrainScale.x) || (y<0) || (y>=terrainScale.z))
+	if ((pos.x<0) || (pos.x>=terrainScale.x) || (pos.y<0) || (pos.y>=terrainScale.z))
 		return 0;
-	x=x/terrainScale.x*(float)(width-1);
-	y=y/terrainScale.z*(float)(height-1);
-	int ix=(int)x,iy=(int)y;
-	float fx=x-(float)ix,fy=y-(float)iy;	
+	pos.x=pos.x/terrainScale.x*(float)(width-1);
+	pos.y=pos.y/terrainScale.z*(float)(height-1);
+	int ix=(int)pos.x,iy=(int)pos.y;
+	float fx=pos.x-(float)ix,fy=pos.y-(float)iy;	
 	float i0,i1,i2;
 	float z0,z1;
 	z0=fx*fx+fy*fy;
@@ -206,4 +213,35 @@ int Terrain::GetWidth()
 int Terrain::GetHeight()
 {
 	return height;
+}
+vec3 Terrain::GetNormal(vec2 pos)
+{
+	if ((pos.x<0) || (pos.x>=terrainScale.x) || (pos.y<0) || (pos.y>=terrainScale.z))
+		return vec3(0,1,0);
+	
+	pos.x=pos.x/terrainScale.x*(float)(width-1);
+	pos.y=pos.y/terrainScale.z*(float)(height-1);
+	int ix=(int)pos.x,iy=(int)pos.y;
+	float fx=pos.x-(float)ix,fy=pos.y-(float)iy;	
+	float i0,i1,i2;
+	float z0,z1;
+	z0=fx*fx+fy*fy;
+	z1=(1.0f-fx)*(1.0f-fx)+(1.0f-fy)*(1.0f-fy);
+	if (z0<z1)
+	{
+		i0=heightmapImage.GetPixel(ix,iy).x;
+		i1=heightmapImage.GetPixel(ix+1,iy).x;
+		i2=heightmapImage.GetPixel(ix,iy+1).x;
+		vec3 v0(0,i0*terrainScale.y,0);
+		vec3 v1(1.0f/(float)(width-1)*terrainScale.x,i1*terrainScale.y,0);
+		vec3 v2(1.0f/(float)(width-1)*terrainScale.x,i2*terrainScale.y,1.0f/(float)(height-1)*terrainScale.z);
+		return Cross(v2-v0,v1-v0).Normalize();
+	}
+	i0=heightmapImage.GetPixel(ix+1,iy).x;
+	i2=heightmapImage.GetPixel(ix,iy+1).x;
+	i1=heightmapImage.GetPixel(ix+1,iy+1).x;
+	vec3 v0(1.0f/(float)(width-1)*terrainScale.x,i0*terrainScale.y,0);
+	vec3 v1(0,i2*terrainScale.y,1.0f/(float)(height-1)*terrainScale.z);
+	vec3 v2(1.0f/(float)(width-1)*terrainScale.x,i1*terrainScale.y,1.0f/(float)(height-1)*terrainScale.z);
+	return Cross(v1-v0,v2-v0).Normalize();
 }

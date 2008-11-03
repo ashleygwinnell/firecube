@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 #include <sstream>
+#include <iostream>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include <Windows.h>
@@ -10,14 +11,15 @@ using namespace std;
 #include <FireCube.h>
 using namespace FireCube;
 #include "Frustum.h"
-#include "Terrain.h"
 #include "QuadTree.h"
+#include "Terrain.h"
 #include "app.h"
 
 App app;
 vec3 pos(0,2,0);
 vec3 speed;
-float angx,angy=(float)PI;
+vec3 angSpeed;
+vec3 ang(0,(float)PI,0);
 Frustum frustum;
 int main(int argc, char *argv[])
 {
@@ -29,67 +31,104 @@ int main(int argc, char *argv[])
 bool App::Init()
 {	
 	SetTitle("Terrain");
-	font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);			
-	terrain.GenerateTerrain("heightmap2.bmp",vec3(512.0f,50.0f,512.0f),vec2(1.0f,1.0f));	
-	qt.Initialize();
-	//qt.Init(vec2((float)terrain.GetWidth(),(float)terrain.GetHeight()),vec2(512.0f,512.0f));
-	//qt.Build(16.0f,1);
-	//qt.Save("heightmap4.bin");
-	qt.Load("heightmap2.bin");
-	return true;	
+	font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);
+	program=Program(new ProgramResource);
+	program->Create(Renderer::GetShaderManager()->Create("diffuseWithFog.vshader"),Renderer::GetShaderManager()->Create("diffuseWithFog.fshader"));
+	if (!terrain.GenerateTerrain("heightmap.bmp","diffuse.bmp",vec3(512.0f,50.0f,512.0f),vec2(1.0f,1.0f)))
+		return false;
+	model=mm.Create("teapot.3ds");
+	model->CreateHardNormals();
+	model->SetProgram(program);
+	return true;
 }
 void App::Update(float time)
-{	
+{
+	pos+=speed;
+	ang+=angSpeed;
+	angSpeed*=0.9f;
+	float height=terrain.GetHeight(vec2(pos.x,pos.z));
+	if (pos.y-height<0.75f)
+	{
+		pos.y=height+0.75f;
+		vec3 n=terrain.GetNormal(vec2(pos.x,pos.z));
+		speed=speed-speed.Dot(n)*n*2;
+	}
+	speed=speed*0.9f;
 }
 void App::Render(float time)
-{	
-	Renderer::SetPerspectiveProjection(90.0f,0.1f,200.0f);
+{
+	static float lAng=0.0f;
+	lAng+=0.01f;
+	Renderer::SetPerspectiveProjection(60.0f,0.1f,200.0f);
 	Renderer::Clear(vec4(0.30f,0.42f,0.95f,1.0f),1.0f);
-	mat4 t;	
-	bool cubeRendered=false;
-	t.RotateX(angx);
-	t.RotateY(angy);
-	t.Translate(-pos);	
+	mat4 t;
+	t.RotateX(ang.x);
+	t.RotateY(ang.y);
+	t.RotateZ(-angSpeed.z);
+	t.Translate(-pos);
 	Renderer::SetModelViewMatrix(t);
-	frustum.ExtractFrustum();	
-	terrain.PrepareRender();	
-	int n=qt.Render(frustum);			
+	Renderer::UseProgram(program);
+	program->SetUniform("fogDensity",0.01f);
+	program->SetUniform("fogColor",vec4(0.30f,0.42f,0.95f,1.0f));
+	program->SetUniform("lightDir",t*vec3(1,-1,1));
+
+	frustum.ExtractFrustum();
+	DWORD n=terrain.Render(frustum);
+	
+	mat4 tt;
+	tt.Translate(vec3(5,5,5));
+	tt.RotateX(lAng);
+	Renderer::SaveModelViewMatrix();
+	Renderer::MultiplyModelViewMatrix(tt);
+	Renderer::Render(model);
+	Renderer::RestoreModelViewMatrix();
+		
 	Renderer::SetOrthographicProjection();
 	Renderer::SetModelViewMatrix(mat4());
 	ostringstream oss,oss2;
 	oss << "FPS:" << app.GetFps();
-	Renderer::RenderText(font,vec2(0,0),vec4(1.0f,1.0f,1.0f,1.0f),oss.str());	
+	Renderer::RenderText(font,vec2(0,0),vec4(1.0f,1.0f,1.0f,1.0f),oss.str());
 	oss2 << "Rendered triangles: " << n;
 	Renderer::RenderText(font,vec2(0,20),vec4(1.0f,1.0f,0.0f,1.0f),oss2.str());
 }
 void App::HandleInput(float time)
 {
-	static vec2 lastPos;	
+	static vec2 lastPos;
 	POINT p;
 	GetCursorPos(&p);
 	vec2 curPos((float)p.x,(float)p.y);
 	if (GetAsyncKeyState(1))
 	{
-		angx+=-(curPos.y-lastPos.y)*time*0.5f;
-		angy+=-(curPos.x-lastPos.x)*time*0.5f;
+		angSpeed.x+=-(curPos.y-lastPos.y)*time*0.1f;
+		angSpeed.y+=-(curPos.x-lastPos.x)*time*0.1f;
 	}
+	if (GetAsyncKeyState(VK_LEFT))
+	{
+		angSpeed.y+=time*0.3f;
+		angSpeed.z+=time*0.5f;
+	}
+	if (GetAsyncKeyState(VK_RIGHT))
+	{
+		angSpeed.y-=time*0.3f;
+		angSpeed.z-=time*0.5f;
+	}
+	if (GetAsyncKeyState(VK_UP))
+		angSpeed.x-=time*0.3f;
+	if (GetAsyncKeyState(VK_DOWN))
+		angSpeed.x+=time*0.3f;
 	vec3 dir;
-	float scale=0.2f;
+	float scale=0.4f;
 	if (GetAsyncKeyState(VK_SHIFT))
-		scale=1.0f;
-	dir.FromAngles(angx,angy);
+		scale=2.0f;
+	dir.FromAngles(ang.x,ang.y);
 	if (GetAsyncKeyState('W'))
-		speed+=dir*time*2.0f*scale;		
+		speed+=dir*time*scale;
 	if (GetAsyncKeyState('S'))
-		speed-=dir*time*2.0f*scale;		
+		speed-=dir*time*scale;
 	vec3 strafe=Cross(dir,vec3(0,1,0)).Normalize();
 	if (GetAsyncKeyState('A'))
-		pos-=strafe*time*2.0f*scale;
+		speed-=strafe*time*scale;
 	if (GetAsyncKeyState('D'))
-		pos+=strafe*time*2.0f*scale;
-	float height=terrain.GetHeight(pos.x,pos.z);
-	if (pos.y-height<0.75f) pos.y=height+0.75f;	
-	pos+=speed;
-	speed=speed*0.9f;
-	lastPos=curPos;	
+		speed+=strafe*time*scale;
+	lastPos=curPos;
 }
