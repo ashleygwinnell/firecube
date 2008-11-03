@@ -29,7 +29,7 @@ This class is responsible for the intialization and running of the application.
     * Creates a window and intializes OpenGL.
     * @return true on success, false otherwise.
     */</font>
-    <font color="blue">bool</font> Initialize<font color="black">(</font><font color="blue">int</font> width,<font color="blue">int</font> height,<font color="blue">int</font> bpp,<font color="blue">bool</font> fullscreen<font color="black">)</font>;
+    <font color="blue">bool</font> Initialize<font color="black">(</font><font color="blue">int</font> width,<font color="blue">int</font> height,<font color="blue">int</font> bpp,<font color="blue">int</font> multisample,<font color="blue">bool</font> fullscreen<font color="black">)</font>;
     <font color="green">/** 
     * Initializes without creating a window (assumes there is already an active rendering context).
     * @return true on success, false otherwise.
@@ -79,10 +79,10 @@ This class is responsible for the intialization and running of the application.
     * Called once initialization is complete to execute user specific intialization.
     */</font>
     virtual <font color="blue">bool</font> Init<font color="black">(</font><font color="black">)</font>;
-<font color="green">//private:</font>
+<font color="blue">private</font><font color="black">:</font>
     Timer timer;    
     <font color="blue">bool</font> running;
-    <font color="blue">float</font> deltaTime;;
+    <font color="blue">float</font> deltaTime;
     <font color="blue">float</font> fps;
     <font color="blue">float</font> fpsTime;
     <font color="blue">float</font> frameCount;   

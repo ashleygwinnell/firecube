@@ -17,7 +17,7 @@ mat4.cpp
 <font color="blue">#include</font> <font color="maroon">"GLee.h"</font>
 <font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
 <font color="blue">using</font> <font color="blue">namespace</font> FireCube;
-<font color="blue">#include</font> <font color="maroon">&#60;math.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;cmath&#62;</font>
 
 <font color="blue">inline</font> <font color="blue">void</font> mat4<font color="black">:</font><font color="black">:</font>Identity<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
@@ -364,13 +364,13 @@ vec3 mat4<font color="black">:</font><font color="black">:</font>GetPos<font col
 
 
 
-    m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>s.x; m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>s.y; m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>s.z; m<font color="black">[</font><font color="maroon">12</font><font color="black">]</font><font color="black">=</font><font color="maroon">0</font>;
-    m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>u.x; m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>u.y; m<font color="black">[</font><font color="maroon">9</font><font color="black">]</font><font color="black">=</font>u.z; m<font color="black">[</font><font color="maroon">13</font><font color="black">]</font><font color="black">=</font><font color="maroon">0</font>;
-    m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font><font color="black">-</font>f.x; m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font><font color="black">-</font>f.y; m<font color="black">[</font><font color="maroon">10</font><font color="black">]</font><font color="black">=</font><font color="black">-</font>f.z; m<font color="black">[</font><font color="maroon">14</font><font color="black">]</font><font color="black">=</font><font color="maroon">0</font>;
+    m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>s.x; m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>s.y; m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>s.z; m<font color="black">[</font><font color="maroon">12</font><font color="black">]</font><font color="black">=</font>pos.x;
+    m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>u.x; m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>u.y; m<font color="black">[</font><font color="maroon">9</font><font color="black">]</font><font color="black">=</font>u.z; m<font color="black">[</font><font color="maroon">13</font><font color="black">]</font><font color="black">=</font>pos.y;
+    m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font><font color="black">-</font>f.x; m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font><font color="black">-</font>f.y; m<font color="black">[</font><font color="maroon">10</font><font color="black">]</font><font color="black">=</font><font color="black">-</font>f.z; m<font color="black">[</font><font color="maroon">14</font><font color="black">]</font><font color="black">=</font>pos.z;
     m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font><font color="maroon">0</font>; m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font><font color="maroon">0</font>; m<font color="black">[</font><font color="maroon">11</font><font color="black">]</font><font color="black">=</font><font color="maroon">0</font>; m<font color="black">[</font><font color="maroon">15</font><font color="black">]</font><font color="black">=</font><font color="maroon">1</font>;
 
-    trans.Translate<font color="black">(</font><font color="black">-</font>pos.x,<font color="black">-</font>pos.y,<font color="black">-</font>pos.z<font color="black">)</font>;
-    <font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">*</font><font color="black">=</font>trans;
+    <font color="green">//trans.Translate(pos.x,pos.y,pos.z);</font>
+    <font color="green">//(*this)*=trans;</font>
 <font color="black">}</font>
 mat4<font color="black">:</font><font color="black">:</font><font color="blue">operator</font> mat3<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>

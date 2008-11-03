@@ -27,9 +27,9 @@ Application::~Application()
 }
 bool Application::Initialize()
 {	
-	return Initialize(800,600,32,false);
+	return Initialize(800,600,32,0,false);
 }
-bool Application::Initialize(int width,int height,int bpp,bool fullscreen)
+bool Application::Initialize(int width,int height,int bpp,int multisample,bool fullscreen)
 {
 	SDL_Surface *screen;
 	if (SDL_Init(SDL_INIT_VIDEO)!=0)
@@ -39,22 +39,23 @@ bool Application::Initialize(int width,int height,int bpp,bool fullscreen)
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);	
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	if (multisample)
+	{
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,1);
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,multisample);
+	}
 	
 	screen=SDL_SetVideoMode(width,height,bpp,SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : SDL_RESIZABLE));
 	if (!screen)
 		return false;
 		
-	glViewport(0,0,width,height);
-	mat4 mat;
-	mat.GeneratePerspective(90.0f,(float)width/(float)height,0.1f,100);	
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(mat.m);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();	
+	Renderer::SetViewport(0,0,width,height);	
+	Renderer::SetPerspectiveProjection(90.0f,0.1f,100);	
+	Renderer::SetModelViewMatrix(mat4());
 	this->width=width;
 	this->height=height;
-	return InitializeNoWindow();;
+	return InitializeNoWindow();
 }
 bool Application::InitializeNoWindow()
 {		
@@ -97,7 +98,7 @@ void Application::Run()
 			{
 				width=event.resize.w;
 				height=event.resize.h;
-				glViewport(0,0,event.resize.w,event.resize.h);
+				Renderer::SetViewport(0,0,event.resize.w,event.resize.h);				
 			}
 			if (event.type==SDL_QUIT) 
 				running=false;

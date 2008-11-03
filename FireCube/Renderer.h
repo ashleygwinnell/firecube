@@ -30,6 +30,14 @@ namespace Renderer
 	*/
 	void FIRECUBE_API SetProjectionMatrix(mat4 &m);
 	/**
+	* Returns the current modelview matrix.
+	*/
+	mat4 FIRECUBE_API GetModelViewMatrix();
+	/**
+	* Returns the current projection matrix.
+	*/
+	mat4 FIRECUBE_API GetProjectionMatrix();
+	/**
 	* Pushes the the current modelview matrix to the stack.
 	*/
 	void FIRECUBE_API SaveModelViewMatrix();
@@ -61,7 +69,7 @@ namespace Renderer
 	* @param pos The position of the text.
 	* @param str The string to output.
 	*/
-	void FIRECUBE_API RenderText(Font font,vec2 pos,vec4 color,const string &str);
+	void FIRECUBE_API RenderText(Font font,vec3 pos,vec4 color,const string &str);
 	/**
 	* Renders an index stream.	
 	* @param mode The rendering mode.
@@ -96,7 +104,7 @@ namespace Renderer
 	/**
 	* Sets the rendering viewport.
 	*/
-	void FIRECUBE_API SetViewport(int width,int height);
+	void FIRECUBE_API SetViewport(int left,int right,int width,int height);
 	/**
 	* Sets a perspective projection.
 	* @param fov The field of view in degrees.

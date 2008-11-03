@@ -9,7 +9,7 @@ using namespace std;
 #include "GLee.h"
 #include "FireCube.h"
 using namespace FireCube;
-#include <math.h>
+#include <cmath>
 
 vec2 FireCube::operator+(const vec2 &a,const vec2 &b)
 {

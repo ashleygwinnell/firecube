@@ -47,15 +47,25 @@ bool TextureResource::Load(const std::string &filename)
 		Create();
 
 		if (image->format->BytesPerPixel==4)
-			format=GL_RGBA;
+		{
+			if (image->format->Rshift==16)
+				format=GL_BGRA;
+			else
+				format=GL_RGBA;
+		}
 		if (image->format->BytesPerPixel==3)
-			format=GL_RGB;
+		{
+			if (image->format->Rshift==16)
+				format=GL_BGR;
+			else
+				format=GL_RGB;
+		}
 
 		glBindTexture(GL_TEXTURE_2D,id);
 		glTexParameteri(GL_TEXTURE_2D,GL_GENERATE_MIPMAP,GL_TRUE);
-		glTexImage2D(GL_TEXTURE_2D,0,format,image->w,image->h,0,format,GL_UNSIGNED_BYTE,image->pixels);		
+		glTexImage2D(GL_TEXTURE_2D,0,image->format->BytesPerPixel,image->w,image->h,0,format,GL_UNSIGNED_BYTE,image->pixels);		
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR_MIPMAP_LINEAR);			
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR_MIPMAP_LINEAR);
 		SDL_FreeSurface(image);		
 		return true;
 	}
@@ -65,4 +75,27 @@ void TextureResource::GenerateMipMaps()
 {
 	glBindTexture(GL_TEXTURE_2D,id);
 	glGenerateMipmapEXT(GL_TEXTURE_2D);
+}
+void TextureResource::SetFiltering(TextureFilter minFilter,TextureFilter magFilter)
+{
+	GLint min,mag;
+
+	if (minFilter==NEAREST)
+		min=GL_NEAREST;
+	else if (minFilter==LINEAR)
+		min=GL_LINEAR;
+	else if (minFilter==MIPMAP)
+		min=GL_LINEAR_MIPMAP_LINEAR;
+
+	if (minFilter==NEAREST)
+		mag=GL_NEAREST;
+	else if (minFilter==LINEAR)
+		mag=GL_LINEAR;
+	else if (minFilter==MIPMAP)
+		mag=GL_LINEAR_MIPMAP_LINEAR;
+
+	glBindTexture(GL_TEXTURE_2D,id);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,min);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,mag);
+
 }

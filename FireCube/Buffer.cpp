@@ -68,7 +68,7 @@ void BufferResource::SetNormalStream()
 void BufferResource::SetTexCoordStream(unsigned int unit)
 {
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glClientActiveTextureARB(GL_TEXTURE0_ARB+unit);
+	glClientActiveTexture(GL_TEXTURE0+unit);
 	glBindBuffer(GL_ARRAY_BUFFER,id);
 	glTexCoordPointer(2,GL_FLOAT,0,0);
 }

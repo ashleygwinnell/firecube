@@ -3,6 +3,10 @@
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+enum TextureFilter
+{
+	NEAREST,LINEAR,MIPMAP
+};
 /**
 * A 2d texture.
 */
@@ -28,6 +32,12 @@ public:
 	* Generates mipmaps for the texture.
 	*/
 	void GenerateMipMaps();
+	/**
+	* Sets the texture filtering.
+	* @param minFilter The minifying filter.
+	* @param magFilter The magnification filter.
+	*/
+	void SetFiltering(TextureFilter minFilter,TextureFilter magFilter);
 
 	GLuint id;
 };	

@@ -11,6 +11,10 @@ Texture.h
 
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>push<font color="black">)</font>
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
+<font color="blue">enum</font> TextureFilter
+<font color="black">{</font>
+    NEAREST,LINEAR,MIPMAP
+<font color="black">}</font>;
 <font color="green">/**
 * A 2d texture.
 */</font>
@@ -36,6 +40,12 @@ Texture.h
     * Generates mipmaps for the texture.
     */</font>
     <font color="blue">void</font> GenerateMipMaps<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Sets the texture filtering.
+    * @param minFilter The minifying filter.
+    * @param magFilter The magnification filter.
+    */</font>
+    <font color="blue">void</font> SetFiltering<font color="black">(</font>TextureFilter minFilter,TextureFilter magFilter<font color="black">)</font>;
 
     GLuint id;
 <font color="black">}</font>;  

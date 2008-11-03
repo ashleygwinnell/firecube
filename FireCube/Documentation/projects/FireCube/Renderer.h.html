@@ -38,6 +38,14 @@ Renderer.h
     */</font>
     <font color="blue">void</font> FIRECUBE_API SetProjectionMatrix<font color="black">(</font>mat4 <font color="black">&</font>m<font color="black">)</font>;
     <font color="green">/**
+    * Returns the current modelview matrix.
+    */</font>
+    mat4 FIRECUBE_API GetModelViewMatrix<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Returns the current projection matrix.
+    */</font>
+    mat4 FIRECUBE_API GetProjectionMatrix<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
     * Pushes the the current modelview matrix to the stack.
     */</font>
     <font color="blue">void</font> FIRECUBE_API SaveModelViewMatrix<font color="black">(</font><font color="black">)</font>;
@@ -69,7 +77,7 @@ Renderer.h
     * @param pos The position of the text.
     * @param str The string to output.
     */</font>
-    <font color="blue">void</font> FIRECUBE_API RenderText<font color="black">(</font>Font font,vec2 pos,vec4 color,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API RenderText<font color="black">(</font>Font font,vec3 pos,vec4 color,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
     <font color="green">/**
     * Renders an index stream.  
     * @param mode The rendering mode.
@@ -104,7 +112,7 @@ Renderer.h
     <font color="green">/**
     * Sets the rendering viewport.
     */</font>
-    <font color="blue">void</font> FIRECUBE_API SetViewport<font color="black">(</font><font color="blue">int</font> width,<font color="blue">int</font> height<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API SetViewport<font color="black">(</font><font color="blue">int</font> left,<font color="blue">int</font> right,<font color="blue">int</font> width,<font color="blue">int</font> height<font color="black">)</font>;
     <font color="green">/**
     * Sets a perspective projection.
     * @param fov The field of view in degrees.

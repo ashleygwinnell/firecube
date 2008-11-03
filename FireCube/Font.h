@@ -9,7 +9,7 @@ typedef boost::shared_ptr<FontResource> Font;
 /* CPPDOC_BEGIN_EXCLUDE */
 namespace Renderer
 {
-	void FIRECUBE_API RenderText(Font font,vec2 pos,vec4 color,const string &str);
+	void FIRECUBE_API RenderText(Font font,vec3 pos,vec4 color,const string &str);
 }
 
 class FontImpl;
@@ -36,7 +36,7 @@ public:
 class FIRECUBE_API FontManager : public ResourceManager<FontResource>
 {
 	friend class FontResource;
-	friend void Renderer::RenderText(Font font,vec2 pos,vec4 color,const string &str);
+	friend void Renderer::RenderText(Font font,vec3 pos,vec4 color,const string &str);
 public:
 	FontManager();
 	/**
@@ -54,7 +54,7 @@ private:
 */
 class FIRECUBE_API FontResource
 {
-	friend void Renderer::RenderText(Font font,vec2 pos,vec4 color,const string &str);
+	friend void Renderer::RenderText(Font font,vec3 pos,vec4 color,const string &str);
 public:
 	FontResource();
 	~FontResource();

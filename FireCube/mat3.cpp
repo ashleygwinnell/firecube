@@ -9,7 +9,7 @@ using namespace std;
 #include "GLee.h"
 #include "FireCube.h"
 using namespace FireCube;
-#include <math.h>
+#include <cmath>
 
 mat3 FireCube::operator*(const mat3 &a,const float &b)
 {

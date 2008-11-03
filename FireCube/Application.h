@@ -21,7 +21,7 @@ public:
 	* Creates a window and intializes OpenGL.
 	* @return true on success, false otherwise.
 	*/
-	bool Initialize(int width,int height,int bpp,bool fullscreen);
+	bool Initialize(int width,int height,int bpp,int multisample,bool fullscreen);
 	/** 
 	* Initializes without creating a window (assumes there is already an active rendering context).
 	* @return true on success, false otherwise.
@@ -71,10 +71,10 @@ public:
 	* Called once initialization is complete to execute user specific intialization.
 	*/
 	virtual bool Init();
-//private:
+private:
 	Timer timer;	
 	bool running;
-	float deltaTime;;
+	float deltaTime;
 	float fps;
 	float fpsTime;
 	float frameCount;	

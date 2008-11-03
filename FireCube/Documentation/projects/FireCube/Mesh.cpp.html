@@ -369,6 +369,72 @@ Model ModelResource<font color="black">:</font><font color="black">:</font>Reduc
         <font color="black">(</font><font color="black">*</font>i<font color="black">)</font><font color="black">-</font><font color="black">&#62;</font>program<font color="black">=</font>program;
     <font color="black">}</font>
 <font color="black">}</font>
+<font color="blue">void</font> ModelResource<font color="black">:</font><font color="black">:</font>CreateHardNormals<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    vector<font color="black">&#60;</font>vec3<font color="black">&#62;</font> vertices;
+    vector<font color="black">&#60;</font>vec2<font color="black">&#62;</font> uvs;
+    <font color="blue">for</font> <font color="black">(</font>DWORD k<font color="black">=</font><font color="maroon">0</font>;k<font color="black">&#60;</font>object.size<font color="black">(</font><font color="black">)</font>;k<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        DWORD currentIndex<font color="black">=</font><font color="maroon">0</font>;
+        Object <font color="black">&</font>obj<font color="black">=</font>object<font color="black">[</font>k<font color="black">]</font>;
+        vertices.clear<font color="black">(</font><font color="black">)</font>;
+        uvs.clear<font color="black">(</font><font color="black">)</font>;
+        vertices<font color="black">=</font>obj.vertex;
+        uvs<font color="black">=</font>obj.uv;
+        obj.face.clear<font color="black">(</font><font color="black">)</font>;
+        obj.vertex.clear<font color="black">(</font><font color="black">)</font>;
+        obj.normal.clear<font color="black">(</font><font color="black">)</font>;
+        obj.uv.clear<font color="black">(</font><font color="black">)</font>;
+        <font color="blue">for</font> <font color="black">(</font>DWORD j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font>obj.mesh.size<font color="black">(</font><font color="black">)</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">{</font>
+            Mesh <font color="black">&</font>ms<font color="black">=</font>obj.mesh<font color="black">[</font>j<font color="black">]</font>;
+            <font color="blue">for</font> <font color="black">(</font>DWORD i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>ms.face.size<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+            <font color="black">{</font>
+                vec2 uv0<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>,uv1<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>,uv2<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;
+                <font color="blue">if</font> <font color="black">(</font>uvs.size<font color="black">(</font><font color="black">)</font><font color="black">&#62;</font><font color="maroon">0</font><font color="black">)</font>
+                <font color="black">{</font>
+                    uv0<font color="black">=</font>uvs<font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">]</font>;
+                    uv1<font color="black">=</font>uvs<font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">]</font>;
+                    uv2<font color="black">=</font>uvs<font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">]</font>;
+                <font color="black">}</font>
+                vec3 v0<font color="black">=</font>vertices<font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">]</font>;
+                vec3 v1<font color="black">=</font>vertices<font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">]</font>;
+                vec3 v2<font color="black">=</font>vertices<font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">]</font>;
+                vec3 n<font color="black">=</font>Cross<font color="black">(</font>v1<font color="black">-</font>v0,v2<font color="black">-</font>v0<font color="black">)</font>.Normalize<font color="black">(</font><font color="black">)</font>;
+                obj.vertex.push_back<font color="black">(</font>v0<font color="black">)</font>;
+                obj.vertex.push_back<font color="black">(</font>v1<font color="black">)</font>;
+                obj.vertex.push_back<font color="black">(</font>v2<font color="black">)</font>;
+                obj.normal.push_back<font color="black">(</font>n<font color="black">)</font>;
+                obj.normal.push_back<font color="black">(</font>n<font color="black">)</font>;
+                obj.normal.push_back<font color="black">(</font>n<font color="black">)</font>;
+                obj.uv.push_back<font color="black">(</font>uv0<font color="black">)</font>;
+                obj.uv.push_back<font color="black">(</font>uv1<font color="black">)</font>;
+                obj.uv.push_back<font color="black">(</font>uv2<font color="black">)</font>;
+                ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>currentIndex<font color="black">+</font><font color="black">+</font>;
+                ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>currentIndex<font color="black">+</font><font color="black">+</font>;
+                ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>currentIndex<font color="black">+</font><font color="black">+</font>;             
+                obj.face.push_back<font color="black">(</font>ms.face<font color="black">[</font>i<font color="black">]</font><font color="black">)</font>;
+            <font color="black">}</font>
+            vector<font color="black">&#60;</font>DWORD<font color="black">&#62;</font> tmp;
+            tmp.resize<font color="black">(</font>ms.face.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">3</font><font color="black">)</font>;
+            <font color="blue">for</font> <font color="black">(</font>DWORD f<font color="black">=</font><font color="maroon">0</font>;f<font color="black">&#60;</font>ms.face.size<font color="black">(</font><font color="black">)</font>;f<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+            <font color="black">{</font>
+                tmp<font color="black">[</font>f<font color="black">*</font><font color="maroon">3</font><font color="black">+</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>ms.face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;
+                tmp<font color="black">[</font>f<font color="black">*</font><font color="maroon">3</font><font color="black">+</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>ms.face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font>;
+                tmp<font color="black">[</font>f<font color="black">*</font><font color="maroon">3</font><font color="black">+</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>ms.face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+            <font color="black">}</font>
+            ms.indexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadIndexData<font color="black">(</font><font color="black">&</font>tmp<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,tmp.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
+        <font color="black">}</font>
+        obj.normalBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>obj.normal<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec3<font color="black">)</font><font color="black">*</font>obj.normal.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>obj.uvBuffer<font color="black">)</font>
+        <font color="black">{</font>   
+            obj.uvBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
+            obj.uvBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
+            obj.uvBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>obj.uv<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec2<font color="black">)</font><font color="black">*</font>obj.uv.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
+        <font color="black">}</font>
+        obj.vertexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>obj.vertex<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec3<font color="black">)</font><font color="black">*</font>obj.vertex.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
+    <font color="black">}</font>
+<font color="black">}</font>
 </PRE>
 </BODY>
 </HTML>

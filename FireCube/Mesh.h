@@ -130,7 +130,11 @@ public:
 	* @param program The program to use.
 	*/
 	void SetProgram(const Program &program);
-	
+	/**
+	* Creates hard normals for the mesh.
+	*/
+	void CreateHardNormals();
+
 	vector<Object> object;
 	vector<Material> material;	
 	string name;

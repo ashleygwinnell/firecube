@@ -76,7 +76,7 @@ BufferResource<font color="black">:</font><font color="black">:</font>~BufferRes
 <font color="blue">void</font> BufferResource<font color="black">:</font><font color="black">:</font>SetTexCoordStream<font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> unit<font color="black">)</font>
 <font color="black">{</font>
     glEnableClientState<font color="black">(</font>GL_TEXTURE_COORD_ARRAY<font color="black">)</font>;
-    glClientActiveTextureARB<font color="black">(</font>GL_TEXTURE0_ARB<font color="black">+</font>unit<font color="black">)</font>;
+    glClientActiveTexture<font color="black">(</font>GL_TEXTURE0<font color="black">+</font>unit<font color="black">)</font>;
     glBindBuffer<font color="black">(</font>GL_ARRAY_BUFFER,id<font color="black">)</font>;
     glTexCoordPointer<font color="black">(</font><font color="maroon">2</font>,GL_FLOAT,<font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;
 <font color="black">}</font>

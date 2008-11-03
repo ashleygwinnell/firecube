@@ -72,11 +72,9 @@ FrameBufferResource<font color="black">:</font><font color="black">:</font>~Fram
     glTexImage2D<font color="black">(</font>GL_TEXTURE_2D,<font color="maroon">0</font>,GL_RGBA8,width,height,<font color="maroon">0</font>,GL_RGBA,GL_UNSIGNED_BYTE,NULL<font color="black">)</font>;
     glTexParameterf<font color="black">(</font>GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE<font color="black">)</font>;
     glTexParameterf<font color="black">(</font>GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE<font color="black">)</font>;
-    glTexParameteri<font color="black">(</font>GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR<font color="black">)</font>;   
+    glTexParameteri<font color="black">(</font>GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR<font color="black">)</font>; 
     glTexParameteri<font color="black">(</font>GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR<font color="black">)</font>;     
-
     glFramebufferTexture2DEXT<font color="black">(</font>GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0_EXT<font color="black">+</font>attachmnetPoint,GL_TEXTURE_2D,texture<font color="black">[</font>attachmnetPoint<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>id,<font color="maroon">0</font><font color="black">)</font>;    
-
 <font color="black">}</font>
 Texture FrameBufferResource<font color="black">:</font><font color="black">:</font>GetRenderTarget<font color="black">(</font><font color="blue">int</font> attachmnetPoint<font color="black">)</font>
 <font color="black">{</font>

@@ -361,3 +361,69 @@ void ModelResource::SetProgram(const Program &program)
 		(*i)->program=program;
 	}
 }
+void ModelResource::CreateHardNormals()
+{
+	vector<vec3> vertices;
+	vector<vec2> uvs;
+	for (DWORD k=0;k<object.size();k++)
+	{
+		DWORD currentIndex=0;
+		Object &obj=object[k];
+		vertices.clear();
+		uvs.clear();
+		vertices=obj.vertex;
+		uvs=obj.uv;
+		obj.face.clear();
+		obj.vertex.clear();
+		obj.normal.clear();
+		obj.uv.clear();
+		for (DWORD j=0;j<obj.mesh.size();j++)
+		{
+			Mesh &ms=obj.mesh[j];
+			for (DWORD i=0;i<ms.face.size();i++)
+			{
+				vec2 uv0(0,0),uv1(0,0),uv2(0,0);
+				if (uvs.size()>0)
+				{
+					uv0=uvs[ms.face[i].v[0]];
+					uv1=uvs[ms.face[i].v[1]];
+					uv2=uvs[ms.face[i].v[2]];
+				}
+				vec3 v0=vertices[ms.face[i].v[0]];
+				vec3 v1=vertices[ms.face[i].v[1]];
+				vec3 v2=vertices[ms.face[i].v[2]];
+				vec3 n=Cross(v1-v0,v2-v0).Normalize();
+				obj.vertex.push_back(v0);
+				obj.vertex.push_back(v1);
+				obj.vertex.push_back(v2);
+				obj.normal.push_back(n);
+				obj.normal.push_back(n);
+				obj.normal.push_back(n);
+				obj.uv.push_back(uv0);
+				obj.uv.push_back(uv1);
+				obj.uv.push_back(uv2);
+				ms.face[i].v[0]=currentIndex++;
+				ms.face[i].v[1]=currentIndex++;
+				ms.face[i].v[2]=currentIndex++;				
+				obj.face.push_back(ms.face[i]);
+			}
+			vector<DWORD> tmp;
+			tmp.resize(ms.face.size()*3);
+			for (DWORD f=0;f<ms.face.size();f++)
+			{
+				tmp[f*3+0]=ms.face[f].v[0];
+				tmp[f*3+1]=ms.face[f].v[1];
+				tmp[f*3+2]=ms.face[f].v[2];
+			}
+			ms.indexBuffer->LoadIndexData(&tmp[0],tmp.size(),STATIC);
+		}
+		obj.normalBuffer->LoadData(&obj.normal[0],sizeof(vec3)*obj.normal.size(),STATIC);
+		if (!obj.uvBuffer)
+		{	
+			obj.uvBuffer=Buffer(new BufferResource);
+			obj.uvBuffer->Create();
+			obj.uvBuffer->LoadData(&obj.uv[0],sizeof(vec2)*obj.uv.size(),STATIC);
+		}
+		obj.vertexBuffer->LoadData(&obj.vertex[0],sizeof(vec3)*obj.vertex.size(),STATIC);
+	}
+}

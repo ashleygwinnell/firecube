@@ -262,9 +262,9 @@ void Renderer::UseTexture(Texture tex,unsigned int unit)
 	glActiveTexture(GL_TEXTURE0+unit);
 	glBindTexture(GL_TEXTURE_2D,tex->id);
 }
-void Renderer::RenderText(Font font,vec2 pos,vec4 color,const string &str)
+void Renderer::RenderText(Font font,vec3 pos,vec4 color,const string &str)
 {	
-	static vector<vec2> vBuffer;
+	static vector<vec3> vBuffer;
 	static vector<vec2> uvBuffer;
 	vBuffer.resize(str.size()*4);
 	uvBuffer.resize(str.size()*4);
@@ -282,7 +282,7 @@ void Renderer::RenderText(Font font,vec2 pos,vec4 color,const string &str)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);	
 	UseTexture(font->page->tex,0);		
-	vec2 curPos=pos;	
+	vec3 curPos=pos;	
 	FT_Long useKerning = FT_HAS_KERNING(font->fontImpl->face);
 	FT_UInt previous = 0; 
 	for (string::const_iterator i=str.begin();i!=str.end();i++)
@@ -304,10 +304,10 @@ void Renderer::RenderText(Font font,vec2 pos,vec4 color,const string &str)
 				FT_Get_Kerning( font->fontImpl->face, previous, glyphIndex, FT_KERNING_DEFAULT, &delta ); 
 				curPos.x += delta.x >> 6; 
 			} 
-			vBuffer[numQuads*4+0]=vec2(font->glyph[c].bitmapOffset.x+curPos.x,font->glyph[c].bitmapOffset.y+curPos.y);
-			vBuffer[numQuads*4+1]=vec2(font->glyph[c].bitmapOffset.x+curPos.x,font->glyph[c].bitmapOffset.y+curPos.y+font->glyph[c].size.y);
-			vBuffer[numQuads*4+2]=vec2(font->glyph[c].bitmapOffset.x+curPos.x+font->glyph[c].size.x,font->glyph[c].bitmapOffset.y+curPos.y+font->glyph[c].size.y);
-			vBuffer[numQuads*4+3]=vec2(font->glyph[c].bitmapOffset.x+curPos.x+font->glyph[c].size.x,font->glyph[c].bitmapOffset.y+curPos.y);
+			vBuffer[numQuads*4+0]=vec3(font->glyph[c].bitmapOffset.x+curPos.x,font->glyph[c].bitmapOffset.y+curPos.y,curPos.z);
+			vBuffer[numQuads*4+1]=vec3(font->glyph[c].bitmapOffset.x+curPos.x,font->glyph[c].bitmapOffset.y+curPos.y+font->glyph[c].size.y,curPos.z);
+			vBuffer[numQuads*4+2]=vec3(font->glyph[c].bitmapOffset.x+curPos.x+font->glyph[c].size.x,font->glyph[c].bitmapOffset.y+curPos.y+font->glyph[c].size.y,curPos.z);
+			vBuffer[numQuads*4+3]=vec3(font->glyph[c].bitmapOffset.x+curPos.x+font->glyph[c].size.x,font->glyph[c].bitmapOffset.y+curPos.y,curPos.z);
 			uvBuffer[numQuads*4+0]=vec2(font->glyph[c].uv.x,font->glyph[c].uv.y);
 			uvBuffer[numQuads*4+1]=vec2(font->glyph[c].uv.x,font->glyph[c].uv.y+font->glyph[c].size.y/512.0f);
 			uvBuffer[numQuads*4+2]=vec2(font->glyph[c].uv.x+font->glyph[c].size.x/512.0f,font->glyph[c].uv.y+font->glyph[c].size.y/512.0f);
@@ -317,10 +317,10 @@ void Renderer::RenderText(Font font,vec2 pos,vec4 color,const string &str)
 			previous=glyphIndex;
 		}		
 	}	
-	textVertexBuffer->LoadData(&vBuffer[0],numQuads*4*sizeof(vec2),STREAM);
+	textVertexBuffer->LoadData(&vBuffer[0],numQuads*4*sizeof(vec3),STREAM);
 	textUvBuffer->LoadData(&uvBuffer[0],numQuads*4*sizeof(vec2),STREAM);
 	textUvBuffer->SetTexCoordStream(0);
-	textVertexBuffer->SetVertexStream(2);
+	textVertexBuffer->SetVertexStream(3);
 	RenderStream(QUADS,numQuads*4);
 	glDisable(GL_BLEND);	
 	glEnable(GL_DEPTH_TEST);		
@@ -455,8 +455,7 @@ void InitializeRenderer()
 									float alpha=texture2D(tex0,gl_TexCoord[0].st).a; \
 									gl_FragColor = vec4(textColor.r,textColor.g,textColor.b,textColor.a*alpha);  \
 									} ");
-	textShader->Create(vShader,fShader);	
-	
+	textShader->Create(vShader,fShader);		
 }
 void Renderer::SetTextureManager(TextureManager *textureManager)
 {
@@ -497,7 +496,20 @@ void Renderer::RestoreFrameBuffer()
 {
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);	
 }
-void Renderer::SetViewport(int width,int height)
+void Renderer::SetViewport(int left,int right,int width,int height)
 {
-	glViewport(0,0,width,height);
+	glViewport(left,right,width,height);
+}
+mat4 Renderer::GetModelViewMatrix()
+{
+	mat4 ret;
+	glGetFloatv(GL_MODELVIEW_MATRIX,ret.m);
+	return ret;
+}
+mat4 Renderer::GetProjectionMatrix()
+{
+	mat4 ret;
+	glGetFloatv(GL_PROJECTION_MATRIX,ret.m);
+	return ret;
+
 }
