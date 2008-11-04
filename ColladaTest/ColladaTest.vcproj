@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\Users\Bachar\Desktop\colladadom\dom\include;C:\Users\Bachar\Desktop\colladadom\dom\include\1.4"
+				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\colladadom\dom\include&quot;;&quot;C:\Program Files (x86)\colladadom\dom\include\1.4&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DOM_DYNAMIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libcollada14dom21-d.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Users\Bachar\Desktop\colladadom\dom\build\vc9-1.4-d&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\colladadom\dom\build\vc9-1.4-d&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
