@@ -1,4 +1,3 @@
-uniform sampler2D tex;
 varying vec4 col;
 uniform vec3 lightDir;
 void main()
@@ -10,7 +9,6 @@ void main()
 	
 	float NdotL=max(-dot(normal,lightDir),0.0);
 	col =ambient + diffuse * NdotL;
-	gl_TexCoord[0]=gl_MultiTexCoord0;
-	col*=texture2D(tex,gl_TexCoord[0].st);
+	gl_TexCoord[0]=gl_MultiTexCoord0;	
 	gl_Position = ftransform();
 } 

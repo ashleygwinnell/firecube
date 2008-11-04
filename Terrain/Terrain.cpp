@@ -106,7 +106,7 @@ bool Terrain::GenerateTerrain(const string &heightmap,const string &diffuse,vec3
 			normal[normalCurrentIndex++]=n2.y;
 			normal[normalCurrentIndex++]=n2.z;
 
-			vec2 uvPos((float)x*uvDiff.x,(float)y*uvDiff.y);
+			vec2 uvPos((float)x*uvDiff.x+uvDiff.x/2.0f,(float)y*uvDiff.y+uvDiff.y/2.0f);
 			uv[uvCurrentIndex++]=uvPos.x;
 			uv[uvCurrentIndex++]=uvPos.y;
 			
