@@ -5,5 +5,7 @@ public:
 	void Render(float time);
 	void Update(float time);
 	void HandleInput(float time);
-	Font font;
+	bool LoadCollada(const string &filename);
+	Font font;	
+	Model model;
 };
