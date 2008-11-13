@@ -134,6 +134,10 @@ public:
 	* Creates hard normals for the mesh.
 	*/
 	void CreateHardNormals();
+	/**
+	* Updates the buffers.
+	*/
+	void UpdateBuffers();
 
 	vector<Object> object;
 	vector<Material> material;	

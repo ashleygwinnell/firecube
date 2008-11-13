@@ -427,3 +427,57 @@ void ModelResource::CreateHardNormals()
 		obj.vertexBuffer->LoadData(&obj.vertex[0],sizeof(vec3)*obj.vertex.size(),STATIC);
 	}
 }
+void ModelResource::UpdateBuffers()
+{
+	for (DWORD k=0;k<object.size();k++)
+	{	
+		Object &obj=object[k];
+		if (!obj.vertexBuffer)
+		{
+			obj.vertexBuffer=Buffer(new BufferResource);
+			obj.vertexBuffer->Create();
+		}
+		obj.vertexBuffer->LoadData(&obj.vertex[0],sizeof(vec3)*obj.vertex.size(),STATIC);
+		if (obj.normal.size()!=0)
+		{
+			if (!obj.normalBuffer)
+			{
+				obj.normalBuffer=Buffer(new BufferResource);
+				obj.normalBuffer->Create();
+			}
+			obj.normalBuffer->LoadData(&obj.normal[0],sizeof(vec3)*obj.normal.size(),STATIC);
+		}
+		else
+			obj.normalBuffer.reset();
+		
+		if (obj.uv.size()!=0)
+		{
+			if (!obj.uvBuffer)
+			{
+				obj.uvBuffer=Buffer(new BufferResource);
+				obj.uvBuffer->Create();
+			}
+			obj.uvBuffer->LoadData(&obj.uv[0],sizeof(vec2)*obj.uv.size(),STATIC);
+		}
+		else
+			obj.uvBuffer.reset();
+
+		for (DWORD m=0;m<obj.mesh.size();m++)
+		{
+			Mesh &mesh=obj.mesh[m];
+			vector<DWORD> indices;
+			for (DWORD i=0;i<mesh.face.size();i++)
+			{
+				indices.push_back(mesh.face[i].v[0]);
+				indices.push_back(mesh.face[i].v[1]);
+				indices.push_back(mesh.face[i].v[2]);
+			}
+			if (!mesh.indexBuffer)
+			{
+				mesh.indexBuffer=Buffer(new BufferResource);
+				mesh.indexBuffer->Create();
+			}
+			mesh.indexBuffer->LoadIndexData(&indices[0],indices.size(),STATIC);
+		}
+	}
+}
