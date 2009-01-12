@@ -44,7 +44,8 @@ bool App::Init()
 	fbo->Create(128,128);
 	fbo->AddDepthBuffer();
 	fbo->AddRenderTarget(0);
-
+	if (!fbo->IsValid())
+		return false;
 	return true;
 }
 void App::HandleInput(float time)
