@@ -11,6 +11,7 @@ typedef boost::shared_ptr<ProgramResource> Program;
 namespace Renderer
 {
 	void FIRECUBE_API UseProgram(Program program);
+	void FIRECUBE_API SetGlobalProgram(Program program);
 }
 /* CPPDOC_END_EXCLUDE */
 
@@ -55,6 +56,7 @@ typedef ResourceManager<ShaderResource> ShaderManager;
 class FIRECUBE_API ProgramResource
 {
 	friend void Renderer::UseProgram(Program program);
+	friend void Renderer::SetGlobalProgram(Program program);
 public:
 	ProgramResource();
 	~ProgramResource();

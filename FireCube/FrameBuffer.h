@@ -28,9 +28,13 @@ public:
 	*/
 	void Create(int width,int height);
 	/**
-	* Adds a depth buffer.
+	* Adds a depth buffer as a renderbuffer.
 	*/
 	void AddDepthBuffer();
+	/**
+	* Adds a depth buffer as a texture.
+	*/
+	void AddDepthBufferTexture();
 	/**
 	* Adds a new render target.
 	* @param attachmentPoint The attachment point to add to.
@@ -46,6 +50,10 @@ public:
 	* Returns a texture from an attachment point.
 	*/
 	Texture GetRenderTarget(int attachmnetPoint);	
+	/**
+	* Returns a texture from the depth buffer.
+	*/
+	Texture GetDepthBuffer();	
 	/**
 	* Checks whether the frame buffer is valid and can be rendered to. 
 	*/
@@ -63,6 +71,7 @@ private:
 	GLuint id;
 	GLuint depthBuffer;
 	Texture texture[MAX_TEXTURES];
+	Texture depthTexture;
 };
 
 

@@ -30,6 +30,10 @@ namespace Renderer
 	*/
 	void FIRECUBE_API SetProjectionMatrix(mat4 &m);
 	/**
+	* Sets the a texture matrix.
+	*/
+	void FIRECUBE_API SetTextureMatrix(mat4 &m,int unit);
+	/**
 	* Returns the current modelview matrix.
 	*/
 	mat4 FIRECUBE_API GetModelViewMatrix();
@@ -106,11 +110,16 @@ namespace Renderer
 	*/
 	void FIRECUBE_API SetViewport(int left,int right,int width,int height);
 	/**
+	* Sets a global program overriding any program assignment.
+	* @param program The program to use
+	*/
+	void FIRECUBE_API SetGlobalProgram(Program program);
+	/**
 	* Sets a perspective projection.
 	* @param fov The field of view in degrees.
 	* @param zNear The near clipping plane.
 	* @param zFar The far clipping plane.
-	*/
+	*/	
 	void FIRECUBE_API SetPerspectiveProjection(float fov,float zNear,float zFar);	
 	/**
 	* Sets an orthographic projection with a one to one pixel ratio.	

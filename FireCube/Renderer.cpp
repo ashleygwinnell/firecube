@@ -20,7 +20,7 @@ Buffer textUvBuffer;
 TextureManager *currentTextureManager=NULL;
 ShaderManager *currentShaderManager=NULL;
 FontManager *currentFontManager=NULL;
-
+Program globalProgram;
 ShaderResource::ShaderResource() : id(0)
 {	
 }
@@ -197,6 +197,12 @@ void Renderer::Clear(vec4 color,float depth)
 void Renderer::SetModelViewMatrix(mat4 &m)
 {
 	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(m.m);
+}
+void Renderer::SetTextureMatrix(mat4 &m,int unit)
+{
+	glActiveTexture(GL_TEXTURE0+unit);
+	glMatrixMode(GL_TEXTURE);
 	glLoadMatrixf(m.m);
 }
 void Renderer::SetProjectionMatrix(mat4 &m)
@@ -385,8 +391,16 @@ void Renderer::RenderStream(RenderMode mode,DWORD count)
 }
 void Renderer::UseProgram(Program program)
 {
+	if ((globalProgram) && (globalProgram->IsValid()))
+		return;
 	if (program)
 		glUseProgram(program->id);	
+}
+void Renderer::SetGlobalProgram(Program program)
+{
+	globalProgram=program;
+	if (program)
+		glUseProgram(program->id);
 }
 void Renderer::UseMaterial(Material material)
 {
@@ -489,8 +503,16 @@ void DestroyRenderer()
 }
 void Renderer::UseFrameBuffer(FrameBuffer frameBuffer)
 {
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,frameBuffer->id);
-	glViewport(0,0,frameBuffer->width,frameBuffer->height);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,frameBuffer->id);	
+	glViewport(0,0,frameBuffer->width,frameBuffer->height);	
+	bool found=false;
+	for (int i=0;(i<MAX_TEXTURES) && (!found);i++)
+		if ((frameBuffer->texture[i]) && (frameBuffer->texture[i]->IsValid()))
+			found=true;
+	if (found)
+		glDrawBuffer(GL_BACK);
+	else
+		glDrawBuffer(GL_NONE);
 }
 void Renderer::RestoreFrameBuffer()
 {

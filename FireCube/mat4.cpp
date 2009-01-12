@@ -356,13 +356,13 @@ void mat4::LookAt(vec3 pos,vec3 at,vec3 up)
 
 
 
-	m[0]=s.x; m[4]=s.y; m[8]=s.z; m[12]=pos.x;
-	m[1]=u.x; m[5]=u.y; m[9]=u.z; m[13]=pos.y;
-	m[2]=-f.x; m[6]=-f.y; m[10]=-f.z; m[14]=pos.z;
+	m[0]=s.x; m[4]=s.y; m[8]=s.z; m[12]=0;
+	m[1]=u.x; m[5]=u.y; m[9]=u.z; m[13]=0;
+	m[2]=-f.x; m[6]=-f.y; m[10]=-f.z; m[14]=0;
 	m[3]=0; m[7]=0; m[11]=0; m[15]=1;
 
-	//trans.Translate(pos.x,pos.y,pos.z);
-	//(*this)*=trans;
+	trans.Translate(-pos.x,-pos.y,-pos.z);
+	(*this)*=trans;
 }
 mat4::operator mat3()
 {

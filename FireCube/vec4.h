@@ -67,11 +67,11 @@ public:
 	operator vec2();
 
 	/**
-	* Returns a pointer the the coordinates.
+	* Returns a pointer to the coordinates.
 	*/
 	inline const float * GetData() {return &x;} 
 	/**
-	* Returns a const pointer the the coordinates.
+	* Returns a const pointer to the coordinates.
 	*/
 	inline const float * GetData() const {return &x;} 
 	/**
@@ -112,7 +112,7 @@ public:
 	*/
 	vec2 ToVec2();
 	/**
-	* Converts to a vec2 by ignoring the w coordinate.
+	* Converts to a vec3 by ignoring the w coordinate.
 	*/
 	vec3 ToVec3();
 	

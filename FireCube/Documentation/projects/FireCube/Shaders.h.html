@@ -19,6 +19,7 @@ Shaders.h
 <font color="blue">namespace</font> Renderer
 <font color="black">{</font>
     <font color="blue">void</font> FIRECUBE_API UseProgram<font color="black">(</font>Program program<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API SetGlobalProgram<font color="black">(</font>Program program<font color="black">)</font>;
 <font color="black">}</font>
 <font color="green">/* CPPDOC_END_EXCLUDE */</font>
 
@@ -63,6 +64,7 @@ Shaders.h
 <font color="blue">class</font> FIRECUBE_API ProgramResource
 <font color="black">{</font>
     <font color="blue">friend</font> <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>UseProgram<font color="black">(</font>Program program<font color="black">)</font>;
+    <font color="blue">friend</font> <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetGlobalProgram<font color="black">(</font>Program program<font color="black">)</font>;
 <font color="blue">public</font><font color="black">:</font>
     ProgramResource<font color="black">(</font><font color="black">)</font>;
     ~ProgramResource<font color="black">(</font><font color="black">)</font>;

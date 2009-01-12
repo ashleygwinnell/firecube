@@ -118,9 +118,9 @@ void ModelResource::CalculateNormals()
 		{
 			vec3 v1=object[k].vertex[object[k].face[f].v[1]]-object[k].vertex[object[k].face[f].v[0]];
 			vec3 v2=object[k].vertex[object[k].face[f].v[2]]-object[k].vertex[object[k].face[f].v[0]];
-			vec3 n=Cross(v1,v2);
-			n.Normalize();
+			vec3 n=Cross(v1,v2);			
 			object[k].face[f].normal=n;
+			object[k].face[f].normal.Normalize();
 			/*for (unsigned int i=0;i<object[k].vertex.size();i++)					// Fix texture coordinate problem having certain vertices duplicated. SLOW.
 			{
 			if (object[k].vertex[i]==object[k].vertex[object[k].face[f].v[0]])
@@ -418,7 +418,7 @@ void ModelResource::CreateHardNormals()
 			ms.indexBuffer->LoadIndexData(&tmp[0],tmp.size(),STATIC);
 		}
 		obj.normalBuffer->LoadData(&obj.normal[0],sizeof(vec3)*obj.normal.size(),STATIC);
-		if (!obj.uvBuffer)
+		if (obj.uv.size())
 		{	
 			obj.uvBuffer=Buffer(new BufferResource);
 			obj.uvBuffer->Create();

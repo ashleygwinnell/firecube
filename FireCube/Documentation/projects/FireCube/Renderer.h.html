@@ -38,6 +38,10 @@ Renderer.h
     */</font>
     <font color="blue">void</font> FIRECUBE_API SetProjectionMatrix<font color="black">(</font>mat4 <font color="black">&</font>m<font color="black">)</font>;
     <font color="green">/**
+    * Sets the a texture matrix.
+    */</font>
+    <font color="blue">void</font> FIRECUBE_API SetTextureMatrix<font color="black">(</font>mat4 <font color="black">&</font>m,<font color="blue">int</font> unit<font color="black">)</font>;
+    <font color="green">/**
     * Returns the current modelview matrix.
     */</font>
     mat4 FIRECUBE_API GetModelViewMatrix<font color="black">(</font><font color="black">)</font>;
@@ -114,11 +118,16 @@ Renderer.h
     */</font>
     <font color="blue">void</font> FIRECUBE_API SetViewport<font color="black">(</font><font color="blue">int</font> left,<font color="blue">int</font> right,<font color="blue">int</font> width,<font color="blue">int</font> height<font color="black">)</font>;
     <font color="green">/**
+    * Sets a global program overriding any program assignment.
+    * @param program The program to use
+    */</font>
+    <font color="blue">void</font> FIRECUBE_API SetGlobalProgram<font color="black">(</font>Program program<font color="black">)</font>;
+    <font color="green">/**
     * Sets a perspective projection.
     * @param fov The field of view in degrees.
     * @param zNear The near clipping plane.
     * @param zFar The far clipping plane.
-    */</font>
+    */</font>  
     <font color="blue">void</font> FIRECUBE_API SetPerspectiveProjection<font color="black">(</font><font color="blue">float</font> fov,<font color="blue">float</font> zNear,<font color="blue">float</font> zFar<font color="black">)</font>;   
     <font color="green">/**
     * Sets an orthographic projection with a one to one pixel ratio.    

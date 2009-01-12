@@ -28,7 +28,7 @@ Buffer textUvBuffer;
 TextureManager <font color="black">*</font>currentTextureManager<font color="black">=</font>NULL;
 ShaderManager <font color="black">*</font>currentShaderManager<font color="black">=</font>NULL;
 FontManager <font color="black">*</font>currentFontManager<font color="black">=</font>NULL;
-
+Program globalProgram;
 ShaderResource<font color="black">:</font><font color="black">:</font>ShaderResource<font color="black">(</font><font color="black">)</font> <font color="black">:</font> id<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>
 <font color="black">{</font>   
 <font color="black">}</font>
@@ -205,6 +205,12 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
 <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetModelViewMatrix<font color="black">(</font>mat4 <font color="black">&</font>m<font color="black">)</font>
 <font color="black">{</font>
     glMatrixMode<font color="black">(</font>GL_MODELVIEW<font color="black">)</font>;
+    glLoadMatrixf<font color="black">(</font>m.m<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetTextureMatrix<font color="black">(</font>mat4 <font color="black">&</font>m,<font color="blue">int</font> unit<font color="black">)</font>
+<font color="black">{</font>
+    glActiveTexture<font color="black">(</font>GL_TEXTURE0<font color="black">+</font>unit<font color="black">)</font>;
+    glMatrixMode<font color="black">(</font>GL_TEXTURE<font color="black">)</font>;
     glLoadMatrixf<font color="black">(</font>m.m<font color="black">)</font>;
 <font color="black">}</font>
 <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetProjectionMatrix<font color="black">(</font>mat4 <font color="black">&</font>m<font color="black">)</font>
@@ -393,8 +399,16 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
 <font color="black">}</font>
 <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>UseProgram<font color="black">(</font>Program program<font color="black">)</font>
 <font color="black">{</font>
+    <font color="blue">if</font> <font color="black">(</font><font color="black">(</font>globalProgram<font color="black">)</font> <font color="black">&</font><font color="black">&</font> <font color="black">(</font>globalProgram<font color="black">-</font><font color="black">&#62;</font>IsValid<font color="black">(</font><font color="black">)</font><font color="black">)</font><font color="black">)</font>
+        <font color="blue">return</font>;
     <font color="blue">if</font> <font color="black">(</font>program<font color="black">)</font>
         glUseProgram<font color="black">(</font>program<font color="black">-</font><font color="black">&#62;</font>id<font color="black">)</font>;  
+<font color="black">}</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetGlobalProgram<font color="black">(</font>Program program<font color="black">)</font>
+<font color="black">{</font>
+    globalProgram<font color="black">=</font>program;
+    <font color="blue">if</font> <font color="black">(</font>program<font color="black">)</font>
+        glUseProgram<font color="black">(</font>program<font color="black">-</font><font color="black">&#62;</font>id<font color="black">)</font>;
 <font color="black">}</font>
 <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>UseMaterial<font color="black">(</font>Material material<font color="black">)</font>
 <font color="black">{</font>
@@ -497,8 +511,16 @@ FontManager <font color="black">*</font>Renderer<font color="black">:</font><fon
 <font color="black">}</font>
 <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>UseFrameBuffer<font color="black">(</font>FrameBuffer frameBuffer<font color="black">)</font>
 <font color="black">{</font>
-    glBindFramebufferEXT<font color="black">(</font>GL_FRAMEBUFFER_EXT,frameBuffer<font color="black">-</font><font color="black">&#62;</font>id<font color="black">)</font>;
-    glViewport<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font>,frameBuffer<font color="black">-</font><font color="black">&#62;</font>width,frameBuffer<font color="black">-</font><font color="black">&#62;</font>height<font color="black">)</font>;
+    glBindFramebufferEXT<font color="black">(</font>GL_FRAMEBUFFER_EXT,frameBuffer<font color="black">-</font><font color="black">&#62;</font>id<font color="black">)</font>;   
+    glViewport<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font>,frameBuffer<font color="black">-</font><font color="black">&#62;</font>width,frameBuffer<font color="black">-</font><font color="black">&#62;</font>height<font color="black">)</font>; 
+    <font color="blue">bool</font> found<font color="black">=</font><font color="blue">false</font>;
+    <font color="blue">for</font> <font color="black">(</font><font color="blue">int</font> i<font color="black">=</font><font color="maroon">0</font>;<font color="black">(</font>i<font color="black">&#60;</font>MAX_TEXTURES<font color="black">)</font> <font color="black">&</font><font color="black">&</font> <font color="black">(</font><font color="black">!</font>found<font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="blue">if</font> <font color="black">(</font><font color="black">(</font>frameBuffer<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>i<font color="black">]</font><font color="black">)</font> <font color="black">&</font><font color="black">&</font> <font color="black">(</font>frameBuffer<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>i<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>IsValid<font color="black">(</font><font color="black">)</font><font color="black">)</font><font color="black">)</font>
+            found<font color="black">=</font><font color="blue">true</font>;
+    <font color="blue">if</font> <font color="black">(</font>found<font color="black">)</font>
+        glDrawBuffer<font color="black">(</font>GL_BACK<font color="black">)</font>;
+    <font color="blue">else</font>
+        glDrawBuffer<font color="black">(</font>GL_NONE<font color="black">)</font>;
 <font color="black">}</font>
 <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RestoreFrameBuffer<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
