@@ -101,7 +101,7 @@ void App::Render(float t)
 	RenderDepth();
 	ostringstream oss;
 	oss << "FPS:"<<app.GetFps();	
-	Renderer::RenderText(app.font,vec2(0,0),vec4(1,1,1,1),oss.str());
+	Renderer::RenderText(app.font,vec2(0,(float)app.GetHeight()-20.0f),vec4(1,1,1,1),oss.str());
 }
 void App::HandleInput(float t)
 {
