@@ -15,7 +15,6 @@ using namespace FireCube;
 #include "app.h"
 
 App app;
-map<string,vector <vec3>> vertices2;
 vec3 rot(0,0,-150);
 int main(int argc, char *argv[])
 {
@@ -27,53 +26,123 @@ int main(int argc, char *argv[])
 bool App::Init()
 {
 	model=Model(new ModelResource);
-	Material mat=Material(new MaterialResource);
-	mat->program=Program(new ProgramResource);
-	mat->program->Create(Renderer::GetShaderManager()->Create("plainColor.vshader"),Renderer::GetShaderManager()->Create("plainColor.fshader"));
-	model->material.push_back(mat);	
+	Program program=Program(new ProgramResource);
+	program->Create(Renderer::GetShaderManager()->Create("plainColor.vshader"),Renderer::GetShaderManager()->Create("plainColor.fshader"));	
 	SetTitle("ColladaTest");
 	font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);
 	if (!font)
 		return false;
 	LoadCollada("cube.dae");
-	for (DWORD i=0;i<model->object.size();i++)
-		for (DWORD j=0;j<model->object[i].mesh.size();j++)
-		model->object[i].mesh[j].material=mat;
+	model->SetProgram(program);
+	//return false;	
 	return true;
 }
-bool App::LoadCollada(const string &filename)
+void App::LoadMaterials()
 {
-	DAE colladaDom;
-	daeInt result = colladaDom.load(filename.c_str());
-
-	if(result != DAE_OK) {		
-		return false;
-	}
-	vector<domMaterial*> materials=colladaDom.getDatabase()->typeLookup<domMaterial>();
-	std::cout << "Num materials: " << materials.size() << std::endl;
+	vector<domMaterial*> materials=colladaDom.getDatabase()->typeLookup<domMaterial>();	
 	for (DWORD matIndex=0;matIndex<materials.size();matIndex++)
 	{
+		Material curMat=Material(new MaterialResource);
+		model->material.push_back(curMat);
 		domMaterial *mat=materials[matIndex];
+		curMat->name=mat->getName();
 		daeElement *elm=mat->getInstance_effect()->getUrl().getElement();
 		domEffect *effect=(domEffect*)elm;
-		daeElementRefArray &elmArray=effect->getContents();
-		for (DWORD i=0;i<elmArray.getCount();i++)
+		domFx_profile_abstract_Array &fxaa=effect->getFx_profile_abstract_array();		
+		for (DWORD i=0;i<fxaa.getCount();i++)
 		{
-			daeElementRef el=elmArray.get(i);
-			if (strcmp(el->getTypeName(),"profile_COMMON")==0)
-			{
-				
-				
+			domFx_profile_abstractRef pa=fxaa.get(i);
+			if (strcmp(pa->getTypeName(),"profile_COMMON")==0)
+			{				
+				daeElement *techniqueElm=pa->getChild("technique");
+				daeElement *phongElm=techniqueElm->getChild("phong");
+				daeElement *blinnElm=techniqueElm->getChild("phong");
+
+				if (phongElm)
+				{				
+					string data;
+					daeElement *colorElm=NULL;
+
+					colorElm=phongElm->getChild("ambient")->getChild("color");
+					if (colorElm)
+					{
+						colorElm->getCharData(data);
+						istringstream ass(data);
+						ass >> curMat->ambient.x >> curMat->ambient.y >> curMat->ambient.z >> curMat->ambient.w;
+					}
+
+					
+					colorElm=phongElm->getChild("diffuse")->getChild("color");
+					if (colorElm)
+					{
+						colorElm->getCharData(data);
+						istringstream dss(data);
+						dss >> curMat->diffuse.x >> curMat->diffuse.y >> curMat->diffuse.z >> curMat->diffuse.w;
+					}
+
+					colorElm=phongElm->getChild("specular")->getChild("color");
+					if (colorElm)
+					{
+						colorElm->getCharData(data);
+						istringstream sss(data);
+						sss >> curMat->specular.x >> curMat->specular.y >> curMat->specular.z >> curMat->specular.w;
+					}
+
+					phongElm->getChild("shininess")->getChild("float")->getCharData(data);				
+					istringstream shss(data);
+					shss >> curMat->shininess;
+				}
+				else if (blinnElm)
+				{				
+					string data;
+					daeElement *colorElm=NULL;
+
+					colorElm=blinnElm->getChild("ambient")->getChild("color");
+					if (colorElm)
+					{
+						colorElm->getCharData(data);
+						istringstream ass(data);
+						ass >> curMat->ambient.x >> curMat->ambient.y >> curMat->ambient.z >> curMat->ambient.w;
+					}
+
+
+					colorElm=blinnElm->getChild("diffuse")->getChild("color");
+					if (colorElm)
+					{
+						colorElm->getCharData(data);
+						istringstream dss(data);
+						dss >> curMat->diffuse.x >> curMat->diffuse.y >> curMat->diffuse.z >> curMat->diffuse.w;
+					}
+
+					colorElm=blinnElm->getChild("specular")->getChild("color");
+					if (colorElm)
+					{
+						colorElm->getCharData(data);
+						istringstream sss(data);
+						sss >> curMat->specular.x >> curMat->specular.y >> curMat->specular.z >> curMat->specular.w;
+					}
+
+					blinnElm->getChild("shininess")->getChild("float")->getCharData(data);				
+					istringstream shss(data);
+					shss >> curMat->shininess;
+				}
+
 			}
 		}
 	}
-	vector<domMesh*> meshes = colladaDom.getDatabase()->typeLookup<domMesh>();	
-	daeUInt meshCount = meshes.size();
-	std::cout << "Num meshes: " << meshCount << std::endl;
-	for (DWORD meshIndex=0;meshIndex<meshCount;meshIndex++)
-	{
-		model->object.push_back(Object());		
-		domMesh *thisMesh=meshes[meshIndex];
+}
+void App::LoadMesh(string &id,Model model,map<string,Material> &materialMap)
+{	
+	map<string,vector <vec3>> vertices2;
+	vector<domGeometry *> geometries=colladaDom.getDatabase()->typeLookup<domGeometry>();
+	for (DWORD geometryIndex=0;geometryIndex<geometries.size();geometryIndex++)
+	{		
+		domGeometry *geometry=geometries[geometryIndex];		
+		if (geometry->getID()!=id)
+			continue;		
+		model->object.push_back(Object());				
+		model->object[model->object.size()-1].name=geometry->getID();
+		domMeshRef thisMesh=geometry->getMesh();		
 		domVerticesRef vert=thisMesh->getVertices();
 		domInputLocal_Array &v=vert->getInput_array();
 		for (unsigned int i=0;i<v.getCount();i++)
@@ -94,7 +163,11 @@ bool App::LoadCollada(const string &filename)
 		for (DWORD triArrayIndex=0;triArrayIndex<triArray.getCount();triArrayIndex++)
 		{		
 			domTrianglesRef tris=triArray.get(triArrayIndex);			
-			model->object[meshIndex].mesh.push_back(Mesh());
+			model->object[model->object.size()-1].mesh.push_back(Mesh());
+			Material mat=materialMap[tris->getMaterial()];
+			if (mat)							
+				model->object[model->object.size()-1].mesh[triArrayIndex].material=mat;
+			
 			domPRef p=tris->getP();
 			DWORD numTriangles=(DWORD)tris->getCount();
 			domInputLocalOffset_Array &tv=tris->getInput_array();
@@ -112,10 +185,18 @@ bool App::LoadCollada(const string &filename)
 					{
 						vector<vec3> &vve=vertices2[lo->getSource().getFragment()];
 						vec3 v0=vve[(DWORD)pv[i+(DWORD)lo->getOffset()]];
-						model->object[meshIndex].vertex.push_back(v0);				
+						model->object[model->object.size()-1].vertex.push_back(v0);				
 					}
 					if (strcmp(lo->getSemantic(),"NORMAL")==0)
-					{				
+					{
+						daeElement *e=lo->getSource().getElement();
+						domSource *so=(domSource*)e;
+						domListOfFloats &lof=so->getFloat_array()->getValue();
+						vec3 n0;
+						n0.x=(float)lof.get((DWORD)pv[i+(DWORD)lo->getOffset()]+0);
+						n0.y=(float)lof.get((DWORD)pv[i+(DWORD)lo->getOffset()]+1);
+						n0.z=(float)lof.get((DWORD)pv[i+(DWORD)lo->getOffset()]+2);
+						model->object[model->object.size()-1].normal.push_back(n0);
 					}
 					if (strcmp(lo->getSemantic(),"TEXCOORD")==0)
 					{				
@@ -127,16 +208,64 @@ bool App::LoadCollada(const string &filename)
 				{
 					cc=0;			
 					Face f;
-					f.v[0]=model->object[meshIndex].vertex.size()-3;
-					f.v[1]=model->object[meshIndex].vertex.size()-2;
-					f.v[2]=model->object[meshIndex].vertex.size()-1;
-					model->object[meshIndex].mesh[triArrayIndex].face.push_back(f);
+					f.v[0]=model->object[model->object.size()-1].vertex.size()-3;
+					f.v[1]=model->object[model->object.size()-1].vertex.size()-2;
+					f.v[2]=model->object[model->object.size()-1].vertex.size()-1;
+					model->object[model->object.size()-1].mesh[triArrayIndex].face.push_back(f);					
+
 				}
 			}
+		}		
+	}			
+}
+void App::LoadNodes()
+{
+	vector<domNode*> nodes = colladaDom.getDatabase()->typeLookup<domNode>();
+	for (DWORD i=0;i<nodes.size();i++)
+	{
+		domNode *curNode=nodes[i];
+		domInstance_geometry_Array &iga=curNode->getInstance_geometry_array();
+		for (DWORD j=0;j<iga.getCount();j++)
+		{
+			map<string,Material> materialMap;
+			domInstance_geometryRef ig=iga.get(j);
+			domInstance_material_Array &ima=ig->getBind_material()->getTechnique_common()->getInstance_material_array();
+			for (DWORD k=0;k<ima.getCount();k++)
+			{
+				domInstance_materialRef im=ima.get(k);
+				Material mat=GetMaterialByName(string(im->getTarget().getFragment()));
+				if (mat)
+					materialMap[im->getSymbol()]=mat;
+
+			}
+			LoadMesh(string(ig->getUrl().getFragment()),model,materialMap);
 		}
 	}
+}
+bool App::LoadCollada(const string &filename)
+{
+	
+	daeInt result = colladaDom.load(filename.c_str());
+
+	if(result != DAE_OK) {		
+		return false;
+	}
+	
+	LoadMaterials();
+	LoadNodes();
+	
+	
 	model->UpdateBuffers();
 	return true;
+}
+Material App::GetMaterialByName(string &name)
+{
+	for (DWORD i=0;i<model->material.size();i++)
+	{
+		if (model->material[i]->name==name)
+			return model->material[i];
+	}
+	return Material();
 }
 void App::Render(float time)
 {
