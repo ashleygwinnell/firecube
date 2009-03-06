@@ -243,6 +243,31 @@ mat4 mat4<font color="black">:</font><font color="black">:</font><font color="bl
     rot.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>cs;
     <font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">=</font><font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">*</font>rot;
 <font color="black">}</font>
+<font color="blue">void</font> mat4<font color="black">:</font><font color="black">:</font>Rotate<font color="black">(</font>vec4 rot<font color="black">)</font>
+<font color="black">{</font>
+    mat4 rotm;
+    <font color="blue">float</font> c <font color="black">=</font> cos<font color="black">(</font>rot.w<font color="black">)</font>;
+    <font color="blue">float</font> s <font color="black">=</font> sin<font color="black">(</font>rot.w<font color="black">)</font>;
+    <font color="blue">float</font> t <font color="black">=</font> <font color="maroon">1</font>.0f <font color="black">-</font>c;
+    rotm.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>c<font color="black">+</font>rot.x<font color="black">*</font>rot.x<font color="black">*</font>t;
+    rotm.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>c<font color="black">+</font>rot.y<font color="black">*</font>rot.y<font color="black">*</font>t;
+    rotm.m<font color="black">[</font><font color="maroon">10</font><font color="black">]</font><font color="black">=</font>c<font color="black">+</font>rot.z<font color="black">*</font>rot.z<font color="black">*</font>t;
+    
+    <font color="blue">float</font> tmp1 <font color="black">=</font> rot.x<font color="black">*</font>rot.y<font color="black">*</font>t;
+    <font color="blue">float</font> tmp2 <font color="black">=</font> rot.z<font color="black">*</font>s;
+    rotm.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font> <font color="black">=</font> tmp1 <font color="black">+</font> tmp2;
+    rotm.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font> <font color="black">=</font> tmp1 <font color="black">-</font>tmp2;
+    tmp1 <font color="black">=</font> rot.x<font color="black">*</font>rot.z<font color="black">*</font>t;
+    tmp2 <font color="black">=</font> rot.y<font color="black">*</font>s;
+    rotm.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font> <font color="black">=</font> tmp1 <font color="black">-</font>tmp2;
+    rotm.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font> <font color="black">=</font> tmp1 <font color="black">+</font> tmp2;
+    tmp1 <font color="black">=</font> rot.y<font color="black">*</font>rot.z<font color="black">*</font>t;
+    tmp2 <font color="black">=</font> rot.x<font color="black">*</font>s;
+    rotm.m<font color="black">[</font><font color="maroon">9</font><font color="black">]</font> <font color="black">=</font> tmp1 <font color="black">+</font> tmp2;
+    rotm.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font> <font color="black">=</font> tmp1 <font color="black">-</font>tmp2;
+
+    <font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">=</font><font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">*</font>rotm;
+<font color="black">}</font>
 <font color="blue">void</font> mat4<font color="black">:</font><font color="black">:</font>Transpose<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
     mat4 t<font color="black">=</font><font color="black">*</font><font color="blue">this</font>;

@@ -102,8 +102,30 @@ public:
 	*/
 	void SetUniform(const string &name,vec4 value);
 	/**
-	* Returns whether the program is valid.
+	* Sets a 1d uniform boolean.
+	* @param name The name of the variable.
+	* @param value The value to assign for it.
 	*/
+	void SetUniform(const string &name,bool value);
+	/**
+	* Sets an array of booleans.
+	* @param name The name of the variable.
+	* @param value The value to assign for it.
+	*/
+	void SetUniform(const string &name,const vector<bool> &value);
+	/**
+	* Sets an array of integers.
+	* @param name The name of the variable.
+	* @param value The value to assign for it.
+	*/
+	void SetUniform(const string &name,const vector<int> &value);
+	/**	
+	* @return Returns the compile log for this program.
+	*/
+	string GetInfoLog();
+	/**
+	* Returns whether the program is valid.
+	*/	
 	bool IsValid() const;	
 
 private:

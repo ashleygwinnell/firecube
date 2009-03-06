@@ -184,6 +184,72 @@ void ProgramResource::SetUniform(const string &name,vec4 value)
 	if (location!=-1)
 		glUniform4fv(location,1,&value.x);
 }
+void ProgramResource::SetUniform(const string &name,bool value)
+{
+	GLint location=-1;
+	map<string,GLint>::iterator i=variables.find(name);
+	if (i!=variables.end())
+		location=i->second;
+	else
+	{
+		location=glGetUniformLocation(id,name.c_str());
+		if (location!=-1)
+			variables[name]=location;
+	}
+	if (location!=-1)	
+		glUniform1i(location,value);
+}
+void ProgramResource::SetUniform(const string &name,const vector<bool> &value)
+{
+	GLint location=-1;
+	map<string,GLint>::iterator i=variables.find(name);
+	if (i!=variables.end())
+		location=i->second;
+	else
+	{
+		location=glGetUniformLocation(id,name.c_str());
+		if (location!=-1)
+			variables[name]=location;
+	}
+	vector<int> tmp;
+	for (vector<bool>::const_iterator i=value.begin();i!=value.end();i++)
+		tmp.push_back(*i);
+	if (location!=-1)	
+		glUniform1iv(location,value.size(),&tmp[0]);
+}
+void ProgramResource::SetUniform(const string &name,const vector<int> &value)
+{
+	GLint location=-1;
+	map<string,GLint>::iterator i=variables.find(name);
+	if (i!=variables.end())
+		location=i->second;
+	else
+	{
+		location=glGetUniformLocation(id,name.c_str());
+		if (location!=-1)
+			variables[name]=location;
+	}
+	if (location!=-1)	
+		glUniform1iv(location,value.size(),&value[0]);
+}
+string ProgramResource::GetInfoLog()
+{
+	int infologLength = 0;
+	int charsWritten  = 0;
+	char *infoLog;
+	string ret;
+	glGetProgramiv(id, GL_INFO_LOG_LENGTH,&infologLength);
+
+	if (infologLength > 0)
+	{
+		infoLog = new char[infologLength];
+		glGetProgramInfoLog(id, infologLength, &charsWritten, infoLog);
+		ret=infoLog;
+		delete [] infoLog;
+	}
+	return ret;
+
+}
 bool ProgramResource::IsValid() const
 {
 	return id!=0;
@@ -222,8 +288,9 @@ void Renderer::Render(Model model)
 		vector<Mesh>::iterator j=i->mesh.begin();
 		if (i->vertexBuffer)
 			i->vertexBuffer->SetVertexStream(3);
-		if (i->uvBuffer)
-			i->uvBuffer->SetTexCoordStream(0);
+		for (DWORD t=0;t<MAX_TEXTURES;t++)
+			if (i->uvBuffer[t])
+				i->uvBuffer[t]->SetTexCoordStream(t);
 		if (i->normalBuffer)
 			i->normalBuffer->SetNormalStream();
 		for (;j!=i->mesh.end();j++)

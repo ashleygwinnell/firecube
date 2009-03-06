@@ -192,6 +192,72 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
     <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">-1</font><font color="black">)</font>
         glUniform4fv<font color="black">(</font>location,<font color="maroon">1</font>,<font color="black">&</font>value.x<font color="black">)</font>;
 <font color="black">}</font>
+<font color="blue">void</font> ProgramResource<font color="black">:</font><font color="black">:</font>SetUniform<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">bool</font> value<font color="black">)</font>
+<font color="black">{</font>
+    GLint location<font color="black">=</font><font color="maroon">-1</font>;
+    map<font color="black">&#60;</font>string,GLint<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>variables.find<font color="black">(</font><font color="blue">name</font><font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>i<font color="black">!</font><font color="black">=</font>variables.end<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+        location<font color="black">=</font>i<font color="black">-</font><font color="black">&#62;</font>second;
+    <font color="blue">else</font>
+    <font color="black">{</font>
+        location<font color="black">=</font>glGetUniformLocation<font color="black">(</font>id,<font color="blue">name</font>.c_str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">-1</font><font color="black">)</font>
+            variables<font color="black">[</font><font color="blue">name</font><font color="black">]</font><font color="black">=</font>location;
+    <font color="black">}</font>
+    <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">-1</font><font color="black">)</font>   
+        glUniform1i<font color="black">(</font>location,value<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> ProgramResource<font color="black">:</font><font color="black">:</font>SetUniform<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">const</font> vector<font color="black">&#60;</font><font color="blue">bool</font><font color="black">&#62;</font> <font color="black">&</font>value<font color="black">)</font>
+<font color="black">{</font>
+    GLint location<font color="black">=</font><font color="maroon">-1</font>;
+    map<font color="black">&#60;</font>string,GLint<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>variables.find<font color="black">(</font><font color="blue">name</font><font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>i<font color="black">!</font><font color="black">=</font>variables.end<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+        location<font color="black">=</font>i<font color="black">-</font><font color="black">&#62;</font>second;
+    <font color="blue">else</font>
+    <font color="black">{</font>
+        location<font color="black">=</font>glGetUniformLocation<font color="black">(</font>id,<font color="blue">name</font>.c_str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">-1</font><font color="black">)</font>
+            variables<font color="black">[</font><font color="blue">name</font><font color="black">]</font><font color="black">=</font>location;
+    <font color="black">}</font>
+    vector<font color="black">&#60;</font><font color="blue">int</font><font color="black">&#62;</font> tmp;
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font><font color="blue">bool</font><font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>const_iterator i<font color="black">=</font>value.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>value.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        tmp.push_back<font color="black">(</font><font color="black">*</font>i<font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">-1</font><font color="black">)</font>   
+        glUniform1iv<font color="black">(</font>location,value.size<font color="black">(</font><font color="black">)</font>,<font color="black">&</font>tmp<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> ProgramResource<font color="black">:</font><font color="black">:</font>SetUniform<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">const</font> vector<font color="black">&#60;</font><font color="blue">int</font><font color="black">&#62;</font> <font color="black">&</font>value<font color="black">)</font>
+<font color="black">{</font>
+    GLint location<font color="black">=</font><font color="maroon">-1</font>;
+    map<font color="black">&#60;</font>string,GLint<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>variables.find<font color="black">(</font><font color="blue">name</font><font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>i<font color="black">!</font><font color="black">=</font>variables.end<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+        location<font color="black">=</font>i<font color="black">-</font><font color="black">&#62;</font>second;
+    <font color="blue">else</font>
+    <font color="black">{</font>
+        location<font color="black">=</font>glGetUniformLocation<font color="black">(</font>id,<font color="blue">name</font>.c_str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">-1</font><font color="black">)</font>
+            variables<font color="black">[</font><font color="blue">name</font><font color="black">]</font><font color="black">=</font>location;
+    <font color="black">}</font>
+    <font color="blue">if</font> <font color="black">(</font>location<font color="black">!</font><font color="black">=</font><font color="maroon">-1</font><font color="black">)</font>   
+        glUniform1iv<font color="black">(</font>location,value.size<font color="black">(</font><font color="black">)</font>,<font color="black">&</font>value<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">)</font>;
+<font color="black">}</font>
+string ProgramResource<font color="black">:</font><font color="black">:</font>GetInfoLog<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">int</font> infologLength <font color="black">=</font> <font color="maroon">0</font>;
+    <font color="blue">int</font> charsWritten  <font color="black">=</font> <font color="maroon">0</font>;
+    <font color="blue">char</font> <font color="black">*</font>infoLog;
+    string ret;
+    glGetProgramiv<font color="black">(</font>id, GL_INFO_LOG_LENGTH,<font color="black">&</font>infologLength<font color="black">)</font>;
+
+    <font color="blue">if</font> <font color="black">(</font>infologLength <font color="black">&#62;</font> <font color="maroon">0</font><font color="black">)</font>
+    <font color="black">{</font>
+        infoLog <font color="black">=</font> <font color="blue">new</font> <font color="blue">char</font><font color="black">[</font>infologLength<font color="black">]</font>;
+        glGetProgramInfoLog<font color="black">(</font>id, infologLength, <font color="black">&</font>charsWritten, infoLog<font color="black">)</font>;
+        ret<font color="black">=</font>infoLog;
+        <font color="blue">delete</font> <font color="black">[</font><font color="black">]</font> infoLog;
+    <font color="black">}</font>
+    <font color="blue">return</font> ret;
+
+<font color="black">}</font>
 <font color="blue">bool</font> ProgramResource<font color="black">:</font><font color="black">:</font>IsValid<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>
 <font color="black">{</font>
     <font color="blue">return</font> id<font color="black">!</font><font color="black">=</font><font color="maroon">0</font>;
@@ -230,8 +296,9 @@ ProgramResource<font color="black">:</font><font color="black">:</font>~ProgramR
         vector<font color="black">&#60;</font>Mesh<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator j<font color="black">=</font>i<font color="black">-</font><font color="black">&#62;</font>mesh.begin<font color="black">(</font><font color="black">)</font>;
         <font color="blue">if</font> <font color="black">(</font>i<font color="black">-</font><font color="black">&#62;</font>vertexBuffer<font color="black">)</font>
             i<font color="black">-</font><font color="black">&#62;</font>vertexBuffer<font color="black">-</font><font color="black">&#62;</font>SetVertexStream<font color="black">(</font><font color="maroon">3</font><font color="black">)</font>;
-        <font color="blue">if</font> <font color="black">(</font>i<font color="black">-</font><font color="black">&#62;</font>uvBuffer<font color="black">)</font>
-            i<font color="black">-</font><font color="black">&#62;</font>uvBuffer<font color="black">-</font><font color="black">&#62;</font>SetTexCoordStream<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>;
+        <font color="blue">for</font> <font color="black">(</font>DWORD t<font color="black">=</font><font color="maroon">0</font>;t<font color="black">&#60;</font>MAX_TEXTURES;t<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+            <font color="blue">if</font> <font color="black">(</font>i<font color="black">-</font><font color="black">&#62;</font>uvBuffer<font color="black">[</font>t<font color="black">]</font><font color="black">)</font>
+                i<font color="black">-</font><font color="black">&#62;</font>uvBuffer<font color="black">[</font>t<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>SetTexCoordStream<font color="black">(</font>t<font color="black">)</font>;
         <font color="blue">if</font> <font color="black">(</font>i<font color="black">-</font><font color="black">&#62;</font>normalBuffer<font color="black">)</font>
             i<font color="black">-</font><font color="black">&#62;</font>normalBuffer<font color="black">-</font><font color="black">&#62;</font>SetNormalStream<font color="black">(</font><font color="black">)</font>;
         <font color="blue">for</font> <font color="black">(</font>;j<font color="black">!</font><font color="black">=</font>i<font color="black">-</font><font color="black">&#62;</font>mesh.end<font color="black">(</font><font color="black">)</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>

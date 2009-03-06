@@ -39,6 +39,10 @@ Mesh::~Mesh()
 {
 
 }
+Object::Object() : uv(MAX_TEXTURES),uvBuffer(MAX_TEXTURES)
+{
+
+}
 ModelResource::ModelResource()
 {
 
@@ -62,45 +66,16 @@ bool ModelResource::Load(const string &filename)
 	{
 		string ext=ToLower(filename.substr(d+1));
 		if (ext=="3ds")
-		{		
-			ifstream f(filename.c_str(),ios::in|ios::binary|ios::ate);
-			if (!f.is_open())
-			{		
-				return false;
-			}	
-			DWORD l=f.tellg();
-			char *buffer=new char[l];
-			f.seekg(0,ios_base::beg);
-			f.read(buffer,l);
-
-			ProcessChunk(buffer);	
-			for (DWORD k=0;k<object.size();k++)
+		{				
+			M3dsLoader m3dsLoader(this);
+			
+			if (m3dsLoader.Load(filename))
 			{
-				for (DWORD i=0;i<object[k].mesh.size();i++)
-				{
-					Mesh *sm=&object[k].mesh[i];		
-					for (DWORD j=0;j<sm->face.size();j++)
-					{
-						DWORD idx=sm->face[j].v[0];
-						sm->face[j]=object[k].face[idx];				
-					}
-					sm->indexBuffer=Buffer(new BufferResource);
-					sm->indexBuffer->Create();
-					vector<DWORD> tmp;
-					tmp.resize(sm->face.size()*3);
-					for (DWORD f=0;f<sm->face.size();f++)
-					{
-						tmp[f*3+0]=sm->face[f].v[0];
-						tmp[f*3+1]=sm->face[f].v[1];
-						tmp[f*3+2]=sm->face[f].v[2];
-					}
-					sm->indexBuffer->LoadIndexData(&tmp[0],tmp.size(),STATIC);
-				}
+				CalculateNormals();			
+				return true;
 			}
-			CalculateNormals();
-
-			delete [] buffer;		
-			return true;
+			else
+				return false;
 		}
 	}
 	return false;
@@ -164,146 +139,7 @@ void ModelResource::ApplyTransformation(mat4 &transform)
 	}
 	CalculateNormals();
 }
-DWORD ModelResource::ProcessChunk(char *buffer)
-{
-	Object *curObject=NULL;
-	if (object.size()>0)
-		curObject=&object[object.size()-1];
-	DWORD i=0,j=0;	
-	Material mat;
-	Material matPtr;
-	Mesh sm;
-	DWORD numtexcoords,numFaces,numVertices;
-	WORD id=*(WORD*)(buffer+i);
-	DWORD len=*(DWORD*)(buffer+i+2);		
-	i+=6;
-	switch (id)
-	{
-	case PRIMARY:
-		break;
-	case EDIT3DS:
-		break;
-	case NAMED_OBJECT:
-			object.push_back(Object());
-			object[object.size()-1].name=buffer+i;			
-			i+=(DWORD)strlen(buffer+i)+1;
-		break;
-	case OBJ_MESH:
-		break;
-	case MESH_VERTICES:			
-		float x,y,z;
-		numVertices=*(WORD*)(buffer+i);
-		curObject->vertex.resize(numVertices);
-		i+=2;
-		for (j=0;j<numVertices;j++)
-		{
-			x=*(float*)(buffer+i);
-			z=-*(float*)(buffer+i+4);
-			y=*(float*)(buffer+i+8);
-			curObject->vertex[j].Set(x,y,z);
-			i+=12;
-		}
-		curObject->vertexBuffer=Buffer(new BufferResource);
-		curObject->vertexBuffer->Create();
-		curObject->vertexBuffer->LoadData(&curObject->vertex[0],sizeof(vec3)*numVertices,STATIC);
-		break;
-	case MESH_FACES:			
-		numFaces=*(WORD*)(buffer+i);
-		i+=2;
-		curObject->face.resize(numFaces);
-		for (j=0;j<numFaces;j++)
-		{
-			curObject->face[j].v[0]=*(WORD*)(buffer+i);
-			curObject->face[j].v[1]=*(WORD*)(buffer+i+2);
-			curObject->face[j].v[2]=*(WORD*)(buffer+i+4);
-			i+=8;
-		}
-		break;
-	case MESH_TEX_VERT:
-		numtexcoords=*(WORD*)(buffer+i);
-		curObject->uv.resize(numtexcoords);
-		i+=2;
-		for (j=0;j<numtexcoords;j++)
-		{
-			curObject->uv[j].x=*(float*)(buffer+i);
-			curObject->uv[j].y=1.0f-*(float*)(buffer+i+4);
-			i+=8;
-		}
-		curObject->uvBuffer=Buffer(new BufferResource);
-		curObject->uvBuffer->Create();
-		curObject->uvBuffer->LoadData(&curObject->uv[0],sizeof(vec2)*numtexcoords,STATIC);
-		break;
-	case MESH_MATERIAL:		
-		sm.material=GetMaterialByName(buffer+i);
-		i+=(DWORD)strlen(buffer+i)+1;
-		numFaces=*(WORD*)(buffer+i);
-		i+=2;
-		sm.face.resize(numFaces);
-		for (j=0;j<numFaces;j++)
-		{
-			sm.face[j].v[0]=*(WORD*)(buffer+i);
-			i+=2;
-		}			
-		curObject->mesh.push_back(sm);
-		break;
-	case MATERIAL:
-		break;
-	case MAT_NAME:				
-		mat=Material(new MaterialResource);
-		mat->name=buffer+i;		
-		this->material.insert(this->material.begin(),mat);		
-		i+=(DWORD)strlen(buffer+i)+1;		
-		break;
-	case MAT_AMBIENT:
-		i+=6;
-		matPtr=this->material[0];		
-		matPtr->ambient=vec4((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f,1.0f);
-		i+=3;
-		break;
-	case MAT_DIFFUSE:
-		i+=6;
-		matPtr=this->material[0];		
-		matPtr->diffuse=vec4((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f,1.0f);
-		i+=3;
-		break;
-	case MAT_SPECULAR:
-		i+=6;
-		matPtr=this->material[0];		
-		matPtr->specular=vec4((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f,1.0f);
-		i+=3;
-		break;
-	case MAT_SHININESS:
-		i+=6;
-		i+=2;
-		break;
-	case MAT_SHIN2PCT:
-		i+=6;
-		matPtr=this->material[0];
-		matPtr->shininess=(float)(*(WORD*)(buffer+i));
-		i+=2;
-		break;
-	case MAT_SHIN3PCT:
-		i+=6;
-		i+=2;
-		break;
-	case MAT_TEXMAP:
-		i+=8;
-		break;
-	case MAT_TEXFLNM:
-		matPtr=material[0];						
-		matPtr->texture[0]=Renderer::GetTextureManager()->Create(buffer+i);		
-		i+=(DWORD)strlen(buffer+i)+1;
-		break;
-	default:	
-		i=len;
-		break;
 
-	}
-	while (i<len)
-		i+=ProcessChunk(buffer+i);
-
-	return len;
-}
 Material ModelResource::GetMaterialByName(const string &name)
 {
 	for (DWORD i=0;i<material.size();i++)
@@ -364,7 +200,7 @@ void ModelResource::SetProgram(const Program &program)
 void ModelResource::CreateHardNormals()
 {
 	vector<vec3> vertices;
-	vector<vec2> uvs;
+	vector<vector<vec2>> uvs(8);
 	for (DWORD k=0;k<object.size();k++)
 	{
 		DWORD currentIndex=0;
@@ -376,19 +212,14 @@ void ModelResource::CreateHardNormals()
 		obj.face.clear();
 		obj.vertex.clear();
 		obj.normal.clear();
-		obj.uv.clear();
+		for (DWORD t=0;t<MAX_TEXTURES;t++)		
+			obj.uv[t].clear();
+
 		for (DWORD j=0;j<obj.mesh.size();j++)
 		{
 			Mesh &ms=obj.mesh[j];
 			for (DWORD i=0;i<ms.face.size();i++)
-			{
-				vec2 uv0(0,0),uv1(0,0),uv2(0,0);
-				if (uvs.size()>0)
-				{
-					uv0=uvs[ms.face[i].v[0]];
-					uv1=uvs[ms.face[i].v[1]];
-					uv2=uvs[ms.face[i].v[2]];
-				}
+			{				
 				vec3 v0=vertices[ms.face[i].v[0]];
 				vec3 v1=vertices[ms.face[i].v[1]];
 				vec3 v2=vertices[ms.face[i].v[2]];
@@ -399,9 +230,20 @@ void ModelResource::CreateHardNormals()
 				obj.normal.push_back(n);
 				obj.normal.push_back(n);
 				obj.normal.push_back(n);
-				obj.uv.push_back(uv0);
-				obj.uv.push_back(uv1);
-				obj.uv.push_back(uv2);
+				for (DWORD t=0;t<MAX_TEXTURES;t++)
+				{									
+					if (uvs[t].size()>0)
+					{
+						vec2 uv0(0,0),uv1(0,0),uv2(0,0);
+						uv0=uvs[t][ms.face[i].v[0]];
+						uv1=uvs[t][ms.face[i].v[1]];
+						uv2=uvs[t][ms.face[i].v[2]];
+
+						obj.uv[t].push_back(uv0);
+						obj.uv[t].push_back(uv1);
+						obj.uv[t].push_back(uv2);
+					}					
+				}
 				ms.face[i].v[0]=currentIndex++;
 				ms.face[i].v[1]=currentIndex++;
 				ms.face[i].v[2]=currentIndex++;				
@@ -418,11 +260,14 @@ void ModelResource::CreateHardNormals()
 			ms.indexBuffer->LoadIndexData(&tmp[0],tmp.size(),STATIC);
 		}
 		obj.normalBuffer->LoadData(&obj.normal[0],sizeof(vec3)*obj.normal.size(),STATIC);
-		if (obj.uv.size())
-		{	
-			obj.uvBuffer=Buffer(new BufferResource);
-			obj.uvBuffer->Create();
-			obj.uvBuffer->LoadData(&obj.uv[0],sizeof(vec2)*obj.uv.size(),STATIC);
+		for (DWORD t=0;t<MAX_TEXTURES;t++)
+		{		
+			if (obj.uv[t].size())
+			{	
+				obj.uvBuffer[t]=Buffer(new BufferResource);
+				obj.uvBuffer[t]->Create();
+				obj.uvBuffer[t]->LoadData(&obj.uv[t][0],sizeof(vec2)*obj.uv[t].size(),STATIC);
+			}
 		}
 		obj.vertexBuffer->LoadData(&obj.vertex[0],sizeof(vec3)*obj.vertex.size(),STATIC);
 	}
@@ -450,17 +295,21 @@ void ModelResource::UpdateBuffers()
 		else
 			obj.normalBuffer.reset();
 		
-		if (obj.uv.size()!=0)
-		{
-			if (!obj.uvBuffer)
+		for (DWORD t=0;t<MAX_TEXTURES;t++)
+		{		
+			if (obj.uv[t].size()!=0)
 			{
-				obj.uvBuffer=Buffer(new BufferResource);
-				obj.uvBuffer->Create();
+				if (!obj.uvBuffer[t])
+				{
+					obj.uvBuffer[t]=Buffer(new BufferResource);
+					obj.uvBuffer[t]->Create();
+				}
+				obj.uvBuffer[t]->LoadData(&obj.uv[t][0],sizeof(vec2)*obj.uv[t].size(),STATIC);
 			}
-			obj.uvBuffer->LoadData(&obj.uv[0],sizeof(vec2)*obj.uv.size(),STATIC);
+			else
+				obj.uvBuffer[t].reset();
 		}
-		else
-			obj.uvBuffer.reset();
+		
 
 		for (DWORD m=0;m<obj.mesh.size();m++)
 		{

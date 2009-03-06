@@ -235,6 +235,31 @@ void mat4::RotateZ(float ang)
 	rot.m[5]=cs;
 	(*this)=(*this)*rot;
 }
+void mat4::Rotate(vec4 rot)
+{
+	mat4 rotm;
+	float c = cos(rot.w);
+	float s = sin(rot.w);
+	float t = 1.0f - c;
+	rotm.m[0]=c+rot.x*rot.x*t;
+	rotm.m[5]=c+rot.y*rot.y*t;
+	rotm.m[10]=c+rot.z*rot.z*t;
+	
+	float tmp1 = rot.x*rot.y*t;
+	float tmp2 = rot.z*s;
+	rotm.m[4] = tmp1 + tmp2;
+	rotm.m[1] = tmp1 - tmp2;
+	tmp1 = rot.x*rot.z*t;
+	tmp2 = rot.y*s;
+	rotm.m[8] = tmp1 - tmp2;
+	rotm.m[2] = tmp1 + tmp2;
+	tmp1 = rot.y*rot.z*t;
+	tmp2 = rot.x*s;
+	rotm.m[9] = tmp1 + tmp2;
+	rotm.m[6] = tmp1 - tmp2;
+
+	(*this)=(*this)*rotm;
+}
 void mat4::Transpose()
 {
 	mat4 t=*this;

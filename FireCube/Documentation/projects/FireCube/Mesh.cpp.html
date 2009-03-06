@@ -47,6 +47,10 @@ Mesh<font color="black">:</font><font color="black">:</font>~Mesh<font color="bl
 <font color="black">{</font>
 
 <font color="black">}</font>
+Object<font color="black">:</font><font color="black">:</font>Object<font color="black">(</font><font color="black">)</font> <font color="black">:</font> uv<font color="black">(</font>MAX_TEXTURES<font color="black">)</font>,uvBuffer<font color="black">(</font>MAX_TEXTURES<font color="black">)</font>
+<font color="black">{</font>
+
+<font color="black">}</font>
 ModelResource<font color="black">:</font><font color="black">:</font>ModelResource<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
 
@@ -70,45 +74,16 @@ ModelResource<font color="black">:</font><font color="black">:</font>~ModelResou
     <font color="black">{</font>
         string ext<font color="black">=</font>ToLower<font color="black">(</font>filename.substr<font color="black">(</font>d<font color="black">+</font><font color="maroon">1</font><font color="black">)</font><font color="black">)</font>;
         <font color="blue">if</font> <font color="black">(</font>ext<font color="black">=</font><font color="black">=</font><font color="maroon">"3ds"</font><font color="black">)</font>
-        <font color="black">{</font>       
-            ifstream f<font color="black">(</font>filename.c_str<font color="black">(</font><font color="black">)</font>,ios<font color="black">:</font><font color="black">:</font>in<font color="black">|</font>ios<font color="black">:</font><font color="black">:</font>binary<font color="black">|</font>ios<font color="black">:</font><font color="black">:</font>ate<font color="black">)</font>;
-            <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>f.is_open<font color="black">(</font><font color="black">)</font><font color="black">)</font>
-            <font color="black">{</font>       
-                <font color="blue">return</font> <font color="blue">false</font>;
-            <font color="black">}</font>   
-            DWORD l<font color="black">=</font>f.tellg<font color="black">(</font><font color="black">)</font>;
-            <font color="blue">char</font> <font color="black">*</font>buffer<font color="black">=</font><font color="blue">new</font> <font color="blue">char</font><font color="black">[</font>l<font color="black">]</font>;
-            f.seekg<font color="black">(</font><font color="maroon">0</font>,ios_base<font color="black">:</font><font color="black">:</font>beg<font color="black">)</font>;
-            f.read<font color="black">(</font>buffer,l<font color="black">)</font>;
-
-            ProcessChunk<font color="black">(</font>buffer<font color="black">)</font>;   
-            <font color="blue">for</font> <font color="black">(</font>DWORD k<font color="black">=</font><font color="maroon">0</font>;k<font color="black">&#60;</font>object.size<font color="black">(</font><font color="black">)</font>;k<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">{</font>               
+            M3dsLoader m3dsLoader<font color="black">(</font><font color="blue">this</font><font color="black">)</font>;
+            
+            <font color="blue">if</font> <font color="black">(</font>m3dsLoader.Load<font color="black">(</font>filename<font color="black">)</font><font color="black">)</font>
             <font color="black">{</font>
-                <font color="blue">for</font> <font color="black">(</font>DWORD i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>object<font color="black">[</font>k<font color="black">]</font>.mesh.size<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
-                <font color="black">{</font>
-                    Mesh <font color="black">*</font>sm<font color="black">=</font><font color="black">&</font>object<font color="black">[</font>k<font color="black">]</font>.mesh<font color="black">[</font>i<font color="black">]</font>;        
-                    <font color="blue">for</font> <font color="black">(</font>DWORD j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font>sm<font color="black">-</font><font color="black">&#62;</font>face.size<font color="black">(</font><font color="black">)</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
-                    <font color="black">{</font>
-                        DWORD idx<font color="black">=</font>sm<font color="black">-</font><font color="black">&#62;</font>face<font color="black">[</font>j<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;
-                        sm<font color="black">-</font><font color="black">&#62;</font>face<font color="black">[</font>j<font color="black">]</font><font color="black">=</font>object<font color="black">[</font>k<font color="black">]</font>.face<font color="black">[</font>idx<font color="black">]</font>;                
-                    <font color="black">}</font>
-                    sm<font color="black">-</font><font color="black">&#62;</font>indexBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
-                    sm<font color="black">-</font><font color="black">&#62;</font>indexBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
-                    vector<font color="black">&#60;</font>DWORD<font color="black">&#62;</font> tmp;
-                    tmp.resize<font color="black">(</font>sm<font color="black">-</font><font color="black">&#62;</font>face.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">3</font><font color="black">)</font>;
-                    <font color="blue">for</font> <font color="black">(</font>DWORD f<font color="black">=</font><font color="maroon">0</font>;f<font color="black">&#60;</font>sm<font color="black">-</font><font color="black">&#62;</font>face.size<font color="black">(</font><font color="black">)</font>;f<font color="black">+</font><font color="black">+</font><font color="black">)</font>
-                    <font color="black">{</font>
-                        tmp<font color="black">[</font>f<font color="black">*</font><font color="maroon">3</font><font color="black">+</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>sm<font color="black">-</font><font color="black">&#62;</font>face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;
-                        tmp<font color="black">[</font>f<font color="black">*</font><font color="maroon">3</font><font color="black">+</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>sm<font color="black">-</font><font color="black">&#62;</font>face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font>;
-                        tmp<font color="black">[</font>f<font color="black">*</font><font color="maroon">3</font><font color="black">+</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>sm<font color="black">-</font><font color="black">&#62;</font>face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
-                    <font color="black">}</font>
-                    sm<font color="black">-</font><font color="black">&#62;</font>indexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadIndexData<font color="black">(</font><font color="black">&</font>tmp<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,tmp.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
-                <font color="black">}</font>
+                CalculateNormals<font color="black">(</font><font color="black">)</font>;         
+                <font color="blue">return</font> <font color="blue">true</font>;
             <font color="black">}</font>
-            CalculateNormals<font color="black">(</font><font color="black">)</font>;
-
-            <font color="blue">delete</font> <font color="black">[</font><font color="black">]</font> buffer;       
-            <font color="blue">return</font> <font color="blue">true</font>;
+            <font color="blue">else</font>
+                <font color="blue">return</font> <font color="blue">false</font>;
         <font color="black">}</font>
     <font color="black">}</font>
     <font color="blue">return</font> <font color="blue">false</font>;
@@ -172,146 +147,7 @@ ModelResource<font color="black">:</font><font color="black">:</font>~ModelResou
     <font color="black">}</font>
     CalculateNormals<font color="black">(</font><font color="black">)</font>;
 <font color="black">}</font>
-DWORD ModelResource<font color="black">:</font><font color="black">:</font>ProcessChunk<font color="black">(</font><font color="blue">char</font> <font color="black">*</font>buffer<font color="black">)</font>
-<font color="black">{</font>
-    Object <font color="black">*</font>curObject<font color="black">=</font>NULL;
-    <font color="blue">if</font> <font color="black">(</font>object.size<font color="black">(</font><font color="black">)</font><font color="black">&#62;</font><font color="maroon">0</font><font color="black">)</font>
-        curObject<font color="black">=</font><font color="black">&</font>object<font color="black">[</font>object.size<font color="black">(</font><font color="black">)</font><font color="maroon">-1</font><font color="black">]</font>;
-    DWORD i<font color="black">=</font><font color="maroon">0</font>,j<font color="black">=</font><font color="maroon">0</font>;  
-    Material mat;
-    Material matPtr;
-    Mesh sm;
-    DWORD numtexcoords,numFaces,numVertices;
-    WORD id<font color="black">=</font><font color="black">*</font><font color="black">(</font>WORD<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;
-    DWORD len<font color="black">=</font><font color="black">*</font><font color="black">(</font>DWORD<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">+</font><font color="maroon">2</font><font color="black">)</font>;        
-    i<font color="black">+</font><font color="black">=</font><font color="maroon">6</font>;
-    <font color="blue">switch</font> <font color="black">(</font>id<font color="black">)</font>
-    <font color="black">{</font>
-    <font color="blue">case</font> PRIMARY<font color="black">:</font>
-        <font color="blue">break</font>;
-    <font color="blue">case</font> EDIT3DS<font color="black">:</font>
-        <font color="blue">break</font>;
-    <font color="blue">case</font> NAMED_OBJECT<font color="black">:</font>
-            object.push_back<font color="black">(</font>Object<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
-            object<font color="black">[</font>object.size<font color="black">(</font><font color="black">)</font><font color="maroon">-1</font><font color="black">]</font>.<font color="blue">name</font><font color="black">=</font>buffer<font color="black">+</font>i;          
-            i<font color="black">+</font><font color="black">=</font><font color="black">(</font>DWORD<font color="black">)</font>strlen<font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font><font color="black">+</font><font color="maroon">1</font>;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> OBJ_MESH<font color="black">:</font>
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MESH_VERTICES<font color="black">:</font>         
-        <font color="blue">float</font> x,y,z;
-        numVertices<font color="black">=</font><font color="black">*</font><font color="black">(</font>WORD<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;
-        curObject<font color="black">-</font><font color="black">&#62;</font>vertex.resize<font color="black">(</font>numVertices<font color="black">)</font>;
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">2</font>;
-        <font color="blue">for</font> <font color="black">(</font>j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font>numVertices;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
-        <font color="black">{</font>
-            x<font color="black">=</font><font color="black">*</font><font color="black">(</font><font color="blue">float</font><font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;
-            z<font color="black">=</font><font color="black">-</font><font color="black">*</font><font color="black">(</font><font color="blue">float</font><font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">+</font><font color="maroon">4</font><font color="black">)</font>;
-            y<font color="black">=</font><font color="black">*</font><font color="black">(</font><font color="blue">float</font><font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">+</font><font color="maroon">8</font><font color="black">)</font>;
-            curObject<font color="black">-</font><font color="black">&#62;</font>vertex<font color="black">[</font>j<font color="black">]</font>.Set<font color="black">(</font>x,y,z<font color="black">)</font>;
-            i<font color="black">+</font><font color="black">=</font><font color="maroon">12</font>;
-        <font color="black">}</font>
-        curObject<font color="black">-</font><font color="black">&#62;</font>vertexBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
-        curObject<font color="black">-</font><font color="black">&#62;</font>vertexBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
-        curObject<font color="black">-</font><font color="black">&#62;</font>vertexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>curObject<font color="black">-</font><font color="black">&#62;</font>vertex<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec3<font color="black">)</font><font color="black">*</font>numVertices,STATIC<font color="black">)</font>;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MESH_FACES<font color="black">:</font>            
-        numFaces<font color="black">=</font><font color="black">*</font><font color="black">(</font>WORD<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">2</font>;
-        curObject<font color="black">-</font><font color="black">&#62;</font>face.resize<font color="black">(</font>numFaces<font color="black">)</font>;
-        <font color="blue">for</font> <font color="black">(</font>j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font>numFaces;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
-        <font color="black">{</font>
-            curObject<font color="black">-</font><font color="black">&#62;</font>face<font color="black">[</font>j<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font><font color="black">*</font><font color="black">(</font>WORD<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;
-            curObject<font color="black">-</font><font color="black">&#62;</font>face<font color="black">[</font>j<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font><font color="black">*</font><font color="black">(</font>WORD<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">+</font><font color="maroon">2</font><font color="black">)</font>;
-            curObject<font color="black">-</font><font color="black">&#62;</font>face<font color="black">[</font>j<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font><font color="black">*</font><font color="black">(</font>WORD<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">+</font><font color="maroon">4</font><font color="black">)</font>;
-            i<font color="black">+</font><font color="black">=</font><font color="maroon">8</font>;
-        <font color="black">}</font>
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MESH_TEX_VERT<font color="black">:</font>
-        numtexcoords<font color="black">=</font><font color="black">*</font><font color="black">(</font>WORD<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;
-        curObject<font color="black">-</font><font color="black">&#62;</font>uv.resize<font color="black">(</font>numtexcoords<font color="black">)</font>;
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">2</font>;
-        <font color="blue">for</font> <font color="black">(</font>j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font>numtexcoords;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
-        <font color="black">{</font>
-            curObject<font color="black">-</font><font color="black">&#62;</font>uv<font color="black">[</font>j<font color="black">]</font>.x<font color="black">=</font><font color="black">*</font><font color="black">(</font><font color="blue">float</font><font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;
-            curObject<font color="black">-</font><font color="black">&#62;</font>uv<font color="black">[</font>j<font color="black">]</font>.y<font color="black">=</font><font color="maroon">1</font>.0f<font color="black">-</font><font color="black">*</font><font color="black">(</font><font color="blue">float</font><font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">+</font><font color="maroon">4</font><font color="black">)</font>;
-            i<font color="black">+</font><font color="black">=</font><font color="maroon">8</font>;
-        <font color="black">}</font>
-        curObject<font color="black">-</font><font color="black">&#62;</font>uvBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
-        curObject<font color="black">-</font><font color="black">&#62;</font>uvBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
-        curObject<font color="black">-</font><font color="black">&#62;</font>uvBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>curObject<font color="black">-</font><font color="black">&#62;</font>uv<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec2<font color="black">)</font><font color="black">*</font>numtexcoords,STATIC<font color="black">)</font>;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MESH_MATERIAL<font color="black">:</font>     
-        sm.material<font color="black">=</font>GetMaterialByName<font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;
-        i<font color="black">+</font><font color="black">=</font><font color="black">(</font>DWORD<font color="black">)</font>strlen<font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font><font color="black">+</font><font color="maroon">1</font>;
-        numFaces<font color="black">=</font><font color="black">*</font><font color="black">(</font>WORD<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">2</font>;
-        sm.face.resize<font color="black">(</font>numFaces<font color="black">)</font>;
-        <font color="blue">for</font> <font color="black">(</font>j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font>numFaces;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
-        <font color="black">{</font>
-            sm.face<font color="black">[</font>j<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font><font color="black">*</font><font color="black">(</font>WORD<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;
-            i<font color="black">+</font><font color="black">=</font><font color="maroon">2</font>;
-        <font color="black">}</font>           
-        curObject<font color="black">-</font><font color="black">&#62;</font>mesh.push_back<font color="black">(</font>sm<font color="black">)</font>;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MATERIAL<font color="black">:</font>
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MAT_NAME<font color="black">:</font>              
-        mat<font color="black">=</font>Material<font color="black">(</font><font color="blue">new</font> MaterialResource<font color="black">)</font>;
-        mat<font color="black">-</font><font color="black">&#62;</font><font color="blue">name</font><font color="black">=</font>buffer<font color="black">+</font>i;     
-        <font color="blue">this</font><font color="black">-</font><font color="black">&#62;</font>material.insert<font color="black">(</font><font color="blue">this</font><font color="black">-</font><font color="black">&#62;</font>material.begin<font color="black">(</font><font color="black">)</font>,mat<font color="black">)</font>;      
-        i<font color="black">+</font><font color="black">=</font><font color="black">(</font>DWORD<font color="black">)</font>strlen<font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font><font color="black">+</font><font color="maroon">1</font>;       
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MAT_AMBIENT<font color="black">:</font>
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">6</font>;
-        matPtr<font color="black">=</font><font color="blue">this</font><font color="black">-</font><font color="black">&#62;</font>material<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;       
-        matPtr<font color="black">-</font><font color="black">&#62;</font>ambient<font color="black">=</font>vec4<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">(</font><font color="black">*</font><font color="black">(</font>BYTE<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font><font color="black">)</font><font color="black">/</font><font color="maroon">255</font>.0f,<font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">(</font><font color="black">*</font><font color="black">(</font>BYTE<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">+</font><font color="maroon">1</font><font color="black">)</font><font color="black">)</font><font color="black">/</font><font color="maroon">255</font>.0f,<font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">(</font><font color="black">*</font><font color="black">(</font>BYTE<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">+</font><font color="maroon">2</font><font color="black">)</font><font color="black">)</font><font color="black">/</font><font color="maroon">255</font>.0f,<font color="maroon">1</font>.0f<font color="black">)</font>;
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">3</font>;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MAT_DIFFUSE<font color="black">:</font>
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">6</font>;
-        matPtr<font color="black">=</font><font color="blue">this</font><font color="black">-</font><font color="black">&#62;</font>material<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;       
-        matPtr<font color="black">-</font><font color="black">&#62;</font>diffuse<font color="black">=</font>vec4<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">(</font><font color="black">*</font><font color="black">(</font>BYTE<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font><font color="black">)</font><font color="black">/</font><font color="maroon">255</font>.0f,<font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">(</font><font color="black">*</font><font color="black">(</font>BYTE<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">+</font><font color="maroon">1</font><font color="black">)</font><font color="black">)</font><font color="black">/</font><font color="maroon">255</font>.0f,<font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">(</font><font color="black">*</font><font color="black">(</font>BYTE<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">+</font><font color="maroon">2</font><font color="black">)</font><font color="black">)</font><font color="black">/</font><font color="maroon">255</font>.0f,<font color="maroon">1</font>.0f<font color="black">)</font>;
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">3</font>;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MAT_SPECULAR<font color="black">:</font>
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">6</font>;
-        matPtr<font color="black">=</font><font color="blue">this</font><font color="black">-</font><font color="black">&#62;</font>material<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;       
-        matPtr<font color="black">-</font><font color="black">&#62;</font>specular<font color="black">=</font>vec4<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">(</font><font color="black">*</font><font color="black">(</font>BYTE<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font><font color="black">)</font><font color="black">/</font><font color="maroon">255</font>.0f,<font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">(</font><font color="black">*</font><font color="black">(</font>BYTE<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">+</font><font color="maroon">1</font><font color="black">)</font><font color="black">)</font><font color="black">/</font><font color="maroon">255</font>.0f,<font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">(</font><font color="black">*</font><font color="black">(</font>BYTE<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">+</font><font color="maroon">2</font><font color="black">)</font><font color="black">)</font><font color="black">/</font><font color="maroon">255</font>.0f,<font color="maroon">1</font>.0f<font color="black">)</font>;
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">3</font>;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MAT_SHININESS<font color="black">:</font>
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">6</font>;
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">2</font>;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MAT_SHIN2PCT<font color="black">:</font>
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">6</font>;
-        matPtr<font color="black">=</font><font color="blue">this</font><font color="black">-</font><font color="black">&#62;</font>material<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;
-        matPtr<font color="black">-</font><font color="black">&#62;</font>shininess<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">(</font><font color="black">*</font><font color="black">(</font>WORD<font color="black">*</font><font color="black">)</font><font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font><font color="black">)</font>;
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">2</font>;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MAT_SHIN3PCT<font color="black">:</font>
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">6</font>;
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">2</font>;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MAT_TEXMAP<font color="black">:</font>
-        i<font color="black">+</font><font color="black">=</font><font color="maroon">8</font>;
-        <font color="blue">break</font>;
-    <font color="blue">case</font> MAT_TEXFLNM<font color="black">:</font>
-        matPtr<font color="black">=</font>material<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;                     
-        matPtr<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>Renderer<font color="black">:</font><font color="black">:</font>GetTextureManager<font color="black">(</font><font color="black">)</font><font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;     
-        i<font color="black">+</font><font color="black">=</font><font color="black">(</font>DWORD<font color="black">)</font>strlen<font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font><font color="black">+</font><font color="maroon">1</font>;
-        <font color="blue">break</font>;
-    <font color="blue">default</font><font color="black">:</font>    
-        i<font color="black">=</font>len;
-        <font color="blue">break</font>;
 
-    <font color="black">}</font>
-    <font color="blue">while</font> <font color="black">(</font>i<font color="black">&#60;</font>len<font color="black">)</font>
-        i<font color="black">+</font><font color="black">=</font>ProcessChunk<font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;
-
-    <font color="blue">return</font> len;
-<font color="black">}</font>
 Material ModelResource<font color="black">:</font><font color="black">:</font>GetMaterialByName<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>
 <font color="black">{</font>
     <font color="blue">for</font> <font color="black">(</font>DWORD i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>material.size<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
@@ -372,7 +208,7 @@ Model ModelResource<font color="black">:</font><font color="black">:</font>Reduc
 <font color="blue">void</font> ModelResource<font color="black">:</font><font color="black">:</font>CreateHardNormals<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
     vector<font color="black">&#60;</font>vec3<font color="black">&#62;</font> vertices;
-    vector<font color="black">&#60;</font>vec2<font color="black">&#62;</font> uvs;
+    vector<font color="black">&#60;</font>vector<font color="black">&#60;</font>vec2<font color="black">&#62;</font><font color="black">&#62;</font> uvs<font color="black">(</font><font color="maroon">8</font><font color="black">)</font>;
     <font color="blue">for</font> <font color="black">(</font>DWORD k<font color="black">=</font><font color="maroon">0</font>;k<font color="black">&#60;</font>object.size<font color="black">(</font><font color="black">)</font>;k<font color="black">+</font><font color="black">+</font><font color="black">)</font>
     <font color="black">{</font>
         DWORD currentIndex<font color="black">=</font><font color="maroon">0</font>;
@@ -384,19 +220,14 @@ Model ModelResource<font color="black">:</font><font color="black">:</font>Reduc
         obj.face.clear<font color="black">(</font><font color="black">)</font>;
         obj.vertex.clear<font color="black">(</font><font color="black">)</font>;
         obj.normal.clear<font color="black">(</font><font color="black">)</font>;
-        obj.uv.clear<font color="black">(</font><font color="black">)</font>;
+        <font color="blue">for</font> <font color="black">(</font>DWORD t<font color="black">=</font><font color="maroon">0</font>;t<font color="black">&#60;</font>MAX_TEXTURES;t<font color="black">+</font><font color="black">+</font><font color="black">)</font>      
+            obj.uv<font color="black">[</font>t<font color="black">]</font>.clear<font color="black">(</font><font color="black">)</font>;
+
         <font color="blue">for</font> <font color="black">(</font>DWORD j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font>obj.mesh.size<font color="black">(</font><font color="black">)</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
         <font color="black">{</font>
             Mesh <font color="black">&</font>ms<font color="black">=</font>obj.mesh<font color="black">[</font>j<font color="black">]</font>;
             <font color="blue">for</font> <font color="black">(</font>DWORD i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>ms.face.size<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
-            <font color="black">{</font>
-                vec2 uv0<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>,uv1<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>,uv2<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;
-                <font color="blue">if</font> <font color="black">(</font>uvs.size<font color="black">(</font><font color="black">)</font><font color="black">&#62;</font><font color="maroon">0</font><font color="black">)</font>
-                <font color="black">{</font>
-                    uv0<font color="black">=</font>uvs<font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">]</font>;
-                    uv1<font color="black">=</font>uvs<font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">]</font>;
-                    uv2<font color="black">=</font>uvs<font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">]</font>;
-                <font color="black">}</font>
+            <font color="black">{</font>               
                 vec3 v0<font color="black">=</font>vertices<font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">]</font>;
                 vec3 v1<font color="black">=</font>vertices<font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">]</font>;
                 vec3 v2<font color="black">=</font>vertices<font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">]</font>;
@@ -407,9 +238,20 @@ Model ModelResource<font color="black">:</font><font color="black">:</font>Reduc
                 obj.normal.push_back<font color="black">(</font>n<font color="black">)</font>;
                 obj.normal.push_back<font color="black">(</font>n<font color="black">)</font>;
                 obj.normal.push_back<font color="black">(</font>n<font color="black">)</font>;
-                obj.uv.push_back<font color="black">(</font>uv0<font color="black">)</font>;
-                obj.uv.push_back<font color="black">(</font>uv1<font color="black">)</font>;
-                obj.uv.push_back<font color="black">(</font>uv2<font color="black">)</font>;
+                <font color="blue">for</font> <font color="black">(</font>DWORD t<font color="black">=</font><font color="maroon">0</font>;t<font color="black">&#60;</font>MAX_TEXTURES;t<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+                <font color="black">{</font>                                   
+                    <font color="blue">if</font> <font color="black">(</font>uvs<font color="black">[</font>t<font color="black">]</font>.size<font color="black">(</font><font color="black">)</font><font color="black">&#62;</font><font color="maroon">0</font><font color="black">)</font>
+                    <font color="black">{</font>
+                        vec2 uv0<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>,uv1<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>,uv2<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;
+                        uv0<font color="black">=</font>uvs<font color="black">[</font>t<font color="black">]</font><font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">]</font>;
+                        uv1<font color="black">=</font>uvs<font color="black">[</font>t<font color="black">]</font><font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">]</font>;
+                        uv2<font color="black">=</font>uvs<font color="black">[</font>t<font color="black">]</font><font color="black">[</font>ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">]</font>;
+
+                        obj.uv<font color="black">[</font>t<font color="black">]</font>.push_back<font color="black">(</font>uv0<font color="black">)</font>;
+                        obj.uv<font color="black">[</font>t<font color="black">]</font>.push_back<font color="black">(</font>uv1<font color="black">)</font>;
+                        obj.uv<font color="black">[</font>t<font color="black">]</font>.push_back<font color="black">(</font>uv2<font color="black">)</font>;
+                    <font color="black">}</font>                   
+                <font color="black">}</font>
                 ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>currentIndex<font color="black">+</font><font color="black">+</font>;
                 ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>currentIndex<font color="black">+</font><font color="black">+</font>;
                 ms.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>currentIndex<font color="black">+</font><font color="black">+</font>;             
@@ -426,11 +268,14 @@ Model ModelResource<font color="black">:</font><font color="black">:</font>Reduc
             ms.indexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadIndexData<font color="black">(</font><font color="black">&</font>tmp<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,tmp.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
         <font color="black">}</font>
         obj.normalBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>obj.normal<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec3<font color="black">)</font><font color="black">*</font>obj.normal.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
-        <font color="blue">if</font> <font color="black">(</font>obj.uv.size<font color="black">(</font><font color="black">)</font><font color="black">)</font>
-        <font color="black">{</font>   
-            obj.uvBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
-            obj.uvBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
-            obj.uvBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>obj.uv<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec2<font color="black">)</font><font color="black">*</font>obj.uv.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
+        <font color="blue">for</font> <font color="black">(</font>DWORD t<font color="black">=</font><font color="maroon">0</font>;t<font color="black">&#60;</font>MAX_TEXTURES;t<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">{</font>       
+            <font color="blue">if</font> <font color="black">(</font>obj.uv<font color="black">[</font>t<font color="black">]</font>.size<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+            <font color="black">{</font>   
+                obj.uvBuffer<font color="black">[</font>t<font color="black">]</font><font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
+                obj.uvBuffer<font color="black">[</font>t<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
+                obj.uvBuffer<font color="black">[</font>t<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>obj.uv<font color="black">[</font>t<font color="black">]</font><font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec2<font color="black">)</font><font color="black">*</font>obj.uv<font color="black">[</font>t<font color="black">]</font>.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
+            <font color="black">}</font>
         <font color="black">}</font>
         obj.vertexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>obj.vertex<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec3<font color="black">)</font><font color="black">*</font>obj.vertex.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
     <font color="black">}</font>
@@ -458,17 +303,21 @@ Model ModelResource<font color="black">:</font><font color="black">:</font>Reduc
         <font color="blue">else</font>
             obj.normalBuffer.reset<font color="black">(</font><font color="black">)</font>;
         
-        <font color="blue">if</font> <font color="black">(</font>obj.uv.size<font color="black">(</font><font color="black">)</font><font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
-        <font color="black">{</font>
-            <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>obj.uvBuffer<font color="black">)</font>
+        <font color="blue">for</font> <font color="black">(</font>DWORD t<font color="black">=</font><font color="maroon">0</font>;t<font color="black">&#60;</font>MAX_TEXTURES;t<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">{</font>       
+            <font color="blue">if</font> <font color="black">(</font>obj.uv<font color="black">[</font>t<font color="black">]</font>.size<font color="black">(</font><font color="black">)</font><font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
             <font color="black">{</font>
-                obj.uvBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
-                obj.uvBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
+                <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>obj.uvBuffer<font color="black">[</font>t<font color="black">]</font><font color="black">)</font>
+                <font color="black">{</font>
+                    obj.uvBuffer<font color="black">[</font>t<font color="black">]</font><font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
+                    obj.uvBuffer<font color="black">[</font>t<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
+                <font color="black">}</font>
+                obj.uvBuffer<font color="black">[</font>t<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>obj.uv<font color="black">[</font>t<font color="black">]</font><font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec2<font color="black">)</font><font color="black">*</font>obj.uv<font color="black">[</font>t<font color="black">]</font>.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
             <font color="black">}</font>
-            obj.uvBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>obj.uv<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec2<font color="black">)</font><font color="black">*</font>obj.uv.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
+            <font color="blue">else</font>
+                obj.uvBuffer<font color="black">[</font>t<font color="black">]</font>.reset<font color="black">(</font><font color="black">)</font>;
         <font color="black">}</font>
-        <font color="blue">else</font>
-            obj.uvBuffer.reset<font color="black">(</font><font color="black">)</font>;
+        
 
         <font color="blue">for</font> <font color="black">(</font>DWORD m<font color="black">=</font><font color="maroon">0</font>;m<font color="black">&#60;</font>obj.mesh.size<font color="black">(</font><font color="black">)</font>;m<font color="black">+</font><font color="black">+</font><font color="black">)</font>
         <font color="black">{</font>

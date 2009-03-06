@@ -75,6 +75,11 @@ public:
 	*/
 	void RotateZ(float ang);
 	/**
+	* Creates a rotation matrix from an axis angle.
+	* @param rot The axis angle(x,y,z,a).
+	*/
+	void Rotate(vec4 rot);
+	/**
 	* Transposes the matrix.
 	*/
 	void Transpose();
