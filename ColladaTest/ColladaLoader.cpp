@@ -94,7 +94,7 @@ Material ColladaLoader::LoadMaterial(const string &name,map<string,pair<string,D
 						curMat->specular=ReadColor(shadingElm->getChild("specular"));
 						if (ReadTexture(shadingElm->getChild("diffuse"),vertexInput,file,unit))
 						{
-							curMat->texture[unit]=Renderer::GetTextureManager()->Create(file);
+							curMat->texture[unit]=Renderer::GetTextureManager()->Create(basepath+file);
 						}						
 						shadingElm->getChild("shininess")->getChild("float")->getCharData(data);				
 						istringstream shss(data);
@@ -110,8 +110,7 @@ Material ColladaLoader::LoadMaterial(const string &name,map<string,pair<string,D
 void ColladaLoader::LoadMesh(string &id,mat4 transform,map<string,string> &materialMap,map<string,pair<string,DWORD>> &vertexInput)
 {	
 	map<string,Source> sourcesArray;
-	map<string,vector<vec3>> vec3Array;
-	map<string,vector<vec2>> vec2Array;
+	map<string,vector<vec4>> vecArray;	
 	vector<domGeometry *> geometries=colladaDom.getDatabase()->typeLookup<domGeometry>();
 	for (DWORD geometryIndex=0;geometryIndex<geometries.size();geometryIndex++)
 	{		
@@ -123,27 +122,31 @@ void ColladaLoader::LoadMesh(string &id,mat4 transform,map<string,string> &mater
 		
 		domMeshRef thisMesh=geometry->getMesh();		
 		
+		// Read all sources for this mesh.
 		domSource_Array &sourceArray=thisMesh->getSource_array();
 		for (DWORD sourceIndex=0;sourceIndex<sourceArray.getCount();sourceIndex++)
 		{			
-			domSourceRef source=sourceArray.get(sourceIndex);			
+			domSourceRef source=sourceArray.get(sourceIndex);
 			sourcesArray[source->getID()]=ReadSource(source);
 		}
+
+		 // Read vertices.
 		domVerticesRef vert=thisMesh->getVertices();
-		domInputLocal_Array &v=vert->getInput_array();		
+		domInputLocal_Array &v=vert->getInput_array();
 		for (unsigned int i=0;i<v.getCount();i++)
 		{
 			if  (strcmp(v[i]->getSemantic(),"POSITION")==0)
 			{
-				vec3Array[vert->getId()]=FloatArray2Vec3Array(sourcesArray[v[i]->getSource().getFragment()].floatArray,sourcesArray[v[i]->getSource().getFragment()].stride);
+				vecArray[vert->getId()]=SourceToVecArray(sourcesArray[v[i]->getSource().getFragment()]);
 			}
 		}
-
+		// Read triangles lists.
 		domTriangles_Array &triArray=thisMesh->getTriangles_array();
 		for (DWORD triArrayIndex=0;triArrayIndex<triArray.getCount();triArrayIndex++)
 		{
 			domTrianglesRef tris=triArray.get(triArrayIndex);
 			model->object[model->object.size()-1].mesh.push_back(Mesh());
+			// Load the material.
 			Material mat=LoadMaterial(materialMap[tris->getMaterial()],vertexInput);
 			if (mat)
 			{
@@ -155,55 +158,73 @@ void ColladaLoader::LoadMesh(string &id,mat4 transform,map<string,string> &mater
 			domInputLocalOffset_Array &tv=tris->getInput_array();
 			domListOfUInts &pv=p->getValue();
 			DWORD cc=0;
+			map<string,DWORD> deindexMap;
+			DWORD v[3];
 			for (DWORD i=0;i<pv.getCount();)
-			{
+			{				
 				DWORD highestOffset=0;
+				ostringstream vertexId;
+				// Generate current vertex id based on its indices to the input buffers.
 				for (DWORD cs=0;cs<tv.getCount();cs++)
 				{
 					domInputLocalOffsetRef lo=tv.get(cs);
 					if (lo->getOffset()>highestOffset)
 						highestOffset=(DWORD)lo->getOffset();
-					if (strcmp(lo->getSemantic(),"VERTEX")==0)
-					{
-						vector<vec3> &vve=vec3Array[lo->getSource().getFragment()];
-						vec3 v0=vve[(DWORD)pv[i+(DWORD)lo->getOffset()]];
-						model->object[model->object.size()-1].vertex.push_back(v0*transform);				
-					}
-					if (strcmp(lo->getSemantic(),"NORMAL")==0)
-					{						
-						if (vec3Array.find(lo->getSource().getFragment())==vec3Array.end())						
-						{							
-							vec3Array[lo->getSource().getFragment()]=FloatArray2Vec3Array(sourcesArray[lo->getSource().getFragment()].floatArray,sourcesArray[lo->getSource().getFragment()].stride);
-						}						
-						vec3 n=vec3Array[lo->getSource().getFragment()][(DWORD)pv[i+(DWORD)lo->getOffset()]];
-						n=n.TransformNormal(transform);
-						model->object[model->object.size()-1].normal.push_back(n);
-					}
-					if (strcmp(lo->getSemantic(),"TEXCOORD")==0)
-					{
-						if (vec2Array.find(lo->getSource().getFragment())==vec2Array.end())
-						{							
-							vec2Array[lo->getSource().getFragment()]=FloatArray2Vec2Array(sourcesArray[lo->getSource().getFragment()].floatArray,sourcesArray[lo->getSource().getFragment()].stride);
-						}
-						DWORD unit=(DWORD)lo->getSet();
-						vec2 uv=vec2Array[lo->getSource().getFragment()][(DWORD)pv[i+(DWORD)lo->getOffset()]];
-						model->object[model->object.size()-1].uv[unit].push_back(vec2(uv.x,1.0f-uv.y));
-					}
+					vertexId << (DWORD)pv[i+(DWORD)lo->getOffset()];
+					vertexId << " ";
 				}
+				if (deindexMap.find(vertexId.str())==deindexMap.end()) // If it's a new vertex, read it.
+				{				
+					for (DWORD cs=0;cs<tv.getCount();cs++)
+					{
+						domInputLocalOffsetRef lo=tv.get(cs);						
+						if (strcmp(lo->getSemantic(),"VERTEX")==0) // Get position from previously read source.
+						{
+							vector<vec4> &vve=vecArray[lo->getSource().getFragment()];
+							vec3 v0=vve[(DWORD)pv[i+(DWORD)lo->getOffset()]];
+							model->object[model->object.size()-1].vertex.push_back(v0*transform);				
+						}
+						if (strcmp(lo->getSemantic(),"NORMAL")==0) // Get normal from previously read source.
+						{						
+							if (vecArray.find(lo->getSource().getFragment())==vecArray.end())
+							{							
+								vecArray[lo->getSource().getFragment()]=SourceToVecArray(sourcesArray[lo->getSource().getFragment()]);
+							}						
+							vec3 n=vecArray[lo->getSource().getFragment()][(DWORD)pv[i+(DWORD)lo->getOffset()]];
+							n=n.TransformNormal(transform);
+							model->object[model->object.size()-1].normal.push_back(n);
+						}
+						if (strcmp(lo->getSemantic(),"TEXCOORD")==0) // Get uv from previously read source.
+						{
+							if (vecArray.find(lo->getSource().getFragment())==vecArray.end())
+							{							
+								vecArray[lo->getSource().getFragment()]=SourceToVecArray(sourcesArray[lo->getSource().getFragment()]);
+							}
+							DWORD unit=(DWORD)lo->getSet();
+							vec2 uv=vecArray[lo->getSource().getFragment()][(DWORD)pv[i+(DWORD)lo->getOffset()]];
+							model->object[model->object.size()-1].uv[unit].push_back(vec2(uv.x,1.0f-uv.y));
+						}						
+					}
+					v[cc]=model->object[model->object.size()-1].vertex.size()-1; // Remember this vertex index.
+					deindexMap[vertexId.str()]=v[cc];
+				}
+				else
+					v[cc]=deindexMap[vertexId.str()]; // Already read this vertex, just get its index.
+				
 				i+=highestOffset+1;
 				cc++;
 				if (cc==3)
 				{
 					cc=0;			
 					Face f;
-					f.v[0]=model->object[model->object.size()-1].vertex.size()-3;
-					f.v[1]=model->object[model->object.size()-1].vertex.size()-2;
-					f.v[2]=model->object[model->object.size()-1].vertex.size()-1;
+					f.v[0]=v[0];
+					f.v[1]=v[1];
+					f.v[2]=v[2];
 					vec3 faceNormal=Cross(model->object[model->object.size()-1].vertex[f.v[1]]-model->object[model->object.size()-1].vertex[f.v[0]],model->object[model->object.size()-1].vertex[f.v[2]]-model->object[model->object.size()-1].vertex[f.v[0]]);
 					faceNormal.Normalize();
 					f.normal=faceNormal;
-					model->object[model->object.size()-1].mesh[triArrayIndex].face.push_back(f);					
-
+					model->object[model->object.size()-1].mesh[triArrayIndex].face.push_back(f);
+					model->object[model->object.size()-1].face.push_back(f);
 				}
 			}
 		}		
@@ -239,7 +260,11 @@ void ColladaLoader::LoadNodes()
 }
 bool ColladaLoader::Load(const string &filename)
 {
-
+	string::size_type i=filename.find_last_of('\\');
+	if (i!=string::npos)
+	{
+		basepath=filename.substr(0,i+1);		
+	}	
 	daeInt result = colladaDom.load(filename.c_str());
 
 	if(result != DAE_OK) {		
@@ -275,18 +300,25 @@ Material ColladaLoader::GetMaterialByName(string &name)
 	}
 	return Material();
 }
-vector<vec3> ColladaLoader::FloatArray2Vec3Array(const vector<float> &fa,int stride)
+vector<vec4> ColladaLoader::SourceToVecArray(const Source &source)
 {
-	vector<vec3> ret;	
-	for (unsigned int i=0;i<fa.size();i+=stride)
-		ret.push_back(vec3(fa[i+0],fa[i+1],fa[i+2]));
-	return ret;
-}
-vector<vec2> ColladaLoader::FloatArray2Vec2Array(const vector<float> &fa,int stride)
-{
-	vector<vec2> ret;	
-	for (unsigned int i=0;i<fa.size();i+=stride)
-		ret.push_back(vec2(fa[i+0],fa[i+1]));
+	vector<vec4> ret;	
+	vec4 v;
+	for (DWORD i=0;i<source.floatArray.size();i+=source.stride)
+	{
+		for (DWORD j=0;j<source.stride;j++)
+		{
+			if (j==0)
+				v.x=source.floatArray[i+j];
+			if (j==1)
+				v.y=source.floatArray[i+j];
+			if (j==2)
+				v.z=source.floatArray[i+j];
+			if (j==3)
+				v.w=source.floatArray[i+j];
+		}
+		ret.push_back(v);
+	}		
 	return ret;
 }
 void ColladaLoader::LoadImageMap()

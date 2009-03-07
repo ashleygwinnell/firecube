@@ -18,7 +18,7 @@ using namespace FireCube;
 App app;
 vec3 rot(0,0,-15);
 int main(int argc, char *argv[])
-{
+{	
 	if (!app.Initialize())
 		return 0;
 	app.Run();
@@ -35,9 +35,8 @@ bool App::Init()
 	if (!font)
 		return false;
 	ColladaLoader loader(model.get());
-	loader.Load("c.dae");
+	loader.Load("duck.dae");
 	model->SetProgram(program);
-	//return false;	
 	return true;
 }
 void App::Render(float time)
@@ -50,16 +49,16 @@ void App::Render(float time)
 	t.RotateY(rot.y);
 	Renderer::SetModelViewMatrix(t);
 	Renderer::UseProgram(program);
-	vector<int> textured;
-	vector<int> textureId;
+	vector<int> textured(8);
+	vector<int> textureId(8);
 	for (DWORD i=0;i<model->material.size();i++)
 		for (DWORD t=0;t<MAX_TEXTURES;t++)
 			if ((model->material[i]->texture[t]) && (model->material[i]->texture[t]->IsValid()))
-				textured.push_back(true);
+				textured[t]=true;
 			else
-				textured.push_back(false);
+				textured[t]=false;
 	for (DWORD t=0;t<MAX_TEXTURES;t++)	
-		textureId.push_back(t);		
+		textureId[t]=t;
 	program->SetUniform("texture",textureId);
 	program->SetUniform("textured",textured);
 	Renderer::Render(model);

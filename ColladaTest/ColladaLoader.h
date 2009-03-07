@@ -5,7 +5,7 @@ public:
 	{
 	public:
 		vector <float> floatArray;
-		int stride;
+		DWORD stride;
 	};
 	ColladaLoader(ModelResource *model);
 	bool Load(const string &filename);
@@ -18,10 +18,10 @@ private:
 	bool ReadTexture(daeElement *elm,map<string,pair<string,DWORD>> &vertexInput,string &file,DWORD &unit);
 	mat4 ReadTransformation(domNode *node);
 	Source ReadSource(domSourceRef source);
-	vector<vec3> FloatArray2Vec3Array(const vector<float> &fa,int stride);
-	vector<vec2> FloatArray2Vec2Array(const vector<float> &fa,int stride);
+	vector<vec4> SourceToVecArray(const Source &source);	
 	Material GetMaterialByName(string &name);	
 	DAE colladaDom;
 	ModelResource *model;
 	map<string,string> imageMap;
+	string basepath;
 };
