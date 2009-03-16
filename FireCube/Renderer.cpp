@@ -289,10 +289,14 @@ void Renderer::Render(Model model)
 		if (i->vertexBuffer)
 			i->vertexBuffer->SetVertexStream(3);
 		for (DWORD t=0;t<MAX_TEXTURES;t++)
-			if (i->uvBuffer[t])
+			if ((i->uvBuffer[t]) && (i->uvBuffer[t]->IsValid()))
 				i->uvBuffer[t]->SetTexCoordStream(t);
+			else
+				Renderer::DisableTexCoordStream(t);
 		if (i->normalBuffer)
 			i->normalBuffer->SetNormalStream();
+		else
+			Renderer::DisableNormalStream();
 		for (;j!=i->mesh.end();j++)
 		{
 			UseMaterial(j->material);
@@ -495,7 +499,20 @@ void Renderer::UseMaterial(Material material)
 	}
 
 	if ((material->program) && (material->program->IsValid()))
+	{
 		UseProgram(material->program);
+		vector<int> textured(8);
+		vector<int> textureId(8);
+		for (DWORD t=0;t<MAX_TEXTURES;t++)
+			if ((material->texture[t]) && (material->texture[t]->IsValid()))
+				textured[t]=true;
+			else
+				textured[t]=false;
+		for (DWORD t=0;t<MAX_TEXTURES;t++)	
+			textureId[t]=t;
+		material->program->SetUniform("texture",textureId);
+		material->program->SetUniform("textured",textured);
+	}
 }
 void Renderer::SetPerspectiveProjection(float fov,float zNear,float zFar)
 {
@@ -601,4 +618,13 @@ mat4 Renderer::GetProjectionMatrix()
 	glGetFloatv(GL_PROJECTION_MATRIX,ret.m);
 	return ret;
 
+}
+void Renderer::DisableTexCoordStream(DWORD unit)
+{
+	glClientActiveTexture(GL_TEXTURE0+unit);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+void Renderer::DisableNormalStream()
+{
+	glDisableClientState(GL_NORMAL_ARRAY);
 }

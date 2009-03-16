@@ -10,6 +10,10 @@ using namespace std;
 #include "GLee.h"
 #include "FireCube.h"
 using namespace FireCube;
+#include <dae.h>
+#include <dom/domCOLLADA.h>
+#include "ModelLoaders.h"
+
 
 M3dsLoader::M3dsLoader(ModelResource *model) : model(model)
 {
@@ -36,21 +40,11 @@ bool M3dsLoader::Load(const string &filename)
 			{
 				DWORD idx=sm->face[j].v[0];
 				sm->face[j]=model->object[k].face[idx];				
-			}
-			sm->indexBuffer=Buffer(new BufferResource);
-			sm->indexBuffer->Create();
-			vector<DWORD> tmp;
-			tmp.resize(sm->face.size()*3);
-			for (DWORD f=0;f<sm->face.size();f++)
-			{
-				tmp[f*3+0]=sm->face[f].v[0];
-				tmp[f*3+1]=sm->face[f].v[1];
-				tmp[f*3+2]=sm->face[f].v[2];
-			}
-			sm->indexBuffer->LoadIndexData(&tmp[0],tmp.size(),STATIC);
+			}			
 		}
-	}	
-
+	}
+	model->CalculateNormals();
+	model->UpdateBuffers();
 	delete [] buffer;		
 	return true;
 }
@@ -92,10 +86,7 @@ DWORD M3dsLoader::ProcessChunk(char *buffer)
 			y=*(float*)(buffer+i+8);
 			curObject->vertex[j].Set(x,y,z);
 			i+=12;
-		}
-		curObject->vertexBuffer=Buffer(new BufferResource);
-		curObject->vertexBuffer->Create();
-		curObject->vertexBuffer->LoadData(&curObject->vertex[0],sizeof(vec3)*numVertices,STATIC);
+		}		
 		break;
 	case MESH_FACES:			
 		numFaces=*(WORD*)(buffer+i);
@@ -118,10 +109,7 @@ DWORD M3dsLoader::ProcessChunk(char *buffer)
 			curObject->uv[0][j].x=*(float*)(buffer+i);
 			curObject->uv[0][j].y=1.0f-*(float*)(buffer+i+4);
 			i+=8;
-		}
-		curObject->uvBuffer[0]=Buffer(new BufferResource);
-		curObject->uvBuffer[0]->Create();
-		curObject->uvBuffer[0]->LoadData(&curObject->uv[0][0],sizeof(vec2)*numtexcoords,STATIC);
+		}		
 		break;
 	case MESH_MATERIAL:		
 		sm.material=model->GetMaterialByName(buffer+i);

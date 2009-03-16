@@ -14,7 +14,9 @@ using namespace std;
 #include <GL/GLU.h>
 #include "FireCube.h"
 using namespace FireCube;
-
+#include <dae.h>
+#include <dom/domCOLLADA.h>
+#include "ModelLoaders.h"
 MaterialResource::MaterialResource()
 {
 	
@@ -69,11 +71,17 @@ bool ModelResource::Load(const string &filename)
 		{				
 			M3dsLoader m3dsLoader(this);
 			
-			if (m3dsLoader.Load(filename))
-			{
-				CalculateNormals();			
-				return true;
-			}
+			if (m3dsLoader.Load(filename))							
+				return true;			
+			else
+				return false;
+		}
+		if (ext=="dae")
+		{				
+			ColladaLoader colladaLoader(this);
+
+			if (colladaLoader.Load(filename))							
+				return true;			
 			else
 				return false;
 		}
@@ -282,7 +290,12 @@ void ModelResource::UpdateBuffers()
 			obj.vertexBuffer=Buffer(new BufferResource);
 			obj.vertexBuffer->Create();
 		}
-		obj.vertexBuffer->LoadData(&obj.vertex[0],sizeof(vec3)*obj.vertex.size(),STATIC);
+		if (!obj.vertexBuffer->LoadData(&obj.vertex[0],sizeof(vec3)*obj.vertex.size(),STATIC))
+		{
+			ostringstream oss;
+			oss << "buffer id:"<<obj.vertexBuffer->id << " Couldn't upload vertex data" << endl;
+			Logger::Write(oss.str());
+		}
 		if (obj.normal.size()!=0)
 		{
 			if (!obj.normalBuffer)
@@ -290,7 +303,12 @@ void ModelResource::UpdateBuffers()
 				obj.normalBuffer=Buffer(new BufferResource);
 				obj.normalBuffer->Create();
 			}
-			obj.normalBuffer->LoadData(&obj.normal[0],sizeof(vec3)*obj.normal.size(),STATIC);
+			if (!obj.normalBuffer->LoadData(&obj.normal[0],sizeof(vec3)*obj.normal.size(),STATIC))
+			{
+				ostringstream oss;
+				oss << "buffer id:"<<obj.vertexBuffer->id << " Couldn't upload vertex data" << endl;
+				Logger::Write(oss.str());
+			}
 		}
 		else
 			obj.normalBuffer.reset();
@@ -304,7 +322,12 @@ void ModelResource::UpdateBuffers()
 					obj.uvBuffer[t]=Buffer(new BufferResource);
 					obj.uvBuffer[t]->Create();
 				}
-				obj.uvBuffer[t]->LoadData(&obj.uv[t][0],sizeof(vec2)*obj.uv[t].size(),STATIC);
+				if (!obj.uvBuffer[t]->LoadData(&obj.uv[t][0],sizeof(vec2)*obj.uv[t].size(),STATIC))
+				{
+					ostringstream oss;
+					oss << "buffer id:"<<obj.vertexBuffer->id << " Couldn't upload vertex data" << endl;
+					Logger::Write(oss.str());
+				}
 			}
 			else
 				obj.uvBuffer[t].reset();
@@ -326,7 +349,12 @@ void ModelResource::UpdateBuffers()
 				mesh.indexBuffer=Buffer(new BufferResource);
 				mesh.indexBuffer->Create();
 			}
-			mesh.indexBuffer->LoadIndexData(&indices[0],indices.size(),STATIC);
+			if (!mesh.indexBuffer->LoadIndexData(&indices[0],indices.size(),STATIC))
+			{
+				ostringstream oss;
+				oss << "buffer id:"<<obj.vertexBuffer->id << " Couldn't upload vertex data" << endl;
+				Logger::Write(oss.str());
+			}
 		}
 	}
 }

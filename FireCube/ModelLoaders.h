@@ -26,7 +26,7 @@
 #define MAT_SHIN2PCT 0xa041
 #define MAT_SHIN3PCT 0xa042
 
-class FIRECUBE_API M3dsLoader
+class M3dsLoader
 {
 public:
 	M3dsLoader(ModelResource *model);
@@ -34,6 +34,34 @@ public:
 private:
 	DWORD ProcessChunk(char *buffer);
 	ModelResource *model;
+};
+
+class ColladaLoader
+{
+public:
+	class Source
+	{
+	public:
+		vector <float> floatArray;
+		DWORD stride;
+	};
+	ColladaLoader(ModelResource *model);
+	bool Load(const string &filename);
+private:	
+	Material LoadMaterial(const string &name,map<string,pair<string,DWORD>> &vertexInput);
+	void LoadMesh(string &id,mat4 transform, map<string,string> &materialMap,map<string,pair<string,DWORD>> &vertexInput);
+	void LoadNodes();
+	void LoadImageMap();
+	vec4 ReadColor(daeElement *elm);
+	bool ReadTexture(daeElement *elm,map<string,pair<string,DWORD>> &vertexInput,string &file,DWORD &unit);
+	mat4 ReadTransformation(domNode *node);
+	Source ReadSource(domSourceRef source);
+	vector<vec4> SourceToVecArray(const Source &source);	
+	Material GetMaterialByName(string &name);	
+	DAE colladaDom;
+	ModelResource *model;
+	map<string,string> imageMap;
+	string basepath;
 };
 
 #pragma warning(pop)

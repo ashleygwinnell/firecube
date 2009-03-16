@@ -87,6 +87,15 @@ namespace Renderer
 	*/
 	void FIRECUBE_API RenderStream(RenderMode mode,DWORD count);
 	/**
+	* Disables a texture coordinates stream.
+	* @param unit The texture unit.
+	*/
+	void FIRECUBE_API DisableTexCoordStream(DWORD unit);
+	/**
+	* Disables the normal stream.	
+	*/
+	void FIRECUBE_API DisableNormalStream();
+	/**
 	* Uses a program.
 	* @param program The program to use.
 	*/

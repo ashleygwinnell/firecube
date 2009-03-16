@@ -32,15 +32,17 @@ public:
 	* @param data Pointer to the data to be stored.
 	* @param size Size of the data in bytes.
 	* @param bt The buffer type.
+	* @return true on success.
 	*/
-	void LoadData(void *data,DWORD size,BufferType bt);
+	bool LoadData(void *data,DWORD size,BufferType bt);
 	/**
 	* Specific function to load index data.
 	* @param data Pointer to the indices to be stored.
 	* @param count Number of indices.
 	* @param bt The buffer type.
+	* @return true on success.
 	*/
-	void LoadIndexData(void *data,DWORD count,BufferType bt);
+	bool LoadIndexData(void *data,DWORD count,BufferType bt);
 	/**
 	* Binds the buffer as a vertex stream.
 	* @param numCoords The number of coordinates per vertex.

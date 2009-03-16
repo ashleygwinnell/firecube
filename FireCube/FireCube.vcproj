@@ -42,6 +42,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\colladadom\dom\include&quot;;&quot;C:\Program Files (x86)\colladadom\dom\include\1.4&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;FIRECUBE_EXPORTS"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -61,8 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib sdl.lib sdlmain.lib sdl_image.lib freetype.lib"
+				AdditionalDependencies="opengl32.lib sdl.lib sdlmain.lib sdl_image.lib freetype.lib libcollada14dom21-d.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\colladadom\dom\build\vc9-1.4-d&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -183,6 +185,10 @@
 			</File>
 			<File
 				RelativePath=".\Buffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ColladaLoader.cpp"
 				>
 			</File>
 			<File
