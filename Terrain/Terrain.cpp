@@ -135,10 +135,17 @@ bool Terrain::GenerateTerrain(const string &heightmap,const string &diffuse,vec3
 
 	quadtree.Initialize();
 	string::size_type d;
-	d=heightmap.find_last_of(".");	
+	d=heightmap.find_last_of("/");	
+	if (d==string::npos)
+		d=heightmap.find_last_of("\\");
+	if (d==string::npos)
+		d=0;
 	if (d!=string::npos)
 	{
-		string quadfile=heightmap.substr(0,d+1);
+		string quadfile=heightmap.substr(d+1);
+		d=quadfile.find_last_of(".");
+		if (d!=string::npos)
+			quadfile=quadfile.substr(0,d+1);
 		quadfile.append("bin");
 		ifstream f(quadfile.c_str(),ios::binary);
 		if (f.is_open())

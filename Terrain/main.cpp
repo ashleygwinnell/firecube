@@ -29,14 +29,15 @@ int main(int argc, char *argv[])
 	return 0;
 }
 bool App::Init()
-{	
+{
+	Application::AddSearchPath("../Media/Textures");
 	SetTitle("Terrain");
 	font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);
 	program=Program(new ProgramResource);
 	program->Create(Renderer::GetShaderManager()->Create("diffuseWithFog.vshader"),Renderer::GetShaderManager()->Create("diffuseWithFog.fshader"));
-	if (!terrain.GenerateTerrain("heightmap.bmp","diffuse.bmp",vec3(512.0f,50.0f,512.0f),vec2(1.0f,1.0f)))
+	if (!terrain.GenerateTerrain("../Media/Textures/heightmap.bmp","../Media/Textures/diffuse.bmp",vec3(512.0f,50.0f,512.0f),vec2(1.0f,1.0f)))
 		return false;
-	model=mm.Create("teapot.3ds");
+	model=mm.Create("../Media/Models/teapot.3ds");
 	model->CreateHardNormals();
 	model->SetProgram(program);
 	return true;

@@ -15,6 +15,8 @@ using namespace FireCube;
 extern void InitializeRenderer();
 extern void DestroyRenderer();
 extern FT_Library freeTypeLibrary;
+
+vector<string> Application::searchPaths;
 Application::Application() : running(false), frameCount(0), fpsTime(0)
 {
 	Renderer::SetTextureManager(&defaultTextureManager);
@@ -137,4 +139,15 @@ int Application::GetWidth() const
 int Application::GetHeight() const
 {
 	return height;
+}
+void Application::AddSearchPath(const string &path)
+{
+	string npath=path;
+	if ((npath[npath.size()-1]=='\\') || (npath[npath.size()-1]=='/'))
+		npath=npath.substr(0,npath.size()-1);
+	Application::searchPaths.push_back(npath);
+}
+const vector<string> &Application::GetSearchPaths()
+{
+	return Application::searchPaths;
 }

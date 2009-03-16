@@ -71,6 +71,15 @@ public:
 	* Called once initialization is complete to execute user specific intialization.
 	*/
 	virtual bool Init();
+	/**
+	* Add a search path for resources.
+	* @param path The path to add.
+	*/
+	static void AddSearchPath(const string &path);
+	/**
+	* @return The list of search paths.
+	*/
+	static const vector<string> &GetSearchPaths();
 private:
 	Timer timer;	
 	bool running;
@@ -81,7 +90,8 @@ private:
 	int width,height;
 	TextureManager defaultTextureManager;
 	ShaderManager defaultShaderManager;
-	FontManager defaultFontManager;	
+	FontManager defaultFontManager;
+	static vector<string> searchPaths;
 };
 #pragma warning(pop)
 #endif

@@ -48,6 +48,7 @@ void MyGLCanvas::Init()
 {
 	FireCubeApp *fcApp=&(((MyApp*)wxTheApp)->fireCubeApp);
 	MyApp *app=(MyApp*)wxTheApp;
+	FireCube::Application::AddSearchPath("../Media/Textures");
 	fcApp->InitializeNoWindow();
 
 	rot=FireCube::vec3(0,0,-5);
@@ -78,7 +79,7 @@ void MyGLCanvas::Init()
 									gl_FragColor = vec4(1.0,1.0,1.0,1.0);  \
 									} ");
 	fcApp->normalRenderingProgram->Create(nvShader,nfShader);	
-	fcApp->LoadModel("teapot2.3ds");		
+	fcApp->LoadModel("../Media/Models/teapot2.3ds");		
 }
 void MyGLCanvas::Render()
 {	

@@ -25,8 +25,9 @@ int main(int argc, char *argv[])
 }
 bool App::Init()
 {
+	Application::AddSearchPath("../Media/Textures");
 	SetTitle(string("FireCube Test Application"));	
-	model=app.modelManager.Create("1.3ds");	
+	model=app.modelManager.Create("../Media/Models/scene.3ds");	
 	font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);
 	plain=Program(new ProgramResource);
 	shadowMap=Program(new ProgramResource);

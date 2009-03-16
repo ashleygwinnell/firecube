@@ -31,7 +31,19 @@ public:
 			if (!i->second.expired())
 				return i->second.lock();
 		boost::shared_ptr<T> ret(new T);
-		if (ret->Load(filename))
+		string loadfile=filename;
+		string fname=GetFileName(filename);
+		const vector<string> &searchPaths=Application::GetSearchPaths();
+		if (!FileExists(loadfile))
+		{
+			for (unsigned int i=0;i<searchPaths.size();i++)
+				if (FileExists(searchPaths[i] + "\\" + fname))
+				{
+					loadfile=searchPaths[i] + "\\" + fname;
+					break;
+				}
+		}
+		if (ret->Load(loadfile))
 		{		
 			resources[filename]=ret;
 			return ret;

@@ -79,6 +79,15 @@ This class is responsible for the intialization and running of the application.
     * Called once initialization is complete to execute user specific intialization.
     */</font>
     virtual <font color="blue">bool</font> Init<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Add a search path for resources.
+    * @param path The path to add.
+    */</font>
+    <font color="blue">static</font> <font color="blue">void</font> AddSearchPath<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>path<font color="black">)</font>;
+    <font color="green">/**
+    * @return The list of search paths.
+    */</font>
+    <font color="blue">static</font> <font color="blue">const</font> vector<font color="black">&#60;</font>string<font color="black">&#62;</font> <font color="black">&</font>GetSearchPaths<font color="black">(</font><font color="black">)</font>;
 <font color="blue">private</font><font color="black">:</font>
     Timer timer;    
     <font color="blue">bool</font> running;
@@ -89,7 +98,8 @@ This class is responsible for the intialization and running of the application.
     <font color="blue">int</font> width,height;
     TextureManager defaultTextureManager;
     ShaderManager defaultShaderManager;
-    FontManager defaultFontManager; 
+    FontManager defaultFontManager;
+    <font color="blue">static</font> vector<font color="black">&#60;</font>string<font color="black">&#62;</font> searchPaths;
 <font color="black">}</font>;
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>pop<font color="black">)</font>
 <font color="blue">#endif</font>

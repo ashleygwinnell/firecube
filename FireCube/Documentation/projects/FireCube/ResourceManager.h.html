@@ -39,7 +39,19 @@ ResourceManager.h
             <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>i<font color="black">-</font><font color="black">&#62;</font>second.expired<font color="black">(</font><font color="black">)</font><font color="black">)</font>
                 <font color="blue">return</font> i<font color="black">-</font><font color="black">&#62;</font>second.lock<font color="black">(</font><font color="black">)</font>;
         boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font> ret<font color="black">(</font><font color="blue">new</font> T<font color="black">)</font>;
-        <font color="blue">if</font> <font color="black">(</font>ret<font color="black">-</font><font color="black">&#62;</font>Load<font color="black">(</font>filename<font color="black">)</font><font color="black">)</font>
+        string loadfile<font color="black">=</font>filename;
+        string fname<font color="black">=</font>GetFileName<font color="black">(</font>filename<font color="black">)</font>;
+        <font color="blue">const</font> vector<font color="black">&#60;</font>string<font color="black">&#62;</font> <font color="black">&</font>searchPaths<font color="black">=</font>Application<font color="black">:</font><font color="black">:</font>GetSearchPaths<font color="black">(</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>FileExists<font color="black">(</font>loadfile<font color="black">)</font><font color="black">)</font>
+        <font color="black">{</font>
+            <font color="blue">for</font> <font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>searchPaths.size<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+                <font color="blue">if</font> <font color="black">(</font>FileExists<font color="black">(</font>searchPaths<font color="black">[</font>i<font color="black">]</font> <font color="black">+</font> <font color="maroon">"\\"</font> <font color="black">+</font> fname<font color="black">)</font><font color="black">)</font>
+                <font color="black">{</font>
+                    loadfile<font color="black">=</font>searchPaths<font color="black">[</font>i<font color="black">]</font> <font color="black">+</font> <font color="maroon">"\\"</font> <font color="black">+</font> fname;
+                    <font color="blue">break</font>;
+                <font color="black">}</font>
+        <font color="black">}</font>
+        <font color="blue">if</font> <font color="black">(</font>ret<font color="black">-</font><font color="black">&#62;</font>Load<font color="black">(</font>loadfile<font color="black">)</font><font color="black">)</font>
         <font color="black">{</font>       
             resources<font color="black">[</font>filename<font color="black">]</font><font color="black">=</font>ret;
             <font color="blue">return</font> ret;

@@ -27,6 +27,7 @@ vector <CollisionInfo> collisions;
 Simulator s;
 int main(int argc, char *argv[])
 {
+	Application::AddSearchPath("../Media/Textures");
 	if (!app.Initialize())
 		return 0;	
 	app.SetTitle(string("Physics Test"));
@@ -38,8 +39,8 @@ int main(int argc, char *argv[])
 	app.program2=Program(new ProgramResource);
 	app.program->Create(app.vShader,app.pShader);
 	app.program2->Create(app.vShader,app.pShader2);		
-	app.model=app.modelManager.Create("1.3ds");
-	app.sphere=app.modelManager.Create("sphere2.3ds");
+	app.model=app.modelManager.Create("../Media/Models/physcube.3ds");
+	app.sphere=app.modelManager.Create("../Media/Models/sphere2.3ds");
 	cube.FromModel(app.model->Reduce(),20,20,20,1.1f);		
 	body1.Init(app.model,&cube);
 	body1.position.Set(-2,0,0);

@@ -20,9 +20,10 @@ int main(int argc, char *argv[])
 }
 bool App::Init()
 {
+	Application::AddSearchPath("../Media/Textures");
 	SetTitle("fboTest");
 	font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",10);	
-	model=mm.Create("1.3ds");
+	model=mm.Create("../Media/Models/1.3ds");
 	program=Program(new ProgramResource);
 	program2=Program(new ProgramResource);
 	vBuffer=Buffer(new BufferResource);
@@ -38,7 +39,7 @@ bool App::Init()
 	uvBuffer->Create();
 	uvBuffer->LoadData(&uvb[0],sizeof(vec2)*8,STATIC);		
 	program2->Create(Renderer::GetShaderManager()->Create("v.vshader"),Renderer::GetShaderManager()->Create("p.fshader"));	
-	model2=mm.Create("teapot2.3ds");
+	model2=mm.Create("../Media/Models/teapot2.3ds");
 	model2->SetProgram(program2);
 	fbo=FrameBuffer(new FrameBufferResource);
 	fbo->Create(128,128);
