@@ -28,7 +28,7 @@ void MyMainFrame::MenuItem1Clicked( wxCommandEvent& event )
 }
 void MyMainFrame::MenuItem2Clicked( wxCommandEvent& event )
 {	
-	wxString file=wxFileSelector(wxT("Open"),0,0,wxT("3ds"),wxT("*.3ds"));
+	wxString file=wxFileSelector(wxT("Open"),0,0,wxT("3ds,dae"),wxT("*.3ds;*.dae"));
 	FireCubeApp *fcApp= &(((MyApp*)wxTheApp)->fireCubeApp);
 	std::string sfile=file;
 	if (sfile=="")

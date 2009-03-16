@@ -46,9 +46,9 @@ MyGLCanvas::~MyGLCanvas()
 }
 void MyGLCanvas::Init()
 {
-	FireCubeApp *fcApp=&(((MyApp*)wxTheApp)->fireCubeApp);	
+	FireCubeApp *fcApp=&(((MyApp*)wxTheApp)->fireCubeApp);
 	MyApp *app=(MyApp*)wxTheApp;
-	fcApp->InitializeNoWindow();	
+	fcApp->InitializeNoWindow();
 
 	rot=FireCube::vec3(0,0,-5);
 	fcApp->font=FireCube::Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);
@@ -60,7 +60,7 @@ void MyGLCanvas::Init()
 	fcApp->vshader=FireCube::Renderer::GetShaderManager()->Create("v.vshader");
 	fcApp->fshader=FireCube::Renderer::GetShaderManager()->Create("p.fshader");
 	fcApp->program=FireCube::Program(new FireCube::ProgramResource);
-	fcApp->program->Create(fcApp->vshader,fcApp->fshader);	
+	fcApp->program->Create(fcApp->vshader,fcApp->fshader);
 	
 	fcApp->normalRenderingBuffer=FireCube::Buffer(new FireCube::BufferResource);
 	fcApp->normalRenderingBuffer->Create();
@@ -78,7 +78,7 @@ void MyGLCanvas::Init()
 									gl_FragColor = vec4(1.0,1.0,1.0,1.0);  \
 									} ");
 	fcApp->normalRenderingProgram->Create(nvShader,nfShader);	
-	fcApp->LoadModel("teapot2.3ds");			
+	fcApp->LoadModel("teapot2.3ds");		
 }
 void MyGLCanvas::Render()
 {	
@@ -99,7 +99,7 @@ void MyGLCanvas::Render()
 	FireCube::Renderer::Clear(bgColor,1.0f);
 	FireCube::mat4 mat;
 	mat.Identity();
-	FireCube::Renderer::SetPerspectiveProjection(90.0f,0.1f,100.0f);		
+	FireCube::Renderer::SetPerspectiveProjection(90.0f,0.1f,1000.0f);		
 	mat.Translate(FireCube::vec3(0,0,rot.z));
 	mat.RotateX(rot.x);
 	mat.RotateY(rot.y);	
@@ -159,6 +159,13 @@ void MyGLCanvas::OnMotion(wxMouseEvent& event)
 	{		
 		rot.x-=(curpos.y-lastpos.y)/30.0f;
 		rot.y-=(curpos.x-lastpos.x)/30.0f;
+	}
+	if (event.MiddleIsDown())
+	{
+		if (event.ShiftDown())
+			rot.z-=(curpos.y-lastpos.y)/15.0f;
+		else
+			rot.z-=(curpos.y-lastpos.y)/30.0f;
 	}
 	lastpos=curpos;
 	this->Refresh(false);
