@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<TITLE>
+Buffer.cpp
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#include</font> <font color="maroon">&#60;string&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;vector&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;sstream&#62;</font>
+<font color="blue">using</font> <font color="blue">namespace</font> std;
+<font color="blue">#include</font> <font color="maroon">&#60;SDL/SDL.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;windows.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">"GLee.h"</font>
+<font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
+<font color="blue">using</font> <font color="blue">namespace</font> FireCube;
+
+BufferResource<font color="black">:</font><font color="black">:</font>BufferResource<font color="black">(</font><font color="black">)</font> <font color="black">:</font> id<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>
+<font color="black">{</font>
+
+<font color="black">}</font>
+BufferResource<font color="black">:</font><font color="black">:</font>~BufferResource<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    Destroy<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+
+<font color="blue">void</font> BufferResource<font color="black">:</font><font color="black">:</font>Create<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>       
+    glGenBuffers<font color="black">(</font><font color="maroon">1</font>,<font color="black">&</font>id<font color="black">)</font>;
+    ostringstream ss;
+    ss<font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">"Created buffer with id="</font><font color="black">&#60;</font><font color="black">&#60;</font>id<font color="black">&#60;</font><font color="black">&#60;</font>endl;
+    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>ss.str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">bool</font> BufferResource<font color="black">:</font><font color="black">:</font>LoadIndexData<font color="black">(</font><font color="blue">void</font> <font color="black">*</font>data,DWORD count,BufferType bt<font color="black">)</font>
+<font color="black">{</font>
+    GLenum e;
+    <font color="blue">if</font> <font color="black">(</font>bt<font color="black">=</font><font color="black">=</font>STREAM<font color="black">)</font>
+        e<font color="black">=</font>GL_STREAM_DRAW;
+    <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>bt<font color="black">=</font><font color="black">=</font>DYNAMIC<font color="black">)</font>
+        e<font color="black">=</font>GL_DYNAMIC_DRAW;
+    <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>bt<font color="black">=</font><font color="black">=</font>STATIC<font color="black">)</font>
+        e<font color="black">=</font>GL_STATIC_DRAW;
+
+    glBindBuffer<font color="black">(</font>GL_ELEMENT_ARRAY_BUFFER,id<font color="black">)</font>;
+    glBufferData<font color="black">(</font>GL_ELEMENT_ARRAY_BUFFER,count<font color="black">*</font><font color="blue">sizeof</font><font color="black">(</font>DWORD<font color="black">)</font>,data,e<font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>glGetError<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font>GL_OUT_OF_MEMORY<font color="black">)</font>
+        <font color="blue">return</font> <font color="blue">false</font>;
+    <font color="blue">return</font> <font color="blue">true</font>;
+<font color="black">}</font>
+<font color="blue">bool</font> BufferResource<font color="black">:</font><font color="black">:</font>LoadData<font color="black">(</font><font color="blue">void</font> <font color="black">*</font>data,DWORD size,BufferType bt<font color="black">)</font>
+<font color="black">{</font>
+    GLenum e;
+    <font color="blue">if</font> <font color="black">(</font>bt<font color="black">=</font><font color="black">=</font>STREAM<font color="black">)</font>
+        e<font color="black">=</font>GL_STREAM_DRAW;
+    <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>bt<font color="black">=</font><font color="black">=</font>DYNAMIC<font color="black">)</font>
+        e<font color="black">=</font>GL_DYNAMIC_DRAW;
+    <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>bt<font color="black">=</font><font color="black">=</font>STATIC<font color="black">)</font>
+        e<font color="black">=</font>GL_STATIC_DRAW;
+
+    glBindBuffer<font color="black">(</font>GL_ARRAY_BUFFER,id<font color="black">)</font>;
+    glBufferData<font color="black">(</font>GL_ARRAY_BUFFER,size,data,e<font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>glGetError<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font>GL_OUT_OF_MEMORY<font color="black">)</font>
+        <font color="blue">return</font> <font color="blue">false</font>;
+    <font color="blue">return</font> <font color="blue">true</font>;
+<font color="black">}</font>
+<font color="blue">void</font> BufferResource<font color="black">:</font><font color="black">:</font>SetVertexStream<font color="black">(</font><font color="blue">int</font> numCoords<font color="black">)</font>
+<font color="black">{</font>
+    glEnableClientState<font color="black">(</font>GL_VERTEX_ARRAY<font color="black">)</font>;
+    glBindBuffer<font color="black">(</font>GL_ARRAY_BUFFER,id<font color="black">)</font>;
+    glVertexPointer<font color="black">(</font>numCoords,GL_FLOAT,<font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> BufferResource<font color="black">:</font><font color="black">:</font>SetNormalStream<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    glEnableClientState<font color="black">(</font>GL_NORMAL_ARRAY<font color="black">)</font>;
+    glBindBuffer<font color="black">(</font>GL_ARRAY_BUFFER,id<font color="black">)</font>;
+    glNormalPointer<font color="black">(</font>GL_FLOAT,<font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;  
+<font color="black">}</font>
+<font color="blue">void</font> BufferResource<font color="black">:</font><font color="black">:</font>SetTexCoordStream<font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> unit<font color="black">)</font>
+<font color="black">{</font>
+    glClientActiveTexture<font color="black">(</font>GL_TEXTURE0<font color="black">+</font>unit<font color="black">)</font>;
+    glEnableClientState<font color="black">(</font>GL_TEXTURE_COORD_ARRAY<font color="black">)</font>;    
+    glBindBuffer<font color="black">(</font>GL_ARRAY_BUFFER,id<font color="black">)</font>;
+    glTexCoordPointer<font color="black">(</font><font color="maroon">2</font>,GL_FLOAT,<font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;
+<font color="black">}</font>
+
+<font color="blue">void</font> BufferResource<font color="black">:</font><font color="black">:</font>SetColorStream<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    glEnableClientState<font color="black">(</font>GL_COLOR_ARRAY<font color="black">)</font>;
+    glBindBuffer<font color="black">(</font>GL_ARRAY_BUFFER,id<font color="black">)</font>;
+    glColorPointer<font color="black">(</font><font color="maroon">3</font>,GL_FLOAT,<font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> BufferResource<font color="black">:</font><font color="black">:</font>SetIndexStream<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    glBindBuffer<font color="black">(</font>GL_ELEMENT_ARRAY_BUFFER,id<font color="black">)</font>;   
+<font color="black">}</font>
+<font color="blue">bool</font> BufferResource<font color="black">:</font><font color="black">:</font>IsValid<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> id<font color="black">!</font><font color="black">=</font><font color="maroon">0</font>;
+<font color="black">}</font>
+<font color="blue">void</font> BufferResource<font color="black">:</font><font color="black">:</font>Destroy<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    ostringstream ss;
+    ss<font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">"Destroyed buffer with id="</font><font color="black">&#60;</font><font color="black">&#60;</font>id<font color="black">&#60;</font><font color="black">&#60;</font>endl;
+    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>ss.str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+    glDeleteBuffers<font color="black">(</font><font color="maroon">1</font>,<font color="black">&</font>id<font color="black">)</font>;
+    id<font color="black">=</font><font color="maroon">0</font>;
+<font color="black">}</font>
+</PRE>
+</BODY>
+</HTML>

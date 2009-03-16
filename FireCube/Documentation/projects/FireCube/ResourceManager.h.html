@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<TITLE>
+ResourceManager.h
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#ifndef</font> RESOURCE_MANAGER_H
+<font color="blue">#define</font> RESOURCE_MANAGER_H
+<font color="green">/**
+* A templated class for a resource manager.&#60;br&#62;
+* Resources should define a bool Load(const string &) function to be usable.
+*/</font>
+<font color="blue">template</font><font color="black">&#60;</font><font color="blue">class</font> T<font color="black">&#62;</font>
+<font color="blue">class</font> ResourceManager
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font> 
+    ResourceManager<font color="black">&#60;</font>T<font color="black">&#62;</font><font color="black">(</font><font color="black">)</font>
+    <font color="black">{</font>
+
+    <font color="black">}</font>
+    virtual ~ResourceManager<font color="black">&#60;</font>T<font color="black">&#62;</font><font color="black">(</font><font color="black">)</font>
+    <font color="black">{</font>
+        Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font><font color="maroon">"Destroying resource manager.\n"</font><font color="black">)</font>;
+    <font color="black">}</font>
+    ResourceManager<font color="black">&#60;</font>T<font color="black">&#62;</font><font color="black">(</font><font color="blue">const</font> ResourceManager<font color="black">&#60;</font>T<font color="black">&#62;</font> <font color="black">&</font>r<font color="black">)</font>
+    <font color="black">{</font>
+        resources<font color="black">=</font>r.resources;
+    <font color="black">}</font>
+    <font color="green">/**
+    * Creates and loads a resource from the specified file.
+    * @param filename The file to load.
+    */</font>
+    boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font> Create<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>
+    <font color="black">{</font>
+        map<font color="black">&#60;</font>string,boost<font color="black">:</font><font color="black">:</font>weak_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font><font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resources.find<font color="black">(</font>filename<font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>i<font color="black">!</font><font color="black">=</font>resources.end<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+            <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>i<font color="black">-</font><font color="black">&#62;</font>second.expired<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+                <font color="blue">return</font> i<font color="black">-</font><font color="black">&#62;</font>second.lock<font color="black">(</font><font color="black">)</font>;
+        boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font> ret<font color="black">(</font><font color="blue">new</font> T<font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>ret<font color="black">-</font><font color="black">&#62;</font>Load<font color="black">(</font>filename<font color="black">)</font><font color="black">)</font>
+        <font color="black">{</font>       
+            resources<font color="black">[</font>filename<font color="black">]</font><font color="black">=</font>ret;
+            <font color="blue">return</font> ret;
+        <font color="black">}</font>
+        <font color="blue">else</font>
+            <font color="blue">return</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font><font color="black">(</font><font color="black">)</font>;
+    <font color="black">}</font>
+    <font color="green">/**
+    * Adds a new resource without loading it.
+    * @param name The name identifying the resource.
+    * @return The newly created resource.
+    */</font>
+    boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font> Add<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>
+    <font color="black">{</font>
+        map<font color="black">&#60;</font>string,boost<font color="black">:</font><font color="black">:</font>weak_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font><font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resources.find<font color="black">(</font><font color="blue">name</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>i<font color="black">!</font><font color="black">=</font>resources.end<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+            <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>i<font color="black">-</font><font color="black">&#62;</font>second.expired<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+                <font color="blue">return</font> i<font color="black">-</font><font color="black">&#62;</font>second.lock<font color="black">(</font><font color="black">)</font>;
+        boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font> ret<font color="black">(</font><font color="blue">new</font> T<font color="black">)</font>;
+        resources<font color="black">[</font><font color="blue">name</font><font color="black">]</font><font color="black">=</font>ret;
+        <font color="blue">return</font> ret;     
+    <font color="black">}</font>
+    <font color="green">/**
+    * Adds an already existing resource.
+    * @param filename The filename/name identifying the resource.
+    * @param res The resource itself.
+    */</font>
+    <font color="blue">void</font> Add<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename,boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font> res<font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">if</font> <font color="black">(</font>resources.find<font color="black">(</font>filename<font color="black">)</font><font color="black">!</font><font color="black">=</font>resources.end<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+            <font color="blue">return</font>;
+
+        resources<font color="black">[</font>filename<font color="black">]</font><font color="black">=</font>res;
+    <font color="black">}</font>
+    <font color="green">/**
+    * Returns a resource with a given filename, null if it does not exist.
+    * @param filename The filename identifying the resource.
+    */</font>
+    boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font> Get<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>
+    <font color="black">{</font>
+        map<font color="black">&#60;</font>string,boost<font color="black">:</font><font color="black">:</font>weak_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font><font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resources.find<font color="black">(</font>filename<font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>i<font color="black">!</font><font color="black">=</font>resources.end<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+            <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>i<font color="black">-</font><font color="black">&#62;</font>second.expired<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+                <font color="blue">return</font> i<font color="black">-</font><font color="black">&#62;</font>second.lock<font color="black">(</font><font color="black">)</font>;
+        
+        <font color="blue">return</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font><font color="black">(</font><font color="black">)</font>;      
+    <font color="black">}</font>
+<font color="blue">private</font><font color="black">:</font>
+    map<font color="black">&#60;</font>string,boost<font color="black">:</font><font color="black">:</font>weak_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font><font color="black">&#62;</font> resources;
+<font color="black">}</font>;
+<font color="blue">#endif</font>
+</PRE>
+</BODY>
+</HTML>

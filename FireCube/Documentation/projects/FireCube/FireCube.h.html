@@ -1,0 +1,40 @@
+<HTML>
+<HEAD>
+<TITLE>
+FireCube.h
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#ifndef</font> FIRECUBE_H
+<font color="blue">#define</font> FIRECUBE_H
+
+<font color="blue">#ifdef</font> FIRECUBE_EXPORTS
+<font color="blue">#define</font> FIRECUBE_API __declspec<font color="black">(</font>dllexport<font color="black">)</font>
+<font color="blue">#else</font>
+<font color="blue">#define</font> FIRECUBE_API __declspec<font color="black">(</font>dllimport<font color="black">)</font>
+<font color="blue">#pragma</font> comment<font color="black">(</font>lib, <font color="maroon">"FireCube.lib"</font><font color="black">)</font>
+<font color="blue">#endif</font>
+
+<font color="blue">namespace</font> FireCube
+<font color="black">{</font>   
+    <font color="blue">#include</font> <font color="maroon">"Logger.h"</font>
+    <font color="blue">#include</font> <font color="maroon">"ResourceManager.h"</font>
+    <font color="blue">#include</font> <font color="maroon">"Timer.h"</font>
+    <font color="blue">#include</font> <font color="maroon">"MyMath.h"</font> 
+    <font color="blue">#include</font> <font color="maroon">"Texture.h"</font>        
+    <font color="blue">#include</font> <font color="maroon">"Buffer.h"</font>
+    <font color="blue">#include</font> <font color="maroon">"Shaders.h"</font>
+    <font color="blue">#include</font> <font color="maroon">"Mesh.h"</font>   
+    <font color="blue">#include</font> <font color="maroon">"FrameBuffer.h"</font>
+    <font color="blue">#include</font> <font color="maroon">"Image.h"</font>
+    <font color="blue">#include</font> <font color="maroon">"Font.h"</font>
+    <font color="blue">#include</font> <font color="maroon">"Renderer.h"</font>           
+    <font color="blue">#include</font> <font color="maroon">"utils.h"</font>  
+    <font color="blue">#include</font> <font color="maroon">"Application.h"</font>
+<font color="black">}</font>;
+
+<font color="blue">#endif</font>
+</PRE>
+</BODY>
+</HTML>

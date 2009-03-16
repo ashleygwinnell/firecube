@@ -1,0 +1,222 @@
+<HTML>
+<HEAD>
+<TITLE>
+vec3.cpp
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#include</font> <font color="maroon">&#60;string&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;vector&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
+<font color="blue">using</font> <font color="blue">namespace</font> std;
+<font color="blue">#include</font> <font color="maroon">&#60;SDL/SDL.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;windows.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">"GLee.h"</font>
+<font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
+<font color="blue">using</font> <font color="blue">namespace</font> FireCube;
+<font color="blue">#include</font> <font color="maroon">&#60;cmath&#62;</font>
+
+vec3 FireCube<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">+</font><font color="black">(</font><font color="blue">const</font> vec3 <font color="black">&</font>a,<font color="blue">const</font> vec3 <font color="black">&</font>b<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> vec3<font color="black">(</font>a.x<font color="black">+</font>b.x,a.y<font color="black">+</font>b.y,a.z<font color="black">+</font>b.z<font color="black">)</font>;
+<font color="black">}</font>
+vec3 FireCube<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">-</font><font color="black">(</font><font color="blue">const</font> vec3 <font color="black">&</font>a,<font color="blue">const</font> vec3 <font color="black">&</font>b<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> vec3<font color="black">(</font>a.x<font color="black">-</font>b.x,a.y<font color="black">-</font>b.y,a.z<font color="black">-</font>b.z<font color="black">)</font>;
+<font color="black">}</font>
+vec3 FireCube<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">const</font> vec3 <font color="black">&</font>a,<font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font>b<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> vec3<font color="black">(</font>a.x<font color="black">*</font>b,a.y<font color="black">*</font>b,a.z<font color="black">*</font>b<font color="black">)</font>;
+<font color="black">}</font>
+vec3 FireCube<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font>a,<font color="blue">const</font> vec3 <font color="black">&</font>b<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> vec3<font color="black">(</font>b.x<font color="black">*</font>a,b.y<font color="black">*</font>a,b.z<font color="black">*</font>a<font color="black">)</font>;
+<font color="black">}</font>
+vec3 FireCube<font color="black">:</font><font color="black">:</font>Cross<font color="black">(</font><font color="blue">const</font> vec3 a,<font color="blue">const</font> vec3 b<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> vec3<font color="black">(</font>a.y<font color="black">*</font>b.z<font color="black">-</font>a.z<font color="black">*</font>b.y,a.z<font color="black">*</font>b.x<font color="black">-</font>a.x<font color="black">*</font>b.z,a.x<font color="black">*</font>b.y<font color="black">-</font>a.y<font color="black">*</font>b.x<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">float</font> FireCube<font color="black">:</font><font color="black">:</font>Dot<font color="black">(</font><font color="blue">const</font> vec3 a,<font color="blue">const</font> vec3 b<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> a.x<font color="black">*</font>b.x<font color="black">+</font>a.y<font color="black">*</font>b.y<font color="black">+</font>a.z<font color="black">*</font>b.z;
+<font color="black">}</font>
+
+
+<font color="blue">void</font> vec3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">+</font><font color="black">=</font><font color="black">(</font><font color="blue">const</font> vec3 <font color="black">&</font>src<font color="black">)</font>
+<font color="black">{</font>   
+    x<font color="black">+</font><font color="black">=</font>src.x;
+    y<font color="black">+</font><font color="black">=</font>src.y;
+    z<font color="black">+</font><font color="black">=</font>src.z;
+<font color="black">}</font>
+<font color="blue">void</font> vec3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">-</font><font color="black">=</font><font color="black">(</font>vec3 <font color="black">&</font>src<font color="black">)</font>
+<font color="black">{</font>   
+    x<font color="black">-</font><font color="black">=</font>src.x;
+    y<font color="black">-</font><font color="black">=</font>src.y;
+    z<font color="black">-</font><font color="black">=</font>src.z;
+<font color="black">}</font>
+<font color="blue">void</font> vec3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">*</font><font color="black">=</font><font color="black">(</font>vec3 <font color="black">&</font>src<font color="black">)</font>
+<font color="black">{</font>   
+    x<font color="black">*</font><font color="black">=</font>src.x;
+    y<font color="black">*</font><font color="black">=</font>src.y;
+    z<font color="black">*</font><font color="black">=</font>src.z;
+<font color="black">}</font>
+<font color="blue">void</font> vec3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">*</font><font color="black">=</font><font color="black">(</font><font color="blue">float</font> val<font color="black">)</font>
+<font color="black">{</font>   
+    x<font color="black">*</font><font color="black">=</font>val;
+    y<font color="black">*</font><font color="black">=</font>val;
+    z<font color="black">*</font><font color="black">=</font>val;
+<font color="black">}</font>
+<font color="blue">void</font> vec3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">/</font><font color="black">=</font><font color="black">(</font>vec3 <font color="black">&</font>src<font color="black">)</font>
+<font color="black">{</font>
+    x<font color="black">/</font><font color="black">=</font>src.x;
+    y<font color="black">/</font><font color="black">=</font>src.y;
+    z<font color="black">/</font><font color="black">=</font>src.z;
+<font color="black">}</font>
+
+<font color="blue">void</font> vec3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">/</font><font color="black">=</font><font color="black">(</font><font color="blue">float</font> val<font color="black">)</font>
+<font color="black">{</font>
+    x<font color="black">/</font><font color="black">=</font>val;
+    y<font color="black">/</font><font color="black">=</font>val;
+    z<font color="black">/</font><font color="black">=</font>val;
+<font color="black">}</font>
+vec3 vec3<font color="black">:</font><font color="black">:</font>Normalize<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">const</font> <font color="blue">float</font> m2 <font color="black">=</font> Length2<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>m2 <font color="black">&#62;</font> <font color="maroon">0</font>.0f<font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">const</font> <font color="blue">float</font> inv_mag <font color="black">=</font> <font color="maroon">1</font>.0f<font color="black">/</font>sqrt<font color="black">(</font>m2<font color="black">)</font>;
+        x <font color="black">=</font> x <font color="black">*</font> inv_mag;
+        y <font color="black">=</font> y <font color="black">*</font> inv_mag;
+        z <font color="black">=</font> z <font color="black">*</font> inv_mag;        
+    <font color="black">}</font>
+    <font color="blue">else</font>
+    <font color="black">{</font>
+
+        x <font color="black">=</font> <font color="maroon">1</font>.0f; 
+        y <font color="black">=</font> z <font color="black">=</font> <font color="maroon">0</font>.0f;       
+    <font color="black">}</font>
+    <font color="blue">return</font> <font color="black">*</font><font color="blue">this</font>;
+<font color="black">}</font>
+<font color="blue">float</font> vec3<font color="black">:</font><font color="black">:</font>Length<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">float</font> length;
+    length<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>sqrt<font color="black">(</font>x<font color="black">*</font>x<font color="black">+</font>y<font color="black">*</font>y<font color="black">+</font>z<font color="black">*</font>z<font color="black">)</font>;
+    <font color="blue">return</font> length;
+<font color="black">}</font>
+<font color="blue">float</font> vec3<font color="black">:</font><font color="black">:</font>Length2<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">return</font> x<font color="black">*</font>x<font color="black">+</font>y<font color="black">*</font>y<font color="black">+</font>z<font color="black">*</font>z;
+<font color="black">}</font>
+<font color="blue">void</font> vec3<font color="black">:</font><font color="black">:</font>Cross<font color="black">(</font><font color="blue">const</font> vec3 <font color="black">&</font>p,<font color="blue">const</font> vec3 <font color="black">&</font>q<font color="black">)</font>
+<font color="black">{</font>
+    x<font color="black">=</font>p.y<font color="black">*</font>q.z<font color="black">-</font>p.z<font color="black">*</font>q.y;
+    y<font color="black">=</font>p.z<font color="black">*</font>q.x<font color="black">-</font>p.x<font color="black">*</font>q.z;
+    z<font color="black">=</font>p.x<font color="black">*</font>q.y<font color="black">-</font>p.y<font color="black">*</font>q.x;
+<font color="black">}</font>
+<font color="blue">void</font> vec3<font color="black">:</font><font color="black">:</font>SetLength<font color="black">(</font><font color="blue">float</font> l<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">float</font> len<font color="black">=</font>Length<font color="black">(</font><font color="black">)</font>;
+
+    x<font color="black">*</font><font color="black">=</font>l<font color="black">/</font>len;
+    y<font color="black">*</font><font color="black">=</font>l<font color="black">/</font>len;
+    z<font color="black">*</font><font color="black">=</font>l<font color="black">/</font>len;
+<font color="black">}</font>
+<font color="blue">void</font> vec3<font color="black">:</font><font color="black">:</font>RotateX<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">float</font> cs<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>cos<font color="black">(</font>ang<font color="black">)</font>,sn<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>sin<font color="black">(</font>ang<font color="black">)</font>;
+    <font color="blue">float</font> ny<font color="black">=</font>y<font color="black">*</font>cs<font color="black">-</font>z<font color="black">*</font>sn;
+    <font color="blue">float</font> nz<font color="black">=</font>y<font color="black">*</font>sn<font color="black">+</font>z<font color="black">*</font>cs;
+    y<font color="black">=</font>ny;
+    z<font color="black">=</font>nz;
+<font color="black">}</font>
+<font color="blue">void</font> vec3<font color="black">:</font><font color="black">:</font>RotateY<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">float</font> cs<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>cos<font color="black">(</font>ang<font color="black">)</font>,sn<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>sin<font color="black">(</font>ang<font color="black">)</font>;
+    <font color="blue">float</font> nx<font color="black">=</font>x<font color="black">*</font>cs<font color="black">-</font>z<font color="black">*</font>sn;
+    <font color="blue">float</font> nz<font color="black">=</font>x<font color="black">*</font>sn<font color="black">+</font>z<font color="black">*</font>cs;
+    x<font color="black">=</font>nx;
+    z<font color="black">=</font>nz;
+<font color="black">}</font>
+<font color="blue">void</font> vec3<font color="black">:</font><font color="black">:</font>RotateZ<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">float</font> cs<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>cos<font color="black">(</font>ang<font color="black">)</font>,sn<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>sin<font color="black">(</font>ang<font color="black">)</font>;
+    <font color="blue">float</font> nx<font color="black">=</font>x<font color="black">*</font>cs<font color="black">-</font>y<font color="black">*</font>sn;
+    <font color="blue">float</font> ny<font color="black">=</font>x<font color="black">*</font>sn<font color="black">+</font>y<font color="black">*</font>cs;
+    x<font color="black">=</font>nx;
+    y<font color="black">=</font>ny;
+<font color="black">}</font>
+vec3 vec3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">*</font><font color="black">(</font>mat4 <font color="black">&</font>src<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> vec3<font color="black">(</font>x<font color="black">*</font>src.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">+</font>y<font color="black">*</font>src.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">+</font>z<font color="black">*</font>src.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">+</font>src.m<font color="black">[</font><font color="maroon">12</font><font color="black">]</font>,x<font color="black">*</font>src.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">+</font>y<font color="black">*</font>src.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">+</font>z<font color="black">*</font>src.m<font color="black">[</font><font color="maroon">9</font><font color="black">]</font><font color="black">+</font>src.m<font color="black">[</font><font color="maroon">13</font><font color="black">]</font>,x<font color="black">*</font>src.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">+</font>y<font color="black">*</font>src.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">+</font>z<font color="black">*</font>src.m<font color="black">[</font><font color="maroon">10</font><font color="black">]</font><font color="black">+</font>src.m<font color="black">[</font><font color="maroon">14</font><font color="black">]</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> vec3<font color="black">:</font><font color="black">:</font>FromAngles<font color="black">(</font><font color="blue">float</font> angx,<font color="blue">float</font> angy<font color="black">)</font>
+<font color="black">{</font>       
+    <font color="blue">float</font> cosx;
+    cosx<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>cos<font color="black">(</font>angx<font color="black">)</font>;
+
+    x<font color="black">=</font>cosx<font color="black">*</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>sin<font color="black">(</font><font color="black">-</font>angy<font color="black">)</font>;
+    y<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>sin<font color="black">(</font>angx<font color="black">)</font>;
+    z<font color="black">=</font><font color="black">-</font>cosx<font color="black">*</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>cos<font color="black">(</font>angy<font color="black">)</font>;
+<font color="black">}</font>
+vec3 vec3<font color="black">:</font><font color="black">:</font>TransformCoordinate<font color="black">(</font>mat4 m<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">float</font> w<font color="black">=</font>x<font color="black">*</font>m.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">+</font>y<font color="black">*</font>m.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">+</font>z<font color="black">*</font>m.m<font color="black">[</font><font color="maroon">11</font><font color="black">]</font><font color="black">+</font>m.m<font color="black">[</font><font color="maroon">15</font><font color="black">]</font>;
+    vec3 ret<font color="black">=</font>vec3<font color="black">(</font>x<font color="black">*</font>m.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">+</font>y<font color="black">*</font>m.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">+</font>z<font color="black">*</font>m.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">+</font>m.m<font color="black">[</font><font color="maroon">12</font><font color="black">]</font>,x<font color="black">*</font>m.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">+</font>y<font color="black">*</font>m.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">+</font>z<font color="black">*</font>m.m<font color="black">[</font><font color="maroon">9</font><font color="black">]</font><font color="black">+</font>m.m<font color="black">[</font><font color="maroon">13</font><font color="black">]</font>,x<font color="black">*</font>m.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">+</font>y<font color="black">*</font>m.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">+</font>z<font color="black">*</font>m.m<font color="black">[</font><font color="maroon">10</font><font color="black">]</font><font color="black">+</font>m.m<font color="black">[</font><font color="maroon">14</font><font color="black">]</font><font color="black">)</font>;
+    ret<font color="black">/</font><font color="black">=</font>w;
+    <font color="blue">return</font> ret;
+<font color="black">}</font>
+vec3 vec3<font color="black">:</font><font color="black">:</font>TransformNormal<font color="black">(</font>mat4 m<font color="black">)</font>
+<font color="black">{</font>
+    mat4 t<font color="black">=</font>m;
+    vec3 ret<font color="black">=</font>vec3<font color="black">(</font>x<font color="black">*</font>t.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">+</font>y<font color="black">*</font>t.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">+</font>z<font color="black">*</font>t.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>,x<font color="black">*</font>t.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">+</font>y<font color="black">*</font>t.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">+</font>z<font color="black">*</font>t.m<font color="black">[</font><font color="maroon">9</font><font color="black">]</font>,x<font color="black">*</font>t.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">+</font>y<font color="black">*</font>t.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">+</font>z<font color="black">*</font>m.m<font color="black">[</font><font color="maroon">10</font><font color="black">]</font><font color="black">)</font>;   
+    <font color="blue">return</font> ret;
+<font color="black">}</font>
+<font color="blue">inline</font> <font color="blue">bool</font> vec3<font color="black">:</font><font color="black">:</font>Sensible<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>IsFinite<font color="black">(</font>x<font color="black">)</font><font color="black">)</font>
+        <font color="blue">return</font> <font color="blue">false</font>;
+    <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>IsFinite<font color="black">(</font>y<font color="black">)</font><font color="black">)</font>
+        <font color="blue">return</font> <font color="blue">false</font>;
+    <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>IsFinite<font color="black">(</font>z<font color="black">)</font><font color="black">)</font>
+        <font color="blue">return</font> <font color="blue">false</font>;
+
+    <font color="blue">return</font> <font color="blue">true</font>;
+<font color="black">}</font>
+vec2 vec3<font color="black">:</font><font color="black">:</font>ToVec2<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> vec2<font color="black">(</font>x,y<font color="black">)</font>;
+<font color="black">}</font>
+vec4 vec3<font color="black">:</font><font color="black">:</font>ToVec4<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> vec4<font color="black">(</font>x,y,z,<font color="maroon">0</font><font color="black">)</font>;
+<font color="black">}</font>
+vec3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font> vec2<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> vec2<font color="black">(</font>x,y<font color="black">)</font>;
+<font color="black">}</font>
+vec3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font> vec4<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> vec4<font color="black">(</font>x,y,z,<font color="maroon">0</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">float</font> <font color="black">&</font> vec3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">[</font><font color="black">]</font><font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> <font color="black">*</font><font color="black">(</font><font color="black">&</font>x<font color="black">+</font>i<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font> vec3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">[</font><font color="black">]</font><font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">return</font> <font color="black">*</font><font color="black">(</font><font color="black">&</font>x<font color="black">+</font>i<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">float</font> <font color="black">&</font> vec3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">)</font> 
+<font color="black">{</font>
+    <font color="blue">return</font> <font color="black">*</font><font color="black">(</font><font color="black">&</font>x<font color="black">+</font>i<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font> vec3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">return</font> <font color="black">*</font><font color="black">(</font><font color="black">&</font>x<font color="black">+</font>i<font color="black">)</font>;
+<font color="black">}</font>
+</PRE>
+</BODY>
+</HTML>

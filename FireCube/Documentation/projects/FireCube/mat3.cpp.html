@@ -1,0 +1,394 @@
+<HTML>
+<HEAD>
+<TITLE>
+mat3.cpp
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#include</font> <font color="maroon">&#60;string&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;vector&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
+<font color="blue">using</font> <font color="blue">namespace</font> std;
+<font color="blue">#include</font> <font color="maroon">&#60;SDL/SDL.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;windows.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">"GLee.h"</font>
+<font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
+<font color="blue">using</font> <font color="blue">namespace</font> FireCube;
+<font color="blue">#include</font> <font color="maroon">&#60;cmath&#62;</font>
+
+mat3 FireCube<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">const</font> mat3 <font color="black">&</font>a,<font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font>b<font color="black">)</font>
+<font color="black">{</font>
+    mat3 ret;
+    ret.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>a.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">*</font>b;
+    ret.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>a.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">*</font>b;
+    ret.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>a.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">*</font>b;
+    ret.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font>a.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">*</font>b;
+    ret.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>a.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">*</font>b;
+    ret.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>a.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">*</font>b;
+    ret.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>a.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">*</font>b;
+    ret.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font>a.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">*</font>b;
+    ret.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>a.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">*</font>b;
+    <font color="blue">return</font> ret;
+<font color="black">}</font>
+mat3 FireCube<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font>a,<font color="blue">const</font> mat3 <font color="black">&</font>b<font color="black">)</font>
+<font color="black">{</font>
+    mat3 ret;
+    ret.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>b.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">*</font>a;
+    ret.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>b.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">*</font>a;
+    ret.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>b.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">*</font>a;
+    ret.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font>b.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">*</font>a;
+    ret.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>b.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">*</font>a;
+    ret.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>b.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">*</font>a;
+    ret.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>b.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">*</font>a;
+    ret.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font>b.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">*</font>a;
+    ret.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>b.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">*</font>a;
+    <font color="blue">return</font> ret;
+
+<font color="black">}</font>
+vec3 FireCube<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">const</font> mat3 <font color="black">&</font>a,<font color="blue">const</font> vec3 <font color="black">&</font>b<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> vec3<font color="black">(</font>b.x<font color="black">*</font>a.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">+</font>b.y<font color="black">*</font>a.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">+</font>b.z<font color="black">*</font>a.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font>,b.x<font color="black">*</font>a.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">+</font>b.y<font color="black">*</font>a.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">+</font>b.z<font color="black">*</font>a.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font>,b.x<font color="black">*</font>a.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">+</font>b.y<font color="black">*</font>a.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">+</font>b.z<font color="black">*</font>a.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">)</font>;
+<font color="black">}</font>
+vec3 FireCube<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">const</font> vec3 <font color="black">&</font>a,<font color="blue">const</font> mat3 <font color="black">&</font>b<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> vec3<font color="black">(</font>a.x<font color="black">*</font>b.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">+</font>a.y<font color="black">*</font>b.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">+</font>a.z<font color="black">*</font>b.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font>,a.x<font color="black">*</font>b.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">+</font>a.y<font color="black">*</font>b.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">+</font>a.z<font color="black">*</font>b.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font>,a.x<font color="black">*</font>b.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">+</font>a.y<font color="black">*</font>b.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">+</font>a.z<font color="black">*</font>b.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">)</font>;
+<font color="black">}</font>
+
+<font color="blue">inline</font> mat3<font color="black">:</font><font color="black">:</font>mat3<font color="black">(</font><font color="blue">float</font> v11, <font color="blue">float</font> v21, <font color="blue">float</font> v31, <font color="green">// first column</font>
+                  <font color="blue">float</font> v12, <font color="blue">float</font> v22, <font color="blue">float</font> v32, <font color="green">// 2nd column</font>
+                  <font color="blue">float</font> v13, <font color="blue">float</font> v23, <font color="blue">float</font> v33  <font color="black">)</font>
+<font color="black">{</font>
+    m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font> <font color="black">=</font> v11;
+    m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font> <font color="black">=</font> v21;
+    m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font> <font color="black">=</font> v31;
+
+    m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font> <font color="black">=</font> v12;
+    m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font> <font color="black">=</font> v22;
+    m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font> <font color="black">=</font> v32;
+
+    m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font> <font color="black">=</font> v13;
+    m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font> <font color="black">=</font> v23;
+    m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font> <font color="black">=</font> v33;
+<font color="black">}</font>
+<font color="blue">inline</font> mat3<font color="black">:</font><font color="black">:</font>mat3<font color="black">(</font><font color="blue">const</font> vec3 <font color="black">&</font> v1, <font color="green">// first column</font>
+                  <font color="blue">const</font> vec3 <font color="black">&</font> v2, 
+                  <font color="blue">const</font> vec3 <font color="black">&</font> v3<font color="black">)</font>
+<font color="black">{</font>
+    m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font> <font color="black">=</font> v1.x;
+    m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font> <font color="black">=</font> v1.y;
+    m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font> <font color="black">=</font> v1.z;
+
+    m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font> <font color="black">=</font> v2.x;
+    m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font> <font color="black">=</font> v2.y;
+    m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font> <font color="black">=</font> v2.z;
+
+    m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font> <font color="black">=</font> v3.x;
+    m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font> <font color="black">=</font> v3.y;
+    m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font> <font color="black">=</font> v3.z;
+<font color="black">}</font>
+
+<font color="blue">inline</font> <font color="blue">void</font> mat3<font color="black">:</font><font color="black">:</font>Identity<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font><font color="maroon">1</font>;
+    m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font><font color="maroon">0</font>;
+<font color="black">}</font>
+<font color="blue">inline</font> <font color="blue">void</font> mat3<font color="black">:</font><font color="black">:</font>Zero<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>   
+    m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font><font color="maroon">0</font>;
+<font color="black">}</font>
+<font color="blue">inline</font> mat3 mat3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">=</font><font color="black">(</font><font color="blue">const</font> mat3 <font color="black">&</font>src<font color="black">)</font>
+<font color="black">{</font>
+    memcpy<font color="black">(</font>m,src.m,<font color="blue">sizeof</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">*</font><font color="maroon">9</font><font color="black">)</font>;
+    <font color="blue">return</font> <font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">inline</font> mat3 mat3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">+</font><font color="black">(</font>mat3 <font color="black">&</font>src<font color="black">)</font>
+<font color="black">{</font>
+    mat3 ret;
+    ret.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">+</font>src.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">+</font>src.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">+</font>src.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">+</font>src.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">+</font>src.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">+</font>src.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">+</font>src.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">+</font>src.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">+</font>src.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>; 
+    <font color="blue">return</font> ret; 
+<font color="black">}</font>
+<font color="blue">inline</font> mat3 mat3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">-</font><font color="black">(</font>mat3 <font color="black">&</font>src<font color="black">)</font>
+<font color="black">{</font>
+    mat3 ret;
+    ret.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">-</font>src.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">-</font>src.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">-</font>src.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">-</font>src.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">-</font>src.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">-</font>src.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">-</font>src.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">-</font>src.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">-</font>src.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>; 
+    <font color="blue">return</font> ret; 
+<font color="black">}</font>
+<font color="blue">inline</font> <font color="blue">void</font> mat3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">+</font><font color="black">=</font><font color="black">(</font>mat3 <font color="black">&</font>src<font color="black">)</font>
+<font color="black">{</font>
+    m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">+</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>; 
+    m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">+</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">+</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">+</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">+</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">+</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">+</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">+</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">+</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>; 
+<font color="black">}</font>
+<font color="blue">inline</font> <font color="blue">void</font> mat3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">-</font><font color="black">=</font><font color="black">(</font>mat3 <font color="black">&</font>src<font color="black">)</font>
+<font color="black">{</font>
+    m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">-</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>; 
+    m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">-</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">-</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">-</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">-</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">-</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">-</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">-</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">-</font><font color="black">=</font>src.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>; 
+<font color="black">}</font>
+mat3 mat3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">*</font><font color="black">(</font>mat3 <font color="black">&</font>src<font color="black">)</font>
+<font color="black">{</font>
+    mat3 ret;
+    ret.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+
+    ret.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;
+
+    ret.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">+</font>m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>;
+
+    <font color="blue">return</font> ret;
+<font color="black">}</font>
+<font color="blue">void</font> mat3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">*</font><font color="black">=</font><font color="black">(</font>mat3 <font color="black">&</font>src<font color="black">)</font>
+<font color="black">{</font>
+    mat3 tmp<font color="black">=</font><font color="black">*</font><font color="blue">this</font>;
+    m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>tmp.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>tmp.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>tmp.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+
+    m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font>tmp.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>tmp.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>tmp.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;
+
+    m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>tmp.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font>tmp.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>tmp.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">+</font>tmp.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">*</font>src.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>;
+<font color="black">}</font>
+<font color="blue">void</font> mat3<font color="black">:</font><font color="black">:</font>Scale<font color="black">(</font><font color="blue">float</font> x,<font color="blue">float</font> y,<font color="blue">float</font> z<font color="black">)</font>
+<font color="black">{</font>
+    mat3 scale;
+    scale.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>x;
+    scale.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>y;
+    scale.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>z;
+    <font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">=</font><font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">*</font>scale;
+<font color="black">}</font>
+<font color="blue">void</font> mat3<font color="black">:</font><font color="black">:</font>RotateX<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>
+<font color="black">{</font>
+    mat3 rot;
+    <font color="blue">float</font> cs<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>cos<font color="black">(</font>ang<font color="black">)</font>;
+    <font color="blue">float</font> sn<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>sin<font color="black">(</font>ang<font color="black">)</font>;
+
+    rot.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>cs;
+    rot.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font><font color="black">-</font>sn;
+    rot.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font>sn;
+    rot.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>cs;
+    <font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">=</font><font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">*</font>rot;
+
+<font color="black">}</font>
+<font color="blue">void</font> mat3<font color="black">:</font><font color="black">:</font>RotateY<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>
+<font color="black">{</font>
+    mat3 rot;
+    <font color="blue">float</font> cs<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>cos<font color="black">(</font>ang<font color="black">)</font>;
+    <font color="blue">float</font> sn<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>sin<font color="black">(</font>ang<font color="black">)</font>;
+
+    rot.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>cs;
+    rot.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>sn;
+    rot.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font><font color="black">-</font>sn;
+    rot.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>cs;
+    <font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">=</font><font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">*</font>rot;
+<font color="black">}</font>
+<font color="blue">void</font> mat3<font color="black">:</font><font color="black">:</font>RotateZ<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>
+<font color="black">{</font>
+    mat3 rot;
+    <font color="blue">float</font> cs<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>cos<font color="black">(</font>ang<font color="black">)</font>;
+    <font color="blue">float</font> sn<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>sin<font color="black">(</font>ang<font color="black">)</font>;
+
+    rot.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>cs;
+    rot.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font><font color="black">-</font>sn;
+    rot.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font>sn;
+    rot.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>cs;
+    <font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">=</font><font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">*</font>rot;
+<font color="black">}</font>
+<font color="blue">void</font> mat3<font color="black">:</font><font color="black">:</font>Transpose<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    mat3 t<font color="black">=</font><font color="black">*</font><font color="blue">this</font>;
+    m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>t.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>t.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font>;    
+
+    m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font>t.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>t.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font>;    
+
+    m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>t.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+    m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font>t.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;    
+<font color="black">}</font>
+<font color="blue">void</font> mat3<font color="black">:</font><font color="black">:</font>Inverse<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font> 
+    <font color="blue">int</font> n<font color="black">=</font><font color="maroon">3</font>;
+    <font color="blue">int</font> l,q,p;
+    <font color="blue">int</font> pos,p_old;
+    <font color="blue">int</font> p_old2;
+    <font color="blue">for</font><font color="black">(</font>l<font color="black">=</font><font color="maroon">0</font>;l<font color="black">&#60;</font>n;l<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        p_old2<font color="black">=</font>l<font color="black">*</font>n<font color="black">+</font>l;
+        m<font color="black">[</font>p_old2<font color="black">]</font><font color="black">=</font><font color="maroon">1</font><font color="black">/</font>m<font color="black">[</font>p_old2<font color="black">]</font>;
+        <font color="blue">for</font><font color="black">(</font>q<font color="black">=</font><font color="maroon">0</font>;q<font color="black">&#60;</font>n;q<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+            <font color="blue">if</font><font color="black">(</font>q<font color="black">!</font><font color="black">=</font>l<font color="black">)</font>
+            <font color="black">{</font>
+                p_old<font color="black">=</font>q<font color="black">*</font>n<font color="black">+</font>l;
+                m<font color="black">[</font>p_old<font color="black">]</font><font color="black">=</font>m<font color="black">[</font>p_old<font color="black">]</font><font color="black">*</font>m<font color="black">[</font>p_old2<font color="black">]</font>;
+            <font color="black">}</font>
+
+            <font color="blue">for</font><font color="black">(</font>q<font color="black">=</font><font color="maroon">0</font>;q<font color="black">&#60;</font>n;q<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+            <font color="black">{</font>
+                <font color="blue">for</font><font color="black">(</font>p<font color="black">=</font><font color="maroon">0</font>;p<font color="black">&#60;</font>n;p<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+                <font color="black">{</font>
+                    <font color="blue">if</font><font color="black">(</font>q<font color="black">!</font><font color="black">=</font>l<font color="black">)</font>
+                    <font color="black">{</font>
+                        <font color="blue">if</font><font color="black">(</font>p<font color="black">!</font><font color="black">=</font>l<font color="black">)</font>
+                        <font color="black">{</font>
+                            pos<font color="black">=</font>q<font color="black">*</font>n<font color="black">+</font>p;
+                            p_old<font color="black">=</font>q<font color="black">*</font>n<font color="black">+</font>l;
+                            p_old2<font color="black">=</font>l<font color="black">*</font>n<font color="black">+</font>p;
+                            m<font color="black">[</font>pos<font color="black">]</font><font color="black">=</font>m<font color="black">[</font>pos<font color="black">]</font><font color="black">-</font><font color="black">(</font>m<font color="black">[</font>p_old<font color="black">]</font><font color="black">*</font>m<font color="black">[</font>p_old2<font color="black">]</font><font color="black">)</font>;
+                        <font color="black">}</font>
+                    <font color="black">}</font>
+                <font color="black">}</font>
+            <font color="black">}</font>
+
+            p_old<font color="black">=</font>l<font color="black">*</font>n<font color="black">+</font>l;
+            <font color="blue">for</font><font color="black">(</font>p<font color="black">=</font><font color="maroon">0</font>;p<font color="black">&#60;</font>n;p<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+                <font color="blue">if</font><font color="black">(</font>p<font color="black">!</font><font color="black">=</font>l<font color="black">)</font>
+                <font color="black">{</font>
+                    pos<font color="black">=</font>l<font color="black">*</font>n<font color="black">+</font>p;
+                    m<font color="black">[</font>pos<font color="black">]</font><font color="black">=</font><font color="black">-</font>m<font color="black">[</font>p_old<font color="black">]</font><font color="black">*</font>m<font color="black">[</font>pos<font color="black">]</font>;
+                <font color="black">}</font>
+    <font color="black">}</font>
+<font color="black">}</font>
+vec3 mat3<font color="black">:</font><font color="black">:</font>GetDir<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    vec3 dr<font color="black">(</font><font color="black">-</font>m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>,<font color="black">-</font>m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>,<font color="black">-</font>m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">)</font>;
+    <font color="blue">return</font> dr;
+<font color="black">}</font>
+mat3<font color="black">:</font><font color="black">:</font><font color="blue">operator</font> mat4<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    mat4 ret;
+
+    ret.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+
+    ret.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;
+
+    ret.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">9</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">10</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>;
+
+    <font color="blue">return</font> ret;
+<font color="black">}</font>
+mat4 mat3<font color="black">:</font><font color="black">:</font>ToMatrix4<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    mat4 ret;
+
+    ret.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+
+    ret.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;
+
+    ret.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">9</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font>;
+    ret.m<font color="black">[</font><font color="maroon">10</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>;
+
+    <font color="blue">return</font> ret;
+<font color="black">}</font>
+<font color="blue">static</font> <font color="blue">inline</font> vec3 FireCube<font color="black">:</font><font color="black">:</font>proj<font color="black">(</font><font color="blue">const</font> vec3 <font color="black">&</font> v1, <font color="blue">const</font> vec3 <font color="black">&</font> v2<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> v1.Dot<font color="black">(</font>v2<font color="black">)</font> <font color="black">*</font> v1 <font color="black">/</font> v1.Length2<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+
+<font color="blue">inline</font> <font color="blue">void</font> mat3<font color="black">:</font><font color="black">:</font>Orthonormalize<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    vec3 u1<font color="black">(</font><font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="maroon">0</font>, <font color="maroon">0</font><font color="black">)</font>, <font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="maroon">1</font>, <font color="maroon">0</font><font color="black">)</font>, <font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="maroon">2</font>, <font color="maroon">0</font><font color="black">)</font><font color="black">)</font>;
+    vec3 u2<font color="black">(</font><font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="maroon">0</font>, <font color="maroon">1</font><font color="black">)</font>, <font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="maroon">1</font>, <font color="maroon">1</font><font color="black">)</font>, <font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="maroon">2</font>, <font color="maroon">1</font><font color="black">)</font><font color="black">)</font>;
+    vec3 u3<font color="black">(</font><font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="maroon">0</font>, <font color="maroon">2</font><font color="black">)</font>, <font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="maroon">1</font>, <font color="maroon">2</font><font color="black">)</font>, <font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="maroon">2</font>, <font color="maroon">2</font><font color="black">)</font><font color="black">)</font>;
+
+    vec3 w1 <font color="black">=</font> u1;
+    w1.Normalize<font color="black">(</font><font color="black">)</font>;
+
+
+    vec3 w2 <font color="black">=</font> <font color="black">(</font>u2 <font color="black">-</font>proj<font color="black">(</font>w1, u2<font color="black">)</font><font color="black">)</font>;
+    w2.Normalize<font color="black">(</font><font color="black">)</font>;
+    vec3 w3 <font color="black">=</font> <font color="black">(</font>u3 <font color="black">-</font>proj<font color="black">(</font>w1, u3<font color="black">)</font> <font color="black">-</font>proj<font color="black">(</font>w2, u3<font color="black">)</font><font color="black">)</font>;
+    w3.Normalize<font color="black">(</font><font color="black">)</font>;
+
+    m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font> <font color="black">=</font> w1.x;
+    m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font> <font color="black">=</font> w1.y;
+    m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font> <font color="black">=</font> w1.z;
+
+    m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font> <font color="black">=</font> w2.x;
+    m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font> <font color="black">=</font> w2.y;
+    m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font> <font color="black">=</font> w2.z;
+
+    m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font> <font color="black">=</font> w3.x;
+    m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font> <font color="black">=</font> w3.y;
+    m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font> <font color="black">=</font> w3.z;
+
+    <font color="blue">if</font> <font color="black">(</font>Sensible<font color="black">(</font><font color="black">)</font> <font color="black">=</font><font color="black">=</font> <font color="blue">false</font><font color="black">)</font>
+    <font color="black">{</font>
+
+        <font color="blue">this</font><font color="black">-</font><font color="black">&#62;</font>Identity<font color="black">(</font><font color="black">)</font>;
+    <font color="black">}</font>
+<font color="black">}</font>
+<font color="blue">inline</font> <font color="blue">bool</font> mat3<font color="black">:</font><font color="black">:</font>Sensible<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">for</font> <font color="black">(</font><font color="blue">unsigned</font> i <font color="black">=</font> <font color="maroon">0</font> ; i <font color="black">&#60;</font> <font color="maroon">9</font> ; <font color="black">+</font><font color="black">+</font>i<font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>IsFinite<font color="black">(</font>m<font color="black">[</font>i<font color="black">]</font><font color="black">)</font><font color="black">)</font>
+            <font color="blue">return</font> <font color="blue">false</font>;
+    <font color="black">}</font>
+    <font color="blue">return</font> <font color="blue">true</font>;
+<font color="black">}</font>
+<font color="blue">inline</font> vec3 mat3<font color="black">:</font><font color="black">:</font>GetCol<font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">const</font> <font color="blue">unsigned</font> <font color="blue">int</font> o <font color="black">=</font> i<font color="black">*</font><font color="maroon">3</font>; 
+    <font color="blue">return</font> vec3<font color="black">(</font>m<font color="black">[</font>o<font color="black">]</font>, m<font color="black">[</font>o<font color="black">+</font><font color="maroon">1</font><font color="black">]</font>, m<font color="black">[</font>o<font color="black">+</font><font color="maroon">2</font><font color="black">]</font><font color="black">)</font>;
+<font color="black">}</font>
+
+<font color="blue">inline</font> <font color="blue">void</font> mat3<font color="black">:</font><font color="black">:</font>SetCol<font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i, <font color="blue">const</font> vec3 <font color="black">&</font> col<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">const</font> <font color="blue">unsigned</font> <font color="blue">int</font> o <font color="black">=</font> i<font color="black">*</font><font color="maroon">3</font>; 
+    m<font color="black">[</font>o<font color="black">]</font>   <font color="black">=</font> col<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;
+    m<font color="black">[</font>o<font color="black">+</font><font color="maroon">1</font><font color="black">]</font> <font color="black">=</font> col<font color="black">[</font><font color="maroon">1</font><font color="black">]</font>;
+    m<font color="black">[</font>o<font color="black">+</font><font color="maroon">2</font><font color="black">]</font> <font color="black">=</font> col<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+<font color="black">}</font>
+</PRE>
+</BODY>
+</HTML>

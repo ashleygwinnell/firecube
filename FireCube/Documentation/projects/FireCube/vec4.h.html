@@ -1,0 +1,172 @@
+<HTML>
+<HEAD>
+<TITLE>
+vec4.h
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#ifndef</font> VEC4_H
+<font color="blue">#define</font> VEC4_H
+<font color="green">/**
+* A 4d vector.
+*/</font>
+<font color="blue">class</font> FIRECUBE_API vec4
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font>
+    vec4<font color="black">(</font><font color="black">)</font> <font color="black">{</font><font color="black">}</font>
+    vec4<font color="black">(</font><font color="blue">float</font> nx,<font color="blue">float</font> ny,<font color="blue">float</font> nz,<font color="blue">float</font> nw<font color="black">)</font> <font color="black">{</font>x<font color="black">=</font>nx;y<font color="black">=</font>ny;z<font color="black">=</font>nz;w<font color="black">=</font>nw;<font color="black">}</font>
+    vec4<font color="black">(</font><font color="blue">const</font> vec4 <font color="black">&</font>v<font color="black">)</font> <font color="black">{</font>x<font color="black">=</font>v.x;y<font color="black">=</font>v.y;z<font color="black">=</font>v.z;w<font color="black">=</font>v.w;<font color="black">}</font>
+
+    vec4 <font color="blue">operator</font><font color="black">=</font><font color="black">(</font><font color="blue">const</font> vec4 <font color="black">&</font>src<font color="black">)</font>
+    <font color="black">{</font><font color="blue">return</font> vec4<font color="black">(</font>x<font color="black">=</font>src.x,y<font color="black">=</font>src.y,z<font color="black">=</font>src.z,w<font color="black">=</font>src.w<font color="black">)</font>;<font color="black">}</font>
+
+    vec4 <font color="blue">operator</font><font color="black">=</font><font color="black">(</font>vec4 <font color="black">*</font>src<font color="black">)</font>
+    <font color="black">{</font><font color="blue">return</font> vec4<font color="black">(</font>x<font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>x,y<font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>y,z<font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>z,w<font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>w<font color="black">)</font>;<font color="black">}</font>
+
+    <font color="blue">int</font> <font color="blue">operator</font><font color="black">=</font><font color="black">=</font><font color="black">(</font>vec4 <font color="black">&</font>src<font color="black">)</font>
+    <font color="black">{</font><font color="blue">return</font> <font color="black">(</font>x<font color="black">=</font><font color="black">=</font>src.x <font color="black">&</font><font color="black">&</font> y<font color="black">=</font><font color="black">=</font>src.y <font color="black">&</font><font color="black">&</font> z<font color="black">=</font><font color="black">=</font>src.z <font color="black">&</font><font color="black">&</font> w<font color="black">=</font><font color="black">=</font>src.w<font color="black">)</font>;<font color="black">}</font>
+
+    <font color="blue">int</font> <font color="blue">operator</font><font color="black">=</font><font color="black">=</font><font color="black">(</font>vec4 <font color="black">*</font>src<font color="black">)</font>
+    <font color="black">{</font><font color="blue">return</font> <font color="black">(</font>x<font color="black">=</font><font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>x <font color="black">&</font><font color="black">&</font> y<font color="black">=</font><font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>y <font color="black">&</font><font color="black">&</font> z<font color="black">=</font><font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>z <font color="black">&</font><font color="black">&</font> w<font color="black">=</font><font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>w<font color="black">)</font>;<font color="black">}</font>
+
+    <font color="blue">int</font> <font color="blue">operator</font><font color="black">!</font><font color="black">=</font><font color="black">(</font>vec4 <font color="black">&</font>src<font color="black">)</font>
+    <font color="black">{</font><font color="blue">return</font> <font color="black">!</font><font color="black">(</font>src<font color="black">=</font><font color="black">=</font><font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">)</font>;<font color="black">}</font>
+
+    <font color="blue">int</font> <font color="blue">operator</font><font color="black">!</font><font color="black">=</font><font color="black">(</font>vec4 <font color="black">*</font>src<font color="black">)</font>
+    <font color="black">{</font><font color="blue">return</font> <font color="black">!</font><font color="black">(</font>src<font color="black">=</font><font color="black">=</font><font color="blue">this</font><font color="black">)</font>;<font color="black">}</font>
+
+    <font color="blue">void</font> <font color="blue">operator</font><font color="black">+</font><font color="black">=</font><font color="black">(</font><font color="blue">const</font> vec4 <font color="black">&</font>src<font color="black">)</font>;
+    <font color="blue">void</font> <font color="blue">operator</font><font color="black">-</font><font color="black">=</font><font color="black">(</font>vec4 <font color="black">&</font>src<font color="black">)</font>;
+    <font color="blue">void</font> <font color="blue">operator</font><font color="black">*</font><font color="black">=</font><font color="black">(</font>vec4 <font color="black">&</font>src<font color="black">)</font>;
+    <font color="blue">void</font> <font color="blue">operator</font><font color="black">*</font><font color="black">=</font><font color="black">(</font><font color="blue">float</font> val<font color="black">)</font>;
+    <font color="blue">void</font> <font color="blue">operator</font><font color="black">/</font><font color="black">=</font><font color="black">(</font>vec4 <font color="black">&</font>src<font color="black">)</font>;
+    <font color="blue">void</font> <font color="blue">operator</font><font color="black">/</font><font color="black">=</font><font color="black">(</font><font color="blue">float</font> val<font color="black">)</font>;
+
+    vec4 <font color="blue">operator</font><font color="black">+</font><font color="black">(</font><font color="blue">const</font> vec4 <font color="black">&</font>src<font color="black">)</font>
+    <font color="black">{</font><font color="blue">return</font> vec4<font color="black">(</font>x<font color="black">+</font>src.x,y<font color="black">+</font>src.y,z<font color="black">+</font>src.z,w<font color="black">+</font>src.w<font color="black">)</font>;<font color="black">}</font>
+
+    vec4 <font color="blue">operator</font><font color="black">-</font><font color="black">(</font>vec4 <font color="black">&</font>src<font color="black">)</font>
+    <font color="black">{</font><font color="blue">return</font> vec4<font color="black">(</font>x<font color="black">-</font>src.x,y<font color="black">-</font>src.y,z<font color="black">-</font>src.z,w<font color="black">-</font>src.w<font color="black">)</font>;<font color="black">}</font> 
+
+    vec4 <font color="blue">operator</font><font color="black">*</font><font color="black">(</font>vec4 <font color="black">&</font>src<font color="black">)</font>
+    <font color="black">{</font><font color="blue">return</font> vec4<font color="black">(</font>x<font color="black">*</font>src.x,y<font color="black">*</font>src.y,z<font color="black">*</font>src.z,w<font color="black">*</font>src.w<font color="black">)</font>;<font color="black">}</font>
+
+    vec4 <font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">float</font> val<font color="black">)</font>
+    <font color="black">{</font><font color="blue">return</font> vec4<font color="black">(</font>x<font color="black">*</font>val,y<font color="black">*</font>val,z<font color="black">*</font>val,w<font color="black">*</font>val<font color="black">)</font>;<font color="black">}</font>
+
+    vec4 <font color="blue">operator</font><font color="black">*</font><font color="black">(</font>mat4 <font color="black">&</font>src<font color="black">)</font>;
+
+
+    vec4 <font color="blue">operator</font><font color="black">/</font><font color="black">(</font>vec4 <font color="black">&</font>src<font color="black">)</font>
+    <font color="black">{</font><font color="blue">return</font> vec4<font color="black">(</font>x<font color="black">/</font>src.x,y<font color="black">/</font>src.y,z<font color="black">/</font>src.z,w<font color="black">/</font>src.w<font color="black">)</font>;<font color="black">}</font>
+
+    vec4 <font color="blue">operator</font><font color="black">/</font><font color="black">(</font><font color="blue">float</font> val<font color="black">)</font>
+    <font color="black">{</font><font color="blue">return</font> vec4<font color="black">(</font>x<font color="black">/</font>val,y<font color="black">/</font>val,z<font color="black">/</font>val,w<font color="black">/</font>val<font color="black">)</font>;<font color="black">}</font>
+
+    vec4 <font color="blue">operator</font><font color="black">-</font><font color="black">(</font><font color="blue">void</font><font color="black">)</font> <font color="black">{</font><font color="blue">return</font> vec4<font color="black">(</font><font color="black">-</font>x, <font color="black">-</font>y, <font color="black">-</font>z,<font color="black">-</font>w<font color="black">)</font>;<font color="black">}</font>
+    <font color="blue">float</font> <font color="black">&</font> <font color="blue">operator</font><font color="black">[</font><font color="black">]</font><font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">)</font>;
+    <font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font> <font color="blue">operator</font><font color="black">[</font><font color="black">]</font><font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">)</font> <font color="blue">const</font>;
+    <font color="blue">float</font> <font color="black">&</font> <font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">)</font>;
+    <font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font> <font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">)</font> <font color="blue">const</font>;
+
+    <font color="blue">inline</font> vec4 <font color="blue">operator</font><font color="black">-</font><font color="black">(</font><font color="black">)</font> <font color="blue">const</font> <font color="black">{</font><font color="blue">return</font> vec4<font color="black">(</font><font color="black">-</font>x, <font color="black">-</font>y, <font color="black">-</font>z,<font color="black">-</font>w<font color="black">)</font>;<font color="black">}</font>
+    <font color="blue">operator</font> vec3<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">operator</font> vec2<font color="black">(</font><font color="black">)</font>;
+
+    <font color="green">/**
+    * Returns a pointer to the coordinates.
+    */</font>
+    <font color="blue">inline</font> <font color="blue">const</font> <font color="blue">float</font> <font color="black">*</font> GetData<font color="black">(</font><font color="black">)</font> <font color="black">{</font><font color="blue">return</font> <font color="black">&</font>x;<font color="black">}</font> 
+    <font color="green">/**
+    * Returns a const pointer to the coordinates.
+    */</font>
+    <font color="blue">inline</font> <font color="blue">const</font> <font color="blue">float</font> <font color="black">*</font> GetData<font color="black">(</font><font color="black">)</font> <font color="blue">const</font> <font color="black">{</font><font color="blue">return</font> <font color="black">&</font>x;<font color="black">}</font> 
+    <font color="green">/**
+    * Sets the vector to (0,0,0).
+    */</font>
+    <font color="blue">void</font> Clear<font color="black">(</font><font color="black">)</font> <font color="black">{</font>x<font color="black">=</font>y<font color="black">=</font>z<font color="black">=</font>w<font color="black">=</font><font color="maroon">0</font>;<font color="black">}</font>
+    <font color="green">/**
+    * Normalizes the vector.
+    */</font>
+    vec4 Normalize<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Returns the length of the vector
+    */</font>
+    <font color="blue">float</font> Length<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
+    <font color="green">/**
+    * Returns the squared length of the vector
+    */</font>
+    <font color="blue">float</font> Length2<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
+    <font color="green">/**
+    * Performs a dot product between two vectors.
+    */</font>
+    <font color="blue">float</font> Dot<font color="black">(</font><font color="blue">const</font> vec4 <font color="black">&</font>v<font color="black">)</font> <font color="blue">const</font>
+    <font color="black">{</font><font color="blue">return</font> <font color="black">(</font>x<font color="black">*</font>v.x<font color="black">+</font>y<font color="black">*</font>v.y<font color="black">+</font>z<font color="black">*</font>v.z<font color="black">+</font>w<font color="black">*</font>v.w<font color="black">)</font>;<font color="black">}</font>
+
+    <font color="green">/**
+    * Performs a cross product between two vectors and sets to result to this vector.
+    */</font>
+    <font color="blue">void</font> Cross<font color="black">(</font><font color="blue">const</font> vec4 <font color="black">&</font>p,<font color="blue">const</font> vec4 <font color="black">&</font>q<font color="black">)</font>;
+    <font color="blue">void</font> Set<font color="black">(</font><font color="blue">float</font> nx,<font color="blue">float</font> ny,<font color="blue">float</font> nz,<font color="blue">float</font> nw<font color="black">)</font>
+    <font color="black">{</font>x<font color="black">=</font>nx;y<font color="black">=</font>ny;z<font color="black">=</font>nz;w<font color="black">=</font>nw;<font color="black">}</font>
+    <font color="green">/**
+    * Sets all coordinates.
+    */</font>
+    <font color="blue">void</font> Set<font color="black">(</font><font color="blue">float</font> nv<font color="black">)</font>
+    <font color="black">{</font>x<font color="black">=</font>nv;y<font color="black">=</font>nv;z<font color="black">=</font>nv;w<font color="black">=</font>nv;<font color="black">}</font>  
+    <font color="green">/**
+    * Converts to a vec2 by ignoring the z,w coordinates.
+    */</font>
+    vec2 ToVec2<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Converts to a vec3 by ignoring the w coordinate.
+    */</font>
+    vec3 ToVec3<font color="black">(</font><font color="black">)</font>;
+    
+    <font color="green">/**
+    * Sets the length of the vector.
+    */</font>
+    <font color="blue">void</font> SetLength<font color="black">(</font><font color="blue">float</font> l<font color="black">)</font>;
+    <font color="green">/**
+    * Rotates the vector around the X axis.
+    * @param ang The amount to rotate in radians.
+    */</font>
+    <font color="blue">void</font> RotateX<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>;
+    <font color="green">/**
+    * Rotates the vector around the Y axis.
+    * @param ang The amount to rotate in radians.
+    */</font>
+    <font color="blue">void</font> RotateY<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>;
+    <font color="green">/**
+    * Rotates the vector around the Z axis.
+    * @param ang The amount to rotate in radians.
+    */</font>
+    <font color="blue">void</font> RotateZ<font color="black">(</font><font color="blue">float</font> ang<font color="black">)</font>;
+    <font color="green">/**
+    * Creates a vector from two angles.
+    */</font>
+    <font color="blue">void</font> FromAngles<font color="black">(</font><font color="blue">float</font> angx,<font color="blue">float</font> angy<font color="black">)</font>; 
+    <font color="green">/**
+    * Checks whether the vector contain valid floating point numbers.
+    */</font>
+    <font color="blue">inline</font> <font color="blue">bool</font> Sensible<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
+
+    <font color="blue">float</font> x,y,z,w;  
+<font color="black">}</font>;
+vec4 FIRECUBE_API <font color="blue">operator</font><font color="black">+</font><font color="black">(</font><font color="blue">const</font> vec4 <font color="black">&</font>a,<font color="blue">const</font> vec4 <font color="black">&</font>b<font color="black">)</font>;
+vec4 FIRECUBE_API <font color="blue">operator</font><font color="black">-</font><font color="black">(</font><font color="blue">const</font> vec4 <font color="black">&</font>a,<font color="blue">const</font> vec4 <font color="black">&</font>b<font color="black">)</font>;
+vec4 FIRECUBE_API <font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">const</font> vec4 <font color="black">&</font>a,<font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font>b<font color="black">)</font>;
+vec4 FIRECUBE_API <font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font>a,<font color="blue">const</font> vec4 <font color="black">&</font>b<font color="black">)</font>;
+<font color="green">/**
+* Performs a cross product between two vectors.
+*/</font>
+vec4 FIRECUBE_API Cross<font color="black">(</font><font color="blue">const</font> vec4 a,<font color="blue">const</font> vec4 b<font color="black">)</font>;
+<font color="green">/**
+* Performs a dot product between two vectors.
+*/</font>
+<font color="blue">float</font> FIRECUBE_API Dot<font color="black">(</font><font color="blue">const</font> vec4 a,<font color="blue">const</font> vec4 b<font color="black">)</font>;
+<font color="blue">#endif</font>
+</PRE>
+</BODY>
+</HTML>

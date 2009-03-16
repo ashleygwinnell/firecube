@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<TITLE>
+Font.cpp
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#include</font> <font color="maroon">&#60;string&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;vector&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;sstream&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;iostream&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/shared_array.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
+<font color="blue">using</font> <font color="blue">namespace</font> std;
+<font color="blue">#include</font> <font color="maroon">&#60;windows.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;SDL/SDL.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;SDL/SDL_image.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;gl/gl.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;ft2build.h&#62;</font>
+<font color="blue">#include</font> FT_FREETYPE_H
+<font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
+<font color="blue">#include</font> <font color="maroon">"privateFont.h"</font>
+<font color="blue">using</font> <font color="blue">namespace</font> FireCube;
+
+FT_Library  freeTypeLibrary;
+
+FontManager<font color="black">:</font><font color="black">:</font>FontManager<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    
+<font color="black">}</font>
+boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FontPage<font color="black">&#62;</font> FontManager<font color="black">:</font><font color="black">:</font>CreateNewPage<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FontPage<font color="black">&#62;</font> p<font color="black">(</font><font color="blue">new</font> FontPage<font color="black">)</font>;
+    p<font color="black">-</font><font color="black">&#62;</font>tex<font color="black">=</font>Texture<font color="black">(</font><font color="blue">new</font> TextureResource<font color="black">)</font>;    
+    p<font color="black">-</font><font color="black">&#62;</font>tex<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
+    glBindTexture<font color="black">(</font>GL_TEXTURE_2D,p<font color="black">-</font><font color="black">&#62;</font>tex<font color="black">-</font><font color="black">&#62;</font>id<font color="black">)</font>;
+    <font color="blue">unsigned</font> <font color="blue">char</font> empty<font color="black">[</font><font color="maroon">512</font><font color="black">*</font><font color="maroon">512</font><font color="black">]</font>;
+    ZeroMemory<font color="black">(</font>empty,<font color="maroon">512</font><font color="black">*</font><font color="maroon">512</font><font color="black">)</font>;
+    glTexImage2D<font color="black">(</font>GL_TEXTURE_2D,<font color="maroon">0</font>,GL_ALPHA,<font color="maroon">512</font>,<font color="maroon">512</font>,<font color="maroon">0</font>,GL_ALPHA,GL_UNSIGNED_BYTE,empty<font color="black">)</font>;   
+    p<font color="black">-</font><font color="black">&#62;</font>textureSize<font color="black">=</font><font color="maroon">512</font>;
+    p<font color="black">-</font><font color="black">&#62;</font>curPos<font color="black">=</font>vec2<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;
+    page.push_back<font color="black">(</font>p<font color="black">)</font>;
+    <font color="blue">return</font> p;
+<font color="black">}</font>
+boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FontResource<font color="black">&#62;</font> FontManager<font color="black">:</font><font color="black">:</font>Create<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename,<font color="blue">int</font> size<font color="black">)</font>
+<font color="black">{</font>
+    ostringstream oss;
+    oss <font color="black">&#60;</font><font color="black">&#60;</font> filename <font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">":"</font> <font color="black">&#60;</font><font color="black">&#60;</font> size;
+    <font color="blue">return</font> ResourceManager<font color="black">&#60;</font>FontResource<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>Create<font color="black">(</font>oss.str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+<font color="black">}</font>
+FontResource<font color="black">:</font><font color="black">:</font>FontResource<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>   
+    glyph.resize<font color="black">(</font><font color="maroon">256</font><font color="black">)</font>;
+    fontImpl<font color="black">=</font><font color="blue">new</font> FontImpl;
+<font color="black">}</font>
+FontResource<font color="black">:</font><font color="black">:</font>~FontResource<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font><font color="maroon">"Destroying font.\n"</font><font color="black">)</font>;
+    <font color="blue">delete</font> fontImpl;
+<font color="black">}</font>
+<font color="blue">bool</font> FontResource<font color="black">:</font><font color="black">:</font>AddChar<font color="black">(</font><font color="blue">char</font> c<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">int</font> <font color="blue">error</font>;
+    FT_UInt glyph_index;
+    glyph_index<font color="black">=</font>FT_Get_Char_Index<font color="black">(</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face,c<font color="black">)</font>;
+    <font color="blue">error</font><font color="black">=</font>FT_Load_Glyph<font color="black">(</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face,glyph_index,FT_LOAD_DEFAULT<font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font><font color="blue">error</font><font color="black">)</font>
+        <font color="blue">return</font> <font color="blue">false</font>;
+    <font color="blue">if</font> <font color="black">(</font>c<font color="black">=</font><font color="black">=</font><font color="maroon">32</font><font color="black">)</font>
+    <font color="black">{</font>
+        glyph<font color="black">[</font>c<font color="black">]</font>.advance<font color="black">=</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>advance.x<font color="black">&#62;</font><font color="black">&#62;</font><font color="maroon">6</font>;
+        <font color="blue">return</font> <font color="blue">true</font>;
+    <font color="black">}</font>   
+    <font color="blue">error</font><font color="black">=</font>FT_Render_Glyph<font color="black">(</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph,FT_RENDER_MODE_NORMAL<font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font><font color="blue">error</font><font color="black">)</font>
+        <font color="blue">return</font> <font color="blue">false</font>;
+    <font color="blue">if</font> <font color="black">(</font>page<font color="black">-</font><font color="black">&#62;</font>textureSize<font color="black">-</font>page<font color="black">-</font><font color="black">&#62;</font>curPos.x<font color="black">&#60;</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.width<font color="black">)</font>
+    <font color="black">{</font>
+        page<font color="black">-</font><font color="black">&#62;</font>curPos.x<font color="black">=</font><font color="maroon">0</font>;
+        page<font color="black">-</font><font color="black">&#62;</font>curPos.y<font color="black">+</font><font color="black">=</font>size;
+    <font color="black">}</font>
+    <font color="blue">if</font> <font color="black">(</font>page<font color="black">-</font><font color="black">&#62;</font>textureSize<font color="black">-</font>page<font color="black">-</font><font color="black">&#62;</font>curPos.y<font color="black">&#60;</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.rows<font color="black">)</font>
+        <font color="blue">return</font> <font color="blue">false</font>;
+    glTexSubImage2D<font color="black">(</font>GL_TEXTURE_2D,<font color="maroon">0</font>,<font color="black">(</font><font color="blue">int</font><font color="black">)</font>page<font color="black">-</font><font color="black">&#62;</font>curPos.x,<font color="black">(</font><font color="blue">int</font><font color="black">)</font>page<font color="black">-</font><font color="black">&#62;</font>curPos.y,fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.width,fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.rows,GL_ALPHA,GL_UNSIGNED_BYTE,fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.buffer<font color="black">)</font>;
+    glyph<font color="black">[</font>c<font color="black">]</font>.uv<font color="black">=</font>page<font color="black">-</font><font color="black">&#62;</font>curPos<font color="black">/</font><font color="maroon">512</font>.0f;
+    glyph<font color="black">[</font>c<font color="black">]</font>.size<font color="black">=</font>vec2<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.width,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap.rows<font color="black">)</font>;
+    glyph<font color="black">[</font>c<font color="black">]</font>.bitmapOffset<font color="black">=</font>vec2<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap_left,size<font color="black">-</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>bitmap_top<font color="black">)</font>;
+    glyph<font color="black">[</font>c<font color="black">]</font>.advance<font color="black">=</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>advance.x<font color="black">&#62;</font><font color="black">&#62;</font><font color="maroon">6</font>;
+    page<font color="black">-</font><font color="black">&#62;</font>curPos.x<font color="black">+</font><font color="black">=</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">-</font><font color="black">&#62;</font>glyph<font color="black">-</font><font color="black">&#62;</font>advance.x<font color="black">&#62;</font><font color="black">&#62;</font><font color="maroon">6</font>;        
+    
+    <font color="blue">return</font> <font color="blue">true</font>;
+<font color="black">}</font>
+<font color="blue">bool</font> FontResource<font color="black">:</font><font color="black">:</font>Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">int</font> size<font color="black">)</font>
+<font color="black">{</font>   
+    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font><font color="maroon">"Loading font with name:"</font><font color="black">)</font>;
+    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font><font color="blue">name</font><font color="black">)</font>;
+    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font><font color="maroon">"\n"</font><font color="black">)</font>;
+    <font color="blue">int</font> <font color="blue">error</font><font color="black">=</font><font color="maroon">0</font>;
+    <font color="blue">char</font> text<font color="black">[</font><font color="black">]</font><font color="black">=</font><font color="maroon">"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-=_+[]{};:'\"\\|,./&#60;&#62;?/*. "</font>;
+    <font color="blue">this</font><font color="black">-</font><font color="black">&#62;</font>size<font color="black">=</font>size;        
+    <font color="blue">error</font><font color="black">=</font>FT_New_Face<font color="black">(</font>freeTypeLibrary,<font color="blue">name</font>.c_str<font color="black">(</font><font color="black">)</font>,<font color="maroon">0</font>,<font color="black">&</font><font color="black">(</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face<font color="black">)</font><font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font><font color="blue">error</font><font color="black">)</font>
+        <font color="blue">return</font> <font color="blue">false</font>;
+    <font color="blue">error</font><font color="black">=</font>FT_Set_Pixel_Sizes<font color="black">(</font>fontImpl<font color="black">-</font><font color="black">&#62;</font>face,<font color="maroon">0</font>,size<font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font><font color="blue">error</font><font color="black">)</font>
+        <font color="blue">return</font> <font color="blue">false</font>;
+    vector<font color="black">&#60;</font>boost<font color="black">:</font><font color="black">:</font>weak_ptr<font color="black">&#60;</font>FontPage<font color="black">&#62;</font><font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator p<font color="black">=</font>Renderer<font color="black">:</font><font color="black">:</font>GetFontManager<font color="black">(</font><font color="black">)</font><font color="black">-</font><font color="black">&#62;</font>page.begin<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">bool</font> found<font color="black">=</font><font color="blue">false</font>;
+    <font color="blue">for</font> <font color="black">(</font>;p<font color="black">!</font><font color="black">=</font>Renderer<font color="black">:</font><font color="black">:</font>GetFontManager<font color="black">(</font><font color="black">)</font><font color="black">-</font><font color="black">&#62;</font>page.end<font color="black">(</font><font color="black">)</font>;p<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>p<font color="black">-</font><font color="black">&#62;</font>expired<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+        <font color="black">{</font>
+            boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FontPage<font color="black">&#62;</font> pg<font color="black">=</font>p<font color="black">-</font><font color="black">&#62;</font>lock<font color="black">(</font><font color="black">)</font>;
+            <font color="blue">int</font> availSpace<font color="black">=</font><font color="black">(</font>pg<font color="black">-</font><font color="black">&#62;</font>textureSize<font color="black">-</font><font color="black">(</font><font color="black">(</font><font color="blue">int</font><font color="black">)</font>pg<font color="black">-</font><font color="black">&#62;</font>curPos.y<font color="black">+</font>size<font color="black">)</font><font color="black">)</font><font color="black">*</font>pg<font color="black">-</font><font color="black">&#62;</font>textureSize<font color="black">+</font><font color="black">(</font>pg<font color="black">-</font><font color="black">&#62;</font>textureSize<font color="black">-</font><font color="black">(</font><font color="black">(</font><font color="blue">int</font><font color="black">)</font>pg<font color="black">-</font><font color="black">&#62;</font>curPos.x<font color="black">+</font>size<font color="black">)</font><font color="black">)</font><font color="black">*</font>size;
+            <font color="blue">if</font> <font color="black">(</font>availSpace<font color="black">&#62;</font><font color="black">=</font><font color="black">(</font><font color="blue">int</font><font color="black">)</font>strlen<font color="black">(</font>text<font color="black">)</font><font color="black">*</font>size<font color="black">*</font>size<font color="black">)</font>
+            <font color="black">{</font>
+                found<font color="black">=</font><font color="blue">true</font>;
+                <font color="blue">break</font>;
+            <font color="black">}</font>
+        <font color="black">}</font>
+    <font color="black">}</font>
+    <font color="blue">if</font> <font color="black">(</font>found<font color="black">)</font>
+        page<font color="black">=</font><font color="black">(</font><font color="black">*</font>p<font color="black">)</font>.lock<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">else</font>
+    <font color="black">{</font>
+        page<font color="black">=</font>Renderer<font color="black">:</font><font color="black">:</font>GetFontManager<font color="black">(</font><font color="black">)</font><font color="black">-</font><font color="black">&#62;</font>CreateNewPage<font color="black">(</font><font color="black">)</font>;
+    <font color="black">}</font>
+    glBindTexture<font color="black">(</font>GL_TEXTURE_2D,page<font color="black">-</font><font color="black">&#62;</font>tex<font color="black">-</font><font color="black">&#62;</font>id<font color="black">)</font>; 
+    glPixelStorei<font color="black">(</font>GL_UNPACK_ALIGNMENT,<font color="maroon">1</font><font color="black">)</font>;
+    <font color="blue">for</font> <font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>strlen<font color="black">(</font>text<font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>       
+        AddChar<font color="black">(</font>text<font color="black">[</font>i<font color="black">]</font><font color="black">)</font>;
+    <font color="black">}</font>   
+    glTexParameteri<font color="black">(</font>GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST<font color="black">)</font>;
+    glTexParameteri<font color="black">(</font>GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST<font color="black">)</font>;
+    glTexParameteri<font color="black">(</font>GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP<font color="black">)</font>;
+    glTexParameteri<font color="black">(</font>GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP<font color="black">)</font>;
+    <font color="blue">return</font> <font color="blue">true</font>;
+<font color="black">}</font>
+<font color="blue">bool</font> FontResource<font color="black">:</font><font color="black">:</font>Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">int</font> size<font color="black">=</font><font color="maroon">0</font>;
+    string<font color="black">:</font><font color="black">:</font>size_type d;
+    d<font color="black">=</font><font color="blue">name</font>.find_last_of<font color="black">(</font><font color="maroon">":"</font><font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>d<font color="black">=</font><font color="black">=</font>string<font color="black">:</font><font color="black">:</font>npos<font color="black">)</font>
+        <font color="blue">return</font> <font color="blue">false</font>;
+    string ssize<font color="black">=</font><font color="blue">name</font>.substr<font color="black">(</font>d<font color="black">+</font><font color="maroon">1</font><font color="black">)</font>;
+    string fontName<font color="black">=</font><font color="blue">name</font>.substr<font color="black">(</font><font color="maroon">0</font>,d<font color="black">)</font>;   
+    size<font color="black">=</font>atoi<font color="black">(</font>ssize.c_str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+    <font color="blue">return</font> Load<font color="black">(</font>fontName,size<font color="black">)</font>;
+<font color="black">}</font>
+
+</PRE>
+</BODY>
+</HTML>

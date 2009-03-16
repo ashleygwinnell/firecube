@@ -1,0 +1,40 @@
+<HTML>
+<HEAD>
+<TITLE>
+Timer.cpp
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#include</font> <font color="maroon">&#60;string&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;vector&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
+<font color="blue">using</font> <font color="blue">namespace</font> std;
+<font color="blue">#include</font> <font color="maroon">&#60;SDL/SDL.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;windows.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">"GLee.h"</font>
+<font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
+<font color="blue">using</font> <font color="blue">namespace</font> FireCube;
+
+<font color="blue">void</font> Timer<font color="black">:</font><font color="black">:</font>Init<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    LARGE_INTEGER freq;
+    QueryPerformanceFrequency<font color="black">(</font><font color="black">&</font>freq<font color="black">)</font>;
+    QueryPerformanceCounter<font color="black">(</font><font color="black">&</font>now<font color="black">)</font>;
+    res<font color="black">=</font><font color="black">(</font><font color="blue">double</font><font color="black">)</font><font color="black">(</font><font color="maroon">1</font>.<font color="maroon">0</font><font color="black">/</font><font color="black">(</font><font color="blue">double</font><font color="black">)</font>freq.QuadPart<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Timer<font color="black">:</font><font color="black">:</font>Update<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    QueryPerformanceCounter<font color="black">(</font><font color="black">&</font>now<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">double</font> Timer<font color="black">:</font><font color="black">:</font>Passed<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    QueryPerformanceCounter<font color="black">(</font><font color="black">&</font>temp<font color="black">)</font>; 
+    <font color="blue">return</font> <font color="black">(</font>temp.QuadPart<font color="black">-</font>now.QuadPart<font color="black">)</font><font color="black">*</font>res;
+<font color="black">}</font>
+
+</PRE>
+</BODY>
+</HTML>

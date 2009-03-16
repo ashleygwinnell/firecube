@@ -1,0 +1,60 @@
+<HTML>
+<HEAD>
+<TITLE>
+Texture.h
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#ifndef</font> TEXTURE_MANAGER_H
+<font color="blue">#define</font> TEXTURE_MANAGER_H
+
+<font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>push<font color="black">)</font>
+<font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
+<font color="blue">enum</font> TextureFilter
+<font color="black">{</font>
+    NEAREST,LINEAR,MIPMAP
+<font color="black">}</font>;
+<font color="green">/**
+* A 2d texture.
+*/</font>
+<font color="blue">class</font> FIRECUBE_API TextureResource
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font>
+    TextureResource<font color="black">(</font><font color="black">)</font>;
+    ~TextureResource<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Loads a texture.
+    * @param filename The file to load.
+    */</font>
+    <font color="blue">bool</font> Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>;
+    <font color="green">/**
+    * Returns whether the texture is valid.
+    */</font>
+    <font color="blue">bool</font> IsValid<font color="black">(</font><font color="black">)</font>; 
+    <font color="green">/**
+    * Creates a new texture.
+    */</font>
+    <font color="blue">bool</font> Create<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Generates mipmaps for the texture.
+    */</font>
+    <font color="blue">void</font> GenerateMipMaps<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Sets the texture filtering.
+    * @param minFilter The minifying filter.
+    * @param magFilter The magnification filter.
+    */</font>
+    <font color="blue">void</font> SetFiltering<font color="black">(</font>TextureFilter minFilter,TextureFilter magFilter<font color="black">)</font>;
+
+    GLuint id;
+<font color="black">}</font>;  
+
+<font color="blue">typedef</font> ResourceManager<font color="black">&#60;</font>TextureResource<font color="black">&#62;</font> TextureManager;
+<font color="blue">typedef</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>TextureResource<font color="black">&#62;</font> Texture;
+
+<font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>pop<font color="black">)</font>
+<font color="blue">#endif</font>
+</PRE>
+</BODY>
+</HTML>
