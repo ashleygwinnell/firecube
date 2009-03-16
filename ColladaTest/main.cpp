@@ -13,7 +13,6 @@ using namespace std;
 #include <FireCube.h>
 using namespace FireCube;
 #include "app.h"
-#include "ColladaLoader.h"
 
 App app;
 vec3 rot(0,0,-15);
@@ -27,15 +26,14 @@ int main(int argc, char *argv[])
 bool App::Init()
 {
 	model=Model(new ModelResource);
-	program=Program(new ProgramResource);
+	Program program=Program(new ProgramResource);
 	program->Create(Renderer::GetShaderManager()->Create("plainColor.vshader"),Renderer::GetShaderManager()->Create("plainColor.fshader"));	
 	cout << program->GetInfoLog();
 	SetTitle("ColladaTest");
 	font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);
 	if (!font)
 		return false;
-	ColladaLoader loader(model.get());
-	loader.Load("duck.dae");
+	model->Load("duck.dae");
 	model->SetProgram(program);
 	return true;
 }
@@ -47,20 +45,7 @@ void App::Render(float time)
 	t.Translate(vec3(0,0,rot.z));
 	t.RotateX(rot.x);
 	t.RotateY(rot.y);
-	Renderer::SetModelViewMatrix(t);
-	Renderer::UseProgram(program);
-	vector<int> textured(8);
-	vector<int> textureId(8);
-	for (DWORD i=0;i<model->material.size();i++)
-		for (DWORD t=0;t<MAX_TEXTURES;t++)
-			if ((model->material[i]->texture[t]) && (model->material[i]->texture[t]->IsValid()))
-				textured[t]=true;
-			else
-				textured[t]=false;
-	for (DWORD t=0;t<MAX_TEXTURES;t++)	
-		textureId[t]=t;
-	program->SetUniform("texture",textureId);
-	program->SetUniform("textured",textured);
+	Renderer::SetModelViewMatrix(t);	
 	Renderer::Render(model);
 	Renderer::SetOrthographicProjection();
 	Renderer::SetModelViewMatrix(mat4());

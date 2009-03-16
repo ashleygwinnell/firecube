@@ -20,7 +20,7 @@ void main()
 	vec3 lightDir=vec3(1.0,1.0,1.0) * gl_NormalMatrix;
 	lightDir=normalize(lightDir);
 	float d=max(dot(n,lightDir),0.0);
-	color = gl_FrontMaterial.ambient;
+	color = gl_FrontMaterial.ambient*vec4(0.5,0.5,0.5,1.0);
 	color+=gl_FrontMaterial.diffuse*d*ApplyTextures();
 	gl_FragColor=color;
 }

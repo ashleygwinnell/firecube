@@ -174,10 +174,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\ColladaLoader.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -189,10 +185,6 @@
 			>
 			<File
 				RelativePath=".\app.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ColladaLoader.h"
 				>
 			</File>
 		</Filter>

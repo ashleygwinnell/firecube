@@ -7,6 +7,5 @@ public:
 	void HandleInput(float time);
 	
 	Font font;	
-	Model model;
-	Program program;
+	Model model;	
 };
