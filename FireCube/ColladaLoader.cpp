@@ -281,18 +281,10 @@ void ColladaLoader::LoadNodes()
 }
 bool ColladaLoader::Load(const string &filename)
 {
-	char currentDir[512];
-	GetCurrentDirectoryA(512,currentDir);	
-	string::size_type i=filename.find_last_of('\\');
-	if (i!=string::npos)
-	{
-		basepath=filename.substr(0,i+1);		
-	}	
-	SetCurrentDirectoryA(basepath.c_str());
 	daeInt result = colladaDom.load(filename.c_str());
 
 	if(result != DAE_OK) {		
-		SetCurrentDirectoryA(currentDir);
+
 		return false;
 	}
 
@@ -301,7 +293,6 @@ bool ColladaLoader::Load(const string &filename)
 
 
 	model->UpdateBuffers();
-	SetCurrentDirectoryA(currentDir);
 	return true;
 }
 ColladaLoader::Source ColladaLoader::ReadSource(domSourceRef source)

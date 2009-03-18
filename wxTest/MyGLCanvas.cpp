@@ -37,7 +37,7 @@ MyGLCanvas::MyGLCanvas(wxWindow *parent, const MyGLCanvas *other,
 						   const wxString& name )
 						   : wxGLCanvas(parent, other->GetContext(), id, pos, size, style|wxFULL_REPAINT_ON_RESIZE , name), init(false)
 {
-
+	
 
 }
 

@@ -61,7 +61,6 @@ private:
 	DAE colladaDom;
 	ModelResource *model;
 	map<string,string> imageMap;
-	string basepath;
 };
 
 #pragma warning(pop)

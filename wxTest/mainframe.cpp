@@ -28,34 +28,33 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	panel1 = new wxPanel( notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxGridSizer* gSizer1;
-	gSizer1 = new wxGridSizer( 2, 2, 0, 0 );
+	wxBoxSizer* bSizer21;
+	bSizer21 = new wxBoxSizer( wxVERTICAL );
 	
-	gSizer1->SetMinSize( wxSize( 100,-1 ) ); 
 	staticText1 = new wxStaticText( panel1, wxID_ANY, wxT("Vertices:"), wxDefaultPosition, wxDefaultSize, 0 );
 	staticText1->Wrap( -1 );
-	gSizer1->Add( staticText1, 0, wxALL, 5 );
+	bSizer21->Add( staticText1, 0, wxALL, 5 );
 	
 	textCtrl1 = new wxTextCtrl( panel1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	textCtrl1->Enable( false );
 	
-	gSizer1->Add( textCtrl1, 0, wxALL, 1 );
+	bSizer21->Add( textCtrl1, 0, wxALL, 1 );
 	
 	staticText2 = new wxStaticText( panel1, wxID_ANY, wxT("Faces:"), wxDefaultPosition, wxDefaultSize, 0 );
 	staticText2->Wrap( -1 );
-	gSizer1->Add( staticText2, 0, wxALL, 5 );
+	bSizer21->Add( staticText2, 0, wxALL, 5 );
 	
 	textCtrl2 = new wxTextCtrl( panel1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	textCtrl2->Enable( false );
 	
-	gSizer1->Add( textCtrl2, 0, wxALL, 1 );
+	bSizer21->Add( textCtrl2, 0, wxALL, 1 );
 	
-	panel1->SetSizer( gSizer1 );
+	panel1->SetSizer( bSizer21 );
 	panel1->Layout();
-	gSizer1->Fit( panel1 );
-	notebook1->AddPage( panel1, wxT("Info"), false );
+	bSizer21->Fit( panel1 );
+	notebook1->AddPage( panel1, wxT("Info"), true );
 	panel2 = new wxPanel( notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	notebook1->AddPage( panel2, wxT("Rendering"), true );
+	notebook1->AddPage( panel2, wxT("Rendering"), false );
 	
 	bSizer2->Add( notebook1, 1, wxEXPAND | wxALL, 5 );
 	

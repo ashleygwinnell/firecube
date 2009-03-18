@@ -34,11 +34,6 @@ void MyMainFrame::MenuItem2Clicked( wxCommandEvent& event )
 	if (sfile=="")
 		return;
 	string::size_type d=sfile.find_last_of("\\");
-	if (d!=string::npos)
-	{
-		string path=sfile.substr(0,d+1);
-		wxSetWorkingDirectory(path.c_str());
-	}
 	fcApp->LoadModel(sfile);
 }
 void MyMainFrame::MenuItem3Clicked( wxCommandEvent& event )
