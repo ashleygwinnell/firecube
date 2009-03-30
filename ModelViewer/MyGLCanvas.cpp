@@ -48,24 +48,25 @@ void MyGLCanvas::Init()
 {
 	FireCubeApp *fcApp=&(((MyApp*)wxTheApp)->fireCubeApp);
 	MyApp *app=(MyApp*)wxTheApp;
-	FireCube::Application::AddSearchPath("../Media/Textures");
+	FireCube::Application::AddSearchPath("../Media/Textures");	
 	fcApp->InitializeNoWindow();
 
 	rot=FireCube::vec3(0,0,-5);
+	lookat=FireCube::vec3(0,0,0);
 	fcApp->font=FireCube::Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);
 	bgColor=FireCube::vec4(0.249f,0.521f,1.0f,1.0f);
 	renderingMode=GL_FILL;
 	cullFaceEnabled=true;
 	renderNormals=false;
 
-	fcApp->vshader=FireCube::Renderer::GetShaderManager()->Create("v.vshader");
-	fcApp->fshader=FireCube::Renderer::GetShaderManager()->Create("p.fshader");
+	fcApp->vshader=FireCube::Renderer::GetShaderManager()->Create("plainColor.vshader");
+	fcApp->fshader=FireCube::Renderer::GetShaderManager()->Create("plainColor.fshader");
 	fcApp->program=FireCube::Program(new FireCube::ProgramResource);
 	fcApp->program->Create(fcApp->vshader,fcApp->fshader);
 	
 	fcApp->normalRenderingBuffer=FireCube::Buffer(new FireCube::BufferResource);
 	fcApp->normalRenderingBuffer->Create();
-	fcApp->normalRenderingProgram=FireCube::Program(new FireCube::ProgramResource);
+	fcApp->plainColorProgram=FireCube::Program(new FireCube::ProgramResource);
 	FireCube::Shader nvShader(new FireCube::ShaderResource);
 	FireCube::Shader nfShader(new FireCube::ShaderResource);
 	nvShader->Create(FireCube::VERTEX_SHADER,"void main() \
@@ -73,13 +74,15 @@ void MyGLCanvas::Init()
 									gl_Position = ftransform(); \
 								  } ");
 
-	nfShader->Create(FireCube::FRAGMENT_SHADER,"uniform sampler2D tex0; \
+	nfShader->Create(FireCube::FRAGMENT_SHADER,"uniform vec4 color; \
 									void main() \
 									{ \
-									gl_FragColor = vec4(1.0,1.0,1.0,1.0);  \
+									gl_FragColor = color;  \
 									} ");
-	fcApp->normalRenderingProgram->Create(nvShader,nfShader);	
-	fcApp->LoadModel("../Media/Models/teapot2.3ds");		
+	fcApp->plainColorProgram->Create(nvShader,nfShader);		
+	normalsLength=0.1f;
+	fcApp->LoadModel("../Media/Models/teapot2.3ds");
+	CreateGrid(2,20);
 }
 void MyGLCanvas::Render()
 {	
@@ -92,23 +95,28 @@ void MyGLCanvas::Render()
 		init=true;
 		Init();
 	}	
-	glPolygonMode(GL_FRONT_AND_BACK,renderingMode);
-	if (cullFaceEnabled)
-		glEnable(GL_CULL_FACE);
-	else
-		glDisable(GL_CULL_FACE);
 	FireCube::Renderer::Clear(bgColor,1.0f);
 	FireCube::mat4 mat;
 	mat.Identity();
 	FireCube::Renderer::SetPerspectiveProjection(90.0f,0.1f,1000.0f);		
+	mat.Translate(lookat);
 	mat.Translate(FireCube::vec3(0,0,rot.z));
 	mat.RotateX(rot.x);
 	mat.RotateY(rot.y);	
 	FireCube::Renderer::SetModelViewMatrix(mat);
+	RenderGrid();
+	if (cullFaceEnabled)
+		glEnable(GL_CULL_FACE);
+	else
+		glDisable(GL_CULL_FACE);
+	
+	glPolygonMode(GL_FRONT_AND_BACK,renderingMode);
+
 	FireCube::Renderer::Render(fcApp->model);	
 	if (renderNormals)
 	{
-		FireCube::Renderer::UseProgram(fcApp->normalRenderingProgram);
+		FireCube::Renderer::UseProgram(fcApp->plainColorProgram);
+		fcApp->plainColorProgram->SetUniform("color",FireCube::vec4(1,1,1,1));
 		fcApp->normalRenderingBuffer->SetVertexStream(3);
 		FireCube::Renderer::RenderStream(FireCube::LINES,fcApp->normalRenderingBufferSize);
 	}
@@ -122,8 +130,7 @@ void MyGLCanvas::Render()
 }
 
 void MyGLCanvas::OnEnterWindow( wxMouseEvent& event )
-{
-	SetFocus();
+{	
 	lastpos=FireCube::vec2(event.GetPosition().x,event.GetPosition().y);
 }
 
@@ -158,8 +165,13 @@ void MyGLCanvas::OnMotion(wxMouseEvent& event)
 	FireCube::vec2 curpos(event.GetPosition().x,event.GetPosition().y);
 	if (event.LeftIsDown())	
 	{		
-		rot.x-=(curpos.y-lastpos.y)/30.0f;
-		rot.y-=(curpos.x-lastpos.x)/30.0f;
+		rot.x-=(curpos.y-lastpos.y)/60.0f;
+		rot.y-=(curpos.x-lastpos.x)/60.0f;
+	}
+	if (event.RightIsDown())	
+	{		
+		lookat.x+=(curpos.x-lastpos.x)/30.0f;
+		lookat.y-=(curpos.y-lastpos.y)/30.0f;
 	}
 	if (event.MiddleIsDown())
 	{
@@ -179,4 +191,53 @@ void MyGLCanvas::OnMouseWheel(wxMouseEvent& event)
 	else	
 		rot.z+=(float)r/150.0f;
 	this->Refresh(false);	
+}
+void MyGLCanvas::CreateGrid(float size,DWORD numberOfCells)
+{	
+	vector<FireCube::vec3> vertices;
+	vector<DWORD> indices;
+	for (DWORD j=0;j<numberOfCells+1;j++)
+		for (DWORD i=0;i<numberOfCells+1;i++)
+		{
+			FireCube::vec3 pos((float)i*size-size*(float)numberOfCells/2.0f,0,(float)j*size-size*(float)numberOfCells/2.0f);
+			vertices.push_back(pos);
+		}
+	for (DWORD j=0;j<numberOfCells;j++)
+	{
+		for (DWORD i=0;i<numberOfCells;i++)
+		{
+			indices.push_back(j*(numberOfCells+1)+i);			
+			indices.push_back(j*(numberOfCells+1)+i+1);
+
+			indices.push_back(j*(numberOfCells+1)+i+1);				
+			indices.push_back((j+1)*(numberOfCells+1)+i+1);
+
+			indices.push_back((j+1)*(numberOfCells+1)+i+1);
+			indices.push_back((j+1)*(numberOfCells+1)+i);
+
+			indices.push_back((j+1)*(numberOfCells+1)+i);
+			indices.push_back(j*(numberOfCells+1)+i);			
+		}
+	}
+	gridCount=indices.size();	
+	gridVertex=FireCube::Buffer(new FireCube::BufferResource);
+	gridIndices=FireCube::Buffer(new FireCube::BufferResource);
+	gridVertex->Create();
+	gridIndices->Create();
+	gridVertex->LoadData(&vertices[0],vertices.size()*sizeof(FireCube::vec3),FireCube::STATIC);
+	gridIndices->LoadIndexData(&indices[0],indices.size(),FireCube::STATIC);
+}
+void MyGLCanvas::RenderGrid()
+{
+	FireCubeApp *fcApp=&(((MyApp*)wxTheApp)->fireCubeApp);
+	glDisable(GL_BLEND);
+	
+	FireCube::Renderer::UseProgram(fcApp->plainColorProgram);
+	fcApp->plainColorProgram->SetUniform("color",FireCube::vec4(0.7f,0.7f,0.7f,1.0f));
+	gridVertex->SetVertexStream(3);
+	gridIndices->SetIndexStream();
+	FireCube::Renderer::DisableNormalStream();
+	for (DWORD i=0;i<FireCube::MAX_TEXTURES;i++)
+		FireCube::Renderer::DisableTexCoordStream(i);
+	FireCube::Renderer::RenderIndexStream(FireCube::LINES,gridCount);
 }

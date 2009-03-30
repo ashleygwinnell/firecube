@@ -16,12 +16,18 @@ protected:
 	void MenuItem1Clicked( wxCommandEvent& event );
 	void MenuItem2Clicked( wxCommandEvent& event );
 	void MenuItem3Clicked( wxCommandEvent& event );
-	void MenuItem4Clicked( wxCommandEvent& event );
+	void MenuItem4Clicked( wxCommandEvent& event );	
+	void CheckBox2Clicked( wxCommandEvent& event );
+	void RadioBox1Clicked( wxCommandEvent& event );
+	void TextCtrl3TextEnter( wxCommandEvent& event );
+	void CheckBox3Clicked( wxCommandEvent& event );
+	void ColourPicker1Changed( wxColourPickerEvent& event );
+	void Button1Clicked( wxCommandEvent& event );
+	void Button2Clicked( wxCommandEvent& event );
+	void TextCtrl4TextEnter( wxCommandEvent& event );
+	void TextCtrl5TextEnter( wxCommandEvent& event );
 	void MenuItem5Clicked( wxCommandEvent& event );
 	void MenuItem6Clicked( wxCommandEvent& event );
-	void MenuItem7Clicked( wxCommandEvent& event );
-	void MenuItem8Clicked( wxCommandEvent& event );
-	void MenuItem9Clicked( wxCommandEvent& event );
 
 public:
 	/** Constructor */

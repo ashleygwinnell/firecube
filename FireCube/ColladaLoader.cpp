@@ -75,7 +75,7 @@ Material ColladaLoader::LoadMaterial(const string &name,map<string,pair<string,D
 	for (DWORD matIndex=0;matIndex<materials.size();matIndex++)
 	{
 		domMaterial *mat=materials[matIndex];
-		if (mat->getName()==name)
+		if (mat->getID()==name)
 		{	
 			Material curMat=Material(new MaterialResource);		
 			curMat->name=mat->getName();			
@@ -102,6 +102,20 @@ Material ColladaLoader::LoadMaterial(const string &name,map<string,pair<string,D
 						curMat->ambient=ReadColor(shadingElm->getChild("ambient"));
 						curMat->diffuse=ReadColor(shadingElm->getChild("diffuse"));
 						curMat->specular=ReadColor(shadingElm->getChild("specular"));
+						domElement *transparency=shadingElm->getChild("transparency");
+						if (transparency)
+						{
+							domElement *f=transparency->getChild("float");
+							if (f)
+							{							
+								string data;
+								f->getCharData(data);
+								istringstream iss(data);
+								float v;
+								iss >> v;
+								curMat->diffuse.w=v;
+							}
+						}
 						if (ReadTexture(shadingElm->getChild("diffuse"),vertexInput,file,unit))
 						{
 							string::size_type i=file.find("file://");
@@ -204,7 +218,18 @@ void ColladaLoader::LoadMesh(string &id,mat4 transform,map<string,string> &mater
 						{
 							vector<vec4> &vve=vecArray[lo->getSource().getFragment()];
 							vec3 v0=vve[(DWORD)pv[i+(DWORD)lo->getOffset()]];
-							model->object[model->object.size()-1].vertex.push_back(v0*transform);				
+							v0=v0*transform;
+							if (upAxis==0)
+							{
+								std::swap(v0.x,v0.y);
+								v0.x*=-1;
+							}
+							else if (upAxis==2)
+							{
+								std::swap(v0.y,v0.z);
+								v0.z*=-1;
+							}
+							model->object[model->object.size()-1].vertex.push_back(v0);				
 						}
 						if (strcmp(lo->getSemantic(),"NORMAL")==0) // Get normal from previously read source.
 						{						
@@ -214,6 +239,17 @@ void ColladaLoader::LoadMesh(string &id,mat4 transform,map<string,string> &mater
 							}						
 							vec3 n=vecArray[lo->getSource().getFragment()][(DWORD)pv[i+(DWORD)lo->getOffset()]];
 							n=n.TransformNormal(transform);
+							if (upAxis==0)
+							{
+								std::swap(n.x,n.y);
+								n.x*=-1;
+							}
+							else if (upAxis==2)
+							{
+								std::swap(n.y,n.z);
+								n.z*=-1;
+							}
+							n.Normalize();
 							model->object[model->object.size()-1].normal.push_back(n);
 						}
 						if (strcmp(lo->getSemantic(),"TEXCOORD")==0) // Get uv from previously read source.
@@ -287,7 +323,20 @@ bool ColladaLoader::Load(const string &filename)
 
 		return false;
 	}
-
+	vector<domAsset*> assets = colladaDom.getDatabase()->typeLookup<domAsset>();
+	for (DWORD i=0;i<assets.size();i++)
+	{
+		domAsset *asset=assets[i];
+		domAsset::domUp_axisRef up=asset->getUp_axis();
+		if (up->getValue()==UPAXISTYPE_X_UP)
+			upAxis=0;
+		else if (up->getValue()==UPAXISTYPE_Y_UP)
+			upAxis=1;
+		else if (up->getValue()==UPAXISTYPE_Z_UP)
+			upAxis=2;
+		domAsset::domUnitRef unit=asset->getUnit();
+		scale=vec3((float)unit->getMeter(),(float)unit->getMeter(),(float)unit->getMeter());
+	}
 	LoadImageMap();	
 	LoadNodes();
 
@@ -351,37 +400,46 @@ void ColladaLoader::LoadImageMap()
 mat4 ColladaLoader::ReadTransformation(domNode *node)
 {
 	mat4 transform;
-
-	domTranslate_Array &ta=node->getTranslate_array();
-	for (DWORD j=0;j<ta.getCount();j++)
+	daeTArray<daeSmartRef<daeElement>> children;
+	node->getChildren(children);
+	for (DWORD i=0;i<children.getCount();i++)
 	{
-		domTranslateRef t=ta.get(j);
-		domFloat3 &tv=t->getValue();
-		vec3 tr((float)tv.get(0),(float)tv.get(1),(float)tv.get(2));
-		mat4 trans;
-		trans.Translate(tr);
-		transform*=trans;
-	}
-	domRotate_Array &ra=node->getRotate_array();
-	for (DWORD j=0;j<ra.getCount();j++)
-	{
-		domRotateRef r=ra.get(j);			
-		domFloat4 &rv=r->getValue();
-		vec4 rt((float)rv.get(0),(float)rv.get(1),(float)rv.get(2),(float)(-rv.get(3)/180.0f * PI));
-		mat4 rot;
-		rot.Rotate(rt);
-		transform*=rot;
+		daeSmartRef<domElement> elm=children.get(i);
+		if (elm->getElementType()==COLLADA_TYPE::MATRIX)
+		{
+			mat4 t;
+			domMatrix *mat=(domMatrix*)elm.cast();
+			for (DWORD j=0;j<16;j++)
+				t.m[j]=(float)mat->getValue().get(j);
+			t.Transpose();
+			transform*=t;
+		}
+		else if (elm->getElementType()==COLLADA_TYPE::TRANSLATE)
+		{
+			domTranslate *t=(domTranslate*)elm.cast();			
+			vec3 tr((float)t->getValue().get(0),(float)t->getValue().get(1),(float)t->getValue().get(2));
+			mat4 trans;
+			trans.Translate(tr);
+			transform*=trans;
+		}
+		else if (elm->getElementType()==COLLADA_TYPE::ROTATE)
+		{
+			domRotate *r=(domRotate*)elm.cast();			
+			vec4 rt((float)r->getValue().get(0),(float)r->getValue().get(1),(float)r->getValue().get(2),(float)(-r->getValue().get(3)/180.0f * PI));
+			mat4 rot;
+			rot.Rotate(rt);
+			transform*=rot;
+		}
+		else if (elm->getElementType()==COLLADA_TYPE::SCALE)
+		{
+			domScale *s=(domScale*)elm.cast();			
+			vec3 sr((float)s->getValue().get(0),(float)s->getValue().get(1),(float)s->getValue().get(2));
+			mat4 scale;
+			scale.Scale(sr.x,sr.y,sr.z);
+			transform*=scale;
+		}
 	}	
-	domScale_Array &sa=node->getScale_array();
-	for (DWORD j=0;j<sa.getCount();j++)
-	{
-		domScaleRef s=sa.get(j);			
-		domFloat3 &sv=s->getValue();
-		vec3 sr((float)sv.get(0),(float)sv.get(1),(float)sv.get(2));
-		mat4 scale;
-		scale.Scale(sr.x,sr.y,sr.z);
-		transform*=scale;
-	}
+		
 	if (node->getParent())
 		if (node->getParent()->getElementType()==COLLADA_TYPE::NODE)		
 			return ReadTransformation((domNode*)node->getParent())*transform;

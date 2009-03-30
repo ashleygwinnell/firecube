@@ -59,6 +59,8 @@ private:
 	vector<vec4> SourceToVecArray(const Source &source);	
 	Material GetMaterialByName(string &name);	
 	DAE colladaDom;
+	int upAxis;
+	vec3 scale;
 	ModelResource *model;
 	map<string,string> imageMap;
 };

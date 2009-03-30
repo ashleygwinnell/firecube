@@ -32,6 +32,11 @@ using namespace std;
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+#include <wx/checkbox.h>
+#include <wx/radiobox.h>
+#include <wx/clrpicker.h>
+#include <wx/button.h>
+#include <wx/choicebk.h>
 #include <wx/notebook.h>
 #include <wx/menu.h>
 #include <wx/statusbr.h>
@@ -53,30 +58,50 @@ class MainFrame : public wxFrame
 		wxStaticText* staticText1;
 		wxStaticText* staticText2;
 		wxPanel* panel2;
+		wxChoicebook* m_choicebook1;
+		wxPanel* panel3;
+		wxCheckBox* checkBox2;
+		wxCheckBox* checkBox3;
+		wxStaticText* staticText3;
+		wxTextCtrl* textCtrl3;
+		wxRadioBox* radioBox1;
+		wxStaticText* staticText4;
+		wxColourPickerCtrl* colourPicker1;
+		wxButton* button1;
+		wxStaticText* staticText6;
+		wxTextCtrl* textCtrl4;
+		wxTextCtrl* textCtrl5;
+		wxPanel* panel4;
+		wxButton* button2;
 		wxMenuBar* menuBar;
 		wxMenu* menu1;
 		wxMenu* menu2;
 		wxMenu* menu3;
-		wxMenu* menu14;
-		wxStatusBar* statusBar1;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void CheckBox2Clicked( wxCommandEvent& event ){ event.Skip(); }
+		virtual void CheckBox3Clicked( wxCommandEvent& event ){ event.Skip(); }
+		virtual void TextCtrl3TextEnter( wxCommandEvent& event ){ event.Skip(); }
+		virtual void RadioBox1Clicked( wxCommandEvent& event ){ event.Skip(); }
+		virtual void ColourPicker1Changed( wxColourPickerEvent& event ){ event.Skip(); }
+		virtual void Button1Clicked( wxCommandEvent& event ){ event.Skip(); }
+		virtual void TextCtrl4TextEnter( wxCommandEvent& event ){ event.Skip(); }
+		virtual void TextCtrl5TextEnter( wxCommandEvent& event ){ event.Skip(); }
+		virtual void Button2Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void MenuItem2Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void MenuItem1Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void MenuItem3Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void MenuItem4Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void MenuItem5Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void MenuItem9Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void MenuItem6Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void MenuItem7Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void MenuItem8Clicked( wxCommandEvent& event ){ event.Skip(); }
+		virtual void MenuItem5Clicked( wxCommandEvent& event ){ event.Skip(); }
 		
 	
 	public:
 		MyGLCanvas *glCanvas;
 		wxTextCtrl* textCtrl1;
 		wxTextCtrl* textCtrl2;
-		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxTest"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 699,596 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		wxStatusBar* statusBar1;
+		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("ModelViewer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 699,596 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~MainFrame();
 	
 };

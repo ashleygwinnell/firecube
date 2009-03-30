@@ -35,25 +35,37 @@ void FireCubeApp::Update(float t)
 void FireCubeApp::LoadModel(const string &filename)
 {
 	MyApp *app=(MyApp*)wxTheApp;
+	FireCube::Timer t;
+	t.Init();
 	model=mm.Create(filename);		
-	model->SetProgram(program);	
-	vector<FireCube::vec3> normals;
+	ostringstream oss3;
+	oss3 << "Loading completed in " << t.Passed() << " seconds.";
+	app->frame->statusBar1->SetStatusText(oss3.str());
+	model->SetProgram(program);		
 	DWORD vertexCount=0,faceCount=0;
 	for (unsigned int j=0;j<model->object.size();j++)
 	{	
 		vertexCount+=model->object[j].vertex.size();
-		faceCount+=model->object[j].face.size();
-		for (unsigned int i=0;i<model->object[j].vertex.size();i++)
-		{
-			normals.push_back(model->object[j].vertex[i]);
-			normals.push_back(model->object[j].vertex[i]+model->object[j].normal[i]*0.07f);
-		}
+		faceCount+=model->object[j].face.size();		
 	}
-	normalRenderingBuffer->LoadData(&normals[0],normals.size()*sizeof(FireCube::vec3),FireCube::STATIC);
-	normalRenderingBufferSize=normals.size();
+	GenerateNormals(app->frame->glCanvas->normalsLength);
 	ostringstream oss,oss2;	
 	oss << vertexCount;
 	oss2 << faceCount;
 	app->frame->textCtrl1->SetValue(oss.str());
 	app->frame->textCtrl2->SetValue(oss2.str());
+}
+void FireCubeApp::GenerateNormals(float l)
+{	
+	vector<FireCube::vec3> normals;	
+	for (unsigned int j=0;j<model->object.size();j++)
+	{			
+		for (unsigned int i=0;i<model->object[j].vertex.size();i++)
+		{
+			normals.push_back(model->object[j].vertex[i]);
+			normals.push_back(model->object[j].vertex[i]+model->object[j].normal[i]*l);
+		}
+	}
+	normalRenderingBuffer->LoadData(&normals[0],normals.size()*sizeof(FireCube::vec3),FireCube::STATIC);
+	normalRenderingBufferSize=normals.size();
 }

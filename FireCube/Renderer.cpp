@@ -477,13 +477,16 @@ void Renderer::UseMaterial(Material material)
 {
 	if (!material)
 		return;
-	float ambient[]={material->ambient.x,material->ambient.y,material->ambient.z,material->ambient.w};
-	float diffuse[]={material->diffuse.x,material->diffuse.y,material->diffuse.z,material->diffuse.w};
-	float specular[]={material->specular.x,material->specular.y,material->specular.z,material->specular.w};
-	glMaterialfv(GL_FRONT,GL_AMBIENT,ambient);
-	glMaterialfv(GL_FRONT,GL_DIFFUSE,diffuse);
-	glMaterialfv(GL_FRONT,GL_SPECULAR,specular);
+	
+	glMaterialfv(GL_FRONT,GL_AMBIENT,&material->ambient.x);
+	glMaterialfv(GL_FRONT,GL_DIFFUSE,&material->diffuse.x);
+	glMaterialfv(GL_FRONT,GL_SPECULAR,&material->specular.x);
 	glMaterialf(GL_FRONT,GL_SHININESS,material->shininess);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	if ((material->ambient.w<1) || (material->diffuse.w<1))
+		glEnable(GL_BLEND);
+	else
+		glDisable(GL_BLEND);
 	for (int i=0;i<MAX_TEXTURES;i++)
 	{		
 		if ((material->texture[i]) && (material->texture[i]->IsValid()))

@@ -5,6 +5,7 @@ public:
 	void Render(float t);
 	void Update(float t);
 	void LoadModel(const string &filename);
+	void GenerateNormals(float l);
 
 	FireCube::Model model;
 	FireCube::Font font;
@@ -13,7 +14,7 @@ public:
 	FireCube::ModelManager mm;
 	FireCube::Buffer normalRenderingBuffer;
 	int normalRenderingBufferSize;
-	FireCube::Program normalRenderingProgram;
+	FireCube::Program plainColorProgram;
 };
 
 class MyApp : public wxApp

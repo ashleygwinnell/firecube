@@ -22,16 +22,23 @@ public:
 	void OnEnterWindow(wxMouseEvent& event);
 	void OnMotion(wxMouseEvent& event);
 	void OnMouseWheel(wxMouseEvent& event);	
-	void Render();	
+	void Render();
+	void CreateGrid(float size,DWORD numberOfCells);
+	void RenderGrid();
 	void Init();
 	
 	FireCube::vec4 bgColor;
 	GLenum renderingMode;
 	bool cullFaceEnabled;	
 	bool renderNormals;
-private:		
-	bool init;
+	float normalsLength;
 	FireCube::vec3 rot;
+	FireCube::vec3 lookat;
+	FireCube::Buffer gridVertex;
+	FireCube::Buffer gridIndices;
+	DWORD gridCount;
+private:		
+	bool init;	
 	FireCube::vec2 lastpos;
 	DECLARE_EVENT_TABLE()
 };

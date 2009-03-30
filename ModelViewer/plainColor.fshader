@@ -22,5 +22,6 @@ void main()
 	float d=max(dot(n,lightDir),0.0);
 	color = gl_FrontMaterial.ambient*vec4(0.5,0.5,0.5,1.0);
 	color+=gl_FrontMaterial.diffuse*d*ApplyTextures();
+	color.a=gl_FrontMaterial.diffuse.a;
 	gl_FragColor=color;
 }

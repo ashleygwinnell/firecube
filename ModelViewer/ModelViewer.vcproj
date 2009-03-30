@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="wxTest"
+	Name="ModelViewer"
 	ProjectGUID="{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}"
 	RootNamespace="wxTest"
 	Keyword="Win32Proj"

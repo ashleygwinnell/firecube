@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxTest", "wxTest.vcproj", "{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelViewer", "ModelViewer.vcproj", "{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
