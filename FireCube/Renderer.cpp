@@ -341,12 +341,12 @@ void Renderer::UseTexture(Texture tex,unsigned int unit)
 }
 void Renderer::RenderText(Font font,vec3 pos,vec4 color,const string &str)
 {	
+	if (!font)
+		return;	
 	static vector<vec3> vBuffer;
 	static vector<vec2> uvBuffer;
 	vBuffer.resize(str.size()*4);
-	uvBuffer.resize(str.size()*4);
-	if (!font)
-		return;	
+	uvBuffer.resize(str.size()*4);	
 	if (textShader->IsValid())
 	{
 		UseProgram(textShader);	

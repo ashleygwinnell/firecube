@@ -119,13 +119,7 @@ void MyGLCanvas::Render()
 		fcApp->plainColorProgram->SetUniform("color",FireCube::vec4(1,1,1,1));
 		fcApp->normalRenderingBuffer->SetVertexStream(3);
 		FireCube::Renderer::RenderStream(FireCube::LINES,fcApp->normalRenderingBufferSize);
-	}
-	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-	FireCube::Renderer::SetModelViewMatrix(FireCube::mat4());
-	FireCube::Renderer::SetOrthographicProjection();
-	ostringstream oss,oss2,oss3;
-	oss << glGetString(GL_RENDERER);
-	FireCube::Renderer::RenderText(fcApp->font,FireCube::vec2(0,0),FireCube::vec4(1,1,1,1),oss.str());	
+	}	
 	SwapBuffers();
 }
 
@@ -196,36 +190,21 @@ void MyGLCanvas::CreateGrid(float size,DWORD numberOfCells)
 {	
 	vector<FireCube::vec3> vertices;
 	vector<DWORD> indices;
-	for (DWORD j=0;j<numberOfCells+1;j++)
-		for (DWORD i=0;i<numberOfCells+1;i++)
-		{
-			FireCube::vec3 pos((float)i*size-size*(float)numberOfCells/2.0f,0,(float)j*size-size*(float)numberOfCells/2.0f);
-			vertices.push_back(pos);
-		}
-	for (DWORD j=0;j<numberOfCells;j++)
+	for (DWORD i=0;i<numberOfCells+1;i++)
 	{
-		for (DWORD i=0;i<numberOfCells;i++)
-		{
-			indices.push_back(j*(numberOfCells+1)+i);			
-			indices.push_back(j*(numberOfCells+1)+i+1);
-
-			indices.push_back(j*(numberOfCells+1)+i+1);				
-			indices.push_back((j+1)*(numberOfCells+1)+i+1);
-
-			indices.push_back((j+1)*(numberOfCells+1)+i+1);
-			indices.push_back((j+1)*(numberOfCells+1)+i);
-
-			indices.push_back((j+1)*(numberOfCells+1)+i);
-			indices.push_back(j*(numberOfCells+1)+i);			
-		}
+		FireCube::vec3 pos1((float)i*size-size*(float)numberOfCells/2.0f,0,-size*(float)numberOfCells/2.0f);
+		FireCube::vec3 pos2((float)i*size-size*(float)numberOfCells/2.0f,0,size*(float)numberOfCells/2.0f);
+		FireCube::vec3 pos3(-size*(float)numberOfCells/2.0f,0,(float)i*size-size*(float)numberOfCells/2.0f);
+		FireCube::vec3 pos4(size*(float)numberOfCells/2.0f,0,(float)i*size-size*(float)numberOfCells/2.0f);
+		vertices.push_back(pos1);
+		vertices.push_back(pos2);
+		vertices.push_back(pos3);
+		vertices.push_back(pos4);
 	}
-	gridCount=indices.size();	
-	gridVertex=FireCube::Buffer(new FireCube::BufferResource);
-	gridIndices=FireCube::Buffer(new FireCube::BufferResource);
-	gridVertex->Create();
-	gridIndices->Create();
-	gridVertex->LoadData(&vertices[0],vertices.size()*sizeof(FireCube::vec3),FireCube::STATIC);
-	gridIndices->LoadIndexData(&indices[0],indices.size(),FireCube::STATIC);
+	gridCount=vertices.size();
+	gridVertex=FireCube::Buffer(new FireCube::BufferResource);	
+	gridVertex->Create();	
+	gridVertex->LoadData(&vertices[0],vertices.size()*sizeof(FireCube::vec3),FireCube::STATIC);	
 }
 void MyGLCanvas::RenderGrid()
 {
@@ -234,10 +213,9 @@ void MyGLCanvas::RenderGrid()
 	
 	FireCube::Renderer::UseProgram(fcApp->plainColorProgram);
 	fcApp->plainColorProgram->SetUniform("color",FireCube::vec4(0.7f,0.7f,0.7f,1.0f));
-	gridVertex->SetVertexStream(3);
-	gridIndices->SetIndexStream();
+	gridVertex->SetVertexStream(3);	
 	FireCube::Renderer::DisableNormalStream();
 	for (DWORD i=0;i<FireCube::MAX_TEXTURES;i++)
 		FireCube::Renderer::DisableTexCoordStream(i);
-	FireCube::Renderer::RenderIndexStream(FireCube::LINES,gridCount);
+	FireCube::Renderer::RenderStream(FireCube::LINES,gridCount);
 }

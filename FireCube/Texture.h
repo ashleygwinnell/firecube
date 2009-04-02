@@ -40,6 +40,7 @@ public:
 	void SetFiltering(TextureFilter minFilter,TextureFilter magFilter);
 
 	GLuint id;
+	string filename;
 };	
 
 typedef ResourceManager<TextureResource> TextureManager;

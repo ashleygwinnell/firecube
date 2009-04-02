@@ -40,6 +40,7 @@ bool TextureResource::Create()
 bool TextureResource::Load(const std::string &filename)
 {
 	SDL_Surface *image;
+	this->filename=filename;
 	image=IMG_Load(filename.c_str());
 	if(image) 
 	{

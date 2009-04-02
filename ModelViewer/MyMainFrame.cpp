@@ -16,10 +16,13 @@ using namespace std;
 #include "MyMainFrame.h"
 #include "main.h"
 
+
 MyMainFrame::MyMainFrame( wxWindow* parent )
 :
 MainFrame( parent )
-{
+{	
+	this->Connect(propertyGrid1->GetId(),wxEVT_PG_CHANGED,wxCommandEventHandler(MyMainFrame::PropertyGrid1Changed));
+	
 
 }
 void MyMainFrame::MenuItem1Clicked( wxCommandEvent& event )
@@ -167,4 +170,79 @@ void MyMainFrame::MenuItem6Clicked( wxCommandEvent& event )
 		notebook1->Show();
 
 	Layout();
+}
+void MyMainFrame::AddMaterial(DWORD id,FireCube::Material mat)
+{
+	materialMap[id]=mat;
+	ostringstream oss;
+	oss << "Material " << id;
+	propertyGrid1->Append( new wxPropertyCategory(oss.str()) );
+
+	ostringstream ossName;
+	ossName << "Name" << id;
+	propertyGrid1->Append(new wxStringProperty("Name",ossName.str(),mat->name));	
+	ostringstream ossAmbient;
+	ossAmbient << "Ambient" << id;
+	propertyGrid1->Append(new wxColourProperty("Ambient",ossAmbient.str(),wxColor(mat->ambient.x*255,mat->ambient.y*255,mat->ambient.z*255,mat->ambient.w*255)));
+	ostringstream ossDiffuse;
+	ossDiffuse << "Diffuse" << id;
+	propertyGrid1->Append(new wxColourProperty("Diffuse",ossDiffuse.str(),wxColor(mat->diffuse.x*255,mat->diffuse.y*255,mat->diffuse.z*255,mat->diffuse.w*255)));
+	ostringstream ossSpecular;
+	ossSpecular << "Specular" << id;
+	propertyGrid1->Append(new wxColourProperty("Specular",ossSpecular.str(),wxColor(mat->specular.x*255,mat->specular.y*255,mat->specular.z*255,mat->specular.w*255)));
+	ostringstream ossShininess;
+	ossShininess << "Shininess" << id;
+	propertyGrid1->Append( new wxFloatProperty("Shininess",ossShininess.str(),mat->shininess) );
+
+
+	propertyGrid1->Refresh();
+}
+void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
+{
+	wxPropertyGridEvent *evt=(wxPropertyGridEvent *)&event;
+	string properyName=evt->GetPropertyName();
+	if (properyName.substr(0,4)=="Name")
+	{
+		DWORD id;
+		istringstream idss(properyName.substr(4));
+		idss >> id;
+		FireCube::Material mat=materialMap[id];
+		mat->name=evt->GetPropertyValueAsString();
+	}
+	if (properyName.substr(0,7)=="Ambient")
+	{		
+		DWORD id;
+		istringstream idss(properyName.substr(7));
+		idss >> id;
+		FireCube::Material mat=materialMap[id];		
+		wxColor col=((wxColourProperty*)evt->GetProperty())->GetVal().m_colour;		
+		mat->ambient=FireCube::vec4(col.Red()/255.0f,col.Green()/255.0f,col.Blue()/255.0f,mat->ambient.w);
+	}
+	if (properyName.substr(0,7)=="Diffuse")
+	{
+		DWORD id;
+		istringstream idss(properyName.substr(7));
+		idss >> id;
+		FireCube::Material mat=materialMap[id];
+		wxColor col=((wxColourProperty*)evt->GetProperty())->GetVal().m_colour;		
+		mat->diffuse=FireCube::vec4(col.Red()/255.0f,col.Green()/255.0f,col.Blue()/255.0f,mat->diffuse.w);
+	}
+	if (properyName.substr(0,8)=="Specular")
+	{
+		DWORD id;
+		istringstream idss(properyName.substr(8));
+		idss >> id;
+		FireCube::Material mat=materialMap[id];
+		wxColor col=((wxColourProperty*)evt->GetProperty())->GetVal().m_colour;		
+		mat->specular=FireCube::vec4(col.Red()/255.0f,col.Green()/255.0f,col.Blue()/255.0f,mat->specular.w);
+	}
+	if (properyName.substr(0,9)=="Shininess")
+	{
+		DWORD id;
+		istringstream idss(properyName.substr(9));
+		idss >> id;
+		FireCube::Material mat=materialMap[id];
+		mat->shininess=(float)evt->GetPropertyValueAsDouble();
+	}
+	glCanvas->Refresh();
 }

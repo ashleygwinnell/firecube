@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\wxMSW-2.8.8\include&quot;;&quot;C:\Program Files (x86)\wxMSW-2.8.8\lib\vc_dll\mswd&quot;"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;wxUSE_GUI=1;__WXMSW__;__WXDEBUG__;WXUSINGDLL;NOPCH;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28d_core.lib wxbase28d.lib wxmsw28d_gl.lib opengl32.lib winmm.lib comctl32.lib rpcrt4.lib wsock32.lib odbc32.lib firecube.lib"
+				AdditionalDependencies="wxmsw28d_core.lib wxbase28d.lib wxmsw28d_gl.lib wxcode_msw28d_propgrid.lib opengl32.lib winmm.lib comctl32.lib rpcrt4.lib wsock32.lib odbc32.lib firecube.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\wxMSW-2.8.8\lib\vc_dll&quot;"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"

@@ -87,7 +87,7 @@ public:
 	~ModelResource();
 	
 	/**
-	* Loads a 3ds file.
+	* Loads a file.
 	* @param filename The file to load.
 	*/
 	bool Load(const string &filename);	

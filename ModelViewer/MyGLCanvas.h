@@ -34,8 +34,7 @@ public:
 	float normalsLength;
 	FireCube::vec3 rot;
 	FireCube::vec3 lookat;
-	FireCube::Buffer gridVertex;
-	FireCube::Buffer gridIndices;
+	FireCube::Buffer gridVertex;	
 	DWORD gridCount;
 private:		
 	bool init;	

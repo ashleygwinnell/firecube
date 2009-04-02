@@ -37,6 +37,8 @@ using namespace std;
 #include <wx/clrpicker.h>
 #include <wx/button.h>
 #include <wx/choicebk.h>
+#include <wx/propgrid/propgrid.h>
+#include <wx/propgrid/advprops.h>
 #include <wx/notebook.h>
 #include <wx/menu.h>
 #include <wx/statusbr.h>
@@ -60,19 +62,24 @@ class MainFrame : public wxFrame
 		wxPanel* panel2;
 		wxChoicebook* m_choicebook1;
 		wxPanel* panel3;
+		wxPanel* panel9;
 		wxCheckBox* checkBox2;
 		wxCheckBox* checkBox3;
 		wxStaticText* staticText3;
 		wxTextCtrl* textCtrl3;
 		wxRadioBox* radioBox1;
+		wxPanel* panel7;
 		wxStaticText* staticText4;
 		wxColourPickerCtrl* colourPicker1;
-		wxButton* button1;
+		wxPanel* panel8;
 		wxStaticText* staticText6;
 		wxTextCtrl* textCtrl4;
+		wxStaticText* staticText7;
 		wxTextCtrl* textCtrl5;
+		wxButton* button1;
 		wxPanel* panel4;
 		wxButton* button2;
+		wxPanel* panel5;
 		wxMenuBar* menuBar;
 		wxMenu* menu1;
 		wxMenu* menu2;
@@ -84,9 +91,9 @@ class MainFrame : public wxFrame
 		virtual void TextCtrl3TextEnter( wxCommandEvent& event ){ event.Skip(); }
 		virtual void RadioBox1Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void ColourPicker1Changed( wxColourPickerEvent& event ){ event.Skip(); }
-		virtual void Button1Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void TextCtrl4TextEnter( wxCommandEvent& event ){ event.Skip(); }
 		virtual void TextCtrl5TextEnter( wxCommandEvent& event ){ event.Skip(); }
+		virtual void Button1Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void Button2Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void MenuItem2Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void MenuItem1Clicked( wxCommandEvent& event ){ event.Skip(); }
@@ -100,8 +107,9 @@ class MainFrame : public wxFrame
 		MyGLCanvas *glCanvas;
 		wxTextCtrl* textCtrl1;
 		wxTextCtrl* textCtrl2;
+		wxPropertyGrid *propertyGrid1;
 		wxStatusBar* statusBar1;
-		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("ModelViewer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 699,596 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("ModelViewer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 918,764 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~MainFrame();
 	
 };

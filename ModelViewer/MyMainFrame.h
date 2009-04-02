@@ -27,11 +27,15 @@ protected:
 	void TextCtrl4TextEnter( wxCommandEvent& event );
 	void TextCtrl5TextEnter( wxCommandEvent& event );
 	void MenuItem5Clicked( wxCommandEvent& event );
-	void MenuItem6Clicked( wxCommandEvent& event );
+	void MenuItem6Clicked( wxCommandEvent& event );	
+	void PropertyGrid1Changed( wxCommandEvent& event );
 
 public:
 	/** Constructor */
 	MyMainFrame( wxWindow* parent );
+	void AddMaterial(DWORD id,FireCube::Material mat);
+
+	map<DWORD,FireCube::Material> materialMap;
 };
 
 #endif // __MyMainFrame__

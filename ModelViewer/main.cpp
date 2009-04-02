@@ -54,6 +54,9 @@ void FireCubeApp::LoadModel(const string &filename)
 	oss2 << faceCount;
 	app->frame->textCtrl1->SetValue(oss.str());
 	app->frame->textCtrl2->SetValue(oss2.str());
+	app->frame->propertyGrid1->Clear();
+	for (DWORD i=0;i<model->material.size();i++)
+		app->frame->AddMaterial(i+1,model->material[i]);
 }
 void FireCubeApp::GenerateNormals(float l)
 {	
