@@ -169,7 +169,7 @@ DWORD M3dsLoader::ProcessChunk(char *buffer)
 		break;
 	case MAT_TEXFLNM:
 		matPtr=model->material[0];						
-		matPtr->texture[0]=Renderer::GetTextureManager()->Create(buffer+i);		
+		matPtr->texture[0]=Renderer::GetTextureManager().Create(buffer+i);		
 		i+=(DWORD)strlen(buffer+i)+1;
 		break;
 	default:	

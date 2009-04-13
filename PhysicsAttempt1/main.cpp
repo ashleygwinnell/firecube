@@ -31,10 +31,10 @@ int main(int argc, char *argv[])
 	if (!app.Initialize())
 		return 0;	
 	app.SetTitle(string("Physics Test"));
-	app.vShader=Renderer::GetShaderManager()->Create("v.vshader");
-	app.pShader=Renderer::GetShaderManager()->Create("p.fshader");	
-	app.pShader2=Renderer::GetShaderManager()->Create("p2.fshader");
-	app.font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);
+	app.vShader=Renderer::GetShaderManager().Create("v.vshader");
+	app.pShader=Renderer::GetShaderManager().Create("p.fshader");	
+	app.pShader2=Renderer::GetShaderManager().Create("p2.fshader");
+	app.font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
 	app.program=Program(new ProgramResource);
 	app.program2=Program(new ProgramResource);
 	app.program->Create(app.vShader,app.pShader);

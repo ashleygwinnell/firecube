@@ -46,7 +46,7 @@ void MyMainFrame::MenuItem3Clicked( wxCommandEvent& event )
 	std::string sfile=file;
 	if (sfile=="")
 		return;
-	fcApp->vshader=FireCube::Renderer::GetShaderManager()->Create(sfile);
+	fcApp->vshader=FireCube::Renderer::GetShaderManager().Create(sfile);
 	fcApp->program->Create(fcApp->vshader,fcApp->fshader);
 	fcApp->model->SetProgram(fcApp->program);
 }
@@ -58,7 +58,7 @@ void MyMainFrame::MenuItem4Clicked( wxCommandEvent& event )
 	std::string sfile=file;
 	if (sfile=="")
 		return;
-	fcApp->fshader=FireCube::Renderer::GetShaderManager()->Create(sfile);
+	fcApp->fshader=FireCube::Renderer::GetShaderManager().Create(sfile);
 	fcApp->program->Create(fcApp->vshader,fcApp->fshader);
 	fcApp->model->SetProgram(fcApp->program);
 }
@@ -176,7 +176,7 @@ void MyMainFrame::AddMaterial(DWORD id,FireCube::Material mat)
 	materialMap[id]=mat;
 	ostringstream oss;
 	oss << "Material " << id;
-	propertyGrid1->Append( new wxPropertyCategory(oss.str()) );
+	propertyGrid1->Append(new wxPropertyCategory(oss.str()) );
 
 	ostringstream ossName;
 	ossName << "Name" << id;
@@ -192,7 +192,7 @@ void MyMainFrame::AddMaterial(DWORD id,FireCube::Material mat)
 	propertyGrid1->Append(new wxColourProperty("Specular",ossSpecular.str(),wxColor(mat->specular.x*255,mat->specular.y*255,mat->specular.z*255,mat->specular.w*255)));
 	ostringstream ossShininess;
 	ossShininess << "Shininess" << id;
-	propertyGrid1->Append( new wxFloatProperty("Shininess",ossShininess.str(),mat->shininess) );
+	propertyGrid1->Append(new wxFloatProperty("Shininess",ossShininess.str(),mat->shininess) );
 
 
 	propertyGrid1->Refresh();

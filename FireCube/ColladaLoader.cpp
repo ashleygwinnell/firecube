@@ -130,7 +130,7 @@ Material ColladaLoader::LoadMaterial(const string &name,map<string,pair<string,D
 								i=file.find("%20");
 							}
 							
-							curMat->texture[unit]=Renderer::GetTextureManager()->Create(file);
+							curMat->texture[unit]=Renderer::GetTextureManager().Create(file);
 						}						
 						shadingElm->getChild("shininess")->getChild("float")->getCharData(data);				
 						istringstream shss(data);

@@ -98,9 +98,9 @@ bool FontResource::Load(const string &name,int size)
 	error=FT_Set_Pixel_Sizes(fontImpl->face,0,size);
 	if (error)
 		return false;
-	vector<boost::weak_ptr<FontPage>>::iterator p=Renderer::GetFontManager()->page.begin();
+	vector<boost::weak_ptr<FontPage>>::iterator p=Renderer::GetFontManager().page.begin();
 	bool found=false;
-	for (;p!=Renderer::GetFontManager()->page.end();p++)
+	for (;p!=Renderer::GetFontManager().page.end();p++)
 	{
 		if (!p->expired())
 		{
@@ -117,7 +117,7 @@ bool FontResource::Load(const string &name,int size)
 		page=(*p).lock();
 	else
 	{
-		page=Renderer::GetFontManager()->CreateNewPage();
+		page=Renderer::GetFontManager().CreateNewPage();
 	}
 	glBindTexture(GL_TEXTURE_2D,page->tex->id);	
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);

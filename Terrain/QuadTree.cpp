@@ -21,7 +21,7 @@ QuadTree::QuadTree() : plainColor(new ProgramResource),indexBuffer(new BufferRes
 void QuadTree::Initialize()
 {	
 	indexBuffer->Create();
-	plainColor->Create(Renderer::GetShaderManager()->Create("plainColor.vshader"),Renderer::GetShaderManager()->Create("plainColor.fshader"));
+	plainColor->Create(Renderer::GetShaderManager().Create("plainColor.vshader"),Renderer::GetShaderManager().Create("plainColor.fshader"));
 }
 void QuadTree::Init(vec2 size,vec2 verticesSize)
 {

@@ -28,13 +28,13 @@ bool App::Init()
 	Application::AddSearchPath("../Media/Textures");
 	SetTitle(string("FireCube Test Application"));	
 	model=app.modelManager.Create("../Media/Models/scene.3ds");	
-	font=Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);
+	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
 	plain=Program(new ProgramResource);
 	shadowMap=Program(new ProgramResource);
 	program=Program(new ProgramResource);
-	plain->Create(Renderer::GetShaderManager()->Create("plain.vshader"),Renderer::GetShaderManager()->Create("plain.fshader"));
-	shadowMap->Create(Renderer::GetShaderManager()->Create("shadowMap.vshader"),Renderer::GetShaderManager()->Create("shadowMap.fshader"));
-	program->Create(Renderer::GetShaderManager()->Create("1.vshader"),Renderer::GetShaderManager()->Create("1.fshader"));
+	plain->Create(Renderer::GetShaderManager().Create("plain.vshader"),Renderer::GetShaderManager().Create("plain.fshader"));
+	shadowMap->Create(Renderer::GetShaderManager().Create("shadowMap.vshader"),Renderer::GetShaderManager().Create("shadowMap.fshader"));
+	program->Create(Renderer::GetShaderManager().Create("1.vshader"),Renderer::GetShaderManager().Create("1.fshader"));
 	fb=FrameBuffer(new FrameBufferResource);
 	fb->Create(1024,1024);
 	fb->AddDepthBufferTexture();

@@ -12,16 +12,27 @@ using namespace std;
 #include "FireCube.h"
 using namespace FireCube;
 
+extern "C" {
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+}
+#include <luabind/luabind.hpp>
+#include <luabind/operator.hpp>
+#include <luabind/object.hpp>
+
 extern void InitializeRenderer();
 extern void DestroyRenderer();
 extern FT_Library freeTypeLibrary;
 
 vector<string> Application::searchPaths;
+lua_State *luaState=NULL;
+void InitializeLua(lua_State *& luaState);
 Application::Application() : running(false), frameCount(0), fpsTime(0)
 {
-	Renderer::SetTextureManager(&defaultTextureManager);
-	Renderer::SetShaderManager(&defaultShaderManager);
-	Renderer::SetFontManager(&defaultFontManager);
+	Renderer::SetTextureManager(defaultTextureManager);
+	Renderer::SetShaderManager(defaultShaderManager);
+	Renderer::SetFontManager(defaultFontManager);
 }
 Application::~Application()
 {
@@ -68,11 +79,11 @@ bool Application::InitializeNoWindow()
 	glEnable(GL_CULL_FACE);
 	srand(GetTickCount());
 	FT_Init_FreeType(&freeTypeLibrary);	
-	InitializeRenderer();
+	InitializeRenderer();	
 	return Init();
 }
 bool Application::Destroy()
-{		
+{	
 	DestroyRenderer();	
 	Logger::Write(string("Destroying application.\n"));	
 	SDL_Quit();	
@@ -150,4 +161,30 @@ void Application::AddSearchPath(const string &path)
 const vector<string> &Application::GetSearchPaths()
 {
 	return Application::searchPaths;
+}
+
+
+
+void Application::ExecuteString(const string &str)
+{
+	luaL_dostring(luaState,str.c_str());
+}
+void Application::ExecuteFile(const string &filename)
+{
+	luaL_dofile(luaState,filename.c_str());
+}
+void Application::InitializeLua()
+{
+	if (luaState==NULL)
+		::InitializeLua(luaState);
+}
+lua_State *Application::GetLuaState()
+{
+	return luaState;
+}
+void Application::CloseLua()
+{
+	if (luaState!=NULL)
+		lua_close(luaState);
+	luaState=NULL;
 }

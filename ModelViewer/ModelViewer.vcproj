@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=""
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;wxUSE_GUI=1;__WXMSW__;__WXDEBUG__;WXUSINGDLL;NOPCH;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;wxUSE_GUI=1;__WXMSW__;WXUSINGDLL;__WXDEBUG__;NOPCH;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

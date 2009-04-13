@@ -4,6 +4,8 @@
 #pragma warning(push)
 #pragma warning(disable:4251)
 
+
+
 /** 
 This class is responsible for the intialization and running of the application.
 */
@@ -80,6 +82,29 @@ public:
 	* @return The list of search paths.
 	*/
 	static const vector<string> &GetSearchPaths();
+
+	/**
+	* Executes a lua string.
+	* @param str The string to execute.
+	*/
+	static void ExecuteString(const string &str);
+	/**
+	* Executes a lua file.
+	* @param filename The file to execute.
+	*/
+	static void ExecuteFile(const string &filename);
+	/**
+	* Initializes the lua state.
+	*/
+	static void InitializeLua();
+	/**
+	* closes the lua state.
+	*/
+	static void CloseLua();
+	/**
+	* @return Returns the lua state.
+	*/
+	static lua_State *GetLuaState();
 private:
 	Timer timer;	
 	bool running;
@@ -91,7 +116,7 @@ private:
 	TextureManager defaultTextureManager;
 	ShaderManager defaultShaderManager;
 	FontManager defaultFontManager;
-	static vector<string> searchPaths;
+	static vector<string> searchPaths;	
 };
 #pragma warning(pop)
 #endif

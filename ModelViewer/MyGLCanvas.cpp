@@ -53,14 +53,14 @@ void MyGLCanvas::Init()
 
 	rot=FireCube::vec3(0,0,-5);
 	lookat=FireCube::vec3(0,0,0);
-	fcApp->font=FireCube::Renderer::GetFontManager()->Create("c:\\windows\\fonts\\arial.ttf",18);
+	fcApp->font=FireCube::Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
 	bgColor=FireCube::vec4(0.249f,0.521f,1.0f,1.0f);
 	renderingMode=GL_FILL;
 	cullFaceEnabled=true;
 	renderNormals=false;
 
-	fcApp->vshader=FireCube::Renderer::GetShaderManager()->Create("plainColor.vshader");
-	fcApp->fshader=FireCube::Renderer::GetShaderManager()->Create("plainColor.fshader");
+	fcApp->vshader=FireCube::Renderer::GetShaderManager().Create("plainColor.vshader");
+	fcApp->fshader=FireCube::Renderer::GetShaderManager().Create("plainColor.fshader");
 	fcApp->program=FireCube::Program(new FireCube::ProgramResource);
 	fcApp->program->Create(fcApp->vshader,fcApp->fshader);
 	

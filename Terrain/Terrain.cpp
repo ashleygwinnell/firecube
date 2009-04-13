@@ -27,11 +27,11 @@ bool Terrain::GenerateTerrain(const string &heightmap,const string &diffuse,vec3
 	float t;
 
 	timer.Update();
-	diffuseTexture=Renderer::GetTextureManager()->Create(diffuse);
+	diffuseTexture=Renderer::GetTextureManager().Create(diffuse);
 	diffuseTexture->SetFiltering(NEAREST,NEAREST);
 	terrainScale=sizeVertices;
 	material->program=Program(new ProgramResource);
-	material->program->Create(Renderer::GetShaderManager()->Create("terrain.vshader"),Renderer::GetShaderManager()->Create("terrain.fshader"));	
+	material->program->Create(Renderer::GetShaderManager().Create("terrain.vshader"),Renderer::GetShaderManager().Create("terrain.fshader"));	
 	normalBuffer=Buffer(new BufferResource);
 	normalBuffer->Create();
 	vertexBuffer->Create();	

@@ -83,7 +83,7 @@ Material ColladaLoader<font color="black">:</font><font color="black">:</font>Lo
     <font color="blue">for</font> <font color="black">(</font>DWORD matIndex<font color="black">=</font><font color="maroon">0</font>;matIndex<font color="black">&#60;</font>materials.size<font color="black">(</font><font color="black">)</font>;matIndex<font color="black">+</font><font color="black">+</font><font color="black">)</font>
     <font color="black">{</font>
         domMaterial <font color="black">*</font>mat<font color="black">=</font>materials<font color="black">[</font>matIndex<font color="black">]</font>;
-        <font color="blue">if</font> <font color="black">(</font>mat<font color="black">-</font><font color="black">&#62;</font>getName<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font><font color="blue">name</font><font color="black">)</font>
+        <font color="blue">if</font> <font color="black">(</font>mat<font color="black">-</font><font color="black">&#62;</font>getID<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font><font color="blue">name</font><font color="black">)</font>
         <font color="black">{</font>   
             Material curMat<font color="black">=</font>Material<font color="black">(</font><font color="blue">new</font> MaterialResource<font color="black">)</font>;     
             curMat<font color="black">-</font><font color="black">&#62;</font><font color="blue">name</font><font color="black">=</font>mat<font color="black">-</font><font color="black">&#62;</font>getName<font color="black">(</font><font color="black">)</font>;            
@@ -110,6 +110,20 @@ Material ColladaLoader<font color="black">:</font><font color="black">:</font>Lo
                         curMat<font color="black">-</font><font color="black">&#62;</font>ambient<font color="black">=</font>ReadColor<font color="black">(</font>shadingElm<font color="black">-</font><font color="black">&#62;</font>getChild<font color="black">(</font><font color="maroon">"ambient"</font><font color="black">)</font><font color="black">)</font>;
                         curMat<font color="black">-</font><font color="black">&#62;</font>diffuse<font color="black">=</font>ReadColor<font color="black">(</font>shadingElm<font color="black">-</font><font color="black">&#62;</font>getChild<font color="black">(</font><font color="maroon">"diffuse"</font><font color="black">)</font><font color="black">)</font>;
                         curMat<font color="black">-</font><font color="black">&#62;</font>specular<font color="black">=</font>ReadColor<font color="black">(</font>shadingElm<font color="black">-</font><font color="black">&#62;</font>getChild<font color="black">(</font><font color="maroon">"specular"</font><font color="black">)</font><font color="black">)</font>;
+                        domElement <font color="black">*</font>transparency<font color="black">=</font>shadingElm<font color="black">-</font><font color="black">&#62;</font>getChild<font color="black">(</font><font color="maroon">"transparency"</font><font color="black">)</font>;
+                        <font color="blue">if</font> <font color="black">(</font>transparency<font color="black">)</font>
+                        <font color="black">{</font>
+                            domElement <font color="black">*</font>f<font color="black">=</font>transparency<font color="black">-</font><font color="black">&#62;</font>getChild<font color="black">(</font><font color="maroon">"float"</font><font color="black">)</font>;
+                            <font color="blue">if</font> <font color="black">(</font>f<font color="black">)</font>
+                            <font color="black">{</font>                           
+                                string data;
+                                f<font color="black">-</font><font color="black">&#62;</font>getCharData<font color="black">(</font>data<font color="black">)</font>;
+                                istringstream iss<font color="black">(</font>data<font color="black">)</font>;
+                                <font color="blue">float</font> v;
+                                iss <font color="black">&#62;</font><font color="black">&#62;</font> v;
+                                curMat<font color="black">-</font><font color="black">&#62;</font>diffuse.w<font color="black">=</font>v;
+                            <font color="black">}</font>
+                        <font color="black">}</font>
                         <font color="blue">if</font> <font color="black">(</font>ReadTexture<font color="black">(</font>shadingElm<font color="black">-</font><font color="black">&#62;</font>getChild<font color="black">(</font><font color="maroon">"diffuse"</font><font color="black">)</font>,vertexInput,file,unit<font color="black">)</font><font color="black">)</font>
                         <font color="black">{</font>
                             string<font color="black">:</font><font color="black">:</font>size_type i<font color="black">=</font>file.find<font color="black">(</font><font color="maroon">"file://"</font><font color="black">)</font>;
@@ -124,7 +138,7 @@ Material ColladaLoader<font color="black">:</font><font color="black">:</font>Lo
                                 i<font color="black">=</font>file.find<font color="black">(</font><font color="maroon">"%20"</font><font color="black">)</font>;
                             <font color="black">}</font>
                             
-                            curMat<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>unit<font color="black">]</font><font color="black">=</font>Renderer<font color="black">:</font><font color="black">:</font>GetTextureManager<font color="black">(</font><font color="black">)</font><font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font>file<font color="black">)</font>;
+                            curMat<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>unit<font color="black">]</font><font color="black">=</font>Renderer<font color="black">:</font><font color="black">:</font>GetTextureManager<font color="black">(</font><font color="black">)</font>.Create<font color="black">(</font>file<font color="black">)</font>;
                         <font color="black">}</font>                       
                         shadingElm<font color="black">-</font><font color="black">&#62;</font>getChild<font color="black">(</font><font color="maroon">"shininess"</font><font color="black">)</font><font color="black">-</font><font color="black">&#62;</font>getChild<font color="black">(</font><font color="maroon">"float"</font><font color="black">)</font><font color="black">-</font><font color="black">&#62;</font>getCharData<font color="black">(</font>data<font color="black">)</font>;                
                         istringstream shss<font color="black">(</font>data<font color="black">)</font>;
@@ -212,7 +226,18 @@ Material ColladaLoader<font color="black">:</font><font color="black">:</font>Lo
                         <font color="black">{</font>
                             vector<font color="black">&#60;</font>vec4<font color="black">&#62;</font> <font color="black">&</font>vve<font color="black">=</font>vecArray<font color="black">[</font>lo<font color="black">-</font><font color="black">&#62;</font>getSource<font color="black">(</font><font color="black">)</font>.getFragment<font color="black">(</font><font color="black">)</font><font color="black">]</font>;
                             vec3 v0<font color="black">=</font>vve<font color="black">[</font><font color="black">(</font>DWORD<font color="black">)</font>pv<font color="black">[</font>i<font color="black">+</font><font color="black">(</font>DWORD<font color="black">)</font>lo<font color="black">-</font><font color="black">&#62;</font>getOffset<font color="black">(</font><font color="black">)</font><font color="black">]</font><font color="black">]</font>;
-                            model<font color="black">-</font><font color="black">&#62;</font>object<font color="black">[</font>model<font color="black">-</font><font color="black">&#62;</font>object.size<font color="black">(</font><font color="black">)</font><font color="maroon">-1</font><font color="black">]</font>.vertex.push_back<font color="black">(</font>v0<font color="black">*</font>transform<font color="black">)</font>;               
+                            v0<font color="black">=</font>v0<font color="black">*</font>transform;
+                            <font color="blue">if</font> <font color="black">(</font>upAxis<font color="black">=</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
+                            <font color="black">{</font>
+                                std<font color="black">:</font><font color="black">:</font>swap<font color="black">(</font>v0.x,v0.y<font color="black">)</font>;
+                                v0.x<font color="black">*</font><font color="black">=</font><font color="maroon">-1</font>;
+                            <font color="black">}</font>
+                            <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>upAxis<font color="black">=</font><font color="black">=</font><font color="maroon">2</font><font color="black">)</font>
+                            <font color="black">{</font>
+                                std<font color="black">:</font><font color="black">:</font>swap<font color="black">(</font>v0.y,v0.z<font color="black">)</font>;
+                                v0.z<font color="black">*</font><font color="black">=</font><font color="maroon">-1</font>;
+                            <font color="black">}</font>
+                            model<font color="black">-</font><font color="black">&#62;</font>object<font color="black">[</font>model<font color="black">-</font><font color="black">&#62;</font>object.size<font color="black">(</font><font color="black">)</font><font color="maroon">-1</font><font color="black">]</font>.vertex.push_back<font color="black">(</font>v0<font color="black">)</font>;             
                         <font color="black">}</font>
                         <font color="blue">if</font> <font color="black">(</font>strcmp<font color="black">(</font>lo<font color="black">-</font><font color="black">&#62;</font>getSemantic<font color="black">(</font><font color="black">)</font>,<font color="maroon">"NORMAL"</font><font color="black">)</font><font color="black">=</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font> <font color="green">// Get normal from previously read source.</font>
                         <font color="black">{</font>                       
@@ -222,6 +247,17 @@ Material ColladaLoader<font color="black">:</font><font color="black">:</font>Lo
                             <font color="black">}</font>                       
                             vec3 n<font color="black">=</font>vecArray<font color="black">[</font>lo<font color="black">-</font><font color="black">&#62;</font>getSource<font color="black">(</font><font color="black">)</font>.getFragment<font color="black">(</font><font color="black">)</font><font color="black">]</font><font color="black">[</font><font color="black">(</font>DWORD<font color="black">)</font>pv<font color="black">[</font>i<font color="black">+</font><font color="black">(</font>DWORD<font color="black">)</font>lo<font color="black">-</font><font color="black">&#62;</font>getOffset<font color="black">(</font><font color="black">)</font><font color="black">]</font><font color="black">]</font>;
                             n<font color="black">=</font>n.TransformNormal<font color="black">(</font>transform<font color="black">)</font>;
+                            <font color="blue">if</font> <font color="black">(</font>upAxis<font color="black">=</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
+                            <font color="black">{</font>
+                                std<font color="black">:</font><font color="black">:</font>swap<font color="black">(</font>n.x,n.y<font color="black">)</font>;
+                                n.x<font color="black">*</font><font color="black">=</font><font color="maroon">-1</font>;
+                            <font color="black">}</font>
+                            <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>upAxis<font color="black">=</font><font color="black">=</font><font color="maroon">2</font><font color="black">)</font>
+                            <font color="black">{</font>
+                                std<font color="black">:</font><font color="black">:</font>swap<font color="black">(</font>n.y,n.z<font color="black">)</font>;
+                                n.z<font color="black">*</font><font color="black">=</font><font color="maroon">-1</font>;
+                            <font color="black">}</font>
+                            n.Normalize<font color="black">(</font><font color="black">)</font>;
                             model<font color="black">-</font><font color="black">&#62;</font>object<font color="black">[</font>model<font color="black">-</font><font color="black">&#62;</font>object.size<font color="black">(</font><font color="black">)</font><font color="maroon">-1</font><font color="black">]</font>.normal.push_back<font color="black">(</font>n<font color="black">)</font>;
                         <font color="black">}</font>
                         <font color="blue">if</font> <font color="black">(</font>strcmp<font color="black">(</font>lo<font color="black">-</font><font color="black">&#62;</font>getSemantic<font color="black">(</font><font color="black">)</font>,<font color="maroon">"TEXCOORD"</font><font color="black">)</font><font color="black">=</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font> <font color="green">// Get uv from previously read source.</font>
@@ -289,27 +325,31 @@ Material ColladaLoader<font color="black">:</font><font color="black">:</font>Lo
 <font color="black">}</font>
 <font color="blue">bool</font> ColladaLoader<font color="black">:</font><font color="black">:</font>Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>
 <font color="black">{</font>
-    <font color="blue">char</font> currentDir<font color="black">[</font><font color="maroon">512</font><font color="black">]</font>;
-    GetCurrentDirectoryA<font color="black">(</font><font color="maroon">512</font>,currentDir<font color="black">)</font>;   
-    string<font color="black">:</font><font color="black">:</font>size_type i<font color="black">=</font>filename.find_last_of<font color="black">(</font><font color="maroon">'\\'</font><font color="black">)</font>;
-    <font color="blue">if</font> <font color="black">(</font>i<font color="black">!</font><font color="black">=</font>string<font color="black">:</font><font color="black">:</font>npos<font color="black">)</font>
-    <font color="black">{</font>
-        basepath<font color="black">=</font>filename.substr<font color="black">(</font><font color="maroon">0</font>,i<font color="black">+</font><font color="maroon">1</font><font color="black">)</font>;        
-    <font color="black">}</font>   
-    SetCurrentDirectoryA<font color="black">(</font>basepath.c_str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
     daeInt result <font color="black">=</font> colladaDom.load<font color="black">(</font>filename.c_str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
 
     <font color="blue">if</font><font color="black">(</font>result <font color="black">!</font><font color="black">=</font> DAE_OK<font color="black">)</font> <font color="black">{</font>      
-        SetCurrentDirectoryA<font color="black">(</font>currentDir<font color="black">)</font>;
+
         <font color="blue">return</font> <font color="blue">false</font>;
     <font color="black">}</font>
-
+    vector<font color="black">&#60;</font>domAsset<font color="black">*</font><font color="black">&#62;</font> assets <font color="black">=</font> colladaDom.getDatabase<font color="black">(</font><font color="black">)</font><font color="black">-</font><font color="black">&#62;</font>typeLookup<font color="black">&#60;</font>domAsset<font color="black">&#62;</font><font color="black">(</font><font color="black">)</font>;
+    <font color="blue">for</font> <font color="black">(</font>DWORD i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>assets.size<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        domAsset <font color="black">*</font>asset<font color="black">=</font>assets<font color="black">[</font>i<font color="black">]</font>;
+        domAsset<font color="black">:</font><font color="black">:</font>domUp_axisRef up<font color="black">=</font>asset<font color="black">-</font><font color="black">&#62;</font>getUp_axis<font color="black">(</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>up<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font>UPAXISTYPE_X_UP<font color="black">)</font>
+            upAxis<font color="black">=</font><font color="maroon">0</font>;
+        <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>up<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font>UPAXISTYPE_Y_UP<font color="black">)</font>
+            upAxis<font color="black">=</font><font color="maroon">1</font>;
+        <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>up<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font>UPAXISTYPE_Z_UP<font color="black">)</font>
+            upAxis<font color="black">=</font><font color="maroon">2</font>;
+        domAsset<font color="black">:</font><font color="black">:</font>domUnitRef unit<font color="black">=</font>asset<font color="black">-</font><font color="black">&#62;</font>getUnit<font color="black">(</font><font color="black">)</font>;
+        scale<font color="black">=</font>vec3<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>unit<font color="black">-</font><font color="black">&#62;</font>getMeter<font color="black">(</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>unit<font color="black">-</font><font color="black">&#62;</font>getMeter<font color="black">(</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>unit<font color="black">-</font><font color="black">&#62;</font>getMeter<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+    <font color="black">}</font>
     LoadImageMap<font color="black">(</font><font color="black">)</font>; 
     LoadNodes<font color="black">(</font><font color="black">)</font>;
 
 
     model<font color="black">-</font><font color="black">&#62;</font>UpdateBuffers<font color="black">(</font><font color="black">)</font>;
-    SetCurrentDirectoryA<font color="black">(</font>currentDir<font color="black">)</font>;
     <font color="blue">return</font> <font color="blue">true</font>;
 <font color="black">}</font>
 ColladaLoader<font color="black">:</font><font color="black">:</font>Source ColladaLoader<font color="black">:</font><font color="black">:</font>ReadSource<font color="black">(</font>domSourceRef source<font color="black">)</font>
@@ -368,37 +408,46 @@ vector<font color="black">&#60;</font>vec4<font color="black">&#62;</font> Colla
 mat4 ColladaLoader<font color="black">:</font><font color="black">:</font>ReadTransformation<font color="black">(</font>domNode <font color="black">*</font>node<font color="black">)</font>
 <font color="black">{</font>
     mat4 transform;
-
-    domTranslate_Array <font color="black">&</font>ta<font color="black">=</font>node<font color="black">-</font><font color="black">&#62;</font>getTranslate_array<font color="black">(</font><font color="black">)</font>;
-    <font color="blue">for</font> <font color="black">(</font>DWORD j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font>ta.getCount<font color="black">(</font><font color="black">)</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    daeTArray<font color="black">&#60;</font>daeSmartRef<font color="black">&#60;</font>daeElement<font color="black">&#62;</font><font color="black">&#62;</font> children;
+    node<font color="black">-</font><font color="black">&#62;</font>getChildren<font color="black">(</font>children<font color="black">)</font>;
+    <font color="blue">for</font> <font color="black">(</font>DWORD i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>children.getCount<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
     <font color="black">{</font>
-        domTranslateRef t<font color="black">=</font>ta.get<font color="black">(</font>j<font color="black">)</font>;
-        domFloat3 <font color="black">&</font>tv<font color="black">=</font>t<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>;
-        vec3 tr<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>tv.get<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>tv.get<font color="black">(</font><font color="maroon">1</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>tv.get<font color="black">(</font><font color="maroon">2</font><font color="black">)</font><font color="black">)</font>;
-        mat4 trans;
-        trans.Translate<font color="black">(</font>tr<font color="black">)</font>;
-        transform<font color="black">*</font><font color="black">=</font>trans;
-    <font color="black">}</font>
-    domRotate_Array <font color="black">&</font>ra<font color="black">=</font>node<font color="black">-</font><font color="black">&#62;</font>getRotate_array<font color="black">(</font><font color="black">)</font>;
-    <font color="blue">for</font> <font color="black">(</font>DWORD j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font>ra.getCount<font color="black">(</font><font color="black">)</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
-    <font color="black">{</font>
-        domRotateRef r<font color="black">=</font>ra.get<font color="black">(</font>j<font color="black">)</font>;           
-        domFloat4 <font color="black">&</font>rv<font color="black">=</font>r<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>;
-        vec4 rt<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>rv.get<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>rv.get<font color="black">(</font><font color="maroon">1</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>rv.get<font color="black">(</font><font color="maroon">2</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">(</font><font color="black">-</font>rv.get<font color="black">(</font><font color="maroon">3</font><font color="black">)</font><font color="black">/</font><font color="maroon">180</font>.0f <font color="black">*</font> PI<font color="black">)</font><font color="black">)</font>;
-        mat4 rot;
-        rot.Rotate<font color="black">(</font>rt<font color="black">)</font>;
-        transform<font color="black">*</font><font color="black">=</font>rot;
+        daeSmartRef<font color="black">&#60;</font>domElement<font color="black">&#62;</font> elm<font color="black">=</font>children.get<font color="black">(</font>i<font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>elm<font color="black">-</font><font color="black">&#62;</font>getElementType<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font>COLLADA_TYPE<font color="black">:</font><font color="black">:</font>MATRIX<font color="black">)</font>
+        <font color="black">{</font>
+            mat4 t;
+            domMatrix <font color="black">*</font>mat<font color="black">=</font><font color="black">(</font>domMatrix<font color="black">*</font><font color="black">)</font>elm.cast<font color="black">(</font><font color="black">)</font>;
+            <font color="blue">for</font> <font color="black">(</font>DWORD j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font><font color="maroon">16</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+                t.m<font color="black">[</font>j<font color="black">]</font><font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>mat<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>.get<font color="black">(</font>j<font color="black">)</font>;
+            t.Transpose<font color="black">(</font><font color="black">)</font>;
+            transform<font color="black">*</font><font color="black">=</font>t;
+        <font color="black">}</font>
+        <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>elm<font color="black">-</font><font color="black">&#62;</font>getElementType<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font>COLLADA_TYPE<font color="black">:</font><font color="black">:</font>TRANSLATE<font color="black">)</font>
+        <font color="black">{</font>
+            domTranslate <font color="black">*</font>t<font color="black">=</font><font color="black">(</font>domTranslate<font color="black">*</font><font color="black">)</font>elm.cast<font color="black">(</font><font color="black">)</font>;          
+            vec3 tr<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>t<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>.get<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>t<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>.get<font color="black">(</font><font color="maroon">1</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>t<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>.get<font color="black">(</font><font color="maroon">2</font><font color="black">)</font><font color="black">)</font>;
+            mat4 trans;
+            trans.Translate<font color="black">(</font>tr<font color="black">)</font>;
+            transform<font color="black">*</font><font color="black">=</font>trans;
+        <font color="black">}</font>
+        <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>elm<font color="black">-</font><font color="black">&#62;</font>getElementType<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font>COLLADA_TYPE<font color="black">:</font><font color="black">:</font>ROTATE<font color="black">)</font>
+        <font color="black">{</font>
+            domRotate <font color="black">*</font>r<font color="black">=</font><font color="black">(</font>domRotate<font color="black">*</font><font color="black">)</font>elm.cast<font color="black">(</font><font color="black">)</font>;            
+            vec4 rt<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>r<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>.get<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>r<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>.get<font color="black">(</font><font color="maroon">1</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>r<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>.get<font color="black">(</font><font color="maroon">2</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">(</font><font color="black">-</font>r<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>.get<font color="black">(</font><font color="maroon">3</font><font color="black">)</font><font color="black">/</font><font color="maroon">180</font>.0f <font color="black">*</font> PI<font color="black">)</font><font color="black">)</font>;
+            mat4 rot;
+            rot.Rotate<font color="black">(</font>rt<font color="black">)</font>;
+            transform<font color="black">*</font><font color="black">=</font>rot;
+        <font color="black">}</font>
+        <font color="blue">else</font> <font color="blue">if</font> <font color="black">(</font>elm<font color="black">-</font><font color="black">&#62;</font>getElementType<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font>COLLADA_TYPE<font color="black">:</font><font color="black">:</font>SCALE<font color="black">)</font>
+        <font color="black">{</font>
+            domScale <font color="black">*</font>s<font color="black">=</font><font color="black">(</font>domScale<font color="black">*</font><font color="black">)</font>elm.cast<font color="black">(</font><font color="black">)</font>;          
+            vec3 sr<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>s<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>.get<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>s<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>.get<font color="black">(</font><font color="maroon">1</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>s<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>.get<font color="black">(</font><font color="maroon">2</font><font color="black">)</font><font color="black">)</font>;
+            mat4 scale;
+            scale.Scale<font color="black">(</font>sr.x,sr.y,sr.z<font color="black">)</font>;
+            transform<font color="black">*</font><font color="black">=</font>scale;
+        <font color="black">}</font>
     <font color="black">}</font>   
-    domScale_Array <font color="black">&</font>sa<font color="black">=</font>node<font color="black">-</font><font color="black">&#62;</font>getScale_array<font color="black">(</font><font color="black">)</font>;
-    <font color="blue">for</font> <font color="black">(</font>DWORD j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font>sa.getCount<font color="black">(</font><font color="black">)</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
-    <font color="black">{</font>
-        domScaleRef s<font color="black">=</font>sa.get<font color="black">(</font>j<font color="black">)</font>;            
-        domFloat3 <font color="black">&</font>sv<font color="black">=</font>s<font color="black">-</font><font color="black">&#62;</font>getValue<font color="black">(</font><font color="black">)</font>;
-        vec3 sr<font color="black">(</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>sv.get<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>sv.get<font color="black">(</font><font color="maroon">1</font><font color="black">)</font>,<font color="black">(</font><font color="blue">float</font><font color="black">)</font>sv.get<font color="black">(</font><font color="maroon">2</font><font color="black">)</font><font color="black">)</font>;
-        mat4 scale;
-        scale.Scale<font color="black">(</font>sr.x,sr.y,sr.z<font color="black">)</font>;
-        transform<font color="black">*</font><font color="black">=</font>scale;
-    <font color="black">}</font>
+        
     <font color="blue">if</font> <font color="black">(</font>node<font color="black">-</font><font color="black">&#62;</font>getParent<font color="black">(</font><font color="black">)</font><font color="black">)</font>
         <font color="blue">if</font> <font color="black">(</font>node<font color="black">-</font><font color="black">&#62;</font>getParent<font color="black">(</font><font color="black">)</font><font color="black">-</font><font color="black">&#62;</font>getElementType<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font>COLLADA_TYPE<font color="black">:</font><font color="black">:</font>NODE<font color="black">)</font>        
             <font color="blue">return</font> ReadTransformation<font color="black">(</font><font color="black">(</font>domNode<font color="black">*</font><font color="black">)</font>node<font color="black">-</font><font color="black">&#62;</font>getParent<font color="black">(</font><font color="black">)</font><font color="black">)</font><font color="black">*</font>transform;

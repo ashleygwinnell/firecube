@@ -558,29 +558,29 @@ void InitializeRenderer()
 									} ");
 	textShader->Create(vShader,fShader);		
 }
-void Renderer::SetTextureManager(TextureManager *textureManager)
+void Renderer::SetTextureManager(TextureManager &textureManager)
 {
-	currentTextureManager=textureManager;
+	currentTextureManager=&textureManager;
 }
-TextureManager *Renderer::GetTextureManager()
+TextureManager &Renderer::GetTextureManager()
 {
-	return currentTextureManager;
+	return *currentTextureManager;
 }
-void Renderer::SetShaderManager(ShaderManager *shaderManager)
+void Renderer::SetShaderManager(ShaderManager &shaderManager)
 {
-	currentShaderManager=shaderManager;
+	currentShaderManager=&shaderManager;
 }
-ShaderManager *Renderer::GetShaderManager()
+ShaderManager &Renderer::GetShaderManager()
 {
-	return currentShaderManager;
+	return *currentShaderManager;
 }
-void Renderer::SetFontManager(FontManager *fontManager)
+void Renderer::SetFontManager(FontManager &fontManager)
 {
-	currentFontManager=fontManager;
+	currentFontManager=&fontManager;
 }
-FontManager *Renderer::GetFontManager()
+FontManager &Renderer::GetFontManager()
 {
-	return currentFontManager;
+	return *currentFontManager;
 }
 void DestroyRenderer()
 {

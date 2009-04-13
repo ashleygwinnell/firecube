@@ -177,7 +177,7 @@ DWORD M3dsLoader<font color="black">:</font><font color="black">:</font>ProcessC
         <font color="blue">break</font>;
     <font color="blue">case</font> MAT_TEXFLNM<font color="black">:</font>
         matPtr<font color="black">=</font>model<font color="black">-</font><font color="black">&#62;</font>material<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;                      
-        matPtr<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>Renderer<font color="black">:</font><font color="black">:</font>GetTextureManager<font color="black">(</font><font color="black">)</font><font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;     
+        matPtr<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>Renderer<font color="black">:</font><font color="black">:</font>GetTextureManager<font color="black">(</font><font color="black">)</font>.Create<font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font>;      
         i<font color="black">+</font><font color="black">=</font><font color="black">(</font>DWORD<font color="black">)</font>strlen<font color="black">(</font>buffer<font color="black">+</font>i<font color="black">)</font><font color="black">+</font><font color="maroon">1</font>;
         <font color="blue">break</font>;
     <font color="blue">default</font><font color="black">:</font>    

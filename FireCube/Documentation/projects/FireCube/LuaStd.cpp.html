@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<TITLE>
+LuaStd.cpp
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#include</font> <font color="maroon">&#60;string&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;vector&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
+<font color="blue">using</font> <font color="blue">namespace</font> std;
+<font color="blue">#include</font> <font color="maroon">&#60;Windows.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;SDL/SDL.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">"GLee.h"</font>
+<font color="blue">#include</font> <font color="maroon">&#60;ft2build.h&#62;</font>
+<font color="blue">#include</font> FT_FREETYPE_H
+<font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
+<font color="blue">using</font> <font color="blue">namespace</font> FireCube;
+
+<font color="blue">extern</font> <font color="maroon">"C"</font> <font color="black">{</font>
+<font color="blue">#include</font> <font color="maroon">"lua.h"</font>
+<font color="blue">#include</font> <font color="maroon">"lualib.h"</font>
+<font color="blue">#include</font> <font color="maroon">"lauxlib.h"</font>
+<font color="black">}</font>
+<font color="blue">#include</font> <font color="maroon">&#60;luabind/luabind.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;luabind/operator.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;luabind/object.hpp&#62;</font>
+
+<font color="blue">#define</font> VECTOR_SET_NAMED<font color="black">(</font>t,<font color="blue">name</font><font color="black">)</font> <font color="blue">void</font> <font color="blue">name</font><font color="black">(</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font> <font color="black">&</font>v,vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size_type i,t <font color="black">&</font>val<font color="black">)</font> <font color="black">{</font>v<font color="black">[</font>i<font color="black">]</font><font color="black">=</font>val;<font color="black">}</font>
+<font color="blue">#define</font> VECTOR_SET<font color="black">(</font>t<font color="black">)</font> <font color="blue">void</font> set_vector_##t<font color="black">(</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font> <font color="black">&</font>v,vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size_type i,t <font color="black">&</font>val<font color="black">)</font> <font color="black">{</font>v<font color="black">[</font>i<font color="black">]</font><font color="black">=</font>val;<font color="black">}</font>
+<font color="blue">#define</font> VECTOR_GET_NAMED<font color="black">(</font>t,<font color="blue">name</font><font color="black">)</font> t <font color="blue">name</font><font color="black">(</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font> <font color="black">&</font>v,vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size_type i<font color="black">)</font> <font color="black">{</font><font color="blue">return</font> v<font color="black">[</font>i<font color="black">]</font>;<font color="black">}</font>
+<font color="blue">#define</font> VECTOR_GET<font color="black">(</font>t<font color="black">)</font> t get_vector_##t<font color="black">(</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font> <font color="black">&</font>v,vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size_type i<font color="black">)</font> <font color="black">{</font><font color="blue">return</font> v<font color="black">[</font>i<font color="black">]</font>;<font color="black">}</font>
+
+VECTOR_GET<font color="black">(</font>vec4<font color="black">)</font>
+VECTOR_GET<font color="black">(</font>vec3<font color="black">)</font>
+VECTOR_GET<font color="black">(</font>vec2<font color="black">)</font>
+VECTOR_GET<font color="black">(</font><font color="blue">float</font><font color="black">)</font>
+VECTOR_GET<font color="black">(</font><font color="blue">int</font><font color="black">)</font>
+VECTOR_GET<font color="black">(</font>DWORD<font color="black">)</font>
+VECTOR_GET<font color="black">(</font>Face<font color="black">)</font>
+VECTOR_GET<font color="black">(</font>Mesh<font color="black">)</font>
+VECTOR_GET<font color="black">(</font>Buffer<font color="black">)</font>
+VECTOR_GET_NAMED<font color="black">(</font>vector<font color="black">&#60;</font>vec2<font color="black">&#62;</font>,get_vector_vector_vec2<font color="black">)</font>
+VECTOR_GET<font color="black">(</font>Object<font color="black">)</font>
+VECTOR_GET<font color="black">(</font>Material<font color="black">)</font>
+
+
+VECTOR_SET<font color="black">(</font>vec4<font color="black">)</font>
+VECTOR_SET<font color="black">(</font>vec3<font color="black">)</font>
+VECTOR_SET<font color="black">(</font>vec2<font color="black">)</font>
+VECTOR_SET<font color="black">(</font><font color="blue">float</font><font color="black">)</font>
+VECTOR_SET<font color="black">(</font><font color="blue">int</font><font color="black">)</font>
+VECTOR_SET<font color="black">(</font>DWORD<font color="black">)</font>
+VECTOR_SET<font color="black">(</font>Face<font color="black">)</font>
+VECTOR_SET<font color="black">(</font>Mesh<font color="black">)</font>
+VECTOR_SET<font color="black">(</font>Buffer<font color="black">)</font>
+VECTOR_SET_NAMED<font color="black">(</font>vector<font color="black">&#60;</font>vec2<font color="black">&#62;</font>,set_vector_vector_vec2<font color="black">)</font>
+VECTOR_SET<font color="black">(</font>Object<font color="black">)</font>
+VECTOR_SET<font color="black">(</font>Material<font color="black">)</font>
+
+<font color="blue">#define</font> LUABIND_VECTOR_NAMED<font color="black">(</font>t,<font color="blue">name</font>,setfunction,getfunction<font color="black">)</font> \
+    luabind<font color="black">:</font><font color="black">:</font>class_<font color="black">&#60;</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font> <font color="black">&#62;</font><font color="black">(</font><font color="blue">name</font><font color="black">)</font>   \
+    .def<font color="black">(</font>luabind<font color="black">:</font><font color="black">:</font>constructor<font color="black">&#60;</font><font color="black">&#62;</font><font color="black">(</font><font color="black">)</font><font color="black">)</font>  \
+    .def<font color="black">(</font>luabind<font color="black">:</font><font color="black">:</font>constructor<font color="black">&#60;</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size_type<font color="black">&#62;</font><font color="black">(</font><font color="black">)</font><font color="black">)</font>  \
+    .def<font color="black">(</font>luabind<font color="black">:</font><font color="black">:</font>constructor<font color="black">&#60;</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size_type,vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>const_reference<font color="black">&#62;</font><font color="black">(</font><font color="black">)</font><font color="black">)</font>   \
+    .def<font color="black">(</font><font color="maroon">"push_back"</font>,<font color="black">&</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>push_back<font color="black">)</font> \
+    .def<font color="black">(</font><font color="maroon">"at"</font>,<font color="black">&</font>##getfunction<font color="black">)</font>   \
+    .def<font color="black">(</font><font color="maroon">"set"</font>,<font color="black">&</font>##setfunction<font color="black">)</font> \
+    .def<font color="black">(</font><font color="maroon">"clear"</font>,<font color="black">&</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>clear<font color="black">)</font> \
+    .def<font color="black">(</font><font color="maroon">"reserve"</font>,<font color="black">&</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>reserve<font color="black">)</font> \
+    .def<font color="black">(</font><font color="maroon">"resize"</font>,<font color="black">(</font><font color="blue">void</font><font color="black">(</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font><font color="black">*</font><font color="black">)</font><font color="black">(</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size_type<font color="black">)</font><font color="black">)</font> <font color="black">&</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>resize<font color="black">)</font>    \
+    .def<font color="black">(</font><font color="maroon">"resize"</font>,<font color="black">(</font><font color="blue">void</font><font color="black">(</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font><font color="black">*</font><font color="black">)</font><font color="black">(</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size_type,t<font color="black">)</font><font color="black">)</font> <font color="black">&</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>resize<font color="black">)</font>  \
+    .def<font color="black">(</font><font color="maroon">"size"</font>,<font color="black">&</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size<font color="black">)</font>
+
+<font color="blue">#define</font> LUABIND_VECTOR<font color="black">(</font>t,<font color="blue">name</font><font color="black">)</font> \
+    luabind<font color="black">:</font><font color="black">:</font>class_<font color="black">&#60;</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font> <font color="black">&#62;</font><font color="black">(</font><font color="blue">name</font><font color="black">)</font>   \
+    .def<font color="black">(</font>luabind<font color="black">:</font><font color="black">:</font>constructor<font color="black">&#60;</font><font color="black">&#62;</font><font color="black">(</font><font color="black">)</font><font color="black">)</font>  \
+    .def<font color="black">(</font>luabind<font color="black">:</font><font color="black">:</font>constructor<font color="black">&#60;</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size_type<font color="black">&#62;</font><font color="black">(</font><font color="black">)</font><font color="black">)</font>  \
+    .def<font color="black">(</font>luabind<font color="black">:</font><font color="black">:</font>constructor<font color="black">&#60;</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size_type,vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>const_reference<font color="black">&#62;</font><font color="black">(</font><font color="black">)</font><font color="black">)</font>   \
+    .def<font color="black">(</font><font color="maroon">"push_back"</font>,<font color="black">&</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>push_back<font color="black">)</font> \
+    .def<font color="black">(</font><font color="maroon">"at"</font>,<font color="black">&</font>get_vector_##t<font color="black">)</font> \
+    .def<font color="black">(</font><font color="maroon">"set"</font>,<font color="black">&</font>set_vector_##t<font color="black">)</font> \
+    .def<font color="black">(</font><font color="maroon">"clear"</font>,<font color="black">&</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>clear<font color="black">)</font> \
+    .def<font color="black">(</font><font color="maroon">"reserve"</font>,<font color="black">&</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>reserve<font color="black">)</font> \
+    .def<font color="black">(</font><font color="maroon">"resize"</font>,<font color="black">(</font><font color="blue">void</font><font color="black">(</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font><font color="black">*</font><font color="black">)</font><font color="black">(</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size_type<font color="black">)</font><font color="black">)</font> <font color="black">&</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>resize<font color="black">)</font>    \
+    .def<font color="black">(</font><font color="maroon">"resize"</font>,<font color="black">(</font><font color="blue">void</font><font color="black">(</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font><font color="black">*</font><font color="black">)</font><font color="black">(</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size_type,t<font color="black">)</font><font color="black">)</font> <font color="black">&</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>resize<font color="black">)</font>  \
+    .def<font color="black">(</font><font color="maroon">"size"</font>,<font color="black">&</font>vector<font color="black">&#60;</font>t<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>size<font color="black">)</font>
+
+<font color="blue">void</font> InitializeLuaStd<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    luabind<font color="black">:</font><font color="black">:</font>module<font color="black">(</font>Application<font color="black">:</font><font color="black">:</font>GetLuaState<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+    <font color="black">[</font>
+        LUABIND_VECTOR<font color="black">(</font>vec4,<font color="maroon">"vector_vec4"</font><font color="black">)</font>,
+        LUABIND_VECTOR<font color="black">(</font>vec3,<font color="maroon">"vector_vec3"</font><font color="black">)</font>,
+        LUABIND_VECTOR<font color="black">(</font>vec2,<font color="maroon">"vector_vec2"</font><font color="black">)</font>,
+        LUABIND_VECTOR<font color="black">(</font><font color="blue">float</font>,<font color="maroon">"vector_float"</font><font color="black">)</font>,
+        LUABIND_VECTOR<font color="black">(</font><font color="blue">int</font>,<font color="maroon">"vector_int"</font><font color="black">)</font>,
+        LUABIND_VECTOR<font color="black">(</font>DWORD,<font color="maroon">"vector_uint"</font><font color="black">)</font>,
+
+        LUABIND_VECTOR<font color="black">(</font>Face,<font color="maroon">"vector_Face"</font><font color="black">)</font>,
+        LUABIND_VECTOR<font color="black">(</font>Mesh,<font color="maroon">"vector_Mesh"</font><font color="black">)</font>,
+        LUABIND_VECTOR<font color="black">(</font>Buffer,<font color="maroon">"vector_Buffer"</font><font color="black">)</font>,
+        LUABIND_VECTOR_NAMED<font color="black">(</font>vector<font color="black">&#60;</font>vec2<font color="black">&#62;</font>,<font color="maroon">"vector_vector_vec2"</font>,set_vector_vector_vec2,get_vector_vector_vec2<font color="black">)</font>,
+        LUABIND_VECTOR<font color="black">(</font>Object,<font color="maroon">"vector_Object"</font><font color="black">)</font>,
+        LUABIND_VECTOR<font color="black">(</font>Material,<font color="maroon">"vector_Material"</font><font color="black">)</font>
+    <font color="black">]</font>;
+<font color="black">}</font>
+</PRE>
+</BODY>
+</HTML>

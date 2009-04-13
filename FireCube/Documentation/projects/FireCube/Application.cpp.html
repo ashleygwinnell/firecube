@@ -20,16 +20,27 @@ Application.cpp
 <font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
 <font color="blue">using</font> <font color="blue">namespace</font> FireCube;
 
+<font color="blue">extern</font> <font color="maroon">"C"</font> <font color="black">{</font>
+<font color="blue">#include</font> <font color="maroon">"lua.h"</font>
+<font color="blue">#include</font> <font color="maroon">"lualib.h"</font>
+<font color="blue">#include</font> <font color="maroon">"lauxlib.h"</font>
+<font color="black">}</font>
+<font color="blue">#include</font> <font color="maroon">&#60;luabind/luabind.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;luabind/operator.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;luabind/object.hpp&#62;</font>
+
 <font color="blue">extern</font> <font color="blue">void</font> InitializeRenderer<font color="black">(</font><font color="black">)</font>;
 <font color="blue">extern</font> <font color="blue">void</font> DestroyRenderer<font color="black">(</font><font color="black">)</font>;
 <font color="blue">extern</font> FT_Library freeTypeLibrary;
 
 vector<font color="black">&#60;</font>string<font color="black">&#62;</font> Application<font color="black">:</font><font color="black">:</font>searchPaths;
+lua_State <font color="black">*</font>luaState<font color="black">=</font>NULL;
+<font color="blue">void</font> InitializeLua<font color="black">(</font>lua_State <font color="black">*</font><font color="black">&</font> luaState<font color="black">)</font>;
 Application<font color="black">:</font><font color="black">:</font>Application<font color="black">(</font><font color="black">)</font> <font color="black">:</font> running<font color="black">(</font><font color="blue">false</font><font color="black">)</font>, frameCount<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>, fpsTime<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>
 <font color="black">{</font>
-    Renderer<font color="black">:</font><font color="black">:</font>SetTextureManager<font color="black">(</font><font color="black">&</font>defaultTextureManager<font color="black">)</font>;
-    Renderer<font color="black">:</font><font color="black">:</font>SetShaderManager<font color="black">(</font><font color="black">&</font>defaultShaderManager<font color="black">)</font>;
-    Renderer<font color="black">:</font><font color="black">:</font>SetFontManager<font color="black">(</font><font color="black">&</font>defaultFontManager<font color="black">)</font>;
+    Renderer<font color="black">:</font><font color="black">:</font>SetTextureManager<font color="black">(</font>defaultTextureManager<font color="black">)</font>;
+    Renderer<font color="black">:</font><font color="black">:</font>SetShaderManager<font color="black">(</font>defaultShaderManager<font color="black">)</font>;
+    Renderer<font color="black">:</font><font color="black">:</font>SetFontManager<font color="black">(</font>defaultFontManager<font color="black">)</font>;
 <font color="black">}</font>
 Application<font color="black">:</font><font color="black">:</font>~Application<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
@@ -76,11 +87,11 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
     glEnable<font color="black">(</font>GL_CULL_FACE<font color="black">)</font>;
     srand<font color="black">(</font>GetTickCount<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
     FT_Init_FreeType<font color="black">(</font><font color="black">&</font>freeTypeLibrary<font color="black">)</font>; 
-    InitializeRenderer<font color="black">(</font><font color="black">)</font>;
+    InitializeRenderer<font color="black">(</font><font color="black">)</font>;   
     <font color="blue">return</font> Init<font color="black">(</font><font color="black">)</font>;
 <font color="black">}</font>
 <font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>Destroy<font color="black">(</font><font color="black">)</font>
-<font color="black">{</font>       
+<font color="black">{</font>   
     DestroyRenderer<font color="black">(</font><font color="black">)</font>;  
     Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>string<font color="black">(</font><font color="maroon">"Destroying application.\n"</font><font color="black">)</font><font color="black">)</font>; 
     SDL_Quit<font color="black">(</font><font color="black">)</font>; 
@@ -158,6 +169,32 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
 <font color="blue">const</font> vector<font color="black">&#60;</font>string<font color="black">&#62;</font> <font color="black">&</font>Application<font color="black">:</font><font color="black">:</font>GetSearchPaths<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
     <font color="blue">return</font> Application<font color="black">:</font><font color="black">:</font>searchPaths;
+<font color="black">}</font>
+
+
+
+<font color="blue">void</font> Application<font color="black">:</font><font color="black">:</font>ExecuteString<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>
+<font color="black">{</font>
+    luaL_dostring<font color="black">(</font>luaState,str.c_str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Application<font color="black">:</font><font color="black">:</font>ExecuteFile<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>
+<font color="black">{</font>
+    luaL_dofile<font color="black">(</font>luaState,filename.c_str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Application<font color="black">:</font><font color="black">:</font>InitializeLua<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">if</font> <font color="black">(</font>luaState<font color="black">=</font><font color="black">=</font>NULL<font color="black">)</font>
+        <font color="black">:</font><font color="black">:</font>InitializeLua<font color="black">(</font>luaState<font color="black">)</font>;
+<font color="black">}</font>
+lua_State <font color="black">*</font>Application<font color="black">:</font><font color="black">:</font>GetLuaState<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> luaState;
+<font color="black">}</font>
+<font color="blue">void</font> Application<font color="black">:</font><font color="black">:</font>CloseLua<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">if</font> <font color="black">(</font>luaState<font color="black">!</font><font color="black">=</font>NULL<font color="black">)</font>
+        lua_close<font color="black">(</font>luaState<font color="black">)</font>;
+    luaState<font color="black">=</font>NULL;
 <font color="black">}</font>
 </PRE>
 </BODY>

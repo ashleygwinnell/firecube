@@ -12,6 +12,8 @@ Application.h
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>push<font color="black">)</font>
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
 
+
+
 <font color="green">/** 
 This class is responsible for the intialization and running of the application.
 */</font>
@@ -88,6 +90,29 @@ This class is responsible for the intialization and running of the application.
     * @return The list of search paths.
     */</font>
     <font color="blue">static</font> <font color="blue">const</font> vector<font color="black">&#60;</font>string<font color="black">&#62;</font> <font color="black">&</font>GetSearchPaths<font color="black">(</font><font color="black">)</font>;
+
+    <font color="green">/**
+    * Executes a lua string.
+    * @param str The string to execute.
+    */</font>
+    <font color="blue">static</font> <font color="blue">void</font> ExecuteString<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
+    <font color="green">/**
+    * Executes a lua file.
+    * @param filename The file to execute.
+    */</font>
+    <font color="blue">static</font> <font color="blue">void</font> ExecuteFile<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>;
+    <font color="green">/**
+    * Initializes the lua state.
+    */</font>
+    <font color="blue">static</font> <font color="blue">void</font> InitializeLua<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * closes the lua state.
+    */</font>
+    <font color="blue">static</font> <font color="blue">void</font> CloseLua<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * @return Returns the lua state.
+    */</font>
+    <font color="blue">static</font> lua_State <font color="black">*</font>GetLuaState<font color="black">(</font><font color="black">)</font>;
 <font color="blue">private</font><font color="black">:</font>
     Timer timer;    
     <font color="blue">bool</font> running;
@@ -99,7 +124,7 @@ This class is responsible for the intialization and running of the application.
     TextureManager defaultTextureManager;
     ShaderManager defaultShaderManager;
     FontManager defaultFontManager;
-    <font color="blue">static</font> vector<font color="black">&#60;</font>string<font color="black">&#62;</font> searchPaths;
+    <font color="blue">static</font> vector<font color="black">&#60;</font>string<font color="black">&#62;</font> searchPaths;  
 <font color="black">}</font>;
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>pop<font color="black">)</font>
 <font color="blue">#endif</font>

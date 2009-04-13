@@ -137,27 +137,27 @@ namespace Renderer
 	/**
 	* Sets the current texture manager.
 	*/
-	void FIRECUBE_API SetTextureManager(TextureManager *textureManager);
+	void FIRECUBE_API SetTextureManager(TextureManager &textureManager);
 	/**
 	* Gets the current texture manager.
 	*/
-	TextureManager FIRECUBE_API *GetTextureManager();
+	TextureManager FIRECUBE_API &GetTextureManager();
 	/**
 	* Sets the current shader manager.
 	*/
-	void FIRECUBE_API SetShaderManager(ShaderManager *shaderManager);
+	void FIRECUBE_API SetShaderManager(ShaderManager &shaderManager);
 	/**
 	* Gets the current shader manager.
 	*/
-	ShaderManager FIRECUBE_API *GetShaderManager();
+	ShaderManager FIRECUBE_API &GetShaderManager();
 	/**
 	* Sets the current font manager.
 	*/
-	void FIRECUBE_API SetFontManager(FontManager *fontManager);
+	void FIRECUBE_API SetFontManager(FontManager &fontManager);
 	/**
 	* Gets the current font manager.
 	*/
-	FontManager FIRECUBE_API *GetFontManager();
+	FontManager FIRECUBE_API &GetFontManager();
 };
 
 

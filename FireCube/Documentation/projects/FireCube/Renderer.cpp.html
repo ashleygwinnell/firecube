@@ -349,12 +349,12 @@ string ProgramResource<font color="black">:</font><font color="black">:</font>Ge
 <font color="black">}</font>
 <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RenderText<font color="black">(</font>Font font,vec3 pos,vec4 color,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>
 <font color="black">{</font>   
+    <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>font<font color="black">)</font>
+        <font color="blue">return</font>; 
     <font color="blue">static</font> vector<font color="black">&#60;</font>vec3<font color="black">&#62;</font> vBuffer;
     <font color="blue">static</font> vector<font color="black">&#60;</font>vec2<font color="black">&#62;</font> uvBuffer;
     vBuffer.resize<font color="black">(</font>str.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">4</font><font color="black">)</font>;
-    uvBuffer.resize<font color="black">(</font>str.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">4</font><font color="black">)</font>;
-    <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>font<font color="black">)</font>
-        <font color="blue">return</font>; 
+    uvBuffer.resize<font color="black">(</font>str.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">4</font><font color="black">)</font>;  
     <font color="blue">if</font> <font color="black">(</font>textShader<font color="black">-</font><font color="black">&#62;</font>IsValid<font color="black">(</font><font color="black">)</font><font color="black">)</font>
     <font color="black">{</font>
         UseProgram<font color="black">(</font>textShader<font color="black">)</font>; 
@@ -485,13 +485,16 @@ string ProgramResource<font color="black">:</font><font color="black">:</font>Ge
 <font color="black">{</font>
     <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>material<font color="black">)</font>
         <font color="blue">return</font>;
-    <font color="blue">float</font> ambient<font color="black">[</font><font color="black">]</font><font color="black">=</font><font color="black">{</font>material<font color="black">-</font><font color="black">&#62;</font>ambient.x,material<font color="black">-</font><font color="black">&#62;</font>ambient.y,material<font color="black">-</font><font color="black">&#62;</font>ambient.z,material<font color="black">-</font><font color="black">&#62;</font>ambient.w<font color="black">}</font>;
-    <font color="blue">float</font> diffuse<font color="black">[</font><font color="black">]</font><font color="black">=</font><font color="black">{</font>material<font color="black">-</font><font color="black">&#62;</font>diffuse.x,material<font color="black">-</font><font color="black">&#62;</font>diffuse.y,material<font color="black">-</font><font color="black">&#62;</font>diffuse.z,material<font color="black">-</font><font color="black">&#62;</font>diffuse.w<font color="black">}</font>;
-    <font color="blue">float</font> specular<font color="black">[</font><font color="black">]</font><font color="black">=</font><font color="black">{</font>material<font color="black">-</font><font color="black">&#62;</font>specular.x,material<font color="black">-</font><font color="black">&#62;</font>specular.y,material<font color="black">-</font><font color="black">&#62;</font>specular.z,material<font color="black">-</font><font color="black">&#62;</font>specular.w<font color="black">}</font>;
-    glMaterialfv<font color="black">(</font>GL_FRONT,GL_AMBIENT,ambient<font color="black">)</font>;
-    glMaterialfv<font color="black">(</font>GL_FRONT,GL_DIFFUSE,diffuse<font color="black">)</font>;
-    glMaterialfv<font color="black">(</font>GL_FRONT,GL_SPECULAR,specular<font color="black">)</font>;
+    
+    glMaterialfv<font color="black">(</font>GL_FRONT,GL_AMBIENT,<font color="black">&</font>material<font color="black">-</font><font color="black">&#62;</font>ambient.x<font color="black">)</font>;
+    glMaterialfv<font color="black">(</font>GL_FRONT,GL_DIFFUSE,<font color="black">&</font>material<font color="black">-</font><font color="black">&#62;</font>diffuse.x<font color="black">)</font>;
+    glMaterialfv<font color="black">(</font>GL_FRONT,GL_SPECULAR,<font color="black">&</font>material<font color="black">-</font><font color="black">&#62;</font>specular.x<font color="black">)</font>;
     glMaterialf<font color="black">(</font>GL_FRONT,GL_SHININESS,material<font color="black">-</font><font color="black">&#62;</font>shininess<font color="black">)</font>;
+    glBlendFunc<font color="black">(</font>GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA<font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font><font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>ambient.w<font color="black">&#60;</font><font color="maroon">1</font><font color="black">)</font> <font color="black">|</font><font color="black">|</font> <font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>diffuse.w<font color="black">&#60;</font><font color="maroon">1</font><font color="black">)</font><font color="black">)</font>
+        glEnable<font color="black">(</font>GL_BLEND<font color="black">)</font>;
+    <font color="blue">else</font>
+        glDisable<font color="black">(</font>GL_BLEND<font color="black">)</font>;
     <font color="blue">for</font> <font color="black">(</font><font color="blue">int</font> i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>MAX_TEXTURES;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
     <font color="black">{</font>       
         <font color="blue">if</font> <font color="black">(</font><font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>i<font color="black">]</font><font color="black">)</font> <font color="black">&</font><font color="black">&</font> <font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>i<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>IsValid<font color="black">(</font><font color="black">)</font><font color="black">)</font><font color="black">)</font>
@@ -563,29 +566,29 @@ string ProgramResource<font color="black">:</font><font color="black">:</font>Ge
                                     } "</font><font color="black">)</font>;
     textShader<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font>vShader,fShader<font color="black">)</font>;        
 <font color="black">}</font>
-<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetTextureManager<font color="black">(</font>TextureManager <font color="black">*</font>textureManager<font color="black">)</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetTextureManager<font color="black">(</font>TextureManager <font color="black">&</font>textureManager<font color="black">)</font>
 <font color="black">{</font>
-    currentTextureManager<font color="black">=</font>textureManager;
+    currentTextureManager<font color="black">=</font><font color="black">&</font>textureManager;
 <font color="black">}</font>
-TextureManager <font color="black">*</font>Renderer<font color="black">:</font><font color="black">:</font>GetTextureManager<font color="black">(</font><font color="black">)</font>
+TextureManager <font color="black">&</font>Renderer<font color="black">:</font><font color="black">:</font>GetTextureManager<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
-    <font color="blue">return</font> currentTextureManager;
+    <font color="blue">return</font> <font color="black">*</font>currentTextureManager;
 <font color="black">}</font>
-<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetShaderManager<font color="black">(</font>ShaderManager <font color="black">*</font>shaderManager<font color="black">)</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetShaderManager<font color="black">(</font>ShaderManager <font color="black">&</font>shaderManager<font color="black">)</font>
 <font color="black">{</font>
-    currentShaderManager<font color="black">=</font>shaderManager;
+    currentShaderManager<font color="black">=</font><font color="black">&</font>shaderManager;
 <font color="black">}</font>
-ShaderManager <font color="black">*</font>Renderer<font color="black">:</font><font color="black">:</font>GetShaderManager<font color="black">(</font><font color="black">)</font>
+ShaderManager <font color="black">&</font>Renderer<font color="black">:</font><font color="black">:</font>GetShaderManager<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
-    <font color="blue">return</font> currentShaderManager;
+    <font color="blue">return</font> <font color="black">*</font>currentShaderManager;
 <font color="black">}</font>
-<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetFontManager<font color="black">(</font>FontManager <font color="black">*</font>fontManager<font color="black">)</font>
+<font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>SetFontManager<font color="black">(</font>FontManager <font color="black">&</font>fontManager<font color="black">)</font>
 <font color="black">{</font>
-    currentFontManager<font color="black">=</font>fontManager;
+    currentFontManager<font color="black">=</font><font color="black">&</font>fontManager;
 <font color="black">}</font>
-FontManager <font color="black">*</font>Renderer<font color="black">:</font><font color="black">:</font>GetFontManager<font color="black">(</font><font color="black">)</font>
+FontManager <font color="black">&</font>Renderer<font color="black">:</font><font color="black">:</font>GetFontManager<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
-    <font color="blue">return</font> currentFontManager;
+    <font color="blue">return</font> <font color="black">*</font>currentFontManager;
 <font color="black">}</font>
 <font color="blue">void</font> DestroyRenderer<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
