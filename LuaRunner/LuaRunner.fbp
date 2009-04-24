@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<wxFormBuilder_Project>
+    <FileVersion major="1" minor="9" />
+    <object class="Project" expanded="1">
+        <property name="class_decoration"></property>
+        <property name="code_generation">C++</property>
+        <property name="disconnect_events">1</property>
+        <property name="encoding">UTF-8</property>
+        <property name="event_generation">connect</property>
+        <property name="file">mainframe</property>
+        <property name="first_id">1000</property>
+        <property name="help_provider">none</property>
+        <property name="internationalize">0</property>
+        <property name="name">MyProject1</property>
+        <property name="namespace"></property>
+        <property name="path">.</property>
+        <property name="precompiled_header"></property>
+        <property name="relative_path">1</property>
+        <property name="use_enum">0</property>
+        <property name="use_microsoft_bom">0</property>
+        <object class="Frame" expanded="1">
+            <property name="bg"></property>
+            <property name="center"></property>
+            <property name="context_help"></property>
+            <property name="enabled">1</property>
+            <property name="extra_style"></property>
+            <property name="fg"></property>
+            <property name="font"></property>
+            <property name="hidden">0</property>
+            <property name="id">wxID_ANY</property>
+            <property name="maximum_size"></property>
+            <property name="minimum_size"></property>
+            <property name="name">MainFrame</property>
+            <property name="pos"></property>
+            <property name="size">864,730</property>
+            <property name="style">wxDEFAULT_FRAME_STYLE|wxMAXIMIZE</property>
+            <property name="subclass"></property>
+            <property name="title">LuaRunner</property>
+            <property name="tooltip"></property>
+            <property name="window_extra_style"></property>
+            <property name="window_name"></property>
+            <property name="window_style">wxTAB_TRAVERSAL</property>
+            <property name="xrc_skip_sizer">1</property>
+            <event name="OnActivate"></event>
+            <event name="OnActivateApp"></event>
+            <event name="OnChar"></event>
+            <event name="OnClose"></event>
+            <event name="OnEnterWindow"></event>
+            <event name="OnEraseBackground"></event>
+            <event name="OnHibernate"></event>
+            <event name="OnIconize"></event>
+            <event name="OnIdle"></event>
+            <event name="OnKeyDown"></event>
+            <event name="OnKeyUp"></event>
+            <event name="OnKillFocus"></event>
+            <event name="OnLeaveWindow"></event>
+            <event name="OnLeftDClick"></event>
+            <event name="OnLeftDown"></event>
+            <event name="OnLeftUp"></event>
+            <event name="OnMiddleDClick"></event>
+            <event name="OnMiddleDown"></event>
+            <event name="OnMiddleUp"></event>
+            <event name="OnMotion"></event>
+            <event name="OnMouseEvents"></event>
+            <event name="OnMouseWheel"></event>
+            <event name="OnPaint"></event>
+            <event name="OnRightDClick"></event>
+            <event name="OnRightDown"></event>
+            <event name="OnRightUp"></event>
+            <event name="OnSetFocus"></event>
+            <event name="OnSize"></event>
+            <event name="OnUpdateUI"></event>
+            <object class="wxFlexGridSizer" expanded="1">
+                <property name="cols">1</property>
+                <property name="flexible_direction">wxBOTH</property>
+                <property name="growablecols">0</property>
+                <property name="growablerows">0</property>
+                <property name="hgap">0</property>
+                <property name="minimum_size"></property>
+                <property name="name">fgSizer1</property>
+                <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
+                <property name="permission">none</property>
+                <property name="rows">2</property>
+                <property name="vgap">0</property>
+                <object class="sizeritem" expanded="1">
+                    <property name="border">5</property>
+                    <property name="flag">wxALL|wxEXPAND</property>
+                    <property name="proportion">0</property>
+                    <object class="CustomControl" expanded="1">
+                        <property name="bg"></property>
+                        <property name="class">wxScintilla</property>
+                        <property name="construction">wxScintilla1=new wxScintilla(this,wxID_ANY);</property>
+                        <property name="context_help"></property>
+                        <property name="declaration">wxScintilla *wxScintilla1;</property>
+                        <property name="enabled">1</property>
+                        <property name="fg"></property>
+                        <property name="font"></property>
+                        <property name="hidden">0</property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="include">#include &lt;wx/wxScintilla.h&gt;</property>
+                        <property name="maximum_size"></property>
+                        <property name="minimum_size"></property>
+                        <property name="name">wxScintilla1</property>
+                        <property name="permission">protected</property>
+                        <property name="pos"></property>
+                        <property name="settings">wxScintilla1-&gt;SetLexer(wxSCI_LEX_LUA);&#x0A;wxScintilla1-&gt;SetUseTabs( true );&#x0A;wxScintilla1-&gt;SetTabWidth( 4 );&#x0A;wxScintilla1-&gt;SetIndent( 4 );&#x0A;wxScintilla1-&gt;SetTabIndents( true );&#x0A;wxScintilla1-&gt;SetBackSpaceUnIndents( true );&#x0A;wxScintilla1-&gt;SetViewEOL( false );&#x0A;wxScintilla1-&gt;SetViewWhiteSpace( false );&#x0A;wxScintilla1-&gt;SetMarginWidth( 2, 0 );&#x0A;wxScintilla1-&gt;SetIndentationGuides( true );&#x0A;wxScintilla1-&gt;SetMarginType( 1, wxSCI_MARGIN_SYMBOL );&#x0A;wxScintilla1-&gt;SetMarginMask( 1, wxSCI_MASK_FOLDERS );&#x0A;wxScintilla1-&gt;SetMarginWidth( 1, 16);&#x0A;wxScintilla1-&gt;SetMarginSensitive( 1, true );&#x0A;wxScintilla1-&gt;SetProperty( wxT(&quot;fold&quot;), wxT(&quot;1&quot;) );&#x0A;wxScintilla1-&gt;SetFoldFlags( wxSCI_FOLDFLAG_LINEBEFORE_CONTRACTED | wxSCI_FOLDFLAG_LINEAFTER_CONTRACTED );&#x0A;wxScintilla1-&gt;SetMarginType( 0, wxSCI_MARGIN_NUMBER );&#x0A;wxScintilla1-&gt;SetMarginWidth( 0, wxScintilla1-&gt;TextWidth( wxSCI_STYLE_LINENUMBER, wxT(&quot;_99999&quot;) ) );&#x0A;wxScintilla1-&gt;MarkerDefine( wxSCI_MARKNUM_FOLDER, wxSCI_MARK_BOXPLUS );&#x0A;wxScintilla1-&gt;MarkerSetBackground( wxSCI_MARKNUM_FOLDER, wxColour( wxT(&quot;BLACK&quot;) ) );&#x0A;wxScintilla1-&gt;MarkerSetForeground( wxSCI_MARKNUM_FOLDER, wxColour( wxT(&quot;WHITE&quot;) ) );&#x0A;wxScintilla1-&gt;MarkerDefine( wxSCI_MARKNUM_FOLDEROPEN, wxSCI_MARK_BOXMINUS );&#x0A;wxScintilla1-&gt;MarkerSetBackground( wxSCI_MARKNUM_FOLDEROPEN, wxColour( wxT(&quot;BLACK&quot;) ) );&#x0A;wxScintilla1-&gt;MarkerSetForeground( wxSCI_MARKNUM_FOLDEROPEN, wxColour( wxT(&quot;WHITE&quot;) ) );&#x0A;wxScintilla1-&gt;MarkerDefine( wxSCI_MARKNUM_FOLDERSUB, wxSCI_MARK_EMPTY );&#x0A;wxScintilla1-&gt;MarkerDefine( wxSCI_MARKNUM_FOLDEREND, wxSCI_MARK_BOXPLUS );&#x0A;wxScintilla1-&gt;MarkerSetBackground( wxSCI_MARKNUM_FOLDEREND, wxColour( wxT(&quot;BLACK&quot;) ) );&#x0A;wxScintilla1-&gt;MarkerSetForeground( wxSCI_MARKNUM_FOLDEREND, wxColour( wxT(&quot;WHITE&quot;) ) );&#x0A;wxScintilla1-&gt;MarkerDefine( wxSCI_MARKNUM_FOLDEROPENMID, wxSCI_MARK_BOXMINUS );&#x0A;wxScintilla1-&gt;MarkerSetBackground( wxSCI_MARKNUM_FOLDEROPENMID, wxColour( wxT(&quot;BLACK&quot;) ) );&#x0A;wxScintilla1-&gt;MarkerSetForeground( wxSCI_MARKNUM_FOLDEROPENMID, wxColour( wxT(&quot;WHITE&quot;) ) );&#x0A;wxScintilla1-&gt;MarkerDefine( wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_EMPTY );&#x0A;wxScintilla1-&gt;MarkerDefine( wxSCI_MARKNUM_FOLDERTAIL, wxSCI_MARK_EMPTY );&#x0A;wxScintilla1-&gt;SetSelBackground( true, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ) );&#x0A;wxScintilla1-&gt;SetSelForeground( true, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ) );&#x0A;&#x0A;wxFont font( 10, wxMODERN, wxNORMAL, wxNORMAL );&#x0A;wxScintilla1-&gt;StyleSetFont( wxSCI_STYLE_DEFAULT, font );&#x0A;//wxScintilla1-&gt;StyleClearAll();&#x0A;</property>
+                        <property name="size"></property>
+                        <property name="subclass"></property>
+                        <property name="tooltip"></property>
+                        <property name="window_extra_style"></property>
+                        <property name="window_name"></property>
+                        <property name="window_style"></property>
+                        <event name="OnChar"></event>
+                        <event name="OnEnterWindow"></event>
+                        <event name="OnEraseBackground"></event>
+                        <event name="OnKeyDown"></event>
+                        <event name="OnKeyUp"></event>
+                        <event name="OnKillFocus"></event>
+                        <event name="OnLeaveWindow"></event>
+                        <event name="OnLeftDClick"></event>
+                        <event name="OnLeftDown"></event>
+                        <event name="OnLeftUp"></event>
+                        <event name="OnMiddleDClick"></event>
+                        <event name="OnMiddleDown"></event>
+                        <event name="OnMiddleUp"></event>
+                        <event name="OnMotion"></event>
+                        <event name="OnMouseEvents"></event>
+                        <event name="OnMouseWheel"></event>
+                        <event name="OnPaint"></event>
+                        <event name="OnRightDClick"></event>
+                        <event name="OnRightDown"></event>
+                        <event name="OnRightUp"></event>
+                        <event name="OnSetFocus"></event>
+                        <event name="OnSize"></event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
+                </object>
+                <object class="sizeritem" expanded="1">
+                    <property name="border">5</property>
+                    <property name="flag">wxEXPAND | wxALL</property>
+                    <property name="proportion">1</property>
+                    <object class="wxRichTextCtrl" expanded="1">
+                        <property name="bg"></property>
+                        <property name="context_help"></property>
+                        <property name="enabled">1</property>
+                        <property name="fg"></property>
+                        <property name="font">Courier New,90,90,10,74,0</property>
+                        <property name="hidden">0</property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="maximum_size"></property>
+                        <property name="minimum_size">-1,150</property>
+                        <property name="name">richText1</property>
+                        <property name="permission">public</property>
+                        <property name="pos"></property>
+                        <property name="size"></property>
+                        <property name="style">wxTE_READONLY</property>
+                        <property name="subclass"></property>
+                        <property name="tooltip"></property>
+                        <property name="window_extra_style"></property>
+                        <property name="window_name"></property>
+                        <property name="window_style">wxVSCROLL|wxHSCROLL|wxNO_BORDER|wxWANTS_CHARS</property>
+                        <event name="OnChar"></event>
+                        <event name="OnEnterWindow"></event>
+                        <event name="OnEraseBackground"></event>
+                        <event name="OnKeyDown"></event>
+                        <event name="OnKeyUp"></event>
+                        <event name="OnKillFocus"></event>
+                        <event name="OnLeaveWindow"></event>
+                        <event name="OnLeftDClick"></event>
+                        <event name="OnLeftDown"></event>
+                        <event name="OnLeftUp"></event>
+                        <event name="OnMiddleDClick"></event>
+                        <event name="OnMiddleDown"></event>
+                        <event name="OnMiddleUp"></event>
+                        <event name="OnMotion"></event>
+                        <event name="OnMouseEvents"></event>
+                        <event name="OnMouseWheel"></event>
+                        <event name="OnPaint"></event>
+                        <event name="OnRichTextCharacter"></event>
+                        <event name="OnRichTextContentDeleted"></event>
+                        <event name="OnRichTextContentInserted"></event>
+                        <event name="OnRichTextDelete"></event>
+                        <event name="OnRichTextReturn"></event>
+                        <event name="OnRichTextStyleChanged"></event>
+                        <event name="OnRichTextStyleSheetChanged"></event>
+                        <event name="OnRichTextStyleSheetReplaced"></event>
+                        <event name="OnRichTextStyleSheetReplacing"></event>
+                        <event name="OnRightDClick"></event>
+                        <event name="OnRightDown"></event>
+                        <event name="OnRightUp"></event>
+                        <event name="OnSetFocus"></event>
+                        <event name="OnSize"></event>
+                        <event name="OnText"></event>
+                        <event name="OnTextEnter"></event>
+                        <event name="OnTextMaxLen"></event>
+                        <event name="OnTextURL"></event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
+                </object>
+            </object>
+            <object class="wxMenuBar" expanded="1">
+                <property name="bg"></property>
+                <property name="context_help"></property>
+                <property name="enabled">1</property>
+                <property name="fg"></property>
+                <property name="font"></property>
+                <property name="hidden">0</property>
+                <property name="id">wxID_ANY</property>
+                <property name="label">MyMenuBar</property>
+                <property name="maximum_size"></property>
+                <property name="minimum_size"></property>
+                <property name="name">menubar1</property>
+                <property name="permission">protected</property>
+                <property name="pos"></property>
+                <property name="size"></property>
+                <property name="style"></property>
+                <property name="subclass"></property>
+                <property name="tooltip"></property>
+                <property name="window_extra_style"></property>
+                <property name="window_name"></property>
+                <property name="window_style"></property>
+                <event name="OnChar"></event>
+                <event name="OnEnterWindow"></event>
+                <event name="OnEraseBackground"></event>
+                <event name="OnKeyDown"></event>
+                <event name="OnKeyUp"></event>
+                <event name="OnKillFocus"></event>
+                <event name="OnLeaveWindow"></event>
+                <event name="OnLeftDClick"></event>
+                <event name="OnLeftDown"></event>
+                <event name="OnLeftUp"></event>
+                <event name="OnMiddleDClick"></event>
+                <event name="OnMiddleDown"></event>
+                <event name="OnMiddleUp"></event>
+                <event name="OnMotion"></event>
+                <event name="OnMouseEvents"></event>
+                <event name="OnMouseWheel"></event>
+                <event name="OnPaint"></event>
+                <event name="OnRightDClick"></event>
+                <event name="OnRightDown"></event>
+                <event name="OnRightUp"></event>
+                <event name="OnSetFocus"></event>
+                <event name="OnSize"></event>
+                <event name="OnUpdateUI"></event>
+                <object class="wxMenu" expanded="1">
+                    <property name="label">File</property>
+                    <property name="name">menu2</property>
+                    <property name="permission">protected</property>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">1</property>
+                        <property name="help"></property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">New</property>
+                        <property name="name">menuItem2</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut"></property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">MenuItem2Clicked</event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">1</property>
+                        <property name="help"></property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Open</property>
+                        <property name="name">menuItem3</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut"></property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">MenuItem3Clicked</event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">1</property>
+                        <property name="help"></property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Save</property>
+                        <property name="name">menuItem4</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut">Ctrl+S</property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">MenuItem4Clicked</event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">1</property>
+                        <property name="help"></property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Save As</property>
+                        <property name="name">menuItem5</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut"></property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">MenuItem5Clicked</event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
+                    <object class="separator" expanded="1">
+                        <property name="permission">none</property>
+                    </object>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">1</property>
+                        <property name="help"></property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Exit</property>
+                        <property name="name">menuItem6</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut"></property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">MenuItem6Clicked</event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
+                </object>
+                <object class="wxMenu" expanded="1">
+                    <property name="label">Build</property>
+                    <property name="name">menu1</property>
+                    <property name="permission">protected</property>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">1</property>
+                        <property name="help"></property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Execute</property>
+                        <property name="name">menuItem1</property>
+                        <property name="permission">public</property>
+                        <property name="shortcut">Ctrl+F5</property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">MenuItem1Clicked</event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
+                </object>
+            </object>
+        </object>
+    </object>
+</wxFormBuilder_Project>

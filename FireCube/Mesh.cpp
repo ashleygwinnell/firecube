@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <map>
+#include <queue>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 using namespace std;
@@ -28,6 +29,12 @@ MaterialResource::~MaterialResource()
 Face::Face()
 {
 	
+}
+Face::Face(DWORD v0,DWORD v1,DWORD v2)
+{
+	v[0]=v0;
+	v[1]=v1;
+	v[2]=v2;
 }
 Face::~Face()
 {
@@ -264,10 +271,8 @@ void ModelResource::CreateHardNormals()
 				tmp[f*3+0]=ms.face[f].v[0];
 				tmp[f*3+1]=ms.face[f].v[1];
 				tmp[f*3+2]=ms.face[f].v[2];
-			}
-			ms.indexBuffer->LoadIndexData(&tmp[0],tmp.size(),STATIC);
-		}
-		obj.normalBuffer->LoadData(&obj.normal[0],sizeof(vec3)*obj.normal.size(),STATIC);
+			}			
+		}		
 		for (DWORD t=0;t<MAX_TEXTURES;t++)
 		{		
 			if (obj.uv[t].size())
@@ -276,9 +281,9 @@ void ModelResource::CreateHardNormals()
 				obj.uvBuffer[t]->Create();
 				obj.uvBuffer[t]->LoadData(&obj.uv[t][0],sizeof(vec2)*obj.uv[t].size(),STATIC);
 			}
-		}
-		obj.vertexBuffer->LoadData(&obj.vertex[0],sizeof(vec3)*obj.vertex.size(),STATIC);
+		}		
 	}
+	UpdateBuffers();
 }
 void ModelResource::UpdateBuffers()
 {

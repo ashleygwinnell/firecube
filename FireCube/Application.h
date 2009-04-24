@@ -4,7 +4,18 @@
 #pragma warning(push)
 #pragma warning(disable:4251)
 
+enum EventType
+{
+	MOUSE_MOVE,MOUSE_CLICK,KEY_DOWN,KEY_UP
+};
 
+class FIRECUBE_API Event
+{
+public:
+	EventType type;
+	int mouseX,mouseY;
+	char c;
+};
 
 /** 
 This class is responsible for the intialization and running of the application.
@@ -74,6 +85,14 @@ public:
 	*/
 	virtual bool Init();
 	/**
+	* @return The next event in the event queue.
+	*/
+	Event GetEvent();
+	/**
+	* @return Whether there are more events pending.
+	*/
+	bool HasMoreEvents();
+	/**
 	* Add a search path for resources.
 	* @param path The path to add.
 	*/
@@ -102,9 +121,17 @@ public:
 	*/
 	static void CloseLua();
 	/**
-	* @return Returns the lua state.
+	* @return The lua state.
 	*/
 	static lua_State *GetLuaState();
+	/**
+	* Sets the output callback to redirect console output.
+	*/
+	static void SetOutputCallback(bool (*outputCallback)(string& ,bool));
+	/**
+	* @return The output callback function.
+	*/
+	static bool (*GetOutputCallback())(string& ,bool);
 private:
 	Timer timer;	
 	bool running;
@@ -117,6 +144,8 @@ private:
 	ShaderManager defaultShaderManager;
 	FontManager defaultFontManager;
 	static vector<string> searchPaths;	
+	static bool (*outputCallback)(string &str,bool out);
+	queue<Event> eventQueue;
 };
 #pragma warning(pop)
 #endif

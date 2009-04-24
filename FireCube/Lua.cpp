@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <queue>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 using namespace std;
@@ -25,6 +26,9 @@ void InitializeLuaStd();
 
 class Dummy{};
 class Dummy2{};
+class Dummy3{};
+class Dummy4{};
+class Dummy5{};
 void SetValue(Face &f,DWORD i,DWORD v)
 {
 	f.v[i]=v;
@@ -297,6 +301,7 @@ void InitializeLua(lua_State *& luaState)
 			.def("SetValue",(void (*)(Edge &,DWORD,DWORD))&SetValue),
 		luabind::class_<Face>("Face")
 			.def(luabind::constructor<>())
+			.def(luabind::constructor<DWORD,DWORD,DWORD>())
 			.def("GetValue",(DWORD (*)(Face &,DWORD))&GetValue)
 			.def("SetValue",(void (*)(Face &,DWORD,DWORD))&SetValue)
 			.def_readwrite("normal",&Face::normal),
@@ -329,13 +334,7 @@ void InitializeLua(lua_State *& luaState)
 			.def_readwrite("object",&ModelResource::object)
 			.def_readwrite("material",&ModelResource::material)
 			.def_readwrite("name",&ModelResource::name),
-		luabind::class_<TextureResource,Texture>("Texture")
-			.enum_("TextureFilter")
-			[
-				luabind::value("NEAREST", NEAREST),
-				luabind::value("LINEAR", LINEAR),
-				luabind::value("MIPMAP", MIPMAP)
-			]
+		luabind::class_<TextureResource,Texture>("Texture")			
 			.def(luabind::constructor<>())
 			.def("Load",&TextureResource::Load)
 			.def("IsValid",&TextureResource::IsValid)
@@ -394,12 +393,7 @@ void InitializeLua(lua_State *& luaState)
 			.def("SetUniform",(void(ProgramResource::*)(const string&,vec3))&ProgramResource::SetUniform)
 			.def("SetUniformi",(void(ProgramResource::*)(const string&,int))&ProgramResource::SetUniform)
 			.def("SetUniform",(void(ProgramResource::*)(const string&,float))&ProgramResource::SetUniform),		
-		luabind::class_<ShaderResource,Shader>("Shader")
-			.enum_("ShaderType")
-			[
-				luabind::value("VERTEX_SHADER", VERTEX_SHADER),
-				luabind::value("FRAGMENT_SHADER", FRAGMENT_SHADER)			
-			]
+		luabind::class_<ShaderResource,Shader>("Shader")			
 			.def(luabind::constructor<>())
 			.def("Create",&ShaderResource::Create)
 			.def("Load",&ShaderResource::Load),		
@@ -432,6 +426,12 @@ void InitializeLua(lua_State *& luaState)
 			.def("Add",(void(ModelManager::*)(const string&,Model))&ModelManager::Add)
 			.def("Create",&ModelManager::Create)
 			.def("Get",&ModelManager::Get),
+		luabind::class_<Event>("Event")
+			.def(luabind::constructor<>())
+			.def_readwrite("type",&Event::type)
+			.def_readwrite("c",&Event::c)
+			.def_readwrite("mouseX",&Event::mouseX)
+			.def_readwrite("mouseY",&Event::mouseY),
 		luabind::class_<Application,ApplicationWrapper>("Application")
 			.def(luabind::constructor<>())
 			.def("Initialize",(bool(Application::*)())&Application::Initialize)
@@ -443,6 +443,8 @@ void InitializeLua(lua_State *& luaState)
 			.def("GetFps",&Application::GetFps)
 			.def("GetWidth",&Application::GetWidth)
 			.def("GetHeight",&Application::GetHeight)
+			.def("HasMoreEvents",&Application::HasMoreEvents)
+			.def("GetEvent",&Application::GetEvent)
 			.def("Render", &Application::Render, &ApplicationWrapper::DefaultRender)
 			.def("Update", &Application::Update, &ApplicationWrapper::DefaultUpdate)
 			.def("HandleInput", &Application::HandleInput, &ApplicationWrapper::DefaultHandleInput)
@@ -468,6 +470,27 @@ void InitializeLua(lua_State *& luaState)
 				luabind::value("STATIC", STATIC),
 				luabind::value("DYNAMIC", DYNAMIC),
 				luabind::value("STREAM", STREAM)				
+			],
+		luabind::class_<Dummy3>("TextureFilter")
+			.enum_("TextureFilter")
+			[
+				luabind::value("NEAREST", NEAREST),
+				luabind::value("LINEAR", LINEAR),
+				luabind::value("MIPMAP", MIPMAP)
+			],
+		luabind::class_<Dummy4>("ShaderType")
+			.enum_("ShaderType")
+			[
+				luabind::value("VERTEX_SHADER", VERTEX_SHADER),
+				luabind::value("FRAGMENT_SHADER", FRAGMENT_SHADER)			
+			],
+		luabind::class_<Dummy5>("EventType")
+			.enum_("EventType")
+			[
+				luabind::value("MOUSE_MOVE", MOUSE_MOVE),
+				luabind::value("MOUSE_CLICK", MOUSE_CLICK),
+				luabind::value("KEY_DOWN", KEY_DOWN),
+				luabind::value("KEY_UP", KEY_UP)
 			],
 		luabind::namespace_("Renderer")
 		[			

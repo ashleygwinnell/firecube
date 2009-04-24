@@ -20,8 +20,14 @@ public:
 	void MenuItem4Clicked( wxCommandEvent& event );
 	void MenuItem5Clicked( wxCommandEvent& event );
 	void MenuItem6Clicked( wxCommandEvent& event );
-
+	void Scintilla1MarginClicked( wxCommandEvent& event );
+	void Scintilla1CharAdded( wxCommandEvent& event );
+	void Scintilla1UpdateUI( wxCommandEvent& event );
+	void Scintilla1Modified( wxCommandEvent& event );
 	string currentFile;
+	char lastChar;
+	int ln;
+	static bool running;
 };
 
 #endif // __MyMainFrame__

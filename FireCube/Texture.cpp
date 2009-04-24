@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <map>
+#include <queue>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 using namespace std;

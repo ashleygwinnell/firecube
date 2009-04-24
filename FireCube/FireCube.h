@@ -7,7 +7,9 @@
 #define FIRECUBE_API __declspec(dllimport)
 #pragma comment(lib, "FireCube.lib")
 #endif
+/* CPPDOC_BEGIN_EXCLUDE */
 typedef struct lua_State lua_State;
+/* CPPDOC_END_EXCLUDE */
 namespace FireCube
 {	
 	#include "Logger.h"

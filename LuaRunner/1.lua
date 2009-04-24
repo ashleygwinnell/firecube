@@ -47,9 +47,10 @@ end
 function MyApp:HandleInput(time)
 end
 app=MyApp()
-if app:Initialize()==true then
+if app:Initialize(800,600,32,8,false)==true then
 	app:Run()
 end
+
 
 
 

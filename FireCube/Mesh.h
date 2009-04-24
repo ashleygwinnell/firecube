@@ -41,6 +41,7 @@ class FIRECUBE_API Face
 {
 public:
 	Face();
+	Face(DWORD v0,DWORD v1,DWORD v2);
 	~Face();
 
 	DWORD v[3];

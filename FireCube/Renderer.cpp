@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <queue>
 #include <fstream>
 #include <sstream>
 #include <boost/shared_ptr.hpp>

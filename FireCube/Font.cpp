@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <map>
+#include <queue>
 #include <boost/shared_array.hpp>
 #include <boost/weak_ptr.hpp>
 using namespace std;
