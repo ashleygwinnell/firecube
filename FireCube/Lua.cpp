@@ -29,6 +29,7 @@ class Dummy2{};
 class Dummy3{};
 class Dummy4{};
 class Dummy5{};
+class Dummy6{};
 void SetValue(Face &f,DWORD i,DWORD v)
 {
 	f.v[i]=v;
@@ -429,7 +430,7 @@ void InitializeLua(lua_State *& luaState)
 		luabind::class_<Event>("Event")
 			.def(luabind::constructor<>())
 			.def_readwrite("type",&Event::type)
-			.def_readwrite("c",&Event::c)
+			.def_readwrite("key",&Event::key)
 			.def_readwrite("mouseX",&Event::mouseX)
 			.def_readwrite("mouseY",&Event::mouseY),
 		luabind::class_<Application,ApplicationWrapper>("Application")
@@ -489,8 +490,18 @@ void InitializeLua(lua_State *& luaState)
 			[
 				luabind::value("MOUSE_MOVE", MOUSE_MOVE),
 				luabind::value("MOUSE_CLICK", MOUSE_CLICK),
+				luabind::value("KEY_PRESSED", KEY_PRESSED),
 				luabind::value("KEY_DOWN", KEY_DOWN),
 				luabind::value("KEY_UP", KEY_UP)
+			],
+		luabind::class_<Dummy6>("Key")
+			.enum_("Key")
+			[
+				luabind::value("KEY_UP_ARROW", KEY_UP_ARROW),
+				luabind::value("KEY_DOWN_ARROW", KEY_DOWN_ARROW),
+				luabind::value("KEY_LEFT_ARROW", KEY_LEFT_ARROW),
+				luabind::value("KEY_RIGHT_ARROW", KEY_RIGHT_ARROW),
+				luabind::value("KEY_SPACE", KEY_SPACE)
 			],
 		luabind::namespace_("Renderer")
 		[			

@@ -12,7 +12,27 @@ Application.h
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>push<font color="black">)</font>
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
 
-
+<font color="blue">enum</font> EventType
+<font color="black">{</font>
+    MOUSE_MOVE,MOUSE_CLICK,KEY_PRESSED,KEY_DOWN,KEY_UP
+<font color="black">}</font>;
+<font color="blue">enum</font> Key
+<font color="black">{</font>
+    KEY_NONE <font color="black">=</font> <font color="maroon">0</font>,
+    KEY_UP_ARROW,
+    KEY_DOWN_ARROW,
+    KEY_LEFT_ARROW,
+    KEY_RIGHT_ARROW,
+    KEY_SPACE,
+    KEY_LAST
+<font color="black">}</font>;
+<font color="blue">class</font> FIRECUBE_API Event
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font>
+    EventType type;
+    <font color="blue">int</font> mouseX,mouseY;
+    Key key;
+<font color="black">}</font>;
 
 <font color="green">/** 
 This class is responsible for the intialization and running of the application.
@@ -82,6 +102,14 @@ This class is responsible for the intialization and running of the application.
     */</font>
     virtual <font color="blue">bool</font> Init<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
+    * @return The next event in the event queue.
+    */</font>
+    Event GetEvent<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * @return Whether there are more events pending.
+    */</font>
+    <font color="blue">bool</font> HasMoreEvents<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
     * Add a search path for resources.
     * @param path The path to add.
     */</font>
@@ -110,9 +138,17 @@ This class is responsible for the intialization and running of the application.
     */</font>
     <font color="blue">static</font> <font color="blue">void</font> CloseLua<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
-    * @return Returns the lua state.
+    * @return The lua state.
     */</font>
     <font color="blue">static</font> lua_State <font color="black">*</font>GetLuaState<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Sets the output callback to redirect console output.
+    */</font>
+    <font color="blue">static</font> <font color="blue">void</font> SetOutputCallback<font color="black">(</font><font color="blue">bool</font> <font color="black">(</font><font color="black">*</font>outputCallback<font color="black">)</font><font color="black">(</font>string<font color="black">&</font> ,<font color="blue">bool</font><font color="black">)</font><font color="black">)</font>;
+    <font color="green">/**
+    * @return The output callback function.
+    */</font>
+    <font color="blue">static</font> <font color="blue">bool</font> <font color="black">(</font><font color="black">*</font>GetOutputCallback<font color="black">(</font><font color="black">)</font><font color="black">)</font><font color="black">(</font>string<font color="black">&</font> ,<font color="blue">bool</font><font color="black">)</font>;
 <font color="blue">private</font><font color="black">:</font>
     Timer timer;    
     <font color="blue">bool</font> running;
@@ -125,6 +161,8 @@ This class is responsible for the intialization and running of the application.
     ShaderManager defaultShaderManager;
     FontManager defaultFontManager;
     <font color="blue">static</font> vector<font color="black">&#60;</font>string<font color="black">&#62;</font> searchPaths;  
+    <font color="blue">static</font> <font color="blue">bool</font> <font color="black">(</font><font color="black">*</font>outputCallback<font color="black">)</font><font color="black">(</font>string <font color="black">&</font>str,<font color="blue">bool</font> out<font color="black">)</font>;
+    queue<font color="black">&#60;</font>Event<font color="black">&#62;</font> eventQueue;
 <font color="black">}</font>;
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>pop<font color="black">)</font>
 <font color="blue">#endif</font>

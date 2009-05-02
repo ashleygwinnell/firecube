@@ -12,6 +12,7 @@ Mesh.cpp
 <font color="blue">#include</font> <font color="maroon">&#60;iostream&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;sstream&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;queue&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
 <font color="blue">using</font> <font color="blue">namespace</font> std;
@@ -36,6 +37,12 @@ MaterialResource<font color="black">:</font><font color="black">:</font>~Materia
 Face<font color="black">:</font><font color="black">:</font>Face<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
     
+<font color="black">}</font>
+Face<font color="black">:</font><font color="black">:</font>Face<font color="black">(</font>DWORD v0,DWORD v1,DWORD v2<font color="black">)</font>
+<font color="black">{</font>
+    v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>v0;
+    v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>v1;
+    v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>v2;
 <font color="black">}</font>
 Face<font color="black">:</font><font color="black">:</font>~Face<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
@@ -272,10 +279,8 @@ Model ModelResource<font color="black">:</font><font color="black">:</font>Reduc
                 tmp<font color="black">[</font>f<font color="black">*</font><font color="maroon">3</font><font color="black">+</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>ms.face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;
                 tmp<font color="black">[</font>f<font color="black">*</font><font color="maroon">3</font><font color="black">+</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>ms.face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font>;
                 tmp<font color="black">[</font>f<font color="black">*</font><font color="maroon">3</font><font color="black">+</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>ms.face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
-            <font color="black">}</font>
-            ms.indexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadIndexData<font color="black">(</font><font color="black">&</font>tmp<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,tmp.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
-        <font color="black">}</font>
-        obj.normalBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>obj.normal<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec3<font color="black">)</font><font color="black">*</font>obj.normal.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
+            <font color="black">}</font>           
+        <font color="black">}</font>       
         <font color="blue">for</font> <font color="black">(</font>DWORD t<font color="black">=</font><font color="maroon">0</font>;t<font color="black">&#60;</font>MAX_TEXTURES;t<font color="black">+</font><font color="black">+</font><font color="black">)</font>
         <font color="black">{</font>       
             <font color="blue">if</font> <font color="black">(</font>obj.uv<font color="black">[</font>t<font color="black">]</font>.size<font color="black">(</font><font color="black">)</font><font color="black">)</font>
@@ -284,9 +289,9 @@ Model ModelResource<font color="black">:</font><font color="black">:</font>Reduc
                 obj.uvBuffer<font color="black">[</font>t<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
                 obj.uvBuffer<font color="black">[</font>t<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>obj.uv<font color="black">[</font>t<font color="black">]</font><font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec2<font color="black">)</font><font color="black">*</font>obj.uv<font color="black">[</font>t<font color="black">]</font>.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
             <font color="black">}</font>
-        <font color="black">}</font>
-        obj.vertexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>obj.vertex<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec3<font color="black">)</font><font color="black">*</font>obj.vertex.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
+        <font color="black">}</font>       
     <font color="black">}</font>
+    UpdateBuffers<font color="black">(</font><font color="black">)</font>;
 <font color="black">}</font>
 <font color="blue">void</font> ModelResource<font color="black">:</font><font color="black">:</font>UpdateBuffers<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>

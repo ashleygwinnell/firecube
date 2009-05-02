@@ -9,6 +9,7 @@ Renderer.cpp
 <font color="blue">#include</font> <font color="maroon">&#60;string&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;vector&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;queue&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;fstream&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;sstream&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
@@ -491,22 +492,14 @@ string ProgramResource<font color="black">:</font><font color="black">:</font>Ge
     glMaterialfv<font color="black">(</font>GL_FRONT,GL_SPECULAR,<font color="black">&</font>material<font color="black">-</font><font color="black">&#62;</font>specular.x<font color="black">)</font>;
     glMaterialf<font color="black">(</font>GL_FRONT,GL_SHININESS,material<font color="black">-</font><font color="black">&#62;</font>shininess<font color="black">)</font>;
     glBlendFunc<font color="black">(</font>GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA<font color="black">)</font>;
-    <font color="blue">if</font> <font color="black">(</font><font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>ambient.w<font color="black">&#60;</font><font color="maroon">1</font><font color="black">)</font> <font color="black">|</font><font color="black">|</font> <font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>diffuse.w<font color="black">&#60;</font><font color="maroon">1</font><font color="black">)</font><font color="black">)</font>
-        glEnable<font color="black">(</font>GL_BLEND<font color="black">)</font>;
-    <font color="blue">else</font>
-        glDisable<font color="black">(</font>GL_BLEND<font color="black">)</font>;
+    <font color="green">/*if ((material-&#62;ambient.w&#60;1) || (material-&#62;diffuse.w&#60;1))
+        glEnable(GL_BLEND);
+    else
+        glDisable(GL_BLEND);*/</font>
     <font color="blue">for</font> <font color="black">(</font><font color="blue">int</font> i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>MAX_TEXTURES;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
     <font color="black">{</font>       
-        <font color="blue">if</font> <font color="black">(</font><font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>i<font color="black">]</font><font color="black">)</font> <font color="black">&</font><font color="black">&</font> <font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>i<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>IsValid<font color="black">(</font><font color="black">)</font><font color="black">)</font><font color="black">)</font>
-        <font color="black">{</font>
-            UseTexture<font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>i<font color="black">]</font>,i<font color="black">)</font>;
-            glEnable<font color="black">(</font>GL_TEXTURE_2D<font color="black">)</font>;            
-        <font color="black">}</font>
-        <font color="blue">else</font>
-        <font color="black">{</font>
-            glActiveTexture<font color="black">(</font>GL_TEXTURE0<font color="black">+</font>i<font color="black">)</font>;
-            glDisable<font color="black">(</font>GL_TEXTURE_2D<font color="black">)</font>;
-        <font color="black">}</font>
+        <font color="blue">if</font> <font color="black">(</font><font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>i<font color="black">]</font><font color="black">)</font> <font color="black">&</font><font color="black">&</font> <font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>i<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font>IsValid<font color="black">(</font><font color="black">)</font><font color="black">)</font><font color="black">)</font>        
+            UseTexture<font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>texture<font color="black">[</font>i<font color="black">]</font>,i<font color="black">)</font>;         
     <font color="black">}</font>
 
     <font color="blue">if</font> <font color="black">(</font><font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>program<font color="black">)</font> <font color="black">&</font><font color="black">&</font> <font color="black">(</font>material<font color="black">-</font><font color="black">&#62;</font>program<font color="black">-</font><font color="black">&#62;</font>IsValid<font color="black">(</font><font color="black">)</font><font color="black">)</font><font color="black">)</font>

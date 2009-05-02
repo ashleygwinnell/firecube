@@ -97,7 +97,7 @@
                         <property name="font"></property>
                         <property name="hidden">0</property>
                         <property name="id">wxID_ANY</property>
-                        <property name="include">#include &lt;string&gt;&#x0A;#include &lt;vector&gt;&#x0A;#include &lt;sstream&gt;&#x0A;#include &lt;map&gt;&#x0A;#include &lt;boost/shared_ptr.hpp&gt;&#x0A;#include &lt;boost/weak_ptr.hpp&gt;&#x0A;using namespace std;&#x0A;#include &lt;windows.h&gt;&#x0A;#include &lt;gl/gl.h&gt;&#x0A;#include &lt;FireCube.h&gt;&#x0A;&#x0A;#include &lt;wx/glcanvas.h&gt;&#x0A;#include &quot;MyGlCanvas.h&quot;</property>
+                        <property name="include">#include &lt;string&gt;&#x0A;#include &lt;vector&gt;&#x0A;#include &lt;sstream&gt;&#x0A;#include &lt;map&gt;&#x0A;#include &lt;queue&gt;&#x0A;#include &lt;boost/shared_ptr.hpp&gt;&#x0A;#include &lt;boost/weak_ptr.hpp&gt;&#x0A;using namespace std;&#x0A;#include &lt;windows.h&gt;&#x0A;#include &lt;gl/gl.h&gt;&#x0A;#include &lt;FireCube.h&gt;&#x0A;&#x0A;#include &lt;wx/glcanvas.h&gt;&#x0A;#include &quot;MyGlCanvas.h&quot;</property>
                         <property name="maximum_size"></property>
                         <property name="minimum_size">-1,-1</property>
                         <property name="name">glCanvas</property>

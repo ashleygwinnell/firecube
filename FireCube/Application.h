@@ -6,15 +6,24 @@
 
 enum EventType
 {
-	MOUSE_MOVE,MOUSE_CLICK,KEY_DOWN,KEY_UP
+	MOUSE_MOVE,MOUSE_CLICK,KEY_PRESSED,KEY_DOWN,KEY_UP
 };
-
+enum Key
+{
+	KEY_NONE = 0,
+	KEY_UP_ARROW,
+	KEY_DOWN_ARROW,
+	KEY_LEFT_ARROW,
+	KEY_RIGHT_ARROW,
+	KEY_SPACE,
+	KEY_LAST
+};
 class FIRECUBE_API Event
 {
 public:
 	EventType type;
 	int mouseX,mouseY;
-	char c;
+	Key key;
 };
 
 /** 

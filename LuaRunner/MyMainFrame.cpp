@@ -46,9 +46,10 @@ MainFrame( parent )
 	wxScintilla1->SetKeyWords(0,"and break do else elseif end false for function if in local nil not or repeat return then true until while");
 	wxScintilla1->SetKeyWords(4,"mat4 mat3 vec4 vec3 vec2 Timer Material Edge Face Mesh Object Model Texture FrameBuffer Image Buffer Program \
 								 Shader Font FontManager TextureManager ShaderManager ModelManager Application RenderMode BufferType TextureFilter \
-								 ShaderType EventType Renderer Logger vector_vec4 vector_vec3 vector_vec2 vector_float vector_int vector_uint vector_Face \
+								 ShaderType EventType Key Renderer Logger vector_vec4 vector_vec3 vector_vec2 vector_float vector_int vector_uint vector_Face \
 								 vector_Mesh vector_Buffer vector_vector_vec2 vector_Object vector_Material");
-	wxScintilla1->SetKeyWords(5,"POINTS LINES TRIANGLES TRIANGLE_STRIP QUADS LINE_LOOP TRIANGLE_FAN STATIC DYNAMIC STREAM NEAREST LINEAR MIPMAP VERTEX_SHADER FRAGMENT_SHADER MAX_TEXTURES MOUSE_MOVE MOUSE_CLICK KEY_DOWN KEY_UP");
+	wxScintilla1->SetKeyWords(5,"POINTS LINES TRIANGLES TRIANGLE_STRIP QUADS LINE_LOOP TRIANGLE_FAN STATIC DYNAMIC STREAM NEAREST LINEAR MIPMAP VERTEX_SHADER FRAGMENT_SHADER MAX_TEXTURES \
+								 MOUSE_MOVE MOUSE_CLICK KEY_PRESSED KEY_DOWN KEY_UP KEY_UP_ARROW KEY_DOWN_ARROW KEY_LEFT_ARROW KEY_RIGHT_ARROW KEY_SPACE");
 	wxScintilla1->SetModEventMask(wxSCI_MOD_INSERTTEXT);
 }
 bool outputCallback(string &str,bool out)

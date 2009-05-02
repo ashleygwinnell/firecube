@@ -484,22 +484,14 @@ void Renderer::UseMaterial(Material material)
 	glMaterialfv(GL_FRONT,GL_SPECULAR,&material->specular.x);
 	glMaterialf(GL_FRONT,GL_SHININESS,material->shininess);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	if ((material->ambient.w<1) || (material->diffuse.w<1))
+	/*if ((material->ambient.w<1) || (material->diffuse.w<1))
 		glEnable(GL_BLEND);
 	else
-		glDisable(GL_BLEND);
+		glDisable(GL_BLEND);*/
 	for (int i=0;i<MAX_TEXTURES;i++)
 	{		
-		if ((material->texture[i]) && (material->texture[i]->IsValid()))
-		{
-			UseTexture(material->texture[i],i);
-			glEnable(GL_TEXTURE_2D);			
-		}
-		else
-		{
-			glActiveTexture(GL_TEXTURE0+i);
-			glDisable(GL_TEXTURE_2D);
-		}
+		if ((material->texture[i]) && (material->texture[i]->IsValid()))		
+			UseTexture(material->texture[i],i);			
 	}
 
 	if ((material->program) && (material->program->IsValid()))
