@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <queue>
 using namespace std;
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>

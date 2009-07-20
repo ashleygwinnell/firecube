@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <queue>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include <Windows.h>

@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib sdl.lib sdlmain.lib sdl_image.lib freetype.lib libcollada14dom21-d.lib lua5.1.lib luabind.lib"
+				AdditionalDependencies="opengl32.lib sdl.lib sdlmain.lib sdl_image.lib freetype239MT_D.lib libcollada14dom21-sd.lib lua5.1.lib luabind.lib libxml2_a.lib wsock32.lib zlib.lib pcre-d.lib pcrecpp-d.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\colladadom\dom\build\vc9-1.4-d&quot;"
 				GenerateDebugInformation="true"
