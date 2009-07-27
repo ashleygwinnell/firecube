@@ -5,6 +5,7 @@
 #include <boost/shared_array.hpp>
 #include <boost/weak_ptr.hpp>
 #include <iostream>
+#include <queue>
 using namespace std;
 #include <windows.h>
 #include <gl/gl.h>

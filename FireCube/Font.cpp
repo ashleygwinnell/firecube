@@ -79,9 +79,9 @@ bool FontResource::AddChar(char c)
 	glTexSubImage2D(GL_TEXTURE_2D,0,(int)page->curPos.x,(int)page->curPos.y,fontImpl->face->glyph->bitmap.width,fontImpl->face->glyph->bitmap.rows,GL_ALPHA,GL_UNSIGNED_BYTE,fontImpl->face->glyph->bitmap.buffer);
 	glyph[c].uv=page->curPos/512.0f;
 	glyph[c].size=vec2((float)fontImpl->face->glyph->bitmap.width,(float)fontImpl->face->glyph->bitmap.rows);
-	glyph[c].bitmapOffset=vec2((float)fontImpl->face->glyph->bitmap_left,size-(float)fontImpl->face->glyph->bitmap_top);
+	glyph[c].bitmapOffset=vec2((float)fontImpl->face->glyph->bitmap_left,size-(float)fontImpl->face->glyph->bitmap_top);	
 	glyph[c].advance=fontImpl->face->glyph->advance.x>>6;
-	page->curPos.x+=fontImpl->face->glyph->advance.x>>6;		
+	page->curPos.x+=glyph[c].size.x;
 	
 	return true;
 }

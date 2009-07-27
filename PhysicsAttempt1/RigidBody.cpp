@@ -5,6 +5,7 @@
 #include <map>
 #include <fstream>
 #include <cmath>
+#include <queue>
 #include <boost/shared_array.hpp>
 #include <boost/weak_ptr.hpp>
 #include <windows.h>

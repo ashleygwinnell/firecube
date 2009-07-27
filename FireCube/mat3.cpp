@@ -239,47 +239,26 @@ void mat3::Transpose()
 	m[7]=t.m[5];	
 }
 void mat3::Inverse()
-{ 
-	int n=3;
-	int l,q,p;
-	int pos,p_old;
-	int p_old2;
-	for(l=0;l<n;l++)
-	{
-		p_old2=l*n+l;
-		m[p_old2]=1/m[p_old2];
-		for(q=0;q<n;q++)
-			if(q!=l)
-			{
-				p_old=q*n+l;
-				m[p_old]=m[p_old]*m[p_old2];
-			}
+{
+	mat3 &mm=*this;
+	float d=mm(0,0)*mm(1,1)*mm(2,2) + mm(0,1)*mm(1,2)*mm(0,2) + mm(0,2)*mm(1,0)*mm(2,1) - mm(0,0)*mm(1,2)*mm(2,1) -
+		mm(0,2)*mm(1,1)*mm(2,0) - mm(0,1)*mm(1,0)*mm(2,2);
 
-			for(q=0;q<n;q++)
-			{
-				for(p=0;p<n;p++)
-				{
-					if(q!=l)
-					{
-						if(p!=l)
-						{
-							pos=q*n+p;
-							p_old=q*n+l;
-							p_old2=l*n+p;
-							m[pos]=m[pos]-(m[p_old]*m[p_old2]);
-						}
-					}
-				}
-			}
+	mat3 ret;	
+	if( d == 0 ) return;
+	d = 1.0f / d;
 
-			p_old=l*n+l;
-			for(p=0;p<n;p++)
-				if(p!=l)
-				{
-					pos=l*n+p;
-					m[pos]=-m[p_old]*m[pos];
-				}
-	}
+	ret(0,0) = d * (mm(1,1)*mm(2,2) - mm(2,1)*mm(1,2));
+	ret(0,1) = d * (mm(2,1)*mm(0,2) - mm(0,1)*mm(2,2));
+	ret(0,2) = d * (mm(0,1)*mm(1,2) - mm(1,1)*mm(0,2));	
+	ret(1,0) = d * (mm(2,0)*mm(1,2) - mm(1,0)*mm(2,2));
+	ret(1,1) = d * (mm(0,0)*mm(2,2) - mm(2,0)*mm(0,2));
+	ret(1,2) = d * (mm(1,0)*mm(0,2) - mm(0,0)*mm(1,2));	
+	ret(2,0) = d * (mm(1,0)*mm(2,1) - mm(2,0)*mm(1,1));
+	ret(2,1) = d * (mm(2,0)*mm(0,1) - mm(0,0)*mm(2,1));
+	ret(2,2) = d * (mm(0,0)*mm(1,1) - mm(1,0)*mm(0,1));	
+	
+	*this=ret;
 }
 vec3 mat3::GetDir()
 {
