@@ -1,0 +1,11 @@
+Download from firecube.googlecode.com and place the dependecies files here.
+You should also have SDL,SDL_Image and boost preinstalled.
+
+This folder should have the following strucutre:
+------------------------------------------------
+
+colladadom
+FreeType
+Lua
+LuaBind
+Dependencies.txt
