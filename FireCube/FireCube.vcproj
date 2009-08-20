@@ -212,14 +212,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Lua.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LuaStd.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\m3dsLoader.cpp"
 				>
 			</File>

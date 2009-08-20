@@ -7,5 +7,6 @@ This folder should have the following strucutre:
 colladadom
 FreeType
 Lua
+LuaDll
 LuaBind
 Dependencies.txt

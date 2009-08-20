@@ -111,36 +111,6 @@ public:
 	*/
 	static const vector<string> &GetSearchPaths();
 
-	/**
-	* Executes a lua string.
-	* @param str The string to execute.
-	*/
-	static void ExecuteString(const string &str);
-	/**
-	* Executes a lua file.
-	* @param filename The file to execute.
-	*/
-	static void ExecuteFile(const string &filename);
-	/**
-	* Initializes the lua state.
-	*/
-	static void InitializeLua();
-	/**
-	* closes the lua state.
-	*/
-	static void CloseLua();
-	/**
-	* @return The lua state.
-	*/
-	static lua_State *GetLuaState();
-	/**
-	* Sets the output callback to redirect console output.
-	*/
-	static void SetOutputCallback(bool (*outputCallback)(string& ,bool));
-	/**
-	* @return The output callback function.
-	*/
-	static bool (*GetOutputCallback())(string& ,bool);
 private:
 	Timer timer;	
 	bool running;
@@ -152,8 +122,7 @@ private:
 	TextureManager defaultTextureManager;
 	ShaderManager defaultShaderManager;
 	FontManager defaultFontManager;
-	static vector<string> searchPaths;	
-	static bool (*outputCallback)(string &str,bool out);
+	static vector<string> searchPaths;		
 	queue<Event> eventQueue;
 };
 #pragma warning(pop)
