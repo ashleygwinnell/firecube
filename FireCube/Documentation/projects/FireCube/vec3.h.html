@@ -21,20 +21,11 @@ vec3.h
     vec3 <font color="blue">operator</font><font color="black">=</font><font color="black">(</font><font color="blue">const</font> vec3 <font color="black">&</font>src<font color="black">)</font>
     <font color="black">{</font><font color="blue">return</font> vec3<font color="black">(</font>x<font color="black">=</font>src.x,y<font color="black">=</font>src.y,z<font color="black">=</font>src.z<font color="black">)</font>;<font color="black">}</font>
 
-    vec3 <font color="blue">operator</font><font color="black">=</font><font color="black">(</font>vec3 <font color="black">*</font>src<font color="black">)</font>
-    <font color="black">{</font><font color="blue">return</font> vec3<font color="black">(</font>x<font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>x,y<font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>y,z<font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>z<font color="black">)</font>;<font color="black">}</font>
-
     <font color="blue">int</font> <font color="blue">operator</font><font color="black">=</font><font color="black">=</font><font color="black">(</font>vec3 <font color="black">&</font>src<font color="black">)</font>
     <font color="black">{</font><font color="blue">return</font> <font color="black">(</font>x<font color="black">=</font><font color="black">=</font>src.x <font color="black">&</font><font color="black">&</font> y<font color="black">=</font><font color="black">=</font>src.y <font color="black">&</font><font color="black">&</font> z<font color="black">=</font><font color="black">=</font>src.z<font color="black">)</font>;<font color="black">}</font>
 
-    <font color="blue">int</font> <font color="blue">operator</font><font color="black">=</font><font color="black">=</font><font color="black">(</font>vec3 <font color="black">*</font>src<font color="black">)</font>
-    <font color="black">{</font><font color="blue">return</font> <font color="black">(</font>x<font color="black">=</font><font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>x <font color="black">&</font><font color="black">&</font> y<font color="black">=</font><font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>y <font color="black">&</font><font color="black">&</font> z<font color="black">=</font><font color="black">=</font>src<font color="black">-</font><font color="black">&#62;</font>z<font color="black">)</font>;<font color="black">}</font>
-
     <font color="blue">int</font> <font color="blue">operator</font><font color="black">!</font><font color="black">=</font><font color="black">(</font>vec3 <font color="black">&</font>src<font color="black">)</font>
     <font color="black">{</font><font color="blue">return</font> <font color="black">!</font><font color="black">(</font>src<font color="black">=</font><font color="black">=</font><font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">)</font>;<font color="black">}</font>
-
-    <font color="blue">int</font> <font color="blue">operator</font><font color="black">!</font><font color="black">=</font><font color="black">(</font>vec3 <font color="black">*</font>src<font color="black">)</font>
-    <font color="black">{</font><font color="blue">return</font> <font color="black">!</font><font color="black">(</font>src<font color="black">=</font><font color="black">=</font><font color="blue">this</font><font color="black">)</font>;<font color="black">}</font>
 
     <font color="blue">void</font> <font color="blue">operator</font><font color="black">+</font><font color="black">=</font><font color="black">(</font><font color="blue">const</font> vec3 <font color="black">&</font>src<font color="black">)</font>;
     <font color="blue">void</font> <font color="blue">operator</font><font color="black">-</font><font color="black">=</font><font color="black">(</font>vec3 <font color="black">&</font>src<font color="black">)</font>;

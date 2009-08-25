@@ -13,20 +13,11 @@ public:
 	vec2 operator=(const vec2 &src)
 	{return vec2(x=src.x,y=src.y);}
 
-	vec2 operator=(vec2 *src)
-	{return vec2(x=src->x,y=src->y);}
-
 	int operator==(vec2 &src)
 	{return (x==src.x && y==src.y);}
 
-	int operator==(vec2 *src)
-	{return (x==src->x && y==src->y);}
-
 	int operator!=(vec2 &src)
 	{return !(src==(*this));}
-
-	int operator!=(vec2 *src)
-	{return !(src==this);}
 
 	void operator+=(const vec2 &src);
 	void operator-=(vec2 &src);

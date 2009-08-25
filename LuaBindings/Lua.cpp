@@ -113,9 +113,18 @@ void LoadData(Buffer b,vector<vec4> &v,BufferType type)
 {
 	b->LoadData(&v[0],sizeof(vec4)*v.size(),type);
 }
-void LoadData(Buffer b,vector<vec3> &v,BufferType type)
+void LoadData(Buffer b,luabind::object const &t,BufferType type)
 {
-	b->LoadData(&v[0],sizeof(vec3)*v.size(),type);
+	vector<vec3> vv;
+	if (luabind::type(t) == LUA_TTABLE)
+	{
+		for (luabind::iterator i(t), end; i != end; ++i)
+		{
+			vec3 v=luabind::object_cast<vec3>(*i);
+			vv.push_back(v);
+		}		
+		b->LoadData(&vv[0],sizeof(vec3)*vv.size(),type);
+	}	
 }
 void LoadData(Buffer b,vector<vec2> &v,BufferType type)
 {
@@ -133,16 +142,26 @@ void LoadData(Buffer b,vector<DWORD> &v,BufferType type)
 {
 	b->LoadData(&v[0],sizeof(DWORD)*v.size(),type);
 }
-void LoadIndexData(Buffer b,vector<DWORD> &v,BufferType type)
+void LoadIndexData(Buffer b,luabind::object const &t,BufferType type)
 {
-	b->LoadIndexData(&v[0],v.size(),type);
+	vector<DWORD> vv;
+	if (luabind::type(t) == LUA_TTABLE)
+	{
+		for (luabind::iterator i(t), end; i != end; ++i)
+		{
+			DWORD v=luabind::object_cast<DWORD>(*i);
+			vv.push_back(v);
+		}		
+		b->LoadIndexData(&vv[0],vv.size(),type);
+	}
+	
 }
 void InitializeLua(lua_State *& luaState)
 {
 	luabind::open(luaState);
 
 	luabind::module(luaState)
-	[		
+	[				
 		luabind::def("IsFinite",&IsFinite),
 		luabind::def("RangedRandom",&RangedRandom),
 		luabind::def("Cross",(float (*)(vec2, vec2))&FireCube::Cross),
@@ -367,13 +386,13 @@ void InitializeLua(lua_State *& luaState)
 			.def("Create",&BufferResource::Create)
 			.def("Destroy",&BufferResource::Destroy)
 			.def("IsValid",&BufferResource::IsValid)			
-			.def("LoadData",(void (*)(Buffer, vector<vec4>&,BufferType))&::LoadData)
-			.def("LoadData",(void (*)(Buffer, vector<vec3>&,BufferType))&::LoadData)
-			.def("LoadData",(void (*)(Buffer, vector<vec2>&,BufferType))&::LoadData)
-			.def("LoadData",(void (*)(Buffer, vector<float>&,BufferType))&::LoadData)
-			.def("LoadData",(void (*)(Buffer, vector<int>&,BufferType))&::LoadData)
-			.def("LoadData",(void (*)(Buffer, vector<DWORD>&,BufferType))&::LoadData)
-			.def("LoadIndexData",(void (*)(Buffer, vector<DWORD>&,BufferType))&::LoadIndexData)
+			//.def("LoadData",(void (*)(Buffer, vector<vec4>&,BufferType))&::LoadData)
+			.def("LoadData",(void (*)(Buffer, luabind::object const &,BufferType))&::LoadData)
+			//.def("LoadData",(void (*)(Buffer, vector<vec2>&,BufferType))&::LoadData)
+			//.def("LoadData",(void (*)(Buffer, vector<float>&,BufferType))&::LoadData)
+			//.def("LoadData",(void (*)(Buffer, vector<int>&,BufferType))&::LoadData)
+			//.def("LoadData",(void (*)(Buffer, vector<DWORD>&,BufferType))&::LoadData)
+			.def("LoadIndexData",(void (*)(Buffer,luabind::object const&,BufferType))&::LoadIndexData)
 			.def("SetColorStream",&BufferResource::SetColorStream)
 			.def("SetIndexStream",&BufferResource::SetIndexStream)
 			.def("SetNormalStream",&BufferResource::SetNormalStream)

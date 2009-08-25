@@ -13,20 +13,11 @@ public:
 	vec4 operator=(const vec4 &src)
 	{return vec4(x=src.x,y=src.y,z=src.z,w=src.w);}
 
-	vec4 operator=(vec4 *src)
-	{return vec4(x=src->x,y=src->y,z=src->z,w=src->w);}
-
 	int operator==(vec4 &src)
 	{return (x==src.x && y==src.y && z==src.z && w==src.w);}
 
-	int operator==(vec4 *src)
-	{return (x==src->x && y==src->y && z==src->z && w==src->w);}
-
 	int operator!=(vec4 &src)
 	{return !(src==(*this));}
-
-	int operator!=(vec4 *src)
-	{return !(src==this);}
 
 	void operator+=(const vec4 &src);
 	void operator-=(vec4 &src);
