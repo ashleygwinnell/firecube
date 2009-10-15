@@ -62,9 +62,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib sdl.lib sdlmain.lib sdl_image.lib freetype239MT_D.lib libcollada14dom21-sd.lib lua5.1.lib luabind.lib libxml2_a.lib wsock32.lib zlib.lib pcre-d.lib pcrecpp-d.lib"
+				AdditionalDependencies="opengl32.lib sdl.lib sdlmain.lib sdl_image.lib freetype239MT_D.lib lua5.1.lib luabind.lib wsock32.lib libcollada14dom21-sd.lib libxml2_a.lib pcrecpp-d.lib pcre-d.lib zlib.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=".\Dependencies\FreeType\lib;.\Dependencies\Lua\lib;.\Dependencies\LuaBind\lib;.\Dependencies\colladadom\lib"
+				IgnoreDefaultLibraryNames="MSVCRT;LIBCMTD"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -89,7 +90,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy debug\FireCube.dll c:\windows\"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration

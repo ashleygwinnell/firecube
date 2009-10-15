@@ -7,7 +7,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 using namespace std;
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <windows.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H

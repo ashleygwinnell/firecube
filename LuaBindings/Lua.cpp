@@ -6,7 +6,7 @@
 #include <boost/weak_ptr.hpp>
 using namespace std;
 #include <Windows.h>
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "GLee.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H

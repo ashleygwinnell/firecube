@@ -6,8 +6,8 @@
 #include <boost/weak_ptr.hpp>
 #include <sstream>
 using namespace std;
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
+#include <SDL.h>
+#include <SDL_image.h>
 #include <windows.h>
 #include "GLee.h"
 #include "FireCube.h"

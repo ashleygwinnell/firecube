@@ -8,8 +8,8 @@
 #include <boost/weak_ptr.hpp>
 using namespace std;
 #include <windows.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
+#include <SDL.h>
+#include <SDL_image.h>
 #include <gl/gl.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
