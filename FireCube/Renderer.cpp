@@ -497,17 +497,22 @@ void Renderer::UseMaterial(Material material)
 	if ((material->program) && (material->program->IsValid()))
 	{
 		UseProgram(material->program);
-		vector<int> textured(8);
-		vector<int> textureId(8);
+		vector<int> textured(MAX_TEXTURES);
+		vector<int> textureId(MAX_TEXTURES);
 		for (DWORD t=0;t<MAX_TEXTURES;t++)
+		{
+			ostringstream oss;
 			if ((material->texture[t]) && (material->texture[t]->IsValid()))
-				textured[t]=true;
+				textured[t]=1;
 			else
-				textured[t]=false;
+				textured[t]=0;
+			oss << "textured" << t;
+			material->program->SetUniform(oss.str(),textured[t]);
+		}
 		for (DWORD t=0;t<MAX_TEXTURES;t++)	
 			textureId[t]=t;
 		material->program->SetUniform("texture",textureId);
-		material->program->SetUniform("textured",textured);
+//		material->program->SetUniform("textured",textured);
 	}
 }
 void Renderer::SetPerspectiveProjection(float fov,float zNear,float zFar)

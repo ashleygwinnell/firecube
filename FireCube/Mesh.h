@@ -7,7 +7,7 @@
 class ModelResource;
 typedef ResourceManager<ModelResource> ModelManager;
 typedef boost::shared_ptr<ModelResource> Model;
-const unsigned int MAX_TEXTURES=8;
+const unsigned int MAX_TEXTURES=6;
 /**
 * Stores information about a material.
 */
