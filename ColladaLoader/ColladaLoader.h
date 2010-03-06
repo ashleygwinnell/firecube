@@ -36,6 +36,7 @@ public:
 	public:
 		string name;
 		string uvCoords;
+		int uvId;
 	};
 	class Image
 	{
@@ -77,6 +78,7 @@ public:
 		PrimitiveType primitiveType;
 		string material;
 		int numPrimtives;
+		vector<unsigned int> indices;
 	};
 	class InputChannel
 	{
@@ -97,6 +99,8 @@ public:
 		vector<InputChannel> inputChannels;
 		vector <SubMesh> subMeshes;
 		string vertexId;
+		vector<vec3> vertices;
+		vector<vec3> normals;
 	};
 	class NodeInstance
 	{
@@ -129,7 +133,7 @@ public:
 		vector<NodeInstance> nodeInstances;
 		vector<GeometryInstance> geometryInstances;
 		vector<Transform> transformations;
-		Node *parent;
+		Node *parent;		
 	};
 	class Geometry
 	{
@@ -176,7 +180,11 @@ public:
 	void ReadMaterialVertexInputBinding(TiXmlNode *parent,SemanticMapping &sm);
 	void ReadScene(TiXmlNode *parent);
 	void ReadTransformation(TiXmlNode *parent,Node *node);
+	mat4 CalculateTranformation(vector<Transform> &transformations);
 	void DeleteNodes(Node *node);
+	void ApplySemanticMapping(Sampler &sampler,SemanticMapping &table);
+	Model TempGenModel();
+	void TempGenModel(Model model,Node *node,mat4 transform);
 	InputType SemanticToInputType(const string &semantic);
 	template <typename Type> 
 	Type& ResolveLibraryReference( std::map<std::string, Type>& pLibrary, const std::string& pURL)
@@ -193,9 +201,8 @@ private:
 	map<string,Geometry> geometryLibrary;
 	map<string,Source> sources;
 	map<string,Node*> nodeLibrary;
+	map<unsigned int,unsigned int> tempMap;
 	Node *root;
-	vector<vec3> vertices;
-	vector<vec3> normals;
 	float unit;
 	UpDirection upDirection;
 };

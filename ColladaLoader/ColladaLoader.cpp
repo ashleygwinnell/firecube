@@ -512,6 +512,56 @@ void ColladaLoader::ReadIndexData(TiXmlNode *parent, Mesh &mesh)
 		}
 	}
 }
+unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed )
+{
+	// 'm' and 'r' are mixing constants generated offline.
+	// They're not really 'magic', they just happen to work well.
+
+	const unsigned int m = 0x5bd1e995;
+	const int r = 24;
+
+	// Initialize the hash to a 'random' value
+
+	unsigned int h = seed ^ len;
+
+	// Mix 4 bytes at a time into the hash
+
+	const unsigned char * data = (const unsigned char *)key;
+
+	while(len >= 4)
+	{
+		unsigned int k = *(unsigned int *)data;
+
+		k *= m; 
+		k ^= k >> r; 
+		k *= m; 
+
+		h *= m; 
+		h ^= k;
+
+		data += 4;
+		len -= 4;
+	}
+
+	// Handle the last few bytes of the input array
+
+	switch(len)
+	{
+	case 3: h ^= data[2] << 16;
+	case 2: h ^= data[1] << 8;
+	case 1: h ^= data[0];
+		h *= m;
+	};
+
+	// Do a few final mixes of the hash to ensure the last few
+	// bytes are well-incorporated.
+
+	h ^= h >> 13;
+	h *= m;
+	h ^= h >> 15;
+
+	return h;
+} 
 void ColladaLoader::ReadPrimitives(TiXmlNode *parent,Mesh &mesh,SubMesh &subMesh,vector<InputChannel> primInputChannels,int count)
 {	
 	TiXmlElement *element=parent->ToElement();
@@ -566,14 +616,25 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent,Mesh &mesh,SubMesh &subMesh
 				ind[o]=*idx;
 				idx++;
 			}
-			for (unsigned int k=0;k<mesh.inputChannels.size();k++)
+			unsigned int h=MurmurHash2(ind,offset*4,0x1234);
+			map<unsigned int,unsigned int>::iterator iter=tempMap.find(h);
+			if (iter==tempMap.end())
 			{
-				GetDataFromChannel(mesh.inputChannels[k],ind[vertexOffset],mesh);
+				for (unsigned int k=0;k<mesh.inputChannels.size();k++)
+				{
+					GetDataFromChannel(mesh.inputChannels[k],ind[vertexOffset],mesh);
+				}
+				for (unsigned int k=0;k<primInputChannels.size();k++)
+				{
+					GetDataFromChannel(primInputChannels[k],ind[primInputChannels[k].offset],mesh);
+				}
+				tempMap[h]=mesh.vertices.size()-1;
+				subMesh.indices.push_back(mesh.vertices.size()-1);
 			}
-			for (unsigned int k=0;k<primInputChannels.size();k++)
-			{
-				GetDataFromChannel(primInputChannels[k],ind[primInputChannels[k].offset],mesh);
-			}
+			else
+				subMesh.indices.push_back(iter->second);
+
+			
 		}
 	}
 	
@@ -592,9 +653,9 @@ void ColladaLoader::GetDataFromChannel(InputChannel &ic,int index,Mesh &mesh)
 	}
 
 	if (ic.type==INPUT_POSITION)	
-		vertices.push_back(vec3(values[0],values[1],values[2]));
+		mesh.vertices.push_back(vec3(values[0],values[1],values[2]));
 	else if (ic.type==INPUT_NORMAL)
-		normals.push_back(vec3(values[0],values[1],values[2]));
+		mesh.normals.push_back(vec3(values[0],values[1],values[2]));
 }
 void ColladaLoader::ReadSceneLibrary(TiXmlNode *parent)
 {
@@ -659,6 +720,14 @@ void ColladaLoader::ReadSceneNode(TiXmlNode *parent,Node *node)
 				node->geometryInstances.push_back(gi);
 			}
 			else if (element->ValueStr()=="lookat")
+				ReadTransformation(element,node);
+			else if (element->ValueStr()=="rotate")
+				ReadTransformation(element,node);
+			else if (element->ValueStr()=="translate")
+				ReadTransformation(element,node);
+			else if (element->ValueStr()=="scale")
+				ReadTransformation(element,node);
+			else if (element->ValueStr()=="matrix")
 				ReadTransformation(element,node);
 		}
 	}
@@ -785,6 +854,150 @@ void ColladaLoader::DeleteNodes(Node *node)
 		DeleteNodes(node->children[i]);
 	delete node;
 }
+mat4 ColladaLoader::CalculateTranformation(vector<Transform> &transformations)
+{
+	mat4 ret;
+	for (unsigned int i=0;i<transformations.size();i++)
+	{
+		Transform &t=transformations[i];
+		mat4 temp;
+		if (t.type==TRANSFORM_TRANSLATE)
+		{			
+			temp.Translate(t.v[0],t.v[1],t.v[2]);
+			ret*=temp;
+		}
+		else if (t.type==TRANSFORM_SCALE)
+		{			
+			temp.Scale(t.v[0],t.v[1],t.v[2]);
+			ret*=temp;
+		}
+		else if (t.type==TRANSFORM_ROTATE)
+		{			
+			float angle=(float)(-t.v[3]/180.0f*PI);
+
+			temp.Rotate(vec4(t.v[0],t.v[1],t.v[2],angle));
+			ret*=temp;
+		}
+		else if (t.type==TRANSFORM_MATRIX)
+		{						
+			for (unsigned int j=0;j<16;j++)
+				temp.m[j]=t.v[j];			
+			ret*=temp;
+		}
+		else if (t.type==TRANSFORM_LOOKAT)
+		{			
+			vec3 pos(t.v[0],t.v[1],t.v[2]);
+			vec3 dst(t.v[3],t.v[4],t.v[5]);
+			vec3 up(t.v[6],t.v[7],t.v[8]);
+			up.Normalize();
+			temp.LookAt(pos,dst,up);
+			ret*=temp;
+		}
+	}
+	return ret;
+}
+void ColladaLoader::ApplySemanticMapping(Sampler &sampler,SemanticMapping &table)
+{
+	map<string,InputSemanticEntry>::iterator iter=table.inputMap.find(sampler.uvCoords);
+	if (iter!=table.inputMap.end())
+	{
+		sampler.uvId=iter->second.set;
+	}
+	else
+		sampler.uvId=0;
+}
+Model ColladaLoader::TempGenModel()
+{
+	Model ret=Model(new ModelResource());
+	TempGenModel(ret,root,mat4());
+	return ret;
+}
+void ColladaLoader::TempGenModel(Model model,Node *node,mat4 transform)
+{
+	mat4 transformation=transform*CalculateTranformation(node->transformations);
+	for (unsigned int i=0;i<node->geometryInstances.size();i++)
+	{
+		GeometryInstance &gi=node->geometryInstances[i];
+		map<string,Geometry>::iterator iter=geometryLibrary.find(gi.url);
+		if (iter==geometryLibrary.end())
+			continue;
+		Geometry &geom=iter->second;
+		Mesh &mesh=geom.mesh;
+		model->object.push_back(Object());
+		Object &object=model->object.back();
+		object.vertex=mesh.vertices;
+		for (unsigned int j=0;j<object.vertex.size();j++)
+		{
+			object.vertex[j]=object.vertex[j]*transformation;
+			if (upDirection==X_UP)
+			{
+				std::swap(object.vertex[j].x,object.vertex[j].y);
+				object.vertex[j].x*=-1;
+			}
+			else if (upDirection==Z_UP)
+			{
+				std::swap(object.vertex[j].y,object.vertex[j].z);
+				object.vertex[j].z*=-1;
+			}
+		}
+		object.normal=mesh.normals;
+		for (unsigned int j=0;j<object.normal.size();j++)
+		{
+			object.normal[j].TransformNormal(transformation);
+			if (upDirection==X_UP)
+			{
+				std::swap(object.normal[j].x,object.normal[j].y);
+				object.normal[j].x*=-1;
+			}
+			else if (upDirection==Z_UP)
+			{
+				std::swap(object.normal[j].y,object.normal[j].z);
+				object.normal[j].z*=-1;
+			}
+			object.normal[j].Normalize();
+		}
+		unsigned int vertexIndex=0;
+		for (unsigned int j=0;j<mesh.subMeshes.size();j++)
+		{
+			SubMesh &subMesh=mesh.subMeshes[j];
+			map<string,SemanticMapping>::iterator iter=gi.materials.find(subMesh.material);
+			SemanticMapping *table=NULL;
+			if (iter!=gi.materials.end())
+				table=&iter->second;
+			Material &mat=materialLibrary[table->materialName];
+			Effect &effect=effectLibrary[mat.effect];			
+			object.mesh.push_back(FireCube::Mesh());
+			FireCube::Mesh &m=object.mesh.back();			
+			FireCube::Material fmat=FireCube::Material(new MaterialResource());
+			fmat->ambient=effect.ambientColor;
+			fmat->diffuse=effect.diffuseColor;
+			fmat->specular=effect.specularColor;
+			fmat->name=subMesh.material;
+			m.material=fmat;
+			if (table)
+			{
+				ApplySemanticMapping(effect.ambientSampler,*table);
+				ApplySemanticMapping(effect.diffuseSampler,*table);
+				ApplySemanticMapping(effect.specularSampler,*table);
+			}
+			if (subMesh.primitiveType==PRIMITIVE_TRIANGLES)
+			{
+				for (int p=0;p<subMesh.numPrimtives;p++)
+				{				
+					Face f;										
+					f.v[0]=subMesh.indices[p*3+0];
+					f.v[1]=subMesh.indices[p*3+1];
+					f.v[2]=subMesh.indices[p*3+2];
+					m.face.push_back(f);
+				}
+			}
+
+		}		
+	}
+	for (unsigned int i=0;i<node->children.size();i++)
+		TempGenModel(model,node->children[i],transformation);
+}
+
 TiXmlElement *ColladaLoader::GetChildElement(TiXmlNode *node,const string &elmName)
 {
 	TiXmlNode *n=node->FirstChild(elmName);
