@@ -11,8 +11,7 @@ using namespace std;
 #include "GLee.h"
 #include "FireCube.h"
 using namespace FireCube;
-#include <dae.h>
-#include <dom/domCOLLADA.h>
+#include "tinyxml.h"
 #include "ModelLoaders.h"
 
 
@@ -170,7 +169,7 @@ DWORD M3dsLoader::ProcessChunk(char *buffer)
 		break;
 	case MAT_TEXFLNM:
 		matPtr=model->material[0];						
-		matPtr->texture[0]=Renderer::GetTextureManager().Create(buffer+i);		
+		matPtr->diffuseTexture=Renderer::GetTextureManager().Create(buffer+i);		
 		i+=(DWORD)strlen(buffer+i)+1;
 		break;
 	default:	

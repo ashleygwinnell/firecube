@@ -488,31 +488,14 @@ void Renderer::UseMaterial(Material material)
 		glEnable(GL_BLEND);
 	else
 		glDisable(GL_BLEND);*/
-	for (int i=0;i<MAX_TEXTURES;i++)
-	{		
-		if ((material->texture[i]) && (material->texture[i]->IsValid()))		
-			UseTexture(material->texture[i],i);			
+	if ((material->diffuseTexture) && (material->diffuseTexture->IsValid()))
+	{
+		UseTexture(material->diffuseTexture,0);
 	}
-
 	if ((material->program) && (material->program->IsValid()))
 	{
 		UseProgram(material->program);
-		vector<int> textured(MAX_TEXTURES);
-		vector<int> textureId(MAX_TEXTURES);
-		for (DWORD t=0;t<MAX_TEXTURES;t++)
-		{
-			ostringstream oss;
-			if ((material->texture[t]) && (material->texture[t]->IsValid()))
-				textured[t]=1;
-			else
-				textured[t]=0;
-			oss << "textured" << t;
-			material->program->SetUniform(oss.str(),textured[t]);
-		}
-		for (DWORD t=0;t<MAX_TEXTURES;t++)	
-			textureId[t]=t;
-		material->program->SetUniform("texture",textureId);
-//		material->program->SetUniform("textured",textured);
+		material->program->SetUniform("diffuseMap",0);
 	}
 }
 void Renderer::SetPerspectiveProjection(float fov,float zNear,float zFar)

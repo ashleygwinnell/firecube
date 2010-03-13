@@ -47,23 +47,6 @@ DWORD GetValue(Edge &e,DWORD i)
 	return e.v[i];
 }
 
-void SetTexture(MaterialResource &m,DWORD i,Texture t)
-{
-	m.texture[i]=t;
-}
-Texture GetTexture(MaterialResource &m,DWORD i)
-{
-	return m.texture[i];
-}
-void SetTexture(Material &m,DWORD i,Texture t)
-{
-	m->texture[i]=t;
-}
-Texture GetTexture(Material &m,DWORD i)
-{
-	return m->texture[i];
-}
-
 void SetValue(mat4 &m,DWORD i,float v)
 {
 	m.m[i]=v;
@@ -303,10 +286,7 @@ void InitializeLua(lua_State *& luaState)
 			.def("Passed",&Timer::Passed),
 		luabind::class_<MaterialResource,Material>("Material")
 			.def(luabind::constructor<>())
-			.def("SetTexture",(void (*)(MaterialResource &,DWORD,Texture))&SetTexture)
-			.def("SetTexture",(Texture (*)(MaterialResource &,DWORD))&GetTexture)
-			//.def("SetTexture",(void (*)(Material &,DWORD,Texture))&SetTexture)
-			//.def("SetTexture",(Texture (*)(Material &,DWORD))&GetTexture)			
+			.def_readwrite("diffuseTexture",&MaterialResource::diffuseTexture)
 			.def_readwrite("name",&MaterialResource::name)
 			.def_readwrite("ambient",&MaterialResource::ambient)
 			.def_readwrite("diffuse",&MaterialResource::diffuse)

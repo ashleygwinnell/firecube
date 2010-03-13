@@ -42,8 +42,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Dependencies\FreeType\include;.\Dependencies\colladadom\include;.\Dependencies\colladadom\include\1.4;.\Dependencies\Lua\include;.\Dependencies\LuaBind\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;FIRECUBE_EXPORTS"
+				AdditionalIncludeDirectories=".\Dependencies\FreeType\include;.\Dependencies\Lua\include;.\Dependencies\LuaBind\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;FIRECUBE_EXPORTS"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,9 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib sdl.lib sdlmain.lib sdl_image.lib freetype239MT_D.lib lua5.1.lib luabind.lib wsock32.lib libcollada14dom21-sd.lib libxml2_a.lib pcrecpp-d.lib pcre-d.lib zlib.lib"
+				AdditionalDependencies="opengl32.lib sdl.lib sdlmain.lib sdl_image.lib freetype239MT_D.lib lua5.1.lib luabind.lib wsock32.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories=".\Dependencies\FreeType\lib;.\Dependencies\Lua\lib;.\Dependencies\LuaBind\lib;.\Dependencies\colladadom\lib"
+				AdditionalLibraryDirectories=".\Dependencies\FreeType\lib;.\Dependencies\Lua\lib;.\Dependencies\LuaBind\lib"
 				IgnoreDefaultLibraryNames="MSVCRT;LIBCMTD"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -245,6 +245,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\tinyxml.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\tinyxmlerror.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\tinyxmlparser.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\utils.cpp"
 				>
 			</File>
@@ -340,6 +352,10 @@
 			</File>
 			<File
 				RelativePath=".\Timer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\tinyxml.h"
 				>
 			</File>
 			<File

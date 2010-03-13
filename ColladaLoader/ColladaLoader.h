@@ -101,6 +101,7 @@ public:
 		string vertexId;
 		vector<vec3> vertices;
 		vector<vec3> normals;
+		vector<vec2> texcoords[4];
 	};
 	class NodeInstance
 	{
@@ -143,8 +144,11 @@ public:
 	class Effect
 	{
 	public:
+		Effect() : ambientColor(1.0f,1.0f,1.0f,1.0f), diffuseColor(1.0f,1.0f,1.0f,1.0f), specularColor(0.0f,0.0f,0.0f,0.0f)
+		{			
+		}
 		ShadingType shadingType;
-		vec4 ambientColor,diffuseColor,specularColor;
+		vec4 ambientColor,diffuseColor,specularColor;		
 		Sampler ambientSampler,diffuseSampler,specularSampler;
 		map<string,EffectParam> effectParams;
 	};
@@ -183,8 +187,8 @@ public:
 	mat4 CalculateTranformation(vector<Transform> &transformations);
 	void DeleteNodes(Node *node);
 	void ApplySemanticMapping(Sampler &sampler,SemanticMapping &table);
-	Model TempGenModel();
-	void TempGenModel(Model model,Node *node,mat4 transform);
+	void GenerateModel(ModelResource *model);
+	void GenerateModel(ModelResource *model,Node *node,mat4 transform);
 	InputType SemanticToInputType(const string &semantic);
 	template <typename Type> 
 	Type& ResolveLibraryReference( std::map<std::string, Type>& pLibrary, const std::string& pURL)
@@ -192,6 +196,8 @@ public:
 		typename std::map<std::string, Type>::iterator it = pLibrary.find( pURL);		
 		return it->second;
 	}
+	string GetTextureFileNameFromSampler(Effect &effect,Sampler &sampler);
+	string FixFileName(string &filename);
 private:
 	TiXmlDocument xmlDocument;
 

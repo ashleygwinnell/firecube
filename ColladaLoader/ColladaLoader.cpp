@@ -475,7 +475,7 @@ void ColladaLoader::ReadInputChannel(TiXmlNode *parent,vector<InputChannel> &inp
 	if ((ic.type==INPUT_TEXCOORD) || (ic.type==INPUT_COLOR))
 	{
 		if (element->QueryIntAttribute("set",&ic.index) != TIXML_SUCCESS)
-			ic.index=-1;
+			ic.index=0;
 	}
 	for (node=parent->FirstChild();node!=NULL;node=node->NextSibling())
 	{
@@ -644,7 +644,7 @@ void ColladaLoader::GetDataFromChannel(InputChannel &ic,int index,Mesh &mesh)
 	if (ic.type==INPUT_VERTEX)
 		return;
 	
-	float *data=&ic.source->dataArray.floatData[0]+ic.offset+index*ic.source->accessor.stride;
+	float *data=&ic.source->dataArray.floatData[0]+ic.source->accessor.offset+index*ic.source->accessor.stride;
 	float values[4];
 	for (int i=0;i<4;i++)
 	{
@@ -656,6 +656,12 @@ void ColladaLoader::GetDataFromChannel(InputChannel &ic,int index,Mesh &mesh)
 		mesh.vertices.push_back(vec3(values[0],values[1],values[2]));
 	else if (ic.type==INPUT_NORMAL)
 		mesh.normals.push_back(vec3(values[0],values[1],values[2]));
+	else if (ic.type==INPUT_TEXCOORD)
+	{
+		if (ic.index<4)
+			mesh.texcoords[ic.index].push_back(vec2(values[0],1.0f-values[1]));
+	}
+
 }
 void ColladaLoader::ReadSceneLibrary(TiXmlNode *parent)
 {
@@ -904,15 +910,49 @@ void ColladaLoader::ApplySemanticMapping(Sampler &sampler,SemanticMapping &table
 		sampler.uvId=iter->second.set;
 	}
 	else
-		sampler.uvId=0;
+		sampler.uvId=-1;
 }
-Model ColladaLoader::TempGenModel()
+string ColladaLoader::GetTextureFileNameFromSampler(Effect &effect,Sampler &sampler)
 {
-	Model ret=Model(new ModelResource());
-	TempGenModel(ret,root,mat4());
-	return ret;
+	string cur=sampler.name;
+	map<string,EffectParam>::iterator i;
+	while ((i=effect.effectParams.find(cur))!=effect.effectParams.end())
+	{
+		cur=i->second.reference;
+	}
+	map<string,ColladaLoader::Image>::iterator imgi=imageLibrary.find(cur);
+	if (imgi==imageLibrary.end())
+		return "";
+	else
+	{
+		return imgi->second.initFrom;
+	}
 }
-void ColladaLoader::TempGenModel(Model model,Node *node,mat4 transform)
+string ColladaLoader::FixFileName(string &filename)
+{
+	string::size_type i=0;
+	string file=filename;
+	while ((file[i]=='.') || (file[i]=='/'))
+		i++;
+	file=file.substr(i);
+	i=file.find("file://");
+	if (i!=string::npos)
+	{
+		file.erase(i,i+7);
+	}
+	i=file.find("%20");
+	while (i!=string::npos)
+	{
+		file.replace(i,3," ");								
+		i=file.find("%20");
+	}
+	return file;
+}
+void ColladaLoader::GenerateModel(ModelResource *model)
+{	
+	GenerateModel(model,root,mat4());
+}
+void ColladaLoader::GenerateModel(ModelResource *model,Node *node,mat4 transform)
 {
 	mat4 transformation=transform*CalculateTranformation(node->transformations);
 	for (unsigned int i=0;i<node->geometryInstances.size();i++)
@@ -943,7 +983,7 @@ void ColladaLoader::TempGenModel(Model model,Node *node,mat4 transform)
 		object.normal=mesh.normals;
 		for (unsigned int j=0;j<object.normal.size();j++)
 		{
-			object.normal[j].TransformNormal(transformation);
+			object.normal[j]=object.normal[j].TransformNormal(transformation);
 			if (upDirection==X_UP)
 			{
 				std::swap(object.normal[j].x,object.normal[j].y);
@@ -956,6 +996,7 @@ void ColladaLoader::TempGenModel(Model model,Node *node,mat4 transform)
 			}
 			object.normal[j].Normalize();
 		}
+		
 		unsigned int vertexIndex=0;
 		for (unsigned int j=0;j<mesh.subMeshes.size();j++)
 		{
@@ -969,9 +1010,10 @@ void ColladaLoader::TempGenModel(Model model,Node *node,mat4 transform)
 			object.mesh.push_back(FireCube::Mesh());
 			FireCube::Mesh &m=object.mesh.back();			
 			FireCube::Material fmat=FireCube::Material(new MaterialResource());
+			model->material.push_back(fmat);
 			fmat->ambient=effect.ambientColor;
 			fmat->diffuse=effect.diffuseColor;
-			fmat->specular=effect.specularColor;
+			fmat->specular=effect.specularColor;			
 			fmat->name=subMesh.material;
 			m.material=fmat;
 			if (table)
@@ -980,6 +1022,14 @@ void ColladaLoader::TempGenModel(Model model,Node *node,mat4 transform)
 				ApplySemanticMapping(effect.diffuseSampler,*table);
 				ApplySemanticMapping(effect.specularSampler,*table);
 			}
+			if (effect.diffuseSampler.name!="")
+			{
+				fmat->diffuseTexture=Renderer::GetTextureManager().Create(GetTextureFileNameFromSampler(effect,effect.diffuseSampler));
+				if (effect.diffuseSampler.uvId!=-1)
+				{
+					object.uv[0]=mesh.texcoords[effect.diffuseSampler.uvId];
+				}				
+			}			
 			if (subMesh.primitiveType==PRIMITIVE_TRIANGLES)
 			{
 				for (int p=0;p<subMesh.numPrimtives;p++)
@@ -995,7 +1045,7 @@ void ColladaLoader::TempGenModel(Model model,Node *node,mat4 transform)
 		}		
 	}
 	for (unsigned int i=0;i<node->children.size();i++)
-		TempGenModel(model,node->children[i],transformation);
+		GenerateModel(model,node->children[i],transformation);
 }
 
 TiXmlElement *ColladaLoader::GetChildElement(TiXmlNode *node,const string &elmName)

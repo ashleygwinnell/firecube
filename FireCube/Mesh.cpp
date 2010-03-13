@@ -15,8 +15,7 @@ using namespace std;
 #include <GL/GLU.h>
 #include "FireCube.h"
 using namespace FireCube;
-#include <dae.h>
-#include <dom/domCOLLADA.h>
+#include "tinyxml.h"
 #include "ModelLoaders.h"
 MaterialResource::MaterialResource()
 {
@@ -85,12 +84,16 @@ bool ModelResource::Load(const string &filename)
 		}
 		if (ext=="dae")
 		{				
-			ColladaLoader colladaLoader(this);
+			ColladaLoader colladaLoader(filename);
 
-			if (colladaLoader.Load(filename))							
-				return true;			
+			if (colladaLoader.Load())
+			{
+				colladaLoader.GenerateModel(this);
+				UpdateBuffers();
+				return true;
+			}
 			else
-				return false;
+				return false;				
 		}
 	}
 	return false;
