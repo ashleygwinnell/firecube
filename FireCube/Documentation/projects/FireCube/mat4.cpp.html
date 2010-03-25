@@ -13,7 +13,7 @@ mat4.cpp
 <font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
 <font color="blue">using</font> <font color="blue">namespace</font> std;
-<font color="blue">#include</font> <font color="maroon">&#60;SDL/SDL.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;SDL.h&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;windows.h&#62;</font>
 <font color="blue">#include</font> <font color="maroon">"GLee.h"</font>
 <font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
@@ -29,11 +29,12 @@ mat4.cpp
 <font color="black">{</font>   
     m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">9</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">10</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">11</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">12</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">13</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">14</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">15</font><font color="black">]</font><font color="black">=</font><font color="maroon">0</font>;
 <font color="black">}</font>
-<font color="blue">inline</font> mat4 mat4<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">=</font><font color="black">(</font>mat4 <font color="black">&</font>src<font color="black">)</font>
+<font color="blue">inline</font> mat4 mat4<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">=</font><font color="black">(</font><font color="blue">const</font> mat4 <font color="black">&</font>src<font color="black">)</font>
 <font color="black">{</font>
     memcpy<font color="black">(</font>m,src.m,<font color="blue">sizeof</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font><font color="black">*</font><font color="maroon">16</font><font color="black">)</font>;
     <font color="blue">return</font> <font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font>;
 <font color="black">}</font>
+
 <font color="blue">inline</font> mat4 mat4<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">+</font><font color="black">(</font>mat4 <font color="black">&</font>src<font color="black">)</font>
 <font color="black">{</font>
     mat4 ret;

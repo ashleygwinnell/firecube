@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib sdl.lib sdlmain.lib sdl_image.lib freetype239MT_D.lib lua5.1.lib luabind.lib wsock32.lib"
+				AdditionalDependencies="opengl32.lib sdl.lib sdlmain.lib sdl_image.lib freetype2312MT_D.lib lua5.1.lib luabind.lib wsock32.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=".\Dependencies\FreeType\lib;.\Dependencies\Lua\lib;.\Dependencies\LuaBind\lib"
 				IgnoreDefaultLibraryNames="MSVCRT;LIBCMTD"

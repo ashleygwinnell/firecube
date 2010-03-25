@@ -21,11 +21,12 @@ inline void mat4::Zero()
 {	
 	m[0]=m[1]=m[2]=m[3]=m[4]=m[5]=m[6]=m[7]=m[8]=m[9]=m[10]=m[11]=m[12]=m[13]=m[14]=m[15]=0;
 }
-inline mat4 mat4::operator=(mat4 &src)
+inline mat4 mat4::operator=(const mat4 &src)
 {
 	memcpy(m,src.m,sizeof(float)*16);
 	return (*this);
 }
+
 inline mat4 mat4::operator+(mat4 &src)
 {
 	mat4 ret;

@@ -27,8 +27,8 @@ public:
 	/**
 	* Sets the matrix to the identity matrix.
 	*/
-	inline void Identity();
-	inline mat4 operator=(mat4 &src);
+	inline void Identity();	
+	inline mat4 operator=(const mat4 &src);
 	inline mat4 operator+(mat4 &src);
 	inline mat4 operator-(mat4 &src);
 	inline void operator+=(mat4 &src);
