@@ -11,13 +11,15 @@ using namespace std;
 #include <gl/gl.h>
 #include <FireCube.h>
 using namespace FireCube;
-#include "app.h"
+#include "ShaderGenerator.h"
+#include "Light.h"
 #include "SceneGraph.h"
+#include "app.h"
+#include <cmath>
 App app;
-SceneGraph sg;
 int main(int argc, char *argv[])
 {	
-	if (!app.Initialize())
+	if (!app.Initialize(1024,768,32,0,false))
 		return 0;		
 	app.Run();			
 	return 0;
@@ -28,27 +30,44 @@ bool App::Init()
 	Application::AddSearchPath("../Media/Models");
 	SetTitle("SceneGraph Test Application");		
 	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
-	program=Program(new ProgramResource);
-	program->Create(Renderer::GetShaderManager().Create("plainTexture.vshader"),Renderer::GetShaderManager().Create("plainTexture.fshader"));
-	mat4 mtr;
-	mtr.Translate(0,-3,-10);
-	mtr.Scale(0.05f,0.05f,0.05f);
-	Node n=sg.Root()->AddChild("Node1",mtr);	
-	Model m=sg.AddModel("duck","duck.dae");
-	m->SetProgram(program);
-	n->AttachModel(m);
+	sg.AddModel("duck","duck.dae");
+	sg.AddModel("teapot","teapot.3ds");	
+	sg.AddModel("collada","collada.dae");
+	sg.GetModel("teapot")->CreateHardNormals();
+	Light l=sg.AddLight("Light1");
+	l->ambientColor.Set(1,1,1,1);
+	l->diffuseColor.Set(0.7f,0.7f,0.7f,1);
+	
+	Node n=sg.Root()->AddChild("Node1");
+	n->Move(vec3(0,-2,-10));	
+	n->AttachModel("collada");
+	
+	n=sg.Root()->AddChild("Node2");
+	n->Move(vec3(8,-2,-10));	
+	n->AttachModel("teapot");
+	
+	n=sg.Root()->AddChild("Node3");	
+	n->Scale(vec3(0.03f,0.03f,0.03f));
+	n->Move(vec3(-8,-4,-10));
+	n->AttachModel("duck");		
+	
+	n=sg.Root()->AddChild("LightNode1");	
+	n->AttachLight("Light1");
 	return true;
 }
 void App::Update(float t)
 {
-	sg.GetNode("Node1")->GetTransformation().RotateY((float)(PI/2*t));	
+	sg.GetNode("Node3")->Rotate(vec3(0,(float)(PI/4*t),0));		
+	sg.GetNode("Node2")->Rotate(vec3(0,(float)(PI/4*t),0));
+	sg.GetNode("Node1")->Rotate(vec3((float)(PI/8*t),(float)(PI/8*t),0));	
 }
 void App::Render(float t)
 {
 	Renderer::Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
-	Renderer::SetPerspectiveProjection(90.0f,0.1f,100.0f);	
+	Renderer::SetPerspectiveProjection(90.0f,0.1f,1000.0f);	
 	Renderer::SetModelViewMatrix(mat4());
 	sg.Render();
+	Renderer::SetModelViewMatrix(mat4());
 	Renderer::SetOrthographicProjection();	
 	ostringstream oss;
 	oss << "FPS:"<<app.GetFps();	

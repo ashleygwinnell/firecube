@@ -64,6 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="opengl32.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -182,6 +183,10 @@
 				RelativePath=".\SceneGraph.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\ShaderGenerator.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -193,7 +198,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Light.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SceneGraph.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ShaderGenerator.h"
 				>
 			</File>
 		</Filter>

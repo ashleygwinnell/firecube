@@ -10,4 +10,5 @@ public:
 	bool Init();
 	Font font;	
 	Program program;
+	SceneGraph sg;
 };
