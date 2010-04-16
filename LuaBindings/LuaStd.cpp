@@ -6,7 +6,6 @@
 #include <boost/weak_ptr.hpp>
 using namespace std;
 #include <Windows.h>
-#include <SDL.h>
 #include "GLee.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -59,7 +58,7 @@ VECTOR_SET(Material)
 	.def(luabind::constructor<>())	\
 	.def(luabind::constructor<vector<t>::size_type>())	\
 	.def(luabind::constructor<vector<t>::size_type,vector<t>::const_reference>())	\
-	.def("push_back",&vector<t>::push_back)	\
+	.def("push_back",(void(vector<t>::*)(vector<t>::const_reference))&vector<t>::push_back)	\
 	.def("at",&##getfunction)	\
 	.def("set",&##setfunction) \
 	.def("clear",&vector<t>::clear)	\
@@ -73,7 +72,7 @@ VECTOR_SET(Material)
 	.def(luabind::constructor<>())	\
 	.def(luabind::constructor<vector<t>::size_type>())	\
 	.def(luabind::constructor<vector<t>::size_type,vector<t>::const_reference>())	\
-	.def("push_back",&vector<t>::push_back)	\
+	.def("push_back",(void(vector<t>::*)(vector<t>::const_reference))&vector<t>::push_back)	\
 	.def("at",&get_vector_##t) \
 	.def("set",&set_vector_##t) \
 	.def("clear",&vector<t>::clear)	\
@@ -86,7 +85,7 @@ void InitializeLuaStd(lua_State *L)
 {
 	luabind::module(L)
 	[
-		LUABIND_VECTOR(vec4,"vector_vec4"),
+		LUABIND_VECTOR(vec4,"vector_vec4"),		
 		LUABIND_VECTOR(vec3,"vector_vec3"),
 		LUABIND_VECTOR(vec2,"vector_vec2"),
 		LUABIND_VECTOR(float,"vector_float"),
