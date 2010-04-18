@@ -43,8 +43,8 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Dev\wxpropgrid-1.4.7\include;C:\Dev\wxMSW-2.8.10\lib\vc_lib\mswd;C:\Dev\wxMSW-2.8.10\include;C:\Users\Idan\Documents\Visual Studio 2010\Projects\FireCube\FireCube;C:\Dev\boost_1_42_0;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Dev\wxpropgrid-1.4.7\lib\vc_lib;C:\Dev\wxMSW-2.8.10\lib\vc_lib;C:\Users\Idan\Documents\Visual Studio 2010\Projects\FireCube\FireCube\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Dev\wxpropgrid-1.4.7\include;C:\Dev\wxMSW-2.8.10\lib\vc_lib\mswd;C:\Dev\wxMSW-2.8.10\include;$(VisualStudioDir)\Projects\FireCube\FireCube;C:\Dev\boost_1_42_0;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Dev\wxpropgrid-1.4.7\lib\vc_lib;C:\Dev\wxMSW-2.8.10\lib\vc_lib;$(VisualStudioDir)\Projects\FireCube\FireCube\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

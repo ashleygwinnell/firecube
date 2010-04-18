@@ -50,7 +50,7 @@
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\Dependencies\FreeType\include;.\Dependencies\Lua\include;.\Dependencies\LuaBind\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\Dependencies\FreeType\include;.\Dependencies\Lua\include;.\Dependencies\Luabind\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;FIRECUBE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -62,7 +62,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;sdl.lib;sdlmain.lib;sdl_image.lib;freetype2312MT_D.lib;lua5.1.lib;luabind.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\Dependencies\FreeType\lib;.\Dependencies\Lua\lib;.\Dependencies\LuaBind\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\Dependencies\FreeType\lib;.\Dependencies\Lua\lib;.\Dependencies\Luabind\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>MSVCRT;LIBCMTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
