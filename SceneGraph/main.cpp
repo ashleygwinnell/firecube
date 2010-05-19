@@ -37,7 +37,8 @@ bool App::Init()
 	Light l=sg.AddLight("Light1");
 	l->ambientColor.Set(1,1,1,1);
 	l->diffuseColor.Set(0.7f,0.7f,0.7f,1);
-	
+	l->type=DIRECTIONAL;
+
 	Node n=sg.Root()->AddChild("Node1");
 	n->Move(vec3(0,-2,-10));	
 	n->AttachModel("collada");
@@ -53,11 +54,17 @@ bool App::Init()
 	
 	n=sg.Root()->AddChild("LightNode1");	
 	n->AttachLight("Light1");
+	sg.SetFog(true);
+	sg.SetFogColor(vec4(0.2f,0.2f,0.6f,1.0f));
+	sg.SetFogDensity(0.05f);
 	return true;
 }
 void App::Update(float t)
 {
+	static float time=0.0f;
+	time+=t;
 	sg.GetNode("Node3")->Rotate(vec3(0,(float)(PI/4*t),0));		
+	sg.GetNode("Node3")->Move(2.0f*sin(time)*vec3(0,0,-0.1f));
 	sg.GetNode("Node2")->Rotate(vec3(0,(float)(PI/4*t),0));
 	sg.GetNode("Node1")->Rotate(vec3((float)(PI/8*t),(float)(PI/8*t),0));	
 }

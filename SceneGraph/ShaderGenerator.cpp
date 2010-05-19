@@ -13,7 +13,7 @@ using namespace std;
 using namespace FireCube;
 #include "ShaderGenerator.h"
 
-RenderState::RenderState() : lighting(false), diffuseTexture(false), fog(false)
+RenderState::RenderState() : directionalLighting(false), diffuseTexture(false), fog(false)
 {
 
 }
@@ -22,9 +22,9 @@ void RenderState::FromMaterial(Material mat)
 	if (mat->diffuseTexture)
 		this->diffuseTexture=true;
 }
-void RenderState::SetLighting(bool enable)
+void RenderState::SetDirectionalLighting(bool enable)
 {
-	lighting=enable;
+	directionalLighting=enable;
 }
 void RenderState::SetFog(bool enable)
 {
@@ -33,7 +33,7 @@ void RenderState::SetFog(bool enable)
 DWORD RenderState::ToInt()
 {
 	DWORD ret=0;
-	if (lighting)
+	if (directionalLighting)
 		ret|=1;
 	if (fog)
 		ret|=2;
@@ -61,23 +61,36 @@ Program ShaderGenerator::GenerateProgram(RenderState &renderState)
 	Shader fshader(new ShaderResource);
 	ostringstream fshaderCode;	
 	fshaderCode << "varying vec3 normal;" << endl;
-	if (renderState.lighting)
+	if (renderState.directionalLighting)
 		fshaderCode << "uniform vec4 lightDiffuse;" << endl;
 	if (renderState.diffuseTexture)
 		fshaderCode << "uniform sampler2D diffuseMap;" << endl;
-	if (renderState.lighting)
+	if (renderState.directionalLighting)
 		fshaderCode << "uniform vec3 lightDir;" << endl;
+	if (renderState.fog)
+	{
+		fshaderCode << "uniform float fogDensity;" << endl
+					<< "uniform vec4 fogColor;" << endl;
+	}
 	fshaderCode << "void main()" << endl
 				<< "{" << endl
 				<< "vec4 color=gl_FrontMaterial.diffuse;" << endl;
 	if (renderState.diffuseTexture)
 		fshaderCode << "color*=texture2D(diffuseMap,gl_TexCoord[0].xy);" << endl;
-	if (renderState.lighting)
+	if (renderState.directionalLighting)
 	{
 		fshaderCode << "vec3 n=normalize(normal);" << endl
 					<< "lightDir=normalize(lightDir);" << endl
 					<< "float d=max(dot(n,lightDir),0.0);" << endl
 					<< "color *= lightDiffuse*d;" << endl;
+	}
+	if (renderState.fog)
+	{
+		fshaderCode << "const float LOG2 = 1.442695;" << endl
+					<< "float z = gl_FragCoord.z / gl_FragCoord.w;" << endl
+					<< "float fogFactor = exp2( -fogDensity* fogDensity* z * z * LOG2 );" << endl
+					<< "fogFactor = clamp(fogFactor, 0.0, 1.0);" << endl
+					<< "color = mix(fogColor, color, fogFactor );" << endl;
 	}
 	fshaderCode << "gl_FragColor=color;" << endl
 				<< "}" << endl;

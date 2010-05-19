@@ -4,11 +4,11 @@ class RenderState
 public:
 	RenderState();
 	void FromMaterial(Material mat);
-	void SetLighting(bool enable);
+	void SetDirectionalLighting(bool enable);
 	void SetFog(bool enable);
 	DWORD ToInt();
 private:
-	bool lighting;
+	bool directionalLighting;
 	bool diffuseTexture;
 	bool fog;
 };

@@ -9,6 +9,6 @@ public:
 	vec4 ambientColor;
 	vec4 diffuseColor;
 	vec4 specularColor;
-	float specularExponent;
+	float shininess;
 };
 typedef boost::shared_ptr<LightResource> Light;

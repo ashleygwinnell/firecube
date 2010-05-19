@@ -222,12 +222,24 @@ void SceneGraph::Render()
 			{
 				RenderState rs;
 				rs.FromMaterial(*k);
-				rs.SetLighting(true);
+				if (i->second->type==DIRECTIONAL)
+					rs.SetDirectionalLighting(true);				
+				rs.SetFog(fog);
 				Program p=shaderGenerator.GenerateProgram(rs);
 				(*k)->program=p;
 				Renderer::UseProgram(p);
-				p->SetUniform("lightDir",vec3(0,0,1).TransformNormal(i->first));
-				p->SetUniform("lightDiffuse",i->second->diffuseColor);
+				if (i->second->type==DIRECTIONAL)
+				{
+					p->SetUniform("lightDir",vec3(0,0,1).TransformNormal(i->first));
+					p->SetUniform("lightDiffuse",i->second->diffuseColor);
+					p->SetUniform("lightSpecular",i->second->specularColor);
+					p->SetUniform("lightShininess",i->second->shininess);
+				}
+				if (fog)
+				{
+					p->SetUniform("fogColor",fogColor);
+					p->SetUniform("fogDensity",fogDensity);
+				}
 			}
 			Renderer::SetModelViewMatrix(j->first);
 			Renderer::Render(model);
@@ -269,4 +281,16 @@ Light SceneGraph::GetLight(const string &name)
 	if (i==lights.end())
 		return Light();
 	return i->second;
+}
+void SceneGraph::SetFogColor(vec4 &color)
+{
+	fogColor=color;
+}
+void SceneGraph::SetFogDensity(float d)
+{
+	fogDensity=d;
+}
+void SceneGraph::SetFog(bool enabled)
+{
+	fog=enabled;
 }

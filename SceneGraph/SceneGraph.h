@@ -55,6 +55,9 @@ public:
 	Light AddLight(const string &name);
 	Model GetModel(const string &name);
 	Light GetLight(const string &name);
+	void SetFogColor(vec4 &color);
+	void SetFogDensity(float d);
+	void SetFog(bool enabled);
 private:
 	ShaderGenerator shaderGenerator;
 	vector<pair<mat4,Model>> renderingQueue;
@@ -65,4 +68,6 @@ private:
 	ModelManager modelManager;
 	Node root;
 	bool lighting,fog;
+	vec4 fogColor;
+	float fogDensity;
 };
