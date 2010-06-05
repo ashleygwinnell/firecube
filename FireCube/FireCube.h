@@ -16,6 +16,7 @@ namespace FireCube
 	#include "ResourceManager.h"
 	#include "Timer.h"
 	#include "MyMath.h"	
+	#include "BoundingBox.h"
 	#include "Texture.h"		
 	#include "Buffer.h"
 	#include "Shaders.h"

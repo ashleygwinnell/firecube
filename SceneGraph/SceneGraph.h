@@ -29,6 +29,9 @@ public:
 	Node GetChild(const string &name);
 	Node RemoveChild(const string &name);
 	const string &GetName() const;
+
+	void RenderBoundingBox();
+	void UpdateBoundingBox();
 private:
 	vector<Node> children;
 	vector<Model> attachedModels;
@@ -42,6 +45,7 @@ private:
 	Node parent;
 	SceneGraph *sceneGraph;
 	string name;
+	BoundingBox bbox;
 };
 class SceneGraph
 {

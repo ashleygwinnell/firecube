@@ -34,7 +34,7 @@ mat4 NodeResource::GetTransformation()
 	transformation.Scale(scale.x,scale.y,scale.z);	
 	transformation.RotateX(rotation.x);
 	transformation.RotateY(rotation.y);
-	transformation.RotateZ(rotation.z);
+	transformation.RotateZ(rotation.z);	
 	return transformation;
 }
 void NodeResource::SetTranslation(vec3 t)
@@ -91,10 +91,13 @@ void NodeResource::AttachModel(const string &name)
 	Model m=sceneGraph->GetModel(name);
 	if (m)
 		attachedModels.push_back(m);
+	
+	UpdateBoundingBox();
 }
 void NodeResource::DetachModel(int i)
 {
 	attachedModels.erase(attachedModels.begin()+i);	
+	UpdateBoundingBox();
 }
 void NodeResource::DetachModel(const string &name)
 {
@@ -105,6 +108,7 @@ void NodeResource::DetachModel(const string &name)
 		if (i!=attachedModels.end())
 			attachedModels.erase(i);
 	}
+	UpdateBoundingBox();
 }
 void NodeResource::AttachLight(const string &name)
 {
@@ -121,6 +125,61 @@ void NodeResource::DetachLight(const string &name)
 		if (i!=attachedLights.end())
 			attachedLights.erase(i);
 	}
+}
+void NodeResource::RenderBoundingBox()
+{
+	float w=bbox.GetWidth();
+	float h=bbox.GetHeight();
+	float d=bbox.GetDepth();
+	vec3 v[8]={bbox.bmin,
+			   bbox.bmin+vec3(w,0,0),
+			   bbox.bmin+vec3(w,0,d),
+			   bbox.bmin+vec3(0,0,d),
+			   bbox.bmin+vec3(0,h,0),
+			   bbox.bmin+vec3(w,h,0),
+			   bbox.bmin+vec3(w,h,d),
+			   bbox.bmin+vec3(0,h,d)};
+	DWORD i[12*2]={0,1,1,2,2,3,3,0,4,5,5,6,6,7,7,4,0,4,1,5,2,6,3,7};
+	float color[4]={0.0f,1.0f,0.0f,1.0f};
+	if (parent)
+		worldTransformation=parent->worldTransformation*GetTransformation();
+	else
+		worldTransformation=GetTransformation();
+
+	Buffer vb(new BufferResource);
+	Buffer ib(new BufferResource);
+	vb->Create();
+	ib->Create();
+	vb->LoadData(v,sizeof(vec3)*8,STATIC);
+	ib->LoadIndexData(i,24,STATIC);
+	vb->SetVertexStream(3);
+	ib->SetIndexStream();
+	RenderState rs;
+	Program p(new ProgramResource);
+	p=sceneGraph->shaderGenerator.GenerateProgram(rs);
+	Renderer::UseProgram(p);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,color);
+	Renderer::SetModelViewMatrix(worldTransformation);
+	Renderer::RenderIndexStream(LINES,24);
+
+	for (vector<Node>::iterator i=children.begin();i!=children.end();i++)
+		(*i)->RenderBoundingBox();	
+}
+void NodeResource::UpdateBoundingBox()
+{
+	bbox=BoundingBox();
+	for (vector<Node>::iterator i=children.begin();i!=children.end();i++)
+	{
+		bbox.Expand((*i)->bbox);
+	}
+	for (vector<Model>::iterator i=attachedModels.begin();i!=attachedModels.end();i++)
+	{
+		bbox.Expand((*i)->GetBoundingBox());
+	}
+	
+	if (parent)
+		parent->UpdateBoundingBox();
+
 }
 void NodeResource::Render()
 {

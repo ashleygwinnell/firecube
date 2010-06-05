@@ -74,6 +74,7 @@ void App::Render(float t)
 	Renderer::SetPerspectiveProjection(90.0f,0.1f,1000.0f);	
 	Renderer::SetModelViewMatrix(mat4());
 	sg.Render();
+	sg.Root()->RenderBoundingBox();
 	Renderer::SetModelViewMatrix(mat4());
 	Renderer::SetOrthographicProjection();	
 	ostringstream oss;

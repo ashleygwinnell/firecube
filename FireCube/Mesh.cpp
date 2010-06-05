@@ -78,7 +78,10 @@ bool ModelResource::Load(const string &filename)
 			M3dsLoader m3dsLoader(this);
 			
 			if (m3dsLoader.Load(filename))							
+			{
+				CalculateBoundingBox();
 				return true;			
+			}
 			else
 				return false;
 		}
@@ -89,6 +92,7 @@ bool ModelResource::Load(const string &filename)
 			if (colladaLoader.Load())
 			{
 				colladaLoader.GenerateModel(this);
+				CalculateBoundingBox();
 				UpdateBuffers();
 				return true;
 			}
@@ -97,6 +101,24 @@ bool ModelResource::Load(const string &filename)
 		}
 	}
 	return false;
+}
+void ModelResource::CalculateBoundingBox()
+{
+	for (vector<Object>::iterator i=object.begin();i!=object.end();i++)
+	{
+		for (vector<vec3>::iterator j=i->vertex.begin();j!=i->vertex.end();j++)
+		{
+			i->bbox.Expand(*j);
+		}
+	}
+	for (vector<Object>::iterator i=object.begin();i!=object.end();i++)
+	{
+		bbox.Expand(i->bbox);
+	}
+}
+BoundingBox ModelResource::GetBoundingBox()
+{
+	return bbox;
 }
 void ModelResource::CalculateNormals()
 {	

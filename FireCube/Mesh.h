@@ -77,6 +77,7 @@ public:
 	Buffer vertexBuffer;
 	vector<Buffer> uvBuffer;
 	Buffer normalBuffer;
+	BoundingBox bbox;
 };
 /**
 * A class representing a model resource.
@@ -101,6 +102,14 @@ public:
 	* Calculates face and vertex normals.
 	*/
 	void CalculateNormals();
+	/**
+	* Calculates the bounding box of this model.
+	*/
+	void CalculateBoundingBox();
+	/**
+	* Returns the bounding box of this model.
+	*/
+	BoundingBox GetBoundingBox();
 	/**
 	* Applies a transformation to the model vertices.
 	* @param transform The transformation matrix.
@@ -129,6 +138,7 @@ public:
 	vector<Object> object;
 	vector<Material> material;	
 	string name;
+	BoundingBox bbox;
 private:	
 	
 };
