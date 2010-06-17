@@ -1,5 +1,8 @@
 #ifndef VEC3_H
 #define VEC3_H
+
+namespace FireCube
+{
 /**
 * A 3d vector.
 */
@@ -157,4 +160,5 @@ vec3 FIRECUBE_API Cross(const vec3 a,const vec3 b);
 * Performs a dot product between two vectors.
 */
 float FIRECUBE_API Dot(const vec3 a,const vec3 b);
+}
 #endif

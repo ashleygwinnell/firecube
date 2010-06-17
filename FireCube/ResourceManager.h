@@ -1,5 +1,8 @@
 #ifndef RESOURCE_MANAGER_H
 #define RESOURCE_MANAGER_H
+
+namespace FireCube
+{
 /**
 * A templated class for a resource manager.<br>
 * Resources should define a bool Load(const string &) function to be usable.
@@ -94,4 +97,5 @@ public:
 private:
 	map<string,boost::weak_ptr<T>> resources;
 };
+}
 #endif

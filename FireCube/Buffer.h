@@ -1,5 +1,8 @@
 #ifndef BUFFER_H
 #define BUFFER_H
+
+namespace FireCube
+{
 /** 
 * Specifies how data is handled.<br>
 * Buffer type:<br>
@@ -78,5 +81,5 @@ public:
 };
 
 typedef boost::shared_ptr<BufferResource> Buffer;
-
+}
 #endif

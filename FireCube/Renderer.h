@@ -4,6 +4,8 @@
 #pragma warning(push)
 #pragma warning(disable:4251)
 
+namespace FireCube
+{
 class Application;
 /**
 * A namespace containing various functions responsible for the rendering pipeline.
@@ -159,8 +161,7 @@ namespace Renderer
 	*/
 	FontManager FIRECUBE_API &GetFontManager();
 };
-
-
+}
 #pragma warning(pop)
 
 #endif

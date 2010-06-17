@@ -1,6 +1,8 @@
 #ifndef __TIMER_H
 #define __TIMER_H
 
+namespace FireCube
+{
 /**
 * A class for a timer.
 */
@@ -24,4 +26,5 @@ public:
 	LARGE_INTEGER temp;
 	double res;
 };
+}
 #endif

@@ -4,6 +4,8 @@
 #pragma warning(push)
 #pragma warning(disable:4251)
 
+namespace FireCube
+{
 class ProgramResource;
 typedef boost::shared_ptr<ProgramResource> Program;
 
@@ -132,4 +134,5 @@ private:
 	GLuint id;
 	map<string,GLint> variables;
 };
+}
 #endif

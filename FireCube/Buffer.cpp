@@ -9,7 +9,11 @@ using namespace std;
 #include <SDL.h>
 #include <windows.h>
 #include "GLee.h"
-#include "FireCube.h"
+
+#include "utils.h"	
+#include "Logger.h"
+#include "Buffer.h"
+
 using namespace FireCube;
 
 BufferResource::BufferResource() : id(0)

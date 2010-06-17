@@ -4,6 +4,8 @@
 #pragma warning(push)
 #pragma warning(disable:4251)
 
+namespace FireCube
+{
 class ModelResource;
 typedef ResourceManager<ModelResource> ModelManager;
 typedef boost::shared_ptr<ModelResource> Model;
@@ -142,7 +144,7 @@ public:
 private:	
 	
 };
-
+}
 #pragma warning(pop)
 
 #endif

@@ -4,6 +4,8 @@
 #pragma warning(push)
 #pragma warning(disable:4251)
 
+namespace FireCube
+{
 enum EventType
 {
 	MOUSE_MOVE,MOUSE_CLICK,KEY_PRESSED,KEY_DOWN,KEY_UP
@@ -125,5 +127,6 @@ private:
 	static vector<string> searchPaths;		
 	queue<Event> eventQueue;
 };
+}
 #pragma warning(pop)
 #endif

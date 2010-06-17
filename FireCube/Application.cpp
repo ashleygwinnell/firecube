@@ -14,17 +14,24 @@ using namespace std;
 #include "GLee.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "FireCube.h"
+
+#include "utils.h"	
+#include "Logger.h"
+#include "ResourceManager.h"
+#include "Timer.h"
+#include "MyMath.h"	
+#include "BoundingBox.h"
+#include "Texture.h"		
+#include "Buffer.h"
+#include "Shaders.h"
+#include "Mesh.h"	
+#include "FrameBuffer.h"
+#include "Font.h"
+#include "Renderer.h"				
+#include "Application.h"
+
 using namespace FireCube;
 
-extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-}
-#include <luabind/luabind.hpp>
-#include <luabind/operator.hpp>
-#include <luabind/object.hpp>
 
 extern void InitializeRenderer();
 extern void DestroyRenderer();

@@ -3,6 +3,9 @@
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+namespace FireCube
+{
 enum TextureFilter
 {
 	NEAREST,LINEAR,MIPMAP
@@ -45,6 +48,6 @@ public:
 
 typedef ResourceManager<TextureResource> TextureManager;
 typedef boost::shared_ptr<TextureResource> Texture;
-
+}
 #pragma warning(pop)
 #endif

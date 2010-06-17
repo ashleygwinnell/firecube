@@ -26,6 +26,8 @@
 #define MAT_SHIN2PCT 0xa041
 #define MAT_SHIN3PCT 0xa042
 
+namespace FireCube
+{
 class M3dsLoader
 {
 public:
@@ -250,6 +252,6 @@ private:
 	float unit;
 	UpDirection upDirection;
 };
-
+}
 #pragma warning(pop)
 #endif

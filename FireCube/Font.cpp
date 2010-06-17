@@ -13,7 +13,22 @@ using namespace std;
 #include <gl/gl.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "FireCube.h"
+
+#include "utils.h"	
+#include "Logger.h"
+#include "ResourceManager.h"
+#include "Timer.h"
+#include "MyMath.h"	
+#include "BoundingBox.h"
+#include "Texture.h"		
+#include "Buffer.h"
+#include "Shaders.h"
+#include "Mesh.h"	
+#include "FrameBuffer.h"
+#include "Font.h"
+#include "Renderer.h"				
+#include "Application.h"
+
 #include "privateFont.h"
 using namespace FireCube;
 

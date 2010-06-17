@@ -1,5 +1,8 @@
 #ifndef MAT4_H
 #define MAT4_H
+
+namespace FireCube
+{
 /**
 * A 4x4 matrix.
 */
@@ -126,4 +129,5 @@ public:
 	mat3 ToMatrix3();
 	float m[16];
 };
+}
 #endif

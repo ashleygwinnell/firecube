@@ -1,6 +1,8 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
+namespace FireCube
+{
 class FrameBufferResource;
 typedef boost::shared_ptr<FrameBufferResource> FrameBuffer;
 
@@ -73,6 +75,6 @@ private:
 	Texture texture[MAX_TEXTURES];
 	Texture depthTexture;
 };
-
+}
 
 #endif

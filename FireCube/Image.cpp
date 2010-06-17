@@ -10,7 +10,24 @@ using namespace std;
 #include <SDL_image.h>
 #include <windows.h>
 #include "GLee.h"
-#include "FireCube.h"
+
+#include "utils.h"	
+#include "Logger.h"
+#include "ResourceManager.h"
+#include "Timer.h"
+#include "MyMath.h"	
+#include "BoundingBox.h"
+#include "Texture.h"		
+#include "Buffer.h"
+#include "Shaders.h"
+#include "Mesh.h"	
+#include "FrameBuffer.h"
+#include "Image.h"
+#include "Font.h"
+#include "Renderer.h"				
+#include "Application.h"
+
+
 using namespace FireCube;
 
 Image::Image() : width(0), height(0), bpp(0)

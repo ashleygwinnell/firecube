@@ -1,5 +1,8 @@
 #ifndef VEC4_H
 #define VEC4_H
+
+namespace FireCube
+{
 /**
 * A 4d vector.
 */
@@ -149,4 +152,5 @@ vec4 FIRECUBE_API Cross(const vec4 a,const vec4 b);
 * Performs a dot product between two vectors.
 */
 float FIRECUBE_API Dot(const vec4 a,const vec4 b);
+}
 #endif

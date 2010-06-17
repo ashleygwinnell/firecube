@@ -4,6 +4,8 @@
 #pragma warning(push)
 #pragma warning(disable:4251)
 
+namespace FireCube
+{
 class FontResource;
 typedef boost::shared_ptr<FontResource> Font;
 /* CPPDOC_BEGIN_EXCLUDE */
@@ -76,6 +78,6 @@ private:
 	FontImpl *fontImpl;
 	int size;
 };
-
+}
 #pragma warning(pop)
 #endif

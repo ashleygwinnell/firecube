@@ -1,6 +1,8 @@
 #ifndef BOUNDINGBOX_H
 #define BOUNDINGBOX_H
 
+namespace FireCube
+{
 class FIRECUBE_API BoundingBox
 {
 public:
@@ -15,5 +17,5 @@ public:
 	bool Contains(const BoundingBox &bb);
 	vec3 bmin,bmax;
 };
-
+}
 #endif

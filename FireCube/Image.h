@@ -1,6 +1,8 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+namespace FireCube
+{
 /**
 * A class representing an image.
 */
@@ -37,4 +39,5 @@ private:
 	int width,height,bpp;
 	vector<unsigned char> data;
 };
+}
 #endif

@@ -12,7 +12,12 @@ using namespace std;
 #include <SDL_image.h>
 #include <windows.h>
 #include "GLee.h"
-#include "FireCube.h"
+
+#include "utils.h"	
+#include "Logger.h"
+#include "ResourceManager.h"
+#include "Texture.h"		
+
 using namespace FireCube;
 
 TextureResource::TextureResource() : id(0)

@@ -9,7 +9,9 @@ using namespace std;
 #include <SDL.h>
 #include <windows.h>
 #include "GLee.h"
-#include "FireCube.h"
+
+#include "utils.h"	
+
 using namespace FireCube;
 
 inline bool FireCube::IsFinite(float val)

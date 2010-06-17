@@ -1,5 +1,8 @@
 #ifndef MAT3_H
 #define MAT3_H
+
+namespace FireCube
+{
 static inline vec3 proj(const vec3 & v1, const vec3 & v2);
 /**
 * A 3x3 matrix.
@@ -107,5 +110,5 @@ mat3 FIRECUBE_API operator*(const mat3 &a,const float &b);
 mat3 FIRECUBE_API operator*(const float &a,const mat3 &b);
 vec3 FIRECUBE_API operator*(const mat3 &a,const vec3 &b);
 vec3 FIRECUBE_API operator*(const vec3 &a,const mat3 &b);
-
+}
 #endif

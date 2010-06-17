@@ -13,10 +13,25 @@ using namespace std;
 #include <windows.h>
 #include "GLee.h"
 #include <GL/GLU.h>
-#include "FireCube.h"
-using namespace FireCube;
+#include "utils.h"	
+#include "Logger.h"
+#include "ResourceManager.h"
+#include "Timer.h"
+#include "MyMath.h"	
+#include "BoundingBox.h"
+#include "Texture.h"		
+#include "Buffer.h"
+#include "Shaders.h"
+#include "Mesh.h"	
+#include "FrameBuffer.h"
+#include "Image.h"
+#include "Font.h"
+#include "Renderer.h"				
+#include "Application.h"
 #include "tinyxml.h"
 #include "ModelLoaders.h"
+
+using namespace FireCube;
 MaterialResource::MaterialResource()
 {
 	
