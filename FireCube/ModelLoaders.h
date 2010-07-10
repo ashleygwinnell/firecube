@@ -59,7 +59,7 @@ public:
 	};
 	enum PrimitiveType
 	{
-		PRIMITIVE_TRIANGLES
+		PRIMITIVE_TRIANGLES,PRIMITIVE_POLYLIST
 	};
 	enum TransformationType
 	{
@@ -119,6 +119,7 @@ public:
 		string material;
 		int numPrimtives;
 		vector<unsigned int> indices;
+		vector<unsigned int> vcount;
 	};
 	class InputChannel
 	{
@@ -215,7 +216,9 @@ public:
 	void ReadAccessor(TiXmlNode *parent,Accessor &accessor);
 	void ReadVertexData(TiXmlNode *parent,Mesh &mesh);
 	void ReadInputChannel(TiXmlNode *parent,vector<InputChannel> &inputChannels);
-	void ReadIndexData(TiXmlNode *parent, Mesh &mesh);
+	void ReadTriangles(TiXmlNode *parent, Mesh &mesh);
+	void ReadPolylist(TiXmlNode *parent, Mesh &mesh);
+	void ReadVCount(TiXmlNode *parent,SubMesh &subMesh);
 	void ReadPrimitives(TiXmlNode *parent,Mesh &mesh,SubMesh &subMesh,vector<InputChannel> primInputChannels,int count);
 	void GetDataFromChannel(InputChannel &ic,int index,Mesh &mesh);
 	void ReadSceneLibrary(TiXmlNode *parent);

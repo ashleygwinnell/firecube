@@ -74,10 +74,10 @@ public:
 	vector<vec3> vertex;
 	vector<vec3> normal;
 	vector<Mesh> mesh;
-	vector<Face> face;
-	vector<vector<vec2>> uv;
-	Buffer vertexBuffer;
-	vector<Buffer> uvBuffer;
+	vector<Face> face;	
+	vector<vec2> diffuseUV;
+	Buffer vertexBuffer;	
+	Buffer diffuseUVBuffer;
 	Buffer normalBuffer;
 	BoundingBox bbox;
 };

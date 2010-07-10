@@ -303,12 +303,11 @@ void Renderer::Render(Model model)
 	{	
 		vector<Mesh>::iterator j=i->mesh.begin();
 		if (i->vertexBuffer)
-			i->vertexBuffer->SetVertexStream(3);
-		for (DWORD t=0;t<MAX_TEXTURES;t++)
-			if ((i->uvBuffer[t]) && (i->uvBuffer[t]->IsValid()))
-				i->uvBuffer[t]->SetTexCoordStream(t);
+			i->vertexBuffer->SetVertexStream(3);		
+		if ((i->diffuseUVBuffer) && (i->diffuseUVBuffer->IsValid()))
+				i->diffuseUVBuffer->SetTexCoordStream(0);
 			else
-				Renderer::DisableTexCoordStream(t);
+				Renderer::DisableTexCoordStream(0);
 		if (i->normalBuffer)
 			i->normalBuffer->SetNormalStream();
 		else

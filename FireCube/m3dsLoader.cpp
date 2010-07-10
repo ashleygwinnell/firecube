@@ -117,12 +117,12 @@ DWORD M3dsLoader::ProcessChunk(char *buffer)
 		break;
 	case MESH_TEX_VERT:
 		numtexcoords=*(WORD*)(buffer+i);
-		curObject->uv[0].resize(numtexcoords);
+		curObject->diffuseUV.resize(numtexcoords);
 		i+=2;
 		for (j=0;j<numtexcoords;j++)
 		{
-			curObject->uv[0][j].x=*(float*)(buffer+i);
-			curObject->uv[0][j].y=1.0f-*(float*)(buffer+i+4);
+			curObject->diffuseUV[j].x=*(float*)(buffer+i);
+			curObject->diffuseUV[j].y=1.0f-*(float*)(buffer+i+4);
 			i+=8;
 		}		
 		break;

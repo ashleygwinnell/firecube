@@ -62,7 +62,7 @@ Mesh::~Mesh()
 {
 
 }
-Object::Object() : uv(MAX_TEXTURES),uvBuffer(MAX_TEXTURES)
+Object::Object()
 {
 
 }
@@ -255,20 +255,19 @@ void ModelResource::SetProgram(const Program &program)
 void ModelResource::CreateHardNormals()
 {
 	vector<vec3> vertices;
-	vector<vector<vec2>> uvs(8);
+	vector<vec2> diffuseUV;
 	for (DWORD k=0;k<object.size();k++)
 	{
 		DWORD currentIndex=0;
 		Object &obj=object[k];
 		vertices.clear();
-		uvs.clear();
+		diffuseUV.clear();
 		vertices=obj.vertex;
-		uvs=obj.uv;
+		diffuseUV=obj.diffuseUV;
 		obj.face.clear();
 		obj.vertex.clear();
 		obj.normal.clear();
-		for (DWORD t=0;t<MAX_TEXTURES;t++)		
-			obj.uv[t].clear();
+		obj.diffuseUV.clear();
 
 		for (DWORD j=0;j<obj.mesh.size();j++)
 		{
@@ -285,20 +284,17 @@ void ModelResource::CreateHardNormals()
 				obj.normal.push_back(n);
 				obj.normal.push_back(n);
 				obj.normal.push_back(n);
-				for (DWORD t=0;t<MAX_TEXTURES;t++)
-				{									
-					if (uvs[t].size()>0)
-					{
-						vec2 uv0(0,0),uv1(0,0),uv2(0,0);
-						uv0=uvs[t][ms.face[i].v[0]];
-						uv1=uvs[t][ms.face[i].v[1]];
-						uv2=uvs[t][ms.face[i].v[2]];
+				if (diffuseUV.size()>0)
+				{
+					vec2 uv0(0,0),uv1(0,0),uv2(0,0);
+					uv0=diffuseUV[ms.face[i].v[0]];
+					uv1=diffuseUV[ms.face[i].v[1]];
+					uv2=diffuseUV[ms.face[i].v[2]];
 
-						obj.uv[t].push_back(uv0);
-						obj.uv[t].push_back(uv1);
-						obj.uv[t].push_back(uv2);
-					}					
-				}
+					obj.diffuseUV.push_back(uv0);
+					obj.diffuseUV.push_back(uv1);
+					obj.diffuseUV.push_back(uv2);
+				}									
 				ms.face[i].v[0]=currentIndex++;
 				ms.face[i].v[1]=currentIndex++;
 				ms.face[i].v[2]=currentIndex++;				
@@ -313,14 +309,11 @@ void ModelResource::CreateHardNormals()
 				tmp[f*3+2]=ms.face[f].v[2];
 			}			
 		}		
-		for (DWORD t=0;t<MAX_TEXTURES;t++)
-		{		
-			if (obj.uv[t].size())
-			{	
-				obj.uvBuffer[t]=Buffer(new BufferResource);
-				obj.uvBuffer[t]->Create();
-				obj.uvBuffer[t]->LoadData(&obj.uv[t][0],sizeof(vec2)*obj.uv[t].size(),STATIC);
-			}
+		if (obj.diffuseUV.size())
+		{	
+			obj.diffuseUVBuffer=Buffer(new BufferResource);
+			obj.diffuseUVBuffer->Create();
+			obj.diffuseUVBuffer->LoadData(&obj.diffuseUV[0],sizeof(vec2)*obj.diffuseUV.size(),STATIC);
 		}		
 	}
 	UpdateBuffers();
@@ -358,25 +351,23 @@ void ModelResource::UpdateBuffers()
 		else
 			obj.normalBuffer.reset();
 		
-		for (DWORD t=0;t<MAX_TEXTURES;t++)
-		{		
-			if (obj.uv[t].size()!=0)
+		if (obj.diffuseUV.size()!=0)
+		{
+			if (!obj.diffuseUVBuffer)
 			{
-				if (!obj.uvBuffer[t])
-				{
-					obj.uvBuffer[t]=Buffer(new BufferResource);
-					obj.uvBuffer[t]->Create();
-				}
-				if (!obj.uvBuffer[t]->LoadData(&obj.uv[t][0],sizeof(vec2)*obj.uv[t].size(),STATIC))
-				{
-					ostringstream oss;
-					oss << "buffer id:"<<obj.vertexBuffer->id << " Couldn't upload vertex data" << endl;
-					Logger::Write(oss.str());
-				}
+				obj.diffuseUVBuffer=Buffer(new BufferResource);
+				obj.diffuseUVBuffer->Create();
 			}
-			else
-				obj.uvBuffer[t].reset();
+			if (!obj.diffuseUVBuffer->LoadData(&obj.diffuseUV[0],sizeof(vec2)*obj.diffuseUV.size(),STATIC))
+			{
+				ostringstream oss;
+				oss << "buffer id:"<<obj.vertexBuffer->id << " Couldn't upload vertex data" << endl;
+				Logger::Write(oss.str());
+			}
 		}
+		else
+			obj.diffuseUVBuffer.reset();
+
 		
 
 		for (DWORD m=0;m<obj.mesh.size();m++)

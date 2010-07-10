@@ -29,7 +29,7 @@ bool ColladaLoader::Load()
 	TiXmlElement *e=GetChildElement(&xmlDocument,"COLLADA");
 	if (e==NULL)
 		return false;
-	
+
 	string version=e->Attribute("version");
 	if (version.substr(0,3)=="1.4")
 		ReadLibraries(e);
@@ -313,6 +313,8 @@ void ColladaLoader::ReadGeometry(TiXmlNode *parent,Geometry &geometry)
 {
 	TiXmlNode *node;
 	TiXmlElement *element;
+
+	tempMap.clear();
 	for (node=parent->FirstChild();node!=NULL;node=node->NextSibling())
 	{
 		if (node->Type()==TiXmlNode::ELEMENT)
@@ -327,6 +329,7 @@ void ColladaLoader::ReadMesh(TiXmlNode *parent,Mesh &mesh)
 {
 	TiXmlNode *node;
 	TiXmlElement *element;
+
 	for (node=parent->FirstChild();node!=NULL;node=node->NextSibling())
 	{
 		if (node->Type()==TiXmlNode::ELEMENT)
@@ -344,7 +347,11 @@ void ColladaLoader::ReadMesh(TiXmlNode *parent,Mesh &mesh)
 			}
 			else if (element->ValueStr()=="triangles")
 			{
-				ReadIndexData(element,mesh);
+				ReadTriangles(element,mesh);
+			}
+			else if (element->ValueStr()=="polylist")
+			{
+				ReadPolylist(element,mesh);
 			}
 		}
 	}
@@ -415,7 +422,7 @@ void ColladaLoader::ReadAccessor(TiXmlNode *parent,Accessor &accesor)
 					accesor.componentsOffset[1]=accesor.params.size();
 				else if (name=="Z")
 					accesor.componentsOffset[2]=accesor.params.size();
-				
+
 				else if (name=="R")
 					accesor.componentsOffset[0]=accesor.params.size();
 				else if (name=="G")
@@ -443,9 +450,9 @@ void ColladaLoader::ReadVertexData(TiXmlNode *parent,Mesh &mesh)
 {
 	TiXmlNode *node;
 	TiXmlElement *element=parent->ToElement();
-	
+
 	mesh.vertexId=element->Attribute("id");
-	
+
 	for (node=parent->FirstChild();node!=NULL;node=node->NextSibling())
 	{
 		if (node->Type()==TiXmlNode::ELEMENT)
@@ -464,14 +471,14 @@ void ColladaLoader::ReadInputChannel(TiXmlNode *parent,vector<InputChannel> &inp
 	TiXmlElement *element=parent->ToElement();
 	inputChannels.push_back(InputChannel());
 	InputChannel &ic=inputChannels[inputChannels.size()-1];
-	
+
 	string semantic=element->Attribute("semantic");
 	ic.type=SemanticToInputType(semantic);
 	string source=element->Attribute("source");
 	ic.sourceName=source.substr(1);	
 	if (element->QueryIntAttribute("offset",&ic.offset) != TIXML_SUCCESS)
 		ic.offset=0;
-	
+
 	if ((ic.type==INPUT_TEXCOORD) || (ic.type==INPUT_COLOR))
 	{
 		if (element->QueryIntAttribute("set",&ic.index) != TIXML_SUCCESS)
@@ -485,7 +492,7 @@ void ColladaLoader::ReadInputChannel(TiXmlNode *parent,vector<InputChannel> &inp
 		}
 	}
 }
-void ColladaLoader::ReadIndexData(TiXmlNode *parent, Mesh &mesh)
+void ColladaLoader::ReadTriangles(TiXmlNode *parent, Mesh &mesh)
 {
 	TiXmlNode *node;
 	TiXmlElement *element=parent->ToElement();
@@ -496,10 +503,9 @@ void ColladaLoader::ReadIndexData(TiXmlNode *parent, Mesh &mesh)
 	SubMesh &subMesh=mesh.subMeshes[mesh.subMeshes.size()-1];
 	element->QueryIntAttribute("count",&count);
 	subMesh.material=element->Attribute("material");	
-	subMesh.numPrimtives=count;
-	if (element->ValueStr()=="triangles")
-		subMesh.primitiveType=PRIMITIVE_TRIANGLES;
-		
+	subMesh.numPrimtives=count;	
+	subMesh.primitiveType=PRIMITIVE_TRIANGLES;
+
 	for (node=parent->FirstChild();node!=NULL;node=node->NextSibling())
 	{
 		if (node->Type()==TiXmlNode::ELEMENT)
@@ -510,6 +516,47 @@ void ColladaLoader::ReadIndexData(TiXmlNode *parent, Mesh &mesh)
 			else if (element->ValueStr()=="p")
 				ReadPrimitives(element,mesh,subMesh,primInputChannels,count);
 		}
+	}
+}
+void ColladaLoader::ReadPolylist(TiXmlNode *parent, Mesh &mesh)
+{
+	TiXmlNode *node;
+	TiXmlElement *element=parent->ToElement();
+
+	vector<InputChannel> primInputChannels;
+	int count;
+	mesh.subMeshes.push_back(SubMesh());
+	SubMesh &subMesh=mesh.subMeshes[mesh.subMeshes.size()-1];
+	element->QueryIntAttribute("count",&count);
+	subMesh.material=element->Attribute("material");	
+	subMesh.numPrimtives=count;	
+	subMesh.primitiveType=PRIMITIVE_POLYLIST;
+
+	for (node=parent->FirstChild();node!=NULL;node=node->NextSibling())
+	{
+		if (node->Type()==TiXmlNode::ELEMENT)
+		{			
+			element=node->ToElement();
+			if (element->ValueStr()=="input")
+				ReadInputChannel(element,primInputChannels);
+			else if (element->ValueStr()=="vcount")
+				ReadVCount(element,subMesh);
+			else if (element->ValueStr()=="p")
+				ReadPrimitives(element,mesh,subMesh,primInputChannels,count);
+		}
+	}
+}
+void ColladaLoader::ReadVCount(TiXmlNode *parent,SubMesh &subMesh)
+{	
+	TiXmlElement *element=parent->ToElement();
+	subMesh.vcount.reserve(subMesh.numPrimtives);
+
+	istringstream iss(element->GetText());
+	while (!iss.eof())
+	{
+		int idx;
+		iss >> idx;
+		subMesh.vcount.push_back(idx);
 	}
 }
 unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed )
@@ -574,10 +621,16 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent,Mesh &mesh,SubMesh &subMesh
 		if (primInputChannels[i].type==INPUT_VERTEX)
 			vertexOffset=primInputChannels[i].offset;
 	}
-	int expectedIndicesCount;
+	int expectedIndicesCount=0;
 	if (subMesh.primitiveType==PRIMITIVE_TRIANGLES)
 		expectedIndicesCount=count * 3;
-	
+	else if (subMesh.primitiveType==PRIMITIVE_POLYLIST)
+	{
+		for (unsigned int i=0;i<subMesh.vcount.size();i++)
+			expectedIndicesCount+=subMesh.vcount[i];
+	}
+
+
 	indices.reserve(expectedIndicesCount*offset);
 
 	istringstream iss(element->GetText());
@@ -608,6 +661,13 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent,Mesh &mesh,SubMesh &subMesh
 		int pointCount=0;
 		if (subMesh.primitiveType==PRIMITIVE_TRIANGLES)
 			pointCount=3;
+		else if (subMesh.primitiveType==PRIMITIVE_POLYLIST)
+			pointCount=subMesh.vcount[i];
+		if (pointCount!=3)
+		{
+			Logger::Write("Error in collada loader, polygons with more than 3 vertices are not implemented yet.\n");
+			continue;
+		}
 		for (int j=0;j<pointCount;j++)
 		{		
 			int ind[15];
@@ -634,16 +694,16 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent,Mesh &mesh,SubMesh &subMesh
 			else
 				subMesh.indices.push_back(iter->second);
 
-			
+
 		}
 	}
-	
+
 }
 void ColladaLoader::GetDataFromChannel(InputChannel &ic,int index,Mesh &mesh)
 {
 	if (ic.type==INPUT_VERTEX)
 		return;
-	
+
 	float *data=&ic.source->dataArray.floatData[0]+ic.source->accessor.offset+index*ic.source->accessor.stride;
 	float values[4];
 	for (int i=0;i<4;i++)
@@ -710,7 +770,7 @@ void ColladaLoader::ReadSceneNode(TiXmlNode *parent,Node *node)
 				ReadSceneNode(element,n);								
 				continue;
 			}
-			
+
 			if (element->ValueStr()=="instance_node")
 			{
 				node->nodeInstances.push_back(NodeInstance());
@@ -743,7 +803,7 @@ void ColladaLoader::ReadNodeGeometry(TiXmlNode *parent,GeometryInstance &gi,Node
 	TiXmlNode *tnode;
 	TiXmlElement *element;
 
-	
+
 	for (tnode=parent->FirstChild();tnode!=NULL;tnode=tnode->NextSibling())
 	{
 		if (tnode->Type()==TiXmlNode::ELEMENT)
@@ -760,7 +820,7 @@ void ColladaLoader::ReadNodeGeometry(TiXmlNode *parent,GeometryInstance &gi,Node
 				gi.materials[symbol]=SemanticMapping();
 				SemanticMapping &sm=gi.materials[symbol];
 				sm.materialName=target.substr(1);
-				
+
 				ReadMaterialVertexInputBinding(element,sm);
 			}
 		}
@@ -905,12 +965,12 @@ mat4 ColladaLoader::CalculateTranformation(vector<Transform> &transformations)
 void ColladaLoader::ApplySemanticMapping(Sampler &sampler,SemanticMapping &table)
 {
 	map<string,InputSemanticEntry>::iterator iter=table.inputMap.find(sampler.uvCoords);
+	sampler.uvId=-1;
 	if (iter!=table.inputMap.end())
 	{
-		sampler.uvId=iter->second.set;
-	}
-	else
-		sampler.uvId=-1;
+		if (iter->second.type==INPUT_TEXCOORD)
+			sampler.uvId=iter->second.set;
+	}			
 }
 string ColladaLoader::GetTextureFileNameFromSampler(Effect &effect,Sampler &sampler)
 {
@@ -995,8 +1055,18 @@ void ColladaLoader::GenerateModel(ModelResource *model,Node *node,mat4 transform
 				object.normal[j].z*=-1;
 			}
 			object.normal[j].Normalize();
+		}		
+		unsigned int writePos=0;
+		for (unsigned int j=0;j<4;j++)
+		{
+			if (mesh.texcoords[j].size()>0)
+			{
+				if (writePos!=j)
+					mesh.texcoords[writePos]=mesh.texcoords[j];
+				writePos++;
+			}
 		}
-		
+
 		unsigned int vertexIndex=0;
 		for (unsigned int j=0;j<mesh.subMeshes.size();j++)
 		{
@@ -1021,19 +1091,44 @@ void ColladaLoader::GenerateModel(ModelResource *model,Node *node,mat4 transform
 				ApplySemanticMapping(effect.ambientSampler,*table);
 				ApplySemanticMapping(effect.diffuseSampler,*table);
 				ApplySemanticMapping(effect.specularSampler,*table);
-			}
+			}			
 			if (effect.diffuseSampler.name!="")
 			{
+				unsigned int map=0;
 				fmat->diffuseTexture=Renderer::GetTextureManager().Create(GetTextureFileNameFromSampler(effect,effect.diffuseSampler));
-				if (effect.diffuseSampler.uvId!=-1)
+				if (effect.diffuseSampler.uvId!=-1)				
+					map=effect.diffuseSampler.uvId;				
+				else
 				{
-					object.uv[0]=mesh.texcoords[effect.diffuseSampler.uvId];
-				}				
+					string::iterator s=effect.diffuseSampler.uvCoords.begin();
+					while (s!=effect.diffuseSampler.uvCoords.end() && (*s<'0' || *s>'9'))
+						s++;
+					map=0;
+					while (s!=effect.diffuseSampler.uvCoords.end() && (*s>='0' && *s<='9'))
+					{
+						map=map*10+(*s-'0');
+						s++;
+					}
+				}
+				object.diffuseUV=mesh.texcoords[map];
 			}			
 			if (subMesh.primitiveType==PRIMITIVE_TRIANGLES)
 			{
 				for (int p=0;p<subMesh.numPrimtives;p++)
 				{				
+					Face f;										
+					f.v[0]=subMesh.indices[p*3+0];
+					f.v[1]=subMesh.indices[p*3+1];
+					f.v[2]=subMesh.indices[p*3+2];
+					m.face.push_back(f);
+				}
+			}
+			else if (subMesh.primitiveType==PRIMITIVE_POLYLIST)
+			{
+				for (int p=0;p<subMesh.numPrimtives;p++)
+				{
+					if (subMesh.vcount[p]!=3)
+						continue;
 					Face f;										
 					f.v[0]=subMesh.indices[p*3+0];
 					f.v[1]=subMesh.indices[p*3+1];
