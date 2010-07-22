@@ -12,6 +12,8 @@ Mesh.h
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>push<font color="black">)</font>
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
 
+<font color="blue">namespace</font> FireCube
+<font color="black">{</font>
 <font color="blue">class</font> ModelResource;
 <font color="blue">typedef</font> ResourceManager<font color="black">&#60;</font>ModelResource<font color="black">&#62;</font> ModelManager;
 <font color="blue">typedef</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>ModelResource<font color="black">&#62;</font> Model;
@@ -80,11 +82,12 @@ Mesh.h
     vector<font color="black">&#60;</font>vec3<font color="black">&#62;</font> vertex;
     vector<font color="black">&#60;</font>vec3<font color="black">&#62;</font> normal;
     vector<font color="black">&#60;</font>Mesh<font color="black">&#62;</font> mesh;
-    vector<font color="black">&#60;</font>Face<font color="black">&#62;</font> face;
-    vector<font color="black">&#60;</font>vector<font color="black">&#60;</font>vec2<font color="black">&#62;</font><font color="black">&#62;</font> uv;
-    Buffer vertexBuffer;
-    vector<font color="black">&#60;</font>Buffer<font color="black">&#62;</font> uvBuffer;
+    vector<font color="black">&#60;</font>Face<font color="black">&#62;</font> face;  
+    vector<font color="black">&#60;</font>vec2<font color="black">&#62;</font> diffuseUV;
+    Buffer vertexBuffer;    
+    Buffer diffuseUVBuffer;
     Buffer normalBuffer;
+    BoundingBox bbox;
 <font color="black">}</font>;
 <font color="green">/**
 * A class representing a model resource.
@@ -109,6 +112,14 @@ Mesh.h
     * Calculates face and vertex normals.
     */</font>
     <font color="blue">void</font> CalculateNormals<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Calculates the bounding box of this model.
+    */</font>
+    <font color="blue">void</font> CalculateBoundingBox<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Returns the bounding box of this model.
+    */</font>
+    BoundingBox GetBoundingBox<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
     * Applies a transformation to the model vertices.
     * @param transform The transformation matrix.
@@ -137,10 +148,11 @@ Mesh.h
     vector<font color="black">&#60;</font>Object<font color="black">&#62;</font> object;
     vector<font color="black">&#60;</font>Material<font color="black">&#62;</font> material;  
     string <font color="blue">name</font>;
+    BoundingBox bbox;
 <font color="blue">private</font><font color="black">:</font>    
     
 <font color="black">}</font>;
-
+<font color="black">}</font>
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>pop<font color="black">)</font>
 
 <font color="blue">#endif</font>

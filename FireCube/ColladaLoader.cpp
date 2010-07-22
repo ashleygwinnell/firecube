@@ -1137,6 +1137,7 @@ void ColladaLoader::GenerateModel(ModelResource *model,Node *node,mat4 transform
 					f.v[1]=subMesh.indices[p*3+1];
 					f.v[2]=subMesh.indices[p*3+2];
 					m.face.push_back(f);
+					object.face.push_back(f);
 				}
 			}
 			else if (subMesh.primitiveType==PRIMITIVE_POLYLIST)
@@ -1150,6 +1151,7 @@ void ColladaLoader::GenerateModel(ModelResource *model,Node *node,mat4 transform
 					f.v[1]=subMesh.indices[p*3+1];
 					f.v[2]=subMesh.indices[p*3+2];
 					m.face.push_back(f);
+					object.face.push_back(f);
 				}
 			}
 

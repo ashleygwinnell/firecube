@@ -40,160 +40,327 @@ bool M3dsLoader::Load(const string &filename)
 	if (!f.is_open())
 		return false;
 	
-	DWORD l=f.tellg();
-	char *buffer=new char[l];
+	DWORD l=f.tellg();	
+	buffer.resize(l);
 	f.seekg(0,ios_base::beg);
-	f.read(buffer,l);
-
-	ProcessChunk(buffer);	
+	f.read(&buffer[0],l);
+	curPos=&buffer[0];
+	ReadMainChunk();
+	
+	vector<pair<pair<DWORD,DWORD>,string>>::iterator meshMat;
+	for (meshMat=meshMaterial.begin();meshMat!=meshMaterial.end();meshMat++)
+		model->object[meshMat->first.first].mesh[meshMat->first.second].material=GetMaterialByName(meshMat->second);
+	vector<pair<DWORD,mat4>>::iterator objMatrix;
 	for (DWORD k=0;k<model->object.size();k++)
 	{
-		for (DWORD i=0;i<model->object[k].mesh.size();i++)
+		if (model->object[k].mesh.size()==0) // No material specified, create a default one.
 		{
-			Mesh *sm=&model->object[k].mesh[i];		
-			for (DWORD j=0;j<sm->face.size();j++)
-			{
-				DWORD idx=sm->face[j].v[0];
-				sm->face[j]=model->object[k].face[idx];				
-			}			
+			Material mat(new MaterialResource);
+			mat->ambient.Set(0,0,0,1);
+			mat->diffuse.Set(1,1,1,1);
+			mat->specular.Set(0,0,0,1);
+			model->material.push_back(mat);
+			model->object[k].mesh.push_back(Mesh());
+			Mesh &mesh=model->object[k].mesh.back();
+			mesh.material=mat;
+			mesh.face=model->object[k].face;
 		}
 	}
 	model->CalculateNormals();
-	model->UpdateBuffers();
-	delete [] buffer;		
+	model->UpdateBuffers();	
 	return true;
 }
-DWORD M3dsLoader::ProcessChunk(char *buffer)
-{
-	Object *curObject=NULL;
-	if (model->object.size()>0)
-		curObject=&model->object[model->object.size()-1];
-	DWORD i=0,j=0;	
-	Material mat;
-	Material matPtr;
-	Mesh sm;
-	DWORD numtexcoords,numFaces,numVertices;
-	WORD id=*(WORD*)(buffer+i);
-	DWORD len=*(DWORD*)(buffer+i+2);		
-	i+=6;
-	switch (id)
+void M3dsLoader::ReadMainChunk()
+{	
+	WORD id=*(WORD*)curPos;
+	DWORD len=*(DWORD*)(curPos+2)-6;	
+	curPos+=6;	
+	char *startPos=curPos;
+	if (id!=MAIN3DS)
+		return;	
+	while ((DWORD)(curPos-startPos)<len)
 	{
-	case PRIMARY:
-		break;
-	case EDIT3DS:
-		break;
-	case NAMED_OBJECT:
-		model->object.push_back(Object());
-		model->object[model->object.size()-1].name=buffer+i;			
-		i+=(DWORD)strlen(buffer+i)+1;
-		break;
-	case OBJ_MESH:
-		break;
-	case MESH_VERTICES:			
-		float x,y,z;
-		numVertices=*(WORD*)(buffer+i);
-		curObject->vertex.resize(numVertices);
-		i+=2;
-		for (j=0;j<numVertices;j++)
-		{
-			x=*(float*)(buffer+i);
-			z=-*(float*)(buffer+i+4);
-			y=*(float*)(buffer+i+8);
-			curObject->vertex[j].Set(x,y,z);
-			i+=12;
-		}		
-		break;
-	case MESH_FACES:			
-		numFaces=*(WORD*)(buffer+i);
-		i+=2;
-		curObject->face.resize(numFaces);
-		for (j=0;j<numFaces;j++)
-		{
-			curObject->face[j].v[0]=*(WORD*)(buffer+i);
-			curObject->face[j].v[1]=*(WORD*)(buffer+i+2);
-			curObject->face[j].v[2]=*(WORD*)(buffer+i+4);
-			i+=8;
-		}
-		break;
-	case MESH_TEX_VERT:
-		numtexcoords=*(WORD*)(buffer+i);
-		curObject->diffuseUV.resize(numtexcoords);
-		i+=2;
-		for (j=0;j<numtexcoords;j++)
-		{
-			curObject->diffuseUV[j].x=*(float*)(buffer+i);
-			curObject->diffuseUV[j].y=1.0f-*(float*)(buffer+i+4);
-			i+=8;
-		}		
-		break;
-	case MESH_MATERIAL:		
-		sm.material=model->GetMaterialByName(buffer+i);
-		i+=(DWORD)strlen(buffer+i)+1;
-		numFaces=*(WORD*)(buffer+i);
-		i+=2;
-		sm.face.resize(numFaces);
-		for (j=0;j<numFaces;j++)
-		{
-			sm.face[j].v[0]=*(WORD*)(buffer+i);
-			i+=2;
-		}			
-		curObject->mesh.push_back(sm);
-		break;
-	case MATERIAL:
-		break;
-	case MAT_NAME:				
-		mat=Material(new MaterialResource);
-		mat->name=buffer+i;		
-		model->material.insert(model->material.begin(),mat);		
-		i+=(DWORD)strlen(buffer+i)+1;		
-		break;
-	case MAT_AMBIENT:
-		i+=6;
-		matPtr=model->material[0];		
-		matPtr->ambient=vec4((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f,1.0f);
-		i+=3;
-		break;
-	case MAT_DIFFUSE:
-		i+=6;
-		matPtr=model->material[0];		
-		matPtr->diffuse=vec4((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f,1.0f);
-		i+=3;
-		break;
-	case MAT_SPECULAR:
-		i+=6;
-		matPtr=model->material[0];		
-		matPtr->specular=vec4((float)(*(BYTE*)(buffer+i))/255.0f,(float)(*(BYTE*)(buffer+i+1))/255.0f,(float)(*(BYTE*)(buffer+i+2))/255.0f,1.0f);
-		i+=3;
-		break;
-	case MAT_SHININESS:
-		i+=6;
-		i+=2;
-		break;
-	case MAT_SHIN2PCT:
-		i+=6;
-		matPtr=model->material[0];
-		matPtr->shininess=(float)(*(WORD*)(buffer+i));
-		i+=2;
-		break;
-	case MAT_SHIN3PCT:
-		i+=6;
-		i+=2;
-		break;
-	case MAT_TEXMAP:
-		i+=8;
-		break;
-	case MAT_TEXFLNM:
-		matPtr=model->material[0];						
-		matPtr->diffuseTexture=Renderer::GetTextureManager().Create(buffer+i);		
-		i+=(DWORD)strlen(buffer+i)+1;
-		break;
-	default:	
-		i=len;
-		break;
-
+		WORD subId=*(WORD*)curPos;
+		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		curPos+=6;
+		if (subId==EDIT3DS)		
+			ReadEdit3dsChunk(subLen);		
+		else
+			curPos+=subLen;
 	}
-	while (i<len)
-		i+=ProcessChunk(buffer+i);
+}
+void M3dsLoader::ReadEdit3dsChunk(DWORD length)
+{
+	char *startPos=curPos;
+	while ((DWORD)(curPos-startPos)<length)
+	{
+		WORD subId=*(WORD*)curPos;
+		DWORD subLen=*(DWORD*)(curPos+2)-6;
+		curPos+=6;
+		if (subId==EDIT_OBJECT)		
+			ReadObjectChunk(subLen);		
+		else if (subId==EDIT_MATERIAL)		
+			ReadMaterialListChunk(subLen);		
+		else
+			curPos+=subLen;
+	}
+}
+void M3dsLoader::ReadObjectChunk(DWORD length)
+{
+	char *startPos=curPos;	
+	string name=curPos;
+	curPos+=name.size()+1;
+	
+	while ((DWORD)(curPos-startPos)<length)
+	{
+		WORD subId=*(WORD*)curPos;
+		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		curPos+=6;
+		if (subId==OBJ_TRIMESH)
+		{	
+			model->object.push_back(Object());
+			model->object.back().name=name;		
+			ReadTriMeshChunk(subLen);
+		}
+		else
+			curPos+=subLen;
+	}
+}
+void M3dsLoader::ReadTriMeshChunk(DWORD length)
+{
+	char *startPos=curPos;
+	while ((DWORD)(curPos-startPos)<length)
+	{
+		WORD subId=*(WORD*)curPos;
+		DWORD subLen=*(DWORD*)(curPos+2)-6;
+		curPos+=6;
+		if (subId==TRI_VERTEXLIST)
+			ReadVerticesListChunk();
+		else if (subId==TRI_FACELIST)
+			ReadFacesListChunk(subLen);
+		else if (subId==TRI_TEXCOORDLIST)
+			ReadTexCoordListChunk();
+		else if (subId==TRI_MATRIX)
+			ReadObjectMatrixChunk();
+		else
+			curPos+=subLen;
+	}
+}
+void M3dsLoader::ReadVerticesListChunk()
+{
+	Object &obj=model->object.back();
+	obj.vertex.resize(*(WORD*)curPos);
+	curPos+=2;
+	for (DWORD i=0;i<obj.vertex.size();i++)
+	{
+		obj.vertex[i].x=*(float*)curPos;
+		curPos+=4;
+		obj.vertex[i].z=-*(float*)curPos;
+		curPos+=4;
+		obj.vertex[i].y=*(float*)curPos;
+		curPos+=4;
+	}
+}
+void M3dsLoader::ReadFacesListChunk(DWORD length)
+{
+	Object &obj=model->object.back();
+	char *startPos=curPos;	
+	obj.face.resize(*(WORD*)curPos);
+	curPos+=2;
+	for (DWORD i=0;i<obj.face.size();i++)
+	{
+		for (DWORD j=0;j<3;j++)
+		{
+			obj.face[i].v[j]=*(WORD*)curPos;
+			curPos+=2;
+		}
+		curPos+=2;
+	}
+	while ((DWORD)(curPos-startPos)<length)
+	{
+		WORD subId=*(WORD*)curPos;
+		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		curPos+=6;
+		if (subId==TRI_MATERIAL)
+			ReadMaterialFaceList();
+		else			
+			curPos+=subLen;
+	}
+}
+void M3dsLoader::ReadTexCoordListChunk()
+{	
+	Object &obj=model->object.back();
+	obj.diffuseUV.resize(*(WORD*)curPos);
+	curPos+=2;
+	for (DWORD i=0;i<obj.diffuseUV.size();i++)
+	{
+		obj.diffuseUV[i].x=*(float*)curPos;
+		curPos+=4;
+		obj.diffuseUV[i].y=1.0f-*(float*)curPos;
+		curPos+=4;
+	}	
+}
+void M3dsLoader::ReadMaterialFaceList()
+{	
+	Object &obj=model->object.back();
+	string matName=curPos;
+	curPos+=matName.size()+1;
+	obj.mesh.push_back(Mesh());
+	Mesh &mesh=obj.mesh.back();		
+	meshMaterial.push_back(make_pair(make_pair(model->object.size()-1,obj.mesh.size()-1),matName));
+	WORD count=*(WORD*)curPos;
+	curPos+=2;
+	for (DWORD i=0;i<count;i++)
+	{
+		mesh.face.push_back(obj.face[*(WORD*)curPos]);
+		curPos+=2;
+	}	
+}
+void M3dsLoader::ReadObjectMatrixChunk()
+{
+	float *arr=(float*)curPos;
+	mat4 mat;
+	mat.m[0]=arr[0];
+	mat.m[4]=arr[1];
+	mat.m[8]=arr[2];
+	mat.m[12]=arr[3];
+	mat.m[1]=arr[4];
+	mat.m[5]=arr[5];
+	mat.m[9]=arr[6];
+	mat.m[13]=arr[7];
+	mat.m[2]=arr[8];
+	mat.m[6]=arr[9];
+	mat.m[10]=arr[10];
+	mat.m[14]=arr[11];
+	objectMatrix.push_back(make_pair(model->object.size()-1,mat));
+	curPos+=4*12;
+}
+void M3dsLoader::ReadMaterialListChunk(DWORD length)
+{
+	char *startPos=curPos;
 
-	return len;
+	while ((DWORD)(curPos-startPos)<length)
+	{
+		WORD subId=*(WORD*)curPos;
+		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		curPos+=6;
+		if (subId==MAT_NAME)
+			ReadMaterialNameChunk();
+		else if (subId==MAT_AMBIENT)
+			ReadMaterialColorChunk(subLen,curMaterial->ambient);
+		else if (subId==MAT_DIFFUSE)
+			ReadMaterialColorChunk(subLen,curMaterial->diffuse);
+		else if (subId==MAT_SPECULAR)
+			ReadMaterialColorChunk(subLen,curMaterial->specular);
+		else if (subId==MAT_TEXMAP)
+			ReadMaterialTexMapChunk(subLen,curMaterial->diffuseTexture);
+		else if (subId==MAT_SHININESS)
+			ReadMaterialShininessChunk(subLen,curMaterial->shininess);
+		else
+			curPos+=subLen;
+	}
+}
+void M3dsLoader::ReadMaterialNameChunk()
+{	
+	curMaterial=Material(new MaterialResource);
+	materials.push_back(curMaterial);
+	model->material.push_back(curMaterial);
+	curMaterial->name=curPos;
+	curPos+=curMaterial->name.size()+1;	
+}
+vec4 M3dsLoader::ReadColorFChunk()
+{
+	vec4 ret;
+	ret.x=*(float*)curPos;
+	curPos+=4;
+	ret.y=*(float*)curPos;
+	curPos+=4;
+	ret.z=*(float*)curPos;
+	curPos+=4;
+	return ret;
+}
+vec4 M3dsLoader::ReadColorBChunk()
+{
+	vec4 ret;
+	ret.x=(float)(*(unsigned char*)curPos)/255.0f;
+	curPos++;
+	ret.y=(float)(*(unsigned char*)curPos)/255.0f;
+	curPos++;
+	ret.z=(float)(*(unsigned char*)curPos)/255.0f;
+	curPos++;
+	return ret;
+}
+void M3dsLoader::ReadMaterialColorChunk(DWORD length,vec4 &color)
+{
+	char *startPos=curPos;
+	while ((DWORD)(curPos-startPos)<length)
+	{
+		WORD subId=*(WORD*)curPos;
+		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		curPos+=6;
+		if (subId==COL_RGB_B)
+			color=ReadColorBChunk();
+		else if (subId==COL_RGB_F)
+			color=ReadColorFChunk();
+		else
+			curPos+=subLen;
+	}
+}
+void M3dsLoader::ReadMaterialShininessChunk(DWORD length,float &shininess)
+{
+	char *startPos=curPos;
+	while ((DWORD)(curPos-startPos)<length)
+	{
+		WORD subId=*(WORD*)curPos;
+		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		curPos+=6;
+		if (subId==PERCENTAGE_B)
+			shininess=ReadPercentageBChunk();
+		else if (subId==PERCENTAGE_F)
+			shininess=ReadPercentageFChunk();
+		else
+			curPos+=subLen;
+	}
+}
+string M3dsLoader::ReadMapNameChunk()
+{
+	string ret=curPos;
+	curPos+=ret.size()+1;
+	return ret;
+}
+void M3dsLoader::ReadMaterialTexMapChunk(DWORD length,Texture &texture)
+{
+	char *startPos=curPos;
+	while ((DWORD)(curPos-startPos)<length)
+	{
+		WORD subId=*(WORD*)curPos;
+		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		curPos+=6;
+		if (subId==MAT_MAPNAME)					
+			texture=Renderer::GetTextureManager().Create(ReadMapNameChunk());		
+		else
+			curPos+=subLen;
+	}
+}
+Material M3dsLoader::GetMaterialByName(const string &name)
+{
+	vector<Material>::iterator i=materials.begin();
+	for (;i!=materials.end();i++)
+	{
+		if ((*i)->name==name)
+			return *i;
+	}
+	return Material();
+}
+float M3dsLoader::ReadPercentageBChunk()
+{
+	float ret=*(WORD*)curPos;
+	curPos+=2;
+	return ret;
+}
+float M3dsLoader::ReadPercentageFChunk()
+{
+	float ret=*(float*)curPos;
+	curPos+=4;
+	return ret;
 }

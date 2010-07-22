@@ -22,17 +22,24 @@ Application.cpp
 <font color="blue">#include</font> <font color="maroon">"GLee.h"</font>
 <font color="blue">#include</font> <font color="maroon">&#60;ft2build.h&#62;</font>
 <font color="blue">#include</font> FT_FREETYPE_H
-<font color="blue">#include</font> <font color="maroon">"FireCube.h"</font>
+
+<font color="blue">#include</font> <font color="maroon">"utils.h"</font>  
+<font color="blue">#include</font> <font color="maroon">"Logger.h"</font>
+<font color="blue">#include</font> <font color="maroon">"ResourceManager.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Timer.h"</font>
+<font color="blue">#include</font> <font color="maroon">"MyMath.h"</font> 
+<font color="blue">#include</font> <font color="maroon">"BoundingBox.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Texture.h"</font>        
+<font color="blue">#include</font> <font color="maroon">"Buffer.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Shaders.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Mesh.h"</font>   
+<font color="blue">#include</font> <font color="maroon">"FrameBuffer.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Font.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Renderer.h"</font>               
+<font color="blue">#include</font> <font color="maroon">"Application.h"</font>
+
 <font color="blue">using</font> <font color="blue">namespace</font> FireCube;
 
-<font color="blue">extern</font> <font color="maroon">"C"</font> <font color="black">{</font>
-<font color="blue">#include</font> <font color="maroon">"lua.h"</font>
-<font color="blue">#include</font> <font color="maroon">"lualib.h"</font>
-<font color="blue">#include</font> <font color="maroon">"lauxlib.h"</font>
-<font color="black">}</font>
-<font color="blue">#include</font> <font color="maroon">&#60;luabind/luabind.hpp&#62;</font>
-<font color="blue">#include</font> <font color="maroon">&#60;luabind/operator.hpp&#62;</font>
-<font color="blue">#include</font> <font color="maroon">&#60;luabind/object.hpp&#62;</font>
 
 <font color="blue">extern</font> <font color="blue">void</font> InitializeRenderer<font color="black">(</font><font color="black">)</font>;
 <font color="blue">extern</font> <font color="blue">void</font> DestroyRenderer<font color="black">(</font><font color="black">)</font>;

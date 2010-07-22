@@ -2,22 +2,48 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ColladaLoader", "ColladaLoader\ColladaLoader.vcxproj", "{ED3A1C56-0EA3-46A3-9D51-1909F4436219}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fboTest", "fboTest\fboTest.vcxproj", "{97AF73CA-DF0C-445A-8451-4C54108C059D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FireCube", "FireCube\FireCube.vcxproj", "{66AD911D-22A7-415E-A8E1-C746E779E0F7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FireCubeTest", "FireCubeTest\FireCubeTest.vcxproj", "{AF6EFDA6-3B19-4401-A2E6-B651291E110B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LuaBindings", "LuaBindings\LuaBindings.vcxproj", "{475834B8-F9CC-4A17-A56C-46170AB1E4B4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelViewer", "ModelViewer\ModelViewer.vcxproj", "{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsAttempt1", "PhysicsAttempt1\PhysicsAttempt1.vcxproj", "{117A3653-33B8-4159-8CDC-77EB1D8275A0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SceneGraph", "SceneGraph\SceneGraph.vcxproj", "{9660D4D1-A287-4B77-B67C-B6C6D56A41F3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Terrain", "Terrain\Terrain.vcxproj", "{C6A530C8-4558-4DC2-A79F-B7EE06C2D2B4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShadowMapping", "ShadowMapping\ShadowMapping.vcxproj", "{B69C902C-FDEF-49D2-8EB1-D629B352C82E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +87,10 @@ Global
 		{C6A530C8-4558-4DC2-A79F-B7EE06C2D2B4}.Debug|Win32.Build.0 = Debug|Win32
 		{C6A530C8-4558-4DC2-A79F-B7EE06C2D2B4}.Release|Win32.ActiveCfg = Release|Win32
 		{C6A530C8-4558-4DC2-A79F-B7EE06C2D2B4}.Release|Win32.Build.0 = Release|Win32
+		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug|Win32.Build.0 = Debug|Win32
+		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release|Win32.ActiveCfg = Release|Win32
+		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

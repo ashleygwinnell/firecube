@@ -11,6 +11,9 @@ Texture.h
 
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>push<font color="black">)</font>
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
+
+<font color="blue">namespace</font> FireCube
+<font color="black">{</font>
 <font color="blue">enum</font> TextureFilter
 <font color="black">{</font>
     NEAREST,LINEAR,MIPMAP
@@ -53,7 +56,7 @@ Texture.h
 
 <font color="blue">typedef</font> ResourceManager<font color="black">&#60;</font>TextureResource<font color="black">&#62;</font> TextureManager;
 <font color="blue">typedef</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>TextureResource<font color="black">&#62;</font> Texture;
-
+<font color="black">}</font>
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>pop<font color="black">)</font>
 <font color="blue">#endif</font>
 </PRE>

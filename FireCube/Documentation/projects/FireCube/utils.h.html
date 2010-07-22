@@ -8,6 +8,16 @@ utils.h
 <PRE>
 <font color="blue">#ifndef</font> UTIL_H
 <font color="blue">#define</font> UTIL_H
+
+<font color="blue">#ifdef</font> FIRECUBE_EXPORTS
+<font color="blue">#define</font> FIRECUBE_API __declspec<font color="black">(</font>dllexport<font color="black">)</font>
+<font color="blue">#else</font>
+<font color="blue">#define</font> FIRECUBE_API __declspec<font color="black">(</font>dllimport<font color="black">)</font>
+<font color="blue">#pragma</font> comment<font color="black">(</font>lib, <font color="maroon">"FireCube.lib"</font><font color="black">)</font>
+<font color="blue">#endif</font>
+
+<font color="blue">namespace</font> FireCube
+<font color="black">{</font>
 <font color="green">/**
 * Checks whether a given float is finite.
 */</font>
@@ -20,6 +30,7 @@ string FIRECUBE_API ToLower<font color="black">(</font><font color="blue">const<
 string FIRECUBE_API ToUpper<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
 string FIRECUBE_API GetFileName<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>file<font color="black">)</font>;
 <font color="blue">bool</font> FIRECUBE_API FileExists<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>file<font color="black">)</font>;
+<font color="black">}</font>;
 <font color="blue">#endif</font>
 </PRE>
 </BODY>

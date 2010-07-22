@@ -8,6 +8,9 @@ ResourceManager.h
 <PRE>
 <font color="blue">#ifndef</font> RESOURCE_MANAGER_H
 <font color="blue">#define</font> RESOURCE_MANAGER_H
+
+<font color="blue">namespace</font> FireCube
+<font color="black">{</font>
 <font color="green">/**
 * A templated class for a resource manager.&#60;br&#62;
 * Resources should define a bool Load(const string &) function to be usable.
@@ -102,6 +105,7 @@ ResourceManager.h
 <font color="blue">private</font><font color="black">:</font>
     map<font color="black">&#60;</font>string,boost<font color="black">:</font><font color="black">:</font>weak_ptr<font color="black">&#60;</font>T<font color="black">&#62;</font><font color="black">&#62;</font> resources;
 <font color="black">}</font>;
+<font color="black">}</font>
 <font color="blue">#endif</font>
 </PRE>
 </BODY>

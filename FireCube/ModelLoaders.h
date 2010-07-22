@@ -4,28 +4,53 @@
 #pragma warning(push)
 #pragma warning(disable:4251)
 
-#define PRIMARY 0x4d4d
-#define EDIT3DS 0x3d3d
-#define KEYF3DS 0xb000
+#define MAIN3DS       0x4D4D
 
-#define NAMED_OBJECT 0x4000
-#define OBJ_MESH 0x4100
-#define MESH_VERTICES 0x4110
-#define MESH_FACES 0x4120
-#define MESH_MATERIAL 0x4130
-#define MESH_TEX_VERT 0x4140
+//>------ Main Chunks
 
-#define MATERIAL 0xafff
-#define MAT_NAME 0xa000
-#define MAT_AMBIENT 0xa010
-#define MAT_DIFFUSE 0xa020
-#define MAT_SPECULAR 0xa030
-#define MAT_SHININESS 0xa040
-#define MAT_TEXMAP 0xa200
-#define MAT_TEXFLNM 0xa300
-#define MAT_SHIN2PCT 0xa041
-#define MAT_SHIN3PCT 0xa042
+#define EDIT3DS       0x3D3D  // this is the start of the editor config
 
+//>------ sub defines of EDIT3DS
+
+#define EDIT_MATERIAL 0xAFFF
+#define EDIT_OBJECT   0x4000
+
+//>------ sub defines of EDIT_OBJECT
+#define OBJ_TRIMESH   0x4100
+#define OBJ_LIGHT     0x4600
+#define OBJ_CAMERA    0x4700
+
+//>------ sub defines of OBJ_CAMERA
+#define CAM_UNKNWN01  0x4710 
+#define CAM_UNKNWN02  0x4720 
+
+//>------ sub defines of OBJ_LIGHT
+#define LIT_OFF       0x4620
+#define LIT_SPOT      0x4610
+#define LIT_UNKNWN01  0x465A
+
+//>------ sub defines of OBJ_TRIMESH
+#define TRI_VERTEXLIST   0x4110
+#define TRI_FACELIST    0x4120
+#define TRI_TEXCOORDLIST 0x4140
+#define TRI_SMOOTH    0x4150
+#define TRI_MATRIX     0x4160
+#define TRI_VISIBLE   0x4165
+#define TRI_MATERIAL  0x4130
+
+#define MAT_NAME 0xA000
+#define MAT_AMBIENT 0xA010
+#define MAT_DIFFUSE 0xA020
+#define MAT_SPECULAR 0xA030
+#define MAT_TEXMAP 0xA200
+#define MAT_MAPNAME 0xA300
+#define MAT_SHININESS 0xA040
+
+//>>------  these define the different color chunk types
+#define COL_RGB_F  0x0010
+#define COL_RGB_B  0x0011
+#define PERCENTAGE_B 0x0030	
+#define PERCENTAGE_F 0x0031
 namespace FireCube
 {
 class M3dsLoader
@@ -34,8 +59,33 @@ public:
 	M3dsLoader(ModelResource *model);
 	bool Load(const string &filename);
 private:
-	DWORD ProcessChunk(char *buffer);
+	void ReadMainChunk();
+	void ReadEdit3dsChunk(DWORD length);
+	void ReadObjectChunk(DWORD length);
+	void ReadTriMeshChunk(DWORD length);
+	void ReadVerticesListChunk();
+	void ReadFacesListChunk(DWORD length);
+	void ReadMaterialFaceList();
+	void ReadTexCoordListChunk();
+	void ReadObjectMatrixChunk();
+	void ReadMaterialListChunk(DWORD length);
+	void ReadMaterialNameChunk();
+	void ReadMaterialColorChunk(DWORD length,vec4 &color);
+	void ReadMaterialTexMapChunk(DWORD length,Texture &texture);
+	void ReadMaterialShininessChunk(DWORD length,float &shininess);
+	string ReadMapNameChunk();
+	vec4 ReadColorFChunk();
+	vec4 ReadColorBChunk();
+	float ReadPercentageBChunk();
+	float ReadPercentageFChunk();
+	Material GetMaterialByName(const string &name);
 	ModelResource *model;
+	vector<char> buffer;
+	Material curMaterial;
+	vector<Material> materials;	
+	vector<pair<pair<DWORD,DWORD>,string>> meshMaterial;
+	vector<pair<DWORD,mat4>> objectMatrix;
+	char *curPos;
 };
 
 class ColladaLoader

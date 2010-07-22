@@ -8,6 +8,9 @@ mat3.h
 <PRE>
 <font color="blue">#ifndef</font> MAT3_H
 <font color="blue">#define</font> MAT3_H
+
+<font color="blue">namespace</font> FireCube
+<font color="black">{</font>
 <font color="blue">static</font> <font color="blue">inline</font> vec3 proj<font color="black">(</font><font color="blue">const</font> vec3 <font color="black">&</font> v1, <font color="blue">const</font> vec3 <font color="black">&</font> v2<font color="black">)</font>;
 <font color="green">/**
 * A 3x3 matrix.
@@ -115,7 +118,7 @@ mat3 FIRECUBE_API <font color="blue">operator</font><font color="black">*</font>
 mat3 FIRECUBE_API <font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font>a,<font color="blue">const</font> mat3 <font color="black">&</font>b<font color="black">)</font>;
 vec3 FIRECUBE_API <font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">const</font> mat3 <font color="black">&</font>a,<font color="blue">const</font> vec3 <font color="black">&</font>b<font color="black">)</font>;
 vec3 FIRECUBE_API <font color="blue">operator</font><font color="black">*</font><font color="black">(</font><font color="blue">const</font> vec3 <font color="black">&</font>a,<font color="blue">const</font> mat3 <font color="black">&</font>b<font color="black">)</font>;
-
+<font color="black">}</font>
 <font color="blue">#endif</font>
 </PRE>
 </BODY>
