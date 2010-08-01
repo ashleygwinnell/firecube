@@ -28,7 +28,8 @@ bool App::Init()
 {
 	Application::AddSearchPath("../Media/Textures");
 	SetTitle(string("Shadow Mapping Test Application"));	
-	model=app.modelManager.Create("../Media/Models/scene.3ds");	
+	node=LoadMesh("../Media/Models/scene.3ds");	
+	node.SetLighting(false);
 	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
 	plain=Program(new ProgramResource);
 	shadowMap=Program(new ProgramResource);
@@ -69,14 +70,13 @@ void App::RenderShadowMap()
 	SetupLight();
 	glPolygonOffset(1.3f,0.0f);
 	glEnable(GL_POLYGON_OFFSET_FILL);
-	Renderer::UseFrameBuffer(fb);
-	Renderer::SetGlobalProgram(plain);
+	Renderer::UseFrameBuffer(fb);	
+	node.SetProgram(plain);
 	Renderer::Clear(vec4(0.0f,0.0f,0.0f,1.0f),1.0f);
 	Renderer::SetProjectionMatrix(lightProj);
 	Renderer::SetModelViewMatrix(lightModelview);
 	Renderer::UseProgram(Program(new ProgramResource));
-	Renderer::Render(app.model);
-	Renderer::SetGlobalProgram(Program());	
+	Renderer::Render(app.node);	
 	glDisable(GL_POLYGON_OFFSET_FILL);	
 }
 void App::Render(float t)
@@ -92,11 +92,11 @@ void App::Render(float t)
 	m.RotateX(rot.x);
 	m.RotateY(rot.y);		
 	Renderer::SetModelViewMatrix(m);		
-	Renderer::SetGlobalProgram(shadowMap);	
+	node.SetProgram(shadowMap);
+	Renderer::UseProgram(shadowMap);	
 	shadowMap->SetUniform("shadowMap",1);	
 	Renderer::UseTexture(fb->GetDepthBuffer(),1);
-	Renderer::Render(app.model);
-	Renderer::SetGlobalProgram(Program());	
+	Renderer::Render(app.node);	
 	Renderer::SetModelViewMatrix(mat4());
 	Renderer::SetOrthographicProjection();
 	RenderDepth();
@@ -106,7 +106,7 @@ void App::Render(float t)
 }
 void App::HandleInput(float t)
 {
-	POINT p;
+	::POINT p;
 	vec3 m;	
 	GetCursorPos(&p);	
 	m.x=(float)p.x;

@@ -49,7 +49,7 @@ void MyMainFrame::MenuItem3Clicked( wxCommandEvent& event )
 		return;
 	fcApp->vshader=FireCube::Renderer::GetShaderManager().Create(sfile);
 	fcApp->program->Create(fcApp->vshader,fcApp->fshader);
-	fcApp->model->SetProgram(fcApp->program);
+	fcApp->root.SetProgram(fcApp->program);
 }
 void MyMainFrame::MenuItem4Clicked( wxCommandEvent& event )
 {	
@@ -61,7 +61,7 @@ void MyMainFrame::MenuItem4Clicked( wxCommandEvent& event )
 		return;
 	fcApp->fshader=FireCube::Renderer::GetShaderManager().Create(sfile);
 	fcApp->program->Create(fcApp->vshader,fcApp->fshader);
-	fcApp->model->SetProgram(fcApp->program);
+	fcApp->root.SetProgram(fcApp->program);
 }
 void MyMainFrame::CheckBox2Clicked( wxCommandEvent& event )
 {

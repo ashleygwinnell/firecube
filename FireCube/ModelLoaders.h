@@ -56,8 +56,25 @@ namespace FireCube
 class M3dsLoader
 {
 public:
-	M3dsLoader(ModelResource *model);
+	class Mesh
+	{
+	public:
+		Material material;
+		vector<Face> face;
+	};
+	class Object
+	{
+	public:
+		string name;
+		vector<vec3> vertex;
+		vector<Face> face;
+		vector<vec2> uv;
+		vector<Mesh> mesh;
+	};
+
+	M3dsLoader();
 	bool Load(const string &filename);
+	Node GenerateSceneGraph();
 private:
 	void ReadMainChunk();
 	void ReadEdit3dsChunk(DWORD length);
@@ -79,12 +96,12 @@ private:
 	float ReadPercentageBChunk();
 	float ReadPercentageFChunk();
 	Material GetMaterialByName(const string &name);
-	ModelResource *model;
 	vector<char> buffer;
 	Material curMaterial;
 	vector<Material> materials;	
 	vector<pair<pair<DWORD,DWORD>,string>> meshMaterial;
 	vector<pair<DWORD,mat4>> objectMatrix;
+	vector<Object> object;
 	char *curPos;
 };
 
@@ -278,10 +295,14 @@ public:
 	void ReadScene(TiXmlNode *parent);
 	void ReadTransformation(TiXmlNode *parent,Node *node);
 	mat4 CalculateTranformation(vector<Transform> &transformations);
+	vec3 GetTranslation(vector<Transform> &transformations);
+	vec3 GetRotation(vector<Transform> &transformations);
+	vec3 GetScale(vector<Transform> &transformations);
+	mat4 GetTransformMatrix(vector<Transform> &transformations);
 	void DeleteNodes(Node *node);
 	void ApplySemanticMapping(Sampler &sampler,SemanticMapping &table);
-	void GenerateModel(ModelResource *model);
-	void GenerateModel(ModelResource *model,Node *node,mat4 transform);
+	FireCube::Node GenerateSceneGraph(Node *node);
+	FireCube::Node GenerateSceneGraph();
 	InputType SemanticToInputType(const string &semantic);
 	template <typename Type> 
 	Type& ResolveLibraryReference( std::map<std::string, Type>& pLibrary, const std::string& pURL)

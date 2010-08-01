@@ -22,13 +22,17 @@ using namespace std;
 #include "Texture.h"		
 #include "Buffer.h"
 #include "Shaders.h"
-#include "Mesh.h"	
+#include "Geometry.h"	
 #include "FrameBuffer.h"
 #include "Image.h"
 #include "Font.h"
-#include "Renderer.h"				
+#include "ShaderGenerator.h"
+#include "Renderer.h"	
 #include "Application.h"
 #include "privateFont.h"
+#include "Light.h"
+#include "Node.h"
+
 using namespace FireCube;
 Program textShader;
 Buffer textVertexBuffer;
@@ -36,6 +40,7 @@ Buffer textUvBuffer;
 TextureManager *currentTextureManager=NULL;
 ShaderManager *currentShaderManager=NULL;
 FontManager *currentFontManager=NULL;
+ShaderGenerator *currentShaderGenerator=NULL;
 Program globalProgram;
 ShaderResource::ShaderResource() : id(0)
 {	
@@ -292,34 +297,30 @@ void Renderer::SetProjectionMatrix(mat4 &m)
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(m.m);
 }
-void Renderer::Render(Model model)
+void FIRECUBE_API Renderer::Render(Geometry geometry)
 {
-	if (!model)
+	if (!geometry)
 		return;
 
-	vector<Object>::iterator i=model->object.begin();	
-	
-	for (;i!=model->object.end();i++)
-	{	
-		vector<Mesh>::iterator j=i->mesh.begin();
-		if (i->vertexBuffer)
-			i->vertexBuffer->SetVertexStream(3);		
-		if ((i->diffuseUVBuffer) && (i->diffuseUVBuffer->IsValid()))
-				i->diffuseUVBuffer->SetTexCoordStream(0);
-			else
-				Renderer::DisableTexCoordStream(0);
-		if (i->normalBuffer)
-			i->normalBuffer->SetNormalStream();
-		else
-			Renderer::DisableNormalStream();
-		for (;j!=i->mesh.end();j++)
-		{
-			UseMaterial(j->material);
-			if (j->indexBuffer)
-				j->indexBuffer->SetIndexStream();
-			RenderIndexStream(TRIANGLES,j->face.size()*3);			
-		}
+	vector<Surface>::iterator i=geometry->surface.begin();
+	if (geometry->vertexBuffer)
+		geometry->vertexBuffer->SetVertexStream(3);
+	if (geometry->diffuseUVBuffer)
+		geometry->diffuseUVBuffer->SetTexCoordStream(0);
+	else
+		Renderer::DisableTexCoordStream(0);
+	if (geometry->normalBuffer)
+		geometry->normalBuffer->SetNormalStream();
+	else
+		Renderer::DisableNormalStream();
+	for (;i!=geometry->surface.end();i++)
+	{
+		Renderer::UseMaterial(i->material);
+		if (i->indexBuffer)
+			i->indexBuffer->SetIndexStream();
+		Renderer::RenderIndexStream(TRIANGLES,i->face.size()*3);
 	}
+
 }
 void Renderer::SaveModelViewMatrix()
 {
@@ -500,12 +501,7 @@ void Renderer::UseMaterial(Material material)
 	if ((material->diffuseTexture) && (material->diffuseTexture->IsValid()))
 	{
 		UseTexture(material->diffuseTexture,0);
-	}
-	if ((material->program) && (material->program->IsValid()))
-	{
-		UseProgram(material->program);
-		material->program->SetUniform("diffuseMap",0);
-	}
+	}	
 }
 void Renderer::SetPerspectiveProjection(float fov,float zNear,float zFar)
 {
@@ -547,6 +543,14 @@ void InitializeRenderer()
 									gl_FragColor = vec4(textColor.r,textColor.g,textColor.b,textColor.a*alpha);  \
 									} ");
 	textShader->Create(vShader,fShader);		
+}
+void FIRECUBE_API Renderer::SetShaderGenerator(ShaderGenerator &shaderGenerator)
+{
+	currentShaderGenerator=&shaderGenerator;
+}
+ShaderGenerator FIRECUBE_API &Renderer::GetShaderGenerator()
+{
+	return *currentShaderGenerator;
 }
 void Renderer::SetTextureManager(TextureManager &textureManager)
 {
@@ -620,4 +624,183 @@ void Renderer::DisableTexCoordStream(DWORD unit)
 void Renderer::DisableNormalStream()
 {
 	glDisableClientState(GL_NORMAL_ARRAY);
+}
+void RenderNode(Node node,vector<pair<mat4,pair<Node,Geometry>>> &renderingQueue,vector<pair<mat4,Light>> &activeLights)
+{
+	if (node.Parent())
+		node.SetWorldTransformation(node.Parent().GetWorldTransformation()*node.GetLocalTransformation());
+	else
+		node.SetWorldTransformation(node.GetLocalTransformation());
+	for (vector<Geometry>::iterator i=node.GetGeometries().begin();i!=node.GetGeometries().end();i++)
+	{		
+		renderingQueue.push_back(make_pair(node.GetWorldTransformation(),make_pair(node,*i)));
+	}
+	for (vector<Light>::iterator i=node.GetLights().begin();i!=node.GetLights().end();i++)
+	{		
+		activeLights.push_back(make_pair(node.GetWorldTransformation(),*i));
+	}
+	for (vector<Node>::iterator i=node.GetChildren().begin();i!=node.GetChildren().end();i++)
+		RenderNode(*i,renderingQueue,activeLights);
+}
+void FIRECUBE_API Renderer::Render(Node node)
+{
+	vector<pair<mat4,pair<Node,Geometry>>> renderingQueue;
+	vector<pair<mat4,Light>> activeLights;	
+	bool firstPass=true;
+	//root->Render();
+	RenderNode(node,renderingQueue,activeLights);
+	vector<pair<mat4,Light>>::iterator i;
+	vector<pair<mat4,pair<Node,Geometry>>>::iterator j;
+	glEnable(GL_BLEND);
+
+	for (i=activeLights.begin();i!=activeLights.end();i++)
+	{				
+		if (firstPass)
+		{
+			glDepthFunc(GL_LESS);
+			glBlendFunc(GL_ONE,GL_ZERO);
+			glDepthMask(true);
+		}
+		else
+		{
+			glDepthFunc(GL_LEQUAL);
+			glBlendFunc(GL_ONE,GL_ONE);
+			glDepthMask(false);
+		}
+		firstPass=false;
+		for (j=renderingQueue.begin();j!=renderingQueue.end();j++)
+		{
+			Geometry geometry=j->second.second;
+			Node node=j->second.first;
+			mat4 transformation=j->first;				
+			if (node.GetRenderParameters().lighting)
+			{							
+				Renderer::SaveModelViewMatrix();
+				Renderer::MultiplyModelViewMatrix(transformation);
+				//Renderer::Render(geometry);
+
+				vector<Surface>::iterator k=geometry->surface.begin();
+				if (geometry->vertexBuffer)
+					geometry->vertexBuffer->SetVertexStream(3);
+				if (geometry->diffuseUVBuffer)
+					geometry->diffuseUVBuffer->SetTexCoordStream(0);
+				else
+					Renderer::DisableTexCoordStream(0);
+				if (geometry->normalBuffer)
+					geometry->normalBuffer->SetNormalStream();
+				else
+					Renderer::DisableNormalStream();
+				for (;k!=geometry->surface.end();k++)
+				{
+					Program p;
+					Renderer::UseMaterial(k->material);
+					if (node.GetProgram() && node.GetProgram()->IsValid())
+						p=node.GetProgram();
+					else
+					{
+						RenderState rs;
+						rs.FromMaterial(k->material);
+						if (node.GetRenderParameters().lighting)
+						{
+							if (i->second->type==DIRECTIONAL)
+								rs.SetDirectionalLighting(true);				
+							else if (i->second->type==POINT)
+								rs.SetPointLighting(true);
+						}
+
+						rs.SetFog(node.GetRenderParameters().fog);
+						p=Renderer::GetShaderGenerator().GenerateProgram(rs);					
+						Renderer::UseProgram(p);
+						if (node.GetRenderParameters().lighting)
+						{					
+							if (i->second->type==DIRECTIONAL)
+							{
+								p->SetUniform("directionalLightDir",vec3(0,0,1).TransformNormal(i->first));
+								p->SetUniform("lightAmbient",i->second->ambientColor);
+								p->SetUniform("lightDiffuse",i->second->diffuseColor);
+								p->SetUniform("lightSpecular",i->second->specularColor);								
+							}
+							else if (i->second->type==POINT)
+							{
+								p->SetUniform("lightPosition",vec3(0,0,0) * i->first);
+								p->SetUniform("lightAmbient",i->second->ambientColor);
+								p->SetUniform("lightDiffuse",i->second->diffuseColor);
+								p->SetUniform("lightSpecular",i->second->specularColor);								
+							}
+						}
+						if (node.GetRenderParameters().fog)
+						{
+							p->SetUniform("fogColor",node.GetRenderParameters().fogColor);
+							p->SetUniform("fogDensity",node.GetRenderParameters().fogDensity);
+						}	
+					}
+					Renderer::UseProgram(p);				
+					if (k->material->diffuseTexture)
+						p->SetUniform("diffuseMap",0);
+					if (k->indexBuffer)
+						k->indexBuffer->SetIndexStream();
+					Renderer::RenderIndexStream(TRIANGLES,k->face.size()*3);
+					
+				}
+				Renderer::RestoreModelViewMatrix();
+			}
+		}
+	}
+	glDepthMask(true);
+	glDisable(GL_BLEND);
+	for (j=renderingQueue.begin();j!=renderingQueue.end();j++)
+	{
+		Geometry geometry=j->second.second;
+		Node node=j->second.first;
+		mat4 transformation=j->first;								
+		if (!node.GetRenderParameters().lighting)
+		{			
+			Renderer::SaveModelViewMatrix();
+			Renderer::MultiplyModelViewMatrix(transformation);			
+			//Renderer::Render(geometry);
+
+			vector<Surface>::iterator k=geometry->surface.begin();
+			if (geometry->vertexBuffer)
+				geometry->vertexBuffer->SetVertexStream(3);
+			if (geometry->diffuseUVBuffer)
+				geometry->diffuseUVBuffer->SetTexCoordStream(0);
+			else
+				Renderer::DisableTexCoordStream(0);
+			if (geometry->normalBuffer)
+				geometry->normalBuffer->SetNormalStream();
+			else
+				Renderer::DisableNormalStream();
+			for (;k!=geometry->surface.end();k++)
+			{
+				Program p;
+				Renderer::UseMaterial(k->material);
+				if (node.GetProgram() && node.GetProgram()->IsValid())
+					p=node.GetProgram();
+				else
+				{
+					RenderState rs;
+					rs.FromMaterial(k->material);					
+
+					rs.SetFog(node.GetRenderParameters().fog);
+					rs.SetDirectionalLighting(false);
+					rs.SetPointLighting(false);
+					p=Renderer::GetShaderGenerator().GenerateProgram(rs);					
+					Renderer::UseProgram(p);					
+					if (node.GetRenderParameters().fog)
+					{
+						p->SetUniform("fogColor",node.GetRenderParameters().fogColor);
+						p->SetUniform("fogDensity",node.GetRenderParameters().fogDensity);
+					}	
+				}
+				Renderer::UseProgram(p);				
+				if (k->material->diffuseTexture)
+					p->SetUniform("diffuseMap",0);
+
+				if (k->indexBuffer)
+					k->indexBuffer->SetIndexStream();				
+				Renderer::RenderIndexStream(TRIANGLES,k->face.size()*3);
+			}	
+			Renderer::RestoreModelViewMatrix();
+		}
+	}
 }

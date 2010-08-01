@@ -108,7 +108,7 @@ RigidBody::RigidBody()
 	mass=1.0f;
 	invMass=1.0f/mass;
 }
-void RigidBody::Init(Model m,CollisionShape *cs)
+void RigidBody::Init(Node m,CollisionShape *cs)
 {
 	model=m;
 	collisionShape=cs;

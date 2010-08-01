@@ -33,12 +33,13 @@ VECTOR_GET(float)
 VECTOR_GET(int)
 VECTOR_GET(DWORD)
 VECTOR_GET(Face)
-VECTOR_GET(Mesh)
+VECTOR_GET(Surface)
 VECTOR_GET(Buffer)
 VECTOR_GET_NAMED(vector<vec2>,get_vector_vector_vec2)
-VECTOR_GET(Object)
+VECTOR_GET(Node)
 VECTOR_GET(Material)
-
+VECTOR_GET(Geometry)
+VECTOR_GET(Light)
 
 VECTOR_SET(vec4)
 VECTOR_SET(vec3)
@@ -47,11 +48,13 @@ VECTOR_SET(float)
 VECTOR_SET(int)
 VECTOR_SET(DWORD)
 VECTOR_SET(Face)
-VECTOR_SET(Mesh)
+VECTOR_SET(Surface)
 VECTOR_SET(Buffer)
 VECTOR_SET_NAMED(vector<vec2>,set_vector_vector_vec2)
-VECTOR_SET(Object)
+VECTOR_SET(Node)
 VECTOR_SET(Material)
+VECTOR_SET(Geometry)
+VECTOR_SET(Light)
 
 #define LUABIND_VECTOR_NAMED(t,name,setfunction,getfunction) \
 	luabind::class_<vector<t> >(name)	\
@@ -91,12 +94,13 @@ void InitializeLuaStd(lua_State *L)
 		LUABIND_VECTOR(float,"vector_float"),
 		LUABIND_VECTOR(int,"vector_int"),
 		LUABIND_VECTOR(DWORD,"vector_uint"),
-
+		LUABIND_VECTOR(Node,"vector_Node"),
 		LUABIND_VECTOR(Face,"vector_Face"),
-		LUABIND_VECTOR(Mesh,"vector_Mesh"),
+		LUABIND_VECTOR(Surface,"vector_Surface"),
+		LUABIND_VECTOR(Geometry,"vector_Geometry"),
 		LUABIND_VECTOR(Buffer,"vector_Buffer"),
-		LUABIND_VECTOR_NAMED(vector<vec2>,"vector_vector_vec2",set_vector_vector_vec2,get_vector_vector_vec2),
-		LUABIND_VECTOR(Object,"vector_Object"),
+		LUABIND_VECTOR(Light,"vector_Light"),
+		LUABIND_VECTOR_NAMED(vector<vec2>,"vector_vector_vec2",set_vector_vector_vec2,get_vector_vector_vec2),		
 		LUABIND_VECTOR(Material,"vector_Material")
 	];
 }

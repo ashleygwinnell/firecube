@@ -13,6 +13,7 @@ public:
 private:
 	QuadTree quadtree;
 	Material material;
+	Program program;
 	Texture diffuseTexture;
 	vec3 terrainScale;
 	Image heightmapImage;

@@ -8,9 +8,8 @@ public:
 	void RenderShadowMap();
 	void RenderDepth();
 	bool Init();
-	FrameBuffer fb;
-	ModelManager modelManager;
-	Model model;	
+	FrameBuffer fb;	
+	Node node;	
 	Font font;	
 	Program plain,shadowMap,program;
 	mat4 lightProj,lightModelview;

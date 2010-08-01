@@ -111,9 +111,8 @@ void MyGLCanvas::Render()
 	else
 		glDisable(GL_CULL_FACE);
 	
-	glPolygonMode(GL_FRONT_AND_BACK,renderingMode);
-
-	FireCube::Renderer::Render(fcApp->model);	
+	glPolygonMode(GL_FRONT_AND_BACK,renderingMode);	
+	FireCube::Renderer::Render(fcApp->root);	
 	if (renderNormals)
 	{
 		FireCube::Renderer::UseProgram(fcApp->plainColorProgram);

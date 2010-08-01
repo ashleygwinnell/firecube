@@ -38,9 +38,11 @@ bool App::Init()
 	program->Create(Renderer::GetShaderManager().Create("diffuseWithFog.vshader"),Renderer::GetShaderManager().Create("diffuseWithFog.fshader"));
 	if (!terrain.GenerateTerrain("../Media/Textures/heightmap.bmp","../Media/Textures/diffuse.bmp",vec3(512.0f,50.0f,512.0f),vec2(1.0f,1.0f)))
 		return false;
-	model=mm.Create("../Media/Models/teapot.3ds");
-	model->CreateHardNormals();
-	model->SetProgram(program);
+	node=LoadMesh("../Media/Models/teapot.3ds");
+	node.Move(vec3(5,5,5));
+	node.CreateHardNormals();
+	node.SetLighting(false);
+	node.SetProgram(program);
 	return true;
 }
 void App::Update(float time)
@@ -59,8 +61,6 @@ void App::Update(float time)
 }
 void App::Render(float time)
 {
-	static float lAng=0.0f;
-	lAng+=0.01f;
 	Renderer::SetPerspectiveProjection(60.0f,0.1f,200.0f);
 	Renderer::Clear(vec4(0.30f,0.42f,0.95f,1.0f),1.0f);
 	mat4 t;
@@ -77,13 +77,8 @@ void App::Render(float time)
 	frustum.ExtractFrustum();
 	DWORD n=terrain.Render(frustum);
 	
-	mat4 tt;
-	tt.Translate(vec3(5,5,5));
-	tt.RotateX(lAng);
-	Renderer::SaveModelViewMatrix();
-	Renderer::MultiplyModelViewMatrix(tt);
-	Renderer::Render(model);
-	Renderer::RestoreModelViewMatrix();
+	node.Rotate(vec3(0.01f,0,0));
+	Renderer::Render(node);	
 		
 	Renderer::SetOrthographicProjection();
 	Renderer::SetModelViewMatrix(mat4());
@@ -96,7 +91,7 @@ void App::Render(float time)
 void App::HandleInput(float time)
 {
 	static vec2 lastPos;
-	POINT p;
+	::POINT p;
 	GetCursorPos(&p);
 	vec2 curPos((float)p.x,(float)p.y);
 	if (GetAsyncKeyState(1))

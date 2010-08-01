@@ -15,6 +15,7 @@ Renderer.h
 <font color="blue">namespace</font> FireCube
 <font color="black">{</font>
 <font color="blue">class</font> Application;
+<font color="blue">class</font> Node;
 <font color="green">/**
 * A namespace containing various functions responsible for the rendering pipeline.
 */</font>
@@ -27,10 +28,15 @@ Renderer.h
     */</font>
     <font color="blue">void</font> FIRECUBE_API Clear<font color="black">(</font>vec4 color,<font color="blue">float</font> depth<font color="black">)</font>;
     <font color="green">/**
-    * Renders a model.
+    * Renders a geometry.
     * @param model The model to render.
     */</font>
-    <font color="blue">void</font> FIRECUBE_API Render<font color="black">(</font>Model model<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API Render<font color="black">(</font>Geometry geometry<font color="black">)</font>;
+    <font color="green">/**
+    * Renders a scene node.
+    * @param model The model to render.
+    */</font>
+    <font color="blue">void</font> FIRECUBE_API Render<font color="black">(</font>Node node<font color="black">)</font>;
     <font color="green">/**
     * Sets the current modelview matrix.
     */</font>
@@ -144,6 +150,14 @@ Renderer.h
     * Sets an orthographic projection with a one to one pixel ratio.    
     */</font>
     <font color="blue">void</font> FIRECUBE_API SetOrthographicProjection<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Sets the current shader generator.
+    */</font>
+    <font color="blue">void</font> FIRECUBE_API SetShaderGenerator<font color="black">(</font>ShaderGenerator <font color="black">&</font>shaderGenerator<font color="black">)</font>;
+    <font color="green">/**
+    * Gets the current shader generator.
+    */</font>
+    ShaderGenerator FIRECUBE_API <font color="black">&</font>GetShaderGenerator<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
     * Sets the current texture manager.
     */</font>

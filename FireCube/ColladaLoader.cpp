@@ -19,14 +19,16 @@ using namespace std;
 #include "Texture.h"		
 #include "Buffer.h"
 #include "Shaders.h"
-#include "Mesh.h"	
+#include "Geometry.h"	
 #include "FrameBuffer.h"
 #include "Font.h"
+#include "ShaderGenerator.h"
 #include "Renderer.h"				
 #include "Application.h"
 #include "tinyxml.h"
+#include "Light.h"
+#include "Node.h"
 #include "ModelLoaders.h"
-
 using namespace FireCube;
 
 
@@ -978,6 +980,91 @@ mat4 ColladaLoader::CalculateTranformation(vector<Transform> &transformations)
 	}
 	return ret;
 }
+vec3 ColladaLoader::GetTranslation(vector<Transform> &transformations)
+{
+	vec3 ret(0,0,0);
+	for (unsigned int i=0;i<transformations.size();i++)
+	{
+		Transform &t=transformations[i];
+		if (t.type==TRANSFORM_TRANSLATE)
+		{			
+			ret+=vec3(t.v[0],t.v[1],t.v[2]);			
+		}		
+	}
+	return ret;
+}
+vec3 ColladaLoader::GetRotation(vector<Transform> &transformations)
+{
+	vec3 ret(0,0,0);
+	for (unsigned int i=0;i<transformations.size();i++)
+	{
+		Transform &t=transformations[i];		
+		if (t.type==TRANSFORM_ROTATE)
+		{			
+			float angle=(float)(-t.v[3]/180.0f*PI);			
+			float c=cos(angle), s=sin(angle);
+			float tt=1-c;
+			float tx=tt*t.v[0];
+			float ty=tt*t.v[1];
+			float a11=tx*t.v[0]+c, a21=tx*t.v[1]+s*t.v[2], a31=tx*t.v[2]-s*t.v[1];
+			float a12=tx*t.v[1]-s*t.v[2], a22=ty*t.v[1]+c, a32=ty*t.v[2]+s*t.v[0];
+			float a13=tx*t.v[2]+s*t.v[1], a23=ty*t.v[2]-s*t.v[0], a33=tt*t.v[2]*t.v[2]+c;
+
+			float angle_x,angle_y,angle_z;
+			angle_y = asin(-a31);
+			a31=cos(angle_y);
+			if ( a31>1e-15 || -a31<-1e-15 ) {
+				angle_x = atan2(a32, a33);
+				angle_z = atan2(a21, a11);
+			} else {
+				angle_x = atan2(a12, a22);
+				angle_z = 0;
+			}
+			ret+=vec3(angle_x,angle_y,angle_z);
+		}		
+	}
+	return ret;
+}
+vec3 ColladaLoader::GetScale(vector<Transform> &transformations)
+{
+	vec3 ret(1,1,1);
+	for (unsigned int i=0;i<transformations.size();i++)
+	{
+		Transform &t=transformations[i];
+		if (t.type==TRANSFORM_SCALE)
+		{					
+			ret.x*=t.v[0];
+			ret.y*=t.v[1];
+			ret.z*=t.v[2];			
+		}		
+	}
+	return ret;
+}
+mat4 ColladaLoader::GetTransformMatrix(vector<Transform> &transformations)
+{
+	mat4 ret;
+	for (unsigned int i=0;i<transformations.size();i++)
+	{
+		Transform &t=transformations[i];
+		mat4 temp;
+		if (t.type==TRANSFORM_MATRIX)
+		{						
+			for (unsigned int j=0;j<16;j++)
+				temp.m[j]=t.v[j];			
+			ret*=temp;
+		}
+		else if (t.type==TRANSFORM_LOOKAT)
+		{			
+			vec3 pos(t.v[0],t.v[1],t.v[2]);
+			vec3 dst(t.v[3],t.v[4],t.v[5]);
+			vec3 up(t.v[6],t.v[7],t.v[8]);
+			up.Normalize();
+			temp.LookAt(pos,dst,up);
+			ret*=temp;
+		}
+	}
+	return ret;
+}
 void ColladaLoader::ApplySemanticMapping(Sampler &sampler,SemanticMapping &table)
 {
 	map<string,InputSemanticEntry>::iterator iter=table.inputMap.find(sampler.uvCoords);
@@ -1024,13 +1111,17 @@ string ColladaLoader::FixFileName(string &filename)
 	}
 	return file;
 }
-void ColladaLoader::GenerateModel(ModelResource *model)
-{	
-	GenerateModel(model,root,mat4());
-}
-void ColladaLoader::GenerateModel(ModelResource *model,Node *node,mat4 transform)
+FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
 {
-	mat4 transformation=transform*CalculateTranformation(node->transformations);
+	FireCube::Node ret(node->name);
+	vec3 translation=GetTranslation(node->transformations);
+	vec3 rotation=GetRotation(node->transformations);
+	vec3 scale=GetScale(node->transformations);
+	mat4 transformation=GetTransformMatrix(node->transformations);
+	ret.SetTranslation(translation);
+	ret.SetRotation(rotation);
+	ret.SetScale(scale);
+	ret.SetMatrixTransformation(transformation);
 	for (unsigned int i=0;i<node->geometryInstances.size();i++)
 	{
 		GeometryInstance &gi=node->geometryInstances[i];
@@ -1039,38 +1130,38 @@ void ColladaLoader::GenerateModel(ModelResource *model,Node *node,mat4 transform
 			continue;
 		Geometry &geom=iter->second;
 		Mesh &mesh=geom.mesh;
-		model->object.push_back(Object());
-		Object &object=model->object.back();
-		object.vertex=mesh.vertices;
-		for (unsigned int j=0;j<object.vertex.size();j++)
+		FireCube::Geometry geometry(new GeometryResource);
+		ret.AddGeometry(geometry);
+		geometry->vertex=mesh.vertices;
+		for (unsigned int j=0;j<geometry->vertex.size();j++)
 		{
-			object.vertex[j]=object.vertex[j]*transformation;
+			//geometry->vertex[j]=geometry->vertex[j]*transformation;
 			if (upDirection==X_UP)
 			{
-				std::swap(object.vertex[j].x,object.vertex[j].y);
-				object.vertex[j].x*=-1;
+				std::swap(geometry->vertex[j].x,geometry->vertex[j].y);
+				geometry->vertex[j].x*=-1;
 			}
 			else if (upDirection==Z_UP)
 			{
-				std::swap(object.vertex[j].y,object.vertex[j].z);
-				object.vertex[j].z*=-1;
+				std::swap(geometry->vertex[j].y,geometry->vertex[j].z);
+				geometry->vertex[j].z*=-1;
 			}
 		}
-		object.normal=mesh.normals;
-		for (unsigned int j=0;j<object.normal.size();j++)
+		geometry->normal=mesh.normals;
+		for (unsigned int j=0;j<geometry->normal.size();j++)
 		{
-			object.normal[j]=object.normal[j].TransformNormal(transformation);
+			//geometry->normal[j]=geometry->normal[j].TransformNormal(transformation);
 			if (upDirection==X_UP)
 			{
-				std::swap(object.normal[j].x,object.normal[j].y);
-				object.normal[j].x*=-1;
+				std::swap(geometry->normal[j].x,geometry->normal[j].y);
+				geometry->normal[j].x*=-1;
 			}
 			else if (upDirection==Z_UP)
 			{
-				std::swap(object.normal[j].y,object.normal[j].z);
-				object.normal[j].z*=-1;
+				std::swap(geometry->normal[j].y,geometry->normal[j].z);
+				geometry->normal[j].z*=-1;
 			}
-			object.normal[j].Normalize();
+			geometry->normal[j].Normalize();
 		}		
 		unsigned int writePos=0;
 		for (unsigned int j=0;j<4;j++)
@@ -1093,15 +1184,15 @@ void ColladaLoader::GenerateModel(ModelResource *model,Node *node,mat4 transform
 				table=&iter->second;
 			Material &mat=materialLibrary[table->materialName];
 			Effect &effect=effectLibrary[mat.effect];			
-			object.mesh.push_back(FireCube::Mesh());
-			FireCube::Mesh &m=object.mesh.back();			
+			geometry->surface.push_back(FireCube::Surface());
+			FireCube::Surface &surface=geometry->surface.back();			
 			FireCube::Material fmat=FireCube::Material(new MaterialResource());
-			model->material.push_back(fmat);
+			geometry->material.push_back(fmat);
 			fmat->ambient=effect.ambientColor;
 			fmat->diffuse=effect.diffuseColor;
 			fmat->specular=effect.specularColor;			
 			fmat->name=subMesh.material;
-			m.material=fmat;
+			surface.material=fmat;
 			if (table)
 			{
 				ApplySemanticMapping(effect.ambientSampler,*table);
@@ -1126,7 +1217,7 @@ void ColladaLoader::GenerateModel(ModelResource *model,Node *node,mat4 transform
 						s++;
 					}
 				}
-				object.diffuseUV=mesh.texcoords[map];
+				geometry->diffuseUV=mesh.texcoords[map];
 			}			
 			if (subMesh.primitiveType==PRIMITIVE_TRIANGLES)
 			{
@@ -1136,8 +1227,8 @@ void ColladaLoader::GenerateModel(ModelResource *model,Node *node,mat4 transform
 					f.v[0]=subMesh.indices[p*3+0];
 					f.v[1]=subMesh.indices[p*3+1];
 					f.v[2]=subMesh.indices[p*3+2];
-					m.face.push_back(f);
-					object.face.push_back(f);
+					surface.face.push_back(f);
+					geometry->face.push_back(f);
 				}
 			}
 			else if (subMesh.primitiveType==PRIMITIVE_POLYLIST)
@@ -1150,17 +1241,26 @@ void ColladaLoader::GenerateModel(ModelResource *model,Node *node,mat4 transform
 					f.v[0]=subMesh.indices[p*3+0];
 					f.v[1]=subMesh.indices[p*3+1];
 					f.v[2]=subMesh.indices[p*3+2];
-					m.face.push_back(f);
-					object.face.push_back(f);
+					surface.face.push_back(f);
+					geometry->face.push_back(f);
 				}
 			}
-
-		}		
+		
+		}
+		geometry->UpdateBuffers();
 	}
 	for (unsigned int i=0;i<node->children.size();i++)
-		GenerateModel(model,node->children[i],transformation);
-}
+	{
+		FireCube::Node c=GenerateSceneGraph(node->children[i]);
+		ret.AddChild(c);
+	}
 
+	return ret;
+}
+FireCube::Node ColladaLoader::GenerateSceneGraph()
+{
+	return GenerateSceneGraph(root);
+}
 TiXmlElement *ColladaLoader::GetChildElement(TiXmlNode *node,const string &elmName)
 {
 	TiXmlNode *n=node->FirstChild(elmName);

@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<TITLE>
+Light.h
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">namespace</font> FireCube
+<font color="black">{</font>
+<font color="blue">enum</font> LightType
+<font color="black">{</font>
+    DIRECTIONAL
+<font color="black">}</font>;
+<font color="blue">class</font> FIRECUBE_API LightResource
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font>
+    LightType type;
+    vec4 ambientColor;
+    vec4 diffuseColor;
+    vec4 specularColor;
+    <font color="blue">float</font> shininess;
+<font color="black">}</font>;
+<font color="blue">typedef</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>LightResource<font color="black">&#62;</font> Light;
+<font color="black">}</font>
+</PRE>
+</BODY>
+</HTML>

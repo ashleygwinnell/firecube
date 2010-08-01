@@ -6,9 +6,8 @@ public:
 	void Update(float time);
 	void Render(float time);		
 	
-	Model model;	
-	Program program;
-	ModelManager mm;	
+	Node node;	
+	Program program;	
 	Font font;
 	Terrain terrain;	
 };

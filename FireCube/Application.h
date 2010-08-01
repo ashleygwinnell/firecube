@@ -124,6 +124,7 @@ private:
 	TextureManager defaultTextureManager;
 	ShaderManager defaultShaderManager;
 	FontManager defaultFontManager;
+	ShaderGenerator defaultShaderGenerator;
 	static vector<string> searchPaths;		
 	queue<Event> eventQueue;
 };

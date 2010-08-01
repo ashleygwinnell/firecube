@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<TITLE>
+SceneGraph.h
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">namespace</font> FireCube
+<font color="black">{</font>
+<font color="blue">class</font> NodeResource;
+<font color="blue">class</font> SceneGraph;
+<font color="green">//typedef boost::shared_ptr&#60;NodeResource&#62; Node;</font>
+
+<font color="blue">class</font> FIRECUBE_API Node
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font>
+    Node<font color="black">(</font><font color="black">)</font>;
+    Node<font color="black">(</font>NodeResource <font color="black">*</font>nr<font color="black">)</font>; 
+    Node<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>;   
+    <font color="blue">operator</font> <font color="blue">bool</font> <font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
+    <font color="blue">void</font> SetName<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>;
+    string GetName<font color="black">(</font><font color="black">)</font>;   
+    mat4 GetLocalTransformation<font color="black">(</font><font color="black">)</font>;  
+    mat4 GetWorldTransformation<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> SetWorldTransformation<font color="black">(</font>mat4 mat<font color="black">)</font>;
+    <font color="blue">void</font> SetTranslation<font color="black">(</font>vec3 t<font color="black">)</font>;
+    vec3 GetTranslation<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> SetRotation<font color="black">(</font>vec3 r<font color="black">)</font>;
+    vec3 GetRotation<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> SetScale<font color="black">(</font>vec3 s<font color="black">)</font>;
+    vec3 GetScale<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> SetMatrixTransformation<font color="black">(</font>mat4 t<font color="black">)</font>;
+    mat4 GetMatrixTransformation<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> Move<font color="black">(</font>vec3 t<font color="black">)</font>;
+    <font color="blue">void</font> Rotate<font color="black">(</font>vec3 r<font color="black">)</font>;
+    <font color="blue">void</font> Scale<font color="black">(</font>vec3 s<font color="black">)</font>;
+    Node <font color="black">&</font>Parent<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> SetParent<font color="black">(</font>Node parent<font color="black">)</font>;
+    vector<font color="black">&#60;</font>Node<font color="black">&#62;</font> <font color="black">&</font>GetChildren<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> AddGeometry<font color="black">(</font>Geometry geometry<font color="black">)</font>;
+    vector<font color="black">&#60;</font>Geometry<font color="black">&#62;</font> <font color="black">&</font>GetGeometries<font color="black">(</font><font color="black">)</font>;
+
+    <font color="blue">void</font> AddLight<font color="black">(</font>Light l<font color="black">)</font>;     
+    <font color="blue">void</font> RemoveLight<font color="black">(</font>Light l<font color="black">)</font>;  
+    vector<font color="black">&#60;</font>Light<font color="black">&#62;</font> <font color="black">&</font>GetLights<font color="black">(</font><font color="black">)</font>; 
+    
+    Node AddChild<font color="black">(</font>Node node<font color="black">)</font>;
+    Node GetChild<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>;
+    Node RemoveChild<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>;
+    Node RemoveChild<font color="black">(</font>Node node<font color="black">)</font>;    
+
+    <font color="blue">void</font> Render<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> CreateHardNormals<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> RenderBoundingBox<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> UpdateBoundingBox<font color="black">(</font><font color="black">)</font>;
+    
+<font color="blue">private</font><font color="black">:</font>
+    boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>NodeResource<font color="black">&#62;</font> nodeResource;
+<font color="black">}</font>;
+
+<font color="blue">class</font> FIRECUBE_API NodeResource
+<font color="black">{</font>
+    <font color="blue">friend</font> <font color="blue">class</font> Node;
+<font color="blue">public</font><font color="black">:</font>
+    NodeResource<font color="black">(</font><font color="black">)</font>;
+<font color="blue">private</font><font color="black">:</font>
+    vector<font color="black">&#60;</font>Node<font color="black">&#62;</font> children;
+    vector<font color="black">&#60;</font>Geometry<font color="black">&#62;</font> geometries;
+    vector<font color="black">&#60;</font>Light<font color="black">&#62;</font> lights;
+    vec3 translation;
+    vec3 rotation;
+    vec3 scale;
+    mat4 matTransform;
+    mat4 transformation;
+    mat4 worldTransformation;
+    <font color="blue">bool</font> transformationChanged;
+    Node parent;    
+    string <font color="blue">name</font>;
+    BoundingBox bbox;
+<font color="black">}</font>;
+Node FIRECUBE_API LoadMesh<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>;
+<font color="black">}</font>
+</PRE>
+</BODY>
+</HTML>

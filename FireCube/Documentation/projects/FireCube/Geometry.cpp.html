@@ -1,0 +1,317 @@
+<HTML>
+<HEAD>
+<TITLE>
+Geometry.cpp
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#include</font> <font color="maroon">&#60;string&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;vector&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;fstream&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;iostream&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;sstream&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;queue&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
+<font color="blue">using</font> <font color="blue">namespace</font> std;
+<font color="blue">#include</font> <font color="maroon">&#60;SDL.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;SDL_image.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;windows.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">"GLee.h"</font>
+<font color="blue">#include</font> <font color="maroon">&#60;GL/GLU.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">"utils.h"</font>  
+<font color="blue">#include</font> <font color="maroon">"Logger.h"</font>
+<font color="blue">#include</font> <font color="maroon">"ResourceManager.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Timer.h"</font>
+<font color="blue">#include</font> <font color="maroon">"MyMath.h"</font> 
+<font color="blue">#include</font> <font color="maroon">"BoundingBox.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Texture.h"</font>        
+<font color="blue">#include</font> <font color="maroon">"Buffer.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Shaders.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Geometry.h"</font>   
+<font color="blue">#include</font> <font color="maroon">"FrameBuffer.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Image.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Font.h"</font>
+<font color="blue">#include</font> <font color="maroon">"ShaderGenerator.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Renderer.h"</font>               
+<font color="blue">#include</font> <font color="maroon">"Application.h"</font>
+<font color="blue">#include</font> <font color="maroon">"tinyxml.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Light.h"</font>
+<font color="blue">#include</font> <font color="maroon">"SceneGraph.h"</font>
+<font color="blue">#include</font> <font color="maroon">"ModelLoaders.h"</font>
+
+<font color="blue">using</font> <font color="blue">namespace</font> FireCube;
+MaterialResource<font color="black">:</font><font color="black">:</font>MaterialResource<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    
+<font color="black">}</font>
+MaterialResource<font color="black">:</font><font color="black">:</font>~MaterialResource<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+
+<font color="black">}</font>
+Face<font color="black">:</font><font color="black">:</font>Face<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    
+<font color="black">}</font>
+Face<font color="black">:</font><font color="black">:</font>Face<font color="black">(</font>DWORD v0,DWORD v1,DWORD v2<font color="black">)</font>
+<font color="black">{</font>
+    v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>v0;
+    v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>v1;
+    v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>v2;
+<font color="black">}</font>
+Face<font color="black">:</font><font color="black">:</font>~Face<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+
+<font color="black">}</font>
+GeometryResource<font color="black">:</font><font color="black">:</font>~GeometryResource<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>   
+    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>string<font color="black">(</font><font color="maroon">"Destroyed geometry.\n"</font><font color="black">)</font><font color="black">)</font>; 
+<font color="black">}</font>
+
+
+<font color="blue">void</font> GeometryResource<font color="black">:</font><font color="black">:</font>CalculateNormals<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>   
+    normal.resize<font color="black">(</font>vertex.size<font color="black">(</font><font color="black">)</font><font color="black">)</font>;       
+    <font color="blue">for</font> <font color="black">(</font>DWORD n<font color="black">=</font><font color="maroon">0</font>;n<font color="black">&#60;</font>normal.size<font color="black">(</font><font color="black">)</font>;n<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>           
+        normal<font color="black">[</font>n<font color="black">]</font><font color="black">=</font>vec3<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;      
+    <font color="black">}</font>
+    <font color="blue">for</font> <font color="black">(</font>DWORD f<font color="black">=</font><font color="maroon">0</font>;f<font color="black">&#60;</font>face.size<font color="black">(</font><font color="black">)</font>;f<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        vec3 v1<font color="black">=</font>vertex<font color="black">[</font>face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">]</font><font color="black">-</font>vertex<font color="black">[</font>face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">]</font>;
+        vec3 v2<font color="black">=</font>vertex<font color="black">[</font>face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">]</font><font color="black">-</font>vertex<font color="black">[</font>face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">]</font>;
+        vec3 n<font color="black">=</font>Cross<font color="black">(</font>v1,v2<font color="black">)</font>;            
+        face<font color="black">[</font>f<font color="black">]</font>.normal<font color="black">=</font>n;
+        face<font color="black">[</font>f<font color="black">]</font>.normal.Normalize<font color="black">(</font><font color="black">)</font>;
+        <font color="green">/*for (unsigned int i=0;i&#60;vertex.size();i++)                    // Fix texture coordinate problem having certain vertices duplicated. SLOW.
+        {
+        if (vertex[i]==vertex[face[f].v[0]])
+        {               
+        normal[i]+=n;
+        count[i]++;             
+        }
+        if (vertex[i]==vertex[face[f].v[1]])
+        {               
+        normal[i]+=n;
+        count[i]++;
+        }
+        if (vertex[i]==vertex[face[f].v[2]])
+        {               
+        normal[i]+=n;
+        count[i]++;
+        }
+        }*/</font>
+        normal<font color="black">[</font>face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">]</font><font color="black">+</font><font color="black">=</font>n;            
+        normal<font color="black">[</font>face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">]</font><font color="black">+</font><font color="black">=</font>n;            
+        normal<font color="black">[</font>face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">]</font><font color="black">+</font><font color="black">=</font>n;            
+    <font color="black">}</font>       
+    <font color="blue">for</font> <font color="black">(</font>DWORD n<font color="black">=</font><font color="maroon">0</font>;n<font color="black">&#60;</font>normal.size<font color="black">(</font><font color="black">)</font>;n<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>           
+        normal<font color="black">[</font>n<font color="black">]</font>.Normalize<font color="black">(</font><font color="black">)</font>;      
+    <font color="black">}</font>   
+    normalBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
+    normalBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
+    normalBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>normal<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec3<font color="black">)</font><font color="black">*</font>normal.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
+<font color="black">}</font>
+
+<font color="blue">void</font> GeometryResource<font color="black">:</font><font color="black">:</font>CreateHardNormals<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    vector<font color="black">&#60;</font>vec3<font color="black">&#62;</font> originalVertices;
+    vector<font color="black">&#60;</font>vec2<font color="black">&#62;</font> originalDiffuseUV;
+    DWORD currentIndex<font color="black">=</font><font color="maroon">0</font>;
+    originalVertices<font color="black">=</font>vertex;
+    originalDiffuseUV<font color="black">=</font>diffuseUV;
+    face.clear<font color="black">(</font><font color="black">)</font>;
+    vertex.clear<font color="black">(</font><font color="black">)</font>;
+    normal.clear<font color="black">(</font><font color="black">)</font>;
+    diffuseUV.clear<font color="black">(</font><font color="black">)</font>;
+
+    <font color="blue">for</font> <font color="black">(</font>DWORD j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font>surface.size<font color="black">(</font><font color="black">)</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        Surface <font color="black">&</font>surface<font color="black">=</font><font color="blue">this</font><font color="black">-</font><font color="black">&#62;</font>surface<font color="black">[</font>j<font color="black">]</font>;
+        <font color="blue">for</font> <font color="black">(</font>DWORD i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>surface.face.size<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">{</font>               
+            vec3 v0<font color="black">=</font>originalVertices<font color="black">[</font>surface.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">]</font>;
+            vec3 v1<font color="black">=</font>originalVertices<font color="black">[</font>surface.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">]</font>;
+            vec3 v2<font color="black">=</font>originalVertices<font color="black">[</font>surface.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">]</font>;
+            vec3 n<font color="black">=</font>Cross<font color="black">(</font>v1<font color="black">-</font>v0,v2<font color="black">-</font>v0<font color="black">)</font>.Normalize<font color="black">(</font><font color="black">)</font>;
+            vertex.push_back<font color="black">(</font>v0<font color="black">)</font>;
+            vertex.push_back<font color="black">(</font>v1<font color="black">)</font>;
+            vertex.push_back<font color="black">(</font>v2<font color="black">)</font>;
+            normal.push_back<font color="black">(</font>n<font color="black">)</font>;
+            normal.push_back<font color="black">(</font>n<font color="black">)</font>;
+            normal.push_back<font color="black">(</font>n<font color="black">)</font>;
+            <font color="blue">if</font> <font color="black">(</font>originalDiffuseUV.size<font color="black">(</font><font color="black">)</font><font color="black">&#62;</font><font color="maroon">0</font><font color="black">)</font>
+            <font color="black">{</font>
+                vec2 uv0<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>,uv1<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>,uv2<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;
+                uv0<font color="black">=</font>originalDiffuseUV<font color="black">[</font>surface.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">]</font>;
+                uv1<font color="black">=</font>originalDiffuseUV<font color="black">[</font>surface.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">]</font>;
+                uv2<font color="black">=</font>originalDiffuseUV<font color="black">[</font>surface.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">]</font>;
+
+                diffuseUV.push_back<font color="black">(</font>uv0<font color="black">)</font>;
+                diffuseUV.push_back<font color="black">(</font>uv1<font color="black">)</font>;
+                diffuseUV.push_back<font color="black">(</font>uv2<font color="black">)</font>;
+            <font color="black">}</font>                                   
+            surface.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>currentIndex<font color="black">+</font><font color="black">+</font>;
+            surface.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>currentIndex<font color="black">+</font><font color="black">+</font>;
+            surface.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>currentIndex<font color="black">+</font><font color="black">+</font>;                
+            face.push_back<font color="black">(</font>surface.face<font color="black">[</font>i<font color="black">]</font><font color="black">)</font>;
+        <font color="black">}</font>
+        vector<font color="black">&#60;</font>DWORD<font color="black">&#62;</font> tmp;
+        tmp.resize<font color="black">(</font>surface.face.size<font color="black">(</font><font color="black">)</font><font color="black">*</font><font color="maroon">3</font><font color="black">)</font>;
+        <font color="blue">for</font> <font color="black">(</font>DWORD f<font color="black">=</font><font color="maroon">0</font>;f<font color="black">&#60;</font>surface.face.size<font color="black">(</font><font color="black">)</font>;f<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">{</font>
+            tmp<font color="black">[</font>f<font color="black">*</font><font color="maroon">3</font><font color="black">+</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>surface.face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;
+            tmp<font color="black">[</font>f<font color="black">*</font><font color="maroon">3</font><font color="black">+</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>surface.face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font>;
+            tmp<font color="black">[</font>f<font color="black">*</font><font color="maroon">3</font><font color="black">+</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>surface.face<font color="black">[</font>f<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
+        <font color="black">}</font>           
+    <font color="black">}</font>       
+    <font color="blue">if</font> <font color="black">(</font>diffuseUV.size<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+    <font color="black">{</font>   
+        diffuseUVBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
+        diffuseUVBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
+        diffuseUVBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>diffuseUV<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec2<font color="black">)</font><font color="black">*</font>diffuseUV.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
+    <font color="black">}</font>       
+
+    UpdateBuffers<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> GeometryResource<font color="black">:</font><font color="black">:</font>UpdateBuffers<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>vertexBuffer<font color="black">)</font>
+    <font color="black">{</font>
+        vertexBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
+        vertexBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
+    <font color="black">}</font>
+    <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>vertexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>vertex<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec3<font color="black">)</font><font color="black">*</font>vertex.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font><font color="black">)</font>
+    <font color="black">{</font>
+        ostringstream oss;
+        oss <font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">"buffer id:"</font><font color="black">&#60;</font><font color="black">&#60;</font>vertexBuffer<font color="black">-</font><font color="black">&#62;</font>id <font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">" Couldn't upload vertex data"</font> <font color="black">&#60;</font><font color="black">&#60;</font> endl;
+        Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>oss.str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+    <font color="black">}</font>
+    <font color="blue">if</font> <font color="black">(</font>normal.size<font color="black">(</font><font color="black">)</font><font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>normalBuffer<font color="black">)</font>
+        <font color="black">{</font>
+            normalBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
+            normalBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
+        <font color="black">}</font>
+        <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>normalBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>normal<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec3<font color="black">)</font><font color="black">*</font>normal.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font><font color="black">)</font>
+        <font color="black">{</font>
+            ostringstream oss;
+            oss <font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">"buffer id:"</font><font color="black">&#60;</font><font color="black">&#60;</font>vertexBuffer<font color="black">-</font><font color="black">&#62;</font>id <font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">" Couldn't upload vertex data"</font> <font color="black">&#60;</font><font color="black">&#60;</font> endl;
+            Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>oss.str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+        <font color="black">}</font>
+    <font color="black">}</font>
+    <font color="blue">else</font>
+        normalBuffer.reset<font color="black">(</font><font color="black">)</font>;
+
+    <font color="blue">if</font> <font color="black">(</font>diffuseUV.size<font color="black">(</font><font color="black">)</font><font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>diffuseUVBuffer<font color="black">)</font>
+        <font color="black">{</font>
+            diffuseUVBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
+            diffuseUVBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
+        <font color="black">}</font>
+        <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>diffuseUVBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>diffuseUV<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec2<font color="black">)</font><font color="black">*</font>diffuseUV.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font><font color="black">)</font>
+        <font color="black">{</font>
+            ostringstream oss;
+            oss <font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">"buffer id:"</font><font color="black">&#60;</font><font color="black">&#60;</font>vertexBuffer<font color="black">-</font><font color="black">&#62;</font>id <font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">" Couldn't upload vertex data"</font> <font color="black">&#60;</font><font color="black">&#60;</font> endl;
+            Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>oss.str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+        <font color="black">}</font>
+    <font color="black">}</font>
+    <font color="blue">else</font>
+        diffuseUVBuffer.reset<font color="black">(</font><font color="black">)</font>;
+
+
+
+    <font color="blue">for</font> <font color="black">(</font>DWORD m<font color="black">=</font><font color="maroon">0</font>;m<font color="black">&#60;</font>surface.size<font color="black">(</font><font color="black">)</font>;m<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        Surface <font color="black">&</font>surface<font color="black">=</font><font color="blue">this</font><font color="black">-</font><font color="black">&#62;</font>surface<font color="black">[</font>m<font color="black">]</font>;
+        vector<font color="black">&#60;</font>DWORD<font color="black">&#62;</font> indices;
+        <font color="blue">for</font> <font color="black">(</font>DWORD i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>surface.face.size<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">{</font>
+            indices.push_back<font color="black">(</font>surface.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">)</font>;
+            indices.push_back<font color="black">(</font>surface.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">)</font>;
+            indices.push_back<font color="black">(</font>surface.face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">)</font>;
+        <font color="black">}</font>
+        <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>surface.indexBuffer<font color="black">)</font>
+        <font color="black">{</font>
+            surface.indexBuffer<font color="black">=</font>Buffer<font color="black">(</font><font color="blue">new</font> BufferResource<font color="black">)</font>;
+            surface.indexBuffer<font color="black">-</font><font color="black">&#62;</font>Create<font color="black">(</font><font color="black">)</font>;
+        <font color="black">}</font>
+        <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>surface.indexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadIndexData<font color="black">(</font><font color="black">&</font>indices<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,indices.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font><font color="black">)</font>
+        <font color="black">{</font>
+            ostringstream oss;
+            oss <font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">"buffer id:"</font><font color="black">&#60;</font><font color="black">&#60;</font>surface.indexBuffer<font color="black">-</font><font color="black">&#62;</font>id <font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">" Couldn't upload vertex data"</font> <font color="black">&#60;</font><font color="black">&#60;</font> endl;
+            Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>oss.str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+        <font color="black">}</font>
+    <font color="black">}</font>
+<font color="black">}</font>
+Geometry GeometryResource<font color="black">:</font><font color="black">:</font>Reduce<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    Geometry geometry<font color="black">(</font><font color="blue">new</font> GeometryResource<font color="black">)</font>;
+    geometry<font color="black">-</font><font color="black">&#62;</font>face<font color="black">=</font>face;    
+
+    <font color="blue">for</font> <font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>geometry<font color="black">-</font><font color="black">&#62;</font>face.size<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">for</font> <font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font><font color="maroon">3</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">{</font>
+            vec3 v<font color="black">=</font>vertex<font color="black">[</font>geometry<font color="black">-</font><font color="black">&#62;</font>face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font>j<font color="black">]</font><font color="black">]</font>;
+            <font color="blue">bool</font> found<font color="black">=</font><font color="blue">false</font>;
+            <font color="blue">unsigned</font> <font color="blue">int</font> k;
+            <font color="blue">for</font> <font color="black">(</font>k<font color="black">=</font><font color="maroon">0</font>;k<font color="black">&#60;</font>geometry<font color="black">-</font><font color="black">&#62;</font>vertex.size<font color="black">(</font><font color="black">)</font>;k<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+            <font color="black">{</font>
+                <font color="blue">if</font> <font color="black">(</font><font color="black">(</font>vertex<font color="black">[</font>k<font color="black">]</font><font color="black">-</font>v<font color="black">)</font>.Length2<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font><font color="maroon">0</font>.0f<font color="black">)</font>
+                <font color="black">{</font>
+                    found<font color="black">=</font><font color="blue">true</font>;
+                    <font color="blue">break</font>;
+                <font color="black">}</font>
+            <font color="black">}</font>
+            <font color="blue">if</font> <font color="black">(</font>found<font color="black">=</font><font color="black">=</font><font color="blue">false</font><font color="black">)</font>
+            <font color="black">{</font>
+                geometry<font color="black">-</font><font color="black">&#62;</font>vertex.push_back<font color="black">(</font>v<font color="black">)</font>;
+                geometry<font color="black">-</font><font color="black">&#62;</font>face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font>j<font color="black">]</font><font color="black">=</font>geometry<font color="black">-</font><font color="black">&#62;</font>vertex.size<font color="black">(</font><font color="black">)</font><font color="maroon">-1</font>;
+            <font color="black">}</font>
+            <font color="blue">else</font>
+            <font color="black">{</font>
+                geometry<font color="black">-</font><font color="black">&#62;</font>face<font color="black">[</font>i<font color="black">]</font>.v<font color="black">[</font>j<font color="black">]</font><font color="black">=</font>k;
+            <font color="black">}</font>
+        <font color="black">}</font>
+    <font color="black">}</font>
+    <font color="blue">return</font> geometry;
+<font color="black">}</font>
+Material GeometryResource<font color="black">:</font><font color="black">:</font>GetMaterialByName<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">for</font> <font color="black">(</font>DWORD i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>material.size<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">if</font> <font color="black">(</font>material<font color="black">[</font>i<font color="black">]</font><font color="black">-</font><font color="black">&#62;</font><font color="blue">name</font><font color="black">=</font><font color="black">=</font><font color="blue">name</font><font color="black">)</font>
+            <font color="blue">return</font> material<font color="black">[</font>i<font color="black">]</font>;
+    <font color="black">}</font>
+    <font color="blue">return</font> Material<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> GeometryResource<font color="black">:</font><font color="black">:</font>ApplyTransformation<font color="black">(</font>mat4 <font color="black">&</font>transform<font color="black">)</font>
+<font color="black">{</font>   
+    <font color="blue">for</font> <font color="black">(</font>DWORD i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>vertex.size<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        vertex<font color="black">[</font>i<font color="black">]</font><font color="black">=</font>vertex<font color="black">[</font>i<font color="black">]</font><font color="black">*</font>transform;
+    <font color="black">}</font>
+    vertexBuffer<font color="black">-</font><font color="black">&#62;</font>LoadData<font color="black">(</font><font color="black">&</font>vertex<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>,<font color="blue">sizeof</font><font color="black">(</font>vec3<font color="black">)</font><font color="black">*</font>vertex.size<font color="black">(</font><font color="black">)</font>,STATIC<font color="black">)</font>;
+
+    CalculateNormals<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+BoundingBox GeometryResource<font color="black">:</font><font color="black">:</font>GetBoundingBox<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> bbox;
+<font color="black">}</font>
+<font color="blue">void</font> GeometryResource<font color="black">:</font><font color="black">:</font>CalculateBoundingBox<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>vec3<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator j<font color="black">=</font>vertex.begin<font color="black">(</font><font color="black">)</font>;j<font color="black">!</font><font color="black">=</font>vertex.end<font color="black">(</font><font color="black">)</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        bbox.Expand<font color="black">(</font><font color="black">*</font>j<font color="black">)</font>;
+    <font color="black">}</font>       
+<font color="black">}</font>
+</PRE>
+</BODY>
+</HTML>

@@ -5,10 +5,9 @@ class App : public Application
 	void Render(float time);
 	void HandleInput(float time);
 
-	Font font;
-	ModelManager mm;
-	Model model,model2;
-	Program program,program2;
+	Font font;	
+	Node root,node,node2;
+	Program program;
 	Buffer uvBuffer,vBuffer;
 	FrameBuffer fbo;
 	float ang;

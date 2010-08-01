@@ -22,10 +22,27 @@ CollisionShape::CollisionShape() : radius(0), interpolateMesh(true)
 {
 
 }
-void CollisionShape::FromModel(Model model,int sizex,int sizey,int sizez,float extraSize)
+Geometry CollisionShape::GetFirstGeometry(Node node)
 {
-	vertex=model->object[0].vertex;
-	face=model->object[0].face;
+	if (node.GetGeometries().size()>0)
+		return node.GetGeometries()[0];
+	else
+	{
+		for (vector<Node>::iterator i=node.GetChildren().begin();i!=node.GetChildren().end();i++)
+		{
+			Geometry g=GetFirstGeometry(*i);
+			if (g)
+				return g;
+		}
+	}
+	return Geometry();
+}
+void CollisionShape::FromNode(Node node,int sizex,int sizey,int sizez,float extraSize)
+{
+	Geometry g=GetFirstGeometry(node);
+	g=g->Reduce();
+	vertex=g->vertex;
+	face=g->face;
 	edge.resize(face.size()*3);
 	for (unsigned int i=0;i<face.size();i++)
 	{

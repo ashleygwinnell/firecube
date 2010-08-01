@@ -24,10 +24,11 @@ using namespace std;
 #include "Texture.h"		
 #include "Buffer.h"
 #include "Shaders.h"
-#include "Mesh.h"	
+#include "Geometry.h"	
 #include "FrameBuffer.h"
 #include "Font.h"
-#include "Renderer.h"				
+#include "ShaderGenerator.h"
+#include "Renderer.h"
 #include "Application.h"
 
 using namespace FireCube;
@@ -46,6 +47,7 @@ Application::Application() : running(false), frameCount(0), fpsTime(0), fps(0)
 	Renderer::SetTextureManager(defaultTextureManager);
 	Renderer::SetShaderManager(defaultShaderManager);
 	Renderer::SetFontManager(defaultFontManager);
+	Renderer::SetShaderGenerator(defaultShaderGenerator);
 }
 Application::~Application()
 {

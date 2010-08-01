@@ -11,9 +11,6 @@ using namespace std;
 #include <gl/gl.h>
 #include <FireCube.h>
 using namespace FireCube;
-#include "ShaderGenerator.h"
-#include "Light.h"
-#include "SceneGraph.h"
 #include "app.h"
 #include <cmath>
 App app;
@@ -30,51 +27,56 @@ bool App::Init()
 	Application::AddSearchPath("../Media/Models");
 	SetTitle("SceneGraph Test Application");		
 	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
-	sg.AddModel("duck","duck.dae");
-	sg.AddModel("teapot","teapot.3ds");	
-	sg.AddModel("collada","collada.dae");
-	sg.GetModel("teapot")->CreateHardNormals();
-	Light l=sg.AddLight("Light1");
-	l->ambientColor.Set(1,1,1,1);
-	l->diffuseColor.Set(0.7f,0.7f,0.7f,1);
-	l->type=DIRECTIONAL;
+	Geometry lightMarker=GeometryGenerator::GenerateSphere(0.1f,10,10);
+	root=Node("Root");	
+	Light l(new LightResource);
+	l->ambientColor.Set(0.3f,0.3f,0.3f,1);
+	l->diffuseColor.Set(1.0f,1.0f,1.0f,1);
+	l->specularColor.Set(1.0f,1.0f,1.0f,1.0f);
+	l->type=FireCube::POINT;
+	Node nn("Ln");
+	nn.SetParent(root);
+	Node lightNode("LightNode1");
+	lightNode.SetParent(nn);
+	lightNode.AddLight(l);
+	lightNode.Move(vec3(0,0,4.0f));
+	lightNode.SetLighting(false);
+	lightNode.AddGeometry(lightMarker);
 
-	Node n=sg.Root()->AddChild("Node1");
-	n->Move(vec3(0,-2,-10));	
-	n->AttachModel("collada");
+	Material mat(new MaterialResource);
+	mat->ambient=vec4(0.3f,0.3f,0.3f,1.0f);
+	mat->diffuse=vec4(0.7f,0.7f,0.7f,1.0f);
+	mat->specular=vec4(0.3f,0.3f,0.3f,1.0f);
+	mat->shininess=20.0f;
+	mat->diffuseTexture=Renderer::GetTextureManager().Create("earthmap1k.jpg");
+	Node n("Earth");
+	n.SetParent(root);	
+	n.AddGeometry(GeometryGenerator::GenerateSphere(2.0f,32,32,mat));	
 	
-	n=sg.Root()->AddChild("Node2");
-	n->Move(vec3(8,-2,-10));	
-	n->AttachModel("teapot");
+	n=root.AddChild(LoadMesh("../Media/Models/teapot.3ds"));
+	n.SetName("Teapot");
+	n.CreateHardNormals();
+	n.Move(vec3(8,-2,0));	
 	
-	n=sg.Root()->AddChild("Node3");	
-	n->Scale(vec3(0.03f,0.03f,0.03f));
-	n->Move(vec3(-8,-4,-10));
-	n->AttachModel("duck");		
+	n=root.AddChild(LoadMesh("../Media/Models/duck.dae"));	
+	n.SetName("Duck");	
+	n.Scale(vec3(0.03f,0.03f,0.03f));
+	n.Move(vec3(-8,-4,0));	
 	
-	n=sg.Root()->AddChild("LightNode1");	
-	n->AttachLight("Light1");
-	sg.SetFog(true);
-	sg.SetFogColor(vec4(0.2f,0.2f,0.6f,1.0f));
-	sg.SetFogDensity(0.05f);
+	root.Move(vec3(0,0,-10));
 	return true;
 }
 void App::Update(float t)
 {
-	static float time=0.0f;
-	time+=t;
-	sg.GetNode("Node3")->Rotate(vec3(0,(float)(PI/4*t),0));		
-	sg.GetNode("Node3")->Move(2.0f*sin(time)*vec3(0,0,-0.1f));
-	sg.GetNode("Node2")->Rotate(vec3(0,(float)(PI/4*t),0));
-	sg.GetNode("Node1")->Rotate(vec3((float)(PI/8*t),(float)(PI/8*t),0));	
+	root.GetChild("Ln").Rotate(vec3(0,0.02f,0));	
 }
 void App::Render(float t)
 {
 	Renderer::Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
 	Renderer::SetPerspectiveProjection(90.0f,0.1f,1000.0f);	
 	Renderer::SetModelViewMatrix(mat4());
-	sg.Render();
-	sg.Root()->RenderBoundingBox();
+	Renderer::Render(root);	
+	//sg.Root()->RenderBoundingBox();
 	Renderer::SetModelViewMatrix(mat4());
 	Renderer::SetOrthographicProjection();	
 	ostringstream oss;

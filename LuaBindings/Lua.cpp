@@ -29,6 +29,7 @@ class Dummy3{};
 class Dummy4{};
 class Dummy5{};
 class Dummy6{};
+class Dummy7{};
 void SetValue(Face &f,DWORD i,DWORD v)
 {
 	f.v[i]=v;
@@ -144,6 +145,7 @@ void InitializeLua(lua_State *& luaState)
 
 	luabind::module(luaState)
 	[				
+		luabind::def("LoadMesh",&LoadMesh),
 		luabind::def("IsFinite",&IsFinite),
 		luabind::def("RangedRandom",&RangedRandom),
 		luabind::def("Cross",(float (*)(vec2, vec2))&FireCube::Cross),
@@ -290,8 +292,7 @@ void InitializeLua(lua_State *& luaState)
 			.def_readwrite("ambient",&MaterialResource::ambient)
 			.def_readwrite("diffuse",&MaterialResource::diffuse)
 			.def_readwrite("specular",&MaterialResource::specular)
-			.def_readwrite("shininess",&MaterialResource::shininess)
-			.def_readwrite("program",&MaterialResource::program),
+			.def_readwrite("shininess",&MaterialResource::shininess),			
 		luabind::class_<Edge>("Edge")
 			.def(luabind::constructor<>())
 			.def("GetValue",(DWORD (*)(Edge &,DWORD))&GetValue)
@@ -302,35 +303,84 @@ void InitializeLua(lua_State *& luaState)
 			.def("GetValue",(DWORD (*)(Face &,DWORD))&GetValue)
 			.def("SetValue",(void (*)(Face &,DWORD,DWORD))&SetValue)
 			.def_readwrite("normal",&Face::normal),
-		luabind::class_<Mesh>("Mesh")
+		luabind::class_<Surface>("Surface")
 			.def(luabind::constructor<>())
-			.def_readwrite("material",&Mesh::material)
-			.def_readwrite("face",&Mesh::face)
-			.def_readwrite("indexBuffer",&Mesh::indexBuffer),
-		luabind::class_<Object>("Object")
+			.def_readwrite("material",&Surface::material)
+			.def_readwrite("face",&Surface::face)
+			.def_readwrite("indexBuffer",&Surface::indexBuffer),		
+		luabind::class_<RenderParameters>("RenderParameters")
 			.def(luabind::constructor<>())
-			.def_readwrite("name",&Object::name)
-			.def_readwrite("vertex",&Object::vertex)
-			.def_readwrite("normal",&Object::normal)
-			.def_readwrite("mesh",&Object::mesh)
-			.def_readwrite("face",&Object::face)
-			.def_readwrite("diffuseUV",&Object::diffuseUV)
-			.def_readwrite("vertexBuffer",&Object::vertexBuffer)
-			.def_readwrite("diffuseUVBuffer",&Object::diffuseUVBuffer)
-			.def_readwrite("normalBuffer",&Object::normalBuffer),
-		luabind::class_<ModelResource, Model >("Model")
+			.def_readwrite("fog",&RenderParameters::fog)
+			.def_readwrite("fogColor",&RenderParameters::fogColor)
+			.def_readwrite("fogDensity",&RenderParameters::fogDensity)
+			.def_readwrite("lighting",&RenderParameters::lighting)
+			.def_readwrite("program",&RenderParameters::program),
+		luabind::class_<LightResource,Light>("Light")
+			.def(luabind::constructor<>())
+			.def_readwrite("diffuseTexture",&LightResource::ambientColor)
+			.def_readwrite("diffuseTexture",&LightResource::diffuseColor)			
+			.def_readwrite("diffuseTexture",&LightResource::specularColor)
+			.def_readwrite("diffuseTexture",&LightResource::type),
+		luabind::class_<Node>("Node")
+			.def(luabind::constructor<>())
+			.def(luabind::constructor<const string &>())
+			.def(luabind::constructor<Node>())			
+			.def("AddChild",&Node::AddChild)
+			.def("AddGeometry",&Node::AddGeometry)
+			.def("AddLight",&Node::AddLight)
+			.def("CreateHardNormals",&Node::CreateHardNormals)
+			.def("GetChild",&Node::GetChild)
+			.def("GetChildren",&Node::GetChildren)
+			.def("GetGeometries",&Node::GetGeometries)
+			.def("GetLighting",&Node::GetLighting)
+			.def("GetLights",&Node::GetLights)
+			.def("GetLocalTransformation",&Node::GetLocalTransformation)
+			.def("GetMatrixTransformation",&Node::GetMatrixTransformation)
+			.def("GetName",&Node::GetName)
+			.def("GetProgram",&Node::GetProgram)
+			.def("GetRenderParameters",&Node::GetRenderParameters)
+			.def("GetRotation",&Node::GetRotation)
+			.def("GetScale",&Node::GetScale)
+			.def("GetTranslation",&Node::GetTranslation)
+			.def("GetWorldTransformation",&Node::GetWorldTransformation)
+			.def("Move",&Node::Move)
+			.def("Parent",&Node::Parent)
+			.def("RemoveChild",(Node(Node::*)(const string&))&Node::RemoveChild)
+			.def("RemoveChild",(Node(Node::*)(Node))&Node::RemoveChild)
+			.def("RemoveLight",&Node::RemoveLight)
+			.def("Render",&Node::Render)
+			.def("RenderBoundingBox",&Node::RenderBoundingBox)
+			.def("Rotate",&Node::Rotate)
+			.def("Scale",&Node::Scale)
+			.def("SetLighting",&Node::SetLighting)
+			.def("SetMatrixTransformation",&Node::SetMatrixTransformation)
+			.def("SetName",&Node::SetName)
+			.def("SetParent",&Node::SetParent)
+			.def("SetProgram",&Node::SetProgram)
+			.def("SetRotation",&Node::SetRotation)
+			.def("SetScale",&Node::SetScale)
+			.def("SetTranslation",&Node::SetTranslation)
+			.def("SetWorldTransformation",&Node::SetWorldTransformation)
+			.def("UpdateBoundingBox",&Node::UpdateBoundingBox),			
+		luabind::class_<GeometryResource, Geometry >("Geometry")
 			.def(luabind::constructor<>())			
-			.def("Load",&ModelResource::Load)
-			.def("Reduce",&ModelResource::Reduce)
-			.def("CalculateNormals",&ModelResource::CalculateNormals)
-			.def("ApplyTransformation",&ModelResource::ApplyTransformation)
-			.def("SetProgram",&ModelResource::SetProgram)
-			.def("CreateHardNormals",&ModelResource::CreateHardNormals)
-			.def("UpdateBuffers",&ModelResource::UpdateBuffers)
-			.def("GetMaterialByName",&ModelResource::GetMaterialByName)
-			.def_readwrite("object",&ModelResource::object)
-			.def_readwrite("material",&ModelResource::material)
-			.def_readwrite("name",&ModelResource::name),
+			//.def("Load",&ModelResource::Load)
+			.def("Reduce",&GeometryResource::Reduce)
+			.def("CalculateNormals",&GeometryResource::CalculateNormals)
+			.def("ApplyTransformation",&GeometryResource::ApplyTransformation)			
+			.def("CreateHardNormals",&GeometryResource::CreateHardNormals)
+			.def("UpdateBuffers",&GeometryResource::UpdateBuffers)
+			.def("GetMaterialByName",&GeometryResource::GetMaterialByName)			
+			.def_readwrite("material",&GeometryResource::material)						
+			.def_readwrite("vertex",&GeometryResource::vertex)
+			.def_readwrite("normal",&GeometryResource::normal)
+			.def_readwrite("mesh",&GeometryResource::surface)
+			.def_readwrite("face",&GeometryResource::face)
+			.def_readwrite("surface",&GeometryResource::surface)
+			.def_readwrite("diffuseUV",&GeometryResource::diffuseUV)
+			.def_readwrite("vertexBuffer",&GeometryResource::vertexBuffer)
+			.def_readwrite("diffuseUVBuffer",&GeometryResource::diffuseUVBuffer)
+			.def_readwrite("normalBuffer",&GeometryResource::normalBuffer),
 		luabind::class_<TextureResource,Texture>("Texture")			
 			.def(luabind::constructor<>())
 			.def("Load",&TextureResource::Load)
@@ -417,12 +467,6 @@ void InitializeLua(lua_State *& luaState)
 			.def("Add",(void(ShaderManager::*)(const string&,Shader))&ShaderManager::Add)
 			.def("Create",&ShaderManager::Create)
 			.def("Get",&ShaderManager::Get),
-		luabind::class_<ModelManager>("ModelManager")
-			.def(luabind::constructor<>())
-			.def("Add",(Model(ModelManager::*)(const string&))&ModelManager::Add)
-			.def("Add",(void(ModelManager::*)(const string&,Model))&ModelManager::Add)
-			.def("Create",&ModelManager::Create)
-			.def("Get",&ModelManager::Get),
 		luabind::class_<Event>("Event")
 			.def(luabind::constructor<>())
 			.def_readwrite("type",&Event::type)
@@ -499,10 +543,17 @@ void InitializeLua(lua_State *& luaState)
 				luabind::value("KEY_RIGHT_ARROW", KEY_RIGHT_ARROW),
 				luabind::value("KEY_SPACE", KEY_SPACE)
 			],
+		luabind::class_<Dummy7>("LightType")
+			.enum_("LightType")
+			[
+				luabind::value("DIRECTIONAL", DIRECTIONAL),
+				luabind::value("POINT", FireCube::POINT)
+			],
 		luabind::namespace_("Renderer")
 		[			
 			luabind::def("Clear",&Renderer::Clear),
-			luabind::def("Render",&Renderer::Render),
+			//luabind::def("Render",(void(*)(Geometry)) &Renderer::Render),
+			luabind::def("Render",(void(*)(Node)) &Renderer::Render),
 			luabind::def("SetModelViewMatrix",&Renderer::SetModelViewMatrix),
 			luabind::def("SetProjectionMatrix",&Renderer::SetProjectionMatrix),
 			luabind::def("SetTextureMatrix",&Renderer::SetTextureMatrix),

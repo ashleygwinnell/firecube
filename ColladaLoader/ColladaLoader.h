@@ -188,10 +188,14 @@ public:
 	void ReadScene(TiXmlNode *parent);
 	void ReadTransformation(TiXmlNode *parent,Node *node);
 	mat4 CalculateTranformation(vector<Transform> &transformations);
+	vec3 GetTranslation(vector<Transform> &transformations);
+	vec3 GetRotation(vector<Transform> &transformations);
+	vec3 GetScale(vector<Transform> &transformations);
+	mat4 GetTransformMatrix(vector<Transform> &transformations);
 	void DeleteNodes(Node *node);
 	void ApplySemanticMapping(Sampler &sampler,SemanticMapping &table);
-	void GenerateModel(ModelResource *model);
-	void GenerateModel(ModelResource *model,Node *node,mat4 transform);
+	FireCube::Node GenerateSceneGraph(Node *node);
+	FireCube::Node GenerateSceneGraph();
 	InputType SemanticToInputType(const string &semantic);
 	template <typename Type> 
 	Type& ResolveLibraryReference( std::map<std::string, Type>& pLibrary, const std::string& pURL)

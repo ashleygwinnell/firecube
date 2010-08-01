@@ -7,6 +7,7 @@
 namespace FireCube
 {
 class Application;
+class Node;
 /**
 * A namespace containing various functions responsible for the rendering pipeline.
 */
@@ -19,10 +20,15 @@ namespace Renderer
 	*/
 	void FIRECUBE_API Clear(vec4 color,float depth);
 	/**
-	* Renders a model.
+	* Renders a geometry.
 	* @param model The model to render.
 	*/
-	void FIRECUBE_API Render(Model model);
+	void FIRECUBE_API Render(Geometry geometry);
+	/**
+	* Renders a scene node.
+	* @param model The model to render.
+	*/
+	void FIRECUBE_API Render(Node node);
 	/**
 	* Sets the current modelview matrix.
 	*/
@@ -136,6 +142,14 @@ namespace Renderer
 	* Sets an orthographic projection with a one to one pixel ratio.	
 	*/
 	void FIRECUBE_API SetOrthographicProjection();
+	/**
+	* Sets the current shader generator.
+	*/
+	void FIRECUBE_API SetShaderGenerator(ShaderGenerator &shaderGenerator);
+	/**
+	* Gets the current shader generator.
+	*/
+	ShaderGenerator FIRECUBE_API &GetShaderGenerator();
 	/**
 	* Sets the current texture manager.
 	*/

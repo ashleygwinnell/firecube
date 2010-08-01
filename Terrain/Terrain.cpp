@@ -31,8 +31,8 @@ bool Terrain::GenerateTerrain(const string &heightmap,const string &diffuse,vec3
 	diffuseTexture=Renderer::GetTextureManager().Create(diffuse);
 	diffuseTexture->SetFiltering(NEAREST,NEAREST);
 	terrainScale=sizeVertices;
-	material->program=Program(new ProgramResource);
-	material->program->Create(Renderer::GetShaderManager().Create("terrain.vshader"),Renderer::GetShaderManager().Create("terrain.fshader"));	
+	program=Program(new ProgramResource);
+	program->Create(Renderer::GetShaderManager().Create("terrain.vshader"),Renderer::GetShaderManager().Create("terrain.fshader"));	
 	normalBuffer=Buffer(new BufferResource);
 	normalBuffer->Create();
 	vertexBuffer->Create();	
@@ -175,11 +175,12 @@ DWORD Terrain::Render(Frustum &frustum)
 	vertexBuffer->SetVertexStream(3);
 	uvBuffer->SetTexCoordStream(0);	
 	normalBuffer->SetNormalStream();	
-	material->program->SetUniform("fogDensity",0.01f);
-	material->program->SetUniform("fogColor",vec4(0.30f,0.42f,0.95f,1.0f));
+	Renderer::UseProgram(program);
+	program->SetUniform("fogDensity",0.01f);
+	program->SetUniform("fogColor",vec4(0.30f,0.42f,0.95f,1.0f));
 	mat4 m=Renderer::GetModelViewMatrix();
-	material->program->SetUniform("lightDir",m*vec3(1,-1,1));
-	material->program->SetUniform("tex",0);
+	program->SetUniform("lightDir",m*vec3(1,-1,1));
+	program->SetUniform("tex",0);
 	Renderer::UseTexture(diffuseTexture,0);	
 
 	return quadtree.Render(frustum);

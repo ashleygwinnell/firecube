@@ -95,14 +95,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SceneGraph.cpp" />
-    <ClCompile Include="ShaderGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="SceneGraph.h" />
-    <ClInclude Include="ShaderGenerator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

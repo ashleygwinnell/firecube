@@ -40,9 +40,13 @@ int main(int argc, char *argv[])
 	app.program2=Program(new ProgramResource);
 	app.program->Create(app.vShader,app.pShader);
 	app.program2->Create(app.vShader,app.pShader2);		
-	app.model=app.modelManager.Create("../Media/Models/physcube.3ds");
-	app.sphere=app.modelManager.Create("../Media/Models/sphere2.3ds");
-	cube.FromModel(app.model->Reduce(),20,20,20,1.1f);		
+	app.model=LoadMesh("../Media/Models/physcube.3ds");
+	app.sphere=LoadMesh("../Media/Models/sphere2.3ds");
+	app.model.SetLighting(false);
+	app.model.SetProgram(app.program);
+	app.sphere.SetLighting(false);
+	app.sphere.SetProgram(app.program);
+	cube.FromNode(app.model,20,20,20,1.1f);		
 	body1.Init(app.model,&cube);
 	body1.position.Set(-2,0,0);
 	body2.Init(app.model,&cube);
@@ -79,7 +83,7 @@ void App::HandleInput(float t)
 {
 	body1.CalculateWorldProperties();
 	body2.CalculateWorldProperties();
-	POINT p;
+	::POINT p;
 	vec3 m;
 	GetCursorPos(&p);
 	m.x=(float)p.x;

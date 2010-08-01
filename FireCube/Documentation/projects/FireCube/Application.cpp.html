@@ -32,10 +32,11 @@ Application.cpp
 <font color="blue">#include</font> <font color="maroon">"Texture.h"</font>        
 <font color="blue">#include</font> <font color="maroon">"Buffer.h"</font>
 <font color="blue">#include</font> <font color="maroon">"Shaders.h"</font>
-<font color="blue">#include</font> <font color="maroon">"Mesh.h"</font>   
+<font color="blue">#include</font> <font color="maroon">"Geometry.h"</font>   
 <font color="blue">#include</font> <font color="maroon">"FrameBuffer.h"</font>
 <font color="blue">#include</font> <font color="maroon">"Font.h"</font>
-<font color="blue">#include</font> <font color="maroon">"Renderer.h"</font>               
+<font color="blue">#include</font> <font color="maroon">"ShaderGenerator.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Renderer.h"</font>
 <font color="blue">#include</font> <font color="maroon">"Application.h"</font>
 
 <font color="blue">using</font> <font color="blue">namespace</font> FireCube;
@@ -54,6 +55,7 @@ Application<font color="black">:</font><font color="black">:</font>Application<f
     Renderer<font color="black">:</font><font color="black">:</font>SetTextureManager<font color="black">(</font>defaultTextureManager<font color="black">)</font>;
     Renderer<font color="black">:</font><font color="black">:</font>SetShaderManager<font color="black">(</font>defaultShaderManager<font color="black">)</font>;
     Renderer<font color="black">:</font><font color="black">:</font>SetFontManager<font color="black">(</font>defaultFontManager<font color="black">)</font>;
+    Renderer<font color="black">:</font><font color="black">:</font>SetShaderGenerator<font color="black">(</font>defaultShaderGenerator<font color="black">)</font>;
 <font color="black">}</font>
 Application<font color="black">:</font><font color="black">:</font>~Application<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>

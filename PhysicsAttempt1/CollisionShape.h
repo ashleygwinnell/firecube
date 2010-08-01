@@ -9,8 +9,9 @@ class CollisionShape
 {
 public:
 	CollisionShape();
-	void FromModel(Model model,int sizex,int sizey,int sizez,float extraSize);
+	void FromNode(Node node,int sizex,int sizey,int sizez,float extraSize);
 	bool GetPointInfo(vec3 pos, vec3 &dir, float &dist, bool accurateOutsideDist);
+	Geometry GetFirstGeometry(Node node);
 	vector<vec3> vertex;
 	vector<Face> face;
 	vector<Edge> edge;

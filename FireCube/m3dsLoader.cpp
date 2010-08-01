@@ -19,18 +19,21 @@ using namespace std;
 #include "Texture.h"		
 #include "Buffer.h"
 #include "Shaders.h"
-#include "Mesh.h"	
+#include "Geometry.h"	
 #include "FrameBuffer.h"
 #include "Image.h"
 #include "Font.h"
-#include "Renderer.h"				
+#include "ShaderGenerator.h"
+#include "Renderer.h"		
 #include "Application.h"
 #include "tinyxml.h"
+#include "Light.h"
+#include "Node.h"
 #include "ModelLoaders.h"
 
 using namespace FireCube;
 
-M3dsLoader::M3dsLoader(ModelResource *model) : model(model)
+M3dsLoader::M3dsLoader()
 {
 
 }
@@ -49,26 +52,57 @@ bool M3dsLoader::Load(const string &filename)
 	
 	vector<pair<pair<DWORD,DWORD>,string>>::iterator meshMat;
 	for (meshMat=meshMaterial.begin();meshMat!=meshMaterial.end();meshMat++)
-		model->object[meshMat->first.first].mesh[meshMat->first.second].material=GetMaterialByName(meshMat->second);
+		object[meshMat->first.first].mesh[meshMat->first.second].material=GetMaterialByName(meshMat->second);
 	vector<pair<DWORD,mat4>>::iterator objMatrix;
-	for (DWORD k=0;k<model->object.size();k++)
+	for (DWORD k=0;k<object.size();k++)
 	{
-		if (model->object[k].mesh.size()==0) // No material specified, create a default one.
+		if (object[k].mesh.size()==0) // No material specified, create a default one.
 		{
 			Material mat(new MaterialResource);
 			mat->ambient.Set(0,0,0,1);
 			mat->diffuse.Set(1,1,1,1);
 			mat->specular.Set(0,0,0,1);
-			model->material.push_back(mat);
-			model->object[k].mesh.push_back(Mesh());
-			Mesh &mesh=model->object[k].mesh.back();
+			materials.push_back(mat);
+			object[k].mesh.push_back(Mesh());
+			Mesh &mesh=object[k].mesh.back();
 			mesh.material=mat;
-			mesh.face=model->object[k].face;
+			mesh.face=object[k].face;
 		}
 	}
-	model->CalculateNormals();
-	model->UpdateBuffers();	
 	return true;
+}
+Node M3dsLoader::GenerateSceneGraph()
+{
+	Node ret(new NodeResource);
+	for (DWORD i=0;i<object.size();i++)
+	{
+		Geometry geom(new GeometryResource);
+		geom->vertex=object[i].vertex;
+		geom->diffuseUV=object[i].uv;
+		geom->material=materials;
+		for (DWORD j=0;j<object[i].mesh.size();j++)
+		{
+			Mesh &mesh=object[i].mesh[j];
+			geom->surface.push_back(Surface());
+			Surface &surface=geom->surface.back();
+			surface.material=mesh.material;
+			for (DWORD k=0;k<mesh.face.size();k++)
+			{
+				Face f;
+				f.v[0]=mesh.face[k].v[0];
+				f.v[1]=mesh.face[k].v[1];
+				f.v[2]=mesh.face[k].v[2];
+				surface.face.push_back(f);
+				geom->face.push_back(f);
+			}
+		}
+		geom->CalculateNormals();
+		geom->UpdateBuffers();
+		Node node(object[i].name);		
+		node.AddGeometry(geom);
+		ret.AddChild(node);
+	}
+	return ret;
 }
 void M3dsLoader::ReadMainChunk()
 {	
@@ -118,8 +152,8 @@ void M3dsLoader::ReadObjectChunk(DWORD length)
 		curPos+=6;
 		if (subId==OBJ_TRIMESH)
 		{	
-			model->object.push_back(Object());
-			model->object.back().name=name;		
+			object.push_back(Object());
+			object.back().name=name;		
 			ReadTriMeshChunk(subLen);
 		}
 		else
@@ -148,7 +182,7 @@ void M3dsLoader::ReadTriMeshChunk(DWORD length)
 }
 void M3dsLoader::ReadVerticesListChunk()
 {
-	Object &obj=model->object.back();
+	Object &obj=object.back();
 	obj.vertex.resize(*(WORD*)curPos);
 	curPos+=2;
 	for (DWORD i=0;i<obj.vertex.size();i++)
@@ -163,7 +197,7 @@ void M3dsLoader::ReadVerticesListChunk()
 }
 void M3dsLoader::ReadFacesListChunk(DWORD length)
 {
-	Object &obj=model->object.back();
+	Object &obj=object.back();
 	char *startPos=curPos;	
 	obj.face.resize(*(WORD*)curPos);
 	curPos+=2;
@@ -189,25 +223,25 @@ void M3dsLoader::ReadFacesListChunk(DWORD length)
 }
 void M3dsLoader::ReadTexCoordListChunk()
 {	
-	Object &obj=model->object.back();
-	obj.diffuseUV.resize(*(WORD*)curPos);
+	Object &obj=object.back();
+	obj.uv.resize(*(WORD*)curPos);
 	curPos+=2;
-	for (DWORD i=0;i<obj.diffuseUV.size();i++)
+	for (DWORD i=0;i<obj.uv.size();i++)
 	{
-		obj.diffuseUV[i].x=*(float*)curPos;
+		obj.uv[i].x=*(float*)curPos;
 		curPos+=4;
-		obj.diffuseUV[i].y=1.0f-*(float*)curPos;
+		obj.uv[i].y=1.0f-*(float*)curPos;
 		curPos+=4;
 	}	
 }
 void M3dsLoader::ReadMaterialFaceList()
 {	
-	Object &obj=model->object.back();
+	Object &obj=object.back();
 	string matName=curPos;
 	curPos+=matName.size()+1;
 	obj.mesh.push_back(Mesh());
 	Mesh &mesh=obj.mesh.back();		
-	meshMaterial.push_back(make_pair(make_pair(model->object.size()-1,obj.mesh.size()-1),matName));
+	meshMaterial.push_back(make_pair(make_pair(object.size()-1,obj.mesh.size()-1),matName));
 	WORD count=*(WORD*)curPos;
 	curPos+=2;
 	for (DWORD i=0;i<count;i++)
@@ -232,7 +266,7 @@ void M3dsLoader::ReadObjectMatrixChunk()
 	mat.m[6]=arr[9];
 	mat.m[10]=arr[10];
 	mat.m[14]=arr[11];
-	objectMatrix.push_back(make_pair(model->object.size()-1,mat));
+	objectMatrix.push_back(make_pair(object.size()-1,mat));
 	curPos+=4*12;
 }
 void M3dsLoader::ReadMaterialListChunk(DWORD length)
@@ -263,10 +297,9 @@ void M3dsLoader::ReadMaterialListChunk(DWORD length)
 void M3dsLoader::ReadMaterialNameChunk()
 {	
 	curMaterial=Material(new MaterialResource);
-	materials.push_back(curMaterial);
-	model->material.push_back(curMaterial);
+	materials.push_back(curMaterial);	
 	curMaterial->name=curPos;
-	curPos+=curMaterial->name.size()+1;	
+	curPos+=curMaterial->name.size()+1;
 }
 vec4 M3dsLoader::ReadColorFChunk()
 {
