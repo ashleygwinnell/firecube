@@ -28,6 +28,7 @@ protected:
 	void TextCtrl5TextEnter( wxCommandEvent& event );
 	void MenuItem5Clicked( wxCommandEvent& event );
 	void MenuItem6Clicked( wxCommandEvent& event );	
+	void MenuItem7Clicked( wxCommandEvent& event );	
 	void PropertyGrid1Changed( wxCommandEvent& event );
 
 public:

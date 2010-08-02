@@ -32,6 +32,7 @@ public:
 	bool cullFaceEnabled;	
 	bool renderNormals;
 	float normalsLength;
+	bool customProgram;
 	FireCube::vec3 rot;
 	FireCube::vec3 lookat;
 	FireCube::Buffer gridVertex;	

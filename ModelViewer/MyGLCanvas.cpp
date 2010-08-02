@@ -59,6 +59,7 @@ void MyGLCanvas::Init()
 	renderingMode=GL_FILL;
 	cullFaceEnabled=true;
 	renderNormals=false;
+	customProgram=false;
 
 	fcApp->vshader=FireCube::Renderer::GetShaderManager().Create("plainColor.vshader");
 	fcApp->fshader=FireCube::Renderer::GetShaderManager().Create("plainColor.fshader");

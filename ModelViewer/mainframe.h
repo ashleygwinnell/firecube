@@ -100,6 +100,7 @@ class MainFrame : public wxFrame
 		virtual void MenuItem1Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void MenuItem3Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void MenuItem4Clicked( wxCommandEvent& event ){ event.Skip(); }
+		virtual void MenuItem7Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void MenuItem6Clicked( wxCommandEvent& event ){ event.Skip(); }
 		virtual void MenuItem5Clicked( wxCommandEvent& event ){ event.Skip(); }
 		

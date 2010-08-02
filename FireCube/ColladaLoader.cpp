@@ -253,6 +253,8 @@ void ColladaLoader::ReadEffectProfileCommon(TiXmlNode *parent,Effect &effect)
 				ReadEffectColor(element,effect.diffuseColor,effect.diffuseSampler);
 			else if (element->ValueStr()=="specular")
 				ReadEffectColor(element,effect.specularColor,effect.specularSampler);
+			else if (element->ValueStr()=="shininess")
+				ReadEffectFloat(element,effect.shininess);
 		}
 	}
 }
@@ -306,6 +308,24 @@ void ColladaLoader::ReadEffectColor(TiXmlNode *parent,vec4 &color,Sampler &sampl
 				sampler.name=element->Attribute("texture");
 				sampler.uvCoords=element->Attribute("texcoord");
 			}
+		}
+	}
+}
+void ColladaLoader::ReadEffectFloat(TiXmlNode *parent,float &value)
+{
+	TiXmlNode *node;
+	TiXmlElement *element;
+	for (node=parent->FirstChild();node!=NULL;node=node->NextSibling())
+	{
+		if (node->Type()==TiXmlNode::ELEMENT)
+		{
+			element=node->ToElement();
+			if (element->ValueStr()=="float")
+			{
+				string data=element->GetText();
+				istringstream iss(data);
+				iss >> value;
+			}			
 		}
 	}
 }
@@ -1191,6 +1211,7 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
 			fmat->ambient=effect.ambientColor;
 			fmat->diffuse=effect.diffuseColor;
 			fmat->specular=effect.specularColor;			
+			fmat->shininess=effect.shininess;
 			fmat->name=subMesh.material;
 			surface.material=fmat;
 			if (table)

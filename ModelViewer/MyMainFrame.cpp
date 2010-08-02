@@ -49,6 +49,7 @@ void MyMainFrame::MenuItem3Clicked( wxCommandEvent& event )
 		return;
 	fcApp->vshader=FireCube::Renderer::GetShaderManager().Create(sfile);
 	fcApp->program->Create(fcApp->vshader,fcApp->fshader);
+	glCanvas->customProgram=true;
 	fcApp->root.SetProgram(fcApp->program);
 }
 void MyMainFrame::MenuItem4Clicked( wxCommandEvent& event )
@@ -61,7 +62,15 @@ void MyMainFrame::MenuItem4Clicked( wxCommandEvent& event )
 		return;
 	fcApp->fshader=FireCube::Renderer::GetShaderManager().Create(sfile);
 	fcApp->program->Create(fcApp->vshader,fcApp->fshader);
+	glCanvas->customProgram=true;
 	fcApp->root.SetProgram(fcApp->program);
+}
+void MyMainFrame::MenuItem7Clicked( wxCommandEvent& event )
+{	
+	FireCubeApp *fcApp=&(((MyApp*)wxTheApp)->fireCubeApp);	
+	FireCubeApp *app= &(((MyApp*)wxTheApp)->fireCubeApp);
+	glCanvas->customProgram=false;
+	fcApp->root.SetProgram(FireCube::Program());
 }
 void MyMainFrame::CheckBox2Clicked( wxCommandEvent& event )
 {

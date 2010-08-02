@@ -317,10 +317,10 @@ void InitializeLua(lua_State *& luaState)
 			.def_readwrite("program",&RenderParameters::program),
 		luabind::class_<LightResource,Light>("Light")
 			.def(luabind::constructor<>())
-			.def_readwrite("diffuseTexture",&LightResource::ambientColor)
-			.def_readwrite("diffuseTexture",&LightResource::diffuseColor)			
-			.def_readwrite("diffuseTexture",&LightResource::specularColor)
-			.def_readwrite("diffuseTexture",&LightResource::type),
+			.def_readwrite("ambientColor",&LightResource::ambientColor)
+			.def_readwrite("diffuseColor",&LightResource::diffuseColor)			
+			.def_readwrite("specularColor",&LightResource::specularColor)
+			.def_readwrite("type",&LightResource::type),
 		luabind::class_<Node>("Node")
 			.def(luabind::constructor<>())
 			.def(luabind::constructor<const string &>())

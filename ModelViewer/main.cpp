@@ -38,12 +38,21 @@ void FireCubeApp::LoadModel(const string &filename)
 	MyApp *app=(MyApp*)wxTheApp;
 	FireCube::Timer t;
 	t.Init();
-	root=FireCube::LoadMesh(filename);
-	root.SetLighting(false);
+	root=FireCube::LoadMesh(filename);	
 	ostringstream oss3;
 	oss3 << "Loading completed in " << t.Passed() << " seconds.";
 	app->frame->statusBar1->SetStatusText(oss3.str());
-	root.SetProgram(program);		
+	FireCube::Node l=root.AddChild(FireCube::Node("LightNode"));
+	FireCube::Light light(new FireCube::LightResource);
+	light->ambientColor=FireCube::vec4(0.3f,0.3f,0.3f,1.0f);
+	light->diffuseColor=FireCube::vec4(0.7f,0.7f,0.7f,1.0f);
+	light->specularColor=FireCube::vec4(0.3f,0.3f,0.3f,1.0f);
+	light->type=FireCube::DIRECTIONAL;
+	l.AddLight(light);
+	l.Rotate(FireCube::vec3((float)PI/4.0f,(float)PI/4.0f,0));
+	if (app->frame->glCanvas->customProgram)
+		root.SetProgram(program);
+
 	unsigned int vertexCount=0,faceCount=0;
 	CountElements(root,vertexCount,faceCount);
 	GenerateNormals(app->frame->glCanvas->normalsLength);

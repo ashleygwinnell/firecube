@@ -154,7 +154,7 @@ Program ShaderGenerator::GenerateProgram(RenderState &renderState)
 		fshaderCode << "color += gl_FrontMaterial.diffuse*lightDiffuse*lambertTerm;" << endl;
 		fshaderCode << "vec3 E = normalize(eyeVec);" << endl
 					<< "vec3 R = reflect(-directionalLightDir, n);" << endl
-					<< "float specular = pow( max(dot(R, E), 0.0), gl_FrontMaterial.shininess );" << endl
+					<< "float specular = max(pow( max(dot(R, E), 0.0), gl_FrontMaterial.shininess ),0.0);" << endl
 					<< "color += gl_FrontMaterial.specular*lightSpecular*specular;" << endl
 					<< "}" << endl;
 	}
@@ -171,7 +171,7 @@ Program ShaderGenerator::GenerateProgram(RenderState &renderState)
 		fshaderCode << "color += gl_FrontMaterial.diffuse*lightDiffuse*lambertTerm;" << endl;
 		fshaderCode << "vec3 E = normalize(eyeVec);" << endl
 					<< "vec3 R = reflect(-l, n);" << endl
-					<< "float specular = pow( max(dot(R, E), 0.0), gl_FrontMaterial.shininess );" << endl
+					<< "float specular = max(pow( max(dot(R, E), 0.0), gl_FrontMaterial.shininess ),0.0);" << endl
 					<< "color += gl_FrontMaterial.specular*lightSpecular*specular;" << endl
 					<< "}" << endl;
 					
