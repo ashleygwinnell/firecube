@@ -42,7 +42,7 @@ vector<string> Application::searchPaths;
 bool keyState[KEY_LAST];
 Application::Application() : running(false), frameCount(0), fpsTime(0), fps(0)
 {
-	for (DWORD i=0;i<KEY_LAST;i++)
+	for (unsigned int i=0;i<KEY_LAST;i++)
 		keyState[i]=false;
 	Renderer::SetTextureManager(defaultTextureManager);
 	Renderer::SetShaderManager(defaultShaderManager);
@@ -169,7 +169,7 @@ void Application::Run()
 			if (event.type==SDL_QUIT) 
 				running=false; 			
 		}
-		for (DWORD i=1;i<KEY_LAST;i++)
+		for (unsigned int i=1;i<KEY_LAST;i++)
 		{
 			int k=ConvertKeyToVKey((Key)i);
 			if (k!=0)

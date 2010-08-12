@@ -41,10 +41,9 @@ FontManager::FontManager()
 }
 boost::shared_ptr<FontPage> FontManager::CreateNewPage()
 {
-	boost::shared_ptr<FontPage> p(new FontPage);
-	p->tex=Texture(new TextureResource);	
-	p->tex->Create();
-	glBindTexture(GL_TEXTURE_2D,p->tex->id);
+	boost::shared_ptr<FontPage> p(new FontPage);	
+	p->tex.Create();
+	glBindTexture(GL_TEXTURE_2D,p->tex.GetId());
 	unsigned char empty[512*512];
 	ZeroMemory(empty,512*512);
 	glTexImage2D(GL_TEXTURE_2D,0,GL_ALPHA,512,512,0,GL_ALPHA,GL_UNSIGNED_BYTE,empty);	
@@ -53,11 +52,11 @@ boost::shared_ptr<FontPage> FontManager::CreateNewPage()
 	page.push_back(p);
 	return p;
 }
-boost::shared_ptr<FontResource> FontManager::Create(const string &filename,int size)
+Font FontManager::Create(const string &filename,int size)
 {
 	ostringstream oss;
 	oss << filename << ":" << size;
-	return ResourceManager<FontResource>::Create(oss.str());
+	return ResourceManager<Font,FontResource>::Create(oss.str());
 }
 FontResource::FontResource()
 {	
@@ -69,50 +68,59 @@ FontResource::~FontResource()
 	Logger::Write("Destroying font.\n");
 	delete fontImpl;
 }
-bool FontResource::AddChar(char c)
+Font::Font()
+{
+
+}
+Font::Font(boost::shared_ptr<FontResource> resource)
+{
+	this->resource=resource;
+}
+bool Font::AddChar(char c)
 {
 	int error;
 	FT_UInt glyph_index;
-	glyph_index=FT_Get_Char_Index(fontImpl->face,c);
-	error=FT_Load_Glyph(fontImpl->face,glyph_index,FT_LOAD_DEFAULT);
+	glyph_index=FT_Get_Char_Index(resource->fontImpl->face,c);
+	error=FT_Load_Glyph(resource->fontImpl->face,glyph_index,FT_LOAD_DEFAULT);
 	if (error)
 		return false;
 	if (c==32)
 	{
-		glyph[c].advance=fontImpl->face->glyph->advance.x>>6;
+		resource->glyph[c].advance=resource->fontImpl->face->glyph->advance.x>>6;
 		return true;
 	}	
-	error=FT_Render_Glyph(fontImpl->face->glyph,FT_RENDER_MODE_NORMAL);
+	error=FT_Render_Glyph(resource->fontImpl->face->glyph,FT_RENDER_MODE_NORMAL);
 	if (error)
 		return false;
-	if (page->textureSize-page->curPos.x<fontImpl->face->glyph->bitmap.width)
+	if (resource->page->textureSize-resource->page->curPos.x<resource->fontImpl->face->glyph->bitmap.width)
 	{
-		page->curPos.x=0;
-		page->curPos.y+=size;
+		resource->page->curPos.x=0;
+		resource->page->curPos.y+=resource->size;
 	}
-	if (page->textureSize-page->curPos.y<fontImpl->face->glyph->bitmap.rows)
+	if (resource->page->textureSize-resource->page->curPos.y<resource->fontImpl->face->glyph->bitmap.rows)
 		return false;
-	glTexSubImage2D(GL_TEXTURE_2D,0,(int)page->curPos.x,(int)page->curPos.y,fontImpl->face->glyph->bitmap.width,fontImpl->face->glyph->bitmap.rows,GL_ALPHA,GL_UNSIGNED_BYTE,fontImpl->face->glyph->bitmap.buffer);
-	glyph[c].uv=page->curPos/512.0f;
-	glyph[c].size=vec2((float)fontImpl->face->glyph->bitmap.width,(float)fontImpl->face->glyph->bitmap.rows);
-	glyph[c].bitmapOffset=vec2((float)fontImpl->face->glyph->bitmap_left,size-(float)fontImpl->face->glyph->bitmap_top);	
-	glyph[c].advance=fontImpl->face->glyph->advance.x>>6;
-	page->curPos.x+=glyph[c].size.x;
+	glTexSubImage2D(GL_TEXTURE_2D,0,(int)resource->page->curPos.x,(int)resource->page->curPos.y,resource->fontImpl->face->glyph->bitmap.width,resource->fontImpl->face->glyph->bitmap.rows,GL_ALPHA,GL_UNSIGNED_BYTE,resource->fontImpl->face->glyph->bitmap.buffer);
+	resource->glyph[c].uv=resource->page->curPos/512.0f;
+	resource->glyph[c].size=vec2((float)resource->fontImpl->face->glyph->bitmap.width,(float)resource->fontImpl->face->glyph->bitmap.rows);
+	resource->glyph[c].bitmapOffset=vec2((float)resource->fontImpl->face->glyph->bitmap_left,resource->size-(float)resource->fontImpl->face->glyph->bitmap_top);	
+	resource->glyph[c].advance=resource->fontImpl->face->glyph->advance.x>>6;
+	resource->page->curPos.x+=resource->glyph[c].size.x;
 	
 	return true;
 }
-bool FontResource::Load(const string &name,int size)
+bool Font::Load(const string &name,int size)
 {	
+	resource=boost::shared_ptr<FontResource>(new FontResource);
 	Logger::Write("Loading font with name:");
 	Logger::Write(name);
 	Logger::Write("\n");
 	int error=0;
 	char text[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-=_+[]{};:'\"\\|,./<>?/*. ";
-	this->size=size;		
-	error=FT_New_Face(freeTypeLibrary,name.c_str(),0,&(fontImpl->face));
+	resource->size=size;		
+	error=FT_New_Face(freeTypeLibrary,name.c_str(),0,&(resource->fontImpl->face));
 	if (error)
 		return false;
-	error=FT_Set_Pixel_Sizes(fontImpl->face,0,size);
+	error=FT_Set_Pixel_Sizes(resource->fontImpl->face,0,size);
 	if (error)
 		return false;
 	vector<boost::weak_ptr<FontPage>>::iterator p=Renderer::GetFontManager().page.begin();
@@ -131,12 +139,12 @@ bool FontResource::Load(const string &name,int size)
 		}
 	}
 	if (found)
-		page=(*p).lock();
+		resource->page=(*p).lock();
 	else
 	{
-		page=Renderer::GetFontManager().CreateNewPage();
+		resource->page=Renderer::GetFontManager().CreateNewPage();
 	}
-	glBindTexture(GL_TEXTURE_2D,page->tex->id);	
+	glBindTexture(GL_TEXTURE_2D,resource->page->tex.GetId());	
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 	for (unsigned int i=0;i<strlen(text);i++)
 	{		
@@ -148,7 +156,7 @@ bool FontResource::Load(const string &name,int size)
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP);
 	return true;
 }
-bool FontResource::Load(const string &name)
+bool Font::Load(const string &name)
 {
 	int size=0;
 	string::size_type d;
@@ -159,4 +167,12 @@ bool FontResource::Load(const string &name)
 	string fontName=name.substr(0,d);	
 	size=atoi(ssize.c_str());
 	return Load(fontName,size);
+}
+Font::operator bool () const
+{
+	return resource;
+}
+bool Font::operator== (const Font &font) const
+{
+	return font.resource==resource;
 }

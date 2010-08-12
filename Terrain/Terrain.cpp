@@ -16,10 +16,11 @@ using namespace FireCube;
 #include "QuadTree.h"
 #include "Terrain.h"
 
-Terrain::Terrain() : vertexBuffer(new BufferResource), uvBuffer(new BufferResource),normalBuffer(new BufferResource),material(new MaterialResource)
+Terrain::Terrain()
 {
-	material->ambient=vec4(0.2f,0.2f,0.2f,1.0f);
-	material->diffuse=vec4(0.5f,0.5f,0.5f,1.0f);	
+	material.Create();
+	material.SetAmbientColor(vec4(0.2f,0.2f,0.2f,1.0f));
+	material.SetDiffuseColor(vec4(0.5f,0.5f,0.5f,1.0f));
 }
 bool Terrain::GenerateTerrain(const string &heightmap,const string &diffuse,vec3 sizeVertices,vec2 sizeUv)
 {	
@@ -29,14 +30,12 @@ bool Terrain::GenerateTerrain(const string &heightmap,const string &diffuse,vec3
 
 	timer.Update();
 	diffuseTexture=Renderer::GetTextureManager().Create(diffuse);
-	diffuseTexture->SetFiltering(NEAREST,NEAREST);
-	terrainScale=sizeVertices;
-	program=Program(new ProgramResource);
-	program->Create(Renderer::GetShaderManager().Create("terrain.vshader"),Renderer::GetShaderManager().Create("terrain.fshader"));	
-	normalBuffer=Buffer(new BufferResource);
-	normalBuffer->Create();
-	vertexBuffer->Create();	
-	uvBuffer->Create();	
+	diffuseTexture.SetFiltering(NEAREST,NEAREST);
+	terrainScale=sizeVertices;	
+	program.Create(Renderer::GetShaderManager().Create("terrain.vshader"),Renderer::GetShaderManager().Create("terrain.fshader"));		
+	normalBuffer.Create();
+	vertexBuffer.Create();	
+	uvBuffer.Create();	
 	if (!heightmapImage.Load(heightmap))
 		return false;
 	width=heightmapImage.GetWidth();
@@ -127,9 +126,9 @@ bool Terrain::GenerateTerrain(const string &heightmap,const string &diffuse,vec3
 			uv[uvCurrentIndex++]=uvPos.y;
 		}
 	}
-	vertexBuffer->LoadData(&vertex[0],vertex.size()*sizeof(float),STATIC);		
-	normalBuffer->LoadData(&normal[0],normal.size()*sizeof(float),STATIC);		
-	uvBuffer->LoadData(&uv[0],uv.size()*sizeof(float),STATIC);
+	vertexBuffer.LoadData(&vertex[0],vertex.size()*sizeof(float),STATIC);		
+	normalBuffer.LoadData(&normal[0],normal.size()*sizeof(float),STATIC);		
+	uvBuffer.LoadData(&uv[0],uv.size()*sizeof(float),STATIC);
 	t=(float)timer.Passed();
 	cout << "Generating terrain took " << t << " seconds" << endl;
 	timer.Update();
@@ -172,15 +171,15 @@ bool Terrain::GenerateTerrain(const string &heightmap,const string &diffuse,vec3
 DWORD Terrain::Render(Frustum &frustum)
 {
 	Renderer::UseMaterial(material);
-	vertexBuffer->SetVertexStream(3);
-	uvBuffer->SetTexCoordStream(0);	
-	normalBuffer->SetNormalStream();	
+	vertexBuffer.SetVertexStream(3);
+	uvBuffer.SetTexCoordStream(0);	
+	normalBuffer.SetNormalStream();	
 	Renderer::UseProgram(program);
-	program->SetUniform("fogDensity",0.01f);
-	program->SetUniform("fogColor",vec4(0.30f,0.42f,0.95f,1.0f));
+	program.SetUniform("fogDensity",0.01f);
+	program.SetUniform("fogColor",vec4(0.30f,0.42f,0.95f,1.0f));
 	mat4 m=Renderer::GetModelViewMatrix();
-	program->SetUniform("lightDir",m*vec3(1,-1,1));
-	program->SetUniform("tex",0);
+	program.SetUniform("lightDir",m*vec3(1,-1,1));
+	program.SetUniform("tex",0);
 	Renderer::UseTexture(diffuseTexture,0);	
 
 	return quadtree.Render(frustum);

@@ -51,7 +51,7 @@ bool Image::Load(const string &filename)
 			{
 				for (int j=0;j<bpp/8;j++)
 				{				
-					DWORD i=y*height*bpp/8+x*bpp/8+j;
+					unsigned int i=y*height*bpp/8+x*bpp/8+j;
 					data[i]=((unsigned char*)(image->pixels))[y*image->pitch+x*bpp/8+j];
 				}
 			}

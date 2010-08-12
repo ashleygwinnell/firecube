@@ -43,11 +43,71 @@ MaterialResource::~MaterialResource()
 {
 
 }
+void Material::Create()
+{
+	resource=boost::shared_ptr<MaterialResource>(new MaterialResource);
+}
+string Material::GetName()
+{
+	return resource->name;
+}
+void Material::SetName(const string &name)
+{
+	resource->name=name;
+}
+vec4 Material::GetAmbientColor()
+{
+	return resource->ambient;
+}
+void Material::SetAmbientColor(vec4 color)
+{
+	resource->ambient=color;
+}
+vec4 Material::GetDiffuseColor()
+{
+	return resource->diffuse;
+}
+void Material::SetDiffuseColor(vec4 color)
+{
+	resource->diffuse=color;
+}
+vec4 Material::GetSpecularColor()
+{
+	return resource->specular;
+}
+void Material::SetSpecularColor(vec4 color)
+{
+	resource->specular=color;
+}
+float Material::GetShininess()
+{
+	return resource->shininess;
+}
+void Material::SetShininess(float value)
+{
+	resource->shininess=value;
+}
+Texture Material::GetDiffuseTexture()
+{
+	return resource->diffuseTexture;
+}
+void Material::SetDiffuseTexture(Texture texture)
+{
+	resource->diffuseTexture=texture;
+}
+Material::operator bool () const
+{
+	return resource;
+}
+bool Material::operator== (const Material &material) const
+{
+	return resource==material.resource;
+}
 Face::Face()
 {
 	
 }
-Face::Face(DWORD v0,DWORD v1,DWORD v2)
+Face::Face(unsigned int v0,unsigned int v1,unsigned int v2)
 {
 	v[0]=v0;
 	v[1]=v1;
@@ -61,20 +121,24 @@ GeometryResource::~GeometryResource()
 {	
 	Logger::Write(string("Destroyed geometry.\n"));	
 }
-void GeometryResource::CalculateNormals()
+void Geometry::Create()
+{
+	resource=boost::shared_ptr<GeometryResource>(new GeometryResource);
+}
+void Geometry::CalculateNormals()
 {	
-	normal.resize(vertex.size());		
-	for (DWORD n=0;n<normal.size();n++)
+	resource->normal.resize(resource->vertex.size());		
+	for (unsigned int n=0;n<resource->normal.size();n++)
 	{			
-		normal[n]=vec3(0,0,0);		
+		resource->normal[n]=vec3(0,0,0);		
 	}
-	for (DWORD f=0;f<face.size();f++)
+	for (unsigned int f=0;f<resource->face.size();f++)
 	{
-		vec3 v1=vertex[face[f].v[1]]-vertex[face[f].v[0]];
-		vec3 v2=vertex[face[f].v[2]]-vertex[face[f].v[0]];
+		vec3 v1=resource->vertex[resource->face[f].v[1]]-resource->vertex[resource->face[f].v[0]];
+		vec3 v2=resource->vertex[resource->face[f].v[2]]-resource->vertex[resource->face[f].v[0]];
 		vec3 n=Cross(v1,v2);			
-		face[f].normal=n;
-		face[f].normal.Normalize();
+		resource->face[f].normal=n;
+		resource->face[f].normal.Normalize();
 		/*for (unsigned int i=0;i<vertex.size();i++)					// Fix texture coordinate problem having certain vertices duplicated. SLOW.
 		{
 		if (vertex[i]==vertex[face[f].v[0]])
@@ -93,46 +157,45 @@ void GeometryResource::CalculateNormals()
 		count[i]++;
 		}
 		}*/
-		normal[face[f].v[0]]+=n;			
-		normal[face[f].v[1]]+=n;			
-		normal[face[f].v[2]]+=n;			
+		resource->normal[resource->face[f].v[0]]+=n;			
+		resource->normal[resource->face[f].v[1]]+=n;			
+		resource->normal[resource->face[f].v[2]]+=n;			
 	}		
-	for (DWORD n=0;n<normal.size();n++)
+	for (unsigned int n=0;n<resource->normal.size();n++)
 	{			
-		normal[n].Normalize();		
-	}	
-	normalBuffer=Buffer(new BufferResource);
-	normalBuffer->Create();
-	normalBuffer->LoadData(&normal[0],sizeof(vec3)*normal.size(),STATIC);
+		resource->normal[n].Normalize();		
+	}		
+	resource->normalBuffer.Create();
+	resource->normalBuffer.LoadData(&resource->normal[0],sizeof(vec3)*resource->normal.size(),STATIC);
 }
 
-void GeometryResource::CreateHardNormals()
+void Geometry::CreateHardNormals()
 {
 	vector<vec3> originalVertices;
 	vector<vec2> originalDiffuseUV;
-	DWORD currentIndex=0;
-	originalVertices=vertex;
-	originalDiffuseUV=diffuseUV;
-	face.clear();
-	vertex.clear();
-	normal.clear();
-	diffuseUV.clear();
+	unsigned int currentIndex=0;
+	originalVertices=resource->vertex;
+	originalDiffuseUV=resource->diffuseUV;
+	resource->face.clear();
+	resource->vertex.clear();
+	resource->normal.clear();
+	resource->diffuseUV.clear();
 
-	for (DWORD j=0;j<surface.size();j++)
+	for (unsigned int j=0;j<resource->surface.size();j++)
 	{
-		Surface &surface=this->surface[j];
-		for (DWORD i=0;i<surface.face.size();i++)
+		Surface &surface=this->resource->surface[j];
+		for (unsigned int i=0;i<surface.face.size();i++)
 		{				
 			vec3 v0=originalVertices[surface.face[i].v[0]];
 			vec3 v1=originalVertices[surface.face[i].v[1]];
 			vec3 v2=originalVertices[surface.face[i].v[2]];
 			vec3 n=Cross(v1-v0,v2-v0).Normalize();
-			vertex.push_back(v0);
-			vertex.push_back(v1);
-			vertex.push_back(v2);
-			normal.push_back(n);
-			normal.push_back(n);
-			normal.push_back(n);
+			resource->vertex.push_back(v0);
+			resource->vertex.push_back(v1);
+			resource->vertex.push_back(v2);
+			resource->normal.push_back(n);
+			resource->normal.push_back(n);
+			resource->normal.push_back(n);
 			if (originalDiffuseUV.size()>0)
 			{
 				vec2 uv0(0,0),uv1(0,0),uv2(0,0);
@@ -140,120 +203,116 @@ void GeometryResource::CreateHardNormals()
 				uv1=originalDiffuseUV[surface.face[i].v[1]];
 				uv2=originalDiffuseUV[surface.face[i].v[2]];
 
-				diffuseUV.push_back(uv0);
-				diffuseUV.push_back(uv1);
-				diffuseUV.push_back(uv2);
+				resource->diffuseUV.push_back(uv0);
+				resource->diffuseUV.push_back(uv1);
+				resource->diffuseUV.push_back(uv2);
 			}									
 			surface.face[i].v[0]=currentIndex++;
 			surface.face[i].v[1]=currentIndex++;
 			surface.face[i].v[2]=currentIndex++;				
-			face.push_back(surface.face[i]);
+			resource->face.push_back(surface.face[i]);
 		}
-		vector<DWORD> tmp;
+		vector<unsigned int> tmp;
 		tmp.resize(surface.face.size()*3);
-		for (DWORD f=0;f<surface.face.size();f++)
+		for (unsigned int f=0;f<surface.face.size();f++)
 		{
 			tmp[f*3+0]=surface.face[f].v[0];
 			tmp[f*3+1]=surface.face[f].v[1];
 			tmp[f*3+2]=surface.face[f].v[2];
 		}			
 	}		
-	if (diffuseUV.size())
-	{	
-		diffuseUVBuffer=Buffer(new BufferResource);
-		diffuseUVBuffer->Create();
-		diffuseUVBuffer->LoadData(&diffuseUV[0],sizeof(vec2)*diffuseUV.size(),STATIC);
+	if (resource->diffuseUV.size())
+	{			
+		resource->diffuseUVBuffer.Create();
+		resource->diffuseUVBuffer.LoadData(&resource->diffuseUV[0],sizeof(vec2)*resource->diffuseUV.size(),STATIC);
 	}		
 
 	UpdateBuffers();
 }
-void GeometryResource::UpdateBuffers()
+void Geometry::UpdateBuffers()
 {
-	if (!vertexBuffer)
-	{
-		vertexBuffer=Buffer(new BufferResource);
-		vertexBuffer->Create();
+	if (!resource->vertexBuffer)
+	{		
+		resource->vertexBuffer.Create();
 	}
-	if (!vertexBuffer->LoadData(&vertex[0],sizeof(vec3)*vertex.size(),STATIC))
+	if (!resource->vertexBuffer.LoadData(&resource->vertex[0],sizeof(vec3)*resource->vertex.size(),STATIC))
 	{
 		ostringstream oss;
-		oss << "buffer id:"<<vertexBuffer->id << " Couldn't upload vertex data" << endl;
+		oss << "buffer id:"<<resource->vertexBuffer.GetId() << " Couldn't upload vertex data" << endl;
 		Logger::Write(oss.str());
 	}
-	if (normal.size()!=0)
+	if (resource->normal.size()!=0)
 	{
-		if (!normalBuffer)
-		{
-			normalBuffer=Buffer(new BufferResource);
-			normalBuffer->Create();
+		if (!resource->normalBuffer)
+		{			
+			resource->normalBuffer.Create();
 		}
-		if (!normalBuffer->LoadData(&normal[0],sizeof(vec3)*normal.size(),STATIC))
+		if (!resource->normalBuffer.LoadData(&resource->normal[0],sizeof(vec3)*resource->normal.size(),STATIC))
 		{
 			ostringstream oss;
-			oss << "buffer id:"<<vertexBuffer->id << " Couldn't upload vertex data" << endl;
+			oss << "buffer id:"<<resource->normalBuffer.GetId() << " Couldn't upload vertex data" << endl;
 			Logger::Write(oss.str());
 		}
 	}
 	else
-		normalBuffer.reset();
+		resource->normalBuffer.Destroy();
 
-	if (diffuseUV.size()!=0)
+	if (resource->diffuseUV.size()!=0)
 	{
-		if (!diffuseUVBuffer)
-		{
-			diffuseUVBuffer=Buffer(new BufferResource);
-			diffuseUVBuffer->Create();
+		if (!resource->diffuseUVBuffer)
+		{			
+			resource->diffuseUVBuffer.Create();
 		}
-		if (!diffuseUVBuffer->LoadData(&diffuseUV[0],sizeof(vec2)*diffuseUV.size(),STATIC))
+		if (!resource->diffuseUVBuffer.LoadData(&resource->diffuseUV[0],sizeof(vec2)*resource->diffuseUV.size(),STATIC))
 		{
 			ostringstream oss;
-			oss << "buffer id:"<<vertexBuffer->id << " Couldn't upload vertex data" << endl;
+			oss << "buffer id:"<<resource->diffuseUVBuffer.GetId() << " Couldn't upload vertex data" << endl;
 			Logger::Write(oss.str());
 		}
 	}
 	else
-		diffuseUVBuffer.reset();
+		resource->diffuseUVBuffer.Destroy();
 
 
 
-	for (DWORD m=0;m<surface.size();m++)
+	for (unsigned int m=0;m<resource->surface.size();m++)
 	{
-		Surface &surface=this->surface[m];
-		vector<DWORD> indices;
-		for (DWORD i=0;i<surface.face.size();i++)
+		Surface &surface=this->resource->surface[m];
+		vector<unsigned int> indices;
+		for (unsigned int i=0;i<surface.face.size();i++)
 		{
 			indices.push_back(surface.face[i].v[0]);
 			indices.push_back(surface.face[i].v[1]);
 			indices.push_back(surface.face[i].v[2]);
 		}
 		if (!surface.indexBuffer)
-		{
-			surface.indexBuffer=Buffer(new BufferResource);
-			surface.indexBuffer->Create();
+		{			
+			surface.indexBuffer.Create();
 		}
-		if (!surface.indexBuffer->LoadIndexData(&indices[0],indices.size(),STATIC))
+		if (!surface.indexBuffer.LoadIndexData(&indices[0],indices.size(),STATIC))
 		{
 			ostringstream oss;
-			oss << "buffer id:"<<surface.indexBuffer->id << " Couldn't upload vertex data" << endl;
+			oss << "buffer id:"<<surface.indexBuffer.GetId() << " Couldn't upload vertex data" << endl;
 			Logger::Write(oss.str());
 		}
 	}
 }
-Geometry GeometryResource::Reduce()
+Geometry Geometry::Reduce()
 {
-	Geometry geometry(new GeometryResource);
-	geometry->face=face;	
+	Geometry geometry;
+	geometry.Create();
+	geometry.resource->face=resource->face;	
 
-	for (unsigned int i=0;i<geometry->face.size();i++)
+	for (unsigned int i=0;i<geometry.resource->face.size();i++)
 	{
 		for (unsigned int j=0;j<3;j++)
 		{
-			vec3 v=vertex[geometry->face[i].v[j]];
+			vec3 v=resource->vertex[geometry.resource->face[i].v[j]];
 			bool found=false;
 			unsigned int k;
-			for (k=0;k<geometry->vertex.size();k++)
+			for (k=0;k<geometry.resource->vertex.size();k++)
 			{
-				if ((vertex[k]-v).Length2()==0.0f)
+				if ((resource->vertex[k]-v).Length2()==0.0f)
 				{
 					found=true;
 					break;
@@ -261,44 +320,76 @@ Geometry GeometryResource::Reduce()
 			}
 			if (found==false)
 			{
-				geometry->vertex.push_back(v);
-				geometry->face[i].v[j]=geometry->vertex.size()-1;
+				geometry.resource->vertex.push_back(v);
+				geometry.resource->face[i].v[j]=geometry.resource->vertex.size()-1;
 			}
 			else
 			{
-				geometry->face[i].v[j]=k;
+				geometry.resource->face[i].v[j]=k;
 			}
 		}
 	}
 	return geometry;
 }
-Material GeometryResource::GetMaterialByName(const string &name)
+Material Geometry::GetMaterialByName(const string &name)
 {
-	for (DWORD i=0;i<material.size();i++)
+	for (unsigned int i=0;i<resource->material.size();i++)
 	{
-		if (material[i]->name==name)
-			return material[i];
+		if (resource->material[i].GetName()==name)
+			return resource->material[i];
 	}
 	return Material();
 }
-void GeometryResource::ApplyTransformation(mat4 &transform)
+void Geometry::ApplyTransformation(mat4 &transform)
 {	
-	for (DWORD i=0;i<vertex.size();i++)
+	for (unsigned int i=0;i<resource->vertex.size();i++)
 	{
-		vertex[i]=vertex[i]*transform;
+		resource->vertex[i]=resource->vertex[i]*transform;
 	}
-	vertexBuffer->LoadData(&vertex[0],sizeof(vec3)*vertex.size(),STATIC);
+	resource->vertexBuffer.LoadData(&resource->vertex[0],sizeof(vec3)*resource->vertex.size(),STATIC);
 
 	CalculateNormals();
 }
-BoundingBox GeometryResource::GetBoundingBox()
+BoundingBox Geometry::GetBoundingBox()
 {
-	return bbox;
+	return resource->bbox;
 }
-void GeometryResource::CalculateBoundingBox()
+void Geometry::CalculateBoundingBox()
 {
-	for (vector<vec3>::iterator j=vertex.begin();j!=vertex.end();j++)
+	for (vector<vec3>::iterator j=resource->vertex.begin();j!=resource->vertex.end();j++)
 	{
-		bbox.Expand(*j);
+		resource->bbox.Expand(*j);
 	}		
+}
+vector<vec3> &Geometry::GetVertices()
+{
+	return resource->vertex;
+}
+vector<vec3> &Geometry::GetNormals()
+{
+	return resource->normal;
+}
+vector<Face> &Geometry::GetFaces()
+{
+	return resource->face;
+}
+vector<vec2> &Geometry::GetDiffuseUV()
+{
+	return resource->diffuseUV;
+}
+vector<Surface> &Geometry::GetSurfaces()
+{
+	return resource->surface;
+}
+vector<Material> &Geometry::GetMaterials()
+{
+	return resource->material;
+}
+Geometry::operator bool () const
+{
+	return resource;
+}
+bool Geometry::operator== (const Geometry &geometry) const
+{
+	return resource==geometry.resource;
 }

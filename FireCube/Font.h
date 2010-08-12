@@ -7,7 +7,7 @@
 namespace FireCube
 {
 class FontResource;
-typedef boost::shared_ptr<FontResource> Font;
+class Font;
 /* CPPDOC_BEGIN_EXCLUDE */
 namespace Renderer
 {
@@ -32,34 +32,30 @@ public:
 	int textureSize;
 };
 /* CPPDOC_END_EXCLUDE */
-/**
-* Manages the various fonts.
-*/
-class FIRECUBE_API FontManager : public ResourceManager<FontResource>
-{
-	friend class FontResource;
-	friend void Renderer::RenderText(Font font,vec3 pos,vec4 color,const string &str);
-public:
-	FontManager();
-	/**
-	* Creates and loads a font from the specified file.
-	* @param filename The file to load.
-	* @param size The size of the font.
-	*/
-	boost::shared_ptr<FontResource> Create(const string &filename,int size);
-private:
-	vector<boost::weak_ptr<FontPage>> page;
-	boost::shared_ptr<FontPage> CreateNewPage();	
-};
-/**
-* Holds the data for a single font face.
-*/
 class FIRECUBE_API FontResource
 {
 	friend void Renderer::RenderText(Font font,vec3 pos,vec4 color,const string &str);
 public:
 	FontResource();
-	~FontResource();
+	~FontResource();	
+	
+	vector<Glyph> glyph;
+	boost::shared_ptr<FontPage> page;
+	FontImpl *fontImpl;
+	int size;
+};
+
+/**
+* Holds the data for a single font face.
+*/
+class FIRECUBE_API Font
+{
+	friend void Renderer::RenderText(Font font,vec3 pos,vec4 color,const string &str);
+	friend class FontManager;
+	friend class ResourceManager<Font,FontResource>;
+public:
+	Font();
+	Font(boost::shared_ptr<FontResource> resource);
 	/**
 	* Loads a font.
 	* @param name The file to load separated with : and an integer representing the font size.
@@ -71,12 +67,32 @@ public:
 	* @param size The size of the font.
 	*/
 	bool Load(const string &name,int size);	
+
+	operator bool () const;
+	bool operator== (const Font &font) const;
 private:
 	bool AddChar(char c);
-	vector<Glyph> glyph;
-	boost::shared_ptr<FontPage> page;
-	FontImpl *fontImpl;
-	int size;
+	boost::shared_ptr<FontResource> resource;
+};
+/**
+* Manages the various fonts.
+*/
+class FIRECUBE_API FontManager : public ResourceManager<Font,FontResource>
+{
+	friend class FontResource;
+	friend void Renderer::RenderText(Font font,vec3 pos,vec4 color,const string &str);
+	friend class Font;
+public:
+	FontManager();
+	/**
+	* Creates and loads a font from the specified file.
+	* @param filename The file to load.
+	* @param size The size of the font.
+	*/
+	Font Create(const string &filename,int size);
+private:
+	vector<boost::weak_ptr<FontPage>> page;
+	boost::shared_ptr<FontPage> CreateNewPage();	
 };
 }
 #pragma warning(pop)

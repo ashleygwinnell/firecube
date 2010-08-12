@@ -87,18 +87,18 @@ namespace Renderer
 	* @param mode The rendering mode.
 	* @param count The number of indices to render.
 	*/
-	void FIRECUBE_API RenderIndexStream(RenderMode mode,DWORD count);
+	void FIRECUBE_API RenderIndexStream(RenderMode mode,unsigned int count);
 	/**
 	* Renders a stream.
 	* @param mode The rendering mode.
 	* @param count The number of indices to render.
 	*/
-	void FIRECUBE_API RenderStream(RenderMode mode,DWORD count);
+	void FIRECUBE_API RenderStream(RenderMode mode,unsigned int count);
 	/**
 	* Disables a texture coordinates stream.
 	* @param unit The texture unit.
 	*/
-	void FIRECUBE_API DisableTexCoordStream(DWORD unit);
+	void FIRECUBE_API DisableTexCoordStream(unsigned int unit);
 	/**
 	* Disables the normal stream.	
 	*/

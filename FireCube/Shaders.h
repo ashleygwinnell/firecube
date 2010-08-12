@@ -7,8 +7,7 @@
 namespace FireCube
 {
 class ProgramResource;
-typedef boost::shared_ptr<ProgramResource> Program;
-
+class Program;
 /* CPPDOC_BEGIN_EXCLUDE */
 namespace Renderer
 {
@@ -25,15 +24,25 @@ enum ShaderType
 	VERTEX_SHADER,FRAGMENT_SHADER
 };
 
-/**
-* A class Representing a single shader.
-*/
 class FIRECUBE_API ShaderResource
 {
 	friend class ProgramResource;
 public:
 	ShaderResource();
-	~ShaderResource();
+	~ShaderResource();	
+	GLuint id;
+};
+
+/**
+* A class Representing a single shader.
+*/
+class FIRECUBE_API Shader
+{
+	friend class ProgramResource;
+	friend class ResourceManager<Shader,ShaderResource>;
+public:
+	Shader();
+	Shader(boost::shared_ptr<ShaderResource> resource);
 	/**
 	* Loads a shader from a file. the shader type is determined by the extension of the file: .vshader for a vertex shader, .fshader for a fragment shader.
 	* @param filename The file to load.
@@ -45,16 +54,19 @@ public:
 	* @param source The source of the shader.
 	*/
 	bool Create(ShaderType type,const string &source);
+	/**
+	* Returns the resource id of the shader.
+	*/
+	unsigned int GetId() const;
+
+	operator bool () const;
+	bool operator== (const Shader &shader) const;
 private:
-	GLuint id;
+	boost::shared_ptr<ShaderResource> resource;
 };
 
-typedef boost::shared_ptr<ShaderResource> Shader;
-typedef ResourceManager<ShaderResource> ShaderManager;
+typedef ResourceManager<Shader,ShaderResource> ShaderManager;
 
-/**
-* A class representing a gpu program.
-*/
 class FIRECUBE_API ProgramResource
 {
 	friend void Renderer::UseProgram(Program program);
@@ -62,6 +74,19 @@ class FIRECUBE_API ProgramResource
 public:
 	ProgramResource();
 	~ProgramResource();
+
+	GLuint id;
+	map<string,GLint> variables;
+};
+
+/**
+* A class representing a gpu program.
+*/
+class FIRECUBE_API Program
+{
+	friend void Renderer::UseProgram(Program program);
+	friend void Renderer::SetGlobalProgram(Program program);
+public:
 	/**
 	* Creates the program.
 	*/
@@ -128,11 +153,17 @@ public:
 	/**
 	* Returns whether the program is valid.
 	*/	
-	bool IsValid() const;	
+	bool IsValid() const;
+	/**
+	* Returns the resource id of the program.
+	*/
+	unsigned int GetId() const;
+
+	operator bool () const;
+	bool operator== (const Program &program) const;
 
 private:
-	GLuint id;
-	map<string,GLint> variables;
+	boost::shared_ptr<ProgramResource> resource;
 };
 }
 #endif

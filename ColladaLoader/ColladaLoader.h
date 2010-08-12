@@ -145,12 +145,13 @@ public:
 	class Effect
 	{
 	public:
-		Effect() : ambientColor(1.0f,1.0f,1.0f,1.0f), diffuseColor(1.0f,1.0f,1.0f,1.0f), specularColor(0.0f,0.0f,0.0f,0.0f)
+		Effect() : ambientColor(1.0f,1.0f,1.0f,1.0f), diffuseColor(1.0f,1.0f,1.0f,1.0f), specularColor(0.0f,0.0f,0.0f,0.0f),shininess(128.0f)
 		{			
 		}
 		ShadingType shadingType;
 		vec4 ambientColor,diffuseColor,specularColor;
 		Sampler ambientSampler,diffuseSampler,specularSampler;
+		float shininess;
 		map<string,EffectParam> effectParams;
 	};
 	ColladaLoader(const string &filename);
@@ -168,6 +169,7 @@ public:
 	void ReadEffectProfileCommon(TiXmlNode *parent,Effect &effect);
 	void ReadEffectParam(TiXmlNode *parent,EffectParam &effectParam);
 	void ReadEffectColor(TiXmlNode *parent,vec4 &color,Sampler &sampler);
+	void ReadEffectFloat(TiXmlNode *parent,float &value);
 	void ReadGeometryLibrary(TiXmlNode *parent);
 	void ReadGeometry(TiXmlNode *parent,Geometry &geometry);
 	void ReadMesh(TiXmlNode *parent,Mesh &mesh);

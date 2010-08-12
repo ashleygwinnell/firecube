@@ -43,7 +43,7 @@ public:
 	void AddLight(Light l);		
 	void RemoveLight(Light l);	
 	vector<Light> &GetLights();	
-	
+
 	Node AddChild(Node node);
 	Node GetChild(const string &name);
 	Node RemoveChild(const string &name);
@@ -53,7 +53,7 @@ public:
 	void CreateHardNormals();
 	void RenderBoundingBox();
 	void UpdateBoundingBox();
-	
+
 	RenderParameters &GetRenderParameters();
 	void SetProgram(Program program);
 	Program GetProgram();
@@ -66,9 +66,8 @@ public:
 	void SetFogDensity(float density);
 	float GetFogDensity();
 private:
-	boost::shared_ptr<NodeResource> nodeResource;
+	boost::shared_ptr<NodeResource> resource;
 };
-
 class FIRECUBE_API NodeResource
 {
 	friend class Node;
@@ -88,7 +87,8 @@ private:
 	Node parent;	
 	string name;
 	RenderParameters renderParameters;
-	BoundingBox bbox;
+	BoundingBox localBoundingBox;
+	BoundingBox worldBoundingBox;
 };
 Node FIRECUBE_API LoadMesh(const string &filename);
 }

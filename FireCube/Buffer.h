@@ -1,6 +1,9 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
+#pragma warning(push)
+#pragma warning(disable:4251)
+
 namespace FireCube
 {
 /** 
@@ -18,14 +21,21 @@ enum RenderMode
 {
 	POINTS,LINES,TRIANGLES,TRIANGLE_STRIP,QUADS,LINE_LOOP,TRIANGLE_FAN
 };
-/**
-* A buffer of data used for rendering.
-*/
 class FIRECUBE_API BufferResource
 {
+	friend class Buffer;
 public:	
 	BufferResource();
 	~BufferResource();
+
+	GLuint id;
+};
+/**
+* A buffer of data used for rendering.
+*/
+class FIRECUBE_API Buffer
+{
+public:
 	/**
 	* Creates a new buffer.
 	*/
@@ -37,7 +47,7 @@ public:
 	* @param bt The buffer type.
 	* @return true on success.
 	*/
-	bool LoadData(void *data,DWORD size,BufferType bt);
+	bool LoadData(void *data,unsigned int size,BufferType bt);
 	/**
 	* Specific function to load index data.
 	* @param data Pointer to the indices to be stored.
@@ -45,7 +55,7 @@ public:
 	* @param bt The buffer type.
 	* @return true on success.
 	*/
-	bool LoadIndexData(void *data,DWORD count,BufferType bt);
+	bool LoadIndexData(void *data,unsigned int count,BufferType bt);
 	/**
 	* Binds the buffer as a vertex stream.
 	* @param numCoords The number of coordinates per vertex.
@@ -76,10 +86,18 @@ public:
 	* Destroys the buffer.
 	*/
 	void Destroy();
+	/**
+	* Returns the resource id of the buffer.
+	*/
+	unsigned int GetId() const;
 
-	GLuint id;
+	operator bool () const;
+	bool operator== (const Buffer &buffer) const;
+
+private:	
+
+	boost::shared_ptr<BufferResource> resource;
 };
-
-typedef boost::shared_ptr<BufferResource> Buffer;
 }
+#pragma warning(pop)
 #endif

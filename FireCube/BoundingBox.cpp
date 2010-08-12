@@ -68,3 +68,11 @@ bool BoundingBox::Contains(const BoundingBox &bb)
 		return true;
 	return false;
 }
+vec3 BoundingBox::GetMin()
+{
+	return bmin;
+}
+vec3 BoundingBox::GetMax()
+{
+	return bmax;
+}

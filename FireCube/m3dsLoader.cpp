@@ -43,25 +43,26 @@ bool M3dsLoader::Load(const string &filename)
 	if (!f.is_open())
 		return false;
 	
-	DWORD l=f.tellg();	
+	unsigned int l=(unsigned int)f.tellg();	
 	buffer.resize(l);
 	f.seekg(0,ios_base::beg);
 	f.read(&buffer[0],l);
 	curPos=&buffer[0];
 	ReadMainChunk();
 	
-	vector<pair<pair<DWORD,DWORD>,string>>::iterator meshMat;
+	vector<pair<pair<unsigned int,unsigned int>,string>>::iterator meshMat;
 	for (meshMat=meshMaterial.begin();meshMat!=meshMaterial.end();meshMat++)
 		object[meshMat->first.first].mesh[meshMat->first.second].material=GetMaterialByName(meshMat->second);
-	vector<pair<DWORD,mat4>>::iterator objMatrix;
-	for (DWORD k=0;k<object.size();k++)
+	vector<pair<unsigned int,mat4>>::iterator objMatrix;
+	for (unsigned int k=0;k<object.size();k++)
 	{
 		if (object[k].mesh.size()==0) // No material specified, create a default one.
 		{
-			Material mat(new MaterialResource);
-			mat->ambient.Set(0,0,0,1);
-			mat->diffuse.Set(1,1,1,1);
-			mat->specular.Set(0,0,0,1);
+			Material mat;
+			mat.Create();
+			mat.SetAmbientColor(vec4(0,0,0,1));
+			mat.SetDiffuseColor(vec4(1,1,1,1));
+			mat.SetSpecularColor(vec4(0,0,0,1));
 			materials.push_back(mat);
 			object[k].mesh.push_back(Mesh());
 			Mesh &mesh=object[k].mesh.back();
@@ -74,30 +75,31 @@ bool M3dsLoader::Load(const string &filename)
 Node M3dsLoader::GenerateSceneGraph()
 {
 	Node ret(new NodeResource);
-	for (DWORD i=0;i<object.size();i++)
+	for (unsigned int i=0;i<object.size();i++)
 	{
-		Geometry geom(new GeometryResource);
-		geom->vertex=object[i].vertex;
-		geom->diffuseUV=object[i].uv;
-		geom->material=materials;
-		for (DWORD j=0;j<object[i].mesh.size();j++)
+		Geometry geom;
+		geom.Create();
+		geom.GetVertices()=object[i].vertex;
+		geom.GetDiffuseUV()=object[i].uv;
+		geom.GetMaterials()=materials;
+		for (unsigned int j=0;j<object[i].mesh.size();j++)
 		{
 			Mesh &mesh=object[i].mesh[j];
-			geom->surface.push_back(Surface());
-			Surface &surface=geom->surface.back();
+			geom.GetSurfaces().push_back(Surface());
+			Surface &surface=geom.GetSurfaces().back();
 			surface.material=mesh.material;
-			for (DWORD k=0;k<mesh.face.size();k++)
+			for (unsigned int k=0;k<mesh.face.size();k++)
 			{
 				Face f;
 				f.v[0]=mesh.face[k].v[0];
 				f.v[1]=mesh.face[k].v[1];
 				f.v[2]=mesh.face[k].v[2];
 				surface.face.push_back(f);
-				geom->face.push_back(f);
+				geom.GetFaces().push_back(f);
 			}
 		}
-		geom->CalculateNormals();
-		geom->UpdateBuffers();
+		geom.CalculateNormals();
+		geom.UpdateBuffers();
 		Node node(object[i].name);		
 		node.AddGeometry(geom);
 		ret.AddChild(node);
@@ -106,16 +108,16 @@ Node M3dsLoader::GenerateSceneGraph()
 }
 void M3dsLoader::ReadMainChunk()
 {	
-	WORD id=*(WORD*)curPos;
-	DWORD len=*(DWORD*)(curPos+2)-6;	
+	unsigned short int id=*(unsigned short int*)curPos;
+	unsigned int len=*(unsigned int*)(curPos+2)-6;	
 	curPos+=6;	
 	char *startPos=curPos;
 	if (id!=MAIN3DS)
 		return;	
-	while ((DWORD)(curPos-startPos)<len)
+	while ((unsigned int)(curPos-startPos)<len)
 	{
-		WORD subId=*(WORD*)curPos;
-		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		unsigned short int subId=*(unsigned short int*)curPos;
+		unsigned int subLen=*(unsigned int*)(curPos+2)-6;	
 		curPos+=6;
 		if (subId==EDIT3DS)		
 			ReadEdit3dsChunk(subLen);		
@@ -123,13 +125,13 @@ void M3dsLoader::ReadMainChunk()
 			curPos+=subLen;
 	}
 }
-void M3dsLoader::ReadEdit3dsChunk(DWORD length)
+void M3dsLoader::ReadEdit3dsChunk(unsigned int length)
 {
 	char *startPos=curPos;
-	while ((DWORD)(curPos-startPos)<length)
+	while ((unsigned int)(curPos-startPos)<length)
 	{
-		WORD subId=*(WORD*)curPos;
-		DWORD subLen=*(DWORD*)(curPos+2)-6;
+		unsigned short int subId=*(unsigned short int*)curPos;
+		unsigned int subLen=*(unsigned int*)(curPos+2)-6;
 		curPos+=6;
 		if (subId==EDIT_OBJECT)		
 			ReadObjectChunk(subLen);		
@@ -139,16 +141,16 @@ void M3dsLoader::ReadEdit3dsChunk(DWORD length)
 			curPos+=subLen;
 	}
 }
-void M3dsLoader::ReadObjectChunk(DWORD length)
+void M3dsLoader::ReadObjectChunk(unsigned int length)
 {
 	char *startPos=curPos;	
 	string name=curPos;
 	curPos+=name.size()+1;
 	
-	while ((DWORD)(curPos-startPos)<length)
+	while ((unsigned int)(curPos-startPos)<length)
 	{
-		WORD subId=*(WORD*)curPos;
-		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		unsigned short int subId=*(unsigned short int*)curPos;
+		unsigned int subLen=*(unsigned int*)(curPos+2)-6;	
 		curPos+=6;
 		if (subId==OBJ_TRIMESH)
 		{	
@@ -160,13 +162,13 @@ void M3dsLoader::ReadObjectChunk(DWORD length)
 			curPos+=subLen;
 	}
 }
-void M3dsLoader::ReadTriMeshChunk(DWORD length)
+void M3dsLoader::ReadTriMeshChunk(unsigned int length)
 {
 	char *startPos=curPos;
-	while ((DWORD)(curPos-startPos)<length)
+	while ((unsigned int)(curPos-startPos)<length)
 	{
-		WORD subId=*(WORD*)curPos;
-		DWORD subLen=*(DWORD*)(curPos+2)-6;
+		unsigned short int subId=*(unsigned short int*)curPos;
+		unsigned int subLen=*(unsigned int*)(curPos+2)-6;
 		curPos+=6;
 		if (subId==TRI_VERTEXLIST)
 			ReadVerticesListChunk();
@@ -183,9 +185,9 @@ void M3dsLoader::ReadTriMeshChunk(DWORD length)
 void M3dsLoader::ReadVerticesListChunk()
 {
 	Object &obj=object.back();
-	obj.vertex.resize(*(WORD*)curPos);
+	obj.vertex.resize(*(unsigned short int*)curPos);
 	curPos+=2;
-	for (DWORD i=0;i<obj.vertex.size();i++)
+	for (unsigned int i=0;i<obj.vertex.size();i++)
 	{
 		obj.vertex[i].x=*(float*)curPos;
 		curPos+=4;
@@ -195,25 +197,25 @@ void M3dsLoader::ReadVerticesListChunk()
 		curPos+=4;
 	}
 }
-void M3dsLoader::ReadFacesListChunk(DWORD length)
+void M3dsLoader::ReadFacesListChunk(unsigned int length)
 {
 	Object &obj=object.back();
 	char *startPos=curPos;	
-	obj.face.resize(*(WORD*)curPos);
+	obj.face.resize(*(unsigned short int*)curPos);
 	curPos+=2;
-	for (DWORD i=0;i<obj.face.size();i++)
+	for (unsigned int i=0;i<obj.face.size();i++)
 	{
-		for (DWORD j=0;j<3;j++)
+		for (unsigned int j=0;j<3;j++)
 		{
-			obj.face[i].v[j]=*(WORD*)curPos;
+			obj.face[i].v[j]=*(unsigned short int*)curPos;
 			curPos+=2;
 		}
 		curPos+=2;
 	}
-	while ((DWORD)(curPos-startPos)<length)
+	while ((unsigned int)(curPos-startPos)<length)
 	{
-		WORD subId=*(WORD*)curPos;
-		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		unsigned short int subId=*(unsigned short int*)curPos;
+		unsigned int subLen=*(unsigned int*)(curPos+2)-6;	
 		curPos+=6;
 		if (subId==TRI_MATERIAL)
 			ReadMaterialFaceList();
@@ -224,9 +226,9 @@ void M3dsLoader::ReadFacesListChunk(DWORD length)
 void M3dsLoader::ReadTexCoordListChunk()
 {	
 	Object &obj=object.back();
-	obj.uv.resize(*(WORD*)curPos);
+	obj.uv.resize(*(unsigned short int*)curPos);
 	curPos+=2;
-	for (DWORD i=0;i<obj.uv.size();i++)
+	for (unsigned int i=0;i<obj.uv.size();i++)
 	{
 		obj.uv[i].x=*(float*)curPos;
 		curPos+=4;
@@ -242,11 +244,11 @@ void M3dsLoader::ReadMaterialFaceList()
 	obj.mesh.push_back(Mesh());
 	Mesh &mesh=obj.mesh.back();		
 	meshMaterial.push_back(make_pair(make_pair(object.size()-1,obj.mesh.size()-1),matName));
-	WORD count=*(WORD*)curPos;
+	unsigned short int count=*(unsigned short int*)curPos;
 	curPos+=2;
-	for (DWORD i=0;i<count;i++)
+	for (unsigned int i=0;i<count;i++)
 	{
-		mesh.face.push_back(obj.face[*(WORD*)curPos]);
+		mesh.face.push_back(obj.face[*(unsigned short int*)curPos]);
 		curPos+=2;
 	}	
 }
@@ -269,37 +271,37 @@ void M3dsLoader::ReadObjectMatrixChunk()
 	objectMatrix.push_back(make_pair(object.size()-1,mat));
 	curPos+=4*12;
 }
-void M3dsLoader::ReadMaterialListChunk(DWORD length)
+void M3dsLoader::ReadMaterialListChunk(unsigned int length)
 {
 	char *startPos=curPos;
 
-	while ((DWORD)(curPos-startPos)<length)
+	while ((unsigned int)(curPos-startPos)<length)
 	{
-		WORD subId=*(WORD*)curPos;
-		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		unsigned short int subId=*(unsigned short int*)curPos;
+		unsigned int subLen=*(unsigned int*)(curPos+2)-6;	
 		curPos+=6;
 		if (subId==MAT_NAME)
 			ReadMaterialNameChunk();
 		else if (subId==MAT_AMBIENT)
-			ReadMaterialColorChunk(subLen,curMaterial->ambient);
+			curMaterial.SetAmbientColor(ReadMaterialColorChunk(subLen));
 		else if (subId==MAT_DIFFUSE)
-			ReadMaterialColorChunk(subLen,curMaterial->diffuse);
+			curMaterial.SetDiffuseColor(ReadMaterialColorChunk(subLen));
 		else if (subId==MAT_SPECULAR)
-			ReadMaterialColorChunk(subLen,curMaterial->specular);
+			curMaterial.SetSpecularColor(ReadMaterialColorChunk(subLen));
 		else if (subId==MAT_TEXMAP)
-			ReadMaterialTexMapChunk(subLen,curMaterial->diffuseTexture);
+			curMaterial.SetDiffuseTexture(ReadMaterialTexMapChunk(subLen));
 		else if (subId==MAT_SHININESS)
-			ReadMaterialShininessChunk(subLen,curMaterial->shininess);
+			curMaterial.SetShininess(ReadMaterialShininessChunk(subLen));
 		else
 			curPos+=subLen;
 	}
 }
 void M3dsLoader::ReadMaterialNameChunk()
 {	
-	curMaterial=Material(new MaterialResource);
+	curMaterial.Create();
 	materials.push_back(curMaterial);	
-	curMaterial->name=curPos;
-	curPos+=curMaterial->name.size()+1;
+	curMaterial.SetName(curPos);
+	curPos+=curMaterial.GetName().size()+1;
 }
 vec4 M3dsLoader::ReadColorFChunk()
 {
@@ -323,37 +325,41 @@ vec4 M3dsLoader::ReadColorBChunk()
 	curPos++;
 	return ret;
 }
-void M3dsLoader::ReadMaterialColorChunk(DWORD length,vec4 &color)
+vec4 M3dsLoader::ReadMaterialColorChunk(unsigned int length)
 {
+	vec4 ret;
 	char *startPos=curPos;
-	while ((DWORD)(curPos-startPos)<length)
+	while ((unsigned int)(curPos-startPos)<length)
 	{
-		WORD subId=*(WORD*)curPos;
-		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		unsigned short int subId=*(unsigned short int*)curPos;
+		unsigned int subLen=*(unsigned int*)(curPos+2)-6;	
 		curPos+=6;
 		if (subId==COL_RGB_B)
-			color=ReadColorBChunk();
+			ret=ReadColorBChunk();
 		else if (subId==COL_RGB_F)
-			color=ReadColorFChunk();
+			ret=ReadColorFChunk();
 		else
 			curPos+=subLen;
 	}
+	return ret;
 }
-void M3dsLoader::ReadMaterialShininessChunk(DWORD length,float &shininess)
+float M3dsLoader::ReadMaterialShininessChunk(unsigned int length)
 {
+	float ret;
 	char *startPos=curPos;
-	while ((DWORD)(curPos-startPos)<length)
+	while ((unsigned int)(curPos-startPos)<length)
 	{
-		WORD subId=*(WORD*)curPos;
-		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		unsigned short int subId=*(unsigned short int*)curPos;
+		unsigned int subLen=*(unsigned int*)(curPos+2)-6;	
 		curPos+=6;
 		if (subId==PERCENTAGE_B)
-			shininess=ReadPercentageBChunk();
+			ret=ReadPercentageBChunk();
 		else if (subId==PERCENTAGE_F)
-			shininess=ReadPercentageFChunk();
+			ret=ReadPercentageFChunk();
 		else
 			curPos+=subLen;
 	}
+	return ret;
 }
 string M3dsLoader::ReadMapNameChunk()
 {
@@ -361,33 +367,35 @@ string M3dsLoader::ReadMapNameChunk()
 	curPos+=ret.size()+1;
 	return ret;
 }
-void M3dsLoader::ReadMaterialTexMapChunk(DWORD length,Texture &texture)
+Texture M3dsLoader::ReadMaterialTexMapChunk(unsigned int length)
 {
+	Texture ret;	
 	char *startPos=curPos;
-	while ((DWORD)(curPos-startPos)<length)
+	while ((unsigned int)(curPos-startPos)<length)
 	{
-		WORD subId=*(WORD*)curPos;
-		DWORD subLen=*(DWORD*)(curPos+2)-6;	
+		unsigned short int subId=*(unsigned short int*)curPos;
+		unsigned int subLen=*(unsigned int*)(curPos+2)-6;	
 		curPos+=6;
 		if (subId==MAT_MAPNAME)					
-			texture=Renderer::GetTextureManager().Create(ReadMapNameChunk());		
+			ret=Renderer::GetTextureManager().Create(ReadMapNameChunk());		
 		else
 			curPos+=subLen;
 	}
+	return ret;
 }
 Material M3dsLoader::GetMaterialByName(const string &name)
 {
 	vector<Material>::iterator i=materials.begin();
 	for (;i!=materials.end();i++)
 	{
-		if ((*i)->name==name)
+		if ((*i).GetName()==name)
 			return *i;
 	}
 	return Material();
 }
 float M3dsLoader::ReadPercentageBChunk()
 {
-	float ret=*(WORD*)curPos;
+	float ret=*(unsigned short int*)curPos;
 	curPos+=2;
 	return ret;
 }

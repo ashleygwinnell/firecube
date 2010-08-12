@@ -33,9 +33,8 @@ bool App::Init()
 {
 	Application::AddSearchPath("../Media/Textures");
 	SetTitle("Terrain");
-	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
-	program=Program(new ProgramResource);
-	program->Create(Renderer::GetShaderManager().Create("diffuseWithFog.vshader"),Renderer::GetShaderManager().Create("diffuseWithFog.fshader"));
+	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);	
+	program.Create(Renderer::GetShaderManager().Create("diffuseWithFog.vshader"),Renderer::GetShaderManager().Create("diffuseWithFog.fshader"));
 	if (!terrain.GenerateTerrain("../Media/Textures/heightmap.bmp","../Media/Textures/diffuse.bmp",vec3(512.0f,50.0f,512.0f),vec2(1.0f,1.0f)))
 		return false;
 	node=LoadMesh("../Media/Models/teapot.3ds");
@@ -70,9 +69,9 @@ void App::Render(float time)
 	t.Translate(-pos);
 	Renderer::SetModelViewMatrix(t);
 	Renderer::UseProgram(program);
-	program->SetUniform("fogDensity",0.01f);
-	program->SetUniform("fogColor",vec4(0.30f,0.42f,0.95f,1.0f));
-	program->SetUniform("lightDir",t*vec3(1,-1,1));
+	program.SetUniform("fogDensity",0.01f);
+	program.SetUniform("fogColor",vec4(0.30f,0.42f,0.95f,1.0f));
+	program.SetUniform("lightDir",t*vec3(1,-1,1));
 
 	frustum.ExtractFrustum();
 	DWORD n=terrain.Render(frustum);

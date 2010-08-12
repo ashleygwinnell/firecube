@@ -10,14 +10,31 @@ enum TextureFilter
 {
 	NEAREST,LINEAR,MIPMAP
 };
-/**
-* A 2d texture.
-*/
+
 class FIRECUBE_API TextureResource
 {
 public:
 	TextureResource();
-	~TextureResource();
+	~TextureResource();	
+	GLuint id;
+	string filename;
+};	
+class Texture;
+namespace Renderer
+{
+	void FIRECUBE_API UseTexture(Texture tex,unsigned int unit);
+}
+
+/**
+* A 2d texture.
+*/
+class FIRECUBE_API Texture
+{
+	friend class ResourceManager<Texture,TextureResource>;
+	friend void Renderer::UseTexture(Texture tex,unsigned int unit);
+public:
+	Texture();
+	Texture(boost::shared_ptr<TextureResource> resource);
 	/**
 	* Loads a texture.
 	* @param filename The file to load.
@@ -41,13 +58,22 @@ public:
 	* @param magFilter The magnification filter.
 	*/
 	void SetFiltering(TextureFilter minFilter,TextureFilter magFilter);
+	/**
+	* Returns the file name of the texture.
+	*/
+	string GetFileName() const;
+	/**
+	* Returns the resource id of the texture.
+	*/
+	unsigned int GetId() const;
 
-	GLuint id;
-	string filename;
+	operator bool () const;
+	bool operator== (const Texture &texture) const;
+private:
+	boost::shared_ptr<TextureResource> resource;
 };	
 
-typedef ResourceManager<TextureResource> TextureManager;
-typedef boost::shared_ptr<TextureResource> Texture;
+typedef ResourceManager<Texture,TextureResource> TextureManager;
 }
 #pragma warning(pop)
 #endif

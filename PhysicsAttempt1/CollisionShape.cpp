@@ -40,9 +40,9 @@ Geometry CollisionShape::GetFirstGeometry(Node node)
 void CollisionShape::FromNode(Node node,int sizex,int sizey,int sizez,float extraSize)
 {
 	Geometry g=GetFirstGeometry(node);
-	g=g->Reduce();
-	vertex=g->vertex;
-	face=g->face;
+	g=g.Reduce();
+	vertex=g.GetVertices();
+	face=g.GetFaces();
 	edge.resize(face.size()*3);
 	for (unsigned int i=0;i<face.size();i++)
 	{

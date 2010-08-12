@@ -1150,38 +1150,39 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
 			continue;
 		Geometry &geom=iter->second;
 		Mesh &mesh=geom.mesh;
-		FireCube::Geometry geometry(new GeometryResource);
+		FireCube::Geometry geometry;
+		geometry.Create();
 		ret.AddGeometry(geometry);
-		geometry->vertex=mesh.vertices;
-		for (unsigned int j=0;j<geometry->vertex.size();j++)
+		geometry.GetVertices()=mesh.vertices;
+		for (unsigned int j=0;j<geometry.GetVertices().size();j++)
 		{
 			//geometry->vertex[j]=geometry->vertex[j]*transformation;
 			if (upDirection==X_UP)
 			{
-				std::swap(geometry->vertex[j].x,geometry->vertex[j].y);
-				geometry->vertex[j].x*=-1;
+				std::swap(geometry.GetVertices()[j].x,geometry.GetVertices()[j].y);
+				geometry.GetVertices()[j].x*=-1;
 			}
 			else if (upDirection==Z_UP)
 			{
-				std::swap(geometry->vertex[j].y,geometry->vertex[j].z);
-				geometry->vertex[j].z*=-1;
+				std::swap(geometry.GetVertices()[j].y,geometry.GetVertices()[j].z);
+				geometry.GetVertices()[j].z*=-1;
 			}
 		}
-		geometry->normal=mesh.normals;
-		for (unsigned int j=0;j<geometry->normal.size();j++)
+		geometry.GetNormals()=mesh.normals;
+		for (unsigned int j=0;j<geometry.GetNormals().size();j++)
 		{
 			//geometry->normal[j]=geometry->normal[j].TransformNormal(transformation);
 			if (upDirection==X_UP)
 			{
-				std::swap(geometry->normal[j].x,geometry->normal[j].y);
-				geometry->normal[j].x*=-1;
+				std::swap(geometry.GetNormals()[j].x,geometry.GetNormals()[j].y);
+				geometry.GetNormals()[j].x*=-1;
 			}
 			else if (upDirection==Z_UP)
 			{
-				std::swap(geometry->normal[j].y,geometry->normal[j].z);
-				geometry->normal[j].z*=-1;
+				std::swap(geometry.GetNormals()[j].y,geometry.GetNormals()[j].z);
+				geometry.GetNormals()[j].z*=-1;
 			}
-			geometry->normal[j].Normalize();
+			geometry.GetNormals()[j].Normalize();
 		}		
 		unsigned int writePos=0;
 		for (unsigned int j=0;j<4;j++)
@@ -1204,15 +1205,16 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
 				table=&iter->second;
 			Material &mat=materialLibrary[table->materialName];
 			Effect &effect=effectLibrary[mat.effect];			
-			geometry->surface.push_back(FireCube::Surface());
-			FireCube::Surface &surface=geometry->surface.back();			
-			FireCube::Material fmat=FireCube::Material(new MaterialResource());
-			geometry->material.push_back(fmat);
-			fmat->ambient=effect.ambientColor;
-			fmat->diffuse=effect.diffuseColor;
-			fmat->specular=effect.specularColor;			
-			fmat->shininess=effect.shininess;
-			fmat->name=subMesh.material;
+			geometry.GetSurfaces().push_back(FireCube::Surface());
+			FireCube::Surface &surface=geometry.GetSurfaces().back();			
+			FireCube::Material fmat;
+			fmat.Create();
+			geometry.GetMaterials().push_back(fmat);
+			fmat.SetAmbientColor(effect.ambientColor);
+			fmat.SetDiffuseColor(effect.diffuseColor);
+			fmat.SetSpecularColor(effect.specularColor);
+			fmat.SetShininess(effect.shininess);
+			fmat.SetName(subMesh.material);
 			surface.material=fmat;
 			if (table)
 			{
@@ -1223,7 +1225,7 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
 			if (effect.diffuseSampler.name!="")
 			{
 				unsigned int map=0;
-				fmat->diffuseTexture=Renderer::GetTextureManager().Create(GetTextureFileNameFromSampler(effect,effect.diffuseSampler));
+				fmat.SetDiffuseTexture(Renderer::GetTextureManager().Create(GetTextureFileNameFromSampler(effect,effect.diffuseSampler)));
 				if (effect.diffuseSampler.uvId!=-1)				
 					map=effect.diffuseSampler.uvId;				
 				else
@@ -1238,7 +1240,7 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
 						s++;
 					}
 				}
-				geometry->diffuseUV=mesh.texcoords[map];
+				geometry.GetDiffuseUV()=mesh.texcoords[map];
 			}			
 			if (subMesh.primitiveType==PRIMITIVE_TRIANGLES)
 			{
@@ -1249,7 +1251,7 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
 					f.v[1]=subMesh.indices[p*3+1];
 					f.v[2]=subMesh.indices[p*3+2];
 					surface.face.push_back(f);
-					geometry->face.push_back(f);
+					geometry.GetFaces().push_back(f);
 				}
 			}
 			else if (subMesh.primitiveType==PRIMITIVE_POLYLIST)
@@ -1263,12 +1265,12 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
 					f.v[1]=subMesh.indices[p*3+1];
 					f.v[2]=subMesh.indices[p*3+2];
 					surface.face.push_back(f);
-					geometry->face.push_back(f);
+					geometry.GetFaces().push_back(f);
 				}
 			}
 		
 		}
-		geometry->UpdateBuffers();
+		geometry.UpdateBuffers();
 	}
 	for (unsigned int i=0;i<node->children.size();i++)
 	{

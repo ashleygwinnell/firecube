@@ -7,19 +7,19 @@ namespace FireCube
 * A templated class for a resource manager.<br>
 * Resources should define a bool Load(const string &) function to be usable.
 */
-template<class T>
+template<class T,class TResource>
 class ResourceManager
 {
 public:	
-	ResourceManager<T>()
+	ResourceManager<T,TResource>()
 	{
 
 	}
-	virtual ~ResourceManager<T>()
+	virtual ~ResourceManager<T,TResource>()
 	{
 		Logger::Write("Destroying resource manager.\n");
 	}
-	ResourceManager<T>(const ResourceManager<T> &r)
+	ResourceManager<T,TResource>(const ResourceManager<T,TResource> &r)
 	{
 		resources=r.resources;
 	}
@@ -27,13 +27,13 @@ public:
 	* Creates and loads a resource from the specified file.
 	* @param filename The file to load.
 	*/
-	boost::shared_ptr<T> Create(const string &filename)
+	T Create(const string &filename)
 	{
-		map<string,boost::weak_ptr<T>>::iterator i=resources.find(filename);
+		map<string,boost::weak_ptr<TResource>>::iterator i=resources.find(filename);
 		if (i!=resources.end())
 			if (!i->second.expired())
-				return i->second.lock();
-		boost::shared_ptr<T> ret(new T);
+				return T(i->second.lock());
+		T ret;
 		string loadfile=filename;
 		string fname=GetFileName(filename);
 		const vector<string> &searchPaths=Application::GetSearchPaths();
@@ -46,27 +46,27 @@ public:
 					break;
 				}
 		}
-		if (ret->Load(loadfile))
+		if (ret.Load(loadfile))
 		{		
-			resources[filename]=ret;
+			resources[filename]=ret.resource;
 			return ret;
 		}
 		else
-			return boost::shared_ptr<T>();
+			return T();
 	}
 	/**
 	* Adds a new resource without loading it.
 	* @param name The name identifying the resource.
 	* @return The newly created resource.
 	*/
-	boost::shared_ptr<T> Add(const string &name)
+	T Add(const string &name)
 	{
-		map<string,boost::weak_ptr<T>>::iterator i=resources.find(name);
+		map<string,boost::weak_ptr<TResource>>::iterator i=resources.find(name);
 		if (i!=resources.end())
 			if (!i->second.expired())
-				return i->second.lock();
-		boost::shared_ptr<T> ret(new T);
-		resources[name]=ret;
+				return T(i->second.lock());
+		T ret;
+		resources[name]=ret.resource;
 		return ret;		
 	}
 	/**
@@ -74,28 +74,28 @@ public:
 	* @param filename The filename/name identifying the resource.
 	* @param res The resource itself.
 	*/
-	void Add(const string &filename,boost::shared_ptr<T> res)
+	void Add(const string &filename,T res)
 	{
 		if (resources.find(filename)!=resources.end())
 			return;
 
-		resources[filename]=res;
+		resources[filename]=res.resource;
 	}
 	/**
 	* Returns a resource with a given filename, null if it does not exist.
 	* @param filename The filename identifying the resource.
 	*/
-	boost::shared_ptr<T> Get(const string &filename)
+	T Get(const string &filename)
 	{
-		map<string,boost::weak_ptr<T>>::iterator i=resources.find(filename);
+		map<string,boost::weak_ptr<TResource>>::iterator i=resources.find(filename);
 		if (i!=resources.end())
 			if (!i->second.expired())
-				return i->second.lock();
+				return T(i->second.lock());
 		
-		return boost::shared_ptr<T>();		
+		return T();
 	}
 private:
-	map<string,boost::weak_ptr<T>> resources;
+	map<string,boost::weak_ptr<TResource>> resources;
 };
 }
 #endif

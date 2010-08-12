@@ -46,8 +46,10 @@ void main()
 	app.node=l.GenerateSceneGraph();
 	app.node.Move(vec3(0,-70,-180));
 	
-	Light light(new LightResource);
-	light->ambientColor=light->diffuseColor=vec4(1,1,1,1);
+	Light light;
+	light.Create();
+	light.SetAmbientColor(vec4(1,1,1,1));
+	light.SetDiffuseColor(vec4(1,1,1,1));
 	app.node.AddLight(light);
 
 	Renderer::SetPerspectiveProjection(60.0f,0.1f,2000.0f);	

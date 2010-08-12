@@ -31,17 +31,13 @@ bool App::Init()
 	node=LoadMesh("../Media/Models/scene.3ds");	
 	node.SetLighting(false);
 	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
-	plain=Program(new ProgramResource);
-	shadowMap=Program(new ProgramResource);
-	program=Program(new ProgramResource);
-	plain->Create(Renderer::GetShaderManager().Create("plain.vshader"),Renderer::GetShaderManager().Create("plain.fshader"));
-	shadowMap->Create(Renderer::GetShaderManager().Create("shadowMap.vshader"),Renderer::GetShaderManager().Create("shadowMap.fshader"));
-	program->Create(Renderer::GetShaderManager().Create("1.vshader"),Renderer::GetShaderManager().Create("1.fshader"));
-	fb=FrameBuffer(new FrameBufferResource);
-	fb->Create(1024,1024);
-	fb->AddDepthBufferTexture();
+	plain.Create(Renderer::GetShaderManager().Create("plain.vshader"),Renderer::GetShaderManager().Create("plain.fshader"));
+	shadowMap.Create(Renderer::GetShaderManager().Create("shadowMap.vshader"),Renderer::GetShaderManager().Create("shadowMap.fshader"));
+	program.Create(Renderer::GetShaderManager().Create("1.vshader"),Renderer::GetShaderManager().Create("1.fshader"));	
+	fb.Create(1024,1024);
+	fb.AddDepthBufferTexture();
 	
-	if (!fb->IsValid())
+	if (!fb.IsValid())
 		return false;
 	return true;
 }
@@ -52,10 +48,10 @@ void App::SetupLight()
 {
 	static float t=0.0f;	
 	vec3 lightPos=vec3(cos(t)*6,4,sin(t)*6);
-	lightProj.GeneratePerspective(45,(float)fb->GetWidth()/(float)fb->GetHeight(),1.0f,20.0f);
+	lightProj.GeneratePerspective(45,(float)fb.GetWidth()/(float)fb.GetHeight(),1.0f,20.0f);
 	lightModelview.LookAt(lightPos,vec3(0,0,0),vec3(0,1,0));			
 	Renderer::UseProgram(shadowMap);
-	shadowMap->SetUniform("lightPos",lightPos);
+	shadowMap.SetUniform("lightPos",lightPos);
 	t+=0.01f;
 
 	mat4 m;	
@@ -75,7 +71,7 @@ void App::RenderShadowMap()
 	Renderer::Clear(vec4(0.0f,0.0f,0.0f,1.0f),1.0f);
 	Renderer::SetProjectionMatrix(lightProj);
 	Renderer::SetModelViewMatrix(lightModelview);
-	Renderer::UseProgram(Program(new ProgramResource));
+	Renderer::UseProgram(Program());
 	Renderer::Render(app.node);	
 	glDisable(GL_POLYGON_OFFSET_FILL);	
 }
@@ -94,8 +90,8 @@ void App::Render(float t)
 	Renderer::SetModelViewMatrix(m);		
 	node.SetProgram(shadowMap);
 	Renderer::UseProgram(shadowMap);	
-	shadowMap->SetUniform("shadowMap",1);	
-	Renderer::UseTexture(fb->GetDepthBuffer(),1);
+	shadowMap.SetUniform("shadowMap",1);	
+	Renderer::UseTexture(fb.GetDepthBuffer(),1);
 	Renderer::Render(app.node);	
 	Renderer::SetModelViewMatrix(mat4());
 	Renderer::SetOrthographicProjection();
@@ -128,18 +124,18 @@ void App::HandleInput(float t)
 }
 void App::RenderDepth()
 {
-	Buffer vBuffer(new BufferResource);
-	Buffer uvBuffer(new BufferResource);	
+	Buffer vBuffer;
+	Buffer uvBuffer;
 	vec2 vb[4]={vec2(0,0),vec2(0,150),vec2(150,150),vec2(150,0)};
 	vec2 uvb[4]={vec2(0,1),vec2(0,0),vec2(1,0),vec2(1,1)};
-	vBuffer->Create();
-	vBuffer->LoadData(&vb[0],sizeof(vec2)*4,STATIC);
-	uvBuffer->Create();
-	uvBuffer->LoadData(&uvb[0],sizeof(vec2)*4,STATIC);
-	vBuffer->SetVertexStream(2);
-	uvBuffer->SetTexCoordStream(0);
+	vBuffer.Create();
+	vBuffer.LoadData(&vb[0],sizeof(vec2)*4,STATIC);
+	uvBuffer.Create();
+	uvBuffer.LoadData(&uvb[0],sizeof(vec2)*4,STATIC);
+	vBuffer.SetVertexStream(2);
+	uvBuffer.SetTexCoordStream(0);
 	Renderer::UseProgram(program);
-	Renderer::UseTexture(fb->GetDepthBuffer(),0);
+	Renderer::UseTexture(fb.GetDepthBuffer(),0);
 	glTexParameteri(GL_TEXTURE_2D, 34892, GL_NONE);	
 	Renderer::RenderStream(QUADS,4);
 	glTexParameteri(GL_TEXTURE_2D, 34892, 34894);		

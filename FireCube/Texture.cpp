@@ -31,22 +31,32 @@ TextureResource::~TextureResource()
 	glDeleteTextures(1,&id);
 	id=0;
 }
-bool TextureResource::IsValid()
+Texture::Texture(boost::shared_ptr<TextureResource> resource)
 {
-	return id!=0;
+	this->resource=resource;
 }
-bool TextureResource::Create()
+Texture::Texture()
 {
-	glGenTextures(1,&id);
+
+}
+bool Texture::IsValid()
+{
+	return resource->id!=0;
+}
+bool Texture::Create()
+{
+	resource=boost::shared_ptr<TextureResource>(new TextureResource);
+	glGenTextures(1,&resource->id);
 	ostringstream ss;
-	ss<< "Created texture with id="<<id<<endl;
+	ss<< "Created texture with id="<<resource->id<<endl;
 	Logger::Write(ss.str());
-	return id!=0;
+	return resource->id!=0;
 }
-bool TextureResource::Load(const std::string &filename)
+bool Texture::Load(const std::string &filename)
 {
+	resource=boost::shared_ptr<TextureResource>(new TextureResource);
 	SDL_Surface *image;
-	this->filename=filename;
+	resource->filename=filename;
 	image=IMG_Load(filename.c_str());
 	if(image) 
 	{
@@ -68,7 +78,7 @@ bool TextureResource::Load(const std::string &filename)
 				format=GL_RGB;
 		}
 
-		glBindTexture(GL_TEXTURE_2D,id);
+		glBindTexture(GL_TEXTURE_2D,resource->id);
 		glTexParameteri(GL_TEXTURE_2D,GL_GENERATE_MIPMAP,GL_TRUE);
 		glTexImage2D(GL_TEXTURE_2D,0,image->format->BytesPerPixel,image->w,image->h,0,format,GL_UNSIGNED_BYTE,image->pixels);		
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
@@ -78,12 +88,12 @@ bool TextureResource::Load(const std::string &filename)
 	}
 	return false;
 }
-void TextureResource::GenerateMipMaps()
+void Texture::GenerateMipMaps()
 {
-	glBindTexture(GL_TEXTURE_2D,id);
+	glBindTexture(GL_TEXTURE_2D,resource->id);
 	glGenerateMipmapEXT(GL_TEXTURE_2D);
 }
-void TextureResource::SetFiltering(TextureFilter minFilter,TextureFilter magFilter)
+void Texture::SetFiltering(TextureFilter minFilter,TextureFilter magFilter)
 {
 	GLint min,mag;
 
@@ -101,8 +111,24 @@ void TextureResource::SetFiltering(TextureFilter minFilter,TextureFilter magFilt
 	else if (minFilter==MIPMAP)
 		mag=GL_LINEAR_MIPMAP_LINEAR;
 
-	glBindTexture(GL_TEXTURE_2D,id);
+	glBindTexture(GL_TEXTURE_2D,resource->id);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,min);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,mag);
 
+}
+string Texture::GetFileName() const
+{
+	return resource->filename;
+}
+unsigned int Texture::GetId() const
+{
+	return resource->id;
+}
+Texture::operator bool () const
+{
+	return resource;
+}
+bool Texture::operator== (const Texture &texture) const
+{
+	return texture.resource==resource;
 }

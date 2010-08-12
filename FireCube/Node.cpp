@@ -35,126 +35,170 @@ using namespace std;
 #include "ModelLoaders.h"
 
 using namespace FireCube;
+void Light::Create()
+{
+	resource=boost::shared_ptr<LightResource>(new LightResource);
+}
+void Light::SetType(LightType type)
+{
+	resource->type=type;
+}
+LightType Light::GetType()
+{
+	return resource->type;
+}
+void Light::SetAmbientColor(vec4 color)
+{
+	resource->ambientColor=color;
+}
+vec4 Light::GetAmbientColor()
+{
+	return resource->ambientColor;
+}
+void Light::SetDiffuseColor(vec4 color)
+{
+	resource->diffuseColor=color;
+}
+vec4 Light::GetDiffuseColor()
+{
+	return resource->diffuseColor;
+}
+void Light::SetSpecularColor(vec4 color)
+{
+	resource->specularColor=color;
+}
+vec4 Light::GetSpecularColor()
+{
+	return resource->specularColor;
+}
+Light::operator bool () const
+{
+	return resource;
+}
+bool Light::operator== (const Light &light) const
+{
+	return light.resource==resource;
+}
 Node::Node()
 {	
 }
-Node::Node(NodeResource *nr) : nodeResource(nr)
+Node::Node(NodeResource *nr) : resource(nr)
 {
 }
 Node::operator bool () const
 {
-	return nodeResource;
+	return resource;
 }
 bool Node::operator== (const Node &node) const
 {
-	return nodeResource==node.nodeResource;
+	return resource==node.resource;
 }
 Node::Node(const string &name)
 {
-	nodeResource=boost::shared_ptr<NodeResource>(new NodeResource);
+	resource=boost::shared_ptr<NodeResource>(new NodeResource);
 	SetName(name);
 }
 void Node::SetName(const string &name)
 {
-	nodeResource->name=name;
+	resource->name=name;
 }
 string Node::GetName()
 {
-	return nodeResource->name;
+	return resource->name;
 }
 Node &Node::Parent()
 {
-	return nodeResource->parent;
+	return resource->parent;
 }
 mat4 Node::GetLocalTransformation()
 {
-	if (!nodeResource->transformationChanged)
-		return nodeResource->transformation;
-	nodeResource->transformationChanged=false;
-	nodeResource->transformation.Identity();
-	nodeResource->transformation.Translate(nodeResource->translation);	
-	nodeResource->transformation.Scale(nodeResource->scale.x,nodeResource->scale.y,nodeResource->scale.z);	
-	nodeResource->transformation.RotateX(nodeResource->rotation.x);
-	nodeResource->transformation.RotateY(nodeResource->rotation.y);
-	nodeResource->transformation.RotateZ(nodeResource->rotation.z);	
-	nodeResource->transformation*=nodeResource->matTransform;
-	return nodeResource->transformation;
+	if (!resource->transformationChanged)
+		return resource->transformation;
+	resource->transformationChanged=false;
+	resource->transformation.Identity();
+	resource->transformation.Translate(resource->translation);	
+	resource->transformation.Scale(resource->scale.x,resource->scale.y,resource->scale.z);	
+	resource->transformation.RotateX(resource->rotation.x);
+	resource->transformation.RotateY(resource->rotation.y);
+	resource->transformation.RotateZ(resource->rotation.z);	
+	resource->transformation*=resource->matTransform;
+	return resource->transformation;
 }
 mat4 Node::GetWorldTransformation()
 {
-	return nodeResource->worldTransformation;
+	return resource->worldTransformation;
 }
 void Node::SetWorldTransformation(mat4 mat)
 {
-	nodeResource->worldTransformation=mat;
+	resource->worldTransformation=mat;
 }
 
 void Node::SetTranslation(vec3 t)
 {
-	nodeResource->transformationChanged=true;
-	nodeResource->translation=t;
+	resource->transformationChanged=true;
+	resource->translation=t;
 }
 vec3 Node::GetTranslation()
 {	
-	return nodeResource->translation;
+	return resource->translation;
 }
 void Node::SetRotation(vec3 r)
 {
-	nodeResource->transformationChanged=true;
-	nodeResource->rotation=r;
+	resource->transformationChanged=true;
+	resource->rotation=r;
 }
 vec3 Node::GetRotation()
 {
-	return nodeResource->rotation;
+	return resource->rotation;
 }
 void Node::SetScale(vec3 s)
 {
-	nodeResource->transformationChanged=true;
-	nodeResource->scale=s;
+	resource->transformationChanged=true;
+	resource->scale=s;
 }
 vec3 Node::GetScale()
 {
-	return nodeResource->scale;
+	return resource->scale;
 }
 void Node::SetMatrixTransformation(mat4 t)
 {
-	nodeResource->transformationChanged=true;
-	nodeResource->matTransform=t;
+	resource->transformationChanged=true;
+	resource->matTransform=t;
 }
 mat4 Node::GetMatrixTransformation()
 {
-	return nodeResource->matTransform;
+	return resource->matTransform;
 }
 void Node::Move(vec3 t)
 {
-	nodeResource->transformationChanged=true;
-	nodeResource->translation+=t;
+	resource->transformationChanged=true;
+	resource->translation+=t;
 }
 void Node::Rotate(vec3 r)
 {
-	nodeResource->transformationChanged=true;
-	nodeResource->rotation+=r;
+	resource->transformationChanged=true;
+	resource->rotation+=r;
 }
 void Node::Scale(vec3 s)
 {
-	nodeResource->transformationChanged=true;
-	nodeResource->scale.x*=s.x;
-	nodeResource->scale.y*=s.y;
-	nodeResource->scale.z*=s.z;
+	resource->transformationChanged=true;
+	resource->scale.x*=s.x;
+	resource->scale.y*=s.y;
+	resource->scale.z*=s.z;
 }
 void Node::AddGeometry(Geometry geometry)
 {
-	nodeResource->geometries.push_back(geometry);
+	resource->geometries.push_back(geometry);
 }
 void Node::AddLight(Light l)
 {	
-	nodeResource->lights.push_back(l);
+	resource->lights.push_back(l);
 }
 void Node::RemoveLight(Light l)
 {
-	vector<Light>::iterator i=std::find(nodeResource->lights.begin(),nodeResource->lights.end(),l);
-	if (i!=nodeResource->lights.end())
-		nodeResource->lights.erase(i);
+	vector<Light>::iterator i=std::find(resource->lights.begin(),resource->lights.end(),l);
+	if (i!=resource->lights.end())
+		resource->lights.erase(i);
 }
 void Node::RenderBoundingBox()
 {
@@ -169,7 +213,7 @@ void Node::RenderBoundingBox()
 			   bbox.bmin+vec3(w,h,0),
 			   bbox.bmin+vec3(w,h,d),
 			   bbox.bmin+vec3(0,h,d)};
-	DWORD i[12*2]={0,1,1,2,2,3,3,0,4,5,5,6,6,7,7,4,0,4,1,5,2,6,3,7};
+	unsigned int i[12*2]={0,1,1,2,2,3,3,0,4,5,5,6,6,7,7,4,0,4,1,5,2,6,3,7};
 	float color[4]={0.0f,1.0f,0.0f,1.0f};
 	if (parent)
 		worldTransformation=parent->worldTransformation*GetTransformation();
@@ -192,7 +236,7 @@ void Node::RenderBoundingBox()
 	Renderer::SetModelViewMatrix(worldTransformation);
 	Renderer::RenderIndexStream(LINES,24);*/
 
-	for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 		(*i).RenderBoundingBox();	
 }
 void Node::UpdateBoundingBox()
@@ -214,15 +258,15 @@ void Node::UpdateBoundingBox()
 
 vector<Geometry> &Node::GetGeometries()
 {
-	return nodeResource->geometries;
+	return resource->geometries;
 }
 vector<Light> &Node::GetLights()
 {
-	return nodeResource->lights;
+	return resource->lights;
 }
 void Node::Render()
 {
-	if (nodeResource->parent)
+	if (resource->parent)
 		SetWorldTransformation(Parent().GetWorldTransformation()*GetLocalTransformation());
 	else
 		SetWorldTransformation(GetLocalTransformation());
@@ -234,30 +278,30 @@ void Node::Render()
 	{		
 		sceneGraph->activeLights.push_back(make_pair(worldTransformation,*i));
 	}*/
-	for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 		(*i).Render();	
 }
 Node Node::AddChild(Node node)
 {
-	nodeResource->children.push_back(node);
+	resource->children.push_back(node);
 	if (node.Parent())
 		node.Parent().RemoveChild(node);
-	node.nodeResource->parent=*this;
+	node.resource->parent=*this;
 	return node;
 }
 void Node::SetParent(Node parent)
 {
 	if (Parent())
 		Parent().RemoveChild(*this);
-	nodeResource->parent=parent;
-	parent.nodeResource->children.push_back(*this);		
+	resource->parent=parent;
+	parent.resource->children.push_back(*this);		
 }
 Node Node::GetChild(const string &name)
 {
-	for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 		if ((*i).GetName()==name)
 			return *i;
-	for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 	{
 		Node ret=(*i).GetChild(name);
 		if (ret)
@@ -267,13 +311,13 @@ Node Node::GetChild(const string &name)
 }
 Node Node::RemoveChild(Node node)
 {
-	for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 		if ((*i)==node)
 		{			
-			nodeResource->children.erase(i);
+			resource->children.erase(i);
 			return node;
 		}
-		for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+		for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 		{
 			Node ret=(*i).RemoveChild(node);
 			if (ret)
@@ -283,14 +327,14 @@ Node Node::RemoveChild(Node node)
 }
 Node Node::RemoveChild(const string &name)
 {
-	for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 		if ((*i).GetName()==name)
 		{
 			Node ret=*i;
-			nodeResource->children.erase(i);
+			resource->children.erase(i);
 			return ret;
 		}
-	for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 	{
 		Node ret=(*i).RemoveChild(name);
 		if (ret)
@@ -300,80 +344,80 @@ Node Node::RemoveChild(const string &name)
 }
 vector<Node> &Node::GetChildren()
 {
-	return nodeResource->children;
+	return resource->children;
 }
 void Node::CreateHardNormals()
 {
 	for (vector<Geometry>::iterator i=GetGeometries().begin();i!=GetGeometries().end();i++)
-		(*i)->CreateHardNormals();
-	for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+		(*i).CreateHardNormals();
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 	{
 		(*i).CreateHardNormals();
 	}
 }
 void Node::SetProgram(Program program)
 {
-	nodeResource->renderParameters.program=program;
-	for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+	resource->renderParameters.program=program;
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 	{
 		(*i).SetProgram(program);
 	}
 }
 RenderParameters &Node::GetRenderParameters()
 {
-	return nodeResource->renderParameters;
+	return resource->renderParameters;
 }
 Program Node::GetProgram()
 {
-	return nodeResource->renderParameters.program;
+	return resource->renderParameters.program;
 }
 void Node::SetLighting(bool enabled)
 {
-	nodeResource->renderParameters.lighting=enabled;
-	for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+	resource->renderParameters.lighting=enabled;
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 	{
 		(*i).SetLighting(enabled);
 	}
 }
 bool Node::GetLighting()
 {
-	return nodeResource->renderParameters.lighting;
+	return resource->renderParameters.lighting;
 }
 void Node::SetFog(bool enabled)
 {
-	nodeResource->renderParameters.fog=enabled;
-	for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+	resource->renderParameters.fog=enabled;
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 	{
 		(*i).SetFog(enabled);
 	}
 }
 bool Node::GetFog()
 {
-	return nodeResource->renderParameters.fog;
+	return resource->renderParameters.fog;
 }
 void Node::SetFogColor(vec4 color)
 {
-	nodeResource->renderParameters.fogColor=color;
-	for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+	resource->renderParameters.fogColor=color;
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 	{
 		(*i).SetFogColor(color);
 	}
 }
 vec4 Node::GetFogColor()
 {
-	return nodeResource->renderParameters.fogColor;
+	return resource->renderParameters.fogColor;
 }
 void Node::SetFogDensity(float density)
 {
-	nodeResource->renderParameters.fogDensity=density;
-	for (vector<Node>::iterator i=nodeResource->children.begin();i!=nodeResource->children.end();i++)
+	resource->renderParameters.fogDensity=density;
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
 	{
 		(*i).SetFogDensity(density);
 	}
 }
 float Node::GetFogDensity()
 {
-	return nodeResource->renderParameters.fogDensity;
+	return resource->renderParameters.fogDensity;
 }
 NodeResource::NodeResource()
 {

@@ -3,8 +3,7 @@
 
 namespace FireCube
 {
-class FrameBufferResource;
-typedef boost::shared_ptr<FrameBufferResource> FrameBuffer;
+class FrameBuffer;
 
 /* CPPDOC_BEGIN_EXCLUDE */
 namespace Renderer
@@ -19,10 +18,20 @@ namespace Renderer
 */
 class FIRECUBE_API FrameBufferResource
 {
-public:
-	friend void Renderer::UseFrameBuffer(FrameBuffer frameBuffer);
+public:	
 	FrameBufferResource();
 	~FrameBufferResource();
+
+	int width,height;
+	GLuint id;
+	GLuint depthBuffer;
+	Texture texture[MAX_TEXTURES];
+	Texture depthTexture;
+};
+class FIRECUBE_API FrameBuffer
+{
+public:
+	friend void Renderer::UseFrameBuffer(FrameBuffer frameBuffer);
 	/**
 	* Creates a frame buffer.
 	* @param width The width of the frame buffer and it's sub-images(depth buffer, render targets).
@@ -68,12 +77,15 @@ public:
 	* Returns the height of the frame buffer.
 	*/
 	int GetHeight();
+	/**
+	* Returns the resource id of the frame buffer.
+	*/
+	unsigned int GetId() const;
+
+	operator bool () const;
+	bool operator== (const FrameBuffer &frameBuffer) const;
 private:
-	int width,height;
-	GLuint id;
-	GLuint depthBuffer;
-	Texture texture[MAX_TEXTURES];
-	Texture depthTexture;
+	boost::shared_ptr<FrameBufferResource> resource;
 };
 }
 

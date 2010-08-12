@@ -37,7 +37,7 @@ RenderState::RenderState() : directionalLighting(false), diffuseTexture(false), 
 }
 void RenderState::FromMaterial(Material mat)
 {
-	if (mat->diffuseTexture)
+	if (mat.GetDiffuseTexture())
 		this->diffuseTexture=true;
 }
 void RenderState::SetDirectionalLighting(bool enable)
@@ -53,9 +53,9 @@ void RenderState::SetFog(bool enable)
 {
 	fog=enable;
 }
-DWORD RenderState::ToInt()
+unsigned int RenderState::ToInt()
 {
-	DWORD ret=0;
+	unsigned int ret=0;
 	if (directionalLighting)
 		ret|=1;
 	if (fog)
@@ -68,12 +68,12 @@ DWORD RenderState::ToInt()
 }
 Program ShaderGenerator::GenerateProgram(RenderState &renderState)
 {
-	map<DWORD,Program>::iterator i=programs.find(renderState.ToInt());
+	map<unsigned int,Program>::iterator i=programs.find(renderState.ToInt());
 	if (i!=programs.end())
 		return i->second;
 	
-	Program program(new ProgramResource);
-	Shader vshader(new ShaderResource);
+	Program program;
+	Shader vshader;
 	ostringstream vshaderCode;
 	if (renderState.pointLighting)
 	{
@@ -103,7 +103,7 @@ Program ShaderGenerator::GenerateProgram(RenderState &renderState)
 	vshaderCode << "normal = gl_NormalMatrix * gl_Normal;" << endl;
 	vshaderCode	<< "gl_Position = ftransform();" << endl
 				<< "}";
-	Shader fshader(new ShaderResource);
+	Shader fshader;
 	ostringstream fshaderCode;	
 	fshaderCode << "varying vec3 normal;" << endl;
 	if (renderState.directionalLighting || renderState.pointLighting)
@@ -186,9 +186,9 @@ Program ShaderGenerator::GenerateProgram(RenderState &renderState)
 	}
 	fshaderCode << "gl_FragColor=color;" << endl
 				<< "}" << endl;
-	vshader->Create(VERTEX_SHADER,vshaderCode.str());
-	fshader->Create(FRAGMENT_SHADER,fshaderCode.str());
-	program->Create(vshader,fshader);
+	vshader.Create(VERTEX_SHADER,vshaderCode.str());
+	fshader.Create(FRAGMENT_SHADER,fshaderCode.str());
+	program.Create(vshader,fshader);
 	programs[renderState.ToInt()]=program;
 	return program;
 }

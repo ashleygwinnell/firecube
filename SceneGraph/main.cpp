@@ -29,11 +29,12 @@ bool App::Init()
 	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
 	Geometry lightMarker=GeometryGenerator::GenerateSphere(0.1f,10,10);
 	root=Node("Root");	
-	Light l(new LightResource);
-	l->ambientColor.Set(0.3f,0.3f,0.3f,1);
-	l->diffuseColor.Set(1.0f,1.0f,1.0f,1);
-	l->specularColor.Set(1.0f,1.0f,1.0f,1.0f);
-	l->type=FireCube::POINT;
+	Light l;
+	l.Create();
+	l.SetAmbientColor(vec4(0.3f,0.3f,0.3f,1));
+	l.SetDiffuseColor(vec4(1.0f,1.0f,1.0f,1));
+	l.SetSpecularColor(vec4(1.0f,1.0f,1.0f,1.0f));
+	l.SetType(FireCube::POINT);
 	Node nn("Ln");
 	nn.SetParent(root);
 	Node lightNode("LightNode1");
@@ -43,12 +44,13 @@ bool App::Init()
 	lightNode.SetLighting(false);
 	lightNode.AddGeometry(lightMarker);
 
-	Material mat(new MaterialResource);
-	mat->ambient=vec4(0.3f,0.3f,0.3f,1.0f);
-	mat->diffuse=vec4(0.7f,0.7f,0.7f,1.0f);
-	mat->specular=vec4(0.3f,0.3f,0.3f,1.0f);
-	mat->shininess=20.0f;
-	mat->diffuseTexture=Renderer::GetTextureManager().Create("earthmap1k.jpg");
+	Material mat;
+	mat.Create();
+	mat.SetAmbientColor(vec4(0.3f,0.3f,0.3f,1.0f));
+	mat.SetDiffuseColor(vec4(0.7f,0.7f,0.7f,1.0f));
+	mat.SetSpecularColor(vec4(0.3f,0.3f,0.3f,1.0f));
+	mat.SetShininess(20.0f);
+	mat.SetDiffuseTexture(Renderer::GetTextureManager().Create("earthmap1k.jpg"));
 	Node n("Earth");
 	n.SetParent(root);	
 	n.AddGeometry(GeometryGenerator::GenerateSphere(2.0f,32,32,mat));	

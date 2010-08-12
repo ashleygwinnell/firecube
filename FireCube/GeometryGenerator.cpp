@@ -38,128 +38,130 @@ using namespace FireCube;
 
 Material CreateDefaultMaterial()
 {
-	Material material(new MaterialResource);
-	material->name="Default";
-	material->ambient=vec4(0.3f,0.3f,0.3f,1.0f);
-	material->diffuse=vec4(0.7f,0.7f,0.7f,1.0f);
-	material->specular=vec4(0.2f,0.2f,0.2f,1.0f);
-	material->shininess=50.0f;	
+	Material material;
+	material.Create();
+	material.SetName("Default");
+	material.SetAmbientColor(vec4(0.3f,0.3f,0.3f,1.0f));
+	material.SetDiffuseColor(vec4(0.7f,0.7f,0.7f,1.0f));
+	material.SetSpecularColor(vec4(0.2f,0.2f,0.2f,1.0f));
+	material.SetShininess(50.0f);
 	return material;
 }
 
 Geometry FIRECUBE_API GeometryGenerator::GenerateBox(vec3 size,Material material)
 {
-	Geometry ret(new GeometryResource);
+	Geometry ret;
+	ret.Create();
 	size=size*0.5f;
 
 	// Front
-	ret->vertex.push_back(vec3(-size.x,-size.y,size.z));
-	ret->vertex.push_back(vec3(size.x,-size.y,size.z));
-	ret->vertex.push_back(vec3(-size.x,size.y,size.z));
-	ret->vertex.push_back(vec3(size.x,size.y,size.z));
-	ret->normal.push_back(vec3(0,0,1));
-	ret->normal.push_back(vec3(0,0,1));
-	ret->normal.push_back(vec3(0,0,1));
-	ret->normal.push_back(vec3(0,0,1));
-	ret->diffuseUV.push_back(vec2(0.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(0.0f,0.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,0.0f));
-	ret->face.push_back(Face(ret->vertex.size()-4,ret->vertex.size()-3,ret->vertex.size()-2));
-	ret->face.back().normal=vec3(0,0,1);
-	ret->face.push_back(Face(ret->vertex.size()-2,ret->vertex.size()-3,ret->vertex.size()-1));
-	ret->face.back().normal=vec3(0,0,1);	
+	ret.GetVertices().push_back(vec3(-size.x,-size.y,size.z));
+	ret.GetVertices().push_back(vec3(size.x,-size.y,size.z));
+	ret.GetVertices().push_back(vec3(-size.x,size.y,size.z));
+	ret.GetVertices().push_back(vec3(size.x,size.y,size.z));
+	ret.GetNormals().push_back(vec3(0,0,1));
+	ret.GetNormals().push_back(vec3(0,0,1));
+	ret.GetNormals().push_back(vec3(0,0,1));
+	ret.GetNormals().push_back(vec3(0,0,1));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,0.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,0.0f));
+	ret.GetFaces().push_back(Face(ret.GetVertices().size()-4,ret.GetVertices().size()-3,ret.GetVertices().size()-2));
+	ret.GetFaces().back().normal=vec3(0,0,1);
+	ret.GetFaces().push_back(Face(ret.GetVertices().size()-2,ret.GetVertices().size()-3,ret.GetVertices().size()-1));
+	ret.GetFaces().back().normal=vec3(0,0,1);	
 	// Back
-	ret->vertex.push_back(vec3(size.x,-size.y,-size.z));
-	ret->vertex.push_back(vec3(-size.x,-size.y,-size.z));
-	ret->vertex.push_back(vec3(size.x,size.y,-size.z));
-	ret->vertex.push_back(vec3(-size.x,size.y,-size.z));
-	ret->normal.push_back(vec3(0,0,-1));
-	ret->normal.push_back(vec3(0,0,-1));
-	ret->normal.push_back(vec3(0,0,-1));
-	ret->normal.push_back(vec3(0,0,-1));
-	ret->diffuseUV.push_back(vec2(0.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(0.0f,0.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,0.0f));
-	ret->face.push_back(Face(ret->vertex.size()-4,ret->vertex.size()-3,ret->vertex.size()-2));
-	ret->face.back().normal=vec3(0,0,-1);
-	ret->face.push_back(Face(ret->vertex.size()-2,ret->vertex.size()-3,ret->vertex.size()-1));
-	ret->face.back().normal=vec3(0,0,-1);
+	ret.GetVertices().push_back(vec3(size.x,-size.y,-size.z));
+	ret.GetVertices().push_back(vec3(-size.x,-size.y,-size.z));
+	ret.GetVertices().push_back(vec3(size.x,size.y,-size.z));
+	ret.GetVertices().push_back(vec3(-size.x,size.y,-size.z));
+	ret.GetNormals().push_back(vec3(0,0,-1));
+	ret.GetNormals().push_back(vec3(0,0,-1));
+	ret.GetNormals().push_back(vec3(0,0,-1));
+	ret.GetNormals().push_back(vec3(0,0,-1));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,0.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,0.0f));
+	ret.GetFaces().push_back(Face(ret.GetVertices().size()-4,ret.GetVertices().size()-3,ret.GetVertices().size()-2));
+	ret.GetFaces().back().normal=vec3(0,0,-1);
+	ret.GetFaces().push_back(Face(ret.GetVertices().size()-2,ret.GetVertices().size()-3,ret.GetVertices().size()-1));
+	ret.GetFaces().back().normal=vec3(0,0,-1);
 	// Left
-	ret->vertex.push_back(vec3(-size.x,-size.y,-size.z));
-	ret->vertex.push_back(vec3(-size.x,-size.y,size.z));
-	ret->vertex.push_back(vec3(-size.x,size.y,-size.z));
-	ret->vertex.push_back(vec3(-size.x,size.y,size.z));
-	ret->normal.push_back(vec3(-1,0,0));
-	ret->normal.push_back(vec3(-1,0,0));
-	ret->normal.push_back(vec3(-1,0,0));
-	ret->normal.push_back(vec3(-1,0,0));
-	ret->diffuseUV.push_back(vec2(0.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(0.0f,0.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,0.0f));
-	ret->face.push_back(Face(ret->vertex.size()-4,ret->vertex.size()-3,ret->vertex.size()-2));
-	ret->face.back().normal=vec3(-1,0,0);
-	ret->face.push_back(Face(ret->vertex.size()-2,ret->vertex.size()-3,ret->vertex.size()-1));
-	ret->face.back().normal=vec3(-1,0,0);
+	ret.GetVertices().push_back(vec3(-size.x,-size.y,-size.z));
+	ret.GetVertices().push_back(vec3(-size.x,-size.y,size.z));
+	ret.GetVertices().push_back(vec3(-size.x,size.y,-size.z));
+	ret.GetVertices().push_back(vec3(-size.x,size.y,size.z));
+	ret.GetNormals().push_back(vec3(-1,0,0));
+	ret.GetNormals().push_back(vec3(-1,0,0));
+	ret.GetNormals().push_back(vec3(-1,0,0));
+	ret.GetNormals().push_back(vec3(-1,0,0));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,0.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,0.0f));
+	ret.GetFaces().push_back(Face(ret.GetVertices().size()-4,ret.GetVertices().size()-3,ret.GetVertices().size()-2));
+	ret.GetFaces().back().normal=vec3(-1,0,0);
+	ret.GetFaces().push_back(Face(ret.GetVertices().size()-2,ret.GetVertices().size()-3,ret.GetVertices().size()-1));
+	ret.GetFaces().back().normal=vec3(-1,0,0);
 	// Right
-	ret->vertex.push_back(vec3(size.x,-size.y,size.z));
-	ret->vertex.push_back(vec3(size.x,-size.y,-size.z));
-	ret->vertex.push_back(vec3(size.x,size.y,size.z));
-	ret->vertex.push_back(vec3(size.x,size.y,-size.z));
-	ret->normal.push_back(vec3(1,0,0));
-	ret->normal.push_back(vec3(1,0,0));
-	ret->normal.push_back(vec3(1,0,0));
-	ret->normal.push_back(vec3(1,0,0));
-	ret->diffuseUV.push_back(vec2(0.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(0.0f,0.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,0.0f));
-	ret->face.push_back(Face(ret->vertex.size()-4,ret->vertex.size()-3,ret->vertex.size()-2));
-	ret->face.back().normal=vec3(1,0,0);
-	ret->face.push_back(Face(ret->vertex.size()-2,ret->vertex.size()-3,ret->vertex.size()-1));
-	ret->face.back().normal=vec3(1,0,0);
+	ret.GetVertices().push_back(vec3(size.x,-size.y,size.z));
+	ret.GetVertices().push_back(vec3(size.x,-size.y,-size.z));
+	ret.GetVertices().push_back(vec3(size.x,size.y,size.z));
+	ret.GetVertices().push_back(vec3(size.x,size.y,-size.z));
+	ret.GetNormals().push_back(vec3(1,0,0));
+	ret.GetNormals().push_back(vec3(1,0,0));
+	ret.GetNormals().push_back(vec3(1,0,0));
+	ret.GetNormals().push_back(vec3(1,0,0));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,0.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,0.0f));
+	ret.GetFaces().push_back(Face(ret.GetVertices().size()-4,ret.GetVertices().size()-3,ret.GetVertices().size()-2));
+	ret.GetFaces().back().normal=vec3(1,0,0);
+	ret.GetFaces().push_back(Face(ret.GetVertices().size()-2,ret.GetVertices().size()-3,ret.GetVertices().size()-1));
+	ret.GetFaces().back().normal=vec3(1,0,0);
 	// Top
-	ret->vertex.push_back(vec3(-size.x,size.y,size.z));
-	ret->vertex.push_back(vec3(size.x,size.y,size.z));
-	ret->vertex.push_back(vec3(-size.x,size.y,-size.z));
-	ret->vertex.push_back(vec3(size.x,size.y,-size.z));
-	ret->normal.push_back(vec3(0,1,0));
-	ret->normal.push_back(vec3(0,1,0));
-	ret->normal.push_back(vec3(0,1,0));
-	ret->normal.push_back(vec3(0,1,0));
-	ret->diffuseUV.push_back(vec2(0.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(0.0f,0.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,0.0f));
-	ret->face.push_back(Face(ret->vertex.size()-4,ret->vertex.size()-3,ret->vertex.size()-2));
-	ret->face.back().normal=vec3(0,1,0);
-	ret->face.push_back(Face(ret->vertex.size()-2,ret->vertex.size()-3,ret->vertex.size()-1));
-	ret->face.back().normal=vec3(0,1,0);	
+	ret.GetVertices().push_back(vec3(-size.x,size.y,size.z));
+	ret.GetVertices().push_back(vec3(size.x,size.y,size.z));
+	ret.GetVertices().push_back(vec3(-size.x,size.y,-size.z));
+	ret.GetVertices().push_back(vec3(size.x,size.y,-size.z));
+	ret.GetNormals().push_back(vec3(0,1,0));
+	ret.GetNormals().push_back(vec3(0,1,0));
+	ret.GetNormals().push_back(vec3(0,1,0));
+	ret.GetNormals().push_back(vec3(0,1,0));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,0.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,0.0f));
+	ret.GetFaces().push_back(Face(ret.GetVertices().size()-4,ret.GetVertices().size()-3,ret.GetVertices().size()-2));
+	ret.GetFaces().back().normal=vec3(0,1,0);
+	ret.GetFaces().push_back(Face(ret.GetVertices().size()-2,ret.GetVertices().size()-3,ret.GetVertices().size()-1));
+	ret.GetFaces().back().normal=vec3(0,1,0);	
 	// Bottom
-	ret->vertex.push_back(vec3(-size.x,-size.y,-size.z));
-	ret->vertex.push_back(vec3(size.x,-size.y,-size.z));
-	ret->vertex.push_back(vec3(-size.x,-size.y,size.z));
-	ret->vertex.push_back(vec3(size.x,-size.y,size.z));
-	ret->normal.push_back(vec3(0,-1,0));
-	ret->normal.push_back(vec3(0,-1,0));
-	ret->normal.push_back(vec3(0,-1,0));
-	ret->normal.push_back(vec3(0,-1,0));
-	ret->diffuseUV.push_back(vec2(0.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(0.0f,0.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,0.0f));
-	ret->face.push_back(Face(ret->vertex.size()-4,ret->vertex.size()-3,ret->vertex.size()-2));
-	ret->face.back().normal=vec3(0,-1,0);
-	ret->face.push_back(Face(ret->vertex.size()-2,ret->vertex.size()-3,ret->vertex.size()-1));
-	ret->face.back().normal=vec3(0,-1,0);
+	ret.GetVertices().push_back(vec3(-size.x,-size.y,-size.z));
+	ret.GetVertices().push_back(vec3(size.x,-size.y,-size.z));
+	ret.GetVertices().push_back(vec3(-size.x,-size.y,size.z));
+	ret.GetVertices().push_back(vec3(size.x,-size.y,size.z));
+	ret.GetNormals().push_back(vec3(0,-1,0));
+	ret.GetNormals().push_back(vec3(0,-1,0));
+	ret.GetNormals().push_back(vec3(0,-1,0));
+	ret.GetNormals().push_back(vec3(0,-1,0));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,0.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,0.0f));
+	ret.GetFaces().push_back(Face(ret.GetVertices().size()-4,ret.GetVertices().size()-3,ret.GetVertices().size()-2));
+	ret.GetFaces().back().normal=vec3(0,-1,0);
+	ret.GetFaces().push_back(Face(ret.GetVertices().size()-2,ret.GetVertices().size()-3,ret.GetVertices().size()-1));
+	ret.GetFaces().back().normal=vec3(0,-1,0);
 	
-	ret->surface.push_back(Surface());
-	ret->surface.back().face=ret->face;
-	ret->surface.back().material=material;
-	ret->material.push_back(material);
-	ret->UpdateBuffers();
+	ret.GetSurfaces().push_back(Surface());
+	ret.GetSurfaces().back().face=ret.GetFaces();
+	ret.GetSurfaces().back().material=material;
+	ret.GetMaterials().push_back(material);
+	ret.UpdateBuffers();
 	return ret;
 }
 Geometry FIRECUBE_API GeometryGenerator::GenerateBox(vec3 size)
@@ -169,12 +171,13 @@ Geometry FIRECUBE_API GeometryGenerator::GenerateBox(vec3 size)
 
 Geometry FIRECUBE_API GeometryGenerator::GenerateSphere (float radius,unsigned int rings, unsigned int columns,Material material) 
 {
-	Geometry ret(new GeometryResource);
+	Geometry ret;
+	ret.Create();
 	vector<unsigned int> indices;
 
-	ret->vertex.reserve((rings + 1) * (columns + 1));
-	ret->normal.reserve((rings + 1) * (columns + 1));
-	ret->diffuseUV.reserve((rings + 1) * (columns + 1));
+	ret.GetVertices().reserve((rings + 1) * (columns + 1));
+	ret.GetNormals().reserve((rings + 1) * (columns + 1));
+	ret.GetDiffuseUV().reserve((rings + 1) * (columns + 1));
 	indices.reserve(2 * rings * (columns + 1));
 
 	const float fDeltaRingAngle = (float)PI / rings;
@@ -192,9 +195,9 @@ Geometry FIRECUBE_API GeometryGenerator::GenerateSphere (float radius,unsigned i
 			vec3 pos(-r0 * std::sin(column * fDeltacolumnAngle), y0, -r0 * std::cos(column * fDeltacolumnAngle));
 			vec2 uv(column / (float)columns, ring / (float) rings);
 
-			ret->vertex.push_back(pos * radius);
-			ret->normal.push_back(pos.Normalize());
-			ret->diffuseUV.push_back(uv);
+			ret.GetVertices().push_back(pos * radius);
+			ret.GetNormals().push_back(pos.Normalize());
+			ret.GetDiffuseUV().push_back(uv);
 			if(ring < rings)
 			{
 				indices.push_back(vertexIndex);
@@ -203,25 +206,25 @@ Geometry FIRECUBE_API GeometryGenerator::GenerateSphere (float radius,unsigned i
 			}
 		}
 	}
-	ret->face.push_back(Face(indices[0],indices[1],indices[2]));
+	ret.GetFaces().push_back(Face(indices[0],indices[1],indices[2]));
 	for (unsigned int i=3;i<indices.size();i++)
 	{
 		if (i%2==1)
 		{		
 			Face f(indices[i-1],indices[i-2],indices[i]);
-			ret->face.push_back(f);
+			ret.GetFaces().push_back(f);
 		}
 		else
 		{
 			Face f(indices[i-2],indices[i-1],indices[i]);
-			ret->face.push_back(f);
+			ret.GetFaces().push_back(f);
 		}
 	}
-	ret->surface.push_back(Surface());	
-	ret->surface.back().face=ret->face;
-	ret->surface.back().material=material;
-	ret->material.push_back(material);
-	ret->UpdateBuffers();
+	ret.GetSurfaces().push_back(Surface());	
+	ret.GetSurfaces().back().face=ret.GetFaces();
+	ret.GetSurfaces().back().material=material;
+	ret.GetMaterials().push_back(material);
+	ret.UpdateBuffers();
 	return ret;
 }
 Geometry FIRECUBE_API GeometryGenerator::GenerateSphere (float radius,unsigned int rings, unsigned int columns) 
@@ -234,30 +237,31 @@ Geometry FIRECUBE_API GeometryGenerator::GeneratePlane(vec2 size)
 }
 Geometry FIRECUBE_API GeometryGenerator::GeneratePlane(vec2 size,Material material)
 {
-	Geometry ret(new GeometryResource);
+	Geometry ret;
+	ret.Create();
 	size=size*0.5f;
 
-	ret->vertex.push_back(vec3(-size.x,0,size.y));
-	ret->vertex.push_back(vec3(size.x,0,size.y));
-	ret->vertex.push_back(vec3(-size.x,0,-size.y));
-	ret->vertex.push_back(vec3(size.x,0,-size.y));
-	ret->normal.push_back(vec3(0,1,0));
-	ret->normal.push_back(vec3(0,1,0));
-	ret->normal.push_back(vec3(0,1,0));
-	ret->normal.push_back(vec3(0,1,0));
-	ret->diffuseUV.push_back(vec2(0.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,1.0f));
-	ret->diffuseUV.push_back(vec2(0.0f,0.0f));
-	ret->diffuseUV.push_back(vec2(1.0f,0.0f));
-	ret->face.push_back(Face(0,1,2));
-	ret->face.back().normal=vec3(0,1,0);
-	ret->face.push_back(Face(2,1,3));
-	ret->face.back().normal=vec3(0,1,0);		
+	ret.GetVertices().push_back(vec3(-size.x,0,size.y));
+	ret.GetVertices().push_back(vec3(size.x,0,size.y));
+	ret.GetVertices().push_back(vec3(-size.x,0,-size.y));
+	ret.GetVertices().push_back(vec3(size.x,0,-size.y));
+	ret.GetNormals().push_back(vec3(0,1,0));
+	ret.GetNormals().push_back(vec3(0,1,0));
+	ret.GetNormals().push_back(vec3(0,1,0));
+	ret.GetNormals().push_back(vec3(0,1,0));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,1.0f));
+	ret.GetDiffuseUV().push_back(vec2(0.0f,0.0f));
+	ret.GetDiffuseUV().push_back(vec2(1.0f,0.0f));
+	ret.GetFaces().push_back(Face(0,1,2));
+	ret.GetFaces().back().normal=vec3(0,1,0);
+	ret.GetFaces().push_back(Face(2,1,3));
+	ret.GetFaces().back().normal=vec3(0,1,0);		
 
-	ret->surface.push_back(Surface());
-	ret->surface.back().face=ret->face;
-	ret->surface.back().material=material;
-	ret->material.push_back(material);
-	ret->UpdateBuffers();
+	ret.GetSurfaces().push_back(Surface());
+	ret.GetSurfaces().back().face=ret.GetFaces();
+	ret.GetSurfaces().back().material=material;
+	ret.GetMaterials().push_back(material);
+	ret.UpdateBuffers();
 	return ret;
 }

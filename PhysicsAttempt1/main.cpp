@@ -36,10 +36,8 @@ int main(int argc, char *argv[])
 	app.pShader=Renderer::GetShaderManager().Create("p.fshader");	
 	app.pShader2=Renderer::GetShaderManager().Create("p2.fshader");
 	app.font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
-	app.program=Program(new ProgramResource);
-	app.program2=Program(new ProgramResource);
-	app.program->Create(app.vShader,app.pShader);
-	app.program2->Create(app.vShader,app.pShader2);		
+	app.program.Create(app.vShader,app.pShader);
+	app.program2.Create(app.vShader,app.pShader2);		
 	app.model=LoadMesh("../Media/Models/physcube.3ds");
 	app.sphere=LoadMesh("../Media/Models/sphere2.3ds");
 	app.model.SetLighting(false);
@@ -70,7 +68,7 @@ void App::Render(float t)
 	m.Translate(-camPos);
 	Renderer::SetModelViewMatrix(m);
 	Renderer::UseProgram(program);
-	app.program->SetUniform("tex0",0);
+	app.program.SetUniform("tex0",0);
 	s.Render();	
 	
 	Renderer::SetOrthographicProjection();

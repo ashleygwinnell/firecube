@@ -21,18 +21,18 @@ bool App::Init()
 	SetTitle("FBO Example");
 	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",10);	
 	root=Node("Root");
-	Light light(new LightResource);	
-	light->ambientColor=vec4(0.5f,0.5f,0.5f,1.0f);
-	light->diffuseColor=vec4(0.8f,0.8f,0.8f,1.0f);
-	light->type=DIRECTIONAL;
+	Light light;
+	light.Create();
+	light.SetAmbientColor(vec4(0.5f,0.5f,0.5f,1.0f));
+	light.SetDiffuseColor(vec4(0.8f,0.8f,0.8f,1.0f));
+	light.SetType(DIRECTIONAL);
 	root.AddLight(light);
 	node=LoadMesh("../Media/Models/1.3ds");
 	root.AddChild(node);
-	node.Move(vec3(1.3f,0,-3));	
-	program=Program(new ProgramResource);	
-	program->Create(Renderer::GetShaderManager().Create("1.vshader"),Renderer::GetShaderManager().Create("1.fshader"));
+	node.Move(vec3(1.3f,0,-3));		
+	program.Create(Renderer::GetShaderManager().Create("1.vshader"),Renderer::GetShaderManager().Create("1.fshader"));
 	Renderer::UseProgram(program);
-	program->SetUniform("tex",0);
+	program.SetUniform("tex",0);
 	node.SetProgram(program);
 	vector<vec3> vb;
 	vector<vec2> uvb;
@@ -53,22 +53,19 @@ bool App::Init()
 	uvb.push_back(vec2(1,1));
 	uvb.push_back(vec2(1,0));
 	uvb.push_back(vec2(0,0));
-	vBuffer=Buffer(new BufferResource);
-	uvBuffer=Buffer(new BufferResource);
-	vBuffer->Create();
-	vBuffer->LoadData(&vb[0],sizeof(vec3)*vb.size(),STATIC);
-	uvBuffer->Create();
-	uvBuffer->LoadData(&uvb[0],sizeof(vec2)*uvb.size(),STATIC);	
+	vBuffer.Create();
+	vBuffer.LoadData(&vb[0],sizeof(vec3)*vb.size(),STATIC);
+	uvBuffer.Create();
+	uvBuffer.LoadData(&uvb[0],sizeof(vec2)*uvb.size(),STATIC);	
 	node2=LoadMesh("../Media/Models/teapot2.3ds");
 	root.AddChild(node2);
-	node2.Move(vec3(-1.3f,0,-3));	
-	fbo=FrameBuffer(new FrameBufferResource);
-	fbo->Create(128,128);
-	fbo->AddDepthBuffer();
-	fbo->AddRenderTarget(0);
-	fbo->GetRenderTarget(0)->GenerateMipMaps();
+	node2.Move(vec3(-1.3f,0,-3));		
+	fbo.Create(128,128);
+	fbo.AddDepthBuffer();
+	fbo.AddRenderTarget(0);
+	fbo.GetRenderTarget(0).GenerateMipMaps();
 	ang=0;
-	if (fbo->IsValid()==false)
+	if (fbo.IsValid()==false)
 	{
 		Logger::Write("Error: couldn't create FBO.\n");
 		return false;
@@ -101,10 +98,10 @@ void App::Render(float time)
 	Renderer::Clear(vec4(0.4f,0.4f,0.4f,1.0f),1.0f);
 	Renderer::SetPerspectiveProjection(90,0.1f,100);
 	Renderer::UseProgram(program);
-	vBuffer->SetVertexStream(3);
-	uvBuffer->SetTexCoordStream(0);
-	fbo->GetRenderTarget(0)->GenerateMipMaps();
-	Renderer::UseTexture(fbo->GetRenderTarget(0),0);
+	vBuffer.SetVertexStream(3);
+	uvBuffer.SetTexCoordStream(0);
+	fbo.GetRenderTarget(0).GenerateMipMaps();
+	Renderer::UseTexture(fbo.GetRenderTarget(0),0);
 	Renderer::RenderStream(QUADS,8);
 
 	Renderer::SetOrthographicProjection();

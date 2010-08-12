@@ -94,7 +94,7 @@ public:
 };
 void LoadData(Buffer b,vector<vec4> &v,BufferType type)
 {
-	b->LoadData(&v[0],sizeof(vec4)*v.size(),type);
+	b.LoadData(&v[0],sizeof(vec4)*v.size(),type);
 }
 void LoadData(Buffer b,luabind::object const &t,BufferType type)
 {
@@ -106,24 +106,24 @@ void LoadData(Buffer b,luabind::object const &t,BufferType type)
 			vec3 v=luabind::object_cast<vec3>(*i);
 			vv.push_back(v);
 		}		
-		b->LoadData(&vv[0],sizeof(vec3)*vv.size(),type);
+		b.LoadData(&vv[0],sizeof(vec3)*vv.size(),type);
 	}	
 }
 void LoadData(Buffer b,vector<vec2> &v,BufferType type)
 {
-	b->LoadData(&v[0],sizeof(vec2)*v.size(),type);
+	b.LoadData(&v[0],sizeof(vec2)*v.size(),type);
 }
 void LoadData(Buffer b,vector<float> &v,BufferType type)
 {
-	b->LoadData(&v[0],sizeof(float)*v.size(),type);
+	b.LoadData(&v[0],sizeof(float)*v.size(),type);
 }
 void LoadData(Buffer b,vector<int> &v,BufferType type)
 {
-	b->LoadData(&v[0],sizeof(int)*v.size(),type);
+	b.LoadData(&v[0],sizeof(int)*v.size(),type);
 }
 void LoadData(Buffer b,vector<DWORD> &v,BufferType type)
 {
-	b->LoadData(&v[0],sizeof(DWORD)*v.size(),type);
+	b.LoadData(&v[0],sizeof(DWORD)*v.size(),type);
 }
 void LoadIndexData(Buffer b,luabind::object const &t,BufferType type)
 {
@@ -135,7 +135,7 @@ void LoadIndexData(Buffer b,luabind::object const &t,BufferType type)
 			DWORD v=luabind::object_cast<DWORD>(*i);
 			vv.push_back(v);
 		}		
-		b->LoadIndexData(&vv[0],vv.size(),type);
+		b.LoadIndexData(&vv[0],vv.size(),type);
 	}
 	
 }
@@ -285,14 +285,21 @@ void InitializeLua(lua_State *& luaState)
 			.def("Init",&Timer::Init)
 			.def("Update",&Timer::Update)
 			.def("Passed",&Timer::Passed),
-		luabind::class_<MaterialResource,Material>("Material")
+		luabind::class_<Material>("Material")
 			.def(luabind::constructor<>())
-			.def_readwrite("diffuseTexture",&MaterialResource::diffuseTexture)
-			.def_readwrite("name",&MaterialResource::name)
-			.def_readwrite("ambient",&MaterialResource::ambient)
-			.def_readwrite("diffuse",&MaterialResource::diffuse)
-			.def_readwrite("specular",&MaterialResource::specular)
-			.def_readwrite("shininess",&MaterialResource::shininess),			
+			.def("GetDiffuseTexture",&Material::GetDiffuseTexture)
+			.def("GetAmbientColor",&Material::GetAmbientColor)
+			.def("GetDiffuseColor",&Material::GetDiffuseColor)
+			.def("GetSpecularColor",&Material::GetSpecularColor)
+			.def("Create",&Material::Create)
+			.def("GetName",&Material::GetName)
+			.def("GetShininess",&Material::GetShininess)
+			.def("SetAmbientColor",&Material::SetAmbientColor)
+			.def("SetDiffuseColor",&Material::SetDiffuseColor)
+			.def("SetDiffuseTexture",&Material::SetDiffuseTexture)
+			.def("SetName",&Material::SetName)
+			.def("SetShininess",&Material::SetShininess)
+			.def("SetSpecularColor",&Material::SetSpecularColor),			
 		luabind::class_<Edge>("Edge")
 			.def(luabind::constructor<>())
 			.def("GetValue",(DWORD (*)(Edge &,DWORD))&GetValue)
@@ -315,12 +322,17 @@ void InitializeLua(lua_State *& luaState)
 			.def_readwrite("fogDensity",&RenderParameters::fogDensity)
 			.def_readwrite("lighting",&RenderParameters::lighting)
 			.def_readwrite("program",&RenderParameters::program),
-		luabind::class_<LightResource,Light>("Light")
+		luabind::class_<Light>("Light")
 			.def(luabind::constructor<>())
-			.def_readwrite("ambientColor",&LightResource::ambientColor)
-			.def_readwrite("diffuseColor",&LightResource::diffuseColor)			
-			.def_readwrite("specularColor",&LightResource::specularColor)
-			.def_readwrite("type",&LightResource::type),
+			.def("Create",&Light::Create)
+			.def("GetAmbientColor",&Light::GetAmbientColor)
+			.def("GetDiffuseColor",&Light::GetDiffuseColor)
+			.def("GetSpecularColor",&Light::GetSpecularColor)
+			.def("GetType",&Light::GetType)
+			.def("SetAmbientColor",&Light::SetAmbientColor)
+			.def("SetDiffuseColor",&Light::SetDiffuseColor)
+			.def("SetSpecularColor",&Light::SetSpecularColor)
+			.def("SetType",&Light::SetType),
 		luabind::class_<Node>("Node")
 			.def(luabind::constructor<>())
 			.def(luabind::constructor<const string &>())
@@ -362,46 +374,45 @@ void InitializeLua(lua_State *& luaState)
 			.def("SetTranslation",&Node::SetTranslation)
 			.def("SetWorldTransformation",&Node::SetWorldTransformation)
 			.def("UpdateBoundingBox",&Node::UpdateBoundingBox),			
-		luabind::class_<GeometryResource, Geometry >("Geometry")
+		luabind::class_<Geometry >("Geometry")
 			.def(luabind::constructor<>())			
-			//.def("Load",&ModelResource::Load)
-			.def("Reduce",&GeometryResource::Reduce)
-			.def("CalculateNormals",&GeometryResource::CalculateNormals)
-			.def("ApplyTransformation",&GeometryResource::ApplyTransformation)			
-			.def("CreateHardNormals",&GeometryResource::CreateHardNormals)
-			.def("UpdateBuffers",&GeometryResource::UpdateBuffers)
-			.def("GetMaterialByName",&GeometryResource::GetMaterialByName)			
-			.def_readwrite("material",&GeometryResource::material)						
-			.def_readwrite("vertex",&GeometryResource::vertex)
-			.def_readwrite("normal",&GeometryResource::normal)
-			.def_readwrite("mesh",&GeometryResource::surface)
-			.def_readwrite("face",&GeometryResource::face)
-			.def_readwrite("surface",&GeometryResource::surface)
-			.def_readwrite("diffuseUV",&GeometryResource::diffuseUV)
-			.def_readwrite("vertexBuffer",&GeometryResource::vertexBuffer)
-			.def_readwrite("diffuseUVBuffer",&GeometryResource::diffuseUVBuffer)
-			.def_readwrite("normalBuffer",&GeometryResource::normalBuffer),
-		luabind::class_<TextureResource,Texture>("Texture")			
+			.def("Create",&Geometry::Create)
+			.def("Reduce",&Geometry::Reduce)
+			.def("CalculateNormals",&Geometry::CalculateNormals)
+			.def("ApplyTransformation",&Geometry::ApplyTransformation)
+			.def("CalculateBoundingBox",&Geometry::CalculateBoundingBox)
+			//.def("GetBoundingBox",&Geometry::GetBoundingBox)
+			.def("CreateHardNormals",&Geometry::CreateHardNormals)
+			.def("UpdateBuffers",&Geometry::UpdateBuffers)
+			.def("GetMaterialByName",&Geometry::GetMaterialByName)
+			.def("GetDiffuseUV",&Geometry::GetDiffuseUV)
+			.def("GetFaces",&Geometry::GetFaces)
+			.def("GetMaterials",&Geometry::GetMaterials)
+			.def("GetNormals",&Geometry::GetNormals)
+			.def("GetSurfaces",&Geometry::GetSurfaces)
+			.def("GetVertices",&Geometry::GetVertices),					
+		luabind::class_<Texture>("Texture")			
 			.def(luabind::constructor<>())
-			.def("Load",&TextureResource::Load)
-			.def("IsValid",&TextureResource::IsValid)
-			.def("Create",&TextureResource::Create)
-			.def("GenerateMipMaps",&TextureResource::GenerateMipMaps)
-			.def("SetFiltering",&TextureResource::SetFiltering)
-			.def_readwrite("id", &TextureResource::id)
-			.def_readwrite("filename", &TextureResource::filename),
-		luabind::class_<FrameBufferResource,FrameBuffer>("FrameBuffer")
+			.def("Load",&Texture::Load)
+			.def("IsValid",&Texture::IsValid)
+			.def("Create",&Texture::Create)
+			.def("GenerateMipMaps",&Texture::GenerateMipMaps)
+			.def("SetFiltering",&Texture::SetFiltering)
+			.def("GetId", &Texture::GetId)
+			.def("GetFileName", &Texture::GetFileName),
+		luabind::class_<FrameBuffer>("FrameBuffer")
 			.def(luabind::constructor<>())
-			.def("Create",&FrameBufferResource::Create)
-			.def("AddDepthBuffer",&FrameBufferResource::AddDepthBuffer)
-			.def("AddDepthBufferTexture",&FrameBufferResource::AddDepthBufferTexture)
-			.def("AddRenderTarget",&FrameBufferResource::AddRenderTarget)
-			.def("SetRenderTarget",&FrameBufferResource::SetRenderTarget)
-			.def("GetRenderTarget",&FrameBufferResource::GetRenderTarget)
-			.def("GetDepthBuffer",&FrameBufferResource::GetDepthBuffer)
-			.def("IsValid",&FrameBufferResource::IsValid)
-			.def("GetWidth",&FrameBufferResource::GetWidth)
-			.def("GetHeight",&FrameBufferResource::GetHeight),			
+			.def("Create",&FrameBuffer::Create)
+			.def("AddDepthBuffer",&FrameBuffer::AddDepthBuffer)
+			.def("AddDepthBufferTexture",&FrameBuffer::AddDepthBufferTexture)
+			.def("AddRenderTarget",&FrameBuffer::AddRenderTarget)
+			.def("SetRenderTarget",&FrameBuffer::SetRenderTarget)
+			.def("GetRenderTarget",&FrameBuffer::GetRenderTarget)
+			.def("GetDepthBuffer",&FrameBuffer::GetDepthBuffer)
+			.def("IsValid",&FrameBuffer::IsValid)
+			.def("GetWidth",&FrameBuffer::GetWidth)
+			.def("GetHeight",&FrameBuffer::GetHeight)	
+			.def("GetId",&FrameBuffer::GetId),
 		luabind::class_<Image>("Image")
 			.def(luabind::constructor<>())
 			.def("Load",&Image::Load)
@@ -410,11 +421,11 @@ void InitializeLua(lua_State *& luaState)
 			.def("GetBPP",&Image::GetBPP)
 			.def("GetPixel",&Image::GetPixel)
 			.def("GetPixels",&Image::GetPixels),
-		luabind::class_<BufferResource,Buffer>("Buffer")			
+		luabind::class_<Buffer>("Buffer")			
 			.def(luabind::constructor<>())
-			.def("Create",&BufferResource::Create)
-			.def("Destroy",&BufferResource::Destroy)
-			.def("IsValid",&BufferResource::IsValid)			
+			.def("Create",&Buffer::Create)
+			.def("Destroy",&Buffer::Destroy)
+			.def("IsValid",&Buffer::IsValid)			
 			//.def("LoadData",(void (*)(Buffer, vector<vec4>&,BufferType))&::LoadData)
 			.def("LoadData",(void (*)(Buffer, luabind::object const &,BufferType))&::LoadData)
 			//.def("LoadData",(void (*)(Buffer, vector<vec2>&,BufferType))&::LoadData)
@@ -422,32 +433,35 @@ void InitializeLua(lua_State *& luaState)
 			//.def("LoadData",(void (*)(Buffer, vector<int>&,BufferType))&::LoadData)
 			//.def("LoadData",(void (*)(Buffer, vector<DWORD>&,BufferType))&::LoadData)
 			.def("LoadIndexData",(void (*)(Buffer,luabind::object const&,BufferType))&::LoadIndexData)
-			.def("SetColorStream",&BufferResource::SetColorStream)
-			.def("SetIndexStream",&BufferResource::SetIndexStream)
-			.def("SetNormalStream",&BufferResource::SetNormalStream)
-			.def("SetTexCoordStream",&BufferResource::SetTexCoordStream)
-			.def("SetVertexStream",&BufferResource::SetVertexStream),			
-		luabind::class_<ProgramResource,Program>("Program")
+			.def("SetColorStream",&Buffer::SetColorStream)
+			.def("SetIndexStream",&Buffer::SetIndexStream)
+			.def("SetNormalStream",&Buffer::SetNormalStream)
+			.def("SetTexCoordStream",&Buffer::SetTexCoordStream)
+			.def("GetId",&Buffer::GetId)
+			.def("SetVertexStream",&Buffer::SetVertexStream),			
+		luabind::class_<Program>("Program")
 			.def(luabind::constructor<>())
-			.def("Create",(void(ProgramResource::*)(Shader,Shader))&ProgramResource::Create)
-			.def("Create",(void(ProgramResource::*)())&ProgramResource::Create)
-			.def("Attach",&ProgramResource::Attach)
-			.def("GetInfoLog",&ProgramResource::GetInfoLog)
-			.def("IsValid",&ProgramResource::IsValid)
-			.def("Link",&ProgramResource::Link)
-			.def("SetUniform",(void(ProgramResource::*)(const string&,bool))&ProgramResource::SetUniform)
-			.def("SetUniform",(void(ProgramResource::*)(const string&,vec4))&ProgramResource::SetUniform)
-			.def("SetUniform",(void(ProgramResource::*)(const string&,vec3))&ProgramResource::SetUniform)
-			.def("SetUniformi",(void(ProgramResource::*)(const string&,int))&ProgramResource::SetUniform)
-			.def("SetUniform",(void(ProgramResource::*)(const string&,float))&ProgramResource::SetUniform),		
-		luabind::class_<ShaderResource,Shader>("Shader")			
+			.def("Create",(void(Program::*)(Shader,Shader))&Program::Create)
+			.def("Create",(void(Program::*)())&Program::Create)
+			.def("Attach",&Program::Attach)
+			.def("GetInfoLog",&Program::GetInfoLog)
+			.def("IsValid",&Program::IsValid)
+			.def("Link",&Program::Link)
+			.def("GetId",&Program::GetId)
+			.def("SetUniform",(void(Program::*)(const string&,bool))&Program::SetUniform)
+			.def("SetUniform",(void(Program::*)(const string&,vec4))&Program::SetUniform)
+			.def("SetUniform",(void(Program::*)(const string&,vec3))&Program::SetUniform)
+			.def("SetUniformi",(void(Program::*)(const string&,int))&Program::SetUniform)
+			.def("SetUniform",(void(Program::*)(const string&,float))&Program::SetUniform),		
+		luabind::class_<Shader>("Shader")			
 			.def(luabind::constructor<>())
-			.def("Create",&ShaderResource::Create)
-			.def("Load",&ShaderResource::Load),		
-		luabind::class_<FontResource,Font>("Font")			
+			.def("Create",&Shader::Create)
+			.def("GetId",&Shader::GetId)
+			.def("Load",&Shader::Load),		
+		luabind::class_<Font>("Font")			
 			.def(luabind::constructor<>())
-			.def("Load",(bool(FontResource::*)(const string&))&FontResource::Load)
-			.def("Load",(bool(FontResource::*)(const string&,int))&FontResource::Load),
+			.def("Load",(bool(Font::*)(const string&))&Font::Load)
+			.def("Load",(bool(Font::*)(const string&,int))&Font::Load),
 		luabind::class_<FontManager>("FontManager")
 			.def(luabind::constructor<>())
 			.def("Add",(Font(FontManager::*)(const string&))&FontManager::Add)

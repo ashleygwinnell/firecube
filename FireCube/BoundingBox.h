@@ -14,7 +14,10 @@ public:
 	float GetHeight();
 	float GetDepth();
 	vec3 GetCenter();
+	vec3 GetMin();
+	vec3 GetMax();
 	bool Contains(const BoundingBox &bb);
+private:
 	vec3 bmin,bmax;
 };
 }

@@ -77,19 +77,19 @@ public:
 	Node GenerateSceneGraph();
 private:
 	void ReadMainChunk();
-	void ReadEdit3dsChunk(DWORD length);
-	void ReadObjectChunk(DWORD length);
-	void ReadTriMeshChunk(DWORD length);
+	void ReadEdit3dsChunk(unsigned int length);
+	void ReadObjectChunk(unsigned int length);
+	void ReadTriMeshChunk(unsigned int length);
 	void ReadVerticesListChunk();
-	void ReadFacesListChunk(DWORD length);
+	void ReadFacesListChunk(unsigned int length);
 	void ReadMaterialFaceList();
 	void ReadTexCoordListChunk();
 	void ReadObjectMatrixChunk();
-	void ReadMaterialListChunk(DWORD length);
+	void ReadMaterialListChunk(unsigned int length);
 	void ReadMaterialNameChunk();
-	void ReadMaterialColorChunk(DWORD length,vec4 &color);
-	void ReadMaterialTexMapChunk(DWORD length,Texture &texture);
-	void ReadMaterialShininessChunk(DWORD length,float &shininess);
+	vec4 ReadMaterialColorChunk(unsigned int length);
+	Texture ReadMaterialTexMapChunk(unsigned int length);
+	float ReadMaterialShininessChunk(unsigned int length);
 	string ReadMapNameChunk();
 	vec4 ReadColorFChunk();
 	vec4 ReadColorBChunk();
@@ -99,8 +99,8 @@ private:
 	vector<char> buffer;
 	Material curMaterial;
 	vector<Material> materials;	
-	vector<pair<pair<DWORD,DWORD>,string>> meshMaterial;
-	vector<pair<DWORD,mat4>> objectMatrix;
+	vector<pair<pair<unsigned int,unsigned int>,string>> meshMaterial;
+	vector<pair<unsigned int,mat4>> objectMatrix;
 	vector<Object> object;
 	char *curPos;
 };

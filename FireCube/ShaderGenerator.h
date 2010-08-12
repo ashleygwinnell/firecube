@@ -9,7 +9,7 @@ public:
 	void SetDirectionalLighting(bool enable);
 	void SetPointLighting(bool enable);
 	void SetFog(bool enable);
-	DWORD ToInt();
+	unsigned int ToInt();
 private:
 	bool directionalLighting;
 	bool pointLighting;
@@ -21,6 +21,6 @@ class FIRECUBE_API ShaderGenerator
 public:
 	Program GenerateProgram(RenderState &renderState);
 private:
-	map<DWORD,Program> programs;
+	map<unsigned int,Program> programs;
 };
 }
