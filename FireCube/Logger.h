@@ -5,8 +5,8 @@ namespace FireCube
 {
 namespace Logger
 {
-	void FIRECUBE_API Init(string filename);
-	void FIRECUBE_API Write(string str);	
+	void FIRECUBE_API Init(std::string filename);
+	void FIRECUBE_API Write(std::string str);	
 	void FIRECUBE_API Close();
 }
 }

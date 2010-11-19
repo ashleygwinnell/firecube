@@ -1,16 +1,6 @@
-#include <string>
-#include <map>
-#include <vector>
-#include <sstream>
-#include <iostream>
-#include <fstream>
-#include <queue>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <Windows.h>
-#include <gl/GL.h>
-using namespace std;
 #include <FireCube.h>
+#include <fstream>
+using namespace std;
 using namespace FireCube;
 #include "Frustum.h"
 #include "QuadTree.h"

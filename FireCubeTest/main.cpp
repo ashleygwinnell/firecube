@@ -1,22 +1,8 @@
-#include <string>
-#include <vector>
-#include <sstream>
-#include <map>
-#include <boost/shared_array.hpp>
-#include <boost/weak_ptr.hpp>
-#include <iostream>
-#include <queue>
-using namespace std;
-#include <windows.h>
-#include <gl/gl.h>
 #include <FireCube.h>
+using namespace std;
 using namespace FireCube;
 #include "app.h"
 App app;
-#include <fstream>
-#include <cmath>
-vec3 lastPos;
-vec3 rot(0,0,-3);
 int main(int argc, char *argv[])
 {	
 	if (!app.Initialize())
@@ -32,7 +18,7 @@ bool App::Init()
 	return true;
 }
 void App::Update(float t)
-{	
+{		
 }
 void App::Render(float t)
 {
@@ -45,6 +31,5 @@ void App::Render(float t)
 	Renderer::RenderText(app.font,vec2(0,(float)app.GetHeight()-20.0f),vec4(1,1,1,1),oss.str());
 }
 void App::HandleInput(float t)
-{
-	
+{	
 }

@@ -6,28 +6,6 @@
 
 namespace FireCube
 {
-enum EventType
-{
-	MOUSE_MOVE,MOUSE_CLICK,KEY_PRESSED,KEY_DOWN,KEY_UP
-};
-enum Key
-{
-	KEY_NONE = 0,
-	KEY_UP_ARROW,
-	KEY_DOWN_ARROW,
-	KEY_LEFT_ARROW,
-	KEY_RIGHT_ARROW,
-	KEY_SPACE,
-	KEY_LAST
-};
-class FIRECUBE_API Event
-{
-public:
-	EventType type;
-	int mouseX,mouseY;
-	Key key;
-};
-
 /** 
 This class is responsible for the intialization and running of the application.
 */
@@ -52,10 +30,10 @@ public:
 	*/
 	bool InitializeNoWindow();
 	/** 
-	* Destroy the window and it's associated OpenGL context.
+	* Closes the application.
 	* @return true on success, false otherwise.
 	*/
-	bool Destroy();
+	bool Close();
 	/** 
 	* Enters the main rendering loop.
 	*/
@@ -63,7 +41,7 @@ public:
 	/** 
 	* Sets the title of the window.
 	*/
-	void SetTitle(const string &title);
+	void SetTitle(const std::string &title);
 	/** 
 	* Returns the current frames per second.
 	*/
@@ -75,11 +53,11 @@ public:
 	/** 
 	* Returns the window's height.
 	*/
-	int GetHeight() const;
+	int GetHeight() const;	
 	/** 
-	* User should override this to handle the input.
-	* Called once per frame.
-	*/
+    * User should override this to handle the input.
+    * Called once per frame.
+    */
 	virtual void HandleInput(float time) = 0;
 	/** 
 	* User should override this to handle the game logic.
@@ -92,26 +70,18 @@ public:
 	*/
 	virtual void Render(float time) = 0;
 	/**
-	* Called once initialization is complete to execute user specific intialization.
+	* Called once initialization is complete to execute user specific initialization.
 	*/
 	virtual bool Init();
 	/**
-	* @return The next event in the event queue.
-	*/
-	Event GetEvent();
-	/**
-	* @return Whether there are more events pending.
-	*/
-	bool HasMoreEvents();
-	/**
 	* Add a search path for resources.
 	* @param path The path to add.
-	*/
-	static void AddSearchPath(const string &path);
+	*/	
+	static void AddSearchPath(const std::string &path);
 	/**
 	* @return The list of search paths.
 	*/
-	static const vector<string> &GetSearchPaths();
+	static const std::vector<std::string> &GetSearchPaths();
 
 private:
 	Timer timer;	
@@ -125,8 +95,7 @@ private:
 	ShaderManager defaultShaderManager;
 	FontManager defaultFontManager;
 	ShaderGenerator defaultShaderGenerator;
-	static vector<string> searchPaths;		
-	queue<Event> eventQueue;
+	static std::vector<std::string> searchPaths;	
 };
 }
 #pragma warning(pop)

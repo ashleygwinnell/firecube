@@ -1,15 +1,5 @@
-#include <string>
-#include <vector>
-#include <sstream>
-#include <map>
-#include <boost/shared_array.hpp>
-#include <boost/weak_ptr.hpp>
-#include <iostream>
-#include <queue>
-using namespace std;
-#include <windows.h>
-#include <gl/gl.h>
 #include <FireCube.h>
+using namespace std;
 using namespace FireCube;
 #include "app.h"
 #include <cmath>
@@ -86,5 +76,6 @@ void App::Render(float t)
 	Renderer::RenderText(app.font,vec2(0,(float)app.GetHeight()-20.0f),vec4(1,1,1,1),oss.str());
 }
 void App::HandleInput(float t)
-{	
+{
 }
+

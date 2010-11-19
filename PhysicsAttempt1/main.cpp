@@ -1,16 +1,5 @@
-#include <string>
-#include <vector>
-#include <sstream>
-#include <iostream>
-#include <map>
-#include <fstream>
-#include <queue>
-using namespace std;
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <windows.h>
-#include <gl/gl.h>
 #include <FireCube.h>
+using namespace std;
 using namespace FireCube;
 #include "app.h"
 #include "Grid3D.h"
@@ -60,7 +49,7 @@ void App::Update(float t)
 }
 void App::Render(float t)
 {	
-	Renderer::SetPerspectiveProjection(90.0f,0.1f,100.0f);
+	Renderer::SetPerspectiveProjection(60.0f,0.1f,100.0f);
 	Renderer::Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
 	mat4 m;	
 	m.RotateX(rot.x);
@@ -101,6 +90,6 @@ void App::HandleInput(float t)
 		vec3 v;
 		v.FromAngles(rot.x,rot.y);
 		camPos+=v*(lastPos.y-m.y)*t;
-	}		
-	lastPos=m;	
+	}               
+	lastPos=m;      
 }

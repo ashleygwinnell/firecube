@@ -28,6 +28,7 @@ using namespace std;
 #include "FrameBuffer.h"
 #include "Font.h"
 #include "ShaderGenerator.h"
+#include "RenderQueue.h"
 #include "Renderer.h"
 #include "Application.h"
 
@@ -38,12 +39,9 @@ extern void InitializeRenderer();
 extern void DestroyRenderer();
 extern FT_Library freeTypeLibrary;
 
-vector<string> Application::searchPaths;
-bool keyState[KEY_LAST];
+std::vector<std::string> Application::searchPaths;
 Application::Application() : running(false), frameCount(0), fpsTime(0), fps(0)
 {
-	for (unsigned int i=0;i<KEY_LAST;i++)
-		keyState[i]=false;
 	Renderer::SetTextureManager(defaultTextureManager);
 	Renderer::SetShaderManager(defaultShaderManager);
 	Renderer::SetFontManager(defaultFontManager);
@@ -51,7 +49,7 @@ Application::Application() : running(false), frameCount(0), fpsTime(0), fps(0)
 }
 Application::~Application()
 {
-	Destroy();
+	Close();
 }
 bool Application::Initialize()
 {	
@@ -73,11 +71,11 @@ bool Application::Initialize(int width,int height,int bpp,int multisample,bool f
 		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,1);
 		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,multisample);
 	}
-	
+
 	screen=SDL_SetVideoMode(width,height,bpp,SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : SDL_RESIZABLE));
 	if (!screen)
 		return false;
-		
+
 	Renderer::SetViewport(0,0,width,height);	
 	Renderer::SetPerspectiveProjection(90.0f,0.1f,100);	
 	Renderer::SetModelViewMatrix(mat4());
@@ -97,64 +95,26 @@ bool Application::InitializeNoWindow()
 	InitializeRenderer();	
 	return Init();
 }
-bool Application::Destroy()
+bool Application::Close()
 {	
-	DestroyRenderer();	
-	Logger::Write(string("Destroying application.\n"));	
-	SDL_Quit();	
+	DestroyRenderer();      
+	Logger::Write(string("Destroying application.\n"));     
+	SDL_Quit();     
 	return true;
 }
-/* CPPDOC_BEGIN_EXCLUDE */
-Key ConvertVKeyToKey(int key)
-{
-	switch (key)
-	{
-	case VK_LEFT:
-		return KEY_LEFT_ARROW;
-	case VK_RIGHT:
-		return KEY_RIGHT_ARROW;
-	case VK_UP:
-		return KEY_UP_ARROW;
-	case VK_DOWN:
-		return KEY_DOWN_ARROW;
-	case VK_SPACE:
-		return KEY_SPACE;
-	default:
-		return KEY_NONE;
-	}
-}
-int ConvertKeyToVKey(Key key)
-{
-	switch (key)
-	{
-	case KEY_LEFT_ARROW:
-		return VK_LEFT;
-	case KEY_RIGHT_ARROW:
-		return VK_RIGHT;
-	case KEY_UP_ARROW:
-		return VK_UP;
-	case KEY_DOWN_ARROW:
-		return VK_DOWN;
-	case KEY_SPACE:
-		return VK_SPACE;
-	default:
-		return 0;
-	}
-}
-/* CPPDOC_END_EXCLUDE */
 void Application::Run()
 {	
 	running=true;
-	SDL_Event event;	
+	SDL_Event event;
 	Logger::Write(string("Entering main loop...\n"));
 	while (running)
 	{		
 		deltaTime=(float)timer.Passed();		
 		timer.Update();
 		while(SDL_PollEvent(&event)) 
-		{						
+		{                                               
 			if (event.type==SDL_KEYDOWN)
-			{				
+			{                               
 				if (event.key.keysym.sym==SDLK_ESCAPE)
 				{
 					running=false;
@@ -164,43 +124,14 @@ void Application::Run()
 			{
 				width=event.resize.w;
 				height=event.resize.h;
-				Renderer::SetViewport(0,0,event.resize.w,event.resize.h);				
+				Renderer::SetViewport(0,0,event.resize.w,event.resize.h);                               
 			}
 			if (event.type==SDL_QUIT) 
-				running=false; 			
+				running=false;                  				
 		}
-		for (unsigned int i=1;i<KEY_LAST;i++)
-		{
-			int k=ConvertKeyToVKey((Key)i);
-			if (k!=0)
-			{
-				if (GetAsyncKeyState(k)&0x8000)
-				{
-					FireCube::Event evt;
-					evt.key=(Key)i;
-					if (keyState[i]==true)
-						evt.type=KEY_DOWN;
-					else
-						evt.type=KEY_PRESSED;
-					keyState[i]=true;
-					eventQueue.push(evt);
-				}
-				else
-				{
-					if (keyState[i]==true)
-					{
-						keyState[i]=false;
-						FireCube::Event evt;
-						evt.key=(Key)i;
-						evt.type=KEY_UP;
-						eventQueue.push(evt);
-					}						
-				}
-			}
-		}
-		HandleInput(deltaTime);
+		HandleInput(deltaTime);		
 		Update(deltaTime);
-		Render(deltaTime);
+		Render(deltaTime);		
 		SDL_GL_SwapBuffers();
 		frameCount+=1.0f;
 		fpsTime+=deltaTime;
@@ -232,16 +163,6 @@ int Application::GetWidth() const
 int Application::GetHeight() const
 {
 	return height;
-}
-bool Application::HasMoreEvents()
-{
-	return !eventQueue.empty();
-}
-Event Application::GetEvent()
-{
-	Event ret=eventQueue.front();
-	eventQueue.pop();
-	return ret;
 }
 void Application::AddSearchPath(const string &path)
 {

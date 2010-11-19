@@ -1,14 +1,5 @@
-#include <string>
-#include <vector>
-#include <sstream>
-#include <map>
-#include <queue>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-using namespace std;
-#include <windows.h>
-#include <gl/gl.h>
 #include <FireCube.h>
+using namespace std;
 
 #include "wx/wx.h"
 #include "wx/colordlg.h"

@@ -25,7 +25,7 @@ public:
 	MaterialResource();
 	~MaterialResource();
 	
-	string name;
+	std::string name;
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
@@ -39,8 +39,8 @@ public:
 	* Creates the material.
 	*/
 	void Create();
-	string GetName();
-	void SetName(const string &name);
+	std::string GetName();
+	void SetName(const std::string &name);
 	vec4 GetAmbientColor();
 	void SetAmbientColor(vec4 color);
 	vec4 GetDiffuseColor();
@@ -83,7 +83,7 @@ class FIRECUBE_API Surface
 {
 public:
 	Material material;
-	vector<Face> face;
+	std::vector<Face> face;
 	Buffer indexBuffer;
 };
 
@@ -93,15 +93,15 @@ public:
 	~GeometryResource();
 	
 
-	vector<vec3> vertex;
-	vector<vec3> normal;
-	vector<Surface> surface;
-	vector<Face> face;	
-	vector<vec2> diffuseUV;
+	std::vector<vec3> vertex;
+	std::vector<vec3> normal;
+	std::vector<Surface> surface;
+	std::vector<Face> face;	
+	std::vector<vec2> diffuseUV;
 	Buffer vertexBuffer;	
 	Buffer diffuseUVBuffer;
 	Buffer normalBuffer;
-	vector<Material> material;
+	std::vector<Material> material;
 	BoundingBox bbox;
 };
 class FIRECUBE_API Geometry
@@ -131,7 +131,7 @@ public:
 	* @param name The name of the material.
 	* @return The material.
 	*/
-	Material GetMaterialByName(const string &name);	
+	Material GetMaterialByName(const std::string &name);	
 	/**
 	* Reduces the geometry by removing duplicated vertices.
 	* @return The reduced geometry.
@@ -152,27 +152,27 @@ public:
 	/**
 	* Returns the vertices of this geometry.
 	*/
-	vector<vec3> &GetVertices();
+	std::vector<vec3> &GetVertices();
 	/**
 	* Returns the normals of this geometry.
 	*/
-	vector<vec3> &GetNormals();
+	std::vector<vec3> &GetNormals();
 	/**
 	* Returns the faces of this geometry.
 	*/
-	vector<Face> &GetFaces();
+	std::vector<Face> &GetFaces();
 	/**
 	* Returns the diffuse uv of this geometry.
 	*/
-	vector<vec2> &GetDiffuseUV();
+	std::vector<vec2> &GetDiffuseUV();
 	/**
 	* Returns the surfaces of this geometry.
 	*/
-	vector<Surface> &GetSurfaces();
+	std::vector<Surface> &GetSurfaces();
 	/**
 	* Returns the materials of this geometry.
 	*/
-	vector<Material> &GetMaterials();
+	std::vector<Material> &GetMaterials();
 
 	operator bool () const;
 	bool operator== (const Geometry &geometry) const;

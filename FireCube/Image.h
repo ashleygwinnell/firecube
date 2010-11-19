@@ -14,7 +14,7 @@ public:
 	* Loads an image.
 	* @param filename The file to load.
 	*/
-	bool Load(const string &filename);
+	bool Load(const std::string &filename);
 	/**
 	* Returns the width of the image.
 	*/
@@ -30,14 +30,14 @@ public:
 	/**
 	* Returns the image pixel data.
 	*/
-	vector<unsigned char> &GetPixels();
+	std::vector<unsigned char> &GetPixels();
 	/**
 	* Returns a pixel.
 	*/
 	vec4 GetPixel(int x,int y);
 private:
 	int width,height,bpp;
-	vector<unsigned char> data;
+	std::vector<unsigned char> data;
 };
 }
 #endif

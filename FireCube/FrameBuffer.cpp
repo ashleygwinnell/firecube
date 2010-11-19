@@ -24,7 +24,8 @@ using namespace std;
 #include "FrameBuffer.h"
 #include "Font.h"
 #include "ShaderGenerator.h"
-#include "Renderer.h"				
+#include "RenderQueue.h"
+#include "Renderer.h"
 #include "Application.h"
 
 using namespace FireCube;

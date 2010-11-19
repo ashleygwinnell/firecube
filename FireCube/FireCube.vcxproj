@@ -43,8 +43,6 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Dev\SDL-1.2.14\include;C:\Dev\SDL_image-1.2.10\include;C:\Dev\boost_1_42_0;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Dev\SDL-1.2.14\lib;C:\Dev\SDL_image-1.2.10\lib;$(LibraryPath)</LibraryPath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Dev\SDL-1.2.14\include;C:\Dev\SDL_image-1.2.10\include;C:\Dev\boost_1_42_0;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Dev\SDL-1.2.14\lib;C:\Dev\SDL_image-1.2.10\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -52,7 +50,7 @@
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\Dependencies\FreeType\include;.\Dependencies\Lua\include;.\Dependencies\Luabind\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\SDL-1.2.14\include;C:\Dev\SDL_image-1.2.10\include;C:\Dev\boost_1_42_0;.\Dependencies\FreeType\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;FIRECUBE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -63,8 +61,8 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;sdl.lib;sdlmain.lib;sdl_image.lib;freetype242MT_D.lib;lua5.1.lib;luabind.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\Dependencies\FreeType\lib;.\Dependencies\Lua\lib;.\Dependencies\Luabind\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;sdl.lib;sdl_image.lib;freetype242MT_D.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Dev\SDL-1.2.14\lib;C:\Dev\SDL_image-1.2.10\lib;.\Dependencies\FreeType\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>MSVCRT;LIBCMTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -121,7 +119,9 @@
     <ClCompile Include="mat4.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RenderQueue.cpp" />
     <ClCompile Include="ShaderGenerator.cpp" />
+    <ClCompile Include="Shaders.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="tinyxml.cpp" />
@@ -152,6 +152,7 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="privateFont.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RenderQueue.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ShaderGenerator.h" />
     <ClInclude Include="Shaders.h" />

@@ -1,16 +1,15 @@
-#ifndef FIRECUBE_H
-#define FIRECUBE_H
-
 #include <string>
 #include <vector>
-#include <sstream>
 #include <map>
+#include <queue>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#include <iostream>
-#include <queue>
+using namespace std;
+#include <SDL.h>
 #include <windows.h>
-#include <gl/gl.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include "GLee.h"
 
 #include "utils.h"	
 #include "Logger.h"
@@ -29,8 +28,12 @@
 #include "RenderQueue.h"
 #include "Renderer.h"
 #include "Application.h"
+#include "privateFont.h"
 #include "Light.h"
 #include "Node.h"
-#include "GeometryGenerator.h"
+using namespace FireCube;
 
-#endif
+void RenderQueue::Clear()
+{
+
+}

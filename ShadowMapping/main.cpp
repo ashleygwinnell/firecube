@@ -1,15 +1,5 @@
-#include <string>
-#include <vector>
-#include <sstream>
-#include <map>
-#include <boost/shared_array.hpp>
-#include <boost/weak_ptr.hpp>
-#include <iostream>
-#include <queue>
-using namespace std;
-#include <windows.h>
-#include <gl/gl.h>
 #include <FireCube.h>
+using namespace std;
 using namespace FireCube;
 #include "app.h"
 App app;
@@ -103,24 +93,24 @@ void App::Render(float t)
 void App::HandleInput(float t)
 {
 	::POINT p;
-	vec3 m;	
-	GetCursorPos(&p);	
+	vec3 m; 
+	GetCursorPos(&p);       
 	m.x=(float)p.x;
-	m.y=(float)p.y;	
+	m.y=(float)p.y; 
 	if (GetAsyncKeyState(1))
 	{
 		rot.x+=t*(lastPos.y-m.y)/2.0f;
-		rot.y+=t*(lastPos.x-m.x)/2.0f;		
-		
+		rot.y+=t*(lastPos.x-m.x)/2.0f;          
+
 		rot.x-=rot.x>=2*PI ? (float)(2*PI) : 0;
 		rot.x+=rot.x<0 ? (float)(2*PI) : 0;
 		rot.y-=rot.y>=2*PI ? (float)(2*PI) : 0;
-		rot.y+=rot.y<0 ? (float)(2*PI) : 0;				
+		rot.y+=rot.y<0 ? (float)(2*PI) : 0;                             
 	}
-	if (GetAsyncKeyState(2))	
+	if (GetAsyncKeyState(2))        
 		rot.z+=t*(lastPos.y-m.y)*2.0f;
 
-	lastPos=m;	
+	lastPos=m;      
 }
 void App::RenderDepth()
 {

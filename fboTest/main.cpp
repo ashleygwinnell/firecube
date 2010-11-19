@@ -1,15 +1,5 @@
-#include <vector>
-#include <map>
-#include <string>
-#include <sstream>
-#include <iostream>
-#include <queue>
-using namespace std;
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <Windows.h>
-#include <gl/GL.h>
 #include <FireCube.h>
+using namespace std;
 using namespace FireCube;
 
 #include "app.h"
@@ -25,6 +15,7 @@ bool App::Init()
 	light.Create();
 	light.SetAmbientColor(vec4(0.5f,0.5f,0.5f,1.0f));
 	light.SetDiffuseColor(vec4(0.8f,0.8f,0.8f,1.0f));
+	light.SetSpecularColor(vec4(0.2f,0.2f,0.2f,1.0f));
 	light.SetType(DIRECTIONAL);
 	root.AddLight(light);
 	node=LoadMesh("../Media/Models/1.3ds");
@@ -114,7 +105,6 @@ void App::HandleInput(float time)
 {
 
 }
-
 int main(int argc, char *argv[])
 {
 	if (app.Initialize())

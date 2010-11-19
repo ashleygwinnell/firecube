@@ -1,16 +1,5 @@
-#include <string>
-#include <vector>
-#include <sstream>
-#include <iostream>
-#include <map>
-#include <fstream>
-#include <queue>
-#include <boost/shared_array.hpp>
-#include <boost/weak_ptr.hpp>
-#include <windows.h>
-using namespace std;
-#include <gl/gl.h>
 #include <FireCube.h>
+using namespace std;
 using namespace FireCube;
 inline float MyAbs(float v)
 {

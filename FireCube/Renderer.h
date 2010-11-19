@@ -26,9 +26,14 @@ namespace Renderer
 	void FIRECUBE_API Render(Geometry geometry);
 	/**
 	* Renders a scene node.
-	* @param model The model to render.
+	* @param node The node to render.
 	*/
 	void FIRECUBE_API Render(Node node);
+	/**
+	* Renders a rendering queue.
+	* @param queue The queue to render.
+	*/
+	void FIRECUBE_API Render(const RenderQueue &queue);
 	/**
 	* Sets the current modelview matrix.
 	*/
@@ -81,7 +86,7 @@ namespace Renderer
 	* @param pos The position of the text.
 	* @param str The string to output.
 	*/
-	void FIRECUBE_API RenderText(Font font,vec3 pos,vec4 color,const string &str);
+	void FIRECUBE_API RenderText(Font font,vec3 pos,vec4 color,const std::string &str);
 	/**
 	* Renders an index stream.	
 	* @param mode The rendering mode.

@@ -17,7 +17,7 @@ public:
 	TextureResource();
 	~TextureResource();	
 	GLuint id;
-	string filename;
+	std::string filename;
 };	
 class Texture;
 namespace Renderer
@@ -39,7 +39,7 @@ public:
 	* Loads a texture.
 	* @param filename The file to load.
 	*/
-	bool Load(const string &filename);
+	bool Load(const std::string &filename);
 	/**
 	* Returns whether the texture is valid.
 	*/
@@ -61,7 +61,7 @@ public:
 	/**
 	* Returns the file name of the texture.
 	*/
-	string GetFileName() const;
+	std::string GetFileName() const;
 	/**
 	* Returns the resource id of the texture.
 	*/

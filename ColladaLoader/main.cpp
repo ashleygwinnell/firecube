@@ -1,15 +1,5 @@
-#include <string>
-#include <map>
-#include <vector>
-#include <sstream>
-#include <iostream>
-#include <queue>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <Windows.h>
-#include <gl/GL.h>
-using namespace std;
 #include <FireCube.h>
+using namespace std;
 using namespace FireCube;
 #include "tinyxml.h"
 #include "ColladaLoader.h"
@@ -17,9 +7,9 @@ using namespace FireCube;
 class App : public Application
 {
 public:
-	virtual void Update(float t);
+	virtual void Update(float t);	
 	virtual void HandleInput(float t);
-	virtual void Render(float t);
+	virtual void Render(float t);	
 	Node node;
 };
 void App::Update(float t)

@@ -15,11 +15,11 @@ class FIRECUBE_API Node
 public:
 	Node();
 	Node(NodeResource *nr);	
-	Node(const string &name);	
+	Node(const std::string &name);	
 	operator bool () const;
 	bool operator== (const Node &node) const;
-	void SetName(const string &name);
-	string GetName();	
+	void SetName(const std::string &name);
+	std::string GetName();	
 	mat4 GetLocalTransformation();	
 	mat4 GetWorldTransformation();
 	void SetWorldTransformation(mat4 mat);
@@ -36,17 +36,17 @@ public:
 	void Scale(vec3 s);
 	Node &Parent();
 	void SetParent(Node parent);
-	vector<Node> &GetChildren();
+	std::vector<Node> &GetChildren();
 	void AddGeometry(Geometry geometry);
-	vector<Geometry> &GetGeometries();
+	std::vector<Geometry> &GetGeometries();
 
 	void AddLight(Light l);		
 	void RemoveLight(Light l);	
-	vector<Light> &GetLights();	
+	std::vector<Light> &GetLights();	
 
 	Node AddChild(Node node);
-	Node GetChild(const string &name);
-	Node RemoveChild(const string &name);
+	Node GetChild(const std::string &name);
+	Node RemoveChild(const std::string &name);
 	Node RemoveChild(Node node);	
 
 	void Render();
@@ -74,9 +74,9 @@ class FIRECUBE_API NodeResource
 public:
 	NodeResource();
 private:
-	vector<Node> children;
-	vector<Geometry> geometries;
-	vector<Light> lights;
+	std::vector<Node> children;
+	std::vector<Geometry> geometries;
+	std::vector<Light> lights;
 	vec3 translation;
 	vec3 rotation;
 	vec3 scale;
@@ -85,10 +85,10 @@ private:
 	mat4 worldTransformation;
 	bool transformationChanged;
 	Node parent;	
-	string name;
+	std::string name;
 	RenderParameters renderParameters;
 	BoundingBox localBoundingBox;
 	BoundingBox worldBoundingBox;
 };
-Node FIRECUBE_API LoadMesh(const string &filename);
+Node FIRECUBE_API LoadMesh(const std::string &filename);
 }

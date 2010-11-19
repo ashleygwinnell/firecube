@@ -27,7 +27,8 @@ using namespace std;
 #include "Image.h"
 #include "Font.h"
 #include "ShaderGenerator.h"
-#include "Renderer.h"				
+#include "RenderQueue.h"
+#include "Renderer.h"
 #include "Application.h"
 #include "Light.h"
 #include "Node.h"
@@ -307,7 +308,7 @@ Node Node::GetChild(const string &name)
 		if (ret)
 			return ret;
 	}
-	return Node(false);
+	return Node();
 }
 Node Node::RemoveChild(Node node)
 {
@@ -323,7 +324,7 @@ Node Node::RemoveChild(Node node)
 			if (ret)
 				return ret;
 		}
-		return Node(false);
+		return Node();
 }
 Node Node::RemoveChild(const string &name)
 {
@@ -340,7 +341,7 @@ Node Node::RemoveChild(const string &name)
 		if (ret)
 			return ret;
 	}
-	return Node(false);
+	return Node();
 }
 vector<Node> &Node::GetChildren()
 {

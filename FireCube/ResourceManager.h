@@ -27,16 +27,16 @@ public:
 	* Creates and loads a resource from the specified file.
 	* @param filename The file to load.
 	*/
-	T Create(const string &filename)
+	T Create(const std::string &filename)
 	{
-		map<string,boost::weak_ptr<TResource>>::iterator i=resources.find(filename);
+		map<std::string,boost::weak_ptr<TResource>>::iterator i=resources.find(filename);
 		if (i!=resources.end())
 			if (!i->second.expired())
 				return T(i->second.lock());
 		T ret;
-		string loadfile=filename;
-		string fname=GetFileName(filename);
-		const vector<string> &searchPaths=Application::GetSearchPaths();
+		std::string loadfile=filename;
+		std::string fname=GetFileName(filename);
+		const std::vector<std::string> &searchPaths=Application::GetSearchPaths();
 		if (!FileExists(loadfile))
 		{
 			for (unsigned int i=0;i<searchPaths.size();i++)
@@ -59,9 +59,9 @@ public:
 	* @param name The name identifying the resource.
 	* @return The newly created resource.
 	*/
-	T Add(const string &name)
+	T Add(const std::string &name)
 	{
-		map<string,boost::weak_ptr<TResource>>::iterator i=resources.find(name);
+		std::map<std::string,boost::weak_ptr<TResource>>::iterator i=resources.find(name);
 		if (i!=resources.end())
 			if (!i->second.expired())
 				return T(i->second.lock());
@@ -74,7 +74,7 @@ public:
 	* @param filename The filename/name identifying the resource.
 	* @param res The resource itself.
 	*/
-	void Add(const string &filename,T res)
+	void Add(const std::string &filename,T res)
 	{
 		if (resources.find(filename)!=resources.end())
 			return;
@@ -85,9 +85,9 @@ public:
 	* Returns a resource with a given filename, null if it does not exist.
 	* @param filename The filename identifying the resource.
 	*/
-	T Get(const string &filename)
+	T Get(const std::string &filename)
 	{
-		map<string,boost::weak_ptr<TResource>>::iterator i=resources.find(filename);
+		std::map<std::string,boost::weak_ptr<TResource>>::iterator i=resources.find(filename);
 		if (i!=resources.end())
 			if (!i->second.expired())
 				return T(i->second.lock());
@@ -95,7 +95,7 @@ public:
 		return T();
 	}
 private:
-	map<string,boost::weak_ptr<TResource>> resources;
+	std::map<std::string,boost::weak_ptr<TResource>> resources;
 };
 }
 #endif

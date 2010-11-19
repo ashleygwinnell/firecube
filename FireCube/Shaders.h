@@ -47,13 +47,13 @@ public:
 	* Loads a shader from a file. the shader type is determined by the extension of the file: .vshader for a vertex shader, .fshader for a fragment shader.
 	* @param filename The file to load.
 	*/
-	bool Load(const string &filename);
+	bool Load(const std::string &filename);
 	/**
 	* Creates a shader from source.
 	* @param shaderType The type of the shader.
 	* @param source The source of the shader.
 	*/
-	bool Create(ShaderType type,const string &source);
+	bool Create(ShaderType type,const std::string &source);
 	/**
 	* Returns the resource id of the shader.
 	*/
@@ -76,7 +76,7 @@ public:
 	~ProgramResource();
 
 	GLuint id;
-	map<string,GLint> variables;
+	std::map<std::string,GLint> variables;
 };
 
 /**
@@ -109,47 +109,47 @@ public:
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
-	void SetUniform(const string &name,float value);
+	void SetUniform(const std::string &name,float value);
 	/**
 	* Sets a 1d uniform integer.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
-	void SetUniform(const string &name,int value);
+	void SetUniform(const std::string &name,int value);
 	/**
 	* Sets a 3d uniform float.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
-	void SetUniform(const string &name,vec3 value);
+	void SetUniform(const std::string &name,vec3 value);
 	/**
 	* Sets a 4d uniform float.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
-	void SetUniform(const string &name,vec4 value);
+	void SetUniform(const std::string &name,vec4 value);
 	/**
 	* Sets a 1d uniform boolean.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
-	void SetUniform(const string &name,bool value);
+	void SetUniform(const std::string &name,bool value);
 	/**
 	* Sets an array of booleans.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
-	void SetUniform(const string &name,const vector<bool> &value);
+	void SetUniform(const std::string &name,const std::vector<bool> &value);
 	/**
 	* Sets an array of integers.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
-	void SetUniform(const string &name,const vector<int> &value);
+	void SetUniform(const std::string &name,const std::vector<int> &value);
 	/**	
 	* @return Returns the compile log for this program.
 	*/
-	string GetInfoLog();
+	std::string GetInfoLog();
 	/**
 	* Returns whether the program is valid.
 	*/	

@@ -21,6 +21,6 @@ class FIRECUBE_API ShaderGenerator
 public:
 	Program GenerateProgram(RenderState &renderState);
 private:
-	map<unsigned int,Program> programs;
+	std::map<unsigned int,Program> programs;
 };
 }
