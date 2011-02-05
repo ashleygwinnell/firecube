@@ -6,15 +6,15 @@
 
 namespace FireCube
 {
-/** 
-This class is responsible for the intialization and running of the application.
+/**
+* This class is responsible for the intialization and running of the application.
 */
 class FIRECUBE_API Application
 {
 public:
 	Application();
 	virtual ~Application();
-	/** 
+	/**
 	* Creates a default window and intializes OpenGL.
 	* @return true on success, false otherwise.
 	*/
