@@ -6,4 +6,5 @@ public:
 	void Update(float t);
 	bool Init();	
 	Font font;
+	Node root;
 };

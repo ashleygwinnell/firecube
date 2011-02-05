@@ -16,14 +16,14 @@ int main(int argc, char *argv[])
 }
 bool App::Init()
 {
-	Application::AddSearchPath("../Media/Textures");
+	Application::AddSearchPath("../Assets/Textures");
 	SetTitle(string("Shadow Mapping Test Application"));	
-	node=LoadMesh("../Media/Models/scene.3ds");	
+	node=LoadMesh("../Assets/Models/scene.3ds");	
 	node.SetLighting(false);
 	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
-	plain.Create(Renderer::GetShaderManager().Create("plain.vshader"),Renderer::GetShaderManager().Create("plain.fshader"));
-	shadowMap.Create(Renderer::GetShaderManager().Create("shadowMap.vshader"),Renderer::GetShaderManager().Create("shadowMap.fshader"));
-	program.Create(Renderer::GetShaderManager().Create("1.vshader"),Renderer::GetShaderManager().Create("1.fshader"));	
+	plain.Create(Renderer::GetShaderManager().Create("plain.vert"),Renderer::GetShaderManager().Create("plain.frag"));
+	shadowMap.Create(Renderer::GetShaderManager().Create("shadowMap.vert"),Renderer::GetShaderManager().Create("shadowMap.frag"));
+	program.Create(Renderer::GetShaderManager().Create("1.vert"),Renderer::GetShaderManager().Create("1.frag"));	
 	fb.Create(1024,1024);
 	fb.AddDepthBufferTexture();
 	
@@ -88,7 +88,7 @@ void App::Render(float t)
 	RenderDepth();
 	ostringstream oss;
 	oss << "FPS:"<<app.GetFps();	
-	Renderer::RenderText(app.font,vec2(0,(float)app.GetHeight()-20.0f),vec4(1,1,1,1),oss.str());
+	Renderer::RenderText(app.font,vec3(0,(float)app.GetHeight()-20.0f,0.0f),vec4(1,1,1,1),oss.str());
 }
 void App::HandleInput(float t)
 {

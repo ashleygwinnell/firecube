@@ -44,7 +44,7 @@ public:
 	Shader();
 	Shader(boost::shared_ptr<ShaderResource> resource);
 	/**
-	* Loads a shader from a file. the shader type is determined by the extension of the file: .vshader for a vertex shader, .fshader for a fragment shader.
+	* Loads a shader from a file. the shader type is determined by the extension of the file: .vert for a vertex shader, .frag for a fragment shader.
 	* @param filename The file to load.
 	*/
 	bool Load(const std::string &filename);
@@ -146,6 +146,12 @@ public:
 	* @param value The value to assign for it.
 	*/
 	void SetUniform(const std::string &name,const std::vector<int> &value);
+	/**
+	* Sets vertex shader attribute.
+	* @param name The name of the variable.
+	* @param buffer The buffer from which data will be read.
+	*/
+	void SetAttribute(const std::string &name,Buffer buffer,int size);
 	/**	
 	* @return Returns the compile log for this program.
 	*/
@@ -165,5 +171,45 @@ public:
 private:
 	boost::shared_ptr<ProgramResource> resource;
 };
+
+class FIRECUBE_API TechniqueResource
+{
+public:
+	std::map<unsigned int,Program> programs;
+	std::string vertexShaderCode;
+	std::string fragmentShaderCode;
+};
+class RenderState;
+/**
+* A class representing a technique.
+*/
+class FIRECUBE_API Technique
+{	
+public:
+	/**
+	* Creates the technique.
+	*/
+	void Create();
+	
+	/**
+	* Loads the specified shader.
+	* @param filename The file name of the shader.
+	* @return Returns true on success, false otherwise.
+	*/
+	bool LoadShader(const std::string &filename);
+
+	/**
+	* Generates a program from a given render state.
+	* @param renderState The render state to use to generate the program.
+	*/
+	Program GenerateProgram(const RenderState &renderState);
+
+	operator bool () const;
+	bool operator== (const Technique &technique) const;
+
+private:
+	boost::shared_ptr<TechniqueResource> resource;
+};
+
 }
 #endif

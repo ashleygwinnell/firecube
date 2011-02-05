@@ -120,7 +120,6 @@
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderQueue.cpp" />
-    <ClCompile Include="ShaderGenerator.cpp" />
     <ClCompile Include="Shaders.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -154,7 +153,6 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderQueue.h" />
     <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="ShaderGenerator.h" />
     <ClInclude Include="Shaders.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />

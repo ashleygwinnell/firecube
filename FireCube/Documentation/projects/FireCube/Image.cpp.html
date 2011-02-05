@@ -32,8 +32,8 @@ Image.cpp
 <font color="blue">#include</font> <font color="maroon">"FrameBuffer.h"</font>
 <font color="blue">#include</font> <font color="maroon">"Image.h"</font>
 <font color="blue">#include</font> <font color="maroon">"Font.h"</font>
-<font color="blue">#include</font> <font color="maroon">"ShaderGenerator.h"</font>
-<font color="blue">#include</font> <font color="maroon">"Renderer.h"</font>               
+<font color="blue">#include</font> <font color="maroon">"RenderQueue.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Renderer.h"</font>
 <font color="blue">#include</font> <font color="maroon">"Application.h"</font>
 
 
@@ -59,7 +59,7 @@ Image<font color="black">:</font><font color="black">:</font>Image<font color="b
             <font color="black">{</font>
                 <font color="blue">for</font> <font color="black">(</font><font color="blue">int</font> j<font color="black">=</font><font color="maroon">0</font>;j<font color="black">&#60;</font>bpp<font color="black">/</font><font color="maroon">8</font>;j<font color="black">+</font><font color="black">+</font><font color="black">)</font>
                 <font color="black">{</font>               
-                    DWORD i<font color="black">=</font>y<font color="black">*</font>height<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>x<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>j;
+                    <font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">=</font>y<font color="black">*</font>height<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>x<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>j;
                     data<font color="black">[</font>i<font color="black">]</font><font color="black">=</font><font color="black">(</font><font color="black">(</font><font color="blue">unsigned</font> <font color="blue">char</font><font color="black">*</font><font color="black">)</font><font color="black">(</font>image<font color="black">-</font><font color="black">&#62;</font>pixels<font color="black">)</font><font color="black">)</font><font color="black">[</font>y<font color="black">*</font>image<font color="black">-</font><font color="black">&#62;</font>pitch<font color="black">+</font>x<font color="black">*</font>bpp<font color="black">/</font><font color="maroon">8</font><font color="black">+</font>j<font color="black">]</font>;
                 <font color="black">}</font>
             <font color="black">}</font>

@@ -26,7 +26,6 @@ using namespace std;
 #include "FrameBuffer.h"
 #include "Image.h"
 #include "Font.h"
-#include "ShaderGenerator.h"
 #include "RenderQueue.h"
 #include "Renderer.h"
 #include "Application.h"
@@ -43,6 +42,46 @@ ShaderManager *currentShaderManager=NULL;
 FontManager *currentFontManager=NULL;
 ShaderGenerator *currentShaderGenerator=NULL;
 Program globalProgram;
+map<string, Technique> techniques;
+RenderState::RenderState() : directionalLighting(false), diffuseTexture(false), fog(false),pointLighting(false),normalTexture(false)
+{
+
+}
+void RenderState::FromMaterial(Material mat)
+{
+	if (mat.GetDiffuseTexture())
+		this->diffuseTexture=true;
+	if (mat.GetNormalTexture())
+		this->normalTexture=true;
+}
+void RenderState::SetDirectionalLighting(bool enable)
+{
+	directionalLighting=enable;
+}
+void RenderState::SetPointLighting(bool enable)
+{
+	pointLighting=enable;
+}
+
+void RenderState::SetFog(bool enable)
+{
+	fog=enable;
+}
+unsigned int RenderState::ToInt() const
+{
+	unsigned int ret=0;
+	if (directionalLighting)
+		ret|=1;
+	if (fog)
+		ret|=2;
+	if (diffuseTexture)
+		ret|=4;
+	if (pointLighting)
+		ret|=8;
+	if (normalTexture)
+		ret|=16;
+	return ret;
+}
 
 void Renderer::Clear(vec4 color,float depth)
 {
@@ -273,7 +312,11 @@ void Renderer::UseMaterial(Material material)
 	if ((material.GetDiffuseTexture()) && (material.GetDiffuseTexture().IsValid()))
 	{
 		UseTexture(material.GetDiffuseTexture(),0);
-	}	
+	}
+	if ((material.GetNormalTexture()) && (material.GetNormalTexture().IsValid()))
+	{
+		UseTexture(material.GetNormalTexture(),1);
+	}
 }
 void Renderer::SetPerspectiveProjection(float fov,float zNear,float zFar)
 {
@@ -311,15 +354,19 @@ void InitializeRenderer()
 									float alpha=texture2D(tex0,gl_TexCoord[0].st).a; \
 									gl_FragColor = vec4(textColor.r,textColor.g,textColor.b,textColor.a*alpha);  \
 									} ");
-	textShader.Create(vShader,fShader);		
-}
-void FIRECUBE_API Renderer::SetShaderGenerator(ShaderGenerator &shaderGenerator)
-{
-	currentShaderGenerator=&shaderGenerator;
-}
-ShaderGenerator FIRECUBE_API &Renderer::GetShaderGenerator()
-{
-	return *currentShaderGenerator;
+	textShader.Create(vShader,fShader);
+
+	Technique technique;
+	technique.Create();
+	if (!technique.LoadShader("default.vert") && !technique.LoadShader("Shaders/default.vert") && !technique.LoadShader("../Assets/Shaders/default.vert") && !technique.LoadShader("./Assets/Shaders/default.vert"))
+		Logger::Write(Logger::LOG_WARNING, "Could not load default technique's vertex shader");
+	else
+	{
+		if (!technique.LoadShader("default.frag") && !technique.LoadShader("Shaders/default.frag") && !technique.LoadShader("../Assets/Shaders/default.frag") && !technique.LoadShader("./Assets/Shaders/default.frag"))
+			Logger::Write(Logger::LOG_WARNING, "Could not load default technique's fragment shader");
+		else
+			Renderer::AddTechnique("default",technique);
+	}
 }
 void Renderer::SetTextureManager(TextureManager &textureManager)
 {
@@ -396,8 +443,8 @@ void Renderer::DisableNormalStream()
 }
 void RenderNode(Node node,vector<pair<mat4,pair<Node,Geometry>>> &renderingQueue,vector<pair<mat4,Light>> &activeLights)
 {
-	if (node.Parent())
-		node.SetWorldTransformation(node.Parent().GetWorldTransformation()*node.GetLocalTransformation());
+	if (node.GetParent())
+		node.SetWorldTransformation(node.GetParent().GetWorldTransformation()*node.GetLocalTransformation());
 	else
 		node.SetWorldTransformation(node.GetLocalTransformation());
 	for (vector<Geometry>::iterator i=node.GetGeometries().begin();i!=node.GetGeometries().end();i++)
@@ -481,7 +528,11 @@ void FIRECUBE_API Renderer::Render(Node node)
 						}
 
 						rs.SetFog(node.GetRenderParameters().fog);
-						p=Renderer::GetShaderGenerator().GenerateProgram(rs);					
+						Technique technique=node.GetTechnique();
+						if (technique)
+							p=technique.GenerateProgram(rs);
+						if (!p)
+							break;
 						Renderer::UseProgram(p);
 						if (node.GetRenderParameters().lighting)
 						{					
@@ -509,9 +560,15 @@ void FIRECUBE_API Renderer::Render(Node node)
 							p.SetUniform("fogDensity",node.GetRenderParameters().fogDensity);
 						}	
 					}
-					Renderer::UseProgram(p);				
+					Renderer::UseProgram(p);
+					if (geometry.resource->tangentBuffer)
+						p.SetAttribute("atrTangent",geometry.resource->tangentBuffer,3);
+					if (geometry.resource->bitangentBuffer)
+						p.SetAttribute("atrBitangent",geometry.resource->bitangentBuffer,3);
 					if (k->material.GetDiffuseTexture())
 						p.SetUniform("diffuseMap",0);
+					if (k->material.GetNormalTexture())
+						p.SetUniform("normalMap",1);
 					if (k->indexBuffer)
 						k->indexBuffer.SetIndexStream();
 					Renderer::RenderIndexStream(TRIANGLES,k->face.size()*3);
@@ -560,7 +617,11 @@ void FIRECUBE_API Renderer::Render(Node node)
 					rs.SetFog(node.GetRenderParameters().fog);
 					rs.SetDirectionalLighting(false);
 					rs.SetPointLighting(false);
-					p=Renderer::GetShaderGenerator().GenerateProgram(rs);					
+					Technique technique=node.GetTechnique();
+					if (technique)
+						p=technique.GenerateProgram(rs);	
+					if (!p)
+						break;
 					Renderer::UseProgram(p);					
 					if (node.GetRenderParameters().fog)
 					{
@@ -568,10 +629,13 @@ void FIRECUBE_API Renderer::Render(Node node)
 						p.SetUniform("fogDensity",node.GetRenderParameters().fogDensity);
 					}	
 				}
-				Renderer::UseProgram(p);				
+				Renderer::UseProgram(p);
+				if (geometry.resource->tangentBuffer)
+					p.SetAttribute("atrTangent",geometry.resource->tangentBuffer,3);
+				if (geometry.resource->bitangentBuffer)
+					p.SetAttribute("atrBitangent",geometry.resource->bitangentBuffer,3);
 				if (k->material.GetDiffuseTexture())
 					p.SetUniform("diffuseMap",0);
-
 				if (k->indexBuffer)
 					k->indexBuffer.SetIndexStream();				
 				Renderer::RenderIndexStream(TRIANGLES,k->face.size()*3);
@@ -579,4 +643,21 @@ void FIRECUBE_API Renderer::Render(Node node)
 			Renderer::RestoreModelViewMatrix();
 		}
 	}
+}
+void FIRECUBE_API Renderer::AddTechnique(const std::string &name, Technique technique)
+{
+	techniques[name]=technique;
+}
+Technique FIRECUBE_API Renderer::GetTechnique(const std::string &name)
+{
+	map<string, Technique>::iterator i=techniques.find(name);
+	if (i!=techniques.end())
+		return i->second;
+	return Technique();
+}
+void FIRECUBE_API Renderer::RemoveTechnique(const std::string &name)
+{
+	map<string, Technique>::iterator i=techniques.find(name);
+	if (i!=techniques.end())	
+		techniques.erase(i);	
 }

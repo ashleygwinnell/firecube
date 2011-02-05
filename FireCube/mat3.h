@@ -43,7 +43,7 @@ public:
 	void operator*=(mat3 &src);	
 	float & operator()(const unsigned int i, const unsigned int j) {return m[i + 3*j];}
 	const float & operator()(const unsigned int i, const unsigned int j) const {return m[i + 3*j];}
-	operator mat4();
+	
 	/**
 	* Creates a scaling matrix.
 	* @param x Scaling along the X axis.
@@ -81,7 +81,7 @@ public:
 	/**
 	* Converts to a mat4 by complementing to a 4x4 indentity matrix.
 	*/
-	mat4 ToMatrix4();
+	mat4 ToMat4();
 	/**
 	* Orthonormalizes the matrix.
 	*/

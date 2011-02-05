@@ -83,18 +83,22 @@ public:
 	*/
 	static const std::vector<std::string> &GetSearchPaths();
 
+	/**
+	* Searches for file name using the search paths.
+	* @param filename The file name to search.
+	*/
+	static std::string SearchForFileName(const std::string &filename);
 private:
-	Timer timer;	
+	Timer timer;
 	bool running;
 	float deltaTime;
 	float fps;
 	float fpsTime;
-	float frameCount;	
+	float frameCount;
 	int width,height;
 	TextureManager defaultTextureManager;
 	ShaderManager defaultShaderManager;
 	FontManager defaultFontManager;
-	ShaderGenerator defaultShaderGenerator;
 	static std::vector<std::string> searchPaths;	
 };
 }

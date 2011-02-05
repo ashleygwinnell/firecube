@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 16 2008)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -66,6 +66,7 @@ class MainFrame : public wxFrame
 		wxPanel* panel9;
 		wxCheckBox* checkBox2;
 		wxCheckBox* checkBox3;
+		wxCheckBox* checkBox4;
 		wxStaticText* staticText3;
 		wxTextCtrl* textCtrl3;
 		wxRadioBox* radioBox1;
@@ -87,22 +88,23 @@ class MainFrame : public wxFrame
 		wxMenu* menu3;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void CheckBox2Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void CheckBox3Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void TextCtrl3TextEnter( wxCommandEvent& event ){ event.Skip(); }
-		virtual void RadioBox1Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void ColourPicker1Changed( wxColourPickerEvent& event ){ event.Skip(); }
-		virtual void TextCtrl4TextEnter( wxCommandEvent& event ){ event.Skip(); }
-		virtual void TextCtrl5TextEnter( wxCommandEvent& event ){ event.Skip(); }
-		virtual void Button1Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void Button2Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void MenuItem2Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void MenuItem1Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void MenuItem3Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void MenuItem4Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void MenuItem7Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void MenuItem6Clicked( wxCommandEvent& event ){ event.Skip(); }
-		virtual void MenuItem5Clicked( wxCommandEvent& event ){ event.Skip(); }
+		virtual void CheckBox2Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void CheckBox3Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void CheckBox4Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void TextCtrl3TextEnter( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RadioBox1Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ColourPicker1Changed( wxColourPickerEvent& event ) { event.Skip(); }
+		virtual void TextCtrl4TextEnter( wxCommandEvent& event ) { event.Skip(); }
+		virtual void TextCtrl5TextEnter( wxCommandEvent& event ) { event.Skip(); }
+		virtual void Button1Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void Button2Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MenuItem2Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MenuItem1Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MenuItem3Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MenuItem4Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MenuItem7Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MenuItem6Clicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MenuItem5Clicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -111,6 +113,7 @@ class MainFrame : public wxFrame
 		wxTextCtrl* textCtrl2;
 		wxPropertyGrid *propertyGrid1;
 		wxStatusBar* statusBar1;
+		
 		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("ModelViewer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 918,764 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~MainFrame();
 	

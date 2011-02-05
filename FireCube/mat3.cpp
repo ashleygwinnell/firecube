@@ -268,25 +268,7 @@ vec3 mat3::GetDir()
 	vec3 dr(-m[2],-m[5],-m[8]);
 	return dr;
 }
-mat3::operator mat4()
-{
-	mat4 ret;
-
-	ret.m[0]=m[0];
-	ret.m[1]=m[1];
-	ret.m[2]=m[2];
-
-	ret.m[4]=m[3];
-	ret.m[5]=m[4];
-	ret.m[6]=m[5];
-
-	ret.m[8]=m[6];
-	ret.m[9]=m[7];
-	ret.m[10]=m[8];
-
-	return ret;
-}
-mat4 mat3::ToMatrix4()
+mat4 mat3::ToMat4()
 {
 	mat4 ret;
 

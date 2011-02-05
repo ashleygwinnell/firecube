@@ -79,6 +79,10 @@ public:
 	*/
 	void SetIndexStream();
 	/**
+	* Binds the buffer.
+	*/
+	void Bind();	
+	/**
 	* Returns whether the buffer is valid.
 	*/
 	bool IsValid();	

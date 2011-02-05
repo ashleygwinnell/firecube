@@ -35,7 +35,7 @@ Application.cpp
 <font color="blue">#include</font> <font color="maroon">"Geometry.h"</font>   
 <font color="blue">#include</font> <font color="maroon">"FrameBuffer.h"</font>
 <font color="blue">#include</font> <font color="maroon">"Font.h"</font>
-<font color="blue">#include</font> <font color="maroon">"ShaderGenerator.h"</font>
+<font color="blue">#include</font> <font color="maroon">"RenderQueue.h"</font>
 <font color="blue">#include</font> <font color="maroon">"Renderer.h"</font>
 <font color="blue">#include</font> <font color="maroon">"Application.h"</font>
 
@@ -46,20 +46,16 @@ Application.cpp
 <font color="blue">extern</font> <font color="blue">void</font> DestroyRenderer<font color="black">(</font><font color="black">)</font>;
 <font color="blue">extern</font> FT_Library freeTypeLibrary;
 
-vector<font color="black">&#60;</font>string<font color="black">&#62;</font> Application<font color="black">:</font><font color="black">:</font>searchPaths;
-<font color="blue">bool</font> keyState<font color="black">[</font>KEY_LAST<font color="black">]</font>;
+std<font color="black">:</font><font color="black">:</font>vector<font color="black">&#60;</font>std<font color="black">:</font><font color="black">:</font>string<font color="black">&#62;</font> Application<font color="black">:</font><font color="black">:</font>searchPaths;
 Application<font color="black">:</font><font color="black">:</font>Application<font color="black">(</font><font color="black">)</font> <font color="black">:</font> running<font color="black">(</font><font color="blue">false</font><font color="black">)</font>, frameCount<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>, fpsTime<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>, fps<font color="black">(</font><font color="maroon">0</font><font color="black">)</font>
 <font color="black">{</font>
-    <font color="blue">for</font> <font color="black">(</font>DWORD i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>KEY_LAST;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
-        keyState<font color="black">[</font>i<font color="black">]</font><font color="black">=</font><font color="blue">false</font>;
     Renderer<font color="black">:</font><font color="black">:</font>SetTextureManager<font color="black">(</font>defaultTextureManager<font color="black">)</font>;
     Renderer<font color="black">:</font><font color="black">:</font>SetShaderManager<font color="black">(</font>defaultShaderManager<font color="black">)</font>;
-    Renderer<font color="black">:</font><font color="black">:</font>SetFontManager<font color="black">(</font>defaultFontManager<font color="black">)</font>;
-    Renderer<font color="black">:</font><font color="black">:</font>SetShaderGenerator<font color="black">(</font>defaultShaderGenerator<font color="black">)</font>;
+    Renderer<font color="black">:</font><font color="black">:</font>SetFontManager<font color="black">(</font>defaultFontManager<font color="black">)</font>;   
 <font color="black">}</font>
 Application<font color="black">:</font><font color="black">:</font>~Application<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
-    Destroy<font color="black">(</font><font color="black">)</font>;
+    Close<font color="black">(</font><font color="black">)</font>;
 <font color="black">}</font>
 <font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>Initialize<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>   
@@ -81,11 +77,11 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
         SDL_GL_SetAttribute<font color="black">(</font>SDL_GL_MULTISAMPLEBUFFERS,<font color="maroon">1</font><font color="black">)</font>;
         SDL_GL_SetAttribute<font color="black">(</font>SDL_GL_MULTISAMPLESAMPLES,multisample<font color="black">)</font>;
     <font color="black">}</font>
-    
+
     screen<font color="black">=</font>SDL_SetVideoMode<font color="black">(</font>width,height,bpp,SDL_OPENGL <font color="black">|</font> <font color="black">(</font>fullscreen ? SDL_FULLSCREEN <font color="black">:</font> SDL_RESIZABLE<font color="black">)</font><font color="black">)</font>;
     <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>screen<font color="black">)</font>
         <font color="blue">return</font> <font color="blue">false</font>;
-        
+
     Renderer<font color="black">:</font><font color="black">:</font>SetViewport<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font>,width,height<font color="black">)</font>;    
     Renderer<font color="black">:</font><font color="black">:</font>SetPerspectiveProjection<font color="black">(</font><font color="maroon">90</font>.0f,<font color="maroon">0</font>.1f,<font color="maroon">100</font><font color="black">)</font>; 
     Renderer<font color="black">:</font><font color="black">:</font>SetModelViewMatrix<font color="black">(</font>mat4<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
@@ -96,7 +92,7 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
 <font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>InitializeNoWindow<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>       
     Logger<font color="black">:</font><font color="black">:</font>Init<font color="black">(</font><font color="maroon">"log.txt"</font><font color="black">)</font>;
-    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>string<font color="black">(</font><font color="maroon">"Initializing application.\n"</font><font color="black">)</font><font color="black">)</font>;   
+    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>Logger<font color="black">:</font><font color="black">:</font>LOG_INFO, string<font color="black">(</font><font color="maroon">"Initializing application"</font><font color="black">)</font><font color="black">)</font>;    
     timer.Init<font color="black">(</font><font color="black">)</font>;
     glEnable<font color="black">(</font>GL_DEPTH_TEST<font color="black">)</font>;    
     glEnable<font color="black">(</font>GL_CULL_FACE<font color="black">)</font>;
@@ -105,64 +101,26 @@ Application<font color="black">:</font><font color="black">:</font>~Application<
     InitializeRenderer<font color="black">(</font><font color="black">)</font>;   
     <font color="blue">return</font> Init<font color="black">(</font><font color="black">)</font>;
 <font color="black">}</font>
-<font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>Destroy<font color="black">(</font><font color="black">)</font>
+<font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>Close<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>   
-    DestroyRenderer<font color="black">(</font><font color="black">)</font>;  
-    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>string<font color="black">(</font><font color="maroon">"Destroying application.\n"</font><font color="black">)</font><font color="black">)</font>; 
-    SDL_Quit<font color="black">(</font><font color="black">)</font>; 
+    DestroyRenderer<font color="black">(</font><font color="black">)</font>;      
+    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>Logger<font color="black">:</font><font color="black">:</font>LOG_INFO, string<font color="black">(</font><font color="maroon">"Destroying application"</font><font color="black">)</font><font color="black">)</font>;     
+    SDL_Quit<font color="black">(</font><font color="black">)</font>;     
     <font color="blue">return</font> <font color="blue">true</font>;
 <font color="black">}</font>
-<font color="green">/* CPPDOC_BEGIN_EXCLUDE */</font>
-Key ConvertVKeyToKey<font color="black">(</font><font color="blue">int</font> key<font color="black">)</font>
-<font color="black">{</font>
-    <font color="blue">switch</font> <font color="black">(</font>key<font color="black">)</font>
-    <font color="black">{</font>
-    <font color="blue">case</font> VK_LEFT<font color="black">:</font>
-        <font color="blue">return</font> KEY_LEFT_ARROW;
-    <font color="blue">case</font> VK_RIGHT<font color="black">:</font>
-        <font color="blue">return</font> KEY_RIGHT_ARROW;
-    <font color="blue">case</font> VK_UP<font color="black">:</font>
-        <font color="blue">return</font> KEY_UP_ARROW;
-    <font color="blue">case</font> VK_DOWN<font color="black">:</font>
-        <font color="blue">return</font> KEY_DOWN_ARROW;
-    <font color="blue">case</font> VK_SPACE<font color="black">:</font>
-        <font color="blue">return</font> KEY_SPACE;
-    <font color="blue">default</font><font color="black">:</font>
-        <font color="blue">return</font> KEY_NONE;
-    <font color="black">}</font>
-<font color="black">}</font>
-<font color="blue">int</font> ConvertKeyToVKey<font color="black">(</font>Key key<font color="black">)</font>
-<font color="black">{</font>
-    <font color="blue">switch</font> <font color="black">(</font>key<font color="black">)</font>
-    <font color="black">{</font>
-    <font color="blue">case</font> KEY_LEFT_ARROW<font color="black">:</font>
-        <font color="blue">return</font> VK_LEFT;
-    <font color="blue">case</font> KEY_RIGHT_ARROW<font color="black">:</font>
-        <font color="blue">return</font> VK_RIGHT;
-    <font color="blue">case</font> KEY_UP_ARROW<font color="black">:</font>
-        <font color="blue">return</font> VK_UP;
-    <font color="blue">case</font> KEY_DOWN_ARROW<font color="black">:</font>
-        <font color="blue">return</font> VK_DOWN;
-    <font color="blue">case</font> KEY_SPACE<font color="black">:</font>
-        <font color="blue">return</font> VK_SPACE;
-    <font color="blue">default</font><font color="black">:</font>
-        <font color="blue">return</font> <font color="maroon">0</font>;
-    <font color="black">}</font>
-<font color="black">}</font>
-<font color="green">/* CPPDOC_END_EXCLUDE */</font>
 <font color="blue">void</font> Application<font color="black">:</font><font color="black">:</font>Run<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>   
     running<font color="black">=</font><font color="blue">true</font>;
-    SDL_Event event;    
-    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>string<font color="black">(</font><font color="maroon">"Entering main loop...\n"</font><font color="black">)</font><font color="black">)</font>;
+    SDL_Event event;
+    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>Logger<font color="black">:</font><font color="black">:</font>LOG_INFO, string<font color="black">(</font><font color="maroon">"Entering main loop..."</font><font color="black">)</font><font color="black">)</font>;
     <font color="blue">while</font> <font color="black">(</font>running<font color="black">)</font>
     <font color="black">{</font>       
         deltaTime<font color="black">=</font><font color="black">(</font><font color="blue">float</font><font color="black">)</font>timer.Passed<font color="black">(</font><font color="black">)</font>;        
         timer.Update<font color="black">(</font><font color="black">)</font>;
         <font color="blue">while</font><font color="black">(</font>SDL_PollEvent<font color="black">(</font><font color="black">&</font>event<font color="black">)</font><font color="black">)</font> 
-        <font color="black">{</font>                       
+        <font color="black">{</font>                                               
             <font color="blue">if</font> <font color="black">(</font>event.type<font color="black">=</font><font color="black">=</font>SDL_KEYDOWN<font color="black">)</font>
-            <font color="black">{</font>               
+            <font color="black">{</font>                               
                 <font color="blue">if</font> <font color="black">(</font>event.key.keysym.sym<font color="black">=</font><font color="black">=</font>SDLK_ESCAPE<font color="black">)</font>
                 <font color="black">{</font>
                     running<font color="black">=</font><font color="blue">false</font>;
@@ -172,43 +130,14 @@ Key ConvertVKeyToKey<font color="black">(</font><font color="blue">int</font> ke
             <font color="black">{</font>
                 width<font color="black">=</font>event.resize.w;
                 height<font color="black">=</font>event.resize.h;
-                Renderer<font color="black">:</font><font color="black">:</font>SetViewport<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font>,event.resize.w,event.resize.h<font color="black">)</font>;               
+                Renderer<font color="black">:</font><font color="black">:</font>SetViewport<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font>,event.resize.w,event.resize.h<font color="black">)</font>;                               
             <font color="black">}</font>
             <font color="blue">if</font> <font color="black">(</font>event.type<font color="black">=</font><font color="black">=</font>SDL_QUIT<font color="black">)</font> 
-                running<font color="black">=</font><font color="blue">false</font>;          
+                running<font color="black">=</font><font color="blue">false</font>;                                  
         <font color="black">}</font>
-        <font color="blue">for</font> <font color="black">(</font>DWORD i<font color="black">=</font><font color="maroon">1</font>;i<font color="black">&#60;</font>KEY_LAST;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
-        <font color="black">{</font>
-            <font color="blue">int</font> k<font color="black">=</font>ConvertKeyToVKey<font color="black">(</font><font color="black">(</font>Key<font color="black">)</font>i<font color="black">)</font>;
-            <font color="blue">if</font> <font color="black">(</font>k<font color="black">!</font><font color="black">=</font><font color="maroon">0</font><font color="black">)</font>
-            <font color="black">{</font>
-                <font color="blue">if</font> <font color="black">(</font>GetAsyncKeyState<font color="black">(</font>k<font color="black">)</font><font color="black">&</font><font color="maroon">0x8000</font><font color="black">)</font>
-                <font color="black">{</font>
-                    FireCube<font color="black">:</font><font color="black">:</font>Event evt;
-                    evt.key<font color="black">=</font><font color="black">(</font>Key<font color="black">)</font>i;
-                    <font color="blue">if</font> <font color="black">(</font>keyState<font color="black">[</font>i<font color="black">]</font><font color="black">=</font><font color="black">=</font><font color="blue">true</font><font color="black">)</font>
-                        evt.type<font color="black">=</font>KEY_DOWN;
-                    <font color="blue">else</font>
-                        evt.type<font color="black">=</font>KEY_PRESSED;
-                    keyState<font color="black">[</font>i<font color="black">]</font><font color="black">=</font><font color="blue">true</font>;
-                    eventQueue.push<font color="black">(</font>evt<font color="black">)</font>;
-                <font color="black">}</font>
-                <font color="blue">else</font>
-                <font color="black">{</font>
-                    <font color="blue">if</font> <font color="black">(</font>keyState<font color="black">[</font>i<font color="black">]</font><font color="black">=</font><font color="black">=</font><font color="blue">true</font><font color="black">)</font>
-                    <font color="black">{</font>
-                        keyState<font color="black">[</font>i<font color="black">]</font><font color="black">=</font><font color="blue">false</font>;
-                        FireCube<font color="black">:</font><font color="black">:</font>Event evt;
-                        evt.key<font color="black">=</font><font color="black">(</font>Key<font color="black">)</font>i;
-                        evt.type<font color="black">=</font>KEY_UP;
-                        eventQueue.push<font color="black">(</font>evt<font color="black">)</font>;
-                    <font color="black">}</font>                       
-                <font color="black">}</font>
-            <font color="black">}</font>
-        <font color="black">}</font>
-        HandleInput<font color="black">(</font>deltaTime<font color="black">)</font>;
+        HandleInput<font color="black">(</font>deltaTime<font color="black">)</font>;     
         Update<font color="black">(</font>deltaTime<font color="black">)</font>;
-        Render<font color="black">(</font>deltaTime<font color="black">)</font>;
+        Render<font color="black">(</font>deltaTime<font color="black">)</font>;      
         SDL_GL_SwapBuffers<font color="black">(</font><font color="black">)</font>;
         frameCount<font color="black">+</font><font color="black">=</font><font color="maroon">1</font>.0f;
         fpsTime<font color="black">+</font><font color="black">=</font>deltaTime;
@@ -219,7 +148,7 @@ Key ConvertVKeyToKey<font color="black">(</font><font color="blue">int</font> ke
             frameCount<font color="black">=</font><font color="maroon">0</font>;
         <font color="black">}</font>       
     <font color="black">}</font>   
-    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>string<font color="black">(</font><font color="maroon">"Exiting main loop...\n"</font><font color="black">)</font><font color="black">)</font>;
+    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>Logger<font color="black">:</font><font color="black">:</font>LOG_INFO, string<font color="black">(</font><font color="maroon">"Exiting main loop..."</font><font color="black">)</font><font color="black">)</font>;
 <font color="black">}</font>
 <font color="blue">void</font> Application<font color="black">:</font><font color="black">:</font>SetTitle<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>title<font color="black">)</font>
 <font color="black">{</font>
@@ -241,16 +170,6 @@ Key ConvertVKeyToKey<font color="black">(</font><font color="blue">int</font> ke
 <font color="black">{</font>
     <font color="blue">return</font> height;
 <font color="black">}</font>
-<font color="blue">bool</font> Application<font color="black">:</font><font color="black">:</font>HasMoreEvents<font color="black">(</font><font color="black">)</font>
-<font color="black">{</font>
-    <font color="blue">return</font> <font color="black">!</font>eventQueue.empty<font color="black">(</font><font color="black">)</font>;
-<font color="black">}</font>
-Event Application<font color="black">:</font><font color="black">:</font>GetEvent<font color="black">(</font><font color="black">)</font>
-<font color="black">{</font>
-    Event ret<font color="black">=</font>eventQueue.front<font color="black">(</font><font color="black">)</font>;
-    eventQueue.pop<font color="black">(</font><font color="black">)</font>;
-    <font color="blue">return</font> ret;
-<font color="black">}</font>
 <font color="blue">void</font> Application<font color="black">:</font><font color="black">:</font>AddSearchPath<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>path<font color="black">)</font>
 <font color="black">{</font>
     string npath<font color="black">=</font>path;
@@ -261,6 +180,31 @@ Event Application<font color="black">:</font><font color="black">:</font>GetEven
 <font color="blue">const</font> vector<font color="black">&#60;</font>string<font color="black">&#62;</font> <font color="black">&</font>Application<font color="black">:</font><font color="black">:</font>GetSearchPaths<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
     <font color="blue">return</font> Application<font color="black">:</font><font color="black">:</font>searchPaths;
+<font color="black">}</font>
+std<font color="black">:</font><font color="black">:</font>string Application<font color="black">:</font><font color="black">:</font>SearchForFileName<font color="black">(</font><font color="blue">const</font> std<font color="black">:</font><font color="black">:</font>string <font color="black">&</font>filename<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">bool</font> found<font color="black">=</font><font color="blue">false</font>;
+    string ret;     
+    <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>FileExists<font color="black">(</font>filename<font color="black">)</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">const</font> vector<font color="black">&#60;</font>string<font color="black">&#62;</font> <font color="black">&</font>searchPaths<font color="black">=</font>Application<font color="black">:</font><font color="black">:</font>GetSearchPaths<font color="black">(</font><font color="black">)</font>;
+        <font color="blue">for</font> <font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> i<font color="black">=</font><font color="maroon">0</font>;i<font color="black">&#60;</font>searchPaths.size<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">{</font>
+            ret<font color="black">=</font>searchPaths<font color="black">[</font>i<font color="black">]</font> <font color="black">+</font> <font color="maroon">"\\"</font> <font color="black">+</font> filename;
+            <font color="blue">if</font> <font color="black">(</font>FileExists<font color="black">(</font>ret<font color="black">)</font><font color="black">)</font>
+            <font color="black">{</font>
+                found<font color="black">=</font><font color="blue">true</font>;
+                <font color="blue">break</font>;
+            <font color="black">}</font>
+        <font color="black">}</font>
+    <font color="black">}</font>
+    <font color="blue">else</font>
+        <font color="blue">return</font> filename;
+
+    <font color="blue">if</font> <font color="black">(</font>found<font color="black">)</font>
+        <font color="blue">return</font> ret;
+    <font color="blue">else</font>
+        <font color="blue">return</font> <font color="maroon">""</font>;
 <font color="black">}</font>
 </PRE>
 </BODY>

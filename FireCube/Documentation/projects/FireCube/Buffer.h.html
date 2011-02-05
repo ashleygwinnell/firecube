@@ -9,6 +9,9 @@ Buffer.h
 <font color="blue">#ifndef</font> BUFFER_H
 <font color="blue">#define</font> BUFFER_H
 
+<font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>push<font color="black">)</font>
+<font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>disable<font color="black">:</font><font color="maroon">4251</font><font color="black">)</font>
+
 <font color="blue">namespace</font> FireCube
 <font color="black">{</font>
 <font color="green">/** 
@@ -26,14 +29,21 @@ Buffer.h
 <font color="black">{</font>
     POINTS,LINES,TRIANGLES,TRIANGLE_STRIP,QUADS,LINE_LOOP,TRIANGLE_FAN
 <font color="black">}</font>;
-<font color="green">/**
-* A buffer of data used for rendering.
-*/</font>
 <font color="blue">class</font> FIRECUBE_API BufferResource
 <font color="black">{</font>
+    <font color="blue">friend</font> <font color="blue">class</font> Buffer;
 <font color="blue">public</font><font color="black">:</font> 
     BufferResource<font color="black">(</font><font color="black">)</font>;
     ~BufferResource<font color="black">(</font><font color="black">)</font>;
+
+    GLuint id;
+<font color="black">}</font>;
+<font color="green">/**
+* A buffer of data used for rendering.
+*/</font>
+<font color="blue">class</font> FIRECUBE_API Buffer
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font>
     <font color="green">/**
     * Creates a new buffer.
     */</font>
@@ -45,7 +55,7 @@ Buffer.h
     * @param bt The buffer type.
     * @return true on success.
     */</font>
-    <font color="blue">bool</font> LoadData<font color="black">(</font><font color="blue">void</font> <font color="black">*</font>data,DWORD size,BufferType bt<font color="black">)</font>;
+    <font color="blue">bool</font> LoadData<font color="black">(</font><font color="blue">void</font> <font color="black">*</font>data,<font color="blue">unsigned</font> <font color="blue">int</font> size,BufferType bt<font color="black">)</font>;
     <font color="green">/**
     * Specific function to load index data.
     * @param data Pointer to the indices to be stored.
@@ -53,7 +63,7 @@ Buffer.h
     * @param bt The buffer type.
     * @return true on success.
     */</font>
-    <font color="blue">bool</font> LoadIndexData<font color="black">(</font><font color="blue">void</font> <font color="black">*</font>data,DWORD count,BufferType bt<font color="black">)</font>;
+    <font color="blue">bool</font> LoadIndexData<font color="black">(</font><font color="blue">void</font> <font color="black">*</font>data,<font color="blue">unsigned</font> <font color="blue">int</font> count,BufferType bt<font color="black">)</font>;
     <font color="green">/**
     * Binds the buffer as a vertex stream.
     * @param numCoords The number of coordinates per vertex.
@@ -77,6 +87,10 @@ Buffer.h
     */</font>
     <font color="blue">void</font> SetIndexStream<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
+    * Binds the buffer.
+    */</font>
+    <font color="blue">void</font> Bind<font color="black">(</font><font color="black">)</font>;    
+    <font color="green">/**
     * Returns whether the buffer is valid.
     */</font>
     <font color="blue">bool</font> IsValid<font color="black">(</font><font color="black">)</font>; 
@@ -84,12 +98,20 @@ Buffer.h
     * Destroys the buffer.
     */</font>
     <font color="blue">void</font> Destroy<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Returns the resource id of the buffer.
+    */</font>
+    <font color="blue">unsigned</font> <font color="blue">int</font> GetId<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
 
-    GLuint id;
+    <font color="blue">operator</font> <font color="blue">bool</font> <font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
+    <font color="blue">bool</font> <font color="blue">operator</font><font color="black">=</font><font color="black">=</font> <font color="black">(</font><font color="blue">const</font> Buffer <font color="black">&</font>buffer<font color="black">)</font> <font color="blue">const</font>;
+
+<font color="blue">private</font><font color="black">:</font>    
+
+    boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>BufferResource<font color="black">&#62;</font> resource;
 <font color="black">}</font>;
-
-<font color="blue">typedef</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>BufferResource<font color="black">&#62;</font> Buffer;
 <font color="black">}</font>
+<font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>pop<font color="black">)</font>
 <font color="blue">#endif</font>
 </PRE>
 </BODY>

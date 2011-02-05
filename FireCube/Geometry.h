@@ -30,7 +30,8 @@ public:
 	vec4 diffuse;
 	vec4 specular;
 	float shininess;	
-	Texture diffuseTexture;	
+	Texture diffuseTexture;
+	Texture normalTexture;
 };
 class FIRECUBE_API Material
 {
@@ -51,6 +52,8 @@ public:
 	void SetShininess(float value);
 	Texture GetDiffuseTexture();
 	void SetDiffuseTexture(Texture texture);
+	Texture GetNormalTexture();
+	void SetNormalTexture(Texture texture);
 
 	operator bool () const;
 	bool operator== (const Material &material) const;
@@ -95,12 +98,16 @@ public:
 
 	std::vector<vec3> vertex;
 	std::vector<vec3> normal;
+	std::vector<vec3> tangent;
+	std::vector<vec3> bitangent;
 	std::vector<Surface> surface;
 	std::vector<Face> face;	
 	std::vector<vec2> diffuseUV;
 	Buffer vertexBuffer;	
 	Buffer diffuseUVBuffer;
 	Buffer normalBuffer;
+	Buffer tangentBuffer;
+	Buffer bitangentBuffer;
 	std::vector<Material> material;
 	BoundingBox bbox;
 };
@@ -142,6 +149,10 @@ public:
 	*/
 	void CalculateNormals();	
 	/**
+	* Calculates tangents and bitangents.
+	*/	
+	void CalculateTangents();
+	/**
 	* Creates hard normals for the mesh.
 	*/
 	void CreateHardNormals();
@@ -157,6 +168,14 @@ public:
 	* Returns the normals of this geometry.
 	*/
 	std::vector<vec3> &GetNormals();
+	/**
+	* Returns the normals of this geometry.
+	*/
+	std::vector<vec3> &GetTangents();
+	/**
+	* Returns the normals of this geometry.
+	*/
+	std::vector<vec3> &GetBitangents();
 	/**
 	* Returns the faces of this geometry.
 	*/

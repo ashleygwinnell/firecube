@@ -22,7 +22,7 @@ Image.h
     * Loads an image.
     * @param filename The file to load.
     */</font>
-    <font color="blue">bool</font> Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>;
+    <font color="blue">bool</font> Load<font color="black">(</font><font color="blue">const</font> std<font color="black">:</font><font color="black">:</font>string <font color="black">&</font>filename<font color="black">)</font>;
     <font color="green">/**
     * Returns the width of the image.
     */</font>
@@ -38,14 +38,14 @@ Image.h
     <font color="green">/**
     * Returns the image pixel data.
     */</font>
-    vector<font color="black">&#60;</font><font color="blue">unsigned</font> <font color="blue">char</font><font color="black">&#62;</font> <font color="black">&</font>GetPixels<font color="black">(</font><font color="black">)</font>;
+    std<font color="black">:</font><font color="black">:</font>vector<font color="black">&#60;</font><font color="blue">unsigned</font> <font color="blue">char</font><font color="black">&#62;</font> <font color="black">&</font>GetPixels<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
     * Returns a pixel.
     */</font>
     vec4 GetPixel<font color="black">(</font><font color="blue">int</font> x,<font color="blue">int</font> y<font color="black">)</font>;
 <font color="blue">private</font><font color="black">:</font>
     <font color="blue">int</font> width,height,bpp;
-    vector<font color="black">&#60;</font><font color="blue">unsigned</font> <font color="blue">char</font><font color="black">&#62;</font> data;
+    std<font color="black">:</font><font color="black">:</font>vector<font color="black">&#60;</font><font color="blue">unsigned</font> <font color="blue">char</font><font color="black">&#62;</font> data;
 <font color="black">}</font>;
 <font color="black">}</font>
 <font color="blue">#endif</font>

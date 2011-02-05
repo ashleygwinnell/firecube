@@ -17,7 +17,7 @@ public:
 	}
 	virtual ~ResourceManager<T,TResource>()
 	{
-		Logger::Write("Destroying resource manager.\n");
+		Logger::Write(Logger::LOG_INFO, "Destroying resource manager");
 	}
 	ResourceManager<T,TResource>(const ResourceManager<T,TResource> &r)
 	{
@@ -34,18 +34,9 @@ public:
 			if (!i->second.expired())
 				return T(i->second.lock());
 		T ret;
-		std::string loadfile=filename;
-		std::string fname=GetFileName(filename);
-		const std::vector<std::string> &searchPaths=Application::GetSearchPaths();
-		if (!FileExists(loadfile))
-		{
-			for (unsigned int i=0;i<searchPaths.size();i++)
-				if (FileExists(searchPaths[i] + "\\" + fname))
-				{
-					loadfile=searchPaths[i] + "\\" + fname;
-					break;
-				}
-		}
+		std::string loadfile=Application::SearchForFileName(filename);
+		if (loadfile.empty())
+			return T();
 		if (ret.Load(loadfile))
 		{		
 			resources[filename]=ret.resource;
@@ -94,7 +85,7 @@ public:
 		
 		return T();
 	}
-private:
+protected:
 	std::map<std::string,boost::weak_ptr<TResource>> resources;
 };
 }

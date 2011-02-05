@@ -18,6 +18,7 @@ protected:
 	void MenuItem3Clicked( wxCommandEvent& event );
 	void MenuItem4Clicked( wxCommandEvent& event );	
 	void CheckBox2Clicked( wxCommandEvent& event );
+	void CheckBox4Clicked( wxCommandEvent& event );
 	void RadioBox1Clicked( wxCommandEvent& event );
 	void TextCtrl3TextEnter( wxCommandEvent& event );
 	void CheckBox3Clicked( wxCommandEvent& event );

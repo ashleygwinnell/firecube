@@ -23,9 +23,12 @@ using namespace std;
 #include "Buffer.h"
 #include "Shaders.h"
 #include "Geometry.h"	
+#include "FrameBuffer.h"
 #include "Font.h"
-#include "ShaderGenerator.h"
+#include "RenderQueue.h"
+#include "Renderer.h"
 #include "Application.h"
+
 using namespace FireCube;
 
 ShaderResource::ShaderResource() : id(0)
@@ -55,9 +58,9 @@ bool Shader::Load(const string &filename)
 	if (d!=string::npos)
 	{
 		string ext=ToLower(filename.substr(d+1));
-		if (ext=="vshader")
+		if (ext=="vert")
 			shaderType=GL_VERTEX_SHADER;
-		else if (ext=="fshader")
+		else if (ext=="frag")
 			shaderType=GL_FRAGMENT_SHADER;
 		else
 			return false;
@@ -121,22 +124,20 @@ ProgramResource::ProgramResource() : id(0)
 ProgramResource::~ProgramResource()
 {
 	ostringstream ss;
-	ss<< "Destroyed program with id="<<id<<endl;
-	Logger::Write(ss.str());
+	ss<< "Destroyed program with id="<<id;
+	Logger::Write(Logger::LOG_INFO, ss.str());
 	glDeleteProgram(id);
 	id=0;
 }
 void Program::Create()
 {
 	resource=boost::shared_ptr<ProgramResource>(new ProgramResource);
-	if (resource->id!=0)
-		glDeleteProgram(resource->id);
-
+	
 	resource->id=glCreateProgram();
 	resource->variables.clear();
 	ostringstream ss;
-	ss<< "Created program with id="<<resource->id<<endl;
-	Logger::Write(ss.str());
+	ss<< "Created program with id="<<resource->id;
+	Logger::Write(Logger::LOG_INFO, ss.str());
 }
 void Program::Create(Shader shader1,Shader shader2)
 {
@@ -262,6 +263,25 @@ void Program::SetUniform(const string &name,const vector<int> &value)
 	if (location!=-1)	
 		glUniform1iv(location,value.size(),&value[0]);
 }
+void Program::SetAttribute(const std::string &name,Buffer buffer,int size)
+{
+	GLint location=-1;
+	map<string,GLint>::iterator i=resource->variables.find(name);
+	if (i!=resource->variables.end())
+		location=i->second;
+	else
+	{
+		location=glGetAttribLocation(resource->id,name.c_str());
+		if (location!=-1)
+			resource->variables[name]=location;
+	}
+	if (location!=-1)
+	{		
+		buffer.Bind();
+		glVertexAttribPointer(location,size,GL_FLOAT,GL_FALSE,0,0);
+		glEnableVertexAttribArray(location);
+	}
+}
 string Program::GetInfoLog()
 {
 	int infologLength = 0;
@@ -295,4 +315,72 @@ Program::operator bool () const
 bool Program::operator== (const Program &program) const
 {
 	return program.resource==resource;
+}
+
+void Technique::Create()
+{
+	resource=boost::shared_ptr<TechniqueResource>(new TechniqueResource);
+}
+Technique::operator bool () const
+{
+	return resource;
+}
+bool Technique::operator== (const Technique &technique) const
+{
+	return technique.resource==resource;
+}
+bool Technique::LoadShader(const string &filename)
+{
+	string name=Application::SearchForFileName(filename);
+	if (name.empty())
+		return false;
+	string *source;
+	string::size_type d;
+	d=filename.find_last_of(".");
+	if (d!=string::npos)
+	{
+		string ext=ToLower(filename.substr(d+1));
+		if (ext=="vert")
+			source=&resource->vertexShaderCode;
+		else if (ext=="frag")
+			source=&resource->fragmentShaderCode;
+		else
+			return false;
+	}
+	ifstream f(name.c_str());
+	if (!f.is_open())	
+		return false;
+		
+	*source=string((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());	
+	return true;
+}
+Program Technique::GenerateProgram(const RenderState &renderState)
+{
+	unsigned int key=renderState.ToInt();
+	map<unsigned int,Program>::iterator i=resource->programs.find(key);
+	if (i!=resource->programs.end())
+		return i->second;
+	
+	ostringstream defines;
+	if (renderState.diffuseTexture)
+		defines << "#define DIFFUSE_MAPPING" << endl;
+	if (renderState.directionalLighting)
+		defines << "#define DIRECTIONAL_LIGHTING" << endl;
+	if (renderState.fog)
+		defines << "#define FOG" << endl;
+	if (renderState.normalTexture)
+		defines << "#define NORMAL_MAPPING" << endl;
+	if (renderState.pointLighting)
+		defines << "#define POINT_LIGHTING" << endl;
+	ostringstream vertexShaderSource;
+	ostringstream fragmentShaderSource;
+	Shader vertexShader,fragmentShader;
+	vertexShaderSource << defines.str() << resource->vertexShaderCode;
+	fragmentShaderSource << defines.str() << resource->fragmentShaderCode;
+	Program p;
+	vertexShader.Create(VERTEX_SHADER,vertexShaderSource.str());
+	fragmentShader.Create(FRAGMENT_SHADER,fragmentShaderSource.str());
+	p.Create(vertexShader,fragmentShader);
+	resource->programs[key]=p;
+	return p;
 }

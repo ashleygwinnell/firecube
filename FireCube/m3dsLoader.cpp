@@ -23,7 +23,6 @@ using namespace std;
 #include "FrameBuffer.h"
 #include "Image.h"
 #include "Font.h"
-#include "ShaderGenerator.h"
 #include "RenderQueue.h"
 #include "Renderer.h"
 #include "Application.h"
@@ -100,11 +99,13 @@ Node M3dsLoader::GenerateSceneGraph()
 			}
 		}
 		geom.CalculateNormals();
+		geom.CalculateTangents();
 		geom.UpdateBuffers();
 		Node node(object[i].name);		
 		node.AddGeometry(geom);
 		ret.AddChild(node);
 	}
+	ret.SetTechnique("default");
 	return ret;
 }
 void M3dsLoader::ReadMainChunk()

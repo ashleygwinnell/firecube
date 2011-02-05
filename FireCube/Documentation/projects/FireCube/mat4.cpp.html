@@ -392,23 +392,7 @@ vec3 mat4<font color="black">:</font><font color="black">:</font>GetPos<font col
     trans.Translate<font color="black">(</font><font color="black">-</font>pos.x,<font color="black">-</font>pos.y,<font color="black">-</font>pos.z<font color="black">)</font>;
     <font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font><font color="black">*</font><font color="black">=</font>trans;
 <font color="black">}</font>
-mat4<font color="black">:</font><font color="black">:</font><font color="blue">operator</font> mat3<font color="black">(</font><font color="black">)</font>
-<font color="black">{</font>
-    mat3 ret;
-
-    ret.m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">0</font><font color="black">]</font>;
-    ret.m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">1</font><font color="black">]</font>;
-    ret.m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">2</font><font color="black">]</font>;
-    ret.m<font color="black">[</font><font color="maroon">3</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font>;
-    ret.m<font color="black">[</font><font color="maroon">4</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font>;
-    ret.m<font color="black">[</font><font color="maroon">5</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font>;
-    ret.m<font color="black">[</font><font color="maroon">6</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font>;
-    ret.m<font color="black">[</font><font color="maroon">7</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">9</font><font color="black">]</font>;
-    ret.m<font color="black">[</font><font color="maroon">8</font><font color="black">]</font><font color="black">=</font>m<font color="black">[</font><font color="maroon">10</font><font color="black">]</font>;
-
-    <font color="blue">return</font> ret;
-<font color="black">}</font>
-mat3 mat4<font color="black">:</font><font color="black">:</font>ToMatrix3<font color="black">(</font><font color="black">)</font>
+mat3 mat4<font color="black">:</font><font color="black">:</font>ToMat3<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>
     mat3 ret;
 

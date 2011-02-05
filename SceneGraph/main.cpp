@@ -13,8 +13,8 @@ int main(int argc, char *argv[])
 }
 bool App::Init()
 {
-	Application::AddSearchPath("../Media/Textures");
-	Application::AddSearchPath("../Media/Models");
+	Application::AddSearchPath("../Assets/Textures");
+	Application::AddSearchPath("../Assets/Models");
 	SetTitle("SceneGraph Test Application");		
 	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
 	Geometry lightMarker=GeometryGenerator::GenerateSphere(0.1f,10,10);
@@ -45,17 +45,18 @@ bool App::Init()
 	n.SetParent(root);	
 	n.AddGeometry(GeometryGenerator::GenerateSphere(2.0f,32,32,mat));	
 	
-	n=root.AddChild(LoadMesh("../Media/Models/teapot.3ds"));
+	n=root.AddChild(LoadMesh("../Assets/Models/teapot.3ds"));
 	n.SetName("Teapot");
 	n.CreateHardNormals();
 	n.Move(vec3(8,-2,0));	
 	
-	n=root.AddChild(LoadMesh("../Media/Models/duck.dae"));	
+	n=root.AddChild(LoadMesh("../Assets/Models/duck.dae"));	
 	n.SetName("Duck");	
 	n.Scale(vec3(0.03f,0.03f,0.03f));
 	n.Move(vec3(-8,-4,0));	
 	
 	root.Move(vec3(0,0,-10));
+	root.SetTechnique("default");
 	return true;
 }
 void App::Update(float t)
@@ -73,7 +74,7 @@ void App::Render(float t)
 	Renderer::SetOrthographicProjection();	
 	ostringstream oss;
 	oss << "FPS:"<<app.GetFps();	
-	Renderer::RenderText(app.font,vec2(0,(float)app.GetHeight()-20.0f),vec4(1,1,1,1),oss.str());
+	Renderer::RenderText(app.font,vec3(0,(float)app.GetHeight()-20.0f,0.0f),vec4(1,1,1,1),oss.str());
 }
 void App::HandleInput(float t)
 {

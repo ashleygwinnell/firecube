@@ -28,9 +28,9 @@ void App::Render(float t)
 }
 void main()
 {
-	Application::AddSearchPath("../Media/Textures");
+	Application::AddSearchPath("../Assets/Textures");
 	App app;
-	ColladaLoader l("../Media/Models/duck_triangulate.dae");
+	ColladaLoader l("../Assets/Models/duck_triangulate.dae");
 	l.Load();	
 	app.Initialize();
 	app.node=l.GenerateSceneGraph();

@@ -675,7 +675,7 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent,Mesh &mesh,SubMesh &subMesh
 			pointCount=subMesh.vcount[i];
 		if (pointCount!=3)
 		{
-			Logger::Write("Error in collada loader, polygons with more than 3 vertices are not implemented yet.\n");
+			Logger::Write(Logger::LOG_ERROR, "Error in collada loader, polygons with more than 3 vertices are not implemented yet");
 			continue;
 		}
 		for (int j=0;j<pointCount;j++)
@@ -1155,7 +1155,39 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
 				geometry.GetNormals()[j].z*=-1;
 			}
 			geometry.GetNormals()[j].Normalize();
-		}		
+		}
+		geometry.GetTangents()=mesh.tangents;
+		for (unsigned int j=0;j<geometry.GetTangents().size();j++)
+		{
+			//geometry->normal[j]=geometry->normal[j].TransformNormal(transformation);
+			if (upDirection==X_UP)
+			{
+				std::swap(geometry.GetTangents()[j].x,geometry.GetTangents()[j].y);
+				geometry.GetTangents()[j].x*=-1;
+			}
+			else if (upDirection==Z_UP)
+			{
+				std::swap(geometry.GetTangents()[j].y,geometry.GetTangents()[j].z);
+				geometry.GetTangents()[j].z*=-1;
+			}
+			geometry.GetTangents()[j].Normalize();
+		}
+		geometry.GetBitangents()=mesh.binormals;
+		for (unsigned int j=0;j<geometry.GetBitangents().size();j++)
+		{
+			//geometry->normal[j]=geometry->normal[j].TransformNormal(transformation);
+			if (upDirection==X_UP)
+			{
+				std::swap(geometry.GetBitangents()[j].x,geometry.GetBitangents()[j].y);
+				geometry.GetBitangents()[j].x*=-1;
+			}
+			else if (upDirection==Z_UP)
+			{
+				std::swap(geometry.GetBitangents()[j].y,geometry.GetBitangents()[j].z);
+				geometry.GetBitangents()[j].z*=-1;
+			}
+			geometry.GetBitangents()[j].Normalize();
+		}
 		unsigned int writePos=0;
 		for (unsigned int j=0;j<4;j++)
 		{
@@ -1242,6 +1274,9 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
 			}
 
 		}
+		if (geometry.GetTangents().size()==0)
+			geometry.CalculateTangents();
+
 		geometry.UpdateBuffers();
 	}
 	for (unsigned int i=0;i<node->children.size();i++)
@@ -1254,7 +1289,9 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
 }
 FireCube::Node ColladaLoader::GenerateSceneGraph()
 {
-	return GenerateSceneGraph(root);
+	FireCube::Node ret=GenerateSceneGraph(root);
+	ret.SetTechnique("default");
+	return ret;
 }
 TiXmlElement *ColladaLoader::GetChildElement(TiXmlNode *node,const string &elmName)
 {
@@ -1275,6 +1312,10 @@ ColladaLoader::InputType ColladaLoader::SemanticToInputType(const string &semant
 		return INPUT_TEXCOORD;
 	else if (semantic=="COLOR")
 		return INPUT_COLOR;
+	else if (semantic=="TEXBINORMAL")
+		return INPUT_BINORMAL;
+	else if (semantic=="TEXTANGENT")
+		return INPUT_TANGENT;
 	else
 		return INPUT_UNKNOWN;
 }

@@ -26,7 +26,6 @@ using namespace std;
 #include "Geometry.h"	
 #include "FrameBuffer.h"
 #include "Font.h"
-#include "ShaderGenerator.h"
 #include "RenderQueue.h"
 #include "Renderer.h"
 #include "Application.h"
@@ -54,10 +53,26 @@ boost::shared_ptr<FontPage> FontManager::CreateNewPage()
 	return p;
 }
 Font FontManager::Create(const string &filename,int size)
-{
-	ostringstream oss;
-	oss << filename << ":" << size;
-	return ResourceManager<Font,FontResource>::Create(oss.str());
+{	
+	ostringstream f2;
+	f2 << filename << ":" << size;
+	map<std::string,boost::weak_ptr<FontResource>>::iterator i=resources.find(f2.str());
+	if (i!=resources.end())
+		if (!i->second.expired())
+			return Font(i->second.lock());
+	Font ret;
+	std::string loadfile=Application::SearchForFileName(filename);
+	if (loadfile.empty())
+		return Font();
+	ostringstream f;
+	f << loadfile << ":" << size;	
+	if (ret.Load(loadfile,size))
+	{		
+		resources[f2.str()]=ret.resource;
+		return ret;
+	}
+	else
+		return Font();
 }
 FontResource::FontResource()
 {	
@@ -66,7 +81,7 @@ FontResource::FontResource()
 }
 FontResource::~FontResource()
 {
-	Logger::Write("Destroying font.\n");
+	Logger::Write(Logger::LOG_INFO, "Destroying font");
 	delete fontImpl;
 }
 Font::Font()
@@ -112,11 +127,9 @@ bool Font::AddChar(char c)
 bool Font::Load(const string &name,int size)
 {	
 	resource=boost::shared_ptr<FontResource>(new FontResource);
-	Logger::Write("Loading font with name:");
-	Logger::Write(name);
-	Logger::Write("\n");
+	Logger::Write(Logger::LOG_INFO, "Loading font with name:" + name);
 	int error=0;
-	char text[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-=_+[]{};:'\"\\|,./<>?/*. ";
+	char text[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-=_+[]{};:'\"\\|,./<>?/. ";
 	resource->size=size;		
 	error=FT_New_Face(freeTypeLibrary,name.c_str(),0,&(resource->fontImpl->face));
 	if (error)
@@ -158,16 +171,8 @@ bool Font::Load(const string &name,int size)
 	return true;
 }
 bool Font::Load(const string &name)
-{
-	int size=0;
-	string::size_type d;
-	d=name.find_last_of(":");
-	if (d==string::npos)
-		return false;
-	string ssize=name.substr(d+1);
-	string fontName=name.substr(0,d);	
-	size=atoi(ssize.c_str());
-	return Load(fontName,size);
+{	
+	return Load(name,18);
 }
 Font::operator bool () const
 {

@@ -23,7 +23,6 @@ using namespace std;
 #include "Geometry.h"	
 #include "FrameBuffer.h"
 #include "Font.h"
-#include "ShaderGenerator.h"
 #include "RenderQueue.h"
 #include "Renderer.h"
 #include "Application.h"
@@ -37,13 +36,13 @@ FrameBufferResource::FrameBufferResource() : id(0),depthBuffer(0)
 FrameBufferResource::~FrameBufferResource()
 {
 	if (id)
-	{
-		glDeleteFramebuffersEXT(1, &id);
+	{		
+		glDeleteFramebuffers(1, &id);
 		id=0;
 	}
 	if (depthBuffer)
 	{
-		glDeleteRenderbuffersEXT(1, &depthBuffer);
+		glDeleteRenderbuffers(1, &depthBuffer);
 		depthBuffer=0;
 	}
 }
@@ -52,7 +51,7 @@ void FrameBuffer::Create(int width,int height)
 	resource=boost::shared_ptr<FrameBufferResource>(new FrameBufferResource);
 	resource->width=width;
 	resource->height=height;
-	glGenFramebuffersEXT(1,&resource->id);	
+	glGenFramebuffers(1,&resource->id);	
 }
 void FrameBuffer::SetRenderTarget(Texture texture,int attachmnetPoint)
 {	
@@ -64,20 +63,20 @@ void FrameBuffer::SetRenderTarget(Texture texture,int attachmnetPoint)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);		
 
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0+attachmnetPoint,GL_TEXTURE_2D,texture.GetId(),0);	
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,resource->id);	
+	glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0+attachmnetPoint,GL_TEXTURE_2D,texture.GetId(),0);	
+	glBindFramebuffer(GL_FRAMEBUFFER,resource->id);	
 }
 void FrameBuffer::AddDepthBuffer()
 {
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,resource->id);
-	glGenRenderbuffersEXT(1,&resource->depthBuffer);
-	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT,resource->depthBuffer);
-	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT,GL_DEPTH_COMPONENT,resource->width,resource->height);
-	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_RENDERBUFFER_EXT,resource->depthBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER,resource->id);
+	glGenRenderbuffers(1,&resource->depthBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER,resource->depthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT,resource->width,resource->height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,resource->depthBuffer);
 }
 void FrameBuffer::AddDepthBufferTexture()
 {
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,resource->id);	
+	glBindFramebuffer(GL_FRAMEBUFFER,resource->id);	
 	resource->depthTexture.Create();
 	Renderer::UseTexture(resource->depthTexture,0);	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -89,11 +88,11 @@ void FrameBuffer::AddDepthBufferTexture()
 	glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE_ARB, GL_INTENSITY);
 	glTexImage2D (GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, resource->width, resource->height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
 	
-	glFramebufferTexture2DEXT (GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, resource->depthTexture.GetId(), 0);
+	glFramebufferTexture2D (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, resource->depthTexture.GetId(), 0);
 }
 void FrameBuffer::AddRenderTarget(int attachmnetPoint)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER_EXT,resource->id);			
+	glBindFramebuffer(GL_FRAMEBUFFER,resource->id);			
 	glDrawBuffer(GL_FRONT_AND_BACK);	
 	resource->texture[attachmnetPoint].Create();
 	Renderer::UseTexture(resource->texture[attachmnetPoint],0);	
@@ -102,7 +101,7 @@ void FrameBuffer::AddRenderTarget(int attachmnetPoint)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);		
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0_EXT+attachmnetPoint,GL_TEXTURE_2D,resource->texture[attachmnetPoint].GetId(),0);	
+	glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0_EXT+attachmnetPoint,GL_TEXTURE_2D,resource->texture[attachmnetPoint].GetId(),0);	
 }
 Texture FrameBuffer::GetRenderTarget(int attachmnetPoint)
 {
@@ -118,7 +117,7 @@ bool FrameBuffer::IsValid()
 	if (resource->id==0)
 		return false;
 		
-	glBindFramebuffer(GL_FRAMEBUFFER_EXT,resource->id);
+	glBindFramebuffer(GL_FRAMEBUFFER,resource->id);
 	bool found=false;
 	for (int i=0;(i<MAX_TEXTURES) && (!found);i++)
 		if ((resource->texture[i]) && (resource->texture[i].IsValid()))
@@ -128,7 +127,7 @@ bool FrameBuffer::IsValid()
 	else
 		glDrawBuffer(GL_NONE);
 
-	if (glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT)!=GL_FRAMEBUFFER_COMPLETE_EXT)
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER)!=GL_FRAMEBUFFER_COMPLETE)
 		return false;
 	return true;
 }

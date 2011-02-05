@@ -26,8 +26,8 @@ TextureResource::TextureResource() : id(0)
 TextureResource::~TextureResource()
 {		
 	ostringstream ss;
-	ss<< "Destroyed texture with id="<<id<<endl;
-	Logger::Write(ss.str());
+	ss<< "Destroyed texture with id="<<id;
+	Logger::Write(Logger::LOG_INFO, ss.str());
 	glDeleteTextures(1,&id);
 	id=0;
 }
@@ -48,8 +48,8 @@ bool Texture::Create()
 	resource=boost::shared_ptr<TextureResource>(new TextureResource);
 	glGenTextures(1,&resource->id);
 	ostringstream ss;
-	ss<< "Created texture with id="<<resource->id<<endl;
-	Logger::Write(ss.str());
+	ss<< "Created texture with id="<<resource->id;
+	Logger::Write(Logger::LOG_INFO, ss.str());
 	return resource->id!=0;
 }
 bool Texture::Load(const std::string &filename)

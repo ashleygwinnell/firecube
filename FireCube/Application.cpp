@@ -27,7 +27,6 @@ using namespace std;
 #include "Geometry.h"	
 #include "FrameBuffer.h"
 #include "Font.h"
-#include "ShaderGenerator.h"
 #include "RenderQueue.h"
 #include "Renderer.h"
 #include "Application.h"
@@ -44,8 +43,7 @@ Application::Application() : running(false), frameCount(0), fpsTime(0), fps(0)
 {
 	Renderer::SetTextureManager(defaultTextureManager);
 	Renderer::SetShaderManager(defaultShaderManager);
-	Renderer::SetFontManager(defaultFontManager);
-	Renderer::SetShaderGenerator(defaultShaderGenerator);
+	Renderer::SetFontManager(defaultFontManager);	
 }
 Application::~Application()
 {
@@ -86,7 +84,7 @@ bool Application::Initialize(int width,int height,int bpp,int multisample,bool f
 bool Application::InitializeNoWindow()
 {		
 	Logger::Init("log.txt");
-	Logger::Write(string("Initializing application.\n"));	
+	Logger::Write(Logger::LOG_INFO, string("Initializing application"));	
 	timer.Init();
 	glEnable(GL_DEPTH_TEST);	
 	glEnable(GL_CULL_FACE);
@@ -98,7 +96,7 @@ bool Application::InitializeNoWindow()
 bool Application::Close()
 {	
 	DestroyRenderer();      
-	Logger::Write(string("Destroying application.\n"));     
+	Logger::Write(Logger::LOG_INFO, string("Destroying application"));     
 	SDL_Quit();     
 	return true;
 }
@@ -106,7 +104,7 @@ void Application::Run()
 {	
 	running=true;
 	SDL_Event event;
-	Logger::Write(string("Entering main loop...\n"));
+	Logger::Write(Logger::LOG_INFO, string("Entering main loop..."));
 	while (running)
 	{		
 		deltaTime=(float)timer.Passed();		
@@ -142,7 +140,7 @@ void Application::Run()
 			frameCount=0;
 		}		
 	}	
-	Logger::Write(string("Exiting main loop...\n"));
+	Logger::Write(Logger::LOG_INFO, string("Exiting main loop..."));
 }
 void Application::SetTitle(const string &title)
 {
@@ -174,4 +172,29 @@ void Application::AddSearchPath(const string &path)
 const vector<string> &Application::GetSearchPaths()
 {
 	return Application::searchPaths;
+}
+std::string Application::SearchForFileName(const std::string &filename)
+{
+	bool found=false;
+	string ret;		
+	if (!FileExists(filename))
+	{
+		const vector<string> &searchPaths=Application::GetSearchPaths();
+		for (unsigned int i=0;i<searchPaths.size();i++)
+		{
+			ret=searchPaths[i] + "\\" + filename;
+			if (FileExists(ret))
+			{
+				found=true;
+				break;
+			}
+		}
+	}
+	else
+		return filename;
+
+	if (found)
+		return ret;
+	else
+		return "";
 }

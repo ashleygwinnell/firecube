@@ -26,7 +26,6 @@ using namespace std;
 #include "FrameBuffer.h"
 #include "Image.h"
 #include "Font.h"
-#include "ShaderGenerator.h"
 #include "RenderQueue.h"
 #include "Renderer.h"
 #include "Application.h"
@@ -107,7 +106,7 @@ string Node::GetName()
 {
 	return resource->name;
 }
-Node &Node::Parent()
+Node &Node::GetParent()
 {
 	return resource->parent;
 }
@@ -268,7 +267,7 @@ vector<Light> &Node::GetLights()
 void Node::Render()
 {
 	if (resource->parent)
-		SetWorldTransformation(Parent().GetWorldTransformation()*GetLocalTransformation());
+		SetWorldTransformation(GetParent().GetWorldTransformation()*GetLocalTransformation());
 	else
 		SetWorldTransformation(GetLocalTransformation());
 	/*for (vector<Model>::iterator i=attachedModels.begin();i!=attachedModels.end();i++)
@@ -285,17 +284,18 @@ void Node::Render()
 Node Node::AddChild(Node node)
 {
 	resource->children.push_back(node);
-	if (node.Parent())
-		node.Parent().RemoveChild(node);
+	if (node.GetParent())
+		node.GetParent().RemoveChild(node);
 	node.resource->parent=*this;
 	return node;
 }
 void Node::SetParent(Node parent)
 {
-	if (Parent())
-		Parent().RemoveChild(*this);
+	if (GetParent())
+		GetParent().RemoveChild(*this);
 	resource->parent=parent;
-	parent.resource->children.push_back(*this);		
+	if (parent)
+		parent.resource->children.push_back(*this);		
 }
 Node Node::GetChild(const string &name)
 {
@@ -356,6 +356,10 @@ void Node::CreateHardNormals()
 		(*i).CreateHardNormals();
 	}
 }
+RenderParameters &Node::GetRenderParameters()
+{
+	return resource->renderParameters;
+}
 void Node::SetProgram(Program program)
 {
 	resource->renderParameters.program=program;
@@ -364,13 +368,21 @@ void Node::SetProgram(Program program)
 		(*i).SetProgram(program);
 	}
 }
-RenderParameters &Node::GetRenderParameters()
-{
-	return resource->renderParameters;
-}
 Program Node::GetProgram()
 {
 	return resource->renderParameters.program;
+}
+void Node::SetTechnique(const string &name)
+{
+	resource->renderParameters.technique=Renderer::GetTechnique(name);
+	for (vector<Node>::iterator i=resource->children.begin();i!=resource->children.end();i++)
+	{
+		i->SetTechnique(name);
+	}
+}
+Technique Node::GetTechnique() const
+{
+	return resource->renderParameters.technique;
 }
 void Node::SetLighting(bool enabled)
 {
@@ -430,12 +442,15 @@ NodeResource::NodeResource()
 }
 Node FIRECUBE_API FireCube::LoadMesh(const string &filename)
 {
+	string file=Application::SearchForFileName(filename);
+	if (file.empty())
+		return Node();
 	string::size_type d;
 	d=filename.find_last_of(".");
 	//name=filename;
 	ostringstream ss;
-	ss<< "Created model with name:"<<filename<<endl;
-	Logger::Write(ss.str());
+	ss<< "Created model with name:"<<filename;
+	Logger::Write(Logger::LOG_INFO, ss.str());
 	if (d!=string::npos)
 	{
 		string ext=ToLower(filename.substr(d+1));
@@ -443,23 +458,23 @@ Node FIRECUBE_API FireCube::LoadMesh(const string &filename)
 		{				
 			M3dsLoader m3dsLoader;
 
-			if (m3dsLoader.Load(filename))							
-			{				
+			if (m3dsLoader.Load(file))
+			{
 				return m3dsLoader.GenerateSceneGraph();
 			}
 			else
 				return Node();
 		}
 		if (ext=="dae")
-		{				
-			ColladaLoader colladaLoader(filename);
+		{
+			ColladaLoader colladaLoader(file);
 
 			if (colladaLoader.Load())
-			{				
+			{
 				return colladaLoader.GenerateSceneGraph();
 			}
 			else
-				return Node();				
+				return Node();
 		}
 	}
 	return Node();

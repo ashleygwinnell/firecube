@@ -22,7 +22,7 @@ bool Terrain::GenerateTerrain(const string &heightmap,const string &diffuse,vec3
 	diffuseTexture=Renderer::GetTextureManager().Create(diffuse);
 	diffuseTexture.SetFiltering(NEAREST,NEAREST);
 	terrainScale=sizeVertices;	
-	program.Create(Renderer::GetShaderManager().Create("terrain.vshader"),Renderer::GetShaderManager().Create("terrain.fshader"));		
+	program.Create(Renderer::GetShaderManager().Create("terrain.vert"),Renderer::GetShaderManager().Create("terrain.frag"));		
 	normalBuffer.Create();
 	vertexBuffer.Create();	
 	uvBuffer.Create();	
@@ -168,7 +168,7 @@ DWORD Terrain::Render(Frustum &frustum)
 	program.SetUniform("fogDensity",0.01f);
 	program.SetUniform("fogColor",vec4(0.30f,0.42f,0.95f,1.0f));
 	mat4 m=Renderer::GetModelViewMatrix();
-	program.SetUniform("lightDir",m*vec3(1,-1,1));
+	program.SetUniform("lightDir",vec3(1,-1,1).TransformNormal(m));
 	program.SetUniform("tex",0);
 	Renderer::UseTexture(diffuseTexture,0);	
 

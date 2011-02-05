@@ -124,7 +124,7 @@ void RigidBody::Render()
 	Renderer::SaveModelViewMatrix();
 	mat4 t;
 	t.Translate(position);
-	t*=(mat4)orientaion;
+	t*=orientaion.ToMat4();
 	Renderer::MultiplyModelViewMatrix(t);
 	Renderer::Render(model);
 	Renderer::RestoreModelViewMatrix();

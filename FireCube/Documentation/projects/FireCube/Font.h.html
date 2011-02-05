@@ -15,11 +15,11 @@ Font.h
 <font color="blue">namespace</font> FireCube
 <font color="black">{</font>
 <font color="blue">class</font> FontResource;
-<font color="blue">typedef</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FontResource<font color="black">&#62;</font> Font;
+<font color="blue">class</font> Font;
 <font color="green">/* CPPDOC_BEGIN_EXCLUDE */</font>
 <font color="blue">namespace</font> Renderer
 <font color="black">{</font>
-    <font color="blue">void</font> FIRECUBE_API RenderText<font color="black">(</font>Font font,vec3 pos,vec4 color,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API RenderText<font color="black">(</font>Font font,vec3 pos,vec4 color,<font color="blue">const</font> std<font color="black">:</font><font color="black">:</font>string <font color="black">&</font>str<font color="black">)</font>;
 <font color="black">}</font>
 
 <font color="blue">class</font> FontImpl;
@@ -40,13 +40,56 @@ Font.h
     <font color="blue">int</font> textureSize;
 <font color="black">}</font>;
 <font color="green">/* CPPDOC_END_EXCLUDE */</font>
+<font color="blue">class</font> FIRECUBE_API FontResource
+<font color="black">{</font>
+    <font color="blue">friend</font> <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RenderText<font color="black">(</font>Font font,vec3 pos,vec4 color,<font color="blue">const</font> std<font color="black">:</font><font color="black">:</font>string <font color="black">&</font>str<font color="black">)</font>;
+<font color="blue">public</font><font color="black">:</font>
+    FontResource<font color="black">(</font><font color="black">)</font>;
+    ~FontResource<font color="black">(</font><font color="black">)</font>;    
+    
+    std<font color="black">:</font><font color="black">:</font>vector<font color="black">&#60;</font>Glyph<font color="black">&#62;</font> glyph;
+    boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FontPage<font color="black">&#62;</font> page;
+    FontImpl <font color="black">*</font>fontImpl;
+    <font color="blue">int</font> size;
+<font color="black">}</font>;
+
+<font color="green">/**
+* Holds the data for a single font face.
+*/</font>
+<font color="blue">class</font> FIRECUBE_API Font
+<font color="black">{</font>
+    <font color="blue">friend</font> <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RenderText<font color="black">(</font>Font font,vec3 pos,vec4 color,<font color="blue">const</font> std<font color="black">:</font><font color="black">:</font>string <font color="black">&</font>str<font color="black">)</font>;
+    <font color="blue">friend</font> <font color="blue">class</font> FontManager;
+    <font color="blue">friend</font> <font color="blue">class</font> ResourceManager<font color="black">&#60;</font>Font,FontResource<font color="black">&#62;</font>;
+<font color="blue">public</font><font color="black">:</font>
+    Font<font color="black">(</font><font color="black">)</font>;
+    Font<font color="black">(</font>boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FontResource<font color="black">&#62;</font> resource<font color="black">)</font>;
+    <font color="green">/**
+    * Loads a font.
+    * @param name The file to load separated with : and an integer representing the font size.
+    */</font>
+    <font color="blue">bool</font> Load<font color="black">(</font><font color="blue">const</font> std<font color="black">:</font><font color="black">:</font>string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>; 
+    <font color="green">/**
+    * Loads a font.
+    * @param name The file to load.
+    * @param size The size of the font.
+    */</font>
+    <font color="blue">bool</font> Load<font color="black">(</font><font color="blue">const</font> std<font color="black">:</font><font color="black">:</font>string <font color="black">&</font><font color="blue">name</font>,<font color="blue">int</font> size<font color="black">)</font>;    
+
+    <font color="blue">operator</font> <font color="blue">bool</font> <font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
+    <font color="blue">bool</font> <font color="blue">operator</font><font color="black">=</font><font color="black">=</font> <font color="black">(</font><font color="blue">const</font> Font <font color="black">&</font>font<font color="black">)</font> <font color="blue">const</font>;
+<font color="blue">private</font><font color="black">:</font>
+    <font color="blue">bool</font> AddChar<font color="black">(</font><font color="blue">char</font> c<font color="black">)</font>;
+    boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FontResource<font color="black">&#62;</font> resource;
+<font color="black">}</font>;
 <font color="green">/**
 * Manages the various fonts.
 */</font>
-<font color="blue">class</font> FIRECUBE_API FontManager <font color="black">:</font> <font color="blue">public</font> ResourceManager<font color="black">&#60;</font>FontResource<font color="black">&#62;</font>
+<font color="blue">class</font> FIRECUBE_API FontManager <font color="black">:</font> <font color="blue">public</font> ResourceManager<font color="black">&#60;</font>Font,FontResource<font color="black">&#62;</font>
 <font color="black">{</font>
     <font color="blue">friend</font> <font color="blue">class</font> FontResource;
-    <font color="blue">friend</font> <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RenderText<font color="black">(</font>Font font,vec3 pos,vec4 color,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
+    <font color="blue">friend</font> <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RenderText<font color="black">(</font>Font font,vec3 pos,vec4 color,<font color="blue">const</font> std<font color="black">:</font><font color="black">:</font>string <font color="black">&</font>str<font color="black">)</font>;
+    <font color="blue">friend</font> <font color="blue">class</font> Font;
 <font color="blue">public</font><font color="black">:</font>
     FontManager<font color="black">(</font><font color="black">)</font>;
     <font color="green">/**
@@ -54,37 +97,10 @@ Font.h
     * @param filename The file to load.
     * @param size The size of the font.
     */</font>
-    boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FontResource<font color="black">&#62;</font> Create<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename,<font color="blue">int</font> size<font color="black">)</font>;
+    Font Create<font color="black">(</font><font color="blue">const</font> std<font color="black">:</font><font color="black">:</font>string <font color="black">&</font>filename,<font color="blue">int</font> size<font color="black">)</font>;
 <font color="blue">private</font><font color="black">:</font>
-    vector<font color="black">&#60;</font>boost<font color="black">:</font><font color="black">:</font>weak_ptr<font color="black">&#60;</font>FontPage<font color="black">&#62;</font><font color="black">&#62;</font> page;
+    std<font color="black">:</font><font color="black">:</font>vector<font color="black">&#60;</font>boost<font color="black">:</font><font color="black">:</font>weak_ptr<font color="black">&#60;</font>FontPage<font color="black">&#62;</font><font color="black">&#62;</font> page;
     boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FontPage<font color="black">&#62;</font> CreateNewPage<font color="black">(</font><font color="black">)</font>;    
-<font color="black">}</font>;
-<font color="green">/**
-* Holds the data for a single font face.
-*/</font>
-<font color="blue">class</font> FIRECUBE_API FontResource
-<font color="black">{</font>
-    <font color="blue">friend</font> <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>RenderText<font color="black">(</font>Font font,vec3 pos,vec4 color,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
-<font color="blue">public</font><font color="black">:</font>
-    FontResource<font color="black">(</font><font color="black">)</font>;
-    ~FontResource<font color="black">(</font><font color="black">)</font>;
-    <font color="green">/**
-    * Loads a font.
-    * @param name The file to load separated with : and an integer representing the font size.
-    */</font>
-    <font color="blue">bool</font> Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>;  
-    <font color="green">/**
-    * Loads a font.
-    * @param name The file to load.
-    * @param size The size of the font.
-    */</font>
-    <font color="blue">bool</font> Load<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font>,<font color="blue">int</font> size<font color="black">)</font>; 
-<font color="blue">private</font><font color="black">:</font>
-    <font color="blue">bool</font> AddChar<font color="black">(</font><font color="blue">char</font> c<font color="black">)</font>;
-    vector<font color="black">&#60;</font>Glyph<font color="black">&#62;</font> glyph;
-    boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FontPage<font color="black">&#62;</font> page;
-    FontImpl <font color="black">*</font>fontImpl;
-    <font color="blue">int</font> size;
 <font color="black">}</font>;
 <font color="black">}</font>
 <font color="blue">#pragma</font> <font color="blue">warning</font><font color="black">(</font>pop<font color="black">)</font>

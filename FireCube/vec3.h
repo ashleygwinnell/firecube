@@ -57,9 +57,7 @@ public:
 	const float & operator()(unsigned int i) const;
 
 	inline vec3 operator-() const {return vec3(-x, -y, -z);}
-	operator vec2();
-	operator vec4();
-
+	
 	/**
 	* Returns a pointer to the coordinates.
 	*/

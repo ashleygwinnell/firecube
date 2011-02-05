@@ -14,8 +14,27 @@ Renderer.h
 
 <font color="blue">namespace</font> FireCube
 <font color="black">{</font>
+<font color="blue">class</font> FIRECUBE_API RenderState
+<font color="black">{</font>
+    <font color="blue">friend</font> <font color="blue">class</font> ShaderGenerator;
+    <font color="blue">friend</font> <font color="blue">class</font> Technique;
+<font color="blue">public</font><font color="black">:</font>
+    RenderState<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> FromMaterial<font color="black">(</font>Material mat<font color="black">)</font>;
+    <font color="blue">void</font> SetDirectionalLighting<font color="black">(</font><font color="blue">bool</font> enable<font color="black">)</font>;
+    <font color="blue">void</font> SetPointLighting<font color="black">(</font><font color="blue">bool</font> enable<font color="black">)</font>;
+    <font color="blue">void</font> SetFog<font color="black">(</font><font color="blue">bool</font> enable<font color="black">)</font>;
+    <font color="blue">unsigned</font> <font color="blue">int</font> ToInt<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
+<font color="blue">private</font><font color="black">:</font>
+    <font color="blue">bool</font> directionalLighting;
+    <font color="blue">bool</font> pointLighting;
+    <font color="blue">bool</font> diffuseTexture;
+    <font color="blue">bool</font> normalTexture;
+    <font color="blue">bool</font> fog;
+<font color="black">}</font>;
 <font color="blue">class</font> Application;
 <font color="blue">class</font> Node;
+<font color="blue">class</font> RenderQueue;
 <font color="green">/**
 * A namespace containing various functions responsible for the rendering pipeline.
 */</font>
@@ -34,9 +53,14 @@ Renderer.h
     <font color="blue">void</font> FIRECUBE_API Render<font color="black">(</font>Geometry geometry<font color="black">)</font>;
     <font color="green">/**
     * Renders a scene node.
-    * @param model The model to render.
+    * @param node The node to render.
     */</font>
     <font color="blue">void</font> FIRECUBE_API Render<font color="black">(</font>Node node<font color="black">)</font>;
+    <font color="green">/**
+    * Renders a rendering queue.
+    * @param queue The queue to render.
+    */</font>
+    <font color="blue">void</font> FIRECUBE_API Render<font color="black">(</font><font color="blue">const</font> RenderQueue <font color="black">&</font>queue<font color="black">)</font>;
     <font color="green">/**
     * Sets the current modelview matrix.
     */</font>
@@ -89,24 +113,24 @@ Renderer.h
     * @param pos The position of the text.
     * @param str The string to output.
     */</font>
-    <font color="blue">void</font> FIRECUBE_API RenderText<font color="black">(</font>Font font,vec3 pos,vec4 color,<font color="blue">const</font> string <font color="black">&</font>str<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API RenderText<font color="black">(</font>Font font,vec3 pos,vec4 color,<font color="blue">const</font> std<font color="black">:</font><font color="black">:</font>string <font color="black">&</font>str<font color="black">)</font>;
     <font color="green">/**
     * Renders an index stream.  
     * @param mode The rendering mode.
     * @param count The number of indices to render.
     */</font>
-    <font color="blue">void</font> FIRECUBE_API RenderIndexStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API RenderIndexStream<font color="black">(</font>RenderMode mode,<font color="blue">unsigned</font> <font color="blue">int</font> count<font color="black">)</font>;
     <font color="green">/**
     * Renders a stream.
     * @param mode The rendering mode.
     * @param count The number of indices to render.
     */</font>
-    <font color="blue">void</font> FIRECUBE_API RenderStream<font color="black">(</font>RenderMode mode,DWORD count<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API RenderStream<font color="black">(</font>RenderMode mode,<font color="blue">unsigned</font> <font color="blue">int</font> count<font color="black">)</font>;
     <font color="green">/**
     * Disables a texture coordinates stream.
     * @param unit The texture unit.
     */</font>
-    <font color="blue">void</font> FIRECUBE_API DisableTexCoordStream<font color="black">(</font>DWORD unit<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API DisableTexCoordStream<font color="black">(</font><font color="blue">unsigned</font> <font color="blue">int</font> unit<font color="black">)</font>;
     <font color="green">/**
     * Disables the normal stream.   
     */</font>
@@ -149,15 +173,23 @@ Renderer.h
     <font color="green">/**
     * Sets an orthographic projection with a one to one pixel ratio.    
     */</font>
-    <font color="blue">void</font> FIRECUBE_API SetOrthographicProjection<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API SetOrthographicProjection<font color="black">(</font><font color="black">)</font>;  
     <font color="green">/**
-    * Sets the current shader generator.
+    * Adds a technique to the list of techniques.
+    * @param name The name of the technique.
+    * @param technique The technique to associate with name.
     */</font>
-    <font color="blue">void</font> FIRECUBE_API SetShaderGenerator<font color="black">(</font>ShaderGenerator <font color="black">&</font>shaderGenerator<font color="black">)</font>;
+    <font color="blue">void</font> FIRECUBE_API AddTechnique<font color="black">(</font><font color="blue">const</font> std<font color="black">:</font><font color="black">:</font>string <font color="black">&</font><font color="blue">name</font>, Technique technique<font color="black">)</font>;
     <font color="green">/**
-    * Gets the current shader generator.
+    * Get a technique by name.
+    * @param name The name of the technique.
     */</font>
-    ShaderGenerator FIRECUBE_API <font color="black">&</font>GetShaderGenerator<font color="black">(</font><font color="black">)</font>;
+    Technique FIRECUBE_API GetTechnique<font color="black">(</font><font color="blue">const</font> std<font color="black">:</font><font color="black">:</font>string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>;
+    <font color="green">/**
+    * Removes a technique.
+    * @param name The name of the technique.
+    */</font>
+    <font color="blue">void</font> FIRECUBE_API RemoveTechnique<font color="black">(</font><font color="blue">const</font> std<font color="black">:</font><font color="black">:</font>string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>;
     <font color="green">/**
     * Sets the current texture manager.
     */</font>

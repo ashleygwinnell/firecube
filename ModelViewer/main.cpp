@@ -47,6 +47,8 @@ void FireCubeApp::LoadModel(const string &filename)
 	unsigned int vertexCount=0,faceCount=0;
 	CountElements(root,vertexCount,faceCount);
 	GenerateNormals(app->frame->glCanvas->normalsLength);
+	GenerateTangents(app->frame->glCanvas->normalsLength);
+	GenerateBitangents(app->frame->glCanvas->normalsLength);
 	ostringstream oss,oss2;	
 	oss << vertexCount;
 	oss2 << faceCount;
@@ -96,4 +98,42 @@ void FireCubeApp::GenerateNormals(FireCube::Node node,float l,vector<FireCube::v
 	}	
 	for (vector<FireCube::Node>::iterator i=node.GetChildren().begin();i!=node.GetChildren().end();i++)
 		GenerateNormals(*i,l,normals);
+}
+void FireCubeApp::GenerateTangents(float l)
+{
+	vector<FireCube::vec3> tangents;	
+	GenerateTangents(root,l,tangents);
+	tangentRenderingBuffer.LoadData(&tangents[0],tangents.size()*sizeof(FireCube::vec3),FireCube::STATIC);	
+}
+void FireCubeApp::GenerateTangents(FireCube::Node node,float l,vector<FireCube::vec3> &tangents)
+{		
+	for (unsigned int j=0;j<node.GetGeometries().size();j++)
+	{			
+		for (unsigned int i=0;i<node.GetGeometries()[j].GetVertices().size();i++)
+		{
+			tangents.push_back(node.GetGeometries()[j].GetVertices()[i]);
+			tangents.push_back(node.GetGeometries()[j].GetVertices()[i]+node.GetGeometries()[j].GetTangents()[i]*l);
+		}
+	}	
+	for (vector<FireCube::Node>::iterator i=node.GetChildren().begin();i!=node.GetChildren().end();i++)
+		GenerateTangents(*i,l,tangents);
+}
+void FireCubeApp::GenerateBitangents(float l)
+{
+	vector<FireCube::vec3> bitangents;	
+	GenerateBitangents(root,l,bitangents);
+	bitangentRenderingBuffer.LoadData(&bitangents[0],bitangents.size()*sizeof(FireCube::vec3),FireCube::STATIC);	
+}
+void FireCubeApp::GenerateBitangents(FireCube::Node node,float l,vector<FireCube::vec3> &bitangents)
+{		
+	for (unsigned int j=0;j<node.GetGeometries().size();j++)
+	{			
+		for (unsigned int i=0;i<node.GetGeometries()[j].GetVertices().size();i++)
+		{
+			bitangents.push_back(node.GetGeometries()[j].GetVertices()[i]);
+			bitangents.push_back(node.GetGeometries()[j].GetVertices()[i]+node.GetGeometries()[j].GetBitangents()[i]*l);
+		}
+	}	
+	for (vector<FireCube::Node>::iterator i=node.GetChildren().begin();i!=node.GetChildren().end();i++)
+		GenerateBitangents(*i,l,bitangents);
 }

@@ -50,7 +50,7 @@ mat4.h
     vec3 <font color="blue">operator</font><font color="black">*</font><font color="black">(</font>vec3 <font color="black">&</font>src<font color="black">)</font>;
     <font color="blue">float</font> <font color="black">&</font> <font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="blue">const</font> <font color="blue">unsigned</font> <font color="blue">int</font> i, <font color="blue">const</font> <font color="blue">unsigned</font> <font color="blue">int</font> j<font color="black">)</font> <font color="black">{</font><font color="blue">return</font> m<font color="black">[</font>i <font color="black">+</font> <font color="maroon">4</font><font color="black">*</font>j<font color="black">]</font>;<font color="black">}</font>
     <font color="blue">const</font> <font color="blue">float</font> <font color="black">&</font> <font color="blue">operator</font><font color="black">(</font><font color="black">)</font><font color="black">(</font><font color="blue">const</font> <font color="blue">unsigned</font> <font color="blue">int</font> i, <font color="blue">const</font> <font color="blue">unsigned</font> <font color="blue">int</font> j<font color="black">)</font> <font color="blue">const</font> <font color="black">{</font><font color="blue">return</font> m<font color="black">[</font>i <font color="black">+</font> <font color="maroon">4</font><font color="black">*</font>j<font color="black">]</font>;<font color="black">}</font>
-    <font color="blue">operator</font> mat3<font color="black">(</font><font color="black">)</font>;
+    
     <font color="green">/**
     * Creates a translation matrix.
     * @param x Translation along the X axis.
@@ -134,7 +134,7 @@ mat4.h
     <font color="green">/*
     * Converts to a mat3 by stripping the translation part.
     */</font>
-    mat3 ToMatrix3<font color="black">(</font><font color="black">)</font>;
+    mat3 ToMat3<font color="black">(</font><font color="black">)</font>;
     <font color="blue">float</font> m<font color="black">[</font><font color="maroon">16</font><font color="black">]</font>;
 <font color="black">}</font>;
 <font color="black">}</font>

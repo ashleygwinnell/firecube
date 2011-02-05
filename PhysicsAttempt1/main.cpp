@@ -17,18 +17,18 @@ vector <CollisionInfo> collisions;
 Simulator s;
 int main(int argc, char *argv[])
 {
-	Application::AddSearchPath("../Media/Textures");
+	Application::AddSearchPath("../Assets/Textures");
 	if (!app.Initialize())
 		return 0;	
 	app.SetTitle(string("Physics Test"));
-	app.vShader=Renderer::GetShaderManager().Create("v.vshader");
-	app.pShader=Renderer::GetShaderManager().Create("p.fshader");	
-	app.pShader2=Renderer::GetShaderManager().Create("p2.fshader");
+	app.vShader=Renderer::GetShaderManager().Create("v.vert");
+	app.pShader=Renderer::GetShaderManager().Create("p.frag");	
+	app.pShader2=Renderer::GetShaderManager().Create("p2.frag");
 	app.font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
 	app.program.Create(app.vShader,app.pShader);
 	app.program2.Create(app.vShader,app.pShader2);		
-	app.model=LoadMesh("../Media/Models/physcube.3ds");
-	app.sphere=LoadMesh("../Media/Models/sphere2.3ds");
+	app.model=LoadMesh("../Assets/Models/physcube.3ds");
+	app.sphere=LoadMesh("../Assets/Models/sphere2.3ds");
 	app.model.SetLighting(false);
 	app.model.SetProgram(app.program);
 	app.sphere.SetLighting(false);
@@ -64,7 +64,7 @@ void App::Render(float t)
 	Renderer::SetModelViewMatrix(mat4());
 	ostringstream oss;
 	oss << "FPS:" << app.GetFps();
-	Renderer::RenderText(font,vec2(0,0),vec4(1,1,1,1),oss.str());	
+	Renderer::RenderText(font,vec3(0,0,0),vec4(1,1,1,1),oss.str());	
 }
 void App::HandleInput(float t)
 {

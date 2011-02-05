@@ -1,0 +1,492 @@
+<HTML>
+<HEAD>
+<TITLE>
+Node.cpp
+</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+<font color="blue">#include</font> <font color="maroon">&#60;string&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;vector&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;fstream&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;iostream&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;sstream&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;queue&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
+<font color="blue">using</font> <font color="blue">namespace</font> std;
+<font color="blue">#include</font> <font color="maroon">&#60;SDL.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;SDL_image.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;windows.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">"GLee.h"</font>
+<font color="blue">#include</font> <font color="maroon">&#60;GL/GLU.h&#62;</font>
+<font color="blue">#include</font> <font color="maroon">"utils.h"</font>  
+<font color="blue">#include</font> <font color="maroon">"Logger.h"</font>
+<font color="blue">#include</font> <font color="maroon">"ResourceManager.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Timer.h"</font>
+<font color="blue">#include</font> <font color="maroon">"MyMath.h"</font> 
+<font color="blue">#include</font> <font color="maroon">"BoundingBox.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Texture.h"</font>        
+<font color="blue">#include</font> <font color="maroon">"Buffer.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Shaders.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Geometry.h"</font>   
+<font color="blue">#include</font> <font color="maroon">"FrameBuffer.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Image.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Font.h"</font>
+<font color="blue">#include</font> <font color="maroon">"RenderQueue.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Renderer.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Application.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Light.h"</font>
+<font color="blue">#include</font> <font color="maroon">"Node.h"</font>
+<font color="blue">#include</font> <font color="maroon">"tinyxml.h"</font>
+<font color="blue">#include</font> <font color="maroon">"ModelLoaders.h"</font>
+
+<font color="blue">using</font> <font color="blue">namespace</font> FireCube;
+<font color="blue">void</font> Light<font color="black">:</font><font color="black">:</font>Create<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">=</font>boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>LightResource<font color="black">&#62;</font><font color="black">(</font><font color="blue">new</font> LightResource<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Light<font color="black">:</font><font color="black">:</font>SetType<font color="black">(</font>LightType type<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>type<font color="black">=</font>type;
+<font color="black">}</font>
+LightType Light<font color="black">:</font><font color="black">:</font>GetType<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>type;
+<font color="black">}</font>
+<font color="blue">void</font> Light<font color="black">:</font><font color="black">:</font>SetAmbientColor<font color="black">(</font>vec4 color<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>ambientColor<font color="black">=</font>color;
+<font color="black">}</font>
+vec4 Light<font color="black">:</font><font color="black">:</font>GetAmbientColor<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>ambientColor;
+<font color="black">}</font>
+<font color="blue">void</font> Light<font color="black">:</font><font color="black">:</font>SetDiffuseColor<font color="black">(</font>vec4 color<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>diffuseColor<font color="black">=</font>color;
+<font color="black">}</font>
+vec4 Light<font color="black">:</font><font color="black">:</font>GetDiffuseColor<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>diffuseColor;
+<font color="black">}</font>
+<font color="blue">void</font> Light<font color="black">:</font><font color="black">:</font>SetSpecularColor<font color="black">(</font>vec4 color<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>specularColor<font color="black">=</font>color;
+<font color="black">}</font>
+vec4 Light<font color="black">:</font><font color="black">:</font>GetSpecularColor<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>specularColor;
+<font color="black">}</font>
+Light<font color="black">:</font><font color="black">:</font><font color="blue">operator</font> <font color="blue">bool</font> <font color="black">(</font><font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource;
+<font color="black">}</font>
+<font color="blue">bool</font> Light<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">=</font><font color="black">=</font> <font color="black">(</font><font color="blue">const</font> Light <font color="black">&</font>light<font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">return</font> light.resource<font color="black">=</font><font color="black">=</font>resource;
+<font color="black">}</font>
+Node<font color="black">:</font><font color="black">:</font>Node<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>   
+<font color="black">}</font>
+Node<font color="black">:</font><font color="black">:</font>Node<font color="black">(</font>NodeResource <font color="black">*</font>nr<font color="black">)</font> <font color="black">:</font> resource<font color="black">(</font>nr<font color="black">)</font>
+<font color="black">{</font>
+<font color="black">}</font>
+Node<font color="black">:</font><font color="black">:</font><font color="blue">operator</font> <font color="blue">bool</font> <font color="black">(</font><font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource;
+<font color="black">}</font>
+<font color="blue">bool</font> Node<font color="black">:</font><font color="black">:</font><font color="blue">operator</font><font color="black">=</font><font color="black">=</font> <font color="black">(</font><font color="blue">const</font> Node <font color="black">&</font>node<font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">=</font><font color="black">=</font>node.resource;
+<font color="black">}</font>
+Node<font color="black">:</font><font color="black">:</font>Node<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">=</font>boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>NodeResource<font color="black">&#62;</font><font color="black">(</font><font color="blue">new</font> NodeResource<font color="black">)</font>;
+    SetName<font color="black">(</font><font color="blue">name</font><font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>SetName<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font><font color="blue">name</font><font color="black">=</font><font color="blue">name</font>;
+<font color="black">}</font>
+string Node<font color="black">:</font><font color="black">:</font>GetName<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font><font color="blue">name</font>;
+<font color="black">}</font>
+Node <font color="black">&</font>Node<font color="black">:</font><font color="black">:</font>GetParent<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>parent;
+<font color="black">}</font>
+mat4 Node<font color="black">:</font><font color="black">:</font>GetLocalTransformation<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">if</font> <font color="black">(</font><font color="black">!</font>resource<font color="black">-</font><font color="black">&#62;</font>transformationChanged<font color="black">)</font>
+        <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>transformation;
+    resource<font color="black">-</font><font color="black">&#62;</font>transformationChanged<font color="black">=</font><font color="blue">false</font>;
+    resource<font color="black">-</font><font color="black">&#62;</font>transformation.Identity<font color="black">(</font><font color="black">)</font>;
+    resource<font color="black">-</font><font color="black">&#62;</font>transformation.Translate<font color="black">(</font>resource<font color="black">-</font><font color="black">&#62;</font>translation<font color="black">)</font>;  
+    resource<font color="black">-</font><font color="black">&#62;</font>transformation.Scale<font color="black">(</font>resource<font color="black">-</font><font color="black">&#62;</font>scale.x,resource<font color="black">-</font><font color="black">&#62;</font>scale.y,resource<font color="black">-</font><font color="black">&#62;</font>scale.z<font color="black">)</font>;  
+    resource<font color="black">-</font><font color="black">&#62;</font>transformation.RotateX<font color="black">(</font>resource<font color="black">-</font><font color="black">&#62;</font>rotation.x<font color="black">)</font>;
+    resource<font color="black">-</font><font color="black">&#62;</font>transformation.RotateY<font color="black">(</font>resource<font color="black">-</font><font color="black">&#62;</font>rotation.y<font color="black">)</font>;
+    resource<font color="black">-</font><font color="black">&#62;</font>transformation.RotateZ<font color="black">(</font>resource<font color="black">-</font><font color="black">&#62;</font>rotation.z<font color="black">)</font>; 
+    resource<font color="black">-</font><font color="black">&#62;</font>transformation<font color="black">*</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>matTransform;
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>transformation;
+<font color="black">}</font>
+mat4 Node<font color="black">:</font><font color="black">:</font>GetWorldTransformation<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>worldTransformation;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>SetWorldTransformation<font color="black">(</font>mat4 mat<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>worldTransformation<font color="black">=</font>mat;
+<font color="black">}</font>
+
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>SetTranslation<font color="black">(</font>vec3 t<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>transformationChanged<font color="black">=</font><font color="blue">true</font>;
+    resource<font color="black">-</font><font color="black">&#62;</font>translation<font color="black">=</font>t;
+<font color="black">}</font>
+vec3 Node<font color="black">:</font><font color="black">:</font>GetTranslation<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>   
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>translation;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>SetRotation<font color="black">(</font>vec3 r<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>transformationChanged<font color="black">=</font><font color="blue">true</font>;
+    resource<font color="black">-</font><font color="black">&#62;</font>rotation<font color="black">=</font>r;
+<font color="black">}</font>
+vec3 Node<font color="black">:</font><font color="black">:</font>GetRotation<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>rotation;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>SetScale<font color="black">(</font>vec3 s<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>transformationChanged<font color="black">=</font><font color="blue">true</font>;
+    resource<font color="black">-</font><font color="black">&#62;</font>scale<font color="black">=</font>s;
+<font color="black">}</font>
+vec3 Node<font color="black">:</font><font color="black">:</font>GetScale<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>scale;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>SetMatrixTransformation<font color="black">(</font>mat4 t<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>transformationChanged<font color="black">=</font><font color="blue">true</font>;
+    resource<font color="black">-</font><font color="black">&#62;</font>matTransform<font color="black">=</font>t;
+<font color="black">}</font>
+mat4 Node<font color="black">:</font><font color="black">:</font>GetMatrixTransformation<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>matTransform;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>Move<font color="black">(</font>vec3 t<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>transformationChanged<font color="black">=</font><font color="blue">true</font>;
+    resource<font color="black">-</font><font color="black">&#62;</font>translation<font color="black">+</font><font color="black">=</font>t;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>Rotate<font color="black">(</font>vec3 r<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>transformationChanged<font color="black">=</font><font color="blue">true</font>;
+    resource<font color="black">-</font><font color="black">&#62;</font>rotation<font color="black">+</font><font color="black">=</font>r;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>Scale<font color="black">(</font>vec3 s<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>transformationChanged<font color="black">=</font><font color="blue">true</font>;
+    resource<font color="black">-</font><font color="black">&#62;</font>scale.x<font color="black">*</font><font color="black">=</font>s.x;
+    resource<font color="black">-</font><font color="black">&#62;</font>scale.y<font color="black">*</font><font color="black">=</font>s.y;
+    resource<font color="black">-</font><font color="black">&#62;</font>scale.z<font color="black">*</font><font color="black">=</font>s.z;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>AddGeometry<font color="black">(</font>Geometry geometry<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>geometries.push_back<font color="black">(</font>geometry<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>AddLight<font color="black">(</font>Light l<font color="black">)</font>
+<font color="black">{</font>   
+    resource<font color="black">-</font><font color="black">&#62;</font>lights.push_back<font color="black">(</font>l<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>RemoveLight<font color="black">(</font>Light l<font color="black">)</font>
+<font color="black">{</font>
+    vector<font color="black">&#60;</font>Light<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>std<font color="black">:</font><font color="black">:</font>find<font color="black">(</font>resource<font color="black">-</font><font color="black">&#62;</font>lights.begin<font color="black">(</font><font color="black">)</font>,resource<font color="black">-</font><font color="black">&#62;</font>lights.end<font color="black">(</font><font color="black">)</font>,l<font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>lights.end<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+        resource<font color="black">-</font><font color="black">&#62;</font>lights.erase<font color="black">(</font>i<font color="black">)</font>;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>RenderBoundingBox<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="green">/*float w=bbox.GetWidth();
+    float h=bbox.GetHeight();
+    float d=bbox.GetDepth();
+    vec3 v[8]={bbox.bmin,
+               bbox.bmin+vec3(w,0,0),
+               bbox.bmin+vec3(w,0,d),
+               bbox.bmin+vec3(0,0,d),
+               bbox.bmin+vec3(0,h,0),
+               bbox.bmin+vec3(w,h,0),
+               bbox.bmin+vec3(w,h,d),
+               bbox.bmin+vec3(0,h,d)};
+    unsigned int i[12*2]={0,1,1,2,2,3,3,0,4,5,5,6,6,7,7,4,0,4,1,5,2,6,3,7};
+    float color[4]={0.0f,1.0f,0.0f,1.0f};
+    if (parent)
+        worldTransformation=parent-&#62;worldTransformation*GetTransformation();
+    else
+        worldTransformation=GetTransformation();
+
+    Buffer vb(new BufferResource);
+    Buffer ib(new BufferResource);
+    vb-&#62;Create();
+    ib-&#62;Create();
+    vb-&#62;LoadData(v,sizeof(vec3)*8,STATIC);
+    ib-&#62;LoadIndexData(i,24,STATIC);
+    vb-&#62;SetVertexStream(3);
+    ib-&#62;SetIndexStream();
+    RenderState rs;
+    Program p(new ProgramResource);
+    p=sceneGraph-&#62;shaderGenerator.GenerateProgram(rs);
+    Renderer::UseProgram(p);
+    glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,color);
+    Renderer::SetModelViewMatrix(worldTransformation);
+    Renderer::RenderIndexStream(LINES,24);*/</font>
+
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.RenderBoundingBox<font color="black">(</font><font color="black">)</font>;   
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>UpdateBoundingBox<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="green">/*bbox=BoundingBox();
+    for (vector&#60;Node&#62;::iterator i=children.begin();i!=children.end();i++)
+    {
+        bbox.Expand((*i)-&#62;bbox);
+    }
+    for (vector&#60;Model&#62;::iterator i=attachedModels.begin();i!=attachedModels.end();i++)
+    {
+        bbox.Expand((*i)-&#62;GetBoundingBox());
+    }
+    
+    if (parent)
+        parent-&#62;UpdateBoundingBox();*/</font>
+
+<font color="black">}</font>
+
+vector<font color="black">&#60;</font>Geometry<font color="black">&#62;</font> <font color="black">&</font>Node<font color="black">:</font><font color="black">:</font>GetGeometries<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>geometries;
+<font color="black">}</font>
+vector<font color="black">&#60;</font>Light<font color="black">&#62;</font> <font color="black">&</font>Node<font color="black">:</font><font color="black">:</font>GetLights<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>lights;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>Render<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">if</font> <font color="black">(</font>resource<font color="black">-</font><font color="black">&#62;</font>parent<font color="black">)</font>
+        SetWorldTransformation<font color="black">(</font>GetParent<font color="black">(</font><font color="black">)</font>.GetWorldTransformation<font color="black">(</font><font color="black">)</font><font color="black">*</font>GetLocalTransformation<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+    <font color="blue">else</font>
+        SetWorldTransformation<font color="black">(</font>GetLocalTransformation<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+    <font color="green">/*for (vector&#60;Model&#62;::iterator i=attachedModels.begin();i!=attachedModels.end();i++)
+    {       
+        sceneGraph-&#62;renderingQueue.push_back(make_pair(worldTransformation,*i));
+    }
+    for (vector&#60;Light&#62;::iterator i=attachedLights.begin();i!=attachedLights.end();i++)
+    {       
+        sceneGraph-&#62;activeLights.push_back(make_pair(worldTransformation,*i));
+    }*/</font>
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.Render<font color="black">(</font><font color="black">)</font>;  
+<font color="black">}</font>
+Node Node<font color="black">:</font><font color="black">:</font>AddChild<font color="black">(</font>Node node<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>children.push_back<font color="black">(</font>node<font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>node.GetParent<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+        node.GetParent<font color="black">(</font><font color="black">)</font>.RemoveChild<font color="black">(</font>node<font color="black">)</font>;
+    node.resource<font color="black">-</font><font color="black">&#62;</font>parent<font color="black">=</font><font color="black">*</font><font color="blue">this</font>;
+    <font color="blue">return</font> node;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>SetParent<font color="black">(</font>Node parent<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">if</font> <font color="black">(</font>GetParent<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+        GetParent<font color="black">(</font><font color="black">)</font>.RemoveChild<font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font>;
+    resource<font color="black">-</font><font color="black">&#62;</font>parent<font color="black">=</font>parent;
+    <font color="blue">if</font> <font color="black">(</font>parent<font color="black">)</font>
+        parent.resource<font color="black">-</font><font color="black">&#62;</font>children.push_back<font color="black">(</font><font color="black">*</font><font color="blue">this</font><font color="black">)</font>;     
+<font color="black">}</font>
+Node Node<font color="black">:</font><font color="black">:</font>GetChild<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="blue">if</font> <font color="black">(</font><font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.GetName<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font><font color="blue">name</font><font color="black">)</font>
+            <font color="blue">return</font> <font color="black">*</font>i;
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        Node ret<font color="black">=</font><font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.GetChild<font color="black">(</font><font color="blue">name</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>ret<font color="black">)</font>
+            <font color="blue">return</font> ret;
+    <font color="black">}</font>
+    <font color="blue">return</font> Node<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+Node Node<font color="black">:</font><font color="black">:</font>RemoveChild<font color="black">(</font>Node node<font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="blue">if</font> <font color="black">(</font><font color="black">(</font><font color="black">*</font>i<font color="black">)</font><font color="black">=</font><font color="black">=</font>node<font color="black">)</font>
+        <font color="black">{</font>           
+            resource<font color="black">-</font><font color="black">&#62;</font>children.erase<font color="black">(</font>i<font color="black">)</font>;
+            <font color="blue">return</font> node;
+        <font color="black">}</font>
+        <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">{</font>
+            Node ret<font color="black">=</font><font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.RemoveChild<font color="black">(</font>node<font color="black">)</font>;
+            <font color="blue">if</font> <font color="black">(</font>ret<font color="black">)</font>
+                <font color="blue">return</font> ret;
+        <font color="black">}</font>
+        <font color="blue">return</font> Node<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+Node Node<font color="black">:</font><font color="black">:</font>RemoveChild<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="blue">if</font> <font color="black">(</font><font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.GetName<font color="black">(</font><font color="black">)</font><font color="black">=</font><font color="black">=</font><font color="blue">name</font><font color="black">)</font>
+        <font color="black">{</font>
+            Node ret<font color="black">=</font><font color="black">*</font>i;
+            resource<font color="black">-</font><font color="black">&#62;</font>children.erase<font color="black">(</font>i<font color="black">)</font>;
+            <font color="blue">return</font> ret;
+        <font color="black">}</font>
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        Node ret<font color="black">=</font><font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.RemoveChild<font color="black">(</font><font color="blue">name</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>ret<font color="black">)</font>
+            <font color="blue">return</font> ret;
+    <font color="black">}</font>
+    <font color="blue">return</font> Node<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+vector<font color="black">&#60;</font>Node<font color="black">&#62;</font> <font color="black">&</font>Node<font color="black">:</font><font color="black">:</font>GetChildren<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>children;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>CreateHardNormals<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Geometry<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>GetGeometries<font color="black">(</font><font color="black">)</font>.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>GetGeometries<font color="black">(</font><font color="black">)</font>.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+        <font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.CreateHardNormals<font color="black">(</font><font color="black">)</font>;
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.CreateHardNormals<font color="black">(</font><font color="black">)</font>;
+    <font color="black">}</font>
+<font color="black">}</font>
+RenderParameters <font color="black">&</font>Node<font color="black">:</font><font color="black">:</font>GetRenderParameters<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>renderParameters;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>SetProgram<font color="black">(</font>Program program<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>renderParameters.program<font color="black">=</font>program;
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.SetProgram<font color="black">(</font>program<font color="black">)</font>;
+    <font color="black">}</font>
+<font color="black">}</font>
+Program Node<font color="black">:</font><font color="black">:</font>GetProgram<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>renderParameters.program;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>SetTechnique<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font><font color="blue">name</font><font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>renderParameters.technique<font color="black">=</font>Renderer<font color="black">:</font><font color="black">:</font>GetTechnique<font color="black">(</font><font color="blue">name</font><font color="black">)</font>;
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        i<font color="black">-</font><font color="black">&#62;</font>SetTechnique<font color="black">(</font><font color="blue">name</font><font color="black">)</font>;
+    <font color="black">}</font>
+<font color="black">}</font>
+Technique Node<font color="black">:</font><font color="black">:</font>GetTechnique<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>renderParameters.technique;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>SetLighting<font color="black">(</font><font color="blue">bool</font> enabled<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>renderParameters.lighting<font color="black">=</font>enabled;
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.SetLighting<font color="black">(</font>enabled<font color="black">)</font>;
+    <font color="black">}</font>
+<font color="black">}</font>
+<font color="blue">bool</font> Node<font color="black">:</font><font color="black">:</font>GetLighting<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>renderParameters.lighting;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>SetFog<font color="black">(</font><font color="blue">bool</font> enabled<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>renderParameters.fog<font color="black">=</font>enabled;
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.SetFog<font color="black">(</font>enabled<font color="black">)</font>;
+    <font color="black">}</font>
+<font color="black">}</font>
+<font color="blue">bool</font> Node<font color="black">:</font><font color="black">:</font>GetFog<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>renderParameters.fog;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>SetFogColor<font color="black">(</font>vec4 color<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>renderParameters.fogColor<font color="black">=</font>color;
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.SetFogColor<font color="black">(</font>color<font color="black">)</font>;
+    <font color="black">}</font>
+<font color="black">}</font>
+vec4 Node<font color="black">:</font><font color="black">:</font>GetFogColor<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>renderParameters.fogColor;
+<font color="black">}</font>
+<font color="blue">void</font> Node<font color="black">:</font><font color="black">:</font>SetFogDensity<font color="black">(</font><font color="blue">float</font> density<font color="black">)</font>
+<font color="black">{</font>
+    resource<font color="black">-</font><font color="black">&#62;</font>renderParameters.fogDensity<font color="black">=</font>density;
+    <font color="blue">for</font> <font color="black">(</font>vector<font color="black">&#60;</font>Node<font color="black">&#62;</font><font color="black">:</font><font color="black">:</font>iterator i<font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.begin<font color="black">(</font><font color="black">)</font>;i<font color="black">!</font><font color="black">=</font>resource<font color="black">-</font><font color="black">&#62;</font>children.end<font color="black">(</font><font color="black">)</font>;i<font color="black">+</font><font color="black">+</font><font color="black">)</font>
+    <font color="black">{</font>
+        <font color="black">(</font><font color="black">*</font>i<font color="black">)</font>.SetFogDensity<font color="black">(</font>density<font color="black">)</font>;
+    <font color="black">}</font>
+<font color="black">}</font>
+<font color="blue">float</font> Node<font color="black">:</font><font color="black">:</font>GetFogDensity<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    <font color="blue">return</font> resource<font color="black">-</font><font color="black">&#62;</font>renderParameters.fogDensity;
+<font color="black">}</font>
+NodeResource<font color="black">:</font><font color="black">:</font>NodeResource<font color="black">(</font><font color="black">)</font>
+<font color="black">{</font>
+    rotation.Set<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;
+    translation.Set<font color="black">(</font><font color="maroon">0</font>,<font color="maroon">0</font>,<font color="maroon">0</font><font color="black">)</font>;
+    scale.Set<font color="black">(</font><font color="maroon">1</font>,<font color="maroon">1</font>,<font color="maroon">1</font><font color="black">)</font>;
+    renderParameters.lighting<font color="black">=</font><font color="blue">true</font>;
+    renderParameters.fog<font color="black">=</font><font color="blue">false</font>;
+<font color="black">}</font>
+Node FIRECUBE_API FireCube<font color="black">:</font><font color="black">:</font>LoadMesh<font color="black">(</font><font color="blue">const</font> string <font color="black">&</font>filename<font color="black">)</font>
+<font color="black">{</font>
+    string file<font color="black">=</font>Application<font color="black">:</font><font color="black">:</font>SearchForFileName<font color="black">(</font>filename<font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>file.empty<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+        <font color="blue">return</font> Node<font color="black">(</font><font color="black">)</font>;
+    string<font color="black">:</font><font color="black">:</font>size_type d;
+    d<font color="black">=</font>filename.find_last_of<font color="black">(</font><font color="maroon">"."</font><font color="black">)</font>;
+    <font color="green">//name=filename;</font>
+    ostringstream ss;
+    ss<font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">"Created model with name:"</font><font color="black">&#60;</font><font color="black">&#60;</font>filename;
+    Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>Logger<font color="black">:</font><font color="black">:</font>LOG_INFO, ss.str<font color="black">(</font><font color="black">)</font><font color="black">)</font>;
+    <font color="blue">if</font> <font color="black">(</font>d<font color="black">!</font><font color="black">=</font>string<font color="black">:</font><font color="black">:</font>npos<font color="black">)</font>
+    <font color="black">{</font>
+        string ext<font color="black">=</font>ToLower<font color="black">(</font>filename.substr<font color="black">(</font>d<font color="black">+</font><font color="maroon">1</font><font color="black">)</font><font color="black">)</font>;
+        <font color="blue">if</font> <font color="black">(</font>ext<font color="black">=</font><font color="black">=</font><font color="maroon">"3ds"</font><font color="black">)</font>
+        <font color="black">{</font>               
+            M3dsLoader m3dsLoader;
+
+            <font color="blue">if</font> <font color="black">(</font>m3dsLoader.Load<font color="black">(</font>file<font color="black">)</font><font color="black">)</font>
+            <font color="black">{</font>
+                <font color="blue">return</font> m3dsLoader.GenerateSceneGraph<font color="black">(</font><font color="black">)</font>;
+            <font color="black">}</font>
+            <font color="blue">else</font>
+                <font color="blue">return</font> Node<font color="black">(</font><font color="black">)</font>;
+        <font color="black">}</font>
+        <font color="blue">if</font> <font color="black">(</font>ext<font color="black">=</font><font color="black">=</font><font color="maroon">"dae"</font><font color="black">)</font>
+        <font color="black">{</font>
+            ColladaLoader colladaLoader<font color="black">(</font>file<font color="black">)</font>;
+
+            <font color="blue">if</font> <font color="black">(</font>colladaLoader.Load<font color="black">(</font><font color="black">)</font><font color="black">)</font>
+            <font color="black">{</font>
+                <font color="blue">return</font> colladaLoader.GenerateSceneGraph<font color="black">(</font><font color="black">)</font>;
+            <font color="black">}</font>
+            <font color="blue">else</font>
+                <font color="blue">return</font> Node<font color="black">(</font><font color="black">)</font>;
+        <font color="black">}</font>
+    <font color="black">}</font>
+    <font color="blue">return</font> Node<font color="black">(</font><font color="black">)</font>;
+<font color="black">}</font>
+</PRE>
+</BODY>
+</HTML>

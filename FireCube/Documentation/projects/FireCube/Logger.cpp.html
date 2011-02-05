@@ -11,6 +11,7 @@ Logger.cpp
 <font color="blue">#include</font> <font color="maroon">&#60;map&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;queue&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;fstream&#62;</font>
+<font color="blue">#include</font> <font color="maroon">&#60;iostream&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;boost/shared_ptr.hpp&#62;</font>
 <font color="blue">#include</font> <font color="maroon">&#60;boost/weak_ptr.hpp&#62;</font>
 <font color="blue">using</font> <font color="blue">namespace</font> std;
@@ -24,14 +25,35 @@ Logger.cpp
 <font color="blue">using</font> <font color="blue">namespace</font> FireCube;
 
 ofstream file;
+Logger<font color="black">:</font><font color="black">:</font>LogLevel minLevel<font color="black">=</font>Logger<font color="black">:</font><font color="black">:</font>LOG_DEBUG;
+<font color="blue">bool</font> outputToFile <font color="black">=</font> <font color="blue">true</font>, outputToCout <font color="black">=</font> <font color="blue">true</font>;
+
+<font color="blue">char</font><font color="black">*</font> levelNames<font color="black">[</font><font color="black">]</font> <font color="black">=</font> <font color="black">{</font><font color="maroon">"[DEBUG]"</font>, <font color="maroon">"[INFO]"</font>, <font color="maroon">"[TRACE]"</font>, <font color="maroon">"[WARNING]"</font>, <font color="maroon">"[ERROR]"</font><font color="black">}</font>;
+
 <font color="blue">void</font> Logger<font color="black">:</font><font color="black">:</font>Init<font color="black">(</font>string filename<font color="black">)</font>
 <font color="black">{</font>
     file.open<font color="black">(</font>filename.c_str<font color="black">(</font><font color="black">)</font>,ios<font color="black">:</font><font color="black">:</font>out<font color="black">|</font>ios<font color="black">:</font><font color="black">:</font>trunc<font color="black">)</font>;    
 <font color="black">}</font>
-<font color="blue">void</font> Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>string str<font color="black">)</font>
+<font color="blue">void</font> Logger<font color="black">:</font><font color="black">:</font>Write<font color="black">(</font>LogLevel level, std<font color="black">:</font><font color="black">:</font>string str<font color="black">)</font>
 <font color="black">{</font>
-    <font color="blue">if</font> <font color="black">(</font>file.is_open<font color="black">(</font><font color="black">)</font><font color="black">)</font>
-        file <font color="black">&#60;</font><font color="black">&#60;</font> str;
+    <font color="blue">if</font> <font color="black">(</font>level<font color="black">&#60;</font>minLevel<font color="black">)</font>
+        <font color="blue">return</font>;
+    <font color="blue">if</font> <font color="black">(</font>outputToFile<font color="black">)</font>
+    <font color="black">{</font>
+        <font color="blue">if</font> <font color="black">(</font>file.is_open<font color="black">(</font><font color="black">)</font><font color="black">)</font>     
+            file <font color="black">&#60;</font><font color="black">&#60;</font> levelNames<font color="black">[</font>level<font color="black">]</font> <font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">": "</font> <font color="black">&#60;</font><font color="black">&#60;</font> str <font color="black">&#60;</font><font color="black">&#60;</font> endl;
+    <font color="black">}</font>
+    <font color="blue">if</font> <font color="black">(</font>outputToCout<font color="black">)</font>
+        cout <font color="black">&#60;</font><font color="black">&#60;</font> levelNames<font color="black">[</font>level<font color="black">]</font> <font color="black">&#60;</font><font color="black">&#60;</font> <font color="maroon">": "</font> <font color="black">&#60;</font><font color="black">&#60;</font> str <font color="black">&#60;</font><font color="black">&#60;</font> endl;
+<font color="black">}</font>
+<font color="blue">void</font> FIRECUBE_API Logger<font color="black">:</font><font color="black">:</font>SetLogLevel<font color="black">(</font>Logger<font color="black">:</font><font color="black">:</font>LogLevel level<font color="black">)</font>
+<font color="black">{</font>
+    minLevel<font color="black">=</font>level;
+<font color="black">}</font>
+<font color="blue">void</font> FIRECUBE_API Logger<font color="black">:</font><font color="black">:</font>SetLogOutput<font color="black">(</font><font color="blue">bool</font> file, <font color="blue">bool</font> con<font color="black">)</font>
+<font color="black">{</font>
+    outputToFile<font color="black">=</font>file;
+    outputToCout<font color="black">=</font>con;
 <font color="black">}</font>
 <font color="blue">void</font> Logger<font color="black">:</font><font color="black">:</font>Close<font color="black">(</font><font color="black">)</font>
 <font color="black">{</font>

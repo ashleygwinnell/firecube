@@ -6,8 +6,27 @@
 
 namespace FireCube
 {
+class FIRECUBE_API RenderState
+{
+	friend class ShaderGenerator;
+	friend class Technique;
+public:
+	RenderState();
+	void FromMaterial(Material mat);
+	void SetDirectionalLighting(bool enable);
+	void SetPointLighting(bool enable);
+	void SetFog(bool enable);
+	unsigned int ToInt() const;
+private:
+	bool directionalLighting;
+	bool pointLighting;
+	bool diffuseTexture;
+	bool normalTexture;
+	bool fog;
+};
 class Application;
 class Node;
+class RenderQueue;
 /**
 * A namespace containing various functions responsible for the rendering pipeline.
 */
@@ -146,15 +165,23 @@ namespace Renderer
 	/**
 	* Sets an orthographic projection with a one to one pixel ratio.	
 	*/
-	void FIRECUBE_API SetOrthographicProjection();
+	void FIRECUBE_API SetOrthographicProjection();	
 	/**
-	* Sets the current shader generator.
+	* Adds a technique to the list of techniques.
+	* @param name The name of the technique.
+	* @param technique The technique to associate with name.
 	*/
-	void FIRECUBE_API SetShaderGenerator(ShaderGenerator &shaderGenerator);
+	void FIRECUBE_API AddTechnique(const std::string &name, Technique technique);
 	/**
-	* Gets the current shader generator.
+	* Get a technique by name.
+	* @param name The name of the technique.
 	*/
-	ShaderGenerator FIRECUBE_API &GetShaderGenerator();
+	Technique FIRECUBE_API GetTechnique(const std::string &name);
+	/**
+	* Removes a technique.
+	* @param name The name of the technique.
+	*/
+	void FIRECUBE_API RemoveTechnique(const std::string &name);
 	/**
 	* Sets the current texture manager.
 	*/

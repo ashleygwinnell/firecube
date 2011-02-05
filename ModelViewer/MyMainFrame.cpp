@@ -34,7 +34,7 @@ void MyMainFrame::MenuItem2Clicked( wxCommandEvent& event )
 void MyMainFrame::MenuItem3Clicked( wxCommandEvent& event )
 {	
 	FireCubeApp *fcApp=&(((MyApp*)wxTheApp)->fireCubeApp);
-	wxString file=wxFileSelector(wxT("Open"),0,0,wxT("vshader"),wxT("*.vshader"));	
+	wxString file=wxFileSelector(wxT("Open"),0,0,wxT("vert"),wxT("*.vert"));	
 	std::string sfile=file;
 	if (sfile=="")
 		return;
@@ -46,7 +46,7 @@ void MyMainFrame::MenuItem3Clicked( wxCommandEvent& event )
 void MyMainFrame::MenuItem4Clicked( wxCommandEvent& event )
 {	
 	FireCubeApp *fcApp=&(((MyApp*)wxTheApp)->fireCubeApp);	
-	wxString file=wxFileSelector(wxT("Open"),0,0,wxT("fshader"),wxT("*.fshader"));
+	wxString file=wxFileSelector(wxT("Open"),0,0,wxT("frag"),wxT("*.frag"));
 	FireCubeApp *app= &(((MyApp*)wxTheApp)->fireCubeApp);
 	std::string sfile=file;
 	if (sfile=="")
@@ -66,6 +66,11 @@ void MyMainFrame::MenuItem7Clicked( wxCommandEvent& event )
 void MyMainFrame::CheckBox2Clicked( wxCommandEvent& event )
 {
 	glCanvas->renderNormals=!glCanvas->renderNormals;	
+	glCanvas->Refresh();
+}
+void MyMainFrame::CheckBox4Clicked( wxCommandEvent& event )
+{
+	glCanvas->renderTangents=!glCanvas->renderTangents;	
 	glCanvas->Refresh();
 }
 void MyMainFrame::RadioBox1Clicked( wxCommandEvent& event )
@@ -88,6 +93,8 @@ void MyMainFrame::TextCtrl3TextEnter( wxCommandEvent& event )
 		glCanvas->normalsLength=(float)l;
 		MyApp *app=(MyApp*)wxTheApp;
 		app->fireCubeApp.GenerateNormals(glCanvas->normalsLength);
+		app->fireCubeApp.GenerateTangents(glCanvas->normalsLength);
+		app->fireCubeApp.GenerateBitangents(glCanvas->normalsLength);
 		glCanvas->Refresh();
 	}
 }

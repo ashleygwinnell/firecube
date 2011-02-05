@@ -15,7 +15,7 @@ public:
 	};
 	enum InputType
 	{
-		INPUT_POSITION,INPUT_VERTEX,INPUT_NORMAL,INPUT_TEXCOORD,INPUT_COLOR,INPUT_UNKNOWN
+		INPUT_POSITION,INPUT_VERTEX,INPUT_NORMAL,INPUT_TEXCOORD,INPUT_COLOR,INPUT_TANGENT,INPUT_BINORMAL,INPUT_UNKNOWN
 	};
 	enum PrimitiveType
 	{
@@ -102,7 +102,9 @@ public:
 		string vertexId;
 		vector<vec3> vertices;
 		vector<vec3> normals;
-		vector<vec2> texcoords[4];
+		vector<vec3> tangents;
+		vector<vec3> binormals;
+		vector<vec2> texcoords[4];		
 	};
 	class NodeInstance
 	{

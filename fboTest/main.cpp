@@ -6,8 +6,8 @@ using namespace FireCube;
 App app;
 bool App::Init()
 {
-	Application::AddSearchPath("../Media/Textures");
-	Application::AddSearchPath("../Media/Models");
+	Application::AddSearchPath("../Assets/Textures");
+	Application::AddSearchPath("../Assets/Models");
 	SetTitle("FBO Example");
 	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",10);	
 	root=Node("Root");
@@ -18,10 +18,10 @@ bool App::Init()
 	light.SetSpecularColor(vec4(0.2f,0.2f,0.2f,1.0f));
 	light.SetType(DIRECTIONAL);
 	root.AddLight(light);
-	node=LoadMesh("../Media/Models/1.3ds");
+	node=LoadMesh("../Assets/Models/1.3ds");
 	root.AddChild(node);
 	node.Move(vec3(1.3f,0,-3));		
-	program.Create(Renderer::GetShaderManager().Create("1.vshader"),Renderer::GetShaderManager().Create("1.fshader"));
+	program.Create(Renderer::GetShaderManager().Create("1.vert"),Renderer::GetShaderManager().Create("1.frag"));
 	Renderer::UseProgram(program);
 	program.SetUniform("tex",0);
 	node.SetProgram(program);
@@ -48,7 +48,7 @@ bool App::Init()
 	vBuffer.LoadData(&vb[0],sizeof(vec3)*vb.size(),STATIC);
 	uvBuffer.Create();
 	uvBuffer.LoadData(&uvb[0],sizeof(vec2)*uvb.size(),STATIC);	
-	node2=LoadMesh("../Media/Models/teapot2.3ds");
+	node2=LoadMesh("../Assets/Models/teapot2.3ds");
 	root.AddChild(node2);
 	node2.Move(vec3(-1.3f,0,-3));		
 	fbo.Create(128,128);
@@ -58,7 +58,7 @@ bool App::Init()
 	ang=0;
 	if (fbo.IsValid()==false)
 	{
-		Logger::Write("Error: couldn't create FBO.\n");
+		Logger::Write(Logger::LOG_ERROR, "Error: couldn't create FBO.\n");
 		return false;
 	}	
 	return true;

@@ -24,7 +24,6 @@ using namespace std;
 #include "FrameBuffer.h"
 #include "Image.h"
 #include "Font.h"
-#include "ShaderGenerator.h"
 #include "RenderQueue.h"
 #include "Renderer.h"
 #include "Application.h"

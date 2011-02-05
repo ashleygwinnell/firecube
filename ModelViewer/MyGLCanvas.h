@@ -31,6 +31,7 @@ public:
 	GLenum renderingMode;
 	bool cullFaceEnabled;	
 	bool renderNormals;
+	bool renderTangents;
 	float normalsLength;
 	bool customProgram;
 	FireCube::vec3 rot;

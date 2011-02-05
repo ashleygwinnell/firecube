@@ -384,23 +384,7 @@ void mat4::LookAt(vec3 pos,vec3 at,vec3 up)
 	trans.Translate(-pos.x,-pos.y,-pos.z);
 	(*this)*=trans;
 }
-mat4::operator mat3()
-{
-	mat3 ret;
-
-	ret.m[0]=m[0];
-	ret.m[1]=m[1];
-	ret.m[2]=m[2];
-	ret.m[3]=m[4];
-	ret.m[4]=m[5];
-	ret.m[5]=m[6];
-	ret.m[6]=m[8];
-	ret.m[7]=m[9];
-	ret.m[8]=m[10];
-
-	return ret;
-}
-mat3 mat4::ToMatrix3()
+mat3 mat4::ToMat3()
 {
 	mat3 ret;
 

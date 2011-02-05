@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 16 2008)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -55,7 +55,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	panel1->SetSizer( fgSizer4 );
 	panel1->Layout();
 	fgSizer4->Fit( panel1 );
-	notebook1->AddPage( panel1, wxT("Info"), true );
+	notebook1->AddPage( panel1, wxT("Info"), false );
 	panel2 = new wxPanel( notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
@@ -75,13 +75,14 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	fgSizer8->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	checkBox2 = new wxCheckBox( panel9, wxID_ANY, wxT("Normals"), wxDefaultPosition, wxDefaultSize, 0 );
-	
 	fgSizer8->Add( checkBox2, 0, wxALL, 5 );
 	
 	checkBox3 = new wxCheckBox( panel9, wxID_ANY, wxT("Cull face"), wxDefaultPosition, wxDefaultSize, 0 );
-	checkBox3->SetValue(true);
-	
+	checkBox3->SetValue(true); 
 	fgSizer8->Add( checkBox3, 0, wxALL, 5 );
+	
+	checkBox4 = new wxCheckBox( panel9, wxID_ANY, wxT("Tangents"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer8->Add( checkBox4, 0, wxALL, 5 );
 	
 	bSizer8->Add( fgSizer8, 0, wxEXPAND, 5 );
 	
@@ -178,7 +179,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	panel2->SetSizer( bSizer3 );
 	panel2->Layout();
 	bSizer3->Fit( panel2 );
-	notebook1->AddPage( panel2, wxT("Settings"), false );
+	notebook1->AddPage( panel2, wxT("Settings"), true );
 	panel5 = new wxPanel( notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer5;
 	fgSizer5 = new wxFlexGridSizer( 1, 1, 0, 0 );
@@ -211,7 +212,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	menuItem1 = new wxMenuItem( menu1, wxID_ANY, wxString( wxT("E&xit") ) , wxT("Close the application."), wxITEM_NORMAL );
 	menu1->Append( menuItem1 );
 	
-	menuBar->Append( menu1, wxT("&File") );
+	menuBar->Append( menu1, wxT("&File") ); 
 	
 	menu2 = new wxMenu();
 	wxMenuItem* menuItem3;
@@ -226,7 +227,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	menuItem7 = new wxMenuItem( menu2, wxID_ANY, wxString( wxT("None") ) , wxEmptyString, wxITEM_NORMAL );
 	menu2->Append( menuItem7 );
 	
-	menuBar->Append( menu2, wxT("Shader") );
+	menuBar->Append( menu2, wxT("Shader") ); 
 	
 	menu3 = new wxMenu();
 	wxMenuItem* menuItem6;
@@ -239,7 +240,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	menu3->Append( menuItem5 );
 	menuItem5->Check( true );
 	
-	menuBar->Append( menu3, wxT("View") );
+	menuBar->Append( menu3, wxT("View") ); 
 	
 	this->SetMenuBar( menuBar );
 	
@@ -248,6 +249,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	// Connect Events
 	checkBox2->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrame::CheckBox2Clicked ), NULL, this );
 	checkBox3->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrame::CheckBox3Clicked ), NULL, this );
+	checkBox4->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrame::CheckBox4Clicked ), NULL, this );
 	textCtrl3->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MainFrame::TextCtrl3TextEnter ), NULL, this );
 	radioBox1->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( MainFrame::RadioBox1Clicked ), NULL, this );
 	colourPicker1->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( MainFrame::ColourPicker1Changed ), NULL, this );
@@ -269,6 +271,7 @@ MainFrame::~MainFrame()
 	// Disconnect Events
 	checkBox2->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrame::CheckBox2Clicked ), NULL, this );
 	checkBox3->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrame::CheckBox3Clicked ), NULL, this );
+	checkBox4->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrame::CheckBox4Clicked ), NULL, this );
 	textCtrl3->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MainFrame::TextCtrl3TextEnter ), NULL, this );
 	radioBox1->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( MainFrame::RadioBox1Clicked ), NULL, this );
 	colourPicker1->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( MainFrame::ColourPicker1Changed ), NULL, this );
@@ -283,4 +286,5 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem7Clicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem6Clicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem5Clicked ) );
+	
 }

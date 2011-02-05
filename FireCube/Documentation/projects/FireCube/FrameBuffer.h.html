@@ -11,8 +11,7 @@ FrameBuffer.h
 
 <font color="blue">namespace</font> FireCube
 <font color="black">{</font>
-<font color="blue">class</font> FrameBufferResource;
-<font color="blue">typedef</font> boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FrameBufferResource<font color="black">&#62;</font> FrameBuffer;
+<font color="blue">class</font> FrameBuffer;
 
 <font color="green">/* CPPDOC_BEGIN_EXCLUDE */</font>
 <font color="blue">namespace</font> Renderer
@@ -27,10 +26,20 @@ FrameBuffer.h
 */</font>
 <font color="blue">class</font> FIRECUBE_API FrameBufferResource
 <font color="black">{</font>
-<font color="blue">public</font><font color="black">:</font>
-    <font color="blue">friend</font> <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>UseFrameBuffer<font color="black">(</font>FrameBuffer frameBuffer<font color="black">)</font>;
+<font color="blue">public</font><font color="black">:</font> 
     FrameBufferResource<font color="black">(</font><font color="black">)</font>;
     ~FrameBufferResource<font color="black">(</font><font color="black">)</font>;
+
+    <font color="blue">int</font> width,height;
+    GLuint id;
+    GLuint depthBuffer;
+    Texture texture<font color="black">[</font>MAX_TEXTURES<font color="black">]</font>;
+    Texture depthTexture;
+<font color="black">}</font>;
+<font color="blue">class</font> FIRECUBE_API FrameBuffer
+<font color="black">{</font>
+<font color="blue">public</font><font color="black">:</font>
+    <font color="blue">friend</font> <font color="blue">void</font> Renderer<font color="black">:</font><font color="black">:</font>UseFrameBuffer<font color="black">(</font>FrameBuffer frameBuffer<font color="black">)</font>;
     <font color="green">/**
     * Creates a frame buffer.
     * @param width The width of the frame buffer and it's sub-images(depth buffer, render targets).
@@ -76,12 +85,15 @@ FrameBuffer.h
     * Returns the height of the frame buffer.
     */</font>
     <font color="blue">int</font> GetHeight<font color="black">(</font><font color="black">)</font>;
+    <font color="green">/**
+    * Returns the resource id of the frame buffer.
+    */</font>
+    <font color="blue">unsigned</font> <font color="blue">int</font> GetId<font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
+
+    <font color="blue">operator</font> <font color="blue">bool</font> <font color="black">(</font><font color="black">)</font> <font color="blue">const</font>;
+    <font color="blue">bool</font> <font color="blue">operator</font><font color="black">=</font><font color="black">=</font> <font color="black">(</font><font color="blue">const</font> FrameBuffer <font color="black">&</font>frameBuffer<font color="black">)</font> <font color="blue">const</font>;
 <font color="blue">private</font><font color="black">:</font>
-    <font color="blue">int</font> width,height;
-    GLuint id;
-    GLuint depthBuffer;
-    Texture texture<font color="black">[</font>MAX_TEXTURES<font color="black">]</font>;
-    Texture depthTexture;
+    boost<font color="black">:</font><font color="black">:</font>shared_ptr<font color="black">&#60;</font>FrameBufferResource<font color="black">&#62;</font> resource;
 <font color="black">}</font>;
 <font color="black">}</font>
 

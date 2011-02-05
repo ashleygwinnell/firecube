@@ -21,13 +21,13 @@ int main(int argc, char *argv[])
 }
 bool App::Init()
 {
-	Application::AddSearchPath("../Media/Textures");
+	Application::AddSearchPath("../Assets/Textures");
 	SetTitle("Terrain");
 	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);	
-	program.Create(Renderer::GetShaderManager().Create("diffuseWithFog.vshader"),Renderer::GetShaderManager().Create("diffuseWithFog.fshader"));
-	if (!terrain.GenerateTerrain("../Media/Textures/heightmap.bmp","../Media/Textures/diffuse.bmp",vec3(512.0f,50.0f,512.0f),vec2(1.0f,1.0f)))
+	program.Create(Renderer::GetShaderManager().Create("diffuseWithFog.vert"),Renderer::GetShaderManager().Create("diffuseWithFog.frag"));
+	if (!terrain.GenerateTerrain("../Assets/Textures/heightmap.bmp","../Assets/Textures/diffuse.bmp",vec3(512.0f,50.0f,512.0f),vec2(1.0f,1.0f)))
 		return false;
-	node=LoadMesh("../Media/Models/teapot.3ds");
+	node=LoadMesh("../Assets/Models/teapot.3ds");
 	node.Move(vec3(5,5,5));
 	node.CreateHardNormals();
 	node.SetLighting(false);
@@ -73,9 +73,9 @@ void App::Render(float time)
 	Renderer::SetModelViewMatrix(mat4());
 	ostringstream oss,oss2;
 	oss << "FPS:" << app.GetFps();
-	Renderer::RenderText(font,vec2(0,0),vec4(1.0f,1.0f,1.0f,1.0f),oss.str());
+	Renderer::RenderText(font,vec3(0,0,0),vec4(1.0f,1.0f,1.0f,1.0f),oss.str());
 	oss2 << "Rendered triangles: " << n;
-	Renderer::RenderText(font,vec2(0,20),vec4(1.0f,1.0f,0.0f,1.0f),oss2.str());
+	Renderer::RenderText(font,vec3(0,20,0),vec4(1.0f,1.0f,0.0f,1.0f),oss2.str());
 }
 void App::HandleInput(float time)
 {

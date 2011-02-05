@@ -23,8 +23,8 @@ BufferResource::BufferResource() : id(0)
 BufferResource::~BufferResource()
 {
 	ostringstream ss;
-	ss<< "Destroyed buffer with id="<<id<<endl;
-	Logger::Write(ss.str());
+	ss<< "Destroyed buffer with id="<<id;
+	Logger::Write(Logger::LOG_INFO, ss.str());
 	glDeleteBuffers(1,&id);
 	id=0;
 }
@@ -34,8 +34,8 @@ void Buffer::Create()
 	resource=boost::shared_ptr<BufferResource>(new BufferResource);
 	glGenBuffers(1,&resource->id);
 	ostringstream ss;
-	ss<< "Created buffer with id="<<resource->id<<endl;
-	Logger::Write(ss.str());
+	ss<< "Created buffer with id="<<resource->id;
+	Logger::Write(Logger::LOG_INFO, ss.str());
 }
 bool Buffer::LoadIndexData(void *data,unsigned int count,BufferType bt)
 {
@@ -98,6 +98,10 @@ void Buffer::SetColorStream()
 void Buffer::SetIndexStream()
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,resource->id);	
+}
+void Buffer::Bind()
+{
+	glBindBuffer(GL_ARRAY_BUFFER,resource->id);
 }
 bool Buffer::IsValid()
 {

@@ -5,6 +5,7 @@ class FIRECUBE_API RenderParameters
 {
 public:
 	Program program;
+	Technique technique;
 	bool lighting;
 	bool fog;
 	vec4 fogColor;
@@ -34,7 +35,7 @@ public:
 	void Move(vec3 t);
 	void Rotate(vec3 r);
 	void Scale(vec3 s);
-	Node &Parent();
+	Node &GetParent();
 	void SetParent(Node parent);
 	std::vector<Node> &GetChildren();
 	void AddGeometry(Geometry geometry);
@@ -57,6 +58,8 @@ public:
 	RenderParameters &GetRenderParameters();
 	void SetProgram(Program program);
 	Program GetProgram();
+	void SetTechnique(const std::string &name);
+	Technique GetTechnique() const;
 	void SetLighting(bool enabled=true);
 	bool GetLighting();
 	void SetFog(bool enabled=true);

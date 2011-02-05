@@ -186,15 +186,6 @@ vec3 vec4::ToVec3()
 {
 	return vec3(x,y,z);
 }
-
-vec4::operator vec2()
-{
-	return vec2(x,y);
-}
-vec4::operator vec3()
-{
-	return vec3(x,y,z);
-}
 float & vec4::operator[](unsigned int i)
 {
 	return *(&x+i);

@@ -42,7 +42,7 @@ public:
 	vec3 operator*(vec3 &src);
 	float & operator()(const unsigned int i, const unsigned int j) {return m[i + 4*j];}
 	const float & operator()(const unsigned int i, const unsigned int j) const {return m[i + 4*j];}
-	operator mat3();
+	
 	/**
 	* Creates a translation matrix.
 	* @param x Translation along the X axis.
@@ -126,7 +126,7 @@ public:
 	/*
 	* Converts to a mat3 by stripping the translation part.
 	*/
-	mat3 ToMatrix3();
+	mat3 ToMat3();
 	float m[16];
 };
 }

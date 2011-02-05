@@ -11,7 +11,7 @@ QuadTree::QuadTree()
 void QuadTree::Initialize()
 {	
 	indexBuffer.Create();
-	plainColor.Create(Renderer::GetShaderManager().Create("plainColor.vshader"),Renderer::GetShaderManager().Create("plainColor.fshader"));
+	plainColor.Create(Renderer::GetShaderManager().Create("plainColor.vert"),Renderer::GetShaderManager().Create("plainColor.frag"));
 }
 void QuadTree::Init(vec2 size,vec2 verticesSize)
 {
