@@ -69,7 +69,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00008"></a>00008 {
 <a name="l00009"></a>00009 <span class="keyword">class </span>FontResource;
 <a name="l00010"></a>00010 <span class="keyword">class </span>Font;
-<a name="l00011"></a>00011 <span class="comment">/* CPPDOC_BEGIN_EXCLUDE */</span>
+<a name="l00011"></a>00011 
 <a name="l00012"></a><a class="code" href="namespace_fire_cube_1_1_renderer.html">00012</a> <span class="keyword">namespace </span>Renderer
 <a name="l00013"></a>00013 {
 <a name="l00014"></a>00014         <span class="keywordtype">void</span> FIRECUBE_API <a class="code" href="namespace_fire_cube_1_1_renderer.html#aa28bc02dcbef65a96c43e217afb6e55e" title="Renders text.">RenderText</a>(<a class="code" href="class_fire_cube_1_1_font.html" title="Holds the data for a single font face.">Font</a> font,<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> pos,<a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> color,<span class="keyword">const</span> std::string &amp;str);
@@ -92,7 +92,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00031"></a>00031         vec2 curPos;
 <a name="l00032"></a>00032         <span class="keywordtype">int</span> textureSize;
 <a name="l00033"></a>00033 };
-<a name="l00034"></a>00034 <span class="comment">/* CPPDOC_END_EXCLUDE */</span>
+<a name="l00034"></a>00034 
 <a name="l00035"></a>00035 <span class="keyword">class </span>FIRECUBE_API FontResource
 <a name="l00036"></a>00036 {
 <a name="l00037"></a>00037         <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="namespace_fire_cube_1_1_renderer.html#aa28bc02dcbef65a96c43e217afb6e55e" title="Renders text.">Renderer::RenderText</a>(Font font,vec3 pos,vec4 color,<span class="keyword">const</span> std::string &amp;str);
@@ -113,31 +113,35 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00055"></a>00055         <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager</a>&lt;Font,FontResource&gt;;
 <a name="l00056"></a>00056 <span class="keyword">public</span>:
 <a name="l00057"></a>00057         Font();
-<a name="l00058"></a>00058         Font(boost::shared_ptr&lt;FontResource&gt; resource);
-<a name="l00063"></a>00063         <span class="keywordtype">bool</span> Load(<span class="keyword">const</span> std::string &amp;name);     
-<a name="l00069"></a>00069         <span class="keywordtype">bool</span> Load(<span class="keyword">const</span> std::string &amp;name,<span class="keywordtype">int</span> size);    
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071         operator bool () <span class="keyword">const</span>;
-<a name="l00072"></a>00072         <span class="keywordtype">bool</span> operator== (<span class="keyword">const</span> Font &amp;font) <span class="keyword">const</span>;
-<a name="l00073"></a>00073 <span class="keyword">private</span>:
-<a name="l00074"></a>00074         <span class="keywordtype">bool</span> AddChar(<span class="keywordtype">char</span> c);
-<a name="l00075"></a>00075         boost::shared_ptr&lt;FontResource&gt; resource;
-<a name="l00076"></a>00076 };
-<a name="l00080"></a><a class="code" href="class_fire_cube_1_1_font_manager.html">00080</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_font_manager.html" title="Manages the various fonts.">FontManager</a> : <span class="keyword">public</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager</a>&lt;Font,FontResource&gt;
-<a name="l00081"></a>00081 {
-<a name="l00082"></a>00082         <span class="keyword">friend</span> <span class="keyword">class </span>FontResource;
-<a name="l00083"></a>00083         <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="namespace_fire_cube_1_1_renderer.html#aa28bc02dcbef65a96c43e217afb6e55e" title="Renders text.">Renderer::RenderText</a>(<a class="code" href="class_fire_cube_1_1_font.html" title="Holds the data for a single font face.">Font</a> font,<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> pos,<a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> color,<span class="keyword">const</span> std::string &amp;str);
-<a name="l00084"></a>00084         <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_fire_cube_1_1_font.html" title="Holds the data for a single font face.">Font</a>;
-<a name="l00085"></a>00085 <span class="keyword">public</span>:
-<a name="l00086"></a>00086         <a class="code" href="class_fire_cube_1_1_font_manager.html" title="Manages the various fonts.">FontManager</a>();
-<a name="l00092"></a>00092         <a class="code" href="class_fire_cube_1_1_font.html" title="Holds the data for a single font face.">Font</a> Create(<span class="keyword">const</span> std::string &amp;filename,<span class="keywordtype">int</span> size);
-<a name="l00093"></a>00093 <span class="keyword">private</span>:
-<a name="l00094"></a>00094         std::vector&lt;boost::weak_ptr&lt;FontPage&gt;&gt; page;
-<a name="l00095"></a>00095         boost::shared_ptr&lt;FontPage&gt; CreateNewPage();    
-<a name="l00096"></a>00096 };
-<a name="l00097"></a>00097 }
-<a name="l00098"></a>00098 <span class="preprocessor">#pragma warning(pop)</span>
-<a name="l00099"></a>00099 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00058"></a>00058         
+<a name="l00063"></a>00063         Font(boost::shared_ptr&lt;FontResource&gt; resource);
+<a name="l00064"></a>00064         
+<a name="l00069"></a>00069         <span class="keywordtype">bool</span> Load(<span class="keyword">const</span> std::string &amp;name);     
+<a name="l00070"></a>00070         
+<a name="l00076"></a>00076         <span class="keywordtype">bool</span> Load(<span class="keyword">const</span> std::string &amp;name,<span class="keywordtype">int</span> size);    
+<a name="l00077"></a>00077 
+<a name="l00081"></a>00081         operator bool () <span class="keyword">const</span>;
+<a name="l00082"></a>00082         
+<a name="l00086"></a>00086         <span class="keywordtype">bool</span> operator== (<span class="keyword">const</span> Font &amp;font) <span class="keyword">const</span>;
+<a name="l00087"></a>00087 <span class="keyword">private</span>:
+<a name="l00088"></a>00088         <span class="keywordtype">bool</span> AddChar(<span class="keywordtype">char</span> c);
+<a name="l00089"></a>00089         boost::shared_ptr&lt;FontResource&gt; resource;
+<a name="l00090"></a>00090 };
+<a name="l00094"></a><a class="code" href="class_fire_cube_1_1_font_manager.html">00094</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_font_manager.html" title="Manages the various fonts.">FontManager</a> : <span class="keyword">public</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager</a>&lt;Font,FontResource&gt;
+<a name="l00095"></a>00095 {
+<a name="l00096"></a>00096         <span class="keyword">friend</span> <span class="keyword">class </span>FontResource;
+<a name="l00097"></a>00097         <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="namespace_fire_cube_1_1_renderer.html#aa28bc02dcbef65a96c43e217afb6e55e" title="Renders text.">Renderer::RenderText</a>(<a class="code" href="class_fire_cube_1_1_font.html" title="Holds the data for a single font face.">Font</a> font,<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> pos,<a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> color,<span class="keyword">const</span> std::string &amp;str);
+<a name="l00098"></a>00098         <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_fire_cube_1_1_font.html" title="Holds the data for a single font face.">Font</a>;
+<a name="l00099"></a>00099 <span class="keyword">public</span>:
+<a name="l00100"></a>00100         <a class="code" href="class_fire_cube_1_1_font_manager.html" title="Manages the various fonts.">FontManager</a>();
+<a name="l00106"></a>00106         <a class="code" href="class_fire_cube_1_1_font.html" title="Holds the data for a single font face.">Font</a> Create(<span class="keyword">const</span> std::string &amp;filename,<span class="keywordtype">int</span> size);
+<a name="l00107"></a>00107 <span class="keyword">private</span>:
+<a name="l00108"></a>00108         std::vector&lt;boost::weak_ptr&lt;FontPage&gt;&gt; page;
+<a name="l00109"></a>00109         boost::shared_ptr&lt;FontPage&gt; CreateNewPage();    
+<a name="l00110"></a>00110 };
+<a name="l00111"></a>00111 }
+<a name="l00112"></a>00112 <span class="preprocessor">#pragma warning(pop)</span>
+<a name="l00113"></a>00113 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -145,7 +149,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -154,7 +158,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 20:06:05 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

@@ -190,13 +190,13 @@ void Node::AddGeometry(Geometry geometry)
 {
 	resource->geometries.push_back(geometry);
 }
-void Node::AddLight(Light l)
+void Node::AddLight(Light light)
 {	
-	resource->lights.push_back(l);
+	resource->lights.push_back(light);
 }
-void Node::RemoveLight(Light l)
+void Node::RemoveLight(Light light)
 {
-	vector<Light>::iterator i=std::find(resource->lights.begin(),resource->lights.end(),l);
+	vector<Light>::iterator i=std::find(resource->lights.begin(),resource->lights.end(),light);
 	if (i!=resource->lights.end())
 		resource->lights.erase(i);
 }

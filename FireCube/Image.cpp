@@ -38,7 +38,10 @@ Image::Image() : width(0), height(0), bpp(0)
 bool Image::Load(const string &filename)
 {
 	SDL_Surface *image;
-	image=IMG_Load(filename.c_str());
+	string fname=Application::SearchForFileName(filename);
+	if (fname.empty())
+		return false;
+	image=IMG_Load(fname.c_str());
 	if (image)
 	{
 		bpp=image->format->BitsPerPixel;

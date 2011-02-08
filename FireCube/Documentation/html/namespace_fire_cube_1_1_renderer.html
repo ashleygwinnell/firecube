@@ -237,7 +237,8 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 <p>Clears the depth and color buffer. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">color</td><td>The color to clear the framebuffer.  The depth to set the depth buffer. </td></tr>
+    <tr><td class="paramname">color</td><td>The color to clear the framebuffer. </td></tr>
+    <tr><td class="paramname">depth</td><td>The depth to set the depth buffer. </td></tr>
   </table>
   </dd>
 </dl>
@@ -362,7 +363,7 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 <p>Renders a geometry. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">model</td><td>The model to render. </td></tr>
+    <tr><td class="paramname">geometry</td><td>The geometry to render. </td></tr>
   </table>
   </dd>
 </dl>
@@ -473,19 +474,19 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
         <tr>
           <td class="memname">void FIRECUBE_API FireCube::Renderer::RenderText </td>
           <td>(</td>
-          <td class="paramtype">Font&#160;</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_font.html">Font</a>&#160;</td>
           <td class="paramname"><em>font</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">vec3&#160;</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td>
           <td class="paramname"><em>pos</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">vec4&#160;</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td>
           <td class="paramname"><em>color</em>, </td>
         </tr>
         <tr>
@@ -508,6 +509,7 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
   <table class="params">
     <tr><td class="paramname">font</td><td>The font to use. </td></tr>
     <tr><td class="paramname">pos</td><td>The position of the text. </td></tr>
+    <tr><td class="paramname">color</td><td>The color of the text. </td></tr>
     <tr><td class="paramname">str</td><td>The string to output. </td></tr>
   </table>
   </dd>
@@ -686,7 +688,7 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 <p>Binds the specified texture. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">texture</td><td>The texture to bind </td></tr>
+    <tr><td class="paramname">tex</td><td>The texture to bind </td></tr>
     <tr><td class="paramname">unit</td><td>Specifies the texture unit. </td></tr>
   </table>
   </dd>
@@ -700,7 +702,7 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -709,7 +711,7 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 20:06:05 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:39 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

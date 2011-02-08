@@ -8,13 +8,12 @@ namespace FireCube
 {
 class ProgramResource;
 class Program;
-/* CPPDOC_BEGIN_EXCLUDE */
+
 namespace Renderer
 {
 	void FIRECUBE_API UseProgram(Program program);
 	void FIRECUBE_API SetGlobalProgram(Program program);
 }
-/* CPPDOC_END_EXCLUDE */
 
 /** 
 * Specifies the type of a shader.
@@ -42,6 +41,11 @@ class FIRECUBE_API Shader
 	friend class ResourceManager<Shader,ShaderResource>;
 public:
 	Shader();
+
+	/**
+	* Constructs a shader from a shader resource.
+	* @param resource The resource to assign to this shader.
+	*/
 	Shader(boost::shared_ptr<ShaderResource> resource);
 	/**
 	* Loads a shader from a file. the shader type is determined by the extension of the file: .vert for a vertex shader, .frag for a fragment shader.
@@ -50,7 +54,7 @@ public:
 	bool Load(const std::string &filename);
 	/**
 	* Creates a shader from source.
-	* @param shaderType The type of the shader.
+	* @param type The type of the shader.
 	* @param source The source of the shader.
 	*/
 	bool Create(ShaderType type,const std::string &source);
@@ -59,7 +63,14 @@ public:
 	*/
 	unsigned int GetId() const;
 
+	/**
+	* @return True if points to an initialized resource, false otherwise.
+	*/
 	operator bool () const;
+
+	/**
+	* @return True of both objects points to the same resource, false otherwise.
+	*/
 	bool operator== (const Shader &shader) const;
 private:
 	boost::shared_ptr<ShaderResource> resource;
@@ -87,85 +98,108 @@ class FIRECUBE_API Program
 	friend void Renderer::UseProgram(Program program);
 	friend void Renderer::SetGlobalProgram(Program program);
 public:
+	
 	/**
 	* Creates the program.
 	*/
 	void Create();
+	
 	/**
 	* Creates the program and attaches two shaders to it.
 	*/
 	void Create(Shader shader1,Shader shader2);
+	
 	/**
 	* Attaches a shader to the program.
 	* @param shader The shader to attach.
 	*/
 	void Attach(Shader shader);
+	
 	/**
 	* Links the program.
 	*/
 	void Link();	
+	
 	/**
 	* Sets a 1d uniform float.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
 	void SetUniform(const std::string &name,float value);
+	
 	/**
 	* Sets a 1d uniform integer.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
 	void SetUniform(const std::string &name,int value);
+	
 	/**
 	* Sets a 3d uniform float.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
 	void SetUniform(const std::string &name,vec3 value);
+	
 	/**
 	* Sets a 4d uniform float.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
 	void SetUniform(const std::string &name,vec4 value);
+	
 	/**
 	* Sets a 1d uniform boolean.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
 	void SetUniform(const std::string &name,bool value);
+	
 	/**
 	* Sets an array of booleans.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
 	void SetUniform(const std::string &name,const std::vector<bool> &value);
+	
 	/**
 	* Sets an array of integers.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
 	*/
 	void SetUniform(const std::string &name,const std::vector<int> &value);
+	
 	/**
 	* Sets vertex shader attribute.
 	* @param name The name of the variable.
 	* @param buffer The buffer from which data will be read.
+	* @param size The number of elements in each attribue.
 	*/
 	void SetAttribute(const std::string &name,Buffer buffer,int size);
+	
 	/**	
 	* @return Returns the compile log for this program.
 	*/
 	std::string GetInfoLog();
+	
 	/**
 	* Returns whether the program is valid.
 	*/	
 	bool IsValid() const;
+	
 	/**
 	* Returns the resource id of the program.
 	*/
 	unsigned int GetId() const;
-
+	
+	/**
+	* @return True if points to an initialized resource, false otherwise.
+	*/
 	operator bool () const;
+
+	/**
+	* @return True of both objects points to the same resource, false otherwise.
+	*/
 	bool operator== (const Program &program) const;
 
 private:
@@ -204,7 +238,14 @@ public:
 	*/
 	Program GenerateProgram(const RenderState &renderState);
 
+	/**
+	* @return True if points to an initialized resource, false otherwise.
+	*/
 	operator bool () const;
+
+	/**
+	* @return True of both objects points to the same resource, false otherwise.
+	*/
 	bool operator== (const Technique &technique) const;
 
 private:

@@ -95,7 +95,14 @@ public:
 	*/
 	unsigned int GetId() const;
 
+	/**
+	* @return True if points to an initialized resource, false otherwise.
+	*/
 	operator bool () const;
+
+	/**
+	* @return True of both objects points to the same resource, false otherwise.
+	*/
 	bool operator== (const Buffer &buffer) const;
 
 private:	

@@ -72,33 +72,251 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="contents">
 <!-- doxytag: class="FireCube::Light" -->
+<p>A class storing various properties of a light source.  
+<a href="#_details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_light_8h_source.html">Light.h</a>&gt;</code></p>
+
 <p><a href="class_fire_cube_1_1_light-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6a6509f87b9437e6417d71775590e1f7"></a><!-- doxytag: member="FireCube::Light::Create" ref="a6a6509f87b9437e6417d71775590e1f7" args="()" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Create</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa42589a76983c193f58c8b6afe0a47e2"></a><!-- doxytag: member="FireCube::Light::SetType" ref="aa42589a76983c193f58c8b6afe0a47e2" args="(LightType type)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetType</b> (LightType type)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aacc425b195c1db3d95f55728dd74dca5"></a><!-- doxytag: member="FireCube::Light::GetType" ref="aacc425b195c1db3d95f55728dd74dca5" args="()" -->
-LightType&#160;</td><td class="memItemRight" valign="bottom"><b>GetType</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a96404cb3bd3718438de81052c37d581a"></a><!-- doxytag: member="FireCube::Light::SetAmbientColor" ref="a96404cb3bd3718438de81052c37d581a" args="(vec4 color)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAmbientColor</b> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac79373bba97929c1f9054f6fd40d161d"></a><!-- doxytag: member="FireCube::Light::GetAmbientColor" ref="ac79373bba97929c1f9054f6fd40d161d" args="()" -->
-<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetAmbientColor</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a00dcd64a42360f353ccc32ba4896eba3"></a><!-- doxytag: member="FireCube::Light::SetDiffuseColor" ref="a00dcd64a42360f353ccc32ba4896eba3" args="(vec4 color)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetDiffuseColor</b> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a015ccbae936f0744d8cc13af5cb699d7"></a><!-- doxytag: member="FireCube::Light::GetDiffuseColor" ref="a015ccbae936f0744d8cc13af5cb699d7" args="()" -->
-<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetDiffuseColor</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4823ccd514227e4c77b258defd5f81e7"></a><!-- doxytag: member="FireCube::Light::SetSpecularColor" ref="a4823ccd514227e4c77b258defd5f81e7" args="(vec4 color)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetSpecularColor</b> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a613ebf80c09bb18f919f8554e97e7886"></a><!-- doxytag: member="FireCube::Light::GetSpecularColor" ref="a613ebf80c09bb18f919f8554e97e7886" args="()" -->
-<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetSpecularColor</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a92ad5cf014c1482480fc7e9f126ae18f"></a><!-- doxytag: member="FireCube::Light::operator bool" ref="a92ad5cf014c1482480fc7e9f126ae18f" args="() const " -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>operator bool</b> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2694095744b3eaa402905a43c5502ed5"></a><!-- doxytag: member="FireCube::Light::operator==" ref="a2694095744b3eaa402905a43c5502ed5" args="(const Light &amp;light) const " -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="class_fire_cube_1_1_light.html">Light</a> &amp;light) const </td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#a6a6509f87b9437e6417d71775590e1f7">Create</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the light. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#aa42589a76983c193f58c8b6afe0a47e2">SetType</a> (LightType type)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the light type.  <a href="#aa42589a76983c193f58c8b6afe0a47e2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">LightType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#aacc425b195c1db3d95f55728dd74dca5">GetType</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the type of this light.  <a href="#aacc425b195c1db3d95f55728dd74dca5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#a96404cb3bd3718438de81052c37d581a">SetAmbientColor</a> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the ambient color of this light.  <a href="#a96404cb3bd3718438de81052c37d581a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#ac79373bba97929c1f9054f6fd40d161d">GetAmbientColor</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ambient color of this light.  <a href="#ac79373bba97929c1f9054f6fd40d161d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#a00dcd64a42360f353ccc32ba4896eba3">SetDiffuseColor</a> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the diffuse color of this light.  <a href="#a00dcd64a42360f353ccc32ba4896eba3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#a015ccbae936f0744d8cc13af5cb699d7">GetDiffuseColor</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the diffuse color of this light.  <a href="#a015ccbae936f0744d8cc13af5cb699d7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#a4823ccd514227e4c77b258defd5f81e7">SetSpecularColor</a> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the specular color of this light.  <a href="#a4823ccd514227e4c77b258defd5f81e7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#a613ebf80c09bb18f919f8554e97e7886">GetSpecularColor</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the specular color of this light.  <a href="#a613ebf80c09bb18f919f8554e97e7886"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#a92ad5cf014c1482480fc7e9f126ae18f">operator bool</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#a2694095744b3eaa402905a43c5502ed5">operator==</a> (const <a class="el" href="class_fire_cube_1_1_light.html">Light</a> &amp;light) const </td></tr>
 </table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>A class storing various properties of a light source. </p>
+</div><hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="ac79373bba97929c1f9054f6fd40d161d"></a><!-- doxytag: member="FireCube::Light::GetAmbientColor" ref="ac79373bba97929c1f9054f6fd40d161d" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> Light::GetAmbientColor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the ambient color of this light. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The ambient color of this light. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a015ccbae936f0744d8cc13af5cb699d7"></a><!-- doxytag: member="FireCube::Light::GetDiffuseColor" ref="a015ccbae936f0744d8cc13af5cb699d7" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> Light::GetDiffuseColor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the diffuse color of this light. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The diffuse color of this light. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a613ebf80c09bb18f919f8554e97e7886"></a><!-- doxytag: member="FireCube::Light::GetSpecularColor" ref="a613ebf80c09bb18f919f8554e97e7886" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> Light::GetSpecularColor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the specular color of this light. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The specular color of this light. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aacc425b195c1db3d95f55728dd74dca5"></a><!-- doxytag: member="FireCube::Light::GetType" ref="aacc425b195c1db3d95f55728dd74dca5" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">LightType Light::GetType </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the type of this light. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The type of this light. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a92ad5cf014c1482480fc7e9f126ae18f"></a><!-- doxytag: member="FireCube::Light::operator bool" ref="a92ad5cf014c1482480fc7e9f126ae18f" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Light::operator bool </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>True if points to an initialized resource, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2694095744b3eaa402905a43c5502ed5"></a><!-- doxytag: member="FireCube::Light::operator==" ref="a2694095744b3eaa402905a43c5502ed5" args="(const Light &amp;light) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Light::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1_light.html">Light</a> &amp;&#160;</td>
+          <td class="paramname"><em>light</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>True of both objects points to the same resource, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a96404cb3bd3718438de81052c37d581a"></a><!-- doxytag: member="FireCube::Light::SetAmbientColor" ref="a96404cb3bd3718438de81052c37d581a" args="(vec4 color)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Light::SetAmbientColor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the ambient color of this light. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>The ambient color to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a00dcd64a42360f353ccc32ba4896eba3"></a><!-- doxytag: member="FireCube::Light::SetDiffuseColor" ref="a00dcd64a42360f353ccc32ba4896eba3" args="(vec4 color)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Light::SetDiffuseColor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the diffuse color of this light. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>The diffuse color to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a4823ccd514227e4c77b258defd5f81e7"></a><!-- doxytag: member="FireCube::Light::SetSpecularColor" ref="a4823ccd514227e4c77b258defd5f81e7" args="(vec4 color)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Light::SetSpecularColor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the specular color of this light. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>The specular color to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="aa42589a76983c193f58c8b6afe0a47e2"></a><!-- doxytag: member="FireCube::Light::SetType" ref="aa42589a76983c193f58c8b6afe0a47e2" args="(LightType type)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Light::SetType </td>
+          <td>(</td>
+          <td class="paramtype">LightType&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the light type. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>The new light type. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="_light_8h_source.html">Light.h</a></li>
 <li>Node.cpp</li>
@@ -109,7 +327,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -118,7 +336,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 20:06:05 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

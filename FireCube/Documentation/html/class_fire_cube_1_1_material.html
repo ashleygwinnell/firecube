@@ -72,45 +72,395 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="contents">
 <!-- doxytag: class="FireCube::Material" -->
+<p>A class representing a material.  
+<a href="#_details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_geometry_8h_source.html">Geometry.h</a>&gt;</code></p>
+
 <p><a href="class_fire_cube_1_1_material-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af39de221a1c5a6ebe920d732e3c84b40"></a><!-- doxytag: member="FireCube::Material::Create" ref="af39de221a1c5a6ebe920d732e3c84b40" args="()" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Create</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0c1279f68efe82c652914fb3cf3443ab"></a><!-- doxytag: member="FireCube::Material::GetName" ref="a0c1279f68efe82c652914fb3cf3443ab" args="()" -->
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>GetName</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae616f4f1eaab0fcdd6cdc739f2c8884c"></a><!-- doxytag: member="FireCube::Material::SetName" ref="ae616f4f1eaab0fcdd6cdc739f2c8884c" args="(const std::string &amp;name)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetName</b> (const std::string &amp;name)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa7f3ea27c611ff277f7417ef250a07ca"></a><!-- doxytag: member="FireCube::Material::GetAmbientColor" ref="aa7f3ea27c611ff277f7417ef250a07ca" args="()" -->
-<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetAmbientColor</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0acc175b6bd0ebfc7ffc9ca192970141"></a><!-- doxytag: member="FireCube::Material::SetAmbientColor" ref="a0acc175b6bd0ebfc7ffc9ca192970141" args="(vec4 color)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAmbientColor</b> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a83b70e14969cdd1a2229dc352b07d14d"></a><!-- doxytag: member="FireCube::Material::GetDiffuseColor" ref="a83b70e14969cdd1a2229dc352b07d14d" args="()" -->
-<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetDiffuseColor</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5c010824851fd6670b1d15e45e9cab54"></a><!-- doxytag: member="FireCube::Material::SetDiffuseColor" ref="a5c010824851fd6670b1d15e45e9cab54" args="(vec4 color)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetDiffuseColor</b> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a10cfb36c2313df457e68e0c49735940e"></a><!-- doxytag: member="FireCube::Material::GetSpecularColor" ref="a10cfb36c2313df457e68e0c49735940e" args="()" -->
-<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetSpecularColor</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0c1e281750492973a8f6d1b687d4439c"></a><!-- doxytag: member="FireCube::Material::SetSpecularColor" ref="a0c1e281750492973a8f6d1b687d4439c" args="(vec4 color)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetSpecularColor</b> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a283ae453cab745cfacde3e088c40c483"></a><!-- doxytag: member="FireCube::Material::GetShininess" ref="a283ae453cab745cfacde3e088c40c483" args="()" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><b>GetShininess</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0f35d04e4628d1e46428bc577dd7fd24"></a><!-- doxytag: member="FireCube::Material::SetShininess" ref="a0f35d04e4628d1e46428bc577dd7fd24" args="(float value)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetShininess</b> (float value)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac7d2a50c948fc9ed895a77cad5ac4236"></a><!-- doxytag: member="FireCube::Material::GetDiffuseTexture" ref="ac7d2a50c948fc9ed895a77cad5ac4236" args="()" -->
-<a class="el" href="class_fire_cube_1_1_texture.html">Texture</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetDiffuseTexture</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a257a82d6b3846b2cb18749513736feca"></a><!-- doxytag: member="FireCube::Material::SetDiffuseTexture" ref="a257a82d6b3846b2cb18749513736feca" args="(Texture texture)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetDiffuseTexture</b> (<a class="el" href="class_fire_cube_1_1_texture.html">Texture</a> texture)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a52e7aa98faf8099fd854e2d8c43a0717"></a><!-- doxytag: member="FireCube::Material::GetNormalTexture" ref="a52e7aa98faf8099fd854e2d8c43a0717" args="()" -->
-<a class="el" href="class_fire_cube_1_1_texture.html">Texture</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetNormalTexture</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a351b4303ff37381d5bb581b8bd6c7dfe"></a><!-- doxytag: member="FireCube::Material::SetNormalTexture" ref="a351b4303ff37381d5bb581b8bd6c7dfe" args="(Texture texture)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetNormalTexture</b> (<a class="el" href="class_fire_cube_1_1_texture.html">Texture</a> texture)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae0241ccc9b0f58b0727050c17b833f93"></a><!-- doxytag: member="FireCube::Material::operator bool" ref="ae0241ccc9b0f58b0727050c17b833f93" args="() const " -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>operator bool</b> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ade99647d66433e0bbfcbe70892ba450b"></a><!-- doxytag: member="FireCube::Material::operator==" ref="ade99647d66433e0bbfcbe70892ba450b" args="(const Material &amp;material) const " -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="class_fire_cube_1_1_material.html">Material</a> &amp;material) const </td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#af39de221a1c5a6ebe920d732e3c84b40">Create</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the material. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#a0c1279f68efe82c652914fb3cf3443ab">GetName</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the name of this material.  <a href="#a0c1279f68efe82c652914fb3cf3443ab"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#a81bad4c57e869998238a88af6cae6109">SetName</a> (const std::string &amp;name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the name of the material.  <a href="#a81bad4c57e869998238a88af6cae6109"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#aa7f3ea27c611ff277f7417ef250a07ca">GetAmbientColor</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ambient color of this material.  <a href="#aa7f3ea27c611ff277f7417ef250a07ca"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#a0acc175b6bd0ebfc7ffc9ca192970141">SetAmbientColor</a> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the ambient color of this material.  <a href="#a0acc175b6bd0ebfc7ffc9ca192970141"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#a83b70e14969cdd1a2229dc352b07d14d">GetDiffuseColor</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the diffuse color of this material.  <a href="#a83b70e14969cdd1a2229dc352b07d14d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#a5c010824851fd6670b1d15e45e9cab54">SetDiffuseColor</a> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the diffuse color of this material.  <a href="#a5c010824851fd6670b1d15e45e9cab54"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#a10cfb36c2313df457e68e0c49735940e">GetSpecularColor</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the specular color of this material.  <a href="#a10cfb36c2313df457e68e0c49735940e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#a0c1e281750492973a8f6d1b687d4439c">SetSpecularColor</a> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the specular color of this material.  <a href="#a0c1e281750492973a8f6d1b687d4439c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#a283ae453cab745cfacde3e088c40c483">GetShininess</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the shininess factor of this material.  <a href="#a283ae453cab745cfacde3e088c40c483"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#a0f35d04e4628d1e46428bc577dd7fd24">SetShininess</a> (float value)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the shininess factor of this material.  <a href="#a0f35d04e4628d1e46428bc577dd7fd24"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1_texture.html">Texture</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#ac7d2a50c948fc9ed895a77cad5ac4236">GetDiffuseTexture</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the diffuse texture of this material.  <a href="#ac7d2a50c948fc9ed895a77cad5ac4236"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#a257a82d6b3846b2cb18749513736feca">SetDiffuseTexture</a> (<a class="el" href="class_fire_cube_1_1_texture.html">Texture</a> texture)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the diffuse texture of this material.  <a href="#a257a82d6b3846b2cb18749513736feca"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1_texture.html">Texture</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#a52e7aa98faf8099fd854e2d8c43a0717">GetNormalTexture</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the normal texture of this material.  <a href="#a52e7aa98faf8099fd854e2d8c43a0717"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#a351b4303ff37381d5bb581b8bd6c7dfe">SetNormalTexture</a> (<a class="el" href="class_fire_cube_1_1_texture.html">Texture</a> texture)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the normal texture of this material.  <a href="#a351b4303ff37381d5bb581b8bd6c7dfe"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#ae0241ccc9b0f58b0727050c17b833f93">operator bool</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_material.html#ade99647d66433e0bbfcbe70892ba450b">operator==</a> (const <a class="el" href="class_fire_cube_1_1_material.html">Material</a> &amp;material) const </td></tr>
 </table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>A class representing a material. </p>
+</div><hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="aa7f3ea27c611ff277f7417ef250a07ca"></a><!-- doxytag: member="FireCube::Material::GetAmbientColor" ref="aa7f3ea27c611ff277f7417ef250a07ca" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> Material::GetAmbientColor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the ambient color of this material. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The ambient color of this material. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a83b70e14969cdd1a2229dc352b07d14d"></a><!-- doxytag: member="FireCube::Material::GetDiffuseColor" ref="a83b70e14969cdd1a2229dc352b07d14d" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> Material::GetDiffuseColor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the diffuse color of this material. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The diffuse color of this material. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac7d2a50c948fc9ed895a77cad5ac4236"></a><!-- doxytag: member="FireCube::Material::GetDiffuseTexture" ref="ac7d2a50c948fc9ed895a77cad5ac4236" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1_texture.html">Texture</a> Material::GetDiffuseTexture </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the diffuse texture of this material. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The diffuse texture of this material. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0c1279f68efe82c652914fb3cf3443ab"></a><!-- doxytag: member="FireCube::Material::GetName" ref="a0c1279f68efe82c652914fb3cf3443ab" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Material::GetName </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the name of this material. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The name of the material. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a52e7aa98faf8099fd854e2d8c43a0717"></a><!-- doxytag: member="FireCube::Material::GetNormalTexture" ref="a52e7aa98faf8099fd854e2d8c43a0717" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1_texture.html">Texture</a> Material::GetNormalTexture </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the normal texture of this material. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The normal texture of this material. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a283ae453cab745cfacde3e088c40c483"></a><!-- doxytag: member="FireCube::Material::GetShininess" ref="a283ae453cab745cfacde3e088c40c483" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Material::GetShininess </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the shininess factor of this material. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The shininess factor of this material. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a10cfb36c2313df457e68e0c49735940e"></a><!-- doxytag: member="FireCube::Material::GetSpecularColor" ref="a10cfb36c2313df457e68e0c49735940e" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> Material::GetSpecularColor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the specular color of this material. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The specular color of this material. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae0241ccc9b0f58b0727050c17b833f93"></a><!-- doxytag: member="FireCube::Material::operator bool" ref="ae0241ccc9b0f58b0727050c17b833f93" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Material::operator bool </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>True if points to an initialized resource, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ade99647d66433e0bbfcbe70892ba450b"></a><!-- doxytag: member="FireCube::Material::operator==" ref="ade99647d66433e0bbfcbe70892ba450b" args="(const Material &amp;material) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Material::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1_material.html">Material</a> &amp;&#160;</td>
+          <td class="paramname"><em>material</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>True of both objects points to the same resource, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0acc175b6bd0ebfc7ffc9ca192970141"></a><!-- doxytag: member="FireCube::Material::SetAmbientColor" ref="a0acc175b6bd0ebfc7ffc9ca192970141" args="(vec4 color)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Material::SetAmbientColor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the ambient color of this material. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>The color to set the ambient to. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a5c010824851fd6670b1d15e45e9cab54"></a><!-- doxytag: member="FireCube::Material::SetDiffuseColor" ref="a5c010824851fd6670b1d15e45e9cab54" args="(vec4 color)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Material::SetDiffuseColor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the diffuse color of this material. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>The color to set the diffuse to. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a257a82d6b3846b2cb18749513736feca"></a><!-- doxytag: member="FireCube::Material::SetDiffuseTexture" ref="a257a82d6b3846b2cb18749513736feca" args="(Texture texture)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Material::SetDiffuseTexture </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_texture.html">Texture</a>&#160;</td>
+          <td class="paramname"><em>texture</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the diffuse texture of this material. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">texture</td><td>The new diffuse texture map. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a81bad4c57e869998238a88af6cae6109"></a><!-- doxytag: member="FireCube::Material::SetName" ref="a81bad4c57e869998238a88af6cae6109" args="(const std::string &amp;name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Material::SetName </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the name of the material. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the material. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a351b4303ff37381d5bb581b8bd6c7dfe"></a><!-- doxytag: member="FireCube::Material::SetNormalTexture" ref="a351b4303ff37381d5bb581b8bd6c7dfe" args="(Texture texture)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Material::SetNormalTexture </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_texture.html">Texture</a>&#160;</td>
+          <td class="paramname"><em>texture</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the normal texture of this material. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">texture</td><td>The new normal texture map. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a0f35d04e4628d1e46428bc577dd7fd24"></a><!-- doxytag: member="FireCube::Material::SetShininess" ref="a0f35d04e4628d1e46428bc577dd7fd24" args="(float value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Material::SetShininess </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the shininess factor of this material. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>The shininess factor. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a0c1e281750492973a8f6d1b687d4439c"></a><!-- doxytag: member="FireCube::Material::SetSpecularColor" ref="a0c1e281750492973a8f6d1b687d4439c" args="(vec4 color)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Material::SetSpecularColor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the specular color of this material. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>The color to set the specular to. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="_geometry_8h_source.html">Geometry.h</a></li>
 <li>Geometry.cpp</li>
@@ -121,7 +471,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -130,7 +480,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 20:06:05 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

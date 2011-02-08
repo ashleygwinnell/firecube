@@ -62,100 +62,152 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="keyword">namespace </span>FireCube
 <a name="l00002"></a>00002 {
 <a name="l00003"></a>00003 <span class="keyword">class </span>NodeResource;
-<a name="l00004"></a><a class="code" href="class_fire_cube_1_1_render_parameters.html">00004</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_render_parameters.html">RenderParameters</a>
-<a name="l00005"></a>00005 {
-<a name="l00006"></a>00006 <span class="keyword">public</span>:
-<a name="l00007"></a>00007         <a class="code" href="class_fire_cube_1_1_program.html" title="A class representing a gpu program.">Program</a> program;
-<a name="l00008"></a>00008         <a class="code" href="class_fire_cube_1_1_technique.html" title="A class representing a technique.">Technique</a> technique;
-<a name="l00009"></a>00009         <span class="keywordtype">bool</span> lighting;
-<a name="l00010"></a>00010         <span class="keywordtype">bool</span> fog;
-<a name="l00011"></a>00011         <a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> fogColor;
-<a name="l00012"></a>00012         <span class="keywordtype">float</span> fogDensity;       
-<a name="l00013"></a>00013 };
-<a name="l00014"></a><a class="code" href="class_fire_cube_1_1_node.html">00014</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_node.html">Node</a>
-<a name="l00015"></a>00015 {
-<a name="l00016"></a>00016 <span class="keyword">public</span>:
-<a name="l00017"></a>00017         <a class="code" href="class_fire_cube_1_1_node.html">Node</a>();
-<a name="l00018"></a>00018         <a class="code" href="class_fire_cube_1_1_node.html">Node</a>(NodeResource *nr); 
-<a name="l00019"></a>00019         <a class="code" href="class_fire_cube_1_1_node.html">Node</a>(<span class="keyword">const</span> std::string &amp;name);  
-<a name="l00020"></a>00020         operator bool () <span class="keyword">const</span>;
-<a name="l00021"></a>00021         <span class="keywordtype">bool</span> operator== (<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1_node.html">Node</a> &amp;node) <span class="keyword">const</span>;
-<a name="l00022"></a>00022         <span class="keywordtype">void</span> SetName(<span class="keyword">const</span> std::string &amp;name);
-<a name="l00023"></a>00023         std::string GetName();  
-<a name="l00024"></a>00024         <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> GetLocalTransformation();  
-<a name="l00025"></a>00025         <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> GetWorldTransformation();
-<a name="l00026"></a>00026         <span class="keywordtype">void</span> SetWorldTransformation(<a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> mat);
-<a name="l00027"></a>00027         <span class="keywordtype">void</span> SetTranslation(<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> t);
-<a name="l00028"></a>00028         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> GetTranslation();
-<a name="l00029"></a>00029         <span class="keywordtype">void</span> SetRotation(<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> r);
-<a name="l00030"></a>00030         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> GetRotation();
-<a name="l00031"></a>00031         <span class="keywordtype">void</span> SetScale(<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> s);
-<a name="l00032"></a>00032         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> GetScale();
-<a name="l00033"></a>00033         <span class="keywordtype">void</span> SetMatrixTransformation(<a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> t);
-<a name="l00034"></a>00034         <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> GetMatrixTransformation();
-<a name="l00035"></a>00035         <span class="keywordtype">void</span> Move(<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> t);
-<a name="l00036"></a>00036         <span class="keywordtype">void</span> Rotate(<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> r);
-<a name="l00037"></a>00037         <span class="keywordtype">void</span> Scale(<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> s);
-<a name="l00038"></a>00038         <a class="code" href="class_fire_cube_1_1_node.html">Node</a> &amp;GetParent();
-<a name="l00039"></a>00039         <span class="keywordtype">void</span> SetParent(<a class="code" href="class_fire_cube_1_1_node.html">Node</a> parent);
-<a name="l00040"></a>00040         std::vector&lt;Node&gt; &amp;GetChildren();
-<a name="l00041"></a>00041         <span class="keywordtype">void</span> AddGeometry(<a class="code" href="class_fire_cube_1_1_geometry.html">Geometry</a> geometry);
-<a name="l00042"></a>00042         std::vector&lt;Geometry&gt; &amp;GetGeometries();
-<a name="l00043"></a>00043 
-<a name="l00044"></a>00044         <span class="keywordtype">void</span> AddLight(<a class="code" href="class_fire_cube_1_1_light.html">Light</a> l);         
-<a name="l00045"></a>00045         <span class="keywordtype">void</span> RemoveLight(<a class="code" href="class_fire_cube_1_1_light.html">Light</a> l);      
-<a name="l00046"></a>00046         std::vector&lt;Light&gt; &amp;GetLights();        
-<a name="l00047"></a>00047 
-<a name="l00048"></a>00048         <a class="code" href="class_fire_cube_1_1_node.html">Node</a> AddChild(<a class="code" href="class_fire_cube_1_1_node.html">Node</a> node);
-<a name="l00049"></a>00049         <a class="code" href="class_fire_cube_1_1_node.html">Node</a> GetChild(<span class="keyword">const</span> std::string &amp;name);
-<a name="l00050"></a>00050         <a class="code" href="class_fire_cube_1_1_node.html">Node</a> RemoveChild(<span class="keyword">const</span> std::string &amp;name);
-<a name="l00051"></a>00051         <a class="code" href="class_fire_cube_1_1_node.html">Node</a> RemoveChild(<a class="code" href="class_fire_cube_1_1_node.html">Node</a> node);    
-<a name="l00052"></a>00052 
-<a name="l00053"></a>00053         <span class="keywordtype">void</span> Render();
-<a name="l00054"></a>00054         <span class="keywordtype">void</span> CreateHardNormals();
-<a name="l00055"></a>00055         <span class="keywordtype">void</span> RenderBoundingBox();
-<a name="l00056"></a>00056         <span class="keywordtype">void</span> UpdateBoundingBox();
-<a name="l00057"></a>00057 
-<a name="l00058"></a>00058         <a class="code" href="class_fire_cube_1_1_render_parameters.html">RenderParameters</a> &amp;GetRenderParameters();
-<a name="l00059"></a>00059         <span class="keywordtype">void</span> SetProgram(<a class="code" href="class_fire_cube_1_1_program.html" title="A class representing a gpu program.">Program</a> program);
-<a name="l00060"></a>00060         <a class="code" href="class_fire_cube_1_1_program.html" title="A class representing a gpu program.">Program</a> GetProgram();
-<a name="l00061"></a>00061         <span class="keywordtype">void</span> SetTechnique(<span class="keyword">const</span> std::string &amp;name);
-<a name="l00062"></a>00062         <a class="code" href="class_fire_cube_1_1_technique.html" title="A class representing a technique.">Technique</a> GetTechnique() <span class="keyword">const</span>;
-<a name="l00063"></a>00063         <span class="keywordtype">void</span> SetLighting(<span class="keywordtype">bool</span> enabled=<span class="keyword">true</span>);
-<a name="l00064"></a>00064         <span class="keywordtype">bool</span> GetLighting();
-<a name="l00065"></a>00065         <span class="keywordtype">void</span> SetFog(<span class="keywordtype">bool</span> enabled=<span class="keyword">true</span>);
-<a name="l00066"></a>00066         <span class="keywordtype">bool</span> GetFog();
-<a name="l00067"></a>00067         <span class="keywordtype">void</span> SetFogColor(<a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> color);
-<a name="l00068"></a>00068         <a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> GetFogColor();
-<a name="l00069"></a>00069         <span class="keywordtype">void</span> SetFogDensity(<span class="keywordtype">float</span> density);
-<a name="l00070"></a>00070         <span class="keywordtype">float</span> GetFogDensity();
-<a name="l00071"></a>00071 <span class="keyword">private</span>:
-<a name="l00072"></a>00072         boost::shared_ptr&lt;NodeResource&gt; resource;
-<a name="l00073"></a>00073 };
-<a name="l00074"></a>00074 <span class="keyword">class </span>FIRECUBE_API NodeResource
-<a name="l00075"></a>00075 {
-<a name="l00076"></a>00076         <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_fire_cube_1_1_node.html">Node</a>;
-<a name="l00077"></a>00077 <span class="keyword">public</span>:
-<a name="l00078"></a>00078         NodeResource();
-<a name="l00079"></a>00079 <span class="keyword">private</span>:
-<a name="l00080"></a>00080         std::vector&lt;Node&gt; children;
-<a name="l00081"></a>00081         std::vector&lt;Geometry&gt; geometries;
-<a name="l00082"></a>00082         std::vector&lt;Light&gt; lights;
-<a name="l00083"></a>00083         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> translation;
-<a name="l00084"></a>00084         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> rotation;
-<a name="l00085"></a>00085         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> scale;
-<a name="l00086"></a>00086         <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> matTransform;
-<a name="l00087"></a>00087         <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> transformation;
-<a name="l00088"></a>00088         <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> worldTransformation;
-<a name="l00089"></a>00089         <span class="keywordtype">bool</span> transformationChanged;
-<a name="l00090"></a>00090         <a class="code" href="class_fire_cube_1_1_node.html">Node</a> parent;    
-<a name="l00091"></a>00091         std::string name;
-<a name="l00092"></a>00092         <a class="code" href="class_fire_cube_1_1_render_parameters.html">RenderParameters</a> renderParameters;
-<a name="l00093"></a>00093         <a class="code" href="class_fire_cube_1_1_bounding_box.html">BoundingBox</a> localBoundingBox;
-<a name="l00094"></a>00094         <a class="code" href="class_fire_cube_1_1_bounding_box.html">BoundingBox</a> worldBoundingBox;
-<a name="l00095"></a>00095 };
-<a name="l00096"></a>00096 Node FIRECUBE_API LoadMesh(<span class="keyword">const</span> std::string &amp;filename);
-<a name="l00097"></a>00097 }
+<a name="l00004"></a>00004 
+<a name="l00008"></a><a class="code" href="class_fire_cube_1_1_render_parameters.html">00008</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_render_parameters.html" title="A class holding information on various rendering parameters.">RenderParameters</a>
+<a name="l00009"></a>00009 {
+<a name="l00010"></a>00010 <span class="keyword">public</span>:
+<a name="l00014"></a><a class="code" href="class_fire_cube_1_1_render_parameters.html#a2bd0c847507121bd7cc8e584ccc56fde">00014</a>         <a class="code" href="class_fire_cube_1_1_program.html" title="A class representing a gpu program.">Program</a> <a class="code" href="class_fire_cube_1_1_render_parameters.html#a2bd0c847507121bd7cc8e584ccc56fde" title="The program used for rendering.">program</a>;
+<a name="l00015"></a>00015 
+<a name="l00019"></a><a class="code" href="class_fire_cube_1_1_render_parameters.html#a7d4551bae5e718ec681606e660979064">00019</a>         <a class="code" href="class_fire_cube_1_1_technique.html" title="A class representing a technique.">Technique</a> <a class="code" href="class_fire_cube_1_1_render_parameters.html#a7d4551bae5e718ec681606e660979064" title="The technique used for rendering.">technique</a>;
+<a name="l00020"></a>00020 
+<a name="l00024"></a><a class="code" href="class_fire_cube_1_1_render_parameters.html#a79eca68ca4c8a5a26110365b3a2cc9aa">00024</a>         <span class="keywordtype">bool</span> <a class="code" href="class_fire_cube_1_1_render_parameters.html#a79eca68ca4c8a5a26110365b3a2cc9aa" title="Specifies whether dynamic lighting is enabled.">lighting</a>;
+<a name="l00025"></a>00025 
+<a name="l00029"></a><a class="code" href="class_fire_cube_1_1_render_parameters.html#ae08a957d652149786a290cf28d85fea4">00029</a>         <span class="keywordtype">bool</span> <a class="code" href="class_fire_cube_1_1_render_parameters.html#ae08a957d652149786a290cf28d85fea4" title="Specifies whether fog is enabled.">fog</a>;
+<a name="l00030"></a>00030 
+<a name="l00034"></a><a class="code" href="class_fire_cube_1_1_render_parameters.html#afea0159b2491c85d9496ade45dbbedf6">00034</a>         <a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> <a class="code" href="class_fire_cube_1_1_render_parameters.html#afea0159b2491c85d9496ade45dbbedf6" title="The fog color.">fogColor</a>;
+<a name="l00035"></a>00035 
+<a name="l00039"></a><a class="code" href="class_fire_cube_1_1_render_parameters.html#a71c3aee735cd0bb339bfa9523d4d2eac">00039</a>         <span class="keywordtype">float</span> <a class="code" href="class_fire_cube_1_1_render_parameters.html#a71c3aee735cd0bb339bfa9523d4d2eac" title="The fog density.">fogDensity</a>;       
+<a name="l00040"></a>00040 };
+<a name="l00041"></a>00041 
+<a name="l00045"></a><a class="code" href="class_fire_cube_1_1_node.html">00045</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a>
+<a name="l00046"></a>00046 {
+<a name="l00047"></a>00047 <span class="keyword">public</span>:
+<a name="l00048"></a>00048         <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a>();
+<a name="l00049"></a>00049 
+<a name="l00054"></a>00054         <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a>(NodeResource *nr); 
+<a name="l00055"></a>00055 
+<a name="l00060"></a>00060         <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a>(<span class="keyword">const</span> std::string &amp;name);  
+<a name="l00061"></a>00061         
+<a name="l00066"></a>00066         <span class="keywordtype">void</span> SetName(<span class="keyword">const</span> std::string &amp;name);
+<a name="l00067"></a>00067 
+<a name="l00072"></a>00072         std::string GetName();
+<a name="l00073"></a>00073 
+<a name="l00078"></a>00078         <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> GetLocalTransformation();
+<a name="l00079"></a>00079 
+<a name="l00084"></a>00084         <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> GetWorldTransformation();
+<a name="l00085"></a>00085         
+<a name="l00090"></a>00090         <span class="keywordtype">void</span> SetWorldTransformation(<a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> mat);
+<a name="l00091"></a>00091 
+<a name="l00096"></a>00096         <span class="keywordtype">void</span> SetTranslation(<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> t);
+<a name="l00097"></a>00097 
+<a name="l00102"></a>00102         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> GetTranslation();
+<a name="l00103"></a>00103         
+<a name="l00108"></a>00108         <span class="keywordtype">void</span> SetRotation(<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> r);
+<a name="l00109"></a>00109 
+<a name="l00114"></a>00114         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> GetRotation();
+<a name="l00115"></a>00115 
+<a name="l00120"></a>00120         <span class="keywordtype">void</span> SetScale(<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> s);
+<a name="l00121"></a>00121 
+<a name="l00126"></a>00126         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> GetScale();
+<a name="l00127"></a>00127 
+<a name="l00132"></a>00132         <span class="keywordtype">void</span> SetMatrixTransformation(<a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> t);
+<a name="l00133"></a>00133 
+<a name="l00138"></a>00138         <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> GetMatrixTransformation();
+<a name="l00139"></a>00139 
+<a name="l00144"></a>00144         <span class="keywordtype">void</span> Move(<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> t);
+<a name="l00145"></a>00145 
+<a name="l00150"></a>00150         <span class="keywordtype">void</span> Rotate(<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> r);
+<a name="l00151"></a>00151 
+<a name="l00156"></a>00156         <span class="keywordtype">void</span> Scale(<a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> s);
+<a name="l00157"></a>00157 
+<a name="l00162"></a>00162         <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a> &amp;GetParent();
+<a name="l00163"></a>00163 
+<a name="l00168"></a>00168         <span class="keywordtype">void</span> SetParent(<a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a> parent);
+<a name="l00169"></a>00169 
+<a name="l00174"></a>00174         std::vector&lt;Node&gt; &amp;GetChildren();
+<a name="l00175"></a>00175         
+<a name="l00180"></a>00180         <span class="keywordtype">void</span> AddGeometry(<a class="code" href="class_fire_cube_1_1_geometry.html" title="A class representing a geometry.">Geometry</a> geometry);
+<a name="l00181"></a>00181         
+<a name="l00186"></a>00186         std::vector&lt;Geometry&gt; &amp;GetGeometries();
+<a name="l00187"></a>00187 
+<a name="l00192"></a>00192         <span class="keywordtype">void</span> AddLight(<a class="code" href="class_fire_cube_1_1_light.html" title="A class storing various properties of a light source.">Light</a> light);     
+<a name="l00193"></a>00193 
+<a name="l00198"></a>00198         <span class="keywordtype">void</span> RemoveLight(<a class="code" href="class_fire_cube_1_1_light.html" title="A class storing various properties of a light source.">Light</a> light);
+<a name="l00199"></a>00199 
+<a name="l00204"></a>00204         std::vector&lt;Light&gt; &amp;GetLights();        
+<a name="l00205"></a>00205 
+<a name="l00210"></a>00210         <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a> AddChild(<a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a> node);
+<a name="l00211"></a>00211 
+<a name="l00217"></a>00217         <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a> GetChild(<span class="keyword">const</span> std::string &amp;name);
+<a name="l00218"></a>00218 
+<a name="l00223"></a>00223         <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a> RemoveChild(<span class="keyword">const</span> std::string &amp;name);
+<a name="l00224"></a>00224 
+<a name="l00229"></a>00229         <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a> RemoveChild(<a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a> node);    
+<a name="l00230"></a>00230 
+<a name="l00234"></a>00234         <span class="keywordtype">void</span> Render();
+<a name="l00235"></a>00235 
+<a name="l00239"></a>00239         <span class="keywordtype">void</span> CreateHardNormals();
+<a name="l00240"></a>00240 
+<a name="l00244"></a>00244         <span class="keywordtype">void</span> RenderBoundingBox();
+<a name="l00245"></a>00245 
+<a name="l00249"></a>00249         <span class="keywordtype">void</span> UpdateBoundingBox();
+<a name="l00250"></a>00250 
+<a name="l00255"></a>00255         <a class="code" href="class_fire_cube_1_1_render_parameters.html" title="A class holding information on various rendering parameters.">RenderParameters</a> &amp;GetRenderParameters();
+<a name="l00256"></a>00256 
+<a name="l00261"></a>00261         <span class="keywordtype">void</span> SetProgram(<a class="code" href="class_fire_cube_1_1_program.html" title="A class representing a gpu program.">Program</a> program);
+<a name="l00262"></a>00262 
+<a name="l00267"></a>00267         <a class="code" href="class_fire_cube_1_1_program.html" title="A class representing a gpu program.">Program</a> GetProgram();
+<a name="l00268"></a>00268 
+<a name="l00273"></a>00273         <span class="keywordtype">void</span> SetTechnique(<span class="keyword">const</span> std::string &amp;name);
+<a name="l00274"></a>00274 
+<a name="l00279"></a>00279         <a class="code" href="class_fire_cube_1_1_technique.html" title="A class representing a technique.">Technique</a> GetTechnique() <span class="keyword">const</span>;
+<a name="l00280"></a>00280 
+<a name="l00285"></a>00285         <span class="keywordtype">void</span> SetLighting(<span class="keywordtype">bool</span> enabled=<span class="keyword">true</span>);
+<a name="l00286"></a>00286 
+<a name="l00291"></a>00291         <span class="keywordtype">bool</span> GetLighting();
+<a name="l00292"></a>00292         
+<a name="l00297"></a>00297         <span class="keywordtype">void</span> SetFog(<span class="keywordtype">bool</span> enabled=<span class="keyword">true</span>);
+<a name="l00298"></a>00298 
+<a name="l00303"></a>00303         <span class="keywordtype">bool</span> GetFog();
+<a name="l00304"></a>00304 
+<a name="l00309"></a>00309         <span class="keywordtype">void</span> SetFogColor(<a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> color);
+<a name="l00310"></a>00310 
+<a name="l00315"></a>00315         <a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> GetFogColor();
+<a name="l00316"></a>00316 
+<a name="l00321"></a>00321         <span class="keywordtype">void</span> SetFogDensity(<span class="keywordtype">float</span> density);
+<a name="l00322"></a>00322 
+<a name="l00327"></a>00327         <span class="keywordtype">float</span> GetFogDensity();
+<a name="l00328"></a>00328         
+<a name="l00332"></a>00332         operator bool () <span class="keyword">const</span>;
+<a name="l00333"></a>00333 
+<a name="l00337"></a>00337         <span class="keywordtype">bool</span> operator== (<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a> &amp;node) <span class="keyword">const</span>;
+<a name="l00338"></a>00338 <span class="keyword">private</span>:
+<a name="l00339"></a>00339         boost::shared_ptr&lt;NodeResource&gt; resource;
+<a name="l00340"></a>00340 };
+<a name="l00341"></a>00341 <span class="keyword">class </span>FIRECUBE_API NodeResource
+<a name="l00342"></a>00342 {
+<a name="l00343"></a>00343         <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a>;
+<a name="l00344"></a>00344 <span class="keyword">public</span>:
+<a name="l00345"></a>00345         NodeResource();
+<a name="l00346"></a>00346 <span class="keyword">private</span>:
+<a name="l00347"></a>00347         std::vector&lt;Node&gt; children;
+<a name="l00348"></a>00348         std::vector&lt;Geometry&gt; geometries;
+<a name="l00349"></a>00349         std::vector&lt;Light&gt; lights;
+<a name="l00350"></a>00350         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> translation;
+<a name="l00351"></a>00351         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> rotation;
+<a name="l00352"></a>00352         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> scale;
+<a name="l00353"></a>00353         <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> matTransform;
+<a name="l00354"></a>00354         <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> transformation;
+<a name="l00355"></a>00355         <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> worldTransformation;
+<a name="l00356"></a>00356         <span class="keywordtype">bool</span> transformationChanged;
+<a name="l00357"></a>00357         <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a> parent;    
+<a name="l00358"></a>00358         std::string name;
+<a name="l00359"></a>00359         <a class="code" href="class_fire_cube_1_1_render_parameters.html" title="A class holding information on various rendering parameters.">RenderParameters</a> renderParameters;
+<a name="l00360"></a>00360         <a class="code" href="class_fire_cube_1_1_bounding_box.html" title="A class representing an axis aligned bounding box.">BoundingBox</a> localBoundingBox;
+<a name="l00361"></a>00361         <a class="code" href="class_fire_cube_1_1_bounding_box.html" title="A class representing an axis aligned bounding box.">BoundingBox</a> worldBoundingBox;
+<a name="l00362"></a>00362 };
+<a name="l00363"></a>00363 Node FIRECUBE_API LoadMesh(<span class="keyword">const</span> std::string &amp;filename);
+<a name="l00364"></a>00364 }
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -163,7 +215,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -172,7 +224,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 20:06:05 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

@@ -73,27 +73,153 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="contents">
 <!-- doxytag: class="FireCube::RenderState" -->
+<p>A class storing information about rendering properties.  
+<a href="#_details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_renderer_8h_source.html">Renderer.h</a>&gt;</code></p>
+
 <p><a href="class_fire_cube_1_1_render_state-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab2f31718f3a3b0d316f2b263190eb667"></a><!-- doxytag: member="FireCube::RenderState::FromMaterial" ref="ab2f31718f3a3b0d316f2b263190eb667" args="(Material mat)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>FromMaterial</b> (<a class="el" href="class_fire_cube_1_1_material.html">Material</a> mat)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a844b97497c14a2355789e3dd544b2a1c"></a><!-- doxytag: member="FireCube::RenderState::SetDirectionalLighting" ref="a844b97497c14a2355789e3dd544b2a1c" args="(bool enable)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetDirectionalLighting</b> (bool enable)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae4f5482717a1168f16da0657c60bbdde"></a><!-- doxytag: member="FireCube::RenderState::SetPointLighting" ref="ae4f5482717a1168f16da0657c60bbdde" args="(bool enable)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetPointLighting</b> (bool enable)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab00e9194fabc1997be5f4141e53341fa"></a><!-- doxytag: member="FireCube::RenderState::SetFog" ref="ab00e9194fabc1997be5f4141e53341fa" args="(bool enable)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetFog</b> (bool enable)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ade33686399f8f82a4e507e68acf2241a"></a><!-- doxytag: member="FireCube::RenderState::ToInt" ref="ade33686399f8f82a4e507e68acf2241a" args="() const " -->
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>ToInt</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_state.html#ab2f31718f3a3b0d316f2b263190eb667">FromMaterial</a> (<a class="el" href="class_fire_cube_1_1_material.html">Material</a> mat)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the rendering from a material.  <a href="#ab2f31718f3a3b0d316f2b263190eb667"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_state.html#a844b97497c14a2355789e3dd544b2a1c">SetDirectionalLighting</a> (bool enable)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether directional lighting should be used.  <a href="#a844b97497c14a2355789e3dd544b2a1c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_state.html#ae4f5482717a1168f16da0657c60bbdde">SetPointLighting</a> (bool enable)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether point lighting should be used.  <a href="#ae4f5482717a1168f16da0657c60bbdde"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_state.html#ab00e9194fabc1997be5f4141e53341fa">SetFog</a> (bool enable)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether fog should be used.  <a href="#ab00e9194fabc1997be5f4141e53341fa"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_state.html#ade33686399f8f82a4e507e68acf2241a">ToInt</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashes the rendering state.  <a href="#ade33686399f8f82a4e507e68acf2241a"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adcb2ff432738c3d0e602910347d3785a"></a><!-- doxytag: member="FireCube::RenderState::ShaderGenerator" ref="adcb2ff432738c3d0e602910347d3785a" args="" -->
-class&#160;</td><td class="memItemRight" valign="bottom"><b>ShaderGenerator</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a807f0a09f6d88f6738f32cadeae4a3cd"></a><!-- doxytag: member="FireCube::RenderState::Technique" ref="a807f0a09f6d88f6738f32cadeae4a3cd" args="" -->
 class&#160;</td><td class="memItemRight" valign="bottom"><b>Technique</b></td></tr>
 </table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>A class storing information about rendering properties. </p>
+<p>This class is used when generating a program. </p>
+</div><hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="ab2f31718f3a3b0d316f2b263190eb667"></a><!-- doxytag: member="FireCube::RenderState::FromMaterial" ref="ab2f31718f3a3b0d316f2b263190eb667" args="(Material mat)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RenderState::FromMaterial </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_material.html">Material</a>&#160;</td>
+          <td class="paramname"><em>mat</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Generates the rendering from a material. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mat</td><td>The material to generate the state from. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a844b97497c14a2355789e3dd544b2a1c"></a><!-- doxytag: member="FireCube::RenderState::SetDirectionalLighting" ref="a844b97497c14a2355789e3dd544b2a1c" args="(bool enable)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RenderState::SetDirectionalLighting </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets whether directional lighting should be used. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enable</td><td>True to enable, false to disable. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ab00e9194fabc1997be5f4141e53341fa"></a><!-- doxytag: member="FireCube::RenderState::SetFog" ref="ab00e9194fabc1997be5f4141e53341fa" args="(bool enable)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RenderState::SetFog </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets whether fog should be used. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enable</td><td>True to enable, false to disable. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ae4f5482717a1168f16da0657c60bbdde"></a><!-- doxytag: member="FireCube::RenderState::SetPointLighting" ref="ae4f5482717a1168f16da0657c60bbdde" args="(bool enable)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RenderState::SetPointLighting </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets whether point lighting should be used. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enable</td><td>True to enable, false to disable. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ade33686399f8f82a4e507e68acf2241a"></a><!-- doxytag: member="FireCube::RenderState::ToInt" ref="ade33686399f8f82a4e507e68acf2241a" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int RenderState::ToInt </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Hashes the rendering state. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An integer representing this rendering state. </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="_renderer_8h_source.html">Renderer.h</a></li>
 <li>Renderer.cpp</li>
@@ -104,7 +230,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Technique</b></td></
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -113,7 +239,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Technique</b></td></
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 20:06:05 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

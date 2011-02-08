@@ -82,8 +82,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9a04ee22df17d81e98da62cd15868ccb"></a><!-- doxytag: member="FireCube::ResourceManager::ResourceManager" ref="a9a04ee22df17d81e98da62cd15868ccb" args="(const ResourceManager&lt; T, TResource &gt; &amp;r)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>ResourceManager</b> (const <a class="el" href="class_fire_cube_1_1_resource_manager.html">ResourceManager</a>&lt; T, TResource &gt; &amp;r)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_resource_manager.html#a9a04ee22df17d81e98da62cd15868ccb">ResourceManager</a> (const <a class="el" href="class_fire_cube_1_1_resource_manager.html">ResourceManager</a>&lt; T, TResource &gt; &amp;r)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the resource manager from another.  <a href="#a9a04ee22df17d81e98da62cd15868ccb"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_resource_manager.html#a216e8cdc2245c76fa40fc1f6a1a0affa">Create</a> (const std::string &amp;filename)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates and loads a resource from the specified file.  <a href="#a216e8cdc2245c76fa40fc1f6a1a0affa"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_resource_manager.html#a8fc2fec6ecd0ddc23d281cfb7c375a7f">Add</a> (const std::string &amp;name)</td></tr>
@@ -96,7 +96,8 @@ Public Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afd718ca7b5a8e727a7483c0c86e17d15"></a><!-- doxytag: member="FireCube::ResourceManager::resources" ref="afd718ca7b5a8e727a7483c0c86e17d15" args="" -->
 std::map&lt; std::string, <br class="typebreak"/>
-boost::weak_ptr&lt; TResource &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>resources</b></td></tr>
+boost::weak_ptr&lt; TResource &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15">resources</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of resources contained in this resource manager. <br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class T, class TResource&gt;<br/>
@@ -105,7 +106,35 @@ boost::weak_ptr&lt; TResource &gt; &gt;&#160;</td><td class="memItemRight" valig
 <p>A templated class for a resource manager. </p>
 <p><br/>
  Resources should define a bool Load(const string &amp;) function to be usable. </p>
-</div><hr/><h2>Member Function Documentation</h2>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a9a04ee22df17d81e98da62cd15868ccb"></a><!-- doxytag: member="FireCube::ResourceManager::ResourceManager" ref="a9a04ee22df17d81e98da62cd15868ccb" args="(const ResourceManager&lt; T, TResource &gt; &amp;r)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class TResource&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1_resource_manager.html">FireCube::ResourceManager</a>&lt; T, TResource &gt;::<a class="el" href="class_fire_cube_1_1_resource_manager.html">ResourceManager</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1_resource_manager.html">ResourceManager</a>&lt; T, TResource &gt; &amp;&#160;</td>
+          <td class="paramname"><em>r</em></td><td>)</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Constructs the resource manager from another. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">r</td><td>The resource manager to copy. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a8fc2fec6ecd0ddc23d281cfb7c375a7f"></a><!-- doxytag: member="FireCube::ResourceManager::Add" ref="a8fc2fec6ecd0ddc23d281cfb7c375a7f" args="(const std::string &amp;name)" -->
 <div class="memitem">
 <div class="memproto">
@@ -235,7 +264,7 @@ template&lt;class T, class TResource&gt; </div>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -244,7 +273,7 @@ template&lt;class T, class TResource&gt; </div>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 20:06:05 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

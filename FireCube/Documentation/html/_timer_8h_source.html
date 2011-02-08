@@ -67,16 +67,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00009"></a><a class="code" href="class_fire_cube_1_1_timer.html">00009</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_timer.html" title="A class for a timer.">Timer</a>
 <a name="l00010"></a>00010 {
 <a name="l00011"></a>00011 <span class="keyword">public</span>:
-<a name="l00015"></a>00015         <span class="keywordtype">void</span> Init();
-<a name="l00019"></a>00019         <span class="keywordtype">void</span> Update();
-<a name="l00023"></a>00023         <span class="keywordtype">double</span> Passed();
-<a name="l00024"></a>00024         
-<a name="l00025"></a>00025         LARGE_INTEGER now;
-<a name="l00026"></a>00026         LARGE_INTEGER temp;
-<a name="l00027"></a>00027         <span class="keywordtype">double</span> res;
-<a name="l00028"></a>00028 };
-<a name="l00029"></a>00029 }
-<a name="l00030"></a>00030 <span class="preprocessor">#endif</span>
+<a name="l00012"></a>00012         
+<a name="l00016"></a>00016         <span class="keywordtype">void</span> Init();
+<a name="l00017"></a>00017         
+<a name="l00021"></a>00021         <span class="keywordtype">void</span> Update();
+<a name="l00022"></a>00022         
+<a name="l00026"></a>00026         <span class="keywordtype">double</span> Passed();
+<a name="l00027"></a>00027 <span class="keyword">private</span>:        
+<a name="l00028"></a>00028         LARGE_INTEGER now;
+<a name="l00029"></a>00029         LARGE_INTEGER temp;
+<a name="l00030"></a>00030         <span class="keywordtype">double</span> res;
+<a name="l00031"></a>00031 };
+<a name="l00032"></a>00032 }
+<a name="l00033"></a>00033 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -84,7 +87,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -93,7 +96,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 20:06:05 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

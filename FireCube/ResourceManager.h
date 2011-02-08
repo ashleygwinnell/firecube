@@ -19,10 +19,16 @@ public:
 	{
 		Logger::Write(Logger::LOG_INFO, "Destroying resource manager");
 	}
+	
+	/**
+	* Constructs the resource manager from another.
+	* @param r The resource manager to copy.
+	*/
 	ResourceManager<T,TResource>(const ResourceManager<T,TResource> &r)
 	{
 		resources=r.resources;
 	}
+	
 	/**
 	* Creates and loads a resource from the specified file.
 	* @param filename The file to load.
@@ -45,6 +51,7 @@ public:
 		else
 			return T();
 	}
+	
 	/**
 	* Adds a new resource without loading it.
 	* @param name The name identifying the resource.
@@ -60,6 +67,7 @@ public:
 		resources[name]=ret.resource;
 		return ret;		
 	}
+	
 	/**
 	* Adds an already existing resource.
 	* @param filename The filename/name identifying the resource.
@@ -72,6 +80,7 @@ public:
 
 		resources[filename]=res.resource;
 	}
+	
 	/**
 	* Returns a resource with a given filename, null if it does not exist.
 	* @param filename The filename identifying the resource.
@@ -86,6 +95,10 @@ public:
 		return T();
 	}
 protected:
+	
+	/**
+	* The list of resources contained in this resource manager.
+	*/
 	std::map<std::string,boost::weak_ptr<TResource>> resources;
 };
 }

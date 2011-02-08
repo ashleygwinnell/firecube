@@ -5,17 +5,10 @@ namespace FireCube
 {
 class FrameBuffer;
 
-/* CPPDOC_BEGIN_EXCLUDE */
 namespace Renderer
 {
 	void FIRECUBE_API UseFrameBuffer(FrameBuffer frameBuffer);
 }
-
-/* CPPDOC_END_EXCLUDE */
-
-/**
-* A class representing a frame buffer.
-*/
 class FIRECUBE_API FrameBufferResource
 {
 public:	
@@ -28,10 +21,14 @@ public:
 	Texture texture[MAX_TEXTURES];
 	Texture depthTexture;
 };
+
+/**
+* A class representing a frame buffer.
+*/
 class FIRECUBE_API FrameBuffer
 {
-public:
 	friend void Renderer::UseFrameBuffer(FrameBuffer frameBuffer);
+public:	
 	/**
 	* Creates a frame buffer.
 	* @param width The width of the frame buffer and it's sub-images(depth buffer, render targets).
@@ -50,17 +47,17 @@ public:
 	* Adds a new render target.
 	* @param attachmentPoint The attachment point to add to.
 	*/
-	void AddRenderTarget(int attachmnetPoint);
+	void AddRenderTarget(int attachmentPoint);
 	/**
 	* Sets a render target from an already existing texture.
 	* @param texture The texture.
 	* @param attachmentPoint The attachment point to add to.
 	*/
-	void SetRenderTarget(Texture texture,int attachmnetPoint);
+	void SetRenderTarget(Texture texture,int attachmentPoint);
 	/**
 	* Returns a texture from an attachment point.
 	*/
-	Texture GetRenderTarget(int attachmnetPoint);	
+	Texture GetRenderTarget(int attachmentPoint);	
 	/**
 	* Returns a texture from the depth buffer.
 	*/
@@ -81,8 +78,15 @@ public:
 	* Returns the resource id of the frame buffer.
 	*/
 	unsigned int GetId() const;
-
+	
+	/**
+	* @return True if points to an initialized resource, false otherwise.
+	*/
 	operator bool () const;
+
+	/**
+	* @return True of both objects points to the same resource, false otherwise.
+	*/
 	bool operator== (const FrameBuffer &frameBuffer) const;
 private:
 	boost::shared_ptr<FrameBufferResource> resource;

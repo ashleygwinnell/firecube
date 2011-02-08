@@ -69,45 +69,73 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00011"></a>00011 {
 <a name="l00012"></a>00012 <span class="keyword">public</span>:
 <a name="l00016"></a><a class="code" href="class_fire_cube_1_1mat3.html#ad73b51dfea9f9fd720bd9c0ffaccddac">00016</a>         <a class="code" href="class_fire_cube_1_1mat3.html#ad73b51dfea9f9fd720bd9c0ffaccddac" title="Initializes the matrix to the identity matrix.">mat3</a>() {Identity();}
-<a name="l00017"></a>00017         <span class="keyword">inline</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a>(<span class="keywordtype">float</span> v11, <span class="keywordtype">float</span> v21, <span class="keywordtype">float</span> v31,<span class="keywordtype">float</span> v12, <span class="keywordtype">float</span> v22, <span class="keywordtype">float</span> v32,<span class="keywordtype">float</span> v13, <span class="keywordtype">float</span> v23, <span class="keywordtype">float</span> v33  );
-<a name="l00018"></a>00018         <span class="keyword">inline</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a>(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp; v1,<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp; v2, <span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp; v3);
-<a name="l00022"></a><a class="code" href="class_fire_cube_1_1mat3.html#af8c82457149ba223c6efde29902e1fa0">00022</a>         <a class="code" href="class_fire_cube_1_1mat3.html#af8c82457149ba223c6efde29902e1fa0" title="Sets all values.">mat3</a>(<span class="keywordtype">float</span> nv) { Set(nv); }
-<a name="l00026"></a><a class="code" href="class_fire_cube_1_1mat3.html#a25e4888bf52e0f8e290de7541184f2a6">00026</a>         <span class="keywordtype">void</span> <a class="code" href="class_fire_cube_1_1mat3.html#a25e4888bf52e0f8e290de7541184f2a6" title="Zeroes the matrix.">Clear</a>() {memset(m,0,<span class="keyword">sizeof</span>(<span class="keywordtype">float</span>)*9);}
-<a name="l00027"></a>00027         <span class="keywordtype">void</span> Set(<span class="keywordtype">float</span> *src) {memcpy(m,src,<span class="keyword">sizeof</span>(<span class="keywordtype">float</span>)*9);}
-<a name="l00028"></a>00028         <span class="keywordtype">void</span> Set(<span class="keywordtype">float</span> nv) {m[0]=nv;m[1]=nv;m[2]=nv;m[3]=nv;m[4]=nv;m[5]=nv;m[6]=nv;m[7]=nv;m[8]=nv;}
-<a name="l00032"></a>00032         <span class="keyword">inline</span> <span class="keywordtype">void</span> Zero();
-<a name="l00036"></a>00036         <span class="keyword">inline</span> <span class="keywordtype">void</span> Identity(); 
-<a name="l00037"></a>00037         <span class="keyword">inline</span> mat3 operator=(<span class="keyword">const</span> mat3 &amp;src);
-<a name="l00038"></a>00038         <span class="keyword">inline</span> mat3 operator+(mat3 &amp;src);
-<a name="l00039"></a>00039         <span class="keyword">inline</span> mat3 operator-(mat3 &amp;src);
-<a name="l00040"></a>00040         <span class="keyword">inline</span> <span class="keywordtype">void</span> operator+=(mat3 &amp;src);
-<a name="l00041"></a>00041         <span class="keyword">inline</span> <span class="keywordtype">void</span> operator-=(mat3 &amp;src);
-<a name="l00042"></a>00042         mat3 operator*(mat3 &amp;src);      
-<a name="l00043"></a>00043         <span class="keywordtype">void</span> operator*=(mat3 &amp;src);     
-<a name="l00044"></a>00044         <span class="keywordtype">float</span> &amp; operator()(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> j) {<span class="keywordflow">return</span> m[i + 3*j];}
-<a name="l00045"></a>00045         <span class="keyword">const</span> <span class="keywordtype">float</span> &amp; operator()(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> j)<span class="keyword"> const </span>{<span class="keywordflow">return</span> m[i + 3*j];}
-<a name="l00046"></a>00046         
-<a name="l00053"></a>00053         <span class="keywordtype">void</span> Scale(<span class="keywordtype">float</span> x,<span class="keywordtype">float</span> y,<span class="keywordtype">float</span> z);
-<a name="l00058"></a>00058         <span class="keywordtype">void</span> RotateX(<span class="keywordtype">float</span> ang);
-<a name="l00063"></a>00063         <span class="keywordtype">void</span> RotateY(<span class="keywordtype">float</span> ang);
-<a name="l00068"></a>00068         <span class="keywordtype">void</span> RotateZ(<span class="keywordtype">float</span> ang);
-<a name="l00072"></a>00072         <span class="keywordtype">void</span> Transpose();
-<a name="l00076"></a>00076         <span class="keywordtype">void</span> Inverse();
-<a name="l00080"></a>00080         vec3 GetDir();
-<a name="l00084"></a>00084         mat4 ToMat4();
-<a name="l00088"></a>00088         <span class="keyword">inline</span> <span class="keywordtype">void</span> Orthonormalize();
-<a name="l00092"></a>00092         <span class="keyword">inline</span> <span class="keywordtype">bool</span> Sensible() <span class="keyword">const</span>;
-<a name="l00097"></a>00097         <span class="keyword">inline</span> vec3 GetCol(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i) <span class="keyword">const</span>;
-<a name="l00102"></a>00102         <span class="keyword">inline</span> <span class="keywordtype">void</span> SetCol(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i, <span class="keyword">const</span> vec3 &amp; col);
-<a name="l00103"></a>00103         <span class="keywordtype">float</span> m[9];
-<a name="l00104"></a>00104 };
-<a name="l00108"></a>00108 mat3 FIRECUBE_API Transpose(<span class="keyword">const</span> mat3 mat);
-<a name="l00109"></a>00109 mat3 FIRECUBE_API operator*(<span class="keyword">const</span> mat3 &amp;a,<span class="keyword">const</span> <span class="keywordtype">float</span> &amp;b);
-<a name="l00110"></a>00110 mat3 FIRECUBE_API operator*(<span class="keyword">const</span> <span class="keywordtype">float</span> &amp;a,<span class="keyword">const</span> mat3 &amp;b);
-<a name="l00111"></a>00111 vec3 FIRECUBE_API operator*(<span class="keyword">const</span> mat3 &amp;a,<span class="keyword">const</span> vec3 &amp;b);
-<a name="l00112"></a>00112 vec3 FIRECUBE_API operator*(<span class="keyword">const</span> vec3 &amp;a,<span class="keyword">const</span> mat3 &amp;b);
-<a name="l00113"></a>00113 }
-<a name="l00114"></a>00114 <span class="preprocessor">#endif</span>
+<a name="l00017"></a>00017 
+<a name="l00021"></a>00021         <span class="keyword">inline</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a>(<span class="keywordtype">float</span> v11, <span class="keywordtype">float</span> v21, <span class="keywordtype">float</span> v31,<span class="keywordtype">float</span> v12, <span class="keywordtype">float</span> v22, <span class="keywordtype">float</span> v32,<span class="keywordtype">float</span> v13, <span class="keywordtype">float</span> v23, <span class="keywordtype">float</span> v33  );
+<a name="l00022"></a>00022 
+<a name="l00027"></a>00027         <span class="keyword">inline</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a>(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp; v1,<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp; v2, <span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp; v3);
+<a name="l00028"></a>00028         
+<a name="l00032"></a><a class="code" href="class_fire_cube_1_1mat3.html#af8c82457149ba223c6efde29902e1fa0">00032</a>         <a class="code" href="class_fire_cube_1_1mat3.html#af8c82457149ba223c6efde29902e1fa0" title="Sets all values.">mat3</a>(<span class="keywordtype">float</span> nv) { Set(nv); }
+<a name="l00033"></a>00033         
+<a name="l00037"></a><a class="code" href="class_fire_cube_1_1mat3.html#a25e4888bf52e0f8e290de7541184f2a6">00037</a>         <span class="keywordtype">void</span> <a class="code" href="class_fire_cube_1_1mat3.html#a25e4888bf52e0f8e290de7541184f2a6" title="Zeroes the matrix.">Clear</a>() {memset(m,0,<span class="keyword">sizeof</span>(<span class="keywordtype">float</span>)*9);}
+<a name="l00038"></a>00038 
+<a name="l00043"></a><a class="code" href="class_fire_cube_1_1mat3.html#abdc67ce302c4f9476fb2b6e551c80cf7">00043</a>         <span class="keywordtype">void</span> <a class="code" href="class_fire_cube_1_1mat3.html#abdc67ce302c4f9476fb2b6e551c80cf7" title="Copies an array into the matrix.">Set</a>(<span class="keywordtype">float</span> *src) {memcpy(m,src,<span class="keyword">sizeof</span>(<span class="keywordtype">float</span>)*9);}
+<a name="l00044"></a>00044 
+<a name="l00049"></a><a class="code" href="class_fire_cube_1_1mat3.html#a03754472243458ef02b66209ecf9c6a9">00049</a>         <span class="keywordtype">void</span> <a class="code" href="class_fire_cube_1_1mat3.html#a03754472243458ef02b66209ecf9c6a9" title="Sets all elements of the matrix to a given value.">Set</a>(<span class="keywordtype">float</span> nv) {m[0]=nv;m[1]=nv;m[2]=nv;m[3]=nv;m[4]=nv;m[5]=nv;m[6]=nv;m[7]=nv;m[8]=nv;}
+<a name="l00050"></a>00050         
+<a name="l00054"></a>00054         <span class="keyword">inline</span> <span class="keywordtype">void</span> Zero();
+<a name="l00058"></a>00058         <span class="keyword">inline</span> <span class="keywordtype">void</span> Identity(); 
+<a name="l00059"></a>00059 
+<a name="l00064"></a>00064         <span class="keyword">inline</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> operator=(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
+<a name="l00065"></a>00065 
+<a name="l00069"></a>00069         <span class="keyword">inline</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> operator+(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
+<a name="l00070"></a>00070 
+<a name="l00074"></a>00074         <span class="keyword">inline</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> operator-(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
+<a name="l00075"></a>00075 
+<a name="l00079"></a>00079         <span class="keyword">inline</span> <span class="keywordtype">void</span> operator+=(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
+<a name="l00080"></a>00080 
+<a name="l00084"></a>00084         <span class="keyword">inline</span> <span class="keywordtype">void</span> operator-=(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
+<a name="l00085"></a>00085 
+<a name="l00089"></a>00089         <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> operator*(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);      
+<a name="l00090"></a>00090 
+<a name="l00094"></a>00094         <span class="keywordtype">void</span> operator*=(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
+<a name="l00095"></a>00095 
+<a name="l00100"></a><a class="code" href="class_fire_cube_1_1mat3.html#a2a0ee45a012f6da59fbee353e8e25444">00100</a>         <span class="keywordtype">float</span> &amp; <a class="code" href="class_fire_cube_1_1mat3.html#a2a0ee45a012f6da59fbee353e8e25444" title="Gets an element in the matrix.">operator()</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> j) {<span class="keywordflow">return</span> m[i + 3*j];}
+<a name="l00101"></a>00101 
+<a name="l00106"></a><a class="code" href="class_fire_cube_1_1mat3.html#a486a336695a4d86a8032047987e7ef1c">00106</a>         <span class="keyword">const</span> <span class="keywordtype">float</span> &amp; <a class="code" href="class_fire_cube_1_1mat3.html#a486a336695a4d86a8032047987e7ef1c" title="Gets an element in the matrix.">operator()</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> j)<span class="keyword"> const </span>{<span class="keywordflow">return</span> m[i + 3*j];}
+<a name="l00107"></a>00107         
+<a name="l00114"></a>00114         <span class="keywordtype">void</span> Scale(<span class="keywordtype">float</span> x,<span class="keywordtype">float</span> y,<span class="keywordtype">float</span> z);
+<a name="l00115"></a>00115         
+<a name="l00120"></a>00120         <span class="keywordtype">void</span> RotateX(<span class="keywordtype">float</span> ang);
+<a name="l00121"></a>00121         
+<a name="l00126"></a>00126         <span class="keywordtype">void</span> RotateY(<span class="keywordtype">float</span> ang);
+<a name="l00127"></a>00127         
+<a name="l00132"></a>00132         <span class="keywordtype">void</span> RotateZ(<span class="keywordtype">float</span> ang);
+<a name="l00133"></a>00133         
+<a name="l00137"></a>00137         <span class="keywordtype">void</span> Transpose();
+<a name="l00138"></a>00138         
+<a name="l00142"></a>00142         <span class="keywordtype">void</span> Inverse();
+<a name="l00143"></a>00143         
+<a name="l00147"></a>00147         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> GetDir();
+<a name="l00148"></a>00148         
+<a name="l00152"></a>00152         <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> ToMat4();
+<a name="l00153"></a>00153         
+<a name="l00157"></a>00157         <span class="keyword">inline</span> <span class="keywordtype">void</span> Orthonormalize();
+<a name="l00158"></a>00158         
+<a name="l00162"></a>00162         <span class="keyword">inline</span> <span class="keywordtype">bool</span> Sensible() <span class="keyword">const</span>;
+<a name="l00163"></a>00163         
+<a name="l00168"></a>00168         <span class="keyword">inline</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> GetCol(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i) <span class="keyword">const</span>;
+<a name="l00169"></a>00169         
+<a name="l00174"></a>00174         <span class="keyword">inline</span> <span class="keywordtype">void</span> SetCol(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i, <span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp; col);
+<a name="l00175"></a>00175         
+<a name="l00179"></a><a class="code" href="class_fire_cube_1_1mat3.html#a2ff31342de9e1b5fd108da5484a46bab">00179</a>         <span class="keywordtype">float</span> m[9];
+<a name="l00180"></a>00180 };
+<a name="l00184"></a>00184 <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> FIRECUBE_API Transpose(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> mat);
+<a name="l00185"></a>00185 <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> FIRECUBE_API operator*(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;a,<span class="keyword">const</span> <span class="keywordtype">float</span> &amp;b);
+<a name="l00186"></a>00186 <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> FIRECUBE_API operator*(<span class="keyword">const</span> <span class="keywordtype">float</span> &amp;a,<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;b);
+<a name="l00187"></a>00187 <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> FIRECUBE_API operator*(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;a,<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp;b);
+<a name="l00188"></a>00188 <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> FIRECUBE_API operator*(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp;a,<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;b);
+<a name="l00189"></a>00189 }
+<a name="l00190"></a>00190 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -115,7 +143,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -124,7 +152,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 20:06:05 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

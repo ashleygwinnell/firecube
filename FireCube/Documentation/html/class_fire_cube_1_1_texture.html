@@ -82,8 +82,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abed59b84a42179c55eab938709a489c7"></a><!-- doxytag: member="FireCube::Texture::Texture" ref="abed59b84a42179c55eab938709a489c7" args="(boost::shared_ptr&lt; TextureResource &gt; resource)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>Texture</b> (boost::shared_ptr&lt; TextureResource &gt; resource)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_texture.html#abed59b84a42179c55eab938709a489c7">Texture</a> (boost::shared_ptr&lt; TextureResource &gt; resource)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a texture from a texture resource.  <a href="#abed59b84a42179c55eab938709a489c7"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_texture.html#a4488b6c55e4a1d4aa0c1e5b296e33854">Load</a> (const std::string &amp;filename)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a texture.  <a href="#a4488b6c55e4a1d4aa0c1e5b296e33854"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad905165371eb1b7d6b8f5f4ba14958cc"></a><!-- doxytag: member="FireCube::Texture::IsValid" ref="ad905165371eb1b7d6b8f5f4ba14958cc" args="()" -->
@@ -103,10 +103,8 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a925196a9631bba4627613a9404c97629"></a><!-- doxytag: member="FireCube::Texture::GetId" ref="a925196a9631bba4627613a9404c97629" args="() const " -->
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_texture.html#a925196a9631bba4627613a9404c97629">GetId</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the resource id of the texture. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa6db7ff19a67e2582496017828f6e73f"></a><!-- doxytag: member="FireCube::Texture::operator bool" ref="aa6db7ff19a67e2582496017828f6e73f" args="() const " -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>operator bool</b> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aca3540da8292ba7dd02e6f1dbda781cc"></a><!-- doxytag: member="FireCube::Texture::operator==" ref="aca3540da8292ba7dd02e6f1dbda781cc" args="(const Texture &amp;texture) const " -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="class_fire_cube_1_1_texture.html">Texture</a> &amp;texture) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_texture.html#aa6db7ff19a67e2582496017828f6e73f">operator bool</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_texture.html#aca3540da8292ba7dd02e6f1dbda781cc">operator==</a> (const <a class="el" href="class_fire_cube_1_1_texture.html">Texture</a> &amp;texture) const </td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae639470b8849353eecdcf8cdfcfb1324"></a><!-- doxytag: member="FireCube::Texture::Renderer::UseTexture" ref="ae639470b8849353eecdcf8cdfcfb1324" args="(Texture tex, unsigned int unit)" -->
@@ -114,7 +112,33 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::UseTexture<
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>A 2d texture. </p>
-</div><hr/><h2>Member Function Documentation</h2>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="abed59b84a42179c55eab938709a489c7"></a><!-- doxytag: member="FireCube::Texture::Texture" ref="abed59b84a42179c55eab938709a489c7" args="(boost::shared_ptr&lt; TextureResource &gt; resource)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Texture::Texture </td>
+          <td>(</td>
+          <td class="paramtype">boost::shared_ptr&lt; TextureResource &gt;&#160;</td>
+          <td class="paramname"><em>resource</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Constructs a texture from a texture resource. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">resource</td><td>The resource to assign to this texture. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a4488b6c55e4a1d4aa0c1e5b296e33854"></a><!-- doxytag: member="FireCube::Texture::Load" ref="a4488b6c55e4a1d4aa0c1e5b296e33854" args="(const std::string &amp;filename)" -->
 <div class="memitem">
 <div class="memproto">
@@ -137,6 +161,41 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::UseTexture<
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="aa6db7ff19a67e2582496017828f6e73f"></a><!-- doxytag: member="FireCube::Texture::operator bool" ref="aa6db7ff19a67e2582496017828f6e73f" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Texture::operator bool </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>True if points to an initialized resource, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aca3540da8292ba7dd02e6f1dbda781cc"></a><!-- doxytag: member="FireCube::Texture::operator==" ref="aca3540da8292ba7dd02e6f1dbda781cc" args="(const Texture &amp;texture) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Texture::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1_texture.html">Texture</a> &amp;&#160;</td>
+          <td class="paramname"><em>texture</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>True of both objects points to the same resource, false otherwise. </dd></dl>
 
 </div>
 </div>
@@ -178,8 +237,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::UseTexture<
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="_texture_8h_source.html">Texture.h</a></li>
-<li>Image.cpp</li>
-<li>Shaders.cpp</li>
 <li>Texture.cpp</li>
 </ul>
 </div>
@@ -188,7 +245,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::UseTexture<
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -197,7 +254,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::UseTexture<
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 20:06:05 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

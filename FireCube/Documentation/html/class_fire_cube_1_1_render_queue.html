@@ -73,19 +73,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="contents">
 <!-- doxytag: class="FireCube::RenderQueue" -->
+<p>A class storing a list of rendering jobs.  
+<a href="#_details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_render_queue_8h_source.html">RenderQueue.h</a>&gt;</code></p>
+
 <p><a href="class_fire_cube_1_1_render_queue-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9000737ca1d2e5edbc6656c966d97253"></a><!-- doxytag: member="FireCube::RenderQueue::Clear" ref="a9000737ca1d2e5edbc6656c966d97253" args="()" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Clear</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ace0fa6c322bb53b91172b9159f942a1e"></a><!-- doxytag: member="FireCube::RenderQueue::AddNode" ref="ace0fa6c322bb53b91172b9159f942a1e" args="(Node node)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>AddNode</b> (<a class="el" href="class_fire_cube_1_1_node.html">Node</a> node)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_queue.html#a9000737ca1d2e5edbc6656c966d97253">Clear</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the rendering queue. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_queue.html#ace0fa6c322bb53b91172b9159f942a1e">AddNode</a> (<a class="el" href="class_fire_cube_1_1_node.html">Node</a> node)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a node to the rendering queue.  <a href="#ace0fa6c322bb53b91172b9159f942a1e"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaf75d0fa02322dded15716562edb0fb4"></a><!-- doxytag: member="FireCube::RenderQueue::Renderer::Render" ref="aaf75d0fa02322dded15716562edb0fb4" args="(const RenderQueue &amp;queue)" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (const <a class="el" href="class_fire_cube_1_1_render_queue.html">RenderQueue</a> &amp;queue)</td></tr>
 </table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>A class storing a list of rendering jobs. </p>
+</div><hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="ace0fa6c322bb53b91172b9159f942a1e"></a><!-- doxytag: member="FireCube::RenderQueue::AddNode" ref="ace0fa6c322bb53b91172b9159f942a1e" args="(Node node)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FireCube::RenderQueue::AddNode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_node.html">Node</a>&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Adds a node to the rendering queue. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td>The node to enqueue. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="_render_queue_8h_source.html">RenderQueue.h</a></li>
 <li>RenderQueue.cpp</li>
@@ -96,7 +130,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> 
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -105,7 +139,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> 
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 20:06:05 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

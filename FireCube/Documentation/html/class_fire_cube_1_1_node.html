@@ -72,112 +72,1125 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="contents">
 <!-- doxytag: class="FireCube::Node" -->
+<p>A class representing a node in a scene graph.  
+<a href="#_details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_node_8h_source.html">Node.h</a>&gt;</code></p>
+
 <p><a href="class_fire_cube_1_1_node-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af83ac7325b227d1ce932ee78eacfdbcc"></a><!-- doxytag: member="FireCube::Node::Node" ref="af83ac7325b227d1ce932ee78eacfdbcc" args="(NodeResource *nr)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>Node</b> (NodeResource *nr)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aee3c667e10892aa5313169aa9869ed5f"></a><!-- doxytag: member="FireCube::Node::Node" ref="aee3c667e10892aa5313169aa9869ed5f" args="(const std::string &amp;name)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>Node</b> (const std::string &amp;name)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af3bf2836616235efca6bf4b619b719e0"></a><!-- doxytag: member="FireCube::Node::operator bool" ref="af3bf2836616235efca6bf4b619b719e0" args="() const " -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>operator bool</b> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af167bfaab0f7e39daf0f39bb3d595e5f"></a><!-- doxytag: member="FireCube::Node::operator==" ref="af167bfaab0f7e39daf0f39bb3d595e5f" args="(const Node &amp;node) const " -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="class_fire_cube_1_1_node.html">Node</a> &amp;node) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6167306e26e97dc624a090cf0f550453"></a><!-- doxytag: member="FireCube::Node::SetName" ref="a6167306e26e97dc624a090cf0f550453" args="(const std::string &amp;name)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetName</b> (const std::string &amp;name)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3108774b8ea5584a9c746d06f1427aa6"></a><!-- doxytag: member="FireCube::Node::GetName" ref="a3108774b8ea5584a9c746d06f1427aa6" args="()" -->
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>GetName</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab0ceda7dcd3dc0f593c56dc8893b7896"></a><!-- doxytag: member="FireCube::Node::GetLocalTransformation" ref="ab0ceda7dcd3dc0f593c56dc8893b7896" args="()" -->
-<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetLocalTransformation</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeb8b7ad340ab738633b7edbbba4bbe68"></a><!-- doxytag: member="FireCube::Node::GetWorldTransformation" ref="aeb8b7ad340ab738633b7edbbba4bbe68" args="()" -->
-<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetWorldTransformation</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7c8ded3b047fa8563cb520571f3e3757"></a><!-- doxytag: member="FireCube::Node::SetWorldTransformation" ref="a7c8ded3b047fa8563cb520571f3e3757" args="(mat4 mat)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetWorldTransformation</b> (<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> mat)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6fdcda2c037f80276e37a94317c8033c"></a><!-- doxytag: member="FireCube::Node::SetTranslation" ref="a6fdcda2c037f80276e37a94317c8033c" args="(vec3 t)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetTranslation</b> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> t)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8fcbf9eb1854723c1af4121df5fd256c"></a><!-- doxytag: member="FireCube::Node::GetTranslation" ref="a8fcbf9eb1854723c1af4121df5fd256c" args="()" -->
-<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetTranslation</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae2b0481f7d87c64047923e507cb25294"></a><!-- doxytag: member="FireCube::Node::SetRotation" ref="ae2b0481f7d87c64047923e507cb25294" args="(vec3 r)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetRotation</b> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> r)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acc56e459f03e3ff98cecfe0034451586"></a><!-- doxytag: member="FireCube::Node::GetRotation" ref="acc56e459f03e3ff98cecfe0034451586" args="()" -->
-<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetRotation</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4ee95376bdaaa1dd3f500f8237daaa4a"></a><!-- doxytag: member="FireCube::Node::SetScale" ref="a4ee95376bdaaa1dd3f500f8237daaa4a" args="(vec3 s)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetScale</b> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> s)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2002efc905225274fd864f172ac9f7e0"></a><!-- doxytag: member="FireCube::Node::GetScale" ref="a2002efc905225274fd864f172ac9f7e0" args="()" -->
-<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetScale</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a380a26b934d28c9dcb139c04fe5c2b0f"></a><!-- doxytag: member="FireCube::Node::SetMatrixTransformation" ref="a380a26b934d28c9dcb139c04fe5c2b0f" args="(mat4 t)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetMatrixTransformation</b> (<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> t)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a657e87a191f64760e35382404ecaa0a2"></a><!-- doxytag: member="FireCube::Node::GetMatrixTransformation" ref="a657e87a191f64760e35382404ecaa0a2" args="()" -->
-<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetMatrixTransformation</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeb2f40832a46c903b965749262390cb0"></a><!-- doxytag: member="FireCube::Node::Move" ref="aeb2f40832a46c903b965749262390cb0" args="(vec3 t)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Move</b> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> t)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4648ab328fbec12baf8c05c2f59aad26"></a><!-- doxytag: member="FireCube::Node::Rotate" ref="a4648ab328fbec12baf8c05c2f59aad26" args="(vec3 r)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Rotate</b> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> r)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a73cbbc634982f2b3e8a6f8fa70bf4d5e"></a><!-- doxytag: member="FireCube::Node::Scale" ref="a73cbbc634982f2b3e8a6f8fa70bf4d5e" args="(vec3 s)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Scale</b> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> s)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a126a28fd0dc00f6b7b4a76d2f8239e91"></a><!-- doxytag: member="FireCube::Node::GetParent" ref="a126a28fd0dc00f6b7b4a76d2f8239e91" args="()" -->
-<a class="el" href="class_fire_cube_1_1_node.html">Node</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetParent</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd1476fafbc70cc8b9e5613495664114"></a><!-- doxytag: member="FireCube::Node::SetParent" ref="acd1476fafbc70cc8b9e5613495664114" args="(Node parent)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetParent</b> (<a class="el" href="class_fire_cube_1_1_node.html">Node</a> parent)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5ccf2a5a1cd0359747d2c88ea402ba7e"></a><!-- doxytag: member="FireCube::Node::GetChildren" ref="a5ccf2a5a1cd0359747d2c88ea402ba7e" args="()" -->
-std::vector&lt; <a class="el" href="class_fire_cube_1_1_node.html">Node</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetChildren</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a72bd1eb3c527077bacacbdc808d12b62"></a><!-- doxytag: member="FireCube::Node::AddGeometry" ref="a72bd1eb3c527077bacacbdc808d12b62" args="(Geometry geometry)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>AddGeometry</b> (<a class="el" href="class_fire_cube_1_1_geometry.html">Geometry</a> geometry)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a09c3169deb0754f541ad98b68b9e10d1"></a><!-- doxytag: member="FireCube::Node::GetGeometries" ref="a09c3169deb0754f541ad98b68b9e10d1" args="()" -->
-std::vector&lt; <a class="el" href="class_fire_cube_1_1_geometry.html">Geometry</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetGeometries</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3437859eb5051fa3314f53a9a9fe393f"></a><!-- doxytag: member="FireCube::Node::AddLight" ref="a3437859eb5051fa3314f53a9a9fe393f" args="(Light l)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>AddLight</b> (<a class="el" href="class_fire_cube_1_1_light.html">Light</a> l)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad888add7ae3381d8018799274fceaee2"></a><!-- doxytag: member="FireCube::Node::RemoveLight" ref="ad888add7ae3381d8018799274fceaee2" args="(Light l)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>RemoveLight</b> (<a class="el" href="class_fire_cube_1_1_light.html">Light</a> l)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a96d7ca14c1c90bdd6bb648b6cfbdcea3"></a><!-- doxytag: member="FireCube::Node::GetLights" ref="a96d7ca14c1c90bdd6bb648b6cfbdcea3" args="()" -->
-std::vector&lt; <a class="el" href="class_fire_cube_1_1_light.html">Light</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetLights</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a87b7e937d7ec02782d06c0602cc7d7a0"></a><!-- doxytag: member="FireCube::Node::AddChild" ref="a87b7e937d7ec02782d06c0602cc7d7a0" args="(Node node)" -->
-<a class="el" href="class_fire_cube_1_1_node.html">Node</a>&#160;</td><td class="memItemRight" valign="bottom"><b>AddChild</b> (<a class="el" href="class_fire_cube_1_1_node.html">Node</a> node)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a20bf64425656b2506ed88784fdf42c34"></a><!-- doxytag: member="FireCube::Node::GetChild" ref="a20bf64425656b2506ed88784fdf42c34" args="(const std::string &amp;name)" -->
-<a class="el" href="class_fire_cube_1_1_node.html">Node</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetChild</b> (const std::string &amp;name)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1f2013dfdc674759dc0e945c1c005533"></a><!-- doxytag: member="FireCube::Node::RemoveChild" ref="a1f2013dfdc674759dc0e945c1c005533" args="(const std::string &amp;name)" -->
-<a class="el" href="class_fire_cube_1_1_node.html">Node</a>&#160;</td><td class="memItemRight" valign="bottom"><b>RemoveChild</b> (const std::string &amp;name)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd5afbdedc51528fa53e2af43f83068a"></a><!-- doxytag: member="FireCube::Node::RemoveChild" ref="acd5afbdedc51528fa53e2af43f83068a" args="(Node node)" -->
-<a class="el" href="class_fire_cube_1_1_node.html">Node</a>&#160;</td><td class="memItemRight" valign="bottom"><b>RemoveChild</b> (<a class="el" href="class_fire_cube_1_1_node.html">Node</a> node)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#af83ac7325b227d1ce932ee78eacfdbcc">Node</a> (NodeResource *nr)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a node from a node resource.  <a href="#af83ac7325b227d1ce932ee78eacfdbcc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a476462d3fb27971e9f3688d9fc2caa8c">Node</a> (const std::string &amp;name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a node.  <a href="#a476462d3fb27971e9f3688d9fc2caa8c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a6167306e26e97dc624a090cf0f550453">SetName</a> (const std::string &amp;name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the name of this node.  <a href="#a6167306e26e97dc624a090cf0f550453"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a3108774b8ea5584a9c746d06f1427aa6">GetName</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the name of this node.  <a href="#a3108774b8ea5584a9c746d06f1427aa6"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#ab0ceda7dcd3dc0f593c56dc8893b7896">GetLocalTransformation</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the local transformation of this node.  <a href="#ab0ceda7dcd3dc0f593c56dc8893b7896"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#aeb8b7ad340ab738633b7edbbba4bbe68">GetWorldTransformation</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the world transformation of this node.  <a href="#aeb8b7ad340ab738633b7edbbba4bbe68"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a7c8ded3b047fa8563cb520571f3e3757">SetWorldTransformation</a> (<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> mat)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the world transformation of this node.  <a href="#a7c8ded3b047fa8563cb520571f3e3757"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a6fdcda2c037f80276e37a94317c8033c">SetTranslation</a> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> t)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the translation of this node.  <a href="#a6fdcda2c037f80276e37a94317c8033c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a8fcbf9eb1854723c1af4121df5fd256c">GetTranslation</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the translation of this node.  <a href="#a8fcbf9eb1854723c1af4121df5fd256c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#ae2b0481f7d87c64047923e507cb25294">SetRotation</a> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> r)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the rotation of this node.  <a href="#ae2b0481f7d87c64047923e507cb25294"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#acc56e459f03e3ff98cecfe0034451586">GetRotation</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the rotation of this node.  <a href="#acc56e459f03e3ff98cecfe0034451586"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a4ee95376bdaaa1dd3f500f8237daaa4a">SetScale</a> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> s)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the scale of this node.  <a href="#a4ee95376bdaaa1dd3f500f8237daaa4a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a2002efc905225274fd864f172ac9f7e0">GetScale</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the scale of this node.  <a href="#a2002efc905225274fd864f172ac9f7e0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a380a26b934d28c9dcb139c04fe5c2b0f">SetMatrixTransformation</a> (<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> t)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the matrix transformation of this node.  <a href="#a380a26b934d28c9dcb139c04fe5c2b0f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a657e87a191f64760e35382404ecaa0a2">GetMatrixTransformation</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the matrix transformation of this node.  <a href="#a657e87a191f64760e35382404ecaa0a2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#aeb2f40832a46c903b965749262390cb0">Move</a> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> t)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Translates the node.  <a href="#aeb2f40832a46c903b965749262390cb0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a4648ab328fbec12baf8c05c2f59aad26">Rotate</a> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> r)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotates the node.  <a href="#a4648ab328fbec12baf8c05c2f59aad26"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a73cbbc634982f2b3e8a6f8fa70bf4d5e">Scale</a> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> s)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Scales the node.  <a href="#a73cbbc634982f2b3e8a6f8fa70bf4d5e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1_node.html">Node</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a126a28fd0dc00f6b7b4a76d2f8239e91">GetParent</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the parent of this node.  <a href="#a126a28fd0dc00f6b7b4a76d2f8239e91"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#acd1476fafbc70cc8b9e5613495664114">SetParent</a> (<a class="el" href="class_fire_cube_1_1_node.html">Node</a> parent)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the parent of this node.  <a href="#acd1476fafbc70cc8b9e5613495664114"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_fire_cube_1_1_node.html">Node</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a5ccf2a5a1cd0359747d2c88ea402ba7e">GetChildren</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the children of this node.  <a href="#a5ccf2a5a1cd0359747d2c88ea402ba7e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a72bd1eb3c527077bacacbdc808d12b62">AddGeometry</a> (<a class="el" href="class_fire_cube_1_1_geometry.html">Geometry</a> geometry)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a geometry to this node.  <a href="#a72bd1eb3c527077bacacbdc808d12b62"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_fire_cube_1_1_geometry.html">Geometry</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a09c3169deb0754f541ad98b68b9e10d1">GetGeometries</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the geometries of this node.  <a href="#a09c3169deb0754f541ad98b68b9e10d1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a93f01c58b0c779f74e47d5bef8ad4150">AddLight</a> (<a class="el" href="class_fire_cube_1_1_light.html">Light</a> light)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a light to this node.  <a href="#a93f01c58b0c779f74e47d5bef8ad4150"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#abc7129d047c9b2fa1e937514dbfde1ac">RemoveLight</a> (<a class="el" href="class_fire_cube_1_1_light.html">Light</a> light)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a light from this node.  <a href="#abc7129d047c9b2fa1e937514dbfde1ac"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_fire_cube_1_1_light.html">Light</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a96d7ca14c1c90bdd6bb648b6cfbdcea3">GetLights</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the lights of this node.  <a href="#a96d7ca14c1c90bdd6bb648b6cfbdcea3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1_node.html">Node</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a87b7e937d7ec02782d06c0602cc7d7a0">AddChild</a> (<a class="el" href="class_fire_cube_1_1_node.html">Node</a> node)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a child node.  <a href="#a87b7e937d7ec02782d06c0602cc7d7a0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1_node.html">Node</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a20bf64425656b2506ed88784fdf42c34">GetChild</a> (const std::string &amp;name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a child node by name.  <a href="#a20bf64425656b2506ed88784fdf42c34"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1_node.html">Node</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#aacef9515844bfb585109b5809cfe677d">RemoveChild</a> (const std::string &amp;name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a child node.  <a href="#aacef9515844bfb585109b5809cfe677d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1_node.html">Node</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#acd5afbdedc51528fa53e2af43f83068a">RemoveChild</a> (<a class="el" href="class_fire_cube_1_1_node.html">Node</a> node)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a child node.  <a href="#acd5afbdedc51528fa53e2af43f83068a"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a71a5297947568bffaa70f28935547def"></a><!-- doxytag: member="FireCube::Node::Render" ref="a71a5297947568bffaa70f28935547def" args="()" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Render</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a71a5297947568bffaa70f28935547def">Render</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the node. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a999dc5e0429a638447a8579daaa97db5"></a><!-- doxytag: member="FireCube::Node::CreateHardNormals" ref="a999dc5e0429a638447a8579daaa97db5" args="()" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>CreateHardNormals</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a999dc5e0429a638447a8579daaa97db5">CreateHardNormals</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates hard normals for all geometries of the sub tree under this node. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a35dbbe704c8ac3a11f7577a39125b00a"></a><!-- doxytag: member="FireCube::Node::RenderBoundingBox" ref="a35dbbe704c8ac3a11f7577a39125b00a" args="()" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>RenderBoundingBox</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a35dbbe704c8ac3a11f7577a39125b00a">RenderBoundingBox</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the bounding boxes of the sub tree under this node. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4f4c1450dc29d99a9cf46a096f0b73d5"></a><!-- doxytag: member="FireCube::Node::UpdateBoundingBox" ref="a4f4c1450dc29d99a9cf46a096f0b73d5" args="()" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateBoundingBox</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2683535c7dc64b97aa9b62524c0adacf"></a><!-- doxytag: member="FireCube::Node::GetRenderParameters" ref="a2683535c7dc64b97aa9b62524c0adacf" args="()" -->
-<a class="el" href="class_fire_cube_1_1_render_parameters.html">RenderParameters</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetRenderParameters</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adfe895cfe80543570c5efcfa0c197eaa"></a><!-- doxytag: member="FireCube::Node::SetProgram" ref="adfe895cfe80543570c5efcfa0c197eaa" args="(Program program)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetProgram</b> (<a class="el" href="class_fire_cube_1_1_program.html">Program</a> program)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5586f8e19517430d59b1f499f89e9f10"></a><!-- doxytag: member="FireCube::Node::GetProgram" ref="a5586f8e19517430d59b1f499f89e9f10" args="()" -->
-<a class="el" href="class_fire_cube_1_1_program.html">Program</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetProgram</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab63d09e022c59c4fc576c6030bd717ae"></a><!-- doxytag: member="FireCube::Node::SetTechnique" ref="ab63d09e022c59c4fc576c6030bd717ae" args="(const std::string &amp;name)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetTechnique</b> (const std::string &amp;name)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7c7bf84cc31e7551f465c71d91d7ac32"></a><!-- doxytag: member="FireCube::Node::GetTechnique" ref="a7c7bf84cc31e7551f465c71d91d7ac32" args="() const " -->
-<a class="el" href="class_fire_cube_1_1_technique.html">Technique</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetTechnique</b> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afa6f64d3013653771980825237f36cba"></a><!-- doxytag: member="FireCube::Node::SetLighting" ref="afa6f64d3013653771980825237f36cba" args="(bool enabled=true)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetLighting</b> (bool enabled=true)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8694654fb968e6ddad1160d1ea75b4cc"></a><!-- doxytag: member="FireCube::Node::GetLighting" ref="a8694654fb968e6ddad1160d1ea75b4cc" args="()" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>GetLighting</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aef9ed94f2a07d77fc31b2614f3f9dd4e"></a><!-- doxytag: member="FireCube::Node::SetFog" ref="aef9ed94f2a07d77fc31b2614f3f9dd4e" args="(bool enabled=true)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetFog</b> (bool enabled=true)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a219babecebd15116a027a9e43d8ee327"></a><!-- doxytag: member="FireCube::Node::GetFog" ref="a219babecebd15116a027a9e43d8ee327" args="()" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>GetFog</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac6be6c739bcc95474772caf81ab84c2a"></a><!-- doxytag: member="FireCube::Node::SetFogColor" ref="ac6be6c739bcc95474772caf81ab84c2a" args="(vec4 color)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetFogColor</b> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3d7c7f9d0e4b30db430f5667960e77b6"></a><!-- doxytag: member="FireCube::Node::GetFogColor" ref="a3d7c7f9d0e4b30db430f5667960e77b6" args="()" -->
-<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetFogColor</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38260a993ab1f0afb4377b0ce108d76a"></a><!-- doxytag: member="FireCube::Node::SetFogDensity" ref="a38260a993ab1f0afb4377b0ce108d76a" args="(float density)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetFogDensity</b> (float density)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a083515d4156bc71e053128375877cf10"></a><!-- doxytag: member="FireCube::Node::GetFogDensity" ref="a083515d4156bc71e053128375877cf10" args="()" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><b>GetFogDensity</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a4f4c1450dc29d99a9cf46a096f0b73d5">UpdateBoundingBox</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the bounding boxes of the sub tree under this node. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1_render_parameters.html">RenderParameters</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a2683535c7dc64b97aa9b62524c0adacf">GetRenderParameters</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the render parameters of this node.  <a href="#a2683535c7dc64b97aa9b62524c0adacf"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#adfe895cfe80543570c5efcfa0c197eaa">SetProgram</a> (<a class="el" href="class_fire_cube_1_1_program.html">Program</a> program)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the program used for rendering of the sub tree under this node.  <a href="#adfe895cfe80543570c5efcfa0c197eaa"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1_program.html">Program</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a5586f8e19517430d59b1f499f89e9f10">GetProgram</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the program of this node.  <a href="#a5586f8e19517430d59b1f499f89e9f10"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#ab63d09e022c59c4fc576c6030bd717ae">SetTechnique</a> (const std::string &amp;name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the technique used for rendering of the sub tree under this node.  <a href="#ab63d09e022c59c4fc576c6030bd717ae"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1_technique.html">Technique</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a7c7bf84cc31e7551f465c71d91d7ac32">GetTechnique</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the technique of this node.  <a href="#a7c7bf84cc31e7551f465c71d91d7ac32"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#afa6f64d3013653771980825237f36cba">SetLighting</a> (bool enabled=true)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether dynamic lighting is enabled for the sub tree under this node.  <a href="#afa6f64d3013653771980825237f36cba"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a8694654fb968e6ddad1160d1ea75b4cc">GetLighting</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether dynamic lighting is enabled for this node.  <a href="#a8694654fb968e6ddad1160d1ea75b4cc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#aef9ed94f2a07d77fc31b2614f3f9dd4e">SetFog</a> (bool enabled=true)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether fog is enabled for the sub tree under this node.  <a href="#aef9ed94f2a07d77fc31b2614f3f9dd4e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a219babecebd15116a027a9e43d8ee327">GetFog</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether fog is enabled for this node.  <a href="#a219babecebd15116a027a9e43d8ee327"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#ac6be6c739bcc95474772caf81ab84c2a">SetFogColor</a> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the fog color for the sub tree under this node.  <a href="#ac6be6c739bcc95474772caf81ab84c2a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a3d7c7f9d0e4b30db430f5667960e77b6">GetFogColor</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the fog color of this node.  <a href="#a3d7c7f9d0e4b30db430f5667960e77b6"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a38260a993ab1f0afb4377b0ce108d76a">SetFogDensity</a> (float density)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the fog density for the sub tree under this node.  <a href="#a38260a993ab1f0afb4377b0ce108d76a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#a083515d4156bc71e053128375877cf10">GetFogDensity</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the fog density of this node.  <a href="#a083515d4156bc71e053128375877cf10"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#af3bf2836616235efca6bf4b619b719e0">operator bool</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_node.html#af167bfaab0f7e39daf0f39bb3d595e5f">operator==</a> (const <a class="el" href="class_fire_cube_1_1_node.html">Node</a> &amp;node) const </td></tr>
 </table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>A class representing a node in a scene graph. </p>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="af83ac7325b227d1ce932ee78eacfdbcc"></a><!-- doxytag: member="FireCube::Node::Node" ref="af83ac7325b227d1ce932ee78eacfdbcc" args="(NodeResource *nr)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Node::Node </td>
+          <td>(</td>
+          <td class="paramtype">NodeResource *&#160;</td>
+          <td class="paramname"><em>nr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Constructs a node from a node resource. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nr</td><td>The resource to assign to this node. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a476462d3fb27971e9f3688d9fc2caa8c"></a><!-- doxytag: member="FireCube::Node::Node" ref="a476462d3fb27971e9f3688d9fc2caa8c" args="(const std::string &amp;name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Node::Node </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Constructs a node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of this node. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a87b7e937d7ec02782d06c0602cc7d7a0"></a><!-- doxytag: member="FireCube::Node::AddChild" ref="a87b7e937d7ec02782d06c0602cc7d7a0" args="(Node node)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1_node.html">Node</a> Node::AddChild </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_node.html">Node</a>&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Adds a child node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td>The node to add as a child. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a72bd1eb3c527077bacacbdc808d12b62"></a><!-- doxytag: member="FireCube::Node::AddGeometry" ref="a72bd1eb3c527077bacacbdc808d12b62" args="(Geometry geometry)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::AddGeometry </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_geometry.html">Geometry</a>&#160;</td>
+          <td class="paramname"><em>geometry</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Adds a geometry to this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">geometry</td><td>The geometry to add. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a93f01c58b0c779f74e47d5bef8ad4150"></a><!-- doxytag: member="FireCube::Node::AddLight" ref="a93f01c58b0c779f74e47d5bef8ad4150" args="(Light light)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::AddLight </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_light.html">Light</a>&#160;</td>
+          <td class="paramname"><em>light</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Adds a light to this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">light</td><td>The light to add. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a20bf64425656b2506ed88784fdf42c34"></a><!-- doxytag: member="FireCube::Node::GetChild" ref="a20bf64425656b2506ed88784fdf42c34" args="(const std::string &amp;name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1_node.html">Node</a> Node::GetChild </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets a child node by name. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the node. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The child node. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a5ccf2a5a1cd0359747d2c88ea402ba7e"></a><!-- doxytag: member="FireCube::Node::GetChildren" ref="a5ccf2a5a1cd0359747d2c88ea402ba7e" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; <a class="el" href="class_fire_cube_1_1_node.html">Node</a> &gt; &amp; Node::GetChildren </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the children of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A list of children. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a219babecebd15116a027a9e43d8ee327"></a><!-- doxytag: member="FireCube::Node::GetFog" ref="a219babecebd15116a027a9e43d8ee327" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Node::GetFog </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Checks whether fog is enabled for this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>True if enabled, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a3d7c7f9d0e4b30db430f5667960e77b6"></a><!-- doxytag: member="FireCube::Node::GetFogColor" ref="a3d7c7f9d0e4b30db430f5667960e77b6" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> Node::GetFogColor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the fog color of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The fog color. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a083515d4156bc71e053128375877cf10"></a><!-- doxytag: member="FireCube::Node::GetFogDensity" ref="a083515d4156bc71e053128375877cf10" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Node::GetFogDensity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the fog density of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The fog density. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a09c3169deb0754f541ad98b68b9e10d1"></a><!-- doxytag: member="FireCube::Node::GetGeometries" ref="a09c3169deb0754f541ad98b68b9e10d1" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; <a class="el" href="class_fire_cube_1_1_geometry.html">Geometry</a> &gt; &amp; Node::GetGeometries </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the geometries of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A list of geometries. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a8694654fb968e6ddad1160d1ea75b4cc"></a><!-- doxytag: member="FireCube::Node::GetLighting" ref="a8694654fb968e6ddad1160d1ea75b4cc" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Node::GetLighting </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Checks whether dynamic lighting is enabled for this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>True if enabled, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a96d7ca14c1c90bdd6bb648b6cfbdcea3"></a><!-- doxytag: member="FireCube::Node::GetLights" ref="a96d7ca14c1c90bdd6bb648b6cfbdcea3" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; <a class="el" href="class_fire_cube_1_1_light.html">Light</a> &gt; &amp; Node::GetLights </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the lights of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A list of lights. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ab0ceda7dcd3dc0f593c56dc8893b7896"></a><!-- doxytag: member="FireCube::Node::GetLocalTransformation" ref="ab0ceda7dcd3dc0f593c56dc8893b7896" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> Node::GetLocalTransformation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the local transformation of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The local transformation of this node. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a657e87a191f64760e35382404ecaa0a2"></a><!-- doxytag: member="FireCube::Node::GetMatrixTransformation" ref="a657e87a191f64760e35382404ecaa0a2" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> Node::GetMatrixTransformation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the matrix transformation of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The matrix transformation of this node. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a3108774b8ea5584a9c746d06f1427aa6"></a><!-- doxytag: member="FireCube::Node::GetName" ref="a3108774b8ea5584a9c746d06f1427aa6" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Node::GetName </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the name of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The name of this node. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a126a28fd0dc00f6b7b4a76d2f8239e91"></a><!-- doxytag: member="FireCube::Node::GetParent" ref="a126a28fd0dc00f6b7b4a76d2f8239e91" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1_node.html">Node</a> &amp; Node::GetParent </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the parent of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The parent of this node. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a5586f8e19517430d59b1f499f89e9f10"></a><!-- doxytag: member="FireCube::Node::GetProgram" ref="a5586f8e19517430d59b1f499f89e9f10" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1_program.html">Program</a> Node::GetProgram </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the program of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The program used for rendering of this node. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2683535c7dc64b97aa9b62524c0adacf"></a><!-- doxytag: member="FireCube::Node::GetRenderParameters" ref="a2683535c7dc64b97aa9b62524c0adacf" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1_render_parameters.html">RenderParameters</a> &amp; Node::GetRenderParameters </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the render parameters of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The render parameters of this node. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="acc56e459f03e3ff98cecfe0034451586"></a><!-- doxytag: member="FireCube::Node::GetRotation" ref="acc56e459f03e3ff98cecfe0034451586" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> Node::GetRotation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the rotation of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The rotation(Euler angles) of this node. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2002efc905225274fd864f172ac9f7e0"></a><!-- doxytag: member="FireCube::Node::GetScale" ref="a2002efc905225274fd864f172ac9f7e0" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> Node::GetScale </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the scale of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The scale of this node. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a7c7bf84cc31e7551f465c71d91d7ac32"></a><!-- doxytag: member="FireCube::Node::GetTechnique" ref="a7c7bf84cc31e7551f465c71d91d7ac32" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1_technique.html">Technique</a> Node::GetTechnique </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the technique of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The technique used for rendering of this node. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a8fcbf9eb1854723c1af4121df5fd256c"></a><!-- doxytag: member="FireCube::Node::GetTranslation" ref="a8fcbf9eb1854723c1af4121df5fd256c" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> Node::GetTranslation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the translation of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The translation of this node. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aeb8b7ad340ab738633b7edbbba4bbe68"></a><!-- doxytag: member="FireCube::Node::GetWorldTransformation" ref="aeb8b7ad340ab738633b7edbbba4bbe68" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> Node::GetWorldTransformation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the world transformation of this node. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The world transformation of this node. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aeb2f40832a46c903b965749262390cb0"></a><!-- doxytag: member="FireCube::Node::Move" ref="aeb2f40832a46c903b965749262390cb0" args="(vec3 t)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::Move </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td>
+          <td class="paramname"><em>t</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Translates the node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>The translation vector. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="af3bf2836616235efca6bf4b619b719e0"></a><!-- doxytag: member="FireCube::Node::operator bool" ref="af3bf2836616235efca6bf4b619b719e0" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Node::operator bool </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>True if points to an initialized resource, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="af167bfaab0f7e39daf0f39bb3d595e5f"></a><!-- doxytag: member="FireCube::Node::operator==" ref="af167bfaab0f7e39daf0f39bb3d595e5f" args="(const Node &amp;node) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Node::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1_node.html">Node</a> &amp;&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>True of both objects points to the same resource, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aacef9515844bfb585109b5809cfe677d"></a><!-- doxytag: member="FireCube::Node::RemoveChild" ref="aacef9515844bfb585109b5809cfe677d" args="(const std::string &amp;name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1_node.html">Node</a> Node::RemoveChild </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Removes a child node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the child node to remove. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="acd5afbdedc51528fa53e2af43f83068a"></a><!-- doxytag: member="FireCube::Node::RemoveChild" ref="acd5afbdedc51528fa53e2af43f83068a" args="(Node node)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1_node.html">Node</a> Node::RemoveChild </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_node.html">Node</a>&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Removes a child node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td>The child node to remove. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="abc7129d047c9b2fa1e937514dbfde1ac"></a><!-- doxytag: member="FireCube::Node::RemoveLight" ref="abc7129d047c9b2fa1e937514dbfde1ac" args="(Light light)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::RemoveLight </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_light.html">Light</a>&#160;</td>
+          <td class="paramname"><em>light</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Removes a light from this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">light</td><td>The light to remove. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a4648ab328fbec12baf8c05c2f59aad26"></a><!-- doxytag: member="FireCube::Node::Rotate" ref="a4648ab328fbec12baf8c05c2f59aad26" args="(vec3 r)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::Rotate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td>
+          <td class="paramname"><em>r</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Rotates the node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">r</td><td>The rotation vector(Euler angles). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a73cbbc634982f2b3e8a6f8fa70bf4d5e"></a><!-- doxytag: member="FireCube::Node::Scale" ref="a73cbbc634982f2b3e8a6f8fa70bf4d5e" args="(vec3 s)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::Scale </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Scales the node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>The scale vector. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="aef9ed94f2a07d77fc31b2614f3f9dd4e"></a><!-- doxytag: member="FireCube::Node::SetFog" ref="aef9ed94f2a07d77fc31b2614f3f9dd4e" args="(bool enabled=true)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::SetFog </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enabled</em> = <code>true</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets whether fog is enabled for the sub tree under this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enabled</td><td>True to enable, false to disable. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ac6be6c739bcc95474772caf81ab84c2a"></a><!-- doxytag: member="FireCube::Node::SetFogColor" ref="ac6be6c739bcc95474772caf81ab84c2a" args="(vec4 color)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::SetFogColor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the fog color for the sub tree under this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>The fog color to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a38260a993ab1f0afb4377b0ce108d76a"></a><!-- doxytag: member="FireCube::Node::SetFogDensity" ref="a38260a993ab1f0afb4377b0ce108d76a" args="(float density)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::SetFogDensity </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>density</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the fog density for the sub tree under this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">density</td><td>The fog density to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="afa6f64d3013653771980825237f36cba"></a><!-- doxytag: member="FireCube::Node::SetLighting" ref="afa6f64d3013653771980825237f36cba" args="(bool enabled=true)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::SetLighting </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enabled</em> = <code>true</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets whether dynamic lighting is enabled for the sub tree under this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enabled</td><td>True to enable, false to disable. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a380a26b934d28c9dcb139c04fe5c2b0f"></a><!-- doxytag: member="FireCube::Node::SetMatrixTransformation" ref="a380a26b934d28c9dcb139c04fe5c2b0f" args="(mat4 t)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::SetMatrixTransformation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td>
+          <td class="paramname"><em>t</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the matrix transformation of this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>The matrix transformation to assign to this node. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a6167306e26e97dc624a090cf0f550453"></a><!-- doxytag: member="FireCube::Node::SetName" ref="a6167306e26e97dc624a090cf0f550453" args="(const std::string &amp;name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::SetName </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the name of this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name to give to this node. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="acd1476fafbc70cc8b9e5613495664114"></a><!-- doxytag: member="FireCube::Node::SetParent" ref="acd1476fafbc70cc8b9e5613495664114" args="(Node parent)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::SetParent </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_node.html">Node</a>&#160;</td>
+          <td class="paramname"><em>parent</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the parent of this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parent</td><td>The new parent to assign to this node </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="adfe895cfe80543570c5efcfa0c197eaa"></a><!-- doxytag: member="FireCube::Node::SetProgram" ref="adfe895cfe80543570c5efcfa0c197eaa" args="(Program program)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::SetProgram </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_program.html">Program</a>&#160;</td>
+          <td class="paramname"><em>program</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the program used for rendering of the sub tree under this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">program</td><td>The program to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ae2b0481f7d87c64047923e507cb25294"></a><!-- doxytag: member="FireCube::Node::SetRotation" ref="ae2b0481f7d87c64047923e507cb25294" args="(vec3 r)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::SetRotation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td>
+          <td class="paramname"><em>r</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the rotation of this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">r</td><td>The rotation(Euler angles) to assign to this node. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a4ee95376bdaaa1dd3f500f8237daaa4a"></a><!-- doxytag: member="FireCube::Node::SetScale" ref="a4ee95376bdaaa1dd3f500f8237daaa4a" args="(vec3 s)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::SetScale </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the scale of this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>The scale to assign to this node. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ab63d09e022c59c4fc576c6030bd717ae"></a><!-- doxytag: member="FireCube::Node::SetTechnique" ref="ab63d09e022c59c4fc576c6030bd717ae" args="(const std::string &amp;name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::SetTechnique </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the technique used for rendering of the sub tree under this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the technique to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a6fdcda2c037f80276e37a94317c8033c"></a><!-- doxytag: member="FireCube::Node::SetTranslation" ref="a6fdcda2c037f80276e37a94317c8033c" args="(vec3 t)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::SetTranslation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td>
+          <td class="paramname"><em>t</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the translation of this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>The translation to assign to this node. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a7c8ded3b047fa8563cb520571f3e3757"></a><!-- doxytag: member="FireCube::Node::SetWorldTransformation" ref="a7c8ded3b047fa8563cb520571f3e3757" args="(mat4 mat)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Node::SetWorldTransformation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td>
+          <td class="paramname"><em>mat</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the world transformation of this node. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mat</td><td>The world transformation to assign to this node. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="_node_8h_source.html">Node.h</a></li>
-<li>Geometry.cpp</li>
 <li>Node.cpp</li>
 </ul>
 </div>
@@ -186,7 +1199,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>GetFogDensity</b> ()
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -195,7 +1208,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>GetFogDensity</b> ()
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 20:06:05 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

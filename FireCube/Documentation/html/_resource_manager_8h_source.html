@@ -76,59 +76,65 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00019"></a>00019         {
 <a name="l00020"></a>00020                 Logger::Write(Logger::LOG_INFO, <span class="stringliteral">&quot;Destroying resource manager&quot;</span>);
 <a name="l00021"></a>00021         }
-<a name="l00022"></a>00022         <a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager&lt;T,TResource&gt;</a>(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager&lt;T,TResource&gt;</a> &amp;r)
-<a name="l00023"></a>00023         {
-<a name="l00024"></a>00024                 resources=r.resources;
-<a name="l00025"></a>00025         }
-<a name="l00030"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#a216e8cdc2245c76fa40fc1f6a1a0affa">00030</a>         T <a class="code" href="class_fire_cube_1_1_resource_manager.html#a216e8cdc2245c76fa40fc1f6a1a0affa" title="Creates and loads a resource from the specified file.">Create</a>(<span class="keyword">const</span> std::string &amp;filename)
-<a name="l00031"></a>00031         {
-<a name="l00032"></a>00032                 map&lt;std::string,boost::weak_ptr&lt;TResource&gt;&gt;::iterator i=resources.find(filename);
-<a name="l00033"></a>00033                 <span class="keywordflow">if</span> (i!=resources.end())
-<a name="l00034"></a>00034                         <span class="keywordflow">if</span> (!i-&gt;second.expired())
-<a name="l00035"></a>00035                                 <span class="keywordflow">return</span> T(i-&gt;second.lock());
-<a name="l00036"></a>00036                 T ret;
-<a name="l00037"></a>00037                 std::string loadfile=<a class="code" href="class_fire_cube_1_1_application.html#a3a67462fbaecaa897aac786a0bdbe22f" title="Searches for file name using the search paths.">Application::SearchForFileName</a>(filename);
-<a name="l00038"></a>00038                 <span class="keywordflow">if</span> (loadfile.empty())
-<a name="l00039"></a>00039                         <span class="keywordflow">return</span> T();
-<a name="l00040"></a>00040                 <span class="keywordflow">if</span> (ret.Load(loadfile))
-<a name="l00041"></a>00041                 {               
-<a name="l00042"></a>00042                         resources[filename]=ret.resource;
-<a name="l00043"></a>00043                         <span class="keywordflow">return</span> ret;
-<a name="l00044"></a>00044                 }
-<a name="l00045"></a>00045                 <span class="keywordflow">else</span>
-<a name="l00046"></a>00046                         <span class="keywordflow">return</span> T();
-<a name="l00047"></a>00047         }
-<a name="l00053"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#a8fc2fec6ecd0ddc23d281cfb7c375a7f">00053</a>         T <a class="code" href="class_fire_cube_1_1_resource_manager.html#a8fc2fec6ecd0ddc23d281cfb7c375a7f" title="Adds a new resource without loading it.">Add</a>(<span class="keyword">const</span> std::string &amp;name)
-<a name="l00054"></a>00054         {
-<a name="l00055"></a>00055                 std::map&lt;std::string,boost::weak_ptr&lt;TResource&gt;&gt;::iterator i=resources.find(name);
-<a name="l00056"></a>00056                 <span class="keywordflow">if</span> (i!=resources.end())
-<a name="l00057"></a>00057                         <span class="keywordflow">if</span> (!i-&gt;second.expired())
-<a name="l00058"></a>00058                                 <span class="keywordflow">return</span> T(i-&gt;second.lock());
-<a name="l00059"></a>00059                 T ret;
-<a name="l00060"></a>00060                 resources[name]=ret.resource;
-<a name="l00061"></a>00061                 <span class="keywordflow">return</span> ret;             
-<a name="l00062"></a>00062         }
-<a name="l00068"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#ac481bfa6b6d294a36dbde4305ba8e3f0">00068</a>         <span class="keywordtype">void</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html#a8fc2fec6ecd0ddc23d281cfb7c375a7f" title="Adds a new resource without loading it.">Add</a>(<span class="keyword">const</span> std::string &amp;filename,T res)
-<a name="l00069"></a>00069         {
-<a name="l00070"></a>00070                 <span class="keywordflow">if</span> (resources.find(filename)!=resources.end())
-<a name="l00071"></a>00071                         <span class="keywordflow">return</span>;
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073                 resources[filename]=res.resource;
-<a name="l00074"></a>00074         }
-<a name="l00079"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#aef5cfc3f5aea6af92cd7898672a460e6">00079</a>         T <a class="code" href="class_fire_cube_1_1_resource_manager.html#aef5cfc3f5aea6af92cd7898672a460e6" title="Returns a resource with a given filename, null if it does not exist.">Get</a>(<span class="keyword">const</span> std::string &amp;filename)
-<a name="l00080"></a>00080         {
-<a name="l00081"></a>00081                 std::map&lt;std::string,boost::weak_ptr&lt;TResource&gt;&gt;::iterator i=resources.find(filename);
-<a name="l00082"></a>00082                 <span class="keywordflow">if</span> (i!=resources.end())
-<a name="l00083"></a>00083                         <span class="keywordflow">if</span> (!i-&gt;second.expired())
-<a name="l00084"></a>00084                                 <span class="keywordflow">return</span> T(i-&gt;second.lock());
-<a name="l00085"></a>00085                 
-<a name="l00086"></a>00086                 <span class="keywordflow">return</span> T();
-<a name="l00087"></a>00087         }
-<a name="l00088"></a>00088 <span class="keyword">protected</span>:
-<a name="l00089"></a>00089         std::map&lt;std::string,boost::weak_ptr&lt;TResource&gt;&gt; resources;
-<a name="l00090"></a>00090 };
-<a name="l00091"></a>00091 }
-<a name="l00092"></a>00092 <span class="preprocessor">#endif</span>
+<a name="l00022"></a>00022         
+<a name="l00027"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#a9a04ee22df17d81e98da62cd15868ccb">00027</a>         <a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager&lt;T,TResource&gt;</a>(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager&lt;T,TResource&gt;</a> &amp;r)
+<a name="l00028"></a>00028         {
+<a name="l00029"></a>00029                 <a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15" title="The list of resources contained in this resource manager.">resources</a>=r.resources;
+<a name="l00030"></a>00030         }
+<a name="l00031"></a>00031         
+<a name="l00036"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#a216e8cdc2245c76fa40fc1f6a1a0affa">00036</a>         T <a class="code" href="class_fire_cube_1_1_resource_manager.html#a216e8cdc2245c76fa40fc1f6a1a0affa" title="Creates and loads a resource from the specified file.">Create</a>(<span class="keyword">const</span> std::string &amp;filename)
+<a name="l00037"></a>00037         {
+<a name="l00038"></a>00038                 map&lt;std::string,boost::weak_ptr&lt;TResource&gt;&gt;::iterator i=<a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15" title="The list of resources contained in this resource manager.">resources</a>.find(filename);
+<a name="l00039"></a>00039                 <span class="keywordflow">if</span> (i!=<a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15" title="The list of resources contained in this resource manager.">resources</a>.end())
+<a name="l00040"></a>00040                         <span class="keywordflow">if</span> (!i-&gt;second.expired())
+<a name="l00041"></a>00041                                 <span class="keywordflow">return</span> T(i-&gt;second.lock());
+<a name="l00042"></a>00042                 T ret;
+<a name="l00043"></a>00043                 std::string loadfile=<a class="code" href="class_fire_cube_1_1_application.html#a3a67462fbaecaa897aac786a0bdbe22f" title="Searches for file name using the search paths.">Application::SearchForFileName</a>(filename);
+<a name="l00044"></a>00044                 <span class="keywordflow">if</span> (loadfile.empty())
+<a name="l00045"></a>00045                         <span class="keywordflow">return</span> T();
+<a name="l00046"></a>00046                 <span class="keywordflow">if</span> (ret.Load(loadfile))
+<a name="l00047"></a>00047                 {               
+<a name="l00048"></a>00048                         <a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15" title="The list of resources contained in this resource manager.">resources</a>[filename]=ret.resource;
+<a name="l00049"></a>00049                         <span class="keywordflow">return</span> ret;
+<a name="l00050"></a>00050                 }
+<a name="l00051"></a>00051                 <span class="keywordflow">else</span>
+<a name="l00052"></a>00052                         <span class="keywordflow">return</span> T();
+<a name="l00053"></a>00053         }
+<a name="l00054"></a>00054         
+<a name="l00060"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#a8fc2fec6ecd0ddc23d281cfb7c375a7f">00060</a>         T <a class="code" href="class_fire_cube_1_1_resource_manager.html#a8fc2fec6ecd0ddc23d281cfb7c375a7f" title="Adds a new resource without loading it.">Add</a>(<span class="keyword">const</span> std::string &amp;name)
+<a name="l00061"></a>00061         {
+<a name="l00062"></a>00062                 std::map&lt;std::string,boost::weak_ptr&lt;TResource&gt;&gt;::iterator i=<a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15" title="The list of resources contained in this resource manager.">resources</a>.find(name);
+<a name="l00063"></a>00063                 <span class="keywordflow">if</span> (i!=<a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15" title="The list of resources contained in this resource manager.">resources</a>.end())
+<a name="l00064"></a>00064                         <span class="keywordflow">if</span> (!i-&gt;second.expired())
+<a name="l00065"></a>00065                                 <span class="keywordflow">return</span> T(i-&gt;second.lock());
+<a name="l00066"></a>00066                 T ret;
+<a name="l00067"></a>00067                 <a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15" title="The list of resources contained in this resource manager.">resources</a>[name]=ret.resource;
+<a name="l00068"></a>00068                 <span class="keywordflow">return</span> ret;             
+<a name="l00069"></a>00069         }
+<a name="l00070"></a>00070         
+<a name="l00076"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#ac481bfa6b6d294a36dbde4305ba8e3f0">00076</a>         <span class="keywordtype">void</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html#a8fc2fec6ecd0ddc23d281cfb7c375a7f" title="Adds a new resource without loading it.">Add</a>(<span class="keyword">const</span> std::string &amp;filename,T res)
+<a name="l00077"></a>00077         {
+<a name="l00078"></a>00078                 <span class="keywordflow">if</span> (<a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15" title="The list of resources contained in this resource manager.">resources</a>.find(filename)!=<a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15" title="The list of resources contained in this resource manager.">resources</a>.end())
+<a name="l00079"></a>00079                         <span class="keywordflow">return</span>;
+<a name="l00080"></a>00080 
+<a name="l00081"></a>00081                 <a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15" title="The list of resources contained in this resource manager.">resources</a>[filename]=res.resource;
+<a name="l00082"></a>00082         }
+<a name="l00083"></a>00083         
+<a name="l00088"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#aef5cfc3f5aea6af92cd7898672a460e6">00088</a>         T <a class="code" href="class_fire_cube_1_1_resource_manager.html#aef5cfc3f5aea6af92cd7898672a460e6" title="Returns a resource with a given filename, null if it does not exist.">Get</a>(<span class="keyword">const</span> std::string &amp;filename)
+<a name="l00089"></a>00089         {
+<a name="l00090"></a>00090                 std::map&lt;std::string,boost::weak_ptr&lt;TResource&gt;&gt;::iterator i=<a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15" title="The list of resources contained in this resource manager.">resources</a>.find(filename);
+<a name="l00091"></a>00091                 <span class="keywordflow">if</span> (i!=<a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15" title="The list of resources contained in this resource manager.">resources</a>.end())
+<a name="l00092"></a>00092                         <span class="keywordflow">if</span> (!i-&gt;second.expired())
+<a name="l00093"></a>00093                                 <span class="keywordflow">return</span> T(i-&gt;second.lock());
+<a name="l00094"></a>00094                 
+<a name="l00095"></a>00095                 <span class="keywordflow">return</span> T();
+<a name="l00096"></a>00096         }
+<a name="l00097"></a>00097 <span class="keyword">protected</span>:
+<a name="l00098"></a>00098         
+<a name="l00102"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15">00102</a>         std::map&lt;std::string,boost::weak_ptr&lt;TResource&gt;&gt; <a class="code" href="class_fire_cube_1_1_resource_manager.html#afd718ca7b5a8e727a7483c0c86e17d15" title="The list of resources contained in this resource manager.">resources</a>;
+<a name="l00103"></a>00103 };
+<a name="l00104"></a>00104 }
+<a name="l00105"></a>00105 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -136,7 +142,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -145,7 +151,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 20:06:05 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

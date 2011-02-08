@@ -8,7 +8,7 @@ namespace FireCube
 {
 class FontResource;
 class Font;
-/* CPPDOC_BEGIN_EXCLUDE */
+
 namespace Renderer
 {
 	void FIRECUBE_API RenderText(Font font,vec3 pos,vec4 color,const std::string &str);
@@ -31,7 +31,7 @@ public:
 	vec2 curPos;
 	int textureSize;
 };
-/* CPPDOC_END_EXCLUDE */
+
 class FIRECUBE_API FontResource
 {
 	friend void Renderer::RenderText(Font font,vec3 pos,vec4 color,const std::string &str);
@@ -55,12 +55,19 @@ class FIRECUBE_API Font
 	friend class ResourceManager<Font,FontResource>;
 public:
 	Font();
+	
+	/**
+	* Constructs a font from a font resource.
+	* @param resource The resource to assign to this font.
+	*/
 	Font(boost::shared_ptr<FontResource> resource);
+	
 	/**
 	* Loads a font.
 	* @param name The file to load separated with : and an integer representing the font size.
 	*/
 	bool Load(const std::string &name);	
+	
 	/**
 	* Loads a font.
 	* @param name The file to load.
@@ -68,7 +75,14 @@ public:
 	*/
 	bool Load(const std::string &name,int size);	
 
+	/**
+	* @return True if points to an initialized resource, false otherwise.
+	*/
 	operator bool () const;
+	
+	/**
+	* @return True of both objects points to the same resource, false otherwise.
+	*/
 	bool operator== (const Font &font) const;
 private:
 	bool AddChar(char c);

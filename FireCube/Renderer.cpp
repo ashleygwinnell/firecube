@@ -40,7 +40,6 @@ Buffer textUvBuffer;
 TextureManager *currentTextureManager=NULL;
 ShaderManager *currentShaderManager=NULL;
 FontManager *currentFontManager=NULL;
-ShaderGenerator *currentShaderGenerator=NULL;
 Program globalProgram;
 map<string, Technique> techniques;
 RenderState::RenderState() : directionalLighting(false), diffuseTexture(false), fog(false),pointLighting(false),normalTexture(false)

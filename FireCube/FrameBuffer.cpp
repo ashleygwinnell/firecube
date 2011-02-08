@@ -53,9 +53,9 @@ void FrameBuffer::Create(int width,int height)
 	resource->height=height;
 	glGenFramebuffers(1,&resource->id);	
 }
-void FrameBuffer::SetRenderTarget(Texture texture,int attachmnetPoint)
+void FrameBuffer::SetRenderTarget(Texture texture,int attachmentPoint)
 {	
-	resource->texture[attachmnetPoint]=texture;
+	resource->texture[attachmentPoint]=texture;
 	Renderer::UseTexture(texture,0);	
 	glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,resource->width,resource->height,0,GL_RGBA,GL_UNSIGNED_BYTE,NULL);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -63,7 +63,7 @@ void FrameBuffer::SetRenderTarget(Texture texture,int attachmnetPoint)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);		
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0+attachmnetPoint,GL_TEXTURE_2D,texture.GetId(),0);	
+	glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0+attachmentPoint,GL_TEXTURE_2D,texture.GetId(),0);	
 	glBindFramebuffer(GL_FRAMEBUFFER,resource->id);	
 }
 void FrameBuffer::AddDepthBuffer()
@@ -90,22 +90,22 @@ void FrameBuffer::AddDepthBufferTexture()
 	
 	glFramebufferTexture2D (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, resource->depthTexture.GetId(), 0);
 }
-void FrameBuffer::AddRenderTarget(int attachmnetPoint)
+void FrameBuffer::AddRenderTarget(int attachmentPoint)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER,resource->id);			
 	glDrawBuffer(GL_FRONT_AND_BACK);	
-	resource->texture[attachmnetPoint].Create();
-	Renderer::UseTexture(resource->texture[attachmnetPoint],0);	
+	resource->texture[attachmentPoint].Create();
+	Renderer::UseTexture(resource->texture[attachmentPoint],0);	
 	glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,resource->width,resource->height,0,GL_RGBA,GL_UNSIGNED_BYTE,NULL);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);		
-	glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0_EXT+attachmnetPoint,GL_TEXTURE_2D,resource->texture[attachmnetPoint].GetId(),0);	
+	glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0_EXT+attachmentPoint,GL_TEXTURE_2D,resource->texture[attachmentPoint].GetId(),0);	
 }
-Texture FrameBuffer::GetRenderTarget(int attachmnetPoint)
+Texture FrameBuffer::GetRenderTarget(int attachmentPoint)
 {
-	return resource->texture[attachmnetPoint];
+	return resource->texture[attachmentPoint];
 }
 Texture FrameBuffer::GetDepthBuffer()
 {
