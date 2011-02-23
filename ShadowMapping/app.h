@@ -11,6 +11,9 @@ public:
 	FrameBuffer fb;	
 	Node node;	
 	Font font;	
-	Program plain,shadowMap,program;
+	Program plain,program;
 	mat4 lightProj,lightModelview;
+	ProgramUniformsList programUniformsList;
+	Buffer vBuffer;
+	Buffer uvBuffer;
 };

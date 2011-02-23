@@ -59,7 +59,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><b>FireCube</b>      </li>
+      <li class="navelem"><a class="el" href="namespace_fire_cube.html">FireCube</a>      </li>
       <li class="navelem"><a class="el" href="class_fire_cube_1_1_geometry.html">Geometry</a>      </li>
     </ul>
   </div>
@@ -94,7 +94,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_geometry.html#a31a4ecaa4fc66233722117b4166165de">ApplyTransformation</a> (<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;transform)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies a transformation to the model vertices.  <a href="#a31a4ecaa4fc66233722117b4166165de"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1_material.html">Material</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_geometry.html#afd5837244807af1060f7e7bab5cf9b9c">GetMaterialByName</a> (const std::string &amp;name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for a marerial by name.  <a href="#afd5837244807af1060f7e7bab5cf9b9c"></a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for a material by name.  <a href="#afd5837244807af1060f7e7bab5cf9b9c"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1_geometry.html">Geometry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_geometry.html#a1ffb480def92b424df6001ddf2a911a7">Reduce</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduces the geometry by removing duplicated vertices.  <a href="#a1ffb480def92b424df6001ddf2a911a7"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add9de644650ed8280495002e490694ff"></a><!-- doxytag: member="FireCube::Geometry::CalculateNormals" ref="add9de644650ed8280495002e490694ff" args="()" -->
@@ -141,6 +141,10 @@ Friends</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (<a class="el" href="class_fire_cube_1_1_geometry.html">Geometry</a> geometry)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae5fb185db07a3190f51e4f04d87e974c"></a><!-- doxytag: member="FireCube::Geometry::Renderer::Render" ref="ae5fb185db07a3190f51e4f04d87e974c" args="(Node node)" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (<a class="el" href="class_fire_cube_1_1_node.html">Node</a> node)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa38a000703b096450c887f454ea28247"></a><!-- doxytag: member="FireCube::Geometry::Renderer::Render" ref="aa38a000703b096450c887f454ea28247" args="(Node node, const std::string &amp;techniqueName, ProgramUniformsList &amp;programUniformsList)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (<a class="el" href="class_fire_cube_1_1_node.html">Node</a> node, const std::string &amp;techniqueName, <a class="el" href="class_fire_cube_1_1_program_uniforms_list.html">ProgramUniformsList</a> &amp;programUniformsList)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a97cf8d221603fbbc52e066bfa92d99aa"></a><!-- doxytag: member="FireCube::Geometry::Renderer::Render" ref="a97cf8d221603fbbc52e066bfa92d99aa" args="(RenderQueue &amp;renderQueue)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (<a class="el" href="class_fire_cube_1_1_render_queue.html">RenderQueue</a> &amp;renderQueue)</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>A class representing a geometry. </p>
@@ -186,7 +190,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> 
 </div>
 <div class="memdoc">
 
-<p>Searches for a marerial by name. </p>
+<p>Searches for a material by name. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">name</td><td>The name of the material. </td></tr>
@@ -261,7 +265,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> 
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -270,7 +274,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> 
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Feb 16 2011 21:18:09 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

@@ -17,6 +17,10 @@ enum BufferType
 {
 	STATIC,DYNAMIC,STREAM
 };
+
+/**
+* Specifies the kind of primitives to render.
+*/
 enum RenderMode
 {
 	POINTS,LINES,TRIANGLES,TRIANGLE_STRIP,QUADS,LINE_LOOP,TRIANGLE_FAN

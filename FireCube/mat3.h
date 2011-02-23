@@ -179,12 +179,28 @@ public:
 	float m[9];
 };
 /**
-* Transposes the matrix.
+* Transposes a matrix.
 */
 mat3 FIRECUBE_API Transpose(const mat3 mat);
+
+/**
+* Multiplies a matrix with a scalar.
+*/
 mat3 FIRECUBE_API operator*(const mat3 &a,const float &b);
+
+/**
+* Multiplies a matrix with a scalar.
+*/
 mat3 FIRECUBE_API operator*(const float &a,const mat3 &b);
+
+/**
+* Multiplies a matrix with a vector.
+*/
 vec3 FIRECUBE_API operator*(const mat3 &a,const vec3 &b);
+
+/**
+* Multiplies a matrix with a vector.
+*/
 vec3 FIRECUBE_API operator*(const vec3 &a,const mat3 &b);
 }
 #endif

@@ -27,7 +27,6 @@ using namespace std;
 #include "Geometry.h"	
 #include "FrameBuffer.h"
 #include "Font.h"
-#include "RenderQueue.h"
 #include "Renderer.h"
 #include "Application.h"
 

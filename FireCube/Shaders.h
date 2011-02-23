@@ -33,7 +33,7 @@ public:
 };
 
 /**
-* A class Representing a single shader.
+* A class representing a single shader.
 */
 class FIRECUBE_API Shader
 {
@@ -48,7 +48,7 @@ public:
 	*/
 	Shader(boost::shared_ptr<ShaderResource> resource);
 	/**
-	* Loads a shader from a file. the shader type is determined by the extension of the file: .vert for a vertex shader, .frag for a fragment shader.
+	* Loads a shader from a file. The shader type is determined by the extension of the file: .vert for a vertex shader, .frag for a fragment shader.
 	* @param filename The file to load.
 	*/
 	bool Load(const std::string &filename);
@@ -76,6 +76,9 @@ private:
 	boost::shared_ptr<ShaderResource> resource;
 };
 
+/**
+* A shader resource manager.
+*/
 typedef ResourceManager<Shader,ShaderResource> ShaderManager;
 
 class FIRECUBE_API ProgramResource
@@ -135,6 +138,13 @@ public:
 	void SetUniform(const std::string &name,int value);
 	
 	/**
+	* Sets a 2d uniform float.
+	* @param name The name of the variable.
+	* @param value The value to assign for it.
+	*/
+	void SetUniform(const std::string &name,vec2 value);
+
+	/**
 	* Sets a 3d uniform float.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.
@@ -147,6 +157,20 @@ public:
 	* @param value The value to assign for it.
 	*/
 	void SetUniform(const std::string &name,vec4 value);
+
+	/**
+	* Sets a 3x3 uniform matrix.
+	* @param name The name of the variable.
+	* @param value The value to assign for it.
+	*/
+	void SetUniform(const std::string &name,mat3 value);
+
+	/**
+	* Sets a 4x4 uniform matrix.
+	* @param name The name of the variable.
+	* @param value The value to assign for it.
+	*/
+	void SetUniform(const std::string &name,mat4 value);
 	
 	/**
 	* Sets a 1d uniform boolean.
@@ -228,9 +252,17 @@ public:
 	/**
 	* Loads the specified shader.
 	* @param filename The file name of the shader.
-	* @return Returns true on success, false otherwise.
+	* @return True on success, false otherwise.
 	*/
 	bool LoadShader(const std::string &filename);
+
+	/**
+	* Loads the specified shader.
+	* @param type The type of the shader.
+	* @param source The source of the shader.
+	* @return True on success, false otherwise.
+	*/
+	bool LoadShader(ShaderType type,const std::string &source);
 
 	/**
 	* Generates a program from a given render state.
@@ -250,6 +282,133 @@ public:
 
 private:
 	boost::shared_ptr<TechniqueResource> resource;
+};
+
+/**
+* A class storing a list of uniforms to be fed into a gpu program.
+*/
+class FIRECUBE_API ProgramUniformsList
+{	
+public:
+	
+	/**
+	* Assigns an integer value to a named uniform variable.
+	* @param name The name of the uniform variable.
+	* @param value The value to assign.
+	*/
+	void SetIntValue(const std::string &name, int value);
+
+	/**
+	* Gets the value of an integer uniform variable.
+	* @param name The name of the uniform variable.
+	* @return The value of the uniform variable.
+	*/
+	int GetIntValue(const std::string &name);
+
+	/**
+	* Assigns a float value to a named uniform variable.
+	* @param name The name of the uniform variable.
+	* @param value The value to assign.
+	*/
+	void SetFloatValue(const std::string &name, float value);
+
+	/**
+	* Gets the value of a float uniform variable.
+	* @param name The name of the uniform variable.
+	* @return The value of the uniform variable.
+	*/
+	float GetFloatValue(const std::string &name);
+
+	/**
+	* Assigns a 2d vector value to a named uniform variable.
+	* @param name The name of the uniform variable.
+	* @param value The value to assign.
+	*/
+	void SetVec2Value(const std::string &name, vec2 value);
+
+	/**
+	* Gets the value of a 2d vector uniform variable.
+	* @param name The name of the uniform variable.
+	* @return The value of the uniform variable.
+	*/
+	vec2 GetVec2Value(const std::string &name);
+
+	/**
+	* Assigns a 3d vector value to a named uniform variable.
+	* @param name The name of the uniform variable.
+	* @param value The value to assign.
+	*/
+	void SetVec3Value(const std::string &name, vec3 value);
+
+	/**
+	* Gets the value of a 3d vector uniform variable.
+	* @param name The name of the uniform variable.
+	* @return The value of the uniform variable.
+	*/
+	vec3 GetVec3Value(const std::string &name);
+
+	/**
+	* Assigns a 4d vector value to a named uniform variable.
+	* @param name The name of the uniform variable.
+	* @param value The value to assign.
+	*/
+	void SetVec4Value(const std::string &name, vec4 value);
+
+	/**
+	* Gets the value of a 4d vector uniform variable.
+	* @param name The name of the uniform variable.
+	* @return The value of the uniform variable.
+	*/
+	vec4 GetVec4Value(const std::string &name);
+
+	/**
+	* Assigns a 3x3 matrix value to a named uniform variable.
+	* @param name The name of the uniform variable.
+	* @param value The value to assign.
+	*/
+	void SetMat3Value(const std::string &name, mat3 value);
+
+	/**
+	* Gets the value of a 3x3 matrix uniform variable.
+	* @param name The name of the uniform variable.
+	* @return The value of the uniform variable.
+	*/
+	mat3 GetMat3Value(const std::string &name);
+
+	/**
+	* Assigns a 4x4 matrix value to a named uniform variable.
+	* @param name The name of the uniform variable.
+	* @param value The value to assign.
+	*/
+	void SetMat4Value(const std::string &name, mat4 value);
+
+	/**
+	* Gets the value of a 4x4 matrix uniform variable.
+	* @param name The name of the uniform variable.
+	* @return The value of the uniform variable.
+	*/
+	mat4 GetMat4Value(const std::string &name);
+
+	/**
+	* Removes a variable from the list.
+	* @param name The name of the variable to remove.
+	*/
+	void RemoveValue(const std::string &name);
+
+	/**
+	* Applies the list to a gpu program.
+	* @param program The program to apply the list to.
+	*/
+	void ApplyForProgram(Program program);
+
+private:
+	std::map<std::string, int> intMap;
+	std::map<std::string, float> floatMap;
+	std::map<std::string, vec2> vec2Map;
+	std::map<std::string, vec3> vec3Map;
+	std::map<std::string, vec4> vec4Map;
+	std::map<std::string, mat3> mat3Map;
+	std::map<std::string, mat4> mat4Map;
 };
 
 }

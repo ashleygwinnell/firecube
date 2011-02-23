@@ -57,7 +57,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><b>FireCube</b>      </li>
+      <li class="navelem"><a class="el" href="namespace_fire_cube.html">FireCube</a>      </li>
       <li class="navelem"><a class="el" href="namespace_fire_cube_1_1_renderer.html">Renderer</a>      </li>
     </ul>
   </div>
@@ -83,10 +83,12 @@ Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders a geometry.  <a href="#a62cce07ca52060e0c9ba48dfbe63e890"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_renderer.html#a1dc44c2e22d37b603e92a0760737f74f">Render</a> (<a class="el" href="class_fire_cube_1_1_node.html">Node</a> node)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders a scene node.  <a href="#a1dc44c2e22d37b603e92a0760737f74f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_renderer.html#af5aae2c30999ef6e554924f942325b1f">Render</a> (<a class="el" href="class_fire_cube_1_1_node.html">Node</a> node, const std::string &amp;techniqueName, <a class="el" href="class_fire_cube_1_1_program_uniforms_list.html">ProgramUniformsList</a> &amp;programUniformsList)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders a scene node using a specified technique.  <a href="#af5aae2c30999ef6e554924f942325b1f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_renderer.html#a85d9281ab1cf08088b9e57a126cd07eb">Render</a> (<a class="el" href="class_fire_cube_1_1_render_queue.html">RenderQueue</a> &amp;renderQueue)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders a render queue.  <a href="#a85d9281ab1cf08088b9e57a126cd07eb"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_renderer.html#aeb21fd3e7dd84d660e1f98f0023f0aa9">Clear</a> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color, float depth)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the depth and color buffer.  <a href="#aeb21fd3e7dd84d660e1f98f0023f0aa9"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_renderer.html#a07054c1a53a296d480bc6337e58623a9">Render</a> (const <a class="el" href="class_fire_cube_1_1_render_queue.html">RenderQueue</a> &amp;queue)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders a rendering queue.  <a href="#a07054c1a53a296d480bc6337e58623a9"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a01f945e8606b898b9799e6b648d8d81b"></a><!-- doxytag: member="FireCube::Renderer::SetModelViewMatrix" ref="a01f945e8606b898b9799e6b648d8d81b" args="(mat4 &amp;m)" -->
 void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_renderer.html#a01f945e8606b898b9799e6b648d8d81b">SetModelViewMatrix</a> (<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;m)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current modelview matrix. <br/></td></tr>
@@ -119,9 +121,9 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplies the current modelview matrix by a given matrix. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_renderer.html#a8fe8560d9a2a5f8021417b6f75f90cb4">UseTexture</a> (<a class="el" href="class_fire_cube_1_1_texture.html">Texture</a> tex, unsigned int unit)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the specified texture.  <a href="#a8fe8560d9a2a5f8021417b6f75f90cb4"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_renderer.html#aa74c2ace78e97f943f5e7c39015c6522">RenderIndexStream</a> (RenderMode mode, unsigned int count)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_renderer.html#aa74c2ace78e97f943f5e7c39015c6522">RenderIndexStream</a> (<a class="el" href="namespace_fire_cube.html#a43c62966b3fb72f435f4e0ddb37d01ef">RenderMode</a> mode, unsigned int count)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an index stream.  <a href="#aa74c2ace78e97f943f5e7c39015c6522"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_renderer.html#af9aa9092bed32560ed0fb7346f0d1925">RenderStream</a> (RenderMode mode, unsigned int count)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_renderer.html#af9aa9092bed32560ed0fb7346f0d1925">RenderStream</a> (<a class="el" href="namespace_fire_cube.html#a43c62966b3fb72f435f4e0ddb37d01ef">RenderMode</a> mode, unsigned int count)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders a stream.  <a href="#af9aa9092bed32560ed0fb7346f0d1925"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_renderer.html#abd0007637d4fd4f5aea1f37c85f09272">DisableTexCoordStream</a> (unsigned int unit)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Disables a texture coordinates stream.  <a href="#abd0007637d4fd4f5aea1f37c85f09272"></a><br/></td></tr>
@@ -345,6 +347,49 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 
 </div>
 </div>
+<a class="anchor" id="af5aae2c30999ef6e554924f942325b1f"></a><!-- doxytag: member="FireCube::Renderer::Render" ref="af5aae2c30999ef6e554924f942325b1f" args="(Node node, const std::string &amp;techniqueName, ProgramUniformsList &amp;programUniformsList)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FIRECUBE_API FireCube::Renderer::Render </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_node.html">Node</a>&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>techniqueName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_program_uniforms_list.html">ProgramUniformsList</a> &amp;&#160;</td>
+          <td class="paramname"><em>programUniformsList</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Renders a scene node using a specified technique. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td>The node to render. </td></tr>
+    <tr><td class="paramname">techniqueName</td><td>The name of the technique. </td></tr>
+    <tr><td class="paramname">programUniformsList</td><td>A list of values to assign to uniform variables of generated programs. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a62cce07ca52060e0c9ba48dfbe63e890"></a><!-- doxytag: member="FireCube::Renderer::Render" ref="a62cce07ca52060e0c9ba48dfbe63e890" args="(Geometry geometry)" -->
 <div class="memitem">
 <div class="memproto">
@@ -370,25 +415,25 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 
 </div>
 </div>
-<a class="anchor" id="a07054c1a53a296d480bc6337e58623a9"></a><!-- doxytag: member="FireCube::Renderer::Render" ref="a07054c1a53a296d480bc6337e58623a9" args="(const RenderQueue &amp;queue)" -->
+<a class="anchor" id="a85d9281ab1cf08088b9e57a126cd07eb"></a><!-- doxytag: member="FireCube::Renderer::Render" ref="a85d9281ab1cf08088b9e57a126cd07eb" args="(RenderQueue &amp;renderQueue)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void FIRECUBE_API FireCube::Renderer::Render </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1_render_queue.html">RenderQueue</a> &amp;&#160;</td>
-          <td class="paramname"><em>queue</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1_render_queue.html">RenderQueue</a> &amp;&#160;</td>
+          <td class="paramname"><em>renderQueue</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Renders a rendering queue. </p>
+<p>Renders a render queue. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">queue</td><td>The queue to render. </td></tr>
+    <tr><td class="paramname">renderQueue</td><td>The render queue to render. </td></tr>
   </table>
   </dd>
 </dl>
@@ -402,7 +447,7 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
         <tr>
           <td class="memname">void FireCube::Renderer::RenderIndexStream </td>
           <td>(</td>
-          <td class="paramtype">RenderMode&#160;</td>
+          <td class="paramtype"><a class="el" href="namespace_fire_cube.html#a43c62966b3fb72f435f4e0ddb37d01ef">RenderMode</a>&#160;</td>
           <td class="paramname"><em>mode</em>, </td>
         </tr>
         <tr>
@@ -438,7 +483,7 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
         <tr>
           <td class="memname">void FireCube::Renderer::RenderStream </td>
           <td>(</td>
-          <td class="paramtype">RenderMode&#160;</td>
+          <td class="paramtype"><a class="el" href="namespace_fire_cube.html#a43c62966b3fb72f435f4e0ddb37d01ef">RenderMode</a>&#160;</td>
           <td class="paramname"><em>mode</em>, </td>
         </tr>
         <tr>
@@ -702,7 +747,7 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -711,7 +756,7 @@ void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:39 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Feb 16 2011 21:18:09 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

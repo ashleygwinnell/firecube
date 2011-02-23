@@ -6,6 +6,10 @@
 
 namespace FireCube
 {
+	class Application;
+	class Node;
+	class RenderQueue;
+
 /**
 * A class storing information about rendering properties.
 * This class is used when generating a program.
@@ -52,9 +56,44 @@ private:
 	bool normalTexture;
 	bool fog;
 };
-class Application;
-class Node;
-class RenderQueue;
+
+/**
+* A class holding information on various rendering parameters.
+*/
+class FIRECUBE_API RenderParameters
+{
+public:
+	/**
+	* The program used for rendering.
+	*/
+	Program program;
+
+	/**
+	* The technique used for rendering.
+	*/
+	Technique technique;
+
+	/**
+	* Specifies whether dynamic lighting is enabled.
+	*/
+	bool lighting;
+
+	/**
+	* Specifies whether fog is enabled.
+	*/
+	bool fog;
+
+	/**
+	* The fog color.
+	*/
+	vec4 fogColor;
+
+	/**
+	* The fog density.
+	*/
+	float fogDensity;	
+};
+
 /**
 * A namespace containing various functions responsible for the rendering pipeline.
 */
@@ -78,12 +117,20 @@ namespace Renderer
 	* @param node The node to render.
 	*/
 	void FIRECUBE_API Render(Node node);
-	
+
 	/**
-	* Renders a rendering queue.
-	* @param queue The queue to render.
+	* Renders a render queue.
+	* @param renderQueue The render queue to render.
 	*/
-	void FIRECUBE_API Render(const RenderQueue &queue);
+	void FIRECUBE_API Render(RenderQueue &renderQueue);
+
+	/**
+	* Renders a scene node using a specified technique.
+	* @param node The node to render.
+	* @param techniqueName The name of the technique.
+	* @param programUniformsList A list of values to assign to uniform variables of generated programs.
+	*/
+	void FIRECUBE_API Render(Node node, const std::string &techniqueName, ProgramUniformsList &programUniformsList);
 	
 	/**
 	* Sets the current modelview matrix.

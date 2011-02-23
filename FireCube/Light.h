@@ -1,5 +1,9 @@
 namespace FireCube
 {
+
+/**
+* Specifies the type of a light.
+*/
 enum LightType
 {
 	DIRECTIONAL,POINT

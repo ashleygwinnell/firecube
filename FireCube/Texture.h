@@ -6,6 +6,10 @@
 
 namespace FireCube
 {
+
+/**
+* Specifies the type of texture filtering.
+*/
 enum TextureFilter
 {
 	NEAREST,LINEAR,MIPMAP
@@ -92,6 +96,9 @@ private:
 	boost::shared_ptr<TextureResource> resource;
 };	
 
+/**
+* A texture resource manager.
+*/
 typedef ResourceManager<Texture,TextureResource> TextureManager;
 }
 #pragma warning(pop)

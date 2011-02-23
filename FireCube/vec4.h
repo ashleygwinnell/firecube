@@ -260,14 +260,32 @@ public:
 	*/
 	float w;
 };
+
+/**
+* Adds two vectors.	
+*/
 vec4 FIRECUBE_API operator+(const vec4 &a,const vec4 &b);
+
+/**
+* Subtracts two vectors.	
+*/
 vec4 FIRECUBE_API operator-(const vec4 &a,const vec4 &b);
+
+/**
+* Multiplies a vector with a scalar.
+*/
 vec4 FIRECUBE_API operator*(const vec4 &a,const float &b);
+
+/**
+* Multiplies a vector with a scalar.
+*/
 vec4 FIRECUBE_API operator*(const float &a,const vec4 &b);
+
 /**
 * Performs a cross product between two vectors.
 */
 vec4 FIRECUBE_API Cross(const vec4 a,const vec4 b);
+
 /**
 * Performs a dot product between two vectors.
 */

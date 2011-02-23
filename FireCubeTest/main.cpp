@@ -52,10 +52,13 @@ void App::Update(float t)
 }
 void App::Render(float t)
 {
+	RenderQueue renderQueue;
 	Renderer::Clear(vec4(0.2f,0.2f,0.6f,1.0f),1.0f);
 	Renderer::SetPerspectiveProjection(60.0f,0.1f,100.0f);	
 	Renderer::SetModelViewMatrix(mat4());	
-	Renderer::Render(root);
+	//Renderer::Render(root);
+	renderQueue.AddNode(root);
+	Renderer::Render(renderQueue);
 	Renderer::SetOrthographicProjection();	
 	ostringstream oss;
 	oss << "FPS:"<<app.GetFps();	

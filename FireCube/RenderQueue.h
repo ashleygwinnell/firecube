@@ -4,14 +4,20 @@
 namespace FireCube
 {
 	class RenderQueue;
+	class Geometry;
+	class Surface;
+	class Material;
+	class RenderParameters;
+	class Light;
+	class Node;
 	namespace Renderer
 	{
-		void FIRECUBE_API Render(const RenderQueue &queue);
+		void FIRECUBE_API Render(RenderQueue &renderQueue);
 	}
 	/**
 	* A class storing information of a rendering job.
 	*/
-	class RenderJob
+	class FIRECUBE_API RenderJob
 	{
 	public:
 		/**
@@ -30,16 +36,21 @@ namespace FireCube
 		Material material;
 
 		/**
-		* The program of this job.
+		* The rendering parameters of this job.
 		*/
-		Program program;
+		RenderParameters renderParameters;
+
+		/**
+		* The transformation to apply to this job.
+		*/
+		mat4 transformation;
 	};
 	/**
 	* A class storing a list of rendering jobs.
 	*/
-	class RenderQueue
+	class FIRECUBE_API RenderQueue
 	{
-		friend void Renderer::Render(const RenderQueue &queue);
+		friend void Renderer::Render(RenderQueue &renderQueue);
 	public:
 
 		/**
@@ -54,6 +65,7 @@ namespace FireCube
 		void AddNode(Node node);
 	private:
 		std::vector<RenderJob> renderJobs;
+		std::vector<std::pair<mat4, Light>> activeLights;
 	};
 }
 #endif

@@ -9,13 +9,20 @@ namespace FireCube
 class GeometryResource;
 class Geometry;
 class Node;
+class RenderQueue;
 namespace Renderer
 {
 	void FIRECUBE_API Render(Geometry geometry);
 	void FIRECUBE_API Render(Node node);
+	void FIRECUBE_API Render(Node node, const std::string &techniqueName, ProgramUniformsList &programUniformsList);
+	void FIRECUBE_API Render(RenderQueue &renderQueue);
 }
 
+/**
+* Specifies the maximum number of textures in various locations.
+*/
 const unsigned int MAX_TEXTURES=6;
+
 /**
 * Stores information about a material.
 */
@@ -232,6 +239,8 @@ class FIRECUBE_API Geometry
 {
 	friend void Renderer::Render(Geometry geometry);
 	friend void Renderer::Render(Node node);
+	friend void Renderer::Render(Node node, const std::string &techniqueName, ProgramUniformsList &programUniformsList);
+	friend void Renderer::Render(RenderQueue &renderQueue);
 public:
 	/**
 	* Creates a new geometry
@@ -251,7 +260,7 @@ public:
 	*/
 	void ApplyTransformation(mat4 &transform);
 	/**
-	* Searches for a marerial by name.
+	* Searches for a material by name.
 	* @param name The name of the material.
 	* @return The material.
 	*/

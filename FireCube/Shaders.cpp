@@ -25,7 +25,6 @@ using namespace std;
 #include "Geometry.h"	
 #include "FrameBuffer.h"
 #include "Font.h"
-#include "RenderQueue.h"
 #include "Renderer.h"
 #include "Application.h"
 
@@ -185,6 +184,21 @@ void Program::SetUniform(const string &name,int value)
 	if (location!=-1)
 		glUniform1i(location,value);
 }
+void Program::SetUniform(const string &name,vec2 value)
+{
+	GLint location=-1;
+	map<string,GLint>::iterator i=resource->variables.find(name);
+	if (i!=resource->variables.end())
+		location=i->second;
+	else
+	{
+		location=glGetUniformLocation(resource->id,name.c_str());
+		if (location!=-1)
+			resource->variables[name]=location;
+	}
+	if (location!=-1)
+		glUniform2fv(location,1,&value.x);
+}
 void Program::SetUniform(const string &name,vec3 value)
 {
 	GLint location=-1;
@@ -214,6 +228,36 @@ void Program::SetUniform(const string &name,vec4 value)
 	}
 	if (location!=-1)
 		glUniform4fv(location,1,&value.x);
+}
+void Program::SetUniform(const std::string &name,mat3 value)
+{
+	GLint location=-1;
+	map<string,GLint>::iterator i=resource->variables.find(name);
+	if (i!=resource->variables.end())
+		location=i->second;
+	else
+	{
+		location=glGetUniformLocation(resource->id,name.c_str());
+		if (location!=-1)
+			resource->variables[name]=location;
+	}
+	if (location!=-1)
+		glUniformMatrix3fv(location,1,false,value.m);
+}
+void Program::SetUniform(const std::string &name,mat4 value)
+{
+	GLint location=-1;
+	map<string,GLint>::iterator i=resource->variables.find(name);
+	if (i!=resource->variables.end())
+		location=i->second;
+	else
+	{
+		location=glGetUniformLocation(resource->id,name.c_str());
+		if (location!=-1)
+			resource->variables[name]=location;
+	}
+	if (location!=-1)
+		glUniformMatrix4fv(location,1,false,value.m);
 }
 void Program::SetUniform(const string &name,bool value)
 {
@@ -354,6 +398,17 @@ bool Technique::LoadShader(const string &filename)
 	*source=string((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());	
 	return true;
 }
+bool Technique::LoadShader(ShaderType type,const string &source)
+{
+	if (type==VERTEX_SHADER)
+		resource->vertexShaderCode=source;
+	else if (type==FRAGMENT_SHADER)
+		resource->fragmentShaderCode=source;
+	else
+		return false;
+
+	return true;
+}
 Program Technique::GenerateProgram(const RenderState &renderState)
 {
 	unsigned int key=renderState.ToInt();
@@ -383,4 +438,146 @@ Program Technique::GenerateProgram(const RenderState &renderState)
 	p.Create(vertexShader,fragmentShader);
 	resource->programs[key]=p;
 	return p;
+}
+
+
+void ProgramUniformsList::SetIntValue(const string &name, int value)
+{
+	intMap[name]=value;
+}
+int ProgramUniformsList::GetIntValue(const string &name)
+{
+	map<string, int>::iterator i=intMap.find(name);
+	if (i==intMap.end())
+		return 0;
+	return i->second;
+}
+void ProgramUniformsList::SetFloatValue(const string &name, float value)
+{
+	floatMap[name]=value;
+}
+float ProgramUniformsList::GetFloatValue(const string &name)
+{
+	map<string, float>::iterator i=floatMap.find(name);
+	if (i==floatMap.end())
+		return 0.0f;
+	return i->second;
+}
+void ProgramUniformsList::SetVec2Value(const string &name, vec2 value)
+{
+	vec2Map[name]=value;
+}
+vec2 ProgramUniformsList::GetVec2Value(const string &name)
+{
+	map<string, vec2>::iterator i=vec2Map.find(name);
+	if (i==vec2Map.end())
+		return vec2();
+	return i->second;
+}
+void ProgramUniformsList::SetVec3Value(const string &name, vec3 value)
+{
+	vec3Map[name]=value;
+}
+vec3 ProgramUniformsList::GetVec3Value(const string &name)
+{
+	map<string, vec3>::iterator i=vec3Map.find(name);
+	if (i==vec3Map.end())
+		return vec3();
+	return i->second;
+}
+void ProgramUniformsList::SetVec4Value(const string &name, vec4 value)
+{
+	vec4Map[name]=value;
+}
+vec4 ProgramUniformsList::GetVec4Value(const string &name)
+{
+	map<string, vec4>::iterator i=vec4Map.find(name);
+	if (i==vec4Map.end())
+		return vec4();
+	return i->second;
+}
+void ProgramUniformsList::SetMat3Value(const string &name, mat3 value)
+{
+	mat3Map[name]=value;
+}
+mat3 ProgramUniformsList::GetMat3Value(const string &name)
+{
+	map<string, mat3>::iterator i=mat3Map.find(name);
+	if (i==mat3Map.end())
+		return mat3();
+	return i->second;
+}
+void ProgramUniformsList::SetMat4Value(const string &name, mat4 value)
+{
+	mat4Map[name]=value;
+}
+mat4 ProgramUniformsList::GetMat4Value(const string &name)
+{
+	map<string, mat4>::iterator i=mat4Map.find(name);
+	if (i==mat4Map.end())
+		return mat4();
+	return i->second;
+}
+void ProgramUniformsList::RemoveValue(const string &name)
+{
+	map<string, int>::iterator i0=intMap.find(name);
+	if (i0!=intMap.end())
+	{
+		intMap.erase(i0);
+		return;
+	}
+	map<string, float>::iterator i1=floatMap.find(name);
+	if (i1!=floatMap.end())
+	{
+		floatMap.erase(i1);
+		return;
+	}
+	map<string, vec2>::iterator i2=vec2Map.find(name);
+	if (i2!=vec2Map.end())
+	{
+		vec2Map.erase(i2);
+		return;
+	}
+	map<string, vec3>::iterator i3=vec3Map.find(name);
+	if (i3!=vec3Map.end())
+	{
+		vec3Map.erase(i3);
+		return;
+	}
+	map<string, vec4>::iterator i4=vec4Map.find(name);
+	if (i4!=vec4Map.end())
+	{
+		vec4Map.erase(i4);
+		return;
+	}
+	map<string, mat3>::iterator i5=mat3Map.find(name);
+	if (i5!=mat3Map.end())
+	{
+		mat3Map.erase(i5);
+		return;
+	}
+	map<string, mat4>::iterator i6=mat4Map.find(name);
+	if (i6!=mat4Map.end())
+	{
+		mat4Map.erase(i6);
+		return;
+	}
+}
+void ProgramUniformsList::ApplyForProgram(Program program)
+{
+	Renderer::UseProgram(program);
+	for (map<string, int>::iterator i=intMap.begin();i!=intMap.end();i++)
+		program.SetUniform(i->first,i->second);
+	for (map<string, float>::iterator i=floatMap.begin();i!=floatMap.end();i++)
+		program.SetUniform(i->first,i->second);
+	for (map<string, vec2>::iterator i=vec2Map.begin();i!=vec2Map.end();i++)
+		program.SetUniform(i->first,i->second);
+	for (map<string, vec3>::iterator i=vec3Map.begin();i!=vec3Map.end();i++)
+		program.SetUniform(i->first,i->second);
+	for (map<string, vec4>::iterator i=vec4Map.begin();i!=vec4Map.end();i++)
+		program.SetUniform(i->first,i->second);
+	for (map<string, mat3>::iterator i=mat3Map.begin();i!=mat3Map.end();i++)
+		program.SetUniform(i->first,i->second);
+	for (map<string, mat4>::iterator i=mat4Map.begin();i!=mat4Map.end();i++)
+		program.SetUniform(i->first,i->second);
 }

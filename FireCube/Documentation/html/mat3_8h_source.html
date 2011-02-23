@@ -87,15 +87,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00059"></a>00059 
 <a name="l00064"></a>00064         <span class="keyword">inline</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> operator=(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
 <a name="l00065"></a>00065 
-<a name="l00069"></a>00069         <span class="keyword">inline</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> operator+(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
+<a name="l00069"></a>00069         <span class="keyword">inline</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> <a class="code" href="namespace_fire_cube.html#ad1e3879ea3bdee6a2d5f410c960d9d7e" title="Adds two vectors.">operator+</a>(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
 <a name="l00070"></a>00070 
-<a name="l00074"></a>00074         <span class="keyword">inline</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> operator-(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
+<a name="l00074"></a>00074         <span class="keyword">inline</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> <a class="code" href="namespace_fire_cube.html#a4fcdba54e153d54509df483db6b34f78" title="Subtracts two vectors.">operator-</a>(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
 <a name="l00075"></a>00075 
 <a name="l00079"></a>00079         <span class="keyword">inline</span> <span class="keywordtype">void</span> operator+=(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
 <a name="l00080"></a>00080 
 <a name="l00084"></a>00084         <span class="keyword">inline</span> <span class="keywordtype">void</span> operator-=(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
 <a name="l00085"></a>00085 
-<a name="l00089"></a>00089         <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> operator*(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);      
+<a name="l00089"></a>00089         <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> <a class="code" href="namespace_fire_cube.html#a3860def5acc387bf23e023c3ac0b0c31" title="Multiplies a matrix with a scalar.">operator*</a>(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);      
 <a name="l00090"></a>00090 
 <a name="l00094"></a>00094         <span class="keywordtype">void</span> operator*=(<a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;src);
 <a name="l00095"></a>00095 
@@ -111,7 +111,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00127"></a>00127         
 <a name="l00132"></a>00132         <span class="keywordtype">void</span> RotateZ(<span class="keywordtype">float</span> ang);
 <a name="l00133"></a>00133         
-<a name="l00137"></a>00137         <span class="keywordtype">void</span> Transpose();
+<a name="l00137"></a>00137         <span class="keywordtype">void</span> <a class="code" href="namespace_fire_cube.html#a8a6e8c5f9f7b82f1e9317d87dd083816" title="Transposes a matrix.">Transpose</a>();
 <a name="l00138"></a>00138         
 <a name="l00142"></a>00142         <span class="keywordtype">void</span> Inverse();
 <a name="l00143"></a>00143         
@@ -129,13 +129,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00175"></a>00175         
 <a name="l00179"></a><a class="code" href="class_fire_cube_1_1mat3.html#a2ff31342de9e1b5fd108da5484a46bab">00179</a>         <span class="keywordtype">float</span> m[9];
 <a name="l00180"></a>00180 };
-<a name="l00184"></a>00184 <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> FIRECUBE_API Transpose(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> mat);
-<a name="l00185"></a>00185 <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> FIRECUBE_API operator*(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;a,<span class="keyword">const</span> <span class="keywordtype">float</span> &amp;b);
-<a name="l00186"></a>00186 <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> FIRECUBE_API operator*(<span class="keyword">const</span> <span class="keywordtype">float</span> &amp;a,<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;b);
-<a name="l00187"></a>00187 <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> FIRECUBE_API operator*(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;a,<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp;b);
-<a name="l00188"></a>00188 <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> FIRECUBE_API operator*(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp;a,<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;b);
-<a name="l00189"></a>00189 }
-<a name="l00190"></a>00190 <span class="preprocessor">#endif</span>
+<a name="l00184"></a>00184 <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> FIRECUBE_API <a class="code" href="namespace_fire_cube.html#a8a6e8c5f9f7b82f1e9317d87dd083816" title="Transposes a matrix.">Transpose</a>(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> mat);
+<a name="l00185"></a>00185 
+<a name="l00189"></a>00189 <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> FIRECUBE_API <a class="code" href="namespace_fire_cube.html#a3860def5acc387bf23e023c3ac0b0c31" title="Multiplies a matrix with a scalar.">operator*</a>(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;a,<span class="keyword">const</span> <span class="keywordtype">float</span> &amp;b);
+<a name="l00190"></a>00190 
+<a name="l00194"></a>00194 <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> FIRECUBE_API <a class="code" href="namespace_fire_cube.html#a3860def5acc387bf23e023c3ac0b0c31" title="Multiplies a matrix with a scalar.">operator*</a>(<span class="keyword">const</span> <span class="keywordtype">float</span> &amp;a,<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;b);
+<a name="l00195"></a>00195 
+<a name="l00199"></a>00199 <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> FIRECUBE_API <a class="code" href="namespace_fire_cube.html#a3860def5acc387bf23e023c3ac0b0c31" title="Multiplies a matrix with a scalar.">operator*</a>(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;a,<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp;b);
+<a name="l00200"></a>00200 
+<a name="l00204"></a>00204 <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> FIRECUBE_API <a class="code" href="namespace_fire_cube.html#a3860def5acc387bf23e023c3ac0b0c31" title="Multiplies a matrix with a scalar.">operator*</a>(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp;a,<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> &amp;b);
+<a name="l00205"></a>00205 }
+<a name="l00206"></a>00206 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -143,7 +147,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -152,7 +156,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 8 2011 20:36:38 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Feb 16 2011 21:18:09 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

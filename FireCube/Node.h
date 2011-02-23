@@ -3,43 +3,6 @@ namespace FireCube
 class NodeResource;
 
 /**
-* A class holding information on various rendering parameters.
-*/
-class FIRECUBE_API RenderParameters
-{
-public:
-	/**
-	* The program used for rendering.
-	*/
-	Program program;
-
-	/**
-	* The technique used for rendering.
-	*/
-	Technique technique;
-
-	/**
-	* Specifies whether dynamic lighting is enabled.
-	*/
-	bool lighting;
-
-	/**
-	* Specifies whether fog is enabled.
-	*/
-	bool fog;
-
-	/**
-	* The fog color.
-	*/
-	vec4 fogColor;
-
-	/**
-	* The fog density.
-	*/
-	float fogDensity;	
-};
-
-/**
 * A class representing a node in a scene graph.
 */
 class FIRECUBE_API Node
@@ -360,5 +323,12 @@ private:
 	BoundingBox localBoundingBox;
 	BoundingBox worldBoundingBox;
 };
+
+/**
+* Loads a node from a file.
+* Supported file formats are 3ds and Collada.
+* @param filename The file to load.
+* @return The loaded node.
+*/
 Node FIRECUBE_API LoadMesh(const std::string &filename);
 }

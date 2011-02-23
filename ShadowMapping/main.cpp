@@ -21,9 +21,21 @@ bool App::Init()
 	node=LoadMesh("../Assets/Models/scene.3ds");	
 	node.SetLighting(false);
 	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
-	plain.Create(Renderer::GetShaderManager().Create("plain.vert"),Renderer::GetShaderManager().Create("plain.frag"));
-	shadowMap.Create(Renderer::GetShaderManager().Create("shadowMap.vert"),Renderer::GetShaderManager().Create("shadowMap.frag"));
+	plain.Create(Renderer::GetShaderManager().Create("plain.vert"),Renderer::GetShaderManager().Create("plain.frag"));	
+	Technique t;
+	t.Create();
+	t.LoadShader("shadowMap.vert");
+	t.LoadShader("shadowMap.frag");
+	Renderer::AddTechnique("shadowMap", t);
+	programUniformsList.SetIntValue("shadowMap", 1);
 	program.Create(Renderer::GetShaderManager().Create("1.vert"),Renderer::GetShaderManager().Create("1.frag"));	
+	vBuffer.Create();	
+	uvBuffer.Create();
+	vec2 vb[4]={vec2(0,0),vec2(0,150),vec2(150,150),vec2(150,0)};
+	vec2 uvb[4]={vec2(0,1),vec2(0,0),vec2(1,0),vec2(1,1)};
+
+	vBuffer.LoadData(&vb[0],sizeof(vec2)*4,STATIC);	
+	uvBuffer.LoadData(&uvb[0],sizeof(vec2)*4,STATIC);
 	fb.Create(1024,1024);
 	fb.AddDepthBufferTexture();
 	
@@ -40,8 +52,7 @@ void App::SetupLight()
 	vec3 lightPos=vec3(cos(t)*6,4,sin(t)*6);
 	lightProj.GeneratePerspective(45,(float)fb.GetWidth()/(float)fb.GetHeight(),1.0f,20.0f);
 	lightModelview.LookAt(lightPos,vec3(0,0,0),vec3(0,1,0));			
-	Renderer::UseProgram(shadowMap);
-	shadowMap.SetUniform("lightPos",lightPos);
+	programUniformsList.SetVec3Value("lightPos", lightPos);
 	t+=0.01f;
 
 	mat4 m;	
@@ -78,11 +89,8 @@ void App::Render(float t)
 	m.RotateX(rot.x);
 	m.RotateY(rot.y);		
 	Renderer::SetModelViewMatrix(m);		
-	node.SetProgram(shadowMap);
-	Renderer::UseProgram(shadowMap);	
-	shadowMap.SetUniform("shadowMap",1);	
-	Renderer::UseTexture(fb.GetDepthBuffer(),1);
-	Renderer::Render(app.node);	
+	Renderer::UseTexture(fb.GetDepthBuffer(),1);	
+	Renderer::Render(app.node, "shadowMap", programUniformsList);	
 	Renderer::SetModelViewMatrix(mat4());
 	Renderer::SetOrthographicProjection();
 	RenderDepth();
@@ -113,15 +121,7 @@ void App::HandleInput(float t)
 	lastPos=m;      
 }
 void App::RenderDepth()
-{
-	Buffer vBuffer;
-	Buffer uvBuffer;
-	vec2 vb[4]={vec2(0,0),vec2(0,150),vec2(150,150),vec2(150,0)};
-	vec2 uvb[4]={vec2(0,1),vec2(0,0),vec2(1,0),vec2(1,1)};
-	vBuffer.Create();
-	vBuffer.LoadData(&vb[0],sizeof(vec2)*4,STATIC);
-	uvBuffer.Create();
-	uvBuffer.LoadData(&uvb[0],sizeof(vec2)*4,STATIC);
+{		
 	vBuffer.SetVertexStream(2);
 	uvBuffer.SetTexCoordStream(0);
 	Renderer::UseProgram(program);
