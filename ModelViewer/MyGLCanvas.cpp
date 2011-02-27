@@ -92,10 +92,10 @@ void MyGLCanvas::Render()
 	FireCube::mat4 mat;
 	mat.Identity();
 	FireCube::Renderer::SetPerspectiveProjection(90.0f,0.1f,1000.0f);		
-	mat.Translate(lookat);
-	mat.Translate(FireCube::vec3(0,0,rot.z));
+	mat.Translate(FireCube::vec3(0,0,rot.z));	
 	mat.RotateX(rot.x);
 	mat.RotateY(rot.y);	
+	mat.Translate(lookat);
 	FireCube::Renderer::SetModelViewMatrix(mat);
 	RenderGrid();
 	if (cullFaceEnabled)

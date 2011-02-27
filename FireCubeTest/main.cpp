@@ -43,7 +43,7 @@ bool App::Init()
 	light.SetSpecularColor(vec4(0.2f,0.2f,0.2f,1.0f));	
 	node.AddLight(light);
 	root.AddChild(node);
-	SetNormalMap(root,Renderer::GetTextureManager().Create("normalMap3.jpg"));	
+	SetNormalMap(root,Renderer::GetTextureManager().Create("normalMap.jpg"));	
 	return true;
 }
 void App::Update(float t)

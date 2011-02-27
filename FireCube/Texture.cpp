@@ -54,14 +54,13 @@ bool Texture::Create()
 }
 bool Texture::Load(const std::string &filename)
 {
-	resource=boost::shared_ptr<TextureResource>(new TextureResource);
 	SDL_Surface *image;
-	resource->filename=filename;
 	image=IMG_Load(filename.c_str());
 	if(image) 
 	{
 		GLenum format;
 		Create();
+		resource->filename=filename;
 
 		if (image->format->BytesPerPixel==4)
 		{

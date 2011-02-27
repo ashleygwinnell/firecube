@@ -201,7 +201,12 @@ void MyMainFrame::AddMaterial(DWORD id,FireCube::Material mat)
 	ostringstream ossShininess;
 	ossShininess << "Shininess" << id;
 	propertyGrid1->Append(new wxFloatProperty("Shininess",ossShininess.str(),mat.GetShininess()) );
-
+	ostringstream ossDiffuseTexture;
+	ossDiffuseTexture << "TextureDiffuse" << id;
+	propertyGrid1->Append(new wxFileProperty("Diffuse texture", ossDiffuseTexture.str(), mat.GetDiffuseTexture() ? mat.GetDiffuseTexture().GetFileName() : ""));
+	ostringstream ossNormalTexture;
+	ossNormalTexture << "TextureNormal" << id;
+	propertyGrid1->Append(new wxFileProperty("Normal texture", ossNormalTexture.str(), mat.GetNormalTexture() ? mat.GetNormalTexture().GetFileName() : ""));
 
 	propertyGrid1->Refresh();
 }
@@ -251,6 +256,22 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		idss >> id;
 		FireCube::Material mat=materialMap[id];
 		mat.SetShininess((float)evt->GetPropertyValueAsDouble());
+	}
+	if (properyName.substr(0,14)=="TextureDiffuse")
+	{
+		DWORD id;
+		istringstream idss(properyName.substr(14));
+		idss >> id;
+		FireCube::Material mat=materialMap[id];
+		mat.SetDiffuseTexture(FireCube::Renderer::GetTextureManager().Create(evt->GetPropertyValueAsString().ToAscii()));
+	}
+	if (properyName.substr(0,13)=="TextureNormal")
+	{
+		DWORD id;
+		istringstream idss(properyName.substr(13));
+		idss >> id;
+		FireCube::Material mat=materialMap[id];
+		mat.SetNormalTexture(FireCube::Renderer::GetTextureManager().Create(evt->GetPropertyValueAsString().ToAscii()));
 	}
 	glCanvas->Refresh();
 }
