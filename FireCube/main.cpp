@@ -9,9 +9,9 @@ using namespace std;
 #include <windows.h>
 #include "GLee.h"
 
-bool APIENTRY DllMain( HANDLE hModule, 
-					  DWORD  ul_reason_for_call, 
-					  LPVOID lpReserved)
-{	
-	return true;
+bool APIENTRY DllMain( HANDLE hModule,
+                       DWORD  ul_reason_for_call,
+                       LPVOID lpReserved)
+{
+    return true;
 }

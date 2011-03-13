@@ -6,7 +6,7 @@
 
 namespace FireCube
 {
-/** 
+/**
 * Specifies how data is handled.<br>
 * Buffer type:<br>
 * STATIC:  Data is sent once and stored on the graphics card.<br>
@@ -15,7 +15,7 @@ namespace FireCube
 */
 enum BufferType
 {
-	STATIC,DYNAMIC,STREAM
+    STATIC, DYNAMIC, STREAM
 };
 
 /**
@@ -23,96 +23,87 @@ enum BufferType
 */
 enum RenderMode
 {
-	POINTS,LINES,TRIANGLES,TRIANGLE_STRIP,QUADS,LINE_LOOP,TRIANGLE_FAN
+    POINTS, LINES, TRIANGLES, TRIANGLE_STRIP, QUADS, LINE_LOOP, TRIANGLE_FAN
 };
-class FIRECUBE_API BufferResource
-{
-	friend class Buffer;
-public:	
-	BufferResource();
-	~BufferResource();
 
-	GLuint id;
-};
 /**
 * A buffer of data used for rendering.
 */
-class FIRECUBE_API Buffer
+class FIRECUBE_API BufferResource
 {
 public:
-	/**
-	* Creates a new buffer.
-	*/
-	void Create();	
-	/**
-	* Loads the specified data to the buffer.
-	* @param data Pointer to the data to be stored.
-	* @param size Size of the data in bytes.
-	* @param bt The buffer type.
-	* @return true on success.
-	*/
-	bool LoadData(void *data,unsigned int size,BufferType bt);
-	/**
-	* Specific function to load index data.
-	* @param data Pointer to the indices to be stored.
-	* @param count Number of indices.
-	* @param bt The buffer type.
-	* @return true on success.
-	*/
-	bool LoadIndexData(void *data,unsigned int count,BufferType bt);
-	/**
-	* Binds the buffer as a vertex stream.
-	* @param numCoords The number of coordinates per vertex.
-	*/
-	void SetVertexStream(int numCoords);
-	/**
-	* Binds the buffer as a normal stream.
-	*/
-	void SetNormalStream();
-	/**
-	* Binds the buffer as a color stream.
-	*/
-	void SetColorStream();
-	/**
-	* Binds the buffer as a texture coordinate stream.
-	* @param unit Specifies the texture unit.
-	*/
-	void SetTexCoordStream(unsigned int unit);	
-	/**
-	* Binds the buffer as an index stream.
-	*/
-	void SetIndexStream();
-	/**
-	* Binds the buffer.
-	*/
-	void Bind();	
-	/**
-	* Returns whether the buffer is valid.
-	*/
-	bool IsValid();	
-	/**
-	* Destroys the buffer.
-	*/
-	void Destroy();
-	/**
-	* Returns the resource id of the buffer.
-	*/
-	unsigned int GetId() const;
+    BufferResource();
+    ~BufferResource();
 
-	/**
-	* @return True if points to an initialized resource, false otherwise.
-	*/
-	operator bool () const;
+    /**
+    * Creates a new buffer.
+    */
+    void Create();
+    /**
+    * Loads the specified data to the buffer.
+    * @param data Pointer to the data to be stored.
+    * @param size Size of the data in bytes.
+    * @param bt The buffer type.
+    * @return true on success.
+    */
+    bool LoadData(void *data, unsigned int size, BufferType bt);
+    /**
+    * Specific function to load index data.
+    * @param data Pointer to the indices to be stored.
+    * @param count Number of indices.
+    * @param bt The buffer type.
+    * @return true on success.
+    */
+    bool LoadIndexData(void *data, unsigned int count, BufferType bt);
+    /**
+    * Binds the buffer as a vertex stream.
+    * @param numCoords The number of coordinates per vertex.
+    */
+    void SetVertexStream(int numCoords);
+    /**
+    * Binds the buffer as a normal stream.
+    */
+    void SetNormalStream();
+    /**
+    * Binds the buffer as a color stream.
+    */
+    void SetColorStream();
+    /**
+    * Binds the buffer as a texture coordinate stream.
+    * @param unit Specifies the texture unit.
+    */
+    void SetTexCoordStream(unsigned int unit);
+    /**
+    * Binds the buffer as an index stream.
+    */
+    void SetIndexStream();
+    /**
+    * Binds the buffer.
+    */
+    void Bind();
+    /**
+    * Returns whether the buffer is valid.
+    */
+    bool IsValid();
+    /**
+    * Destroys the buffer.
+    */
+    void Destroy();
+    /**
+    * Returns the resource id of the buffer.
+    */
+    unsigned int GetId() const;
 
-	/**
-	* @return True of both objects points to the same resource, false otherwise.
-	*/
-	bool operator== (const Buffer &buffer) const;
+private:
 
-private:	
-
-	boost::shared_ptr<BufferResource> resource;
+    GLuint id;
 };
+
+/**
+* A shared pointer to a BufferResource.
+*/
+typedef boost::shared_ptr<BufferResource> Buffer;
+
 }
 #pragma warning(pop)
 #endif

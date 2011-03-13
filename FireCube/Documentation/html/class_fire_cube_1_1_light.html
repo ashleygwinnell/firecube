@@ -81,9 +81,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6a6509f87b9437e6417d71775590e1f7"></a><!-- doxytag: member="FireCube::Light::Create" ref="a6a6509f87b9437e6417d71775590e1f7" args="()" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#a6a6509f87b9437e6417d71775590e1f7">Create</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the light. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#aa42589a76983c193f58c8b6afe0a47e2">SetType</a> (<a class="el" href="namespace_fire_cube.html#aa3b90321ff2321015871d3431526ac54">LightType</a> type)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the light type.  <a href="#aa42589a76983c193f58c8b6afe0a47e2"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_fire_cube.html#aa3b90321ff2321015871d3431526ac54">LightType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#aacc425b195c1db3d95f55728dd74dca5">GetType</a> ()</td></tr>
@@ -100,8 +97,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the specular color of this light.  <a href="#a4823ccd514227e4c77b258defd5f81e7"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#a613ebf80c09bb18f919f8554e97e7886">GetSpecularColor</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the specular color of this light.  <a href="#a613ebf80c09bb18f919f8554e97e7886"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#a92ad5cf014c1482480fc7e9f126ae18f">operator bool</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#a2694095744b3eaa402905a43c5502ed5">operator==</a> (const <a class="el" href="class_fire_cube_1_1_light.html">Light</a> &amp;light) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_light.html#a055bac69392c0b14d794005c0ef079e5">operator==</a> (const <a class="el" href="class_fire_cube_1_1_light.html">Light</a> &amp;other) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether two lights are equal.  <a href="#a055bac69392c0b14d794005c0ef079e5"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>A class storing various properties of a light source. </p>
@@ -182,24 +179,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
-<a class="anchor" id="a92ad5cf014c1482480fc7e9f126ae18f"></a><!-- doxytag: member="FireCube::Light::operator bool" ref="a92ad5cf014c1482480fc7e9f126ae18f" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Light::operator bool </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if points to an initialized resource, false otherwise. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a2694095744b3eaa402905a43c5502ed5"></a><!-- doxytag: member="FireCube::Light::operator==" ref="a2694095744b3eaa402905a43c5502ed5" args="(const Light &amp;light) const " -->
+<a class="anchor" id="a055bac69392c0b14d794005c0ef079e5"></a><!-- doxytag: member="FireCube::Light::operator==" ref="a055bac69392c0b14d794005c0ef079e5" args="(const Light &amp;other) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -207,13 +187,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
           <td class="memname">bool Light::operator== </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="class_fire_cube_1_1_light.html">Light</a> &amp;&#160;</td>
-          <td class="paramname"><em>light</em></td><td>)</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>True of both objects points to the same resource, false otherwise. </dd></dl>
+
+<p>Checks whether two lights are equal. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>True if the two lights are equal, false otherwise. </dd></dl>
 
 </div>
 </div>
@@ -336,7 +318,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Feb 16 2011 21:18:09 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Mar 13 2011 14:29:50 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

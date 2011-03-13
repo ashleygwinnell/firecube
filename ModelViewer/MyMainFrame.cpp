@@ -39,9 +39,9 @@ void MyMainFrame::MenuItem3Clicked( wxCommandEvent& event )
 	if (sfile=="")
 		return;
 	fcApp->vshader=FireCube::Renderer::GetShaderManager().Create(sfile);
-	fcApp->program.Create(fcApp->vshader,fcApp->fshader);
+	fcApp->program->Create(fcApp->vshader,fcApp->fshader);
 	glCanvas->customProgram=true;
-	fcApp->root.SetProgram(fcApp->program);
+	fcApp->root->SetProgram(fcApp->program);
 }
 void MyMainFrame::MenuItem4Clicked( wxCommandEvent& event )
 {	
@@ -52,16 +52,16 @@ void MyMainFrame::MenuItem4Clicked( wxCommandEvent& event )
 	if (sfile=="")
 		return;
 	fcApp->fshader=FireCube::Renderer::GetShaderManager().Create(sfile);
-	fcApp->program.Create(fcApp->vshader,fcApp->fshader);
+	fcApp->program->Create(fcApp->vshader,fcApp->fshader);
 	glCanvas->customProgram=true;
-	fcApp->root.SetProgram(fcApp->program);
+	fcApp->root->SetProgram(fcApp->program);
 }
 void MyMainFrame::MenuItem7Clicked( wxCommandEvent& event )
 {	
 	FireCubeApp *fcApp=&(((MyApp*)wxTheApp)->fireCubeApp);	
 	FireCubeApp *app= &(((MyApp*)wxTheApp)->fireCubeApp);
 	glCanvas->customProgram=false;
-	fcApp->root.SetProgram(FireCube::Program());
+	fcApp->root->SetProgram(FireCube::Program());
 }
 void MyMainFrame::CheckBox2Clicked( wxCommandEvent& event )
 {
@@ -188,25 +188,25 @@ void MyMainFrame::AddMaterial(DWORD id,FireCube::Material mat)
 
 	ostringstream ossName;
 	ossName << "Name" << id;
-	propertyGrid1->Append(new wxStringProperty("Name",ossName.str(),mat.GetName()));	
+	propertyGrid1->Append(new wxStringProperty("Name",ossName.str(),mat->GetName()));	
 	ostringstream ossAmbient;
 	ossAmbient << "Ambient" << id;
-	propertyGrid1->Append(new wxColourProperty("Ambient",ossAmbient.str(),wxColor(mat.GetAmbientColor().x*255,mat.GetAmbientColor().y*255,mat.GetAmbientColor().z*255,mat.GetAmbientColor().w*255)));
+	propertyGrid1->Append(new wxColourProperty("Ambient",ossAmbient.str(),wxColor(mat->GetAmbientColor().x*255,mat->GetAmbientColor().y*255,mat->GetAmbientColor().z*255,mat->GetAmbientColor().w*255)));
 	ostringstream ossDiffuse;
 	ossDiffuse << "Diffuse" << id;
-	propertyGrid1->Append(new wxColourProperty("Diffuse",ossDiffuse.str(),wxColor(mat.GetDiffuseColor().x*255,mat.GetDiffuseColor().y*255,mat.GetDiffuseColor().z*255,mat.GetDiffuseColor().w*255)));
+	propertyGrid1->Append(new wxColourProperty("Diffuse",ossDiffuse.str(),wxColor(mat->GetDiffuseColor().x*255,mat->GetDiffuseColor().y*255,mat->GetDiffuseColor().z*255,mat->GetDiffuseColor().w*255)));
 	ostringstream ossSpecular;
 	ossSpecular << "Specular" << id;
-	propertyGrid1->Append(new wxColourProperty("Specular",ossSpecular.str(),wxColor(mat.GetSpecularColor().x*255,mat.GetSpecularColor().y*255,mat.GetSpecularColor().z*255,mat.GetSpecularColor().w*255)));
+	propertyGrid1->Append(new wxColourProperty("Specular",ossSpecular.str(),wxColor(mat->GetSpecularColor().x*255,mat->GetSpecularColor().y*255,mat->GetSpecularColor().z*255,mat->GetSpecularColor().w*255)));
 	ostringstream ossShininess;
 	ossShininess << "Shininess" << id;
-	propertyGrid1->Append(new wxFloatProperty("Shininess",ossShininess.str(),mat.GetShininess()) );
+	propertyGrid1->Append(new wxFloatProperty("Shininess",ossShininess.str(),mat->GetShininess()) );
 	ostringstream ossDiffuseTexture;
 	ossDiffuseTexture << "TextureDiffuse" << id;
-	propertyGrid1->Append(new wxFileProperty("Diffuse texture", ossDiffuseTexture.str(), mat.GetDiffuseTexture() ? mat.GetDiffuseTexture().GetFileName() : ""));
+	propertyGrid1->Append(new wxFileProperty("Diffuse texture", ossDiffuseTexture.str(), mat->GetDiffuseTexture() ? mat->GetDiffuseTexture()->GetFileName() : ""));
 	ostringstream ossNormalTexture;
 	ossNormalTexture << "TextureNormal" << id;
-	propertyGrid1->Append(new wxFileProperty("Normal texture", ossNormalTexture.str(), mat.GetNormalTexture() ? mat.GetNormalTexture().GetFileName() : ""));
+	propertyGrid1->Append(new wxFileProperty("Normal texture", ossNormalTexture.str(), mat->GetNormalTexture() ? mat->GetNormalTexture()->GetFileName() : ""));
 
 	propertyGrid1->Refresh();
 }
@@ -220,7 +220,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		istringstream idss(properyName.substr(4));
 		idss >> id;
 		FireCube::Material mat=materialMap[id];
-		mat.SetName(evt->GetPropertyValueAsString().c_str());
+		mat->SetName(evt->GetPropertyValueAsString().c_str());
 	}
 	if (properyName.substr(0,7)=="Ambient")
 	{		
@@ -229,7 +229,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		idss >> id;
 		FireCube::Material mat=materialMap[id];		
 		wxColor col=((wxColourProperty*)evt->GetProperty())->GetVal().m_colour;		
-		mat.SetAmbientColor(FireCube::vec4(col.Red()/255.0f,col.Green()/255.0f,col.Blue()/255.0f,mat.GetAmbientColor().w));
+		mat->SetAmbientColor(FireCube::vec4(col.Red()/255.0f,col.Green()/255.0f,col.Blue()/255.0f,mat->GetAmbientColor().w));
 	}
 	if (properyName.substr(0,7)=="Diffuse")
 	{
@@ -238,7 +238,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		idss >> id;
 		FireCube::Material mat=materialMap[id];
 		wxColor col=((wxColourProperty*)evt->GetProperty())->GetVal().m_colour;		
-		mat.SetDiffuseColor(FireCube::vec4(col.Red()/255.0f,col.Green()/255.0f,col.Blue()/255.0f,mat.GetDiffuseColor().w));
+		mat->SetDiffuseColor(FireCube::vec4(col.Red()/255.0f,col.Green()/255.0f,col.Blue()/255.0f,mat->GetDiffuseColor().w));
 	}
 	if (properyName.substr(0,8)=="Specular")
 	{
@@ -247,7 +247,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		idss >> id;
 		FireCube::Material mat=materialMap[id];
 		wxColor col=((wxColourProperty*)evt->GetProperty())->GetVal().m_colour;		
-		mat.SetSpecularColor(FireCube::vec4(col.Red()/255.0f,col.Green()/255.0f,col.Blue()/255.0f,mat.GetSpecularColor().w));
+		mat->SetSpecularColor(FireCube::vec4(col.Red()/255.0f,col.Green()/255.0f,col.Blue()/255.0f,mat->GetSpecularColor().w));
 	}
 	if (properyName.substr(0,9)=="Shininess")
 	{
@@ -255,7 +255,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		istringstream idss(properyName.substr(9));
 		idss >> id;
 		FireCube::Material mat=materialMap[id];
-		mat.SetShininess((float)evt->GetPropertyValueAsDouble());
+		mat->SetShininess((float)evt->GetPropertyValueAsDouble());
 	}
 	if (properyName.substr(0,14)=="TextureDiffuse")
 	{
@@ -263,7 +263,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		istringstream idss(properyName.substr(14));
 		idss >> id;
 		FireCube::Material mat=materialMap[id];
-		mat.SetDiffuseTexture(FireCube::Renderer::GetTextureManager().Create(evt->GetPropertyValueAsString().ToAscii()));
+		mat->SetDiffuseTexture(FireCube::Renderer::GetTextureManager().Create(evt->GetPropertyValueAsString().ToAscii()));
 	}
 	if (properyName.substr(0,13)=="TextureNormal")
 	{
@@ -271,7 +271,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		istringstream idss(properyName.substr(13));
 		idss >> id;
 		FireCube::Material mat=materialMap[id];
-		mat.SetNormalTexture(FireCube::Renderer::GetTextureManager().Create(evt->GetPropertyValueAsString().ToAscii()));
+		mat->SetNormalTexture(FireCube::Renderer::GetTextureManager().Create(evt->GetPropertyValueAsString().ToAscii()));
 	}
 	glCanvas->Refresh();
 }

@@ -12,13 +12,13 @@ Simulator::Simulator()
 {
 
 }
-void Simulator::Render()
+void Simulator::Render(mat4 transform)
 {
 	vector<RigidBody *>::iterator i=rigidBodies.begin();
 
 	for (;i!=rigidBodies.end();i++)
 	{
-		(*i)->Render();
+		(*i)->Render(transform);
 	}
 }
 void Simulator::Add(RigidBody *body)

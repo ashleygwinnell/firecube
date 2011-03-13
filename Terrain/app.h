@@ -6,7 +6,7 @@ public:
 	void Update(float time);
 	void Render(float time);		
 	
-	Node node;	
+	Node root, node;	
 	Program program;	
 	Font font;
 	Terrain terrain;	

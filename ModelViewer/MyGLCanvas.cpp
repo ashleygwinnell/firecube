@@ -54,25 +54,30 @@ void MyGLCanvas::Init()
 	customProgram=false;
 
 	fcApp->vshader=FireCube::Renderer::GetShaderManager().Create("plainColor.vert");
-	fcApp->fshader=FireCube::Renderer::GetShaderManager().Create("plainColor.frag");	
-	fcApp->program.Create(fcApp->vshader,fcApp->fshader);
-		
-	fcApp->normalRenderingBuffer.Create();	
-	fcApp->tangentRenderingBuffer.Create();	
-	fcApp->bitangentRenderingBuffer.Create();	
-	FireCube::Shader nvShader;
-	FireCube::Shader nfShader;
-	nvShader.Create(FireCube::VERTEX_SHADER,"void main() \
+	fcApp->fshader=FireCube::Renderer::GetShaderManager().Create("plainColor.frag");
+	fcApp->program=FireCube::Program(new FireCube::ProgramResource);
+	fcApp->program->Create(fcApp->vshader,fcApp->fshader);
+	
+	fcApp->normalRenderingBuffer=FireCube::Buffer(new FireCube::BufferResource);
+	fcApp->tangentRenderingBuffer=FireCube::Buffer(new FireCube::BufferResource);
+	fcApp->bitangentRenderingBuffer=FireCube::Buffer(new FireCube::BufferResource);
+	fcApp->normalRenderingBuffer->Create();	
+	fcApp->tangentRenderingBuffer->Create();	
+	fcApp->bitangentRenderingBuffer->Create();	
+	FireCube::Shader nvShader(new FireCube::ShaderResource);
+	FireCube::Shader nfShader(new FireCube::ShaderResource);
+	nvShader->Create(FireCube::VERTEX_SHADER,"void main() \
 								  {	\
 									gl_Position = ftransform(); \
 								  } ");
 
-	nfShader.Create(FireCube::FRAGMENT_SHADER,"uniform vec4 color; \
+	nfShader->Create(FireCube::FRAGMENT_SHADER,"uniform vec4 color; \
 									void main() \
 									{ \
 									gl_FragColor = color;  \
 									} ");
-	fcApp->plainColorProgram.Create(nvShader,nfShader);		
+	fcApp->plainColorProgram=FireCube::Program(new FireCube::ProgramResource);
+	fcApp->plainColorProgram->Create(nvShader,nfShader);		
 	normalsLength=0.1f;
 	fcApp->LoadModel("../Assets/Models/teapot2.3ds");
 	CreateGrid(2,20);
@@ -104,24 +109,25 @@ void MyGLCanvas::Render()
 		glDisable(GL_CULL_FACE);
 	
 	glPolygonMode(GL_FRONT_AND_BACK,renderingMode);	
+	fcApp->root->SetMatrixTransformation(mat);
 	FireCube::Renderer::Render(fcApp->root);	
 	if (renderNormals)
 	{
 		FireCube::Renderer::UseProgram(fcApp->plainColorProgram);
-		fcApp->plainColorProgram.SetUniform("color",FireCube::vec4(0,0,1,1));
-		fcApp->normalRenderingBuffer.SetVertexStream(3);
+		fcApp->plainColorProgram->SetUniform("color",FireCube::vec4(0,0,1,1));
+		fcApp->normalRenderingBuffer->SetVertexStream(3);
 		FireCube::Renderer::RenderStream(FireCube::LINES,fcApp->normalRenderingBufferSize);
 	}
 	if (renderTangents)
 	{
 		FireCube::Renderer::UseProgram(fcApp->plainColorProgram);
-		fcApp->plainColorProgram.SetUniform("color",FireCube::vec4(1,0,0,1));
-		fcApp->tangentRenderingBuffer.SetVertexStream(3);
+		fcApp->plainColorProgram->SetUniform("color",FireCube::vec4(1,0,0,1));
+		fcApp->tangentRenderingBuffer->SetVertexStream(3);
 		FireCube::Renderer::RenderStream(FireCube::LINES,fcApp->normalRenderingBufferSize);
 
 		FireCube::Renderer::UseProgram(fcApp->plainColorProgram);
-		fcApp->plainColorProgram.SetUniform("color",FireCube::vec4(0,1,0,1));
-		fcApp->bitangentRenderingBuffer.SetVertexStream(3);
+		fcApp->plainColorProgram->SetUniform("color",FireCube::vec4(0,1,0,1));
+		fcApp->bitangentRenderingBuffer->SetVertexStream(3);
 		FireCube::Renderer::RenderStream(FireCube::LINES,fcApp->normalRenderingBufferSize);
 	}	
 	SwapBuffers();
@@ -205,9 +211,10 @@ void MyGLCanvas::CreateGrid(float size,DWORD numberOfCells)
 		vertices.push_back(pos3);
 		vertices.push_back(pos4);
 	}
-	gridCount=vertices.size();	
-	gridVertex.Create();	
-	gridVertex.LoadData(&vertices[0],vertices.size()*sizeof(FireCube::vec3),FireCube::STATIC);	
+	gridCount=vertices.size();
+	gridVertex=FireCube::Buffer(new FireCube::BufferResource);
+	gridVertex->Create();	
+	gridVertex->LoadData(&vertices[0],vertices.size()*sizeof(FireCube::vec3),FireCube::STATIC);	
 }
 void MyGLCanvas::RenderGrid()
 {
@@ -215,8 +222,8 @@ void MyGLCanvas::RenderGrid()
 	glDisable(GL_BLEND);
 	
 	FireCube::Renderer::UseProgram(fcApp->plainColorProgram);
-	fcApp->plainColorProgram.SetUniform("color",FireCube::vec4(0.7f,0.7f,0.7f,1.0f));
-	gridVertex.SetVertexStream(3);	
+	fcApp->plainColorProgram->SetUniform("color",FireCube::vec4(0.7f,0.7f,0.7f,1.0f));
+	gridVertex->SetVertexStream(3);	
 	FireCube::Renderer::DisableNormalStream();
 	for (DWORD i=0;i<FireCube::MAX_TEXTURES;i++)
 		FireCube::Renderer::DisableTexCoordStream(i);

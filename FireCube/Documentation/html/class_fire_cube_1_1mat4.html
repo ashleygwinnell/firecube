@@ -126,6 +126,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6f7189f47dc5d3d189cf060cb09e4754"></a><!-- doxytag: member="FireCube::mat4::operator*" ref="a6f7189f47dc5d3d189cf060cb09e4754" args="(vec3 &amp;src)" -->
 <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a6f7189f47dc5d3d189cf060cb09e4754">operator*</a> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> &amp;src)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplies a matrix with a 3d vector. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0cb96764110425dce3b0b23fd3dc3a7c"></a><!-- doxytag: member="FireCube::mat4::operator*" ref="a0cb96764110425dce3b0b23fd3dc3a7c" args="(vec4 &amp;src)" -->
+<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a0cb96764110425dce3b0b23fd3dc3a7c">operator*</a> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> &amp;src)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplies a matrix with a 4d vector. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#afb6f4ba65b7dc1319071d884d2e830e7">operator()</a> (const unsigned int i, const unsigned int j)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets an element in the matrix.  <a href="#afb6f4ba65b7dc1319071d884d2e830e7"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a8e62236930fbdf68c746a9ae44dd053d">operator()</a> (const unsigned int i, const unsigned int j) const </td></tr>
@@ -357,36 +360,6 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 </div>
 </div>
-<a class="anchor" id="a8e62236930fbdf68c746a9ae44dd053d"></a><!-- doxytag: member="FireCube::mat4::operator()" ref="a8e62236930fbdf68c746a9ae44dd053d" args="(const unsigned int i, const unsigned int j) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const float&amp; FireCube::mat4::operator() </td>
-          <td>(</td>
-          <td class="paramtype">const unsigned int&#160;</td>
-          <td class="paramname"><em>i</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const unsigned int&#160;</td>
-          <td class="paramname"><em>j</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Gets an element in the matrix. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The specified element. </dd></dl>
-
-</div>
-</div>
 <a class="anchor" id="afb6f4ba65b7dc1319071d884d2e830e7"></a><!-- doxytag: member="FireCube::mat4::operator()" ref="afb6f4ba65b7dc1319071d884d2e830e7" args="(const unsigned int i, const unsigned int j)" -->
 <div class="memitem">
 <div class="memproto">
@@ -407,6 +380,36 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
           <td></td>
           <td>)</td>
           <td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets an element in the matrix. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The specified element. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a8e62236930fbdf68c746a9ae44dd053d"></a><!-- doxytag: member="FireCube::mat4::operator()" ref="a8e62236930fbdf68c746a9ae44dd053d" args="(const unsigned int i, const unsigned int j) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const float&amp; FireCube::mat4::operator() </td>
+          <td>(</td>
+          <td class="paramtype">const unsigned int&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned int&#160;</td>
+          <td class="paramname"><em>j</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -722,7 +725,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Feb 16 2011 21:18:09 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Mar 13 2011 14:29:50 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

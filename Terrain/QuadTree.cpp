@@ -10,8 +10,10 @@ QuadTree::QuadTree()
 }
 void QuadTree::Initialize()
 {	
-	indexBuffer.Create();
-	plainColor.Create(Renderer::GetShaderManager().Create("plainColor.vert"),Renderer::GetShaderManager().Create("plainColor.frag"));
+	indexBuffer=Buffer(new BufferResource);
+	indexBuffer->Create();
+	plainColor=Program(new ProgramResource);
+	plainColor->Create(Renderer::GetShaderManager().Create("plainColor.vert"),Renderer::GetShaderManager().Create("plainColor.frag"));
 }
 void QuadTree::Init(vec2 size,vec2 verticesSize)
 {
@@ -86,8 +88,8 @@ DWORD QuadTree::Render(Frustum &frustum)
 	Render(root,frustum);
 	if (currentIndex>0)
 	{
-		indexBuffer.LoadIndexData(&indicesToRender[0],currentIndex,DYNAMIC);
-		indexBuffer.SetIndexStream();
+		indexBuffer->LoadIndexData(&indicesToRender[0],currentIndex,DYNAMIC);
+		indexBuffer->SetIndexStream();
 		Renderer::RenderIndexStream(TRIANGLES,currentIndex);
 	}
 	return currentIndex;
@@ -151,15 +153,15 @@ void QuadTree::RenderLines()
 }
 void QuadTree::RenderLines(NodePtr node)
 {
-	Buffer v;
-	v.Create();
+	Buffer v(new BufferResource);
+	v->Create();
 	vector<vec3> vv;
 	vv.push_back(vec3(node->min.x,20.0f,node->min.y));
 	vv.push_back(vec3(node->max.x,20.0f,node->min.y));
 	vv.push_back(vec3(node->max.x,20.0f,node->max.y));
 	vv.push_back(vec3(node->min.x,20.0f,node->max.y));
-	v.LoadData(&vv[0],sizeof(vec3)*vv.size(),DYNAMIC);
-	v.SetVertexStream(3);
+	v->LoadData(&vv[0],sizeof(vec3)*vv.size(),DYNAMIC);
+	v->SetVertexStream(3);
 	Renderer::RenderStream(LINE_LOOP,vv.size());
 	for (DWORD j=0;j<4;j++)
 		if (node->child[j])

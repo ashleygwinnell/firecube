@@ -12,11 +12,11 @@ CollisionShape::CollisionShape() : radius(0), interpolateMesh(true)
 }
 Geometry CollisionShape::GetFirstGeometry(Node node)
 {
-	if (node.GetGeometries().size()>0)
-		return node.GetGeometries()[0];
+	if (node->GetGeometries().size()>0)
+		return node->GetGeometries()[0];
 	else
 	{
-		for (vector<Node>::iterator i=node.GetChildren().begin();i!=node.GetChildren().end();i++)
+		for (vector<Node>::iterator i=node->GetChildren().begin();i!=node->GetChildren().end();i++)
 		{
 			Geometry g=GetFirstGeometry(*i);
 			if (g)
@@ -28,9 +28,9 @@ Geometry CollisionShape::GetFirstGeometry(Node node)
 void CollisionShape::FromNode(Node node,int sizex,int sizey,int sizez,float extraSize)
 {
 	Geometry g=GetFirstGeometry(node);
-	g=g.Reduce();
-	vertex=g.GetVertices();
-	face=g.GetFaces();
+	g=g->Reduce();
+	vertex=g->GetVertices();
+	face=g->GetFaces();
 	edge.resize(face.size()*3);
 	for (unsigned int i=0;i<face.size();i++)
 	{

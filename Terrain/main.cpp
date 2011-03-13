@@ -24,14 +24,17 @@ bool App::Init()
 	Application::AddSearchPath("../Assets/Textures");
 	SetTitle("Terrain");
 	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);	
-	program.Create(Renderer::GetShaderManager().Create("diffuseWithFog.vert"),Renderer::GetShaderManager().Create("diffuseWithFog.frag"));
+	program=Program(new ProgramResource);
+	program->Create(Renderer::GetShaderManager().Create("diffuseWithFog.vert"),Renderer::GetShaderManager().Create("diffuseWithFog.frag"));
 	if (!terrain.GenerateTerrain("../Assets/Textures/heightmap.bmp","../Assets/Textures/diffuse.bmp",vec3(512.0f,50.0f,512.0f),vec2(1.0f,1.0f)))
 		return false;
-	node=LoadMesh("../Assets/Models/teapot.3ds");
-	node.Move(vec3(5,5,5));
-	node.CreateHardNormals();
-	node.SetLighting(false);
-	node.SetProgram(program);
+	root = Node(new NodeResource("root"));
+	node = LoadMesh("../Assets/Models/teapot.3ds");
+	node->Move(vec3(5,5,5));
+	node->CreateHardNormals();
+	node->SetLighting(false);
+	node->SetProgram(program);
+	root->AddChild(node);
 	return true;
 }
 void App::Update(float time)
@@ -59,15 +62,16 @@ void App::Render(float time)
 	t.Translate(-pos);
 	Renderer::SetModelViewMatrix(t);
 	Renderer::UseProgram(program);
-	program.SetUniform("fogDensity",0.01f);
-	program.SetUniform("fogColor",vec4(0.30f,0.42f,0.95f,1.0f));
-	program.SetUniform("lightDir",t*vec3(1,-1,1));
+	program->SetUniform("fogDensity",0.01f);
+	program->SetUniform("fogColor",vec4(0.30f,0.42f,0.95f,1.0f));
+	program->SetUniform("lightDir",t*vec3(1,-1,1));
 
 	frustum.ExtractFrustum();
 	DWORD n=terrain.Render(frustum);
 	
-	node.Rotate(vec3(0.01f,0,0));
-	Renderer::Render(node);	
+	root->SetMatrixTransformation(t);
+	node->Rotate(vec3(0.01f,0,0));
+	Renderer::Render(root);	
 		
 	Renderer::SetOrthographicProjection();
 	Renderer::SetModelViewMatrix(mat4());
@@ -81,7 +85,7 @@ void App::HandleInput(float time)
 {
 	static vec2 lastPos;
 	::POINT p;
-	GetCursorPos(&p);
+	::GetCursorPos(&p);
 	vec2 curPos((float)p.x,(float)p.y);
 	if (GetAsyncKeyState(1))
 	{

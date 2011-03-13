@@ -10,7 +10,7 @@ using namespace std;
 #include <windows.h>
 #include "GLee.h"
 
-#include "utils.h"	
+#include "utils.h"
 #include "Logger.h"
 #include "Buffer.h"
 
@@ -22,104 +22,99 @@ BufferResource::BufferResource() : id(0)
 }
 BufferResource::~BufferResource()
 {
-	ostringstream ss;
-	ss<< "Destroyed buffer with id="<<id;
-	Logger::Write(Logger::LOG_INFO, ss.str());
-	glDeleteBuffers(1,&id);
-	id=0;
+    ostringstream ss;
+    ss << "Destroyed buffer with id=" << id;
+    Logger::Write(Logger::LOG_INFO, ss.str());
+    glDeleteBuffers(1, &id);
+    id = 0;
 }
 
-void Buffer::Create()
-{		
-	resource=boost::shared_ptr<BufferResource>(new BufferResource);
-	glGenBuffers(1,&resource->id);
-	ostringstream ss;
-	ss<< "Created buffer with id="<<resource->id;
-	Logger::Write(Logger::LOG_INFO, ss.str());
-}
-bool Buffer::LoadIndexData(void *data,unsigned int count,BufferType bt)
+void BufferResource::Create()
 {
-	GLenum e;
-	if (bt==STREAM)
-		e=GL_STREAM_DRAW;
-	else if (bt==DYNAMIC)
-		e=GL_DYNAMIC_DRAW;
-	else if (bt==STATIC)
-		e=GL_STATIC_DRAW;
+    glGenBuffers(1, &id);
+    ostringstream ss;
+    ss << "Created buffer with id=" << id;
+    Logger::Write(Logger::LOG_INFO, ss.str());
+}
+bool BufferResource::LoadIndexData(void *data, unsigned int count, BufferType bt)
+{
+    GLenum e;
+    if (bt == STREAM)
+        e = GL_STREAM_DRAW;
+    else if (bt == DYNAMIC)
+        e = GL_DYNAMIC_DRAW;
+    else if (bt == STATIC)
+        e = GL_STATIC_DRAW;
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,resource->id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER,count*sizeof(unsigned int),data,e);
-	if (glGetError()==GL_OUT_OF_MEMORY)
-		return false;
-	return true;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, e);
+    if (glGetError() == GL_OUT_OF_MEMORY)
+        return false;
+    return true;
 }
-bool Buffer::LoadData(void *data,unsigned int size,BufferType bt)
+bool BufferResource::LoadData(void *data, unsigned int size, BufferType bt)
 {
-	GLenum e;
-	if (bt==STREAM)
-		e=GL_STREAM_DRAW;
-	else if (bt==DYNAMIC)
-		e=GL_DYNAMIC_DRAW;
-	else if (bt==STATIC)
-		e=GL_STATIC_DRAW;
+    GLenum e;
+    if (bt == STREAM)
+        e = GL_STREAM_DRAW;
+    else if (bt == DYNAMIC)
+        e = GL_DYNAMIC_DRAW;
+    else if (bt == STATIC)
+        e = GL_STATIC_DRAW;
 
-	glBindBuffer(GL_ARRAY_BUFFER,resource->id);
-	glBufferData(GL_ARRAY_BUFFER,size,data,e);
-	if (glGetError()==GL_OUT_OF_MEMORY)
-		return false;
-	return true;
+    glBindBuffer(GL_ARRAY_BUFFER, id);
+    glBufferData(GL_ARRAY_BUFFER, size, data, e);
+    if (glGetError() == GL_OUT_OF_MEMORY)
+        return false;
+    return true;
 }
-void Buffer::SetVertexStream(int numCoords)
+void BufferResource::SetVertexStream(int numCoords)
 {
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER,resource->id);
-	glVertexPointer(numCoords,GL_FLOAT,0,0);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glBindBuffer(GL_ARRAY_BUFFER, id);
+    glVertexPointer(numCoords, GL_FLOAT, 0, 0);
 }
-void Buffer::SetNormalStream()
+void BufferResource::SetNormalStream()
 {
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER,resource->id);
-	glNormalPointer(GL_FLOAT,0,0);	
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glBindBuffer(GL_ARRAY_BUFFER, id);
+    glNormalPointer(GL_FLOAT, 0, 0);
 }
-void Buffer::SetTexCoordStream(unsigned int unit)
+void BufferResource::SetTexCoordStream(unsigned int unit)
 {
-	glClientActiveTexture(GL_TEXTURE0+unit);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
-	glBindBuffer(GL_ARRAY_BUFFER,resource->id);
-	glTexCoordPointer(2,GL_FLOAT,0,0);
+    glClientActiveTexture(GL_TEXTURE0 + unit);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glBindBuffer(GL_ARRAY_BUFFER, id);
+    glTexCoordPointer(2, GL_FLOAT, 0, 0);
 }
 
-void Buffer::SetColorStream()
+void BufferResource::SetColorStream()
 {
-	glEnableClientState(GL_COLOR_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER,resource->id);
-	glColorPointer(3,GL_FLOAT,0,0);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glBindBuffer(GL_ARRAY_BUFFER, id);
+    glColorPointer(3, GL_FLOAT, 0, 0);
 }
-void Buffer::SetIndexStream()
+void BufferResource::SetIndexStream()
 {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,resource->id);	
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 }
-void Buffer::Bind()
+void BufferResource::Bind()
 {
-	glBindBuffer(GL_ARRAY_BUFFER,resource->id);
+    glBindBuffer(GL_ARRAY_BUFFER, id);
 }
-bool Buffer::IsValid()
+bool BufferResource::IsValid()
 {
-	return resource->id!=0;
+    return id != 0;
 }
-void Buffer::Destroy()
+void BufferResource::Destroy()
 {
-	resource.reset();
+    ostringstream ss;
+    ss << "Destroyed buffer with id=" << id;
+    Logger::Write(Logger::LOG_INFO, ss.str());
+    glDeleteBuffers(1, &id);
+    id = 0;
 }
-unsigned int Buffer::GetId() const
+unsigned int BufferResource::GetId() const
 {
-	return resource->id;
-}
-Buffer::operator bool () const
-{
-	return resource;
-}
-bool Buffer::operator== (const Buffer &buffer) const
-{
-	return resource==buffer.resource;
+    return id;
 }

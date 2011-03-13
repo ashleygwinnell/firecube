@@ -59,35 +59,524 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><b>FireCube</b>      </li>
+      <li class="navelem"><a class="el" href="namespace_fire_cube.html">FireCube</a>      </li>
       <li class="navelem"><a class="el" href="class_fire_cube_1_1_program_resource.html">ProgramResource</a>      </li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#friends">Friends</a>  </div>
   <div class="headertitle">
 <h1>FireCube::ProgramResource Class Reference</h1>  </div>
 </div>
 <div class="contents">
 <!-- doxytag: class="FireCube::ProgramResource" -->
+<p>A class representing a gpu program.  
+<a href="#_details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_shaders_8h_source.html">Shaders.h</a>&gt;</code></p>
+
 <p><a href="class_fire_cube_1_1_program_resource-members.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aadc977e3abad7d5d6bfa668ad93f9702"></a><!-- doxytag: member="FireCube::ProgramResource::id" ref="aadc977e3abad7d5d6bfa668ad93f9702" args="" -->
-GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>id</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a986c574061e6229e07cc05fe80b1c5e1"></a><!-- doxytag: member="FireCube::ProgramResource::variables" ref="a986c574061e6229e07cc05fe80b1c5e1" args="" -->
-std::map&lt; std::string, GLint &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>variables</b></td></tr>
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aed2a42cceffe36850960606a0e2d99d9"></a><!-- doxytag: member="FireCube::ProgramResource::Create" ref="aed2a42cceffe36850960606a0e2d99d9" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#aed2a42cceffe36850960606a0e2d99d9">Create</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the program. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aef5159aa8acb5ba8f267182b432e759c"></a><!-- doxytag: member="FireCube::ProgramResource::Create" ref="aef5159aa8acb5ba8f267182b432e759c" args="(Shader shader1, Shader shader2)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#aef5159aa8acb5ba8f267182b432e759c">Create</a> (<a class="el" href="namespace_fire_cube.html#a505d35d29a897c4a84552f8cfb514f42">Shader</a> shader1, <a class="el" href="namespace_fire_cube.html#a505d35d29a897c4a84552f8cfb514f42">Shader</a> shader2)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the program and attaches two shaders to it. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#a8eef875f51bd6e9b72cee1c29b8632a8">Attach</a> (<a class="el" href="namespace_fire_cube.html#a505d35d29a897c4a84552f8cfb514f42">Shader</a> shader)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Attaches a shader to the program.  <a href="#a8eef875f51bd6e9b72cee1c29b8632a8"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1cdec73cbf6fb754bd90bed1f6588da8"></a><!-- doxytag: member="FireCube::ProgramResource::Link" ref="a1cdec73cbf6fb754bd90bed1f6588da8" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#a1cdec73cbf6fb754bd90bed1f6588da8">Link</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Links the program. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#a00231fdc88bfb8198c24930a35f606ad">SetUniform</a> (const std::string &amp;name, float value)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a 1d uniform float.  <a href="#a00231fdc88bfb8198c24930a35f606ad"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#acc6192ba437a686edcdf2cd1e289caf0">SetUniform</a> (const std::string &amp;name, int value)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a 1d uniform integer.  <a href="#acc6192ba437a686edcdf2cd1e289caf0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#aca2357b2dde49a0fef35b1865ac97fd2">SetUniform</a> (const std::string &amp;name, <a class="el" href="class_fire_cube_1_1vec2.html">vec2</a> value)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a 2d uniform float.  <a href="#aca2357b2dde49a0fef35b1865ac97fd2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#a987f484ff62ac92456b704a29c2406a6">SetUniform</a> (const std::string &amp;name, <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> value)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a 3d uniform float.  <a href="#a987f484ff62ac92456b704a29c2406a6"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#ab45744732bd1acb60c837c6bed032ac0">SetUniform</a> (const std::string &amp;name, <a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> value)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a 4d uniform float.  <a href="#ab45744732bd1acb60c837c6bed032ac0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#aca8a4776bcb7feb633807b4729b43ab0">SetUniform</a> (const std::string &amp;name, <a class="el" href="class_fire_cube_1_1mat3.html">mat3</a> value)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a 3x3 uniform matrix.  <a href="#aca8a4776bcb7feb633807b4729b43ab0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#aa7a4fbfa081959c660ec958d260a09f9">SetUniform</a> (const std::string &amp;name, <a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> value)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a 4x4 uniform matrix.  <a href="#aa7a4fbfa081959c660ec958d260a09f9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#a0901baa83022ed0c0e63a8a1a570502d">SetUniform</a> (const std::string &amp;name, bool value)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a 1d uniform boolean.  <a href="#a0901baa83022ed0c0e63a8a1a570502d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#adf3103d2d46586f065bf8e85351930d9">SetUniform</a> (const std::string &amp;name, const std::vector&lt; bool &gt; &amp;value)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets an array of booleans.  <a href="#adf3103d2d46586f065bf8e85351930d9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#afd9857a9f4dffd4f09e9fc0c71d67ba5">SetUniform</a> (const std::string &amp;name, const std::vector&lt; int &gt; &amp;value)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets an array of integers.  <a href="#afd9857a9f4dffd4f09e9fc0c71d67ba5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#a06a791d11ae63aaab8f3605600da043c">SetAttribute</a> (const std::string &amp;name, <a class="el" href="namespace_fire_cube.html#aeaeb8ce418138f56749a46bf8d78cbac">Buffer</a> buffer, int size)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets vertex shader attribute.  <a href="#a06a791d11ae63aaab8f3605600da043c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#ad48891f9895b99eb34f5ebcb40236809">GetInfoLog</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5a2e33f8fe49eebc23c48ab227365001"></a><!-- doxytag: member="FireCube::ProgramResource::IsValid" ref="a5a2e33f8fe49eebc23c48ab227365001" args="() const " -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#a5a2e33f8fe49eebc23c48ab227365001">IsValid</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether the program is valid. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac68be3aa5c0aa900092c41f4eb9aa0ac"></a><!-- doxytag: member="FireCube::ProgramResource::GetId" ref="ac68be3aa5c0aa900092c41f4eb9aa0ac" args="() const " -->
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_program_resource.html#ac68be3aa5c0aa900092c41f4eb9aa0ac">GetId</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the resource id of the program. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6a58d5127b6537b8847a747989bef28d"></a><!-- doxytag: member="FireCube::ProgramResource::Renderer::UseProgram" ref="a6a58d5127b6537b8847a747989bef28d" args="(Program program)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::UseProgram</b> (<a class="el" href="class_fire_cube_1_1_program.html">Program</a> program)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::UseProgram</b> (<a class="el" href="namespace_fire_cube.html#a14367c0feb409b94f6acbba3c477e8b0">Program</a> program)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0bef519ca2c3873536f824dc6b8851a5"></a><!-- doxytag: member="FireCube::ProgramResource::Renderer::SetGlobalProgram" ref="a0bef519ca2c3873536f824dc6b8851a5" args="(Program program)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::SetGlobalProgram</b> (<a class="el" href="class_fire_cube_1_1_program.html">Program</a> program)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::SetGlobalProgram</b> (<a class="el" href="namespace_fire_cube.html#a14367c0feb409b94f6acbba3c477e8b0">Program</a> program)</td></tr>
 </table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>A class representing a gpu program. </p>
+</div><hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a8eef875f51bd6e9b72cee1c29b8632a8"></a><!-- doxytag: member="FireCube::ProgramResource::Attach" ref="a8eef875f51bd6e9b72cee1c29b8632a8" args="(Shader shader)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ProgramResource::Attach </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_fire_cube.html#a505d35d29a897c4a84552f8cfb514f42">Shader</a>&#160;</td>
+          <td class="paramname"><em>shader</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Attaches a shader to the program. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">shader</td><td>The shader to attach. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ad48891f9895b99eb34f5ebcb40236809"></a><!-- doxytag: member="FireCube::ProgramResource::GetInfoLog" ref="ad48891f9895b99eb34f5ebcb40236809" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string ProgramResource::GetInfoLog </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns the compile log for this program. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a06a791d11ae63aaab8f3605600da043c"></a><!-- doxytag: member="FireCube::ProgramResource::SetAttribute" ref="a06a791d11ae63aaab8f3605600da043c" args="(const std::string &amp;name, Buffer buffer, int size)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ProgramResource::SetAttribute </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_fire_cube.html#aeaeb8ce418138f56749a46bf8d78cbac">Buffer</a>&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets vertex shader attribute. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable. </td></tr>
+    <tr><td class="paramname">buffer</td><td>The buffer from which data will be read. </td></tr>
+    <tr><td class="paramname">size</td><td>The number of elements in each attribue. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="aa7a4fbfa081959c660ec958d260a09f9"></a><!-- doxytag: member="FireCube::ProgramResource::SetUniform" ref="aa7a4fbfa081959c660ec958d260a09f9" args="(const std::string &amp;name, mat4 value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ProgramResource::SetUniform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets a 4x4 uniform matrix. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable. </td></tr>
+    <tr><td class="paramname">value</td><td>The value to assign for it. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="aca8a4776bcb7feb633807b4729b43ab0"></a><!-- doxytag: member="FireCube::ProgramResource::SetUniform" ref="aca8a4776bcb7feb633807b4729b43ab0" args="(const std::string &amp;name, mat3 value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ProgramResource::SetUniform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1mat3.html">mat3</a>&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets a 3x3 uniform matrix. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable. </td></tr>
+    <tr><td class="paramname">value</td><td>The value to assign for it. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ab45744732bd1acb60c837c6bed032ac0"></a><!-- doxytag: member="FireCube::ProgramResource::SetUniform" ref="ab45744732bd1acb60c837c6bed032ac0" args="(const std::string &amp;name, vec4 value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ProgramResource::SetUniform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets a 4d uniform float. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable. </td></tr>
+    <tr><td class="paramname">value</td><td>The value to assign for it. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a987f484ff62ac92456b704a29c2406a6"></a><!-- doxytag: member="FireCube::ProgramResource::SetUniform" ref="a987f484ff62ac92456b704a29c2406a6" args="(const std::string &amp;name, vec3 value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ProgramResource::SetUniform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets a 3d uniform float. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable. </td></tr>
+    <tr><td class="paramname">value</td><td>The value to assign for it. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="adf3103d2d46586f065bf8e85351930d9"></a><!-- doxytag: member="FireCube::ProgramResource::SetUniform" ref="adf3103d2d46586f065bf8e85351930d9" args="(const std::string &amp;name, const std::vector&lt; bool &gt; &amp;value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ProgramResource::SetUniform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; bool &gt; &amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets an array of booleans. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable. </td></tr>
+    <tr><td class="paramname">value</td><td>The value to assign for it. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="acc6192ba437a686edcdf2cd1e289caf0"></a><!-- doxytag: member="FireCube::ProgramResource::SetUniform" ref="acc6192ba437a686edcdf2cd1e289caf0" args="(const std::string &amp;name, int value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ProgramResource::SetUniform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets a 1d uniform integer. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable. </td></tr>
+    <tr><td class="paramname">value</td><td>The value to assign for it. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a00231fdc88bfb8198c24930a35f606ad"></a><!-- doxytag: member="FireCube::ProgramResource::SetUniform" ref="a00231fdc88bfb8198c24930a35f606ad" args="(const std::string &amp;name, float value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ProgramResource::SetUniform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets a 1d uniform float. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable. </td></tr>
+    <tr><td class="paramname">value</td><td>The value to assign for it. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="aca2357b2dde49a0fef35b1865ac97fd2"></a><!-- doxytag: member="FireCube::ProgramResource::SetUniform" ref="aca2357b2dde49a0fef35b1865ac97fd2" args="(const std::string &amp;name, vec2 value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ProgramResource::SetUniform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec2.html">vec2</a>&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets a 2d uniform float. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable. </td></tr>
+    <tr><td class="paramname">value</td><td>The value to assign for it. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a0901baa83022ed0c0e63a8a1a570502d"></a><!-- doxytag: member="FireCube::ProgramResource::SetUniform" ref="a0901baa83022ed0c0e63a8a1a570502d" args="(const std::string &amp;name, bool value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ProgramResource::SetUniform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets a 1d uniform boolean. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable. </td></tr>
+    <tr><td class="paramname">value</td><td>The value to assign for it. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="afd9857a9f4dffd4f09e9fc0c71d67ba5"></a><!-- doxytag: member="FireCube::ProgramResource::SetUniform" ref="afd9857a9f4dffd4f09e9fc0c71d67ba5" args="(const std::string &amp;name, const std::vector&lt; int &gt; &amp;value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ProgramResource::SetUniform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets an array of integers. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable. </td></tr>
+    <tr><td class="paramname">value</td><td>The value to assign for it. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="_shaders_8h_source.html">Shaders.h</a></li>
 <li>Shaders.cpp</li>
@@ -98,7 +587,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::SetGlobalPr
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -107,7 +596,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::SetGlobalPr
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Feb 5 2011 19:18:54 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Mar 13 2011 14:29:50 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

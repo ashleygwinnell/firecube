@@ -73,7 +73,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="contents">
 <!-- doxytag: class="FireCube::Application" -->
-<p>This class is responsible for the intialization and running of the application.  
+<p>This class is responsible for the initialization and running of the application.  
 <a href="#_details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_application_8h_source.html">Application.h</a>&gt;</code></p>
@@ -83,9 +83,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_application.html#a00d10eb756046bb9a02494ca7362013e">Initialize</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a default window and intializes OpenGL.  <a href="#a00d10eb756046bb9a02494ca7362013e"></a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a default window and initializes OpenGL.  <a href="#a00d10eb756046bb9a02494ca7362013e"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_application.html#af1082723b40457d85a467861dd733ad2">Initialize</a> (int width, int height, int bpp, int multisample, bool fullscreen)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a window and intializes OpenGL.  <a href="#af1082723b40457d85a467861dd733ad2"></a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a window and initializes OpenGL.  <a href="#af1082723b40457d85a467861dd733ad2"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_application.html#a05c4dbc0ff19bcff0fc94294f2bc648f">InitializeNoWindow</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes without creating a window (assumes there is already an active rendering context).  <a href="#a05c4dbc0ff19bcff0fc94294f2bc648f"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_application.html#a3cbfcf05793d1d40cae0928e6dd1c62c">Close</a> ()</td></tr>
@@ -105,6 +105,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a73fe90398a5c3cd9d3a430ae0d5894db"></a><!-- doxytag: member="FireCube::Application::GetHeight" ref="a73fe90398a5c3cd9d3a430ae0d5894db" args="() const " -->
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_application.html#a73fe90398a5c3cd9d3a430ae0d5894db">GetHeight</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the window's height. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae6726c1800449d0542656f904969d637"></a><!-- doxytag: member="FireCube::Application::GetCursorPos" ref="ae6726c1800449d0542656f904969d637" args="()" -->
+<a class="el" href="class_fire_cube_1_1vec2.html">vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_application.html#ae6726c1800449d0542656f904969d637">GetCursorPos</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the cursor position. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_application.html#aa44755d3453393d217b1e99498a31587">HandleInput</a> (float time)=0</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">User should override this to handle the input.  <a href="#aa44755d3453393d217b1e99498a31587"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_application.html#a0938c3c57a31ba77531a8193ed1aab7e">Update</a> (float time)=0</td></tr>
@@ -125,7 +128,7 @@ Static Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for file name using the search paths.  <a href="#a3a67462fbaecaa897aac786a0bdbe22f"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>This class is responsible for the intialization and running of the application. </p>
+<div class="textblock"><p>This class is responsible for the initialization and running of the application. </p>
 </div><hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="ad13d5b81cb9a7011c7a764922d26cefd"></a><!-- doxytag: member="FireCube::Application::AddSearchPath" ref="ad13d5b81cb9a7011c7a764922d26cefd" args="(const std::string &amp;path)" -->
 <div class="memitem">
@@ -210,6 +213,25 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a00d10eb756046bb9a02494ca7362013e"></a><!-- doxytag: member="FireCube::Application::Initialize" ref="a00d10eb756046bb9a02494ca7362013e" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Application::Initialize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Creates a default window and initializes OpenGL. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>true on success, false otherwise. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="af1082723b40457d85a467861dd733ad2"></a><!-- doxytag: member="FireCube::Application::Initialize" ref="af1082723b40457d85a467861dd733ad2" args="(int width, int height, int bpp, int multisample, bool fullscreen)" -->
 <div class="memitem">
 <div class="memproto">
@@ -253,26 +275,7 @@ Static Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Creates a window and intializes OpenGL. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>true on success, false otherwise. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a00d10eb756046bb9a02494ca7362013e"></a><!-- doxytag: member="FireCube::Application::Initialize" ref="a00d10eb756046bb9a02494ca7362013e" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Application::Initialize </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Creates a default window and intializes OpenGL. </p>
+<p>Creates a window and initializes OpenGL. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>true on success, false otherwise. </dd></dl>
 
 </div>
@@ -380,7 +383,7 @@ Static Public Member Functions</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Feb 16 2011 21:18:09 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Mar 13 2011 14:29:50 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

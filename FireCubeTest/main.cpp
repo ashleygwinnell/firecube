@@ -12,37 +12,36 @@ int main(int argc, char *argv[])
 }
 void SetNormalMap(Node node,Texture texture)
 {
-	for (unsigned int i=0;i<node.GetGeometries().size();i++)
+	for (unsigned int i=0;i<node->GetGeometries().size();i++)
 	{
-		Geometry g=node.GetGeometries()[i];
-		for (unsigned int j=0;j<g.GetMaterials().size();j++)
+		Geometry g=node->GetGeometries()[i];
+		for (unsigned int j=0;j<g->GetMaterials().size();j++)
 		{
-			Material m=g.GetMaterials()[j];
-			m.SetNormalTexture(texture);			
+			Material m=g->GetMaterials()[j];
+			m->SetNormalTexture(texture);			
 		}
 	}
-	for (unsigned int i=0;i<node.GetChildren().size();i++)
-		SetNormalMap(node.GetChildren()[i],texture);
+	for (unsigned int i=0;i<node->GetChildren().size();i++)
+		SetNormalMap(node->GetChildren()[i],texture);
 }
 bool App::Init()
 {
 	Application::AddSearchPath("../Assets/Textures");
 	SetTitle(string("FireCube Test Application"));		
 	font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
-	root=Node("Root");
+	root=Node(new NodeResource("Root"));
 	Node node;
 	node=LoadMesh("../Assets/Models/teapot2.3ds");	
-	node.SetTranslation(vec3(0,0,-4.0f));
-	root.AddChild(node);
-	node=Node("LightNode");
+	node->SetTranslation(vec3(0,0,-4.0f));
+	root->AddChild(node);
+	node=Node(new NodeResource("LightNode"));
 	Light light;
-	light.Create();
 	light.SetType(DIRECTIONAL);
 	light.SetAmbientColor(vec4(0.2f,0.2f,0.2f,1.0f));
 	light.SetDiffuseColor(vec4(0.7f,0.7f,0.7f,1.0f));
 	light.SetSpecularColor(vec4(0.2f,0.2f,0.2f,1.0f));	
-	node.AddLight(light);
-	root.AddChild(node);
+	node->AddLight(light);
+	root->AddChild(node);
 	SetNormalMap(root,Renderer::GetTextureManager().Create("normalMap.jpg"));	
 	return true;
 }
@@ -69,12 +68,12 @@ void App::HandleInput(float t)
 	static vec2 lastPos;
 	vec2 pos;
 	::POINT p;
-	GetCursorPos(&p);
+	::GetCursorPos(&p);
 	pos.x=(float)p.x;
 	pos.y=(float)p.y;
 	if (GetAsyncKeyState(1))	
-		root.GetChildren()[0].Rotate(vec3(lastPos.y-pos.y,lastPos.x-pos.x,0)*t);
+		root->GetChildren()[0]->Rotate(vec3(lastPos.y-pos.y,lastPos.x-pos.x,0)*t);
 	if (GetAsyncKeyState(2))	
-		root.GetChildren()[1].Rotate(vec3(lastPos.y-pos.y,lastPos.x-pos.x,0)*t);
+		root->GetChildren()[1]->Rotate(vec3(lastPos.y-pos.y,lastPos.x-pos.x,0)*t);
 	lastPos=pos;
 }

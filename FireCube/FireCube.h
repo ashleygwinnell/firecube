@@ -7,21 +7,22 @@
 #include <map>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <iostream>
 #include <queue>
 #include <windows.h>
 #include <gl/gl.h>
 
-#include "utils.h"	
+#include "utils.h"
 #include "Logger.h"
 #include "ResourceManager.h"
 #include "Timer.h"
-#include "MyMath.h"	
+#include "MyMath.h"
 #include "BoundingBox.h"
-#include "Texture.h"		
+#include "Texture.h"
 #include "Buffer.h"
 #include "Shaders.h"
-#include "Geometry.h"	
+#include "Geometry.h"
 #include "FrameBuffer.h"
 #include "Image.h"
 #include "Font.h"

@@ -25,14 +25,16 @@ int main(int argc, char *argv[])
 	app.pShader=Renderer::GetShaderManager().Create("p.frag");	
 	app.pShader2=Renderer::GetShaderManager().Create("p2.frag");
 	app.font=Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf",18);
-	app.program.Create(app.vShader,app.pShader);
-	app.program2.Create(app.vShader,app.pShader2);		
+	app.program=Program(new ProgramResource);
+	app.program->Create(app.vShader,app.pShader);
+	app.program2=Program(new ProgramResource);
+	app.program2->Create(app.vShader,app.pShader2);		
 	app.model=LoadMesh("../Assets/Models/physcube.3ds");
 	app.sphere=LoadMesh("../Assets/Models/sphere2.3ds");
-	app.model.SetLighting(false);
-	app.model.SetProgram(app.program);
-	app.sphere.SetLighting(false);
-	app.sphere.SetProgram(app.program);
+	app.model->SetLighting(false);
+	app.model->SetProgram(app.program);
+	app.sphere->SetLighting(false);
+	app.sphere->SetProgram(app.program);
 	cube.FromNode(app.model,20,20,20,1.1f);		
 	body1.Init(app.model,&cube);
 	body1.position.Set(-2,0,0);
@@ -57,8 +59,8 @@ void App::Render(float t)
 	m.Translate(-camPos);
 	Renderer::SetModelViewMatrix(m);
 	Renderer::UseProgram(program);
-	app.program.SetUniform("tex0",0);
-	s.Render();	
+	app.program->SetUniform("tex0",0);
+	s.Render(m);	
 	
 	Renderer::SetOrthographicProjection();
 	Renderer::SetModelViewMatrix(mat4());
@@ -72,7 +74,7 @@ void App::HandleInput(float t)
 	body2.CalculateWorldProperties();
 	::POINT p;
 	vec3 m;
-	GetCursorPos(&p);
+	::GetCursorPos(&p);
 	m.x=(float)p.x;
 	m.y=(float)p.y;
 	if (GetAsyncKeyState(1))

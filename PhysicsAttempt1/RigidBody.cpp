@@ -119,15 +119,13 @@ bool RigidBody::GetPointInfo(vec3 pos, vec3 &dir, float &dist)
 	dir=dir*orientaion;
 	return inside;
 }
-void RigidBody::Render()
-{
-	Renderer::SaveModelViewMatrix();
+void RigidBody::Render(mat4 transform)
+{	
 	mat4 t;
 	t.Translate(position);
 	t*=orientaion.ToMat4();
-	Renderer::MultiplyModelViewMatrix(t);
+	model->SetMatrixTransformation(transform * t);
 	Renderer::Render(model);
-	Renderer::RestoreModelViewMatrix();
 }
 void RigidBody::GetBoundingSphere(vec3 &pos,float &radius)
 {

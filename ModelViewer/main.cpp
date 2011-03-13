@@ -32,17 +32,16 @@ void FireCubeApp::LoadModel(const string &filename)
 	ostringstream oss3;
 	oss3 << "Loading completed in " << t.Passed() << " seconds.";
 	app->frame->statusBar1->SetStatusText(oss3.str());
-	FireCube::Node l=root.AddChild(FireCube::Node("LightNode"));
-	FireCube::Light light;
-	light.Create();
+	FireCube::Node l=root->AddChild(FireCube::Node(new FireCube::NodeResource("LightNode")));
+	FireCube::Light light;	
 	light.SetAmbientColor(FireCube::vec4(0.3f,0.3f,0.3f,1.0f));
 	light.SetDiffuseColor(FireCube::vec4(0.7f,0.7f,0.7f,1.0f));
 	light.SetSpecularColor(FireCube::vec4(0.3f,0.3f,0.3f,1.0f));
 	light.SetType(FireCube::DIRECTIONAL);
-	l.AddLight(light);
-	l.Rotate(FireCube::vec3((float)PI/4.0f,(float)PI/4.0f,0));
+	l->AddLight(light);
+	l->Rotate(FireCube::vec3((float)PI/4.0f,(float)PI/4.0f,0));
 	if (app->frame->glCanvas->customProgram)
-		root.SetProgram(program);
+		root->SetProgram(program);
 
 	unsigned int vertexCount=0,faceCount=0;
 	CountElements(root,vertexCount,faceCount);
@@ -60,80 +59,80 @@ void FireCubeApp::LoadModel(const string &filename)
 }
 void FireCubeApp::CountElements(FireCube::Node node,unsigned int &verticesCount,unsigned int &faceCount)
 {
-	for (unsigned int j=0;j<node.GetGeometries().size();j++)
+	for (unsigned int j=0;j<node->GetGeometries().size();j++)
 	{		
-		verticesCount+=node.GetGeometries()[j].GetVertices().size();
-		faceCount+=node.GetGeometries()[j].GetFaces().size();
+		verticesCount+=node->GetGeometries()[j]->GetVertices().size();
+		faceCount+=node->GetGeometries()[j]->GetFaces().size();
 	}
-	for (vector<FireCube::Node>::iterator i=node.GetChildren().begin();i!=node.GetChildren().end();i++)
+	for (vector<FireCube::Node>::iterator i=node->GetChildren().begin();i!=node->GetChildren().end();i++)
 		CountElements(*i,verticesCount,faceCount);
 }
 void FireCubeApp::AddMaterials(unsigned int &id,FireCube::Node node)
 {
 	MyApp *app=(MyApp*)wxTheApp;
-	for (unsigned int j=0;j<node.GetGeometries().size();j++)
+	for (unsigned int j=0;j<node->GetGeometries().size();j++)
 	{		
-		for (DWORD i=0;i<node.GetGeometries()[j].GetMaterials().size();i++)
-			app->frame->AddMaterial(id++,node.GetGeometries()[j].GetMaterials()[i]);
+		for (DWORD i=0;i<node->GetGeometries()[j]->GetMaterials().size();i++)
+			app->frame->AddMaterial(id++,node->GetGeometries()[j]->GetMaterials()[i]);
 	}
-	for (vector<FireCube::Node>::iterator i=node.GetChildren().begin();i!=node.GetChildren().end();i++)
+	for (vector<FireCube::Node>::iterator i=node->GetChildren().begin();i!=node->GetChildren().end();i++)
 		AddMaterials(id,*i);
 }
 void FireCubeApp::GenerateNormals(float l)
 {
 	vector<FireCube::vec3> normals;	
 	GenerateNormals(root,l,normals);
-	normalRenderingBuffer.LoadData(&normals[0],normals.size()*sizeof(FireCube::vec3),FireCube::STATIC);
+	normalRenderingBuffer->LoadData(&normals[0],normals.size()*sizeof(FireCube::vec3),FireCube::STATIC);
 	normalRenderingBufferSize=normals.size();
 }
 void FireCubeApp::GenerateNormals(FireCube::Node node,float l,vector<FireCube::vec3> &normals)
 {		
-	for (unsigned int j=0;j<node.GetGeometries().size();j++)
+	for (unsigned int j=0;j<node->GetGeometries().size();j++)
 	{			
-		for (unsigned int i=0;i<node.GetGeometries()[j].GetVertices().size();i++)
+		for (unsigned int i=0;i<node->GetGeometries()[j]->GetVertices().size();i++)
 		{
-			normals.push_back(node.GetGeometries()[j].GetVertices()[i]);
-			normals.push_back(node.GetGeometries()[j].GetVertices()[i]+node.GetGeometries()[j].GetNormals()[i]*l);
+			normals.push_back(node->GetGeometries()[j]->GetVertices()[i]);
+			normals.push_back(node->GetGeometries()[j]->GetVertices()[i]+node->GetGeometries()[j]->GetNormals()[i]*l);
 		}
 	}	
-	for (vector<FireCube::Node>::iterator i=node.GetChildren().begin();i!=node.GetChildren().end();i++)
+	for (vector<FireCube::Node>::iterator i=node->GetChildren().begin();i!=node->GetChildren().end();i++)
 		GenerateNormals(*i,l,normals);
 }
 void FireCubeApp::GenerateTangents(float l)
 {
 	vector<FireCube::vec3> tangents;	
 	GenerateTangents(root,l,tangents);
-	tangentRenderingBuffer.LoadData(&tangents[0],tangents.size()*sizeof(FireCube::vec3),FireCube::STATIC);	
+	tangentRenderingBuffer->LoadData(&tangents[0],tangents.size()*sizeof(FireCube::vec3),FireCube::STATIC);	
 }
 void FireCubeApp::GenerateTangents(FireCube::Node node,float l,vector<FireCube::vec3> &tangents)
 {		
-	for (unsigned int j=0;j<node.GetGeometries().size();j++)
+	for (unsigned int j=0;j<node->GetGeometries().size();j++)
 	{			
-		for (unsigned int i=0;i<node.GetGeometries()[j].GetVertices().size();i++)
+		for (unsigned int i=0;i<node->GetGeometries()[j]->GetVertices().size();i++)
 		{
-			tangents.push_back(node.GetGeometries()[j].GetVertices()[i]);
-			tangents.push_back(node.GetGeometries()[j].GetVertices()[i]+node.GetGeometries()[j].GetTangents()[i]*l);
+			tangents.push_back(node->GetGeometries()[j]->GetVertices()[i]);
+			tangents.push_back(node->GetGeometries()[j]->GetVertices()[i]+node->GetGeometries()[j]->GetTangents()[i]*l);
 		}
 	}	
-	for (vector<FireCube::Node>::iterator i=node.GetChildren().begin();i!=node.GetChildren().end();i++)
+	for (vector<FireCube::Node>::iterator i=node->GetChildren().begin();i!=node->GetChildren().end();i++)
 		GenerateTangents(*i,l,tangents);
 }
 void FireCubeApp::GenerateBitangents(float l)
 {
 	vector<FireCube::vec3> bitangents;	
 	GenerateBitangents(root,l,bitangents);
-	bitangentRenderingBuffer.LoadData(&bitangents[0],bitangents.size()*sizeof(FireCube::vec3),FireCube::STATIC);	
+	bitangentRenderingBuffer->LoadData(&bitangents[0],bitangents.size()*sizeof(FireCube::vec3),FireCube::STATIC);	
 }
 void FireCubeApp::GenerateBitangents(FireCube::Node node,float l,vector<FireCube::vec3> &bitangents)
 {		
-	for (unsigned int j=0;j<node.GetGeometries().size();j++)
+	for (unsigned int j=0;j<node->GetGeometries().size();j++)
 	{			
-		for (unsigned int i=0;i<node.GetGeometries()[j].GetVertices().size();i++)
+		for (unsigned int i=0;i<node->GetGeometries()[j]->GetVertices().size();i++)
 		{
-			bitangents.push_back(node.GetGeometries()[j].GetVertices()[i]);
-			bitangents.push_back(node.GetGeometries()[j].GetVertices()[i]+node.GetGeometries()[j].GetBitangents()[i]*l);
+			bitangents.push_back(node->GetGeometries()[j]->GetVertices()[i]);
+			bitangents.push_back(node->GetGeometries()[j]->GetVertices()[i]+node->GetGeometries()[j]->GetBitangents()[i]*l);
 		}
 	}	
-	for (vector<FireCube::Node>::iterator i=node.GetChildren().begin();i!=node.GetChildren().end();i++)
+	for (vector<FireCube::Node>::iterator i=node->GetChildren().begin();i!=node->GetChildren().end();i++)
 		GenerateBitangents(*i,l,bitangents);
 }

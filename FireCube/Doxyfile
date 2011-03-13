@@ -709,20 +709,8 @@ EXCLUDE_PATTERNS       =
 # wildcard * is used, a substring. Examples: ANamespace, AClass, 
 # AClass::ANamespace, ANamespace::*Test
 
-EXCLUDE_SYMBOLS        = TextureResource \
-                         NodeResource \
-                         TechniqueResource \
-                         MaterialResource \
-                         ShaderResource \
-                         FontResource \
-                         FontPage \
-                         FrameBufferResource \
-                         GeometryResource \
-                         Glyph \
-                         LightResource \
-                         BufferResource \
-                         ProgramResource \
-                         ProgramResource
+EXCLUDE_SYMBOLS        = Glyph \
+                         FontPage
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or 
 # directories that contain example code fragments that are included (see 
