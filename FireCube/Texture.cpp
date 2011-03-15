@@ -15,7 +15,6 @@ using namespace std;
 
 #include "utils.h"
 #include "Logger.h"
-#include "ResourceManager.h"
 #include "Texture.h"
 
 using namespace FireCube;

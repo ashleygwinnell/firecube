@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>FireCube: Member List</title>
+<title>FireCube: Filesystem.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
@@ -29,8 +29,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
-      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -51,33 +51,32 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
-      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+      <li><a href="files.html"><span>File&#160;List</span></a></li>
     </ul>
   </div>
-  <div id="nav-path" class="navpath">
-    <ul>
-      <li class="navelem"><a class="el" href="namespace_fire_cube.html">FireCube</a>      </li>
-      <li class="navelem"><a class="el" href="class_fire_cube_1_1_shader_resource.html">ShaderResource</a>      </li>
-    </ul>
-  </div>
-</div>
 <div class="header">
   <div class="headertitle">
-<h1>FireCube::ShaderResource Member List</h1>  </div>
+<h1>Filesystem.h</h1>  </div>
 </div>
 <div class="contents">
-This is the complete list of members for <a class="el" href="class_fire_cube_1_1_shader_resource.html">FireCube::ShaderResource</a>, including all inherited members.<table>
-  <tr class="memlist"><td><a class="el" href="class_fire_cube_1_1_shader_resource.html#a4693a73fe9f8da966a0ef755cbda12dd">Create</a>(ShaderType type, const std::string &amp;source)</td><td><a class="el" href="class_fire_cube_1_1_shader_resource.html">FireCube::ShaderResource</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="class_fire_cube_1_1_shader_resource.html#aa210b7fd38cf22b9f688fdac36b09f55">GetId</a>() const </td><td><a class="el" href="class_fire_cube_1_1_shader_resource.html">FireCube::ShaderResource</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="class_fire_cube_1_1_shader_resource.html#a05460f36c131d62468f503df6c01c91c">Load</a>(const std::string &amp;filename)</td><td><a class="el" href="class_fire_cube_1_1_shader_resource.html">FireCube::ShaderResource</a></td><td></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>ProgramResource</b> (defined in <a class="el" href="class_fire_cube_1_1_shader_resource.html">FireCube::ShaderResource</a>)</td><td><a class="el" href="class_fire_cube_1_1_shader_resource.html">FireCube::ShaderResource</a></td><td><code> [friend]</code></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>ResourceManager&lt; ShaderResource &gt;</b> (defined in <a class="el" href="class_fire_cube_1_1_shader_resource.html">FireCube::ShaderResource</a>)</td><td><a class="el" href="class_fire_cube_1_1_shader_resource.html">FireCube::ShaderResource</a></td><td><code> [friend]</code></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>ShaderResource</b>() (defined in <a class="el" href="class_fire_cube_1_1_shader_resource.html">FireCube::ShaderResource</a>)</td><td><a class="el" href="class_fire_cube_1_1_shader_resource.html">FireCube::ShaderResource</a></td><td></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>~ShaderResource</b>() (defined in <a class="el" href="class_fire_cube_1_1_shader_resource.html">FireCube::ShaderResource</a>)</td><td><a class="el" href="class_fire_cube_1_1_shader_resource.html">FireCube::ShaderResource</a></td><td></td></tr>
-</table></div>
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef FILESYSTEM_H</span>
+<a name="l00002"></a>00002 <span class="preprocessor"></span><span class="preprocessor">#define FILESYSTEM_H</span>
+<a name="l00003"></a>00003 <span class="preprocessor"></span>
+<a name="l00004"></a>00004 <span class="keyword">namespace </span>FireCube
+<a name="l00005"></a>00005 {
+<a name="l00006"></a>00006 
+<a name="l00010"></a><a class="code" href="namespace_fire_cube_1_1_filesystem.html">00010</a> <span class="keyword">namespace </span>Filesystem
+<a name="l00011"></a>00011 {
+<a name="l00016"></a>00016     <span class="keywordtype">void</span> FIRECUBE_API <a class="code" href="namespace_fire_cube_1_1_filesystem.html#aa68e6d7f8e8b932570919eb76eb9cb48" title="Add a search path for resources.">AddSearchPath</a>(<span class="keyword">const</span> std::string &amp;path);
+<a name="l00017"></a>00017 
+<a name="l00022"></a>00022     <span class="keyword">const</span> FIRECUBE_API std::vector&lt;std::string&gt; &amp;<a class="code" href="namespace_fire_cube_1_1_filesystem.html#ae91294e3a7c149d41355e74572447575" title="Gets the list of search paths.">GetSearchPaths</a>();
+<a name="l00023"></a>00023 
+<a name="l00028"></a>00028     std::string FIRECUBE_API <a class="code" href="namespace_fire_cube_1_1_filesystem.html#a82ead44a24b65a52bc402902f3afaee2" title="Searches for file name using the search paths.">SearchForFileName</a>(<span class="keyword">const</span> std::string &amp;filename);
+<a name="l00029"></a>00029 }
+<a name="l00030"></a>00030 }
+<a name="l00031"></a>00031 <span class="preprocessor">#endif</span>
+</pre></div></div>
+</div>
 <!--- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -92,7 +91,7 @@ This is the complete list of members for <a class="el" href="class_fire_cube_1_1
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 23:19:17 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 23:19:16 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

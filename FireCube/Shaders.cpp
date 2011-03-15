@@ -15,18 +15,11 @@ using namespace std;
 
 #include "utils.h"
 #include "Logger.h"
-#include "ResourceManager.h"
-#include "Timer.h"
+#include "Filesystem.h"
 #include "MyMath.h"
-#include "BoundingBox.h"
-#include "Texture.h"
 #include "Buffer.h"
 #include "Shaders.h"
-#include "Geometry.h"
-#include "FrameBuffer.h"
-#include "Font.h"
 #include "Renderer.h"
-#include "Application.h"
 
 using namespace FireCube;
 
@@ -336,7 +329,7 @@ unsigned int ProgramResource::GetId() const
 
 bool TechniqueResource::LoadShader(const string &filename)
 {
-    string name = Application::SearchForFileName(filename);
+    string name = Filesystem::SearchForFileName(filename);
     if (name.empty())
         return false;
     string *source;

@@ -86,8 +86,6 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the resource manager from another.  <a href="#a273f13c1bad8d2c93ce7f93f2b0f7559"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_resource_manager.html#ac47309f0adae432591cde0c6b023350d">Create</a> (const std::string &amp;filename)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates and loads a resource from the specified file.  <a href="#ac47309f0adae432591cde0c6b023350d"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_resource_manager.html#a42adc45f42340fd5a3a49c07af84f804">Add</a> (const std::string &amp;name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a new resource without loading it.  <a href="#a42adc45f42340fd5a3a49c07af84f804"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_resource_manager.html#a44b68cfdffea0b2549669d3685c87476">Add</a> (const std::string &amp;filename, boost::shared_ptr&lt; T &gt; res)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an already existing resource.  <a href="#a44b68cfdffea0b2549669d3685c87476"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_resource_manager.html#a3c75ef76943df9076745025e281e2e7a">Get</a> (const std::string &amp;filename)</td></tr>
@@ -135,34 +133,6 @@ template&lt;class T&gt; </div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a42adc45f42340fd5a3a49c07af84f804"></a><!-- doxytag: member="FireCube::ResourceManager::Add" ref="a42adc45f42340fd5a3a49c07af84f804" args="(const std::string &amp;name)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">boost::shared_ptr&lt;T&gt; <a class="el" href="class_fire_cube_1_1_resource_manager.html">FireCube::ResourceManager</a>&lt; T &gt;::Add </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Adds a new resource without loading it. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>The name identifying the resource. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The newly created resource. </dd></dl>
-
-</div>
-</div>
 <a class="anchor" id="a44b68cfdffea0b2549669d3685c87476"></a><!-- doxytag: member="FireCube::ResourceManager::Add" ref="a44b68cfdffea0b2549669d3685c87476" args="(const std::string &amp;filename, boost::shared_ptr&lt; T &gt; res)" -->
 <div class="memitem">
 <div class="memproto">
@@ -273,7 +243,7 @@ template&lt;class T&gt; </div>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sun Mar 13 2011 14:37:48 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 23:19:17 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

@@ -14,29 +14,29 @@ Simulator::Simulator()
 }
 void Simulator::Render(mat4 transform)
 {
-	vector<RigidBody *>::iterator i=rigidBodies.begin();
+    vector<RigidBody *>::iterator i = rigidBodies.begin();
 
-	for (;i!=rigidBodies.end();i++)
-	{
-		(*i)->Render(transform);
-	}
+    for (; i != rigidBodies.end(); i++)
+    {
+        (*i)->Render(transform);
+    }
 }
 void Simulator::Add(RigidBody *body)
 {
-	rigidBodies.push_back(body);
+    rigidBodies.push_back(body);
 }
 void Simulator::ResetForcesAndTorques()
 {
-	vector<RigidBody *>::iterator i=rigidBodies.begin();
+    vector<RigidBody *>::iterator i = rigidBodies.begin();
 
-	for (;i!=rigidBodies.end();i++)
-	{
-		RigidBody *b=*i;
-		b->torque=vec3(0,0,0);
-		b->force=vec3(0,0,0);
-	}
+    for (; i != rigidBodies.end(); i++)
+    {
+        RigidBody *b = *i;
+        b->torque = vec3(0, 0, 0);
+        b->force = vec3(0, 0, 0);
+    }
 }
 void Simulator::Update(float t)
 {
-	ResetForcesAndTorques();	
+    ResetForcesAndTorques();
 }

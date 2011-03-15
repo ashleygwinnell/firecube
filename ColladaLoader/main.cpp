@@ -28,7 +28,7 @@ void App::Render(float t)
 }
 void main()
 {
-    Application::AddSearchPath("../Assets/Textures");
+    Filesystem::AddSearchPath("../Assets/Textures");
     App app;
     ColladaLoader l("../Assets/Models/duck_triangulate.dae");
     l.Load();
@@ -36,7 +36,7 @@ void main()
     app.node = l.GenerateSceneGraph();
     app.node->Move(vec3(0, -70, -180));
 
-    Light light;    
+    Light light;
     light.SetAmbientColor(vec4(1, 1, 1, 1));
     light.SetDiffuseColor(vec4(1, 1, 1, 1));
     app.node->AddLight(light);

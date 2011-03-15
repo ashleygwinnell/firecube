@@ -13,18 +13,10 @@ using namespace std;
 
 #include "utils.h"
 #include "Logger.h"
-#include "ResourceManager.h"
-#include "Timer.h"
 #include "MyMath.h"
-#include "BoundingBox.h"
 #include "Texture.h"
-#include "Buffer.h"
-#include "Shaders.h"
-#include "Geometry.h"
 #include "FrameBuffer.h"
-#include "Font.h"
 #include "Renderer.h"
-#include "Application.h"
 
 using namespace FireCube;
 

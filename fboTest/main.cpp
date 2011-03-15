@@ -6,12 +6,12 @@ using namespace FireCube;
 App app;
 bool App::Init()
 {
-    Application::AddSearchPath("../Assets/Textures");
-    Application::AddSearchPath("../Assets/Models");
+    Filesystem::AddSearchPath("../Assets/Textures");
+    Filesystem::AddSearchPath("../Assets/Models");
     SetTitle("FBO Example");
     font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 10);
     root = Node(new NodeResource("Root"));
-    Light light;    
+    Light light;
     light.SetAmbientColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));
     light.SetDiffuseColor(vec4(0.8f, 0.8f, 0.8f, 1.0f));
     light.SetSpecularColor(vec4(0.2f, 0.2f, 0.2f, 1.0f));

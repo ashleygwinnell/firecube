@@ -13,22 +13,14 @@ using namespace std;
 #include <SDL_image.h>
 #include <windows.h>
 #include "GLee.h"
-#include <GL/GLU.h>
+
 #include "utils.h"
 #include "Logger.h"
-#include "ResourceManager.h"
-#include "Timer.h"
+#include "Filesystem.h"
 #include "MyMath.h"
 #include "BoundingBox.h"
-#include "Texture.h"
-#include "Buffer.h"
-#include "Shaders.h"
 #include "Geometry.h"
-#include "FrameBuffer.h"
-#include "Image.h"
-#include "Font.h"
 #include "Renderer.h"
-#include "Application.h"
 #include "Light.h"
 #include "Node.h"
 #include "tinyxml.h"
@@ -447,7 +439,7 @@ Node NodeResource::Clone()
 }
 Node FIRECUBE_API FireCube::LoadMesh(const string &filename)
 {
-    string file = Application::SearchForFileName(filename);
+    string file = Filesystem::SearchForFileName(filename);
     if (file.empty())
         return Node();
     string::size_type d;

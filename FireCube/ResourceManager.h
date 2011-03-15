@@ -3,6 +3,13 @@
 
 namespace FireCube
 {
+
+// Forward declarations.
+namespace Filesystem
+{
+   std::string FIRECUBE_API SearchForFileName(const std::string &filename);
+}
+
 /**
 * A templated class for a resource manager.<br>
 * Resources should define a bool Load(const string &) function to be usable.
@@ -35,37 +42,26 @@ public:
     */
     boost::shared_ptr<T> Create(const std::string &filename)
     {
-        map<std::string, boost::weak_ptr<T>>::iterator i = resources.find(filename);
-        if (i != resources.end())
-            if (!i->second.expired())
-                return i->second.lock();
-        boost::shared_ptr<T> ret(new T);
-        std::string loadfile = Application::SearchForFileName(filename);
-        if (loadfile.empty())
-            return boost::shared_ptr<T>();
-        if (ret->Load(loadfile))
-        {
-            resources[filename] = ret;
-            return ret;
-        }
-        else
-            return boost::shared_ptr<T>();
-    }
-
-    /**
-    * Adds a new resource without loading it.
-    * @param name The name identifying the resource.
-    * @return The newly created resource.
-    */
-    boost::shared_ptr<T> Add(const std::string &name)
-    {
-        std::map<std::string, boost::weak_ptr<T>>::iterator i = resources.find(name);
-        if (i != resources.end())
-            if (!i->second.expired())
-                return i->second.lock();
-        boost::shared_ptr<T> ret(new T);
-        resources[name] = ret;
-        return ret;
+		char pFullPathName[1024];
+		string fullPathName;
+		std::string loadfile = Filesystem::SearchForFileName(filename);
+		if (loadfile.empty())
+			return boost::shared_ptr<T>();
+		if (GetFullPathNameA(loadfile.c_str(),1024,pFullPathName,NULL) == 0)
+			return boost::shared_ptr<T>();
+		fullPathName = pFullPathName;
+		map<std::string, boost::weak_ptr<T>>::iterator i = resources.find(fullPathName);
+		if (i != resources.end())
+			if (!i->second.expired())
+				return i->second.lock();
+		boost::shared_ptr<T> ret(new T);
+		if (ret->Load(loadfile))
+		{						
+			resources[fullPathName] = ret;
+			return ret;
+		}
+		else
+			return boost::shared_ptr<T>();
     }
 
     /**

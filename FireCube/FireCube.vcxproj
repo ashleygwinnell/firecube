@@ -106,6 +106,7 @@
     <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="ColladaLoader.cpp" />
+    <ClCompile Include="Filesystem.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="Geometry.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="Filesystem.h" />
     <ClInclude Include="FireCube.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FrameBuffer.h" />

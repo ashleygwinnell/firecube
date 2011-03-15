@@ -15,6 +15,7 @@
 
 #include "utils.h"
 #include "Logger.h"
+#include "Filesystem.h"
 #include "ResourceManager.h"
 #include "Timer.h"
 #include "MyMath.h"

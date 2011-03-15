@@ -19,14 +19,6 @@ enum BufferType
 };
 
 /**
-* Specifies the kind of primitives to render.
-*/
-enum RenderMode
-{
-    POINTS, LINES, TRIANGLES, TRIANGLE_STRIP, QUADS, LINE_LOOP, TRIANGLE_FAN
-};
-
-/**
 * A buffer of data used for rendering.
 */
 class FIRECUBE_API BufferResource

@@ -17,7 +17,6 @@ using namespace std;
 #include "utils.h"
 #include "Logger.h"
 #include "ResourceManager.h"
-#include "Timer.h"
 #include "MyMath.h"
 #include "BoundingBox.h"
 #include "Texture.h"
@@ -25,11 +24,9 @@ using namespace std;
 #include "Shaders.h"
 #include "Geometry.h"
 #include "FrameBuffer.h"
-#include "Image.h"
 #include "Font.h"
 #include "Renderer.h"
 #include "RenderQueue.h"
-#include "Application.h"
 #include "privateFont.h"
 #include "Light.h"
 #include "Node.h"
@@ -288,12 +285,6 @@ void Renderer::UseProgram(Program program)
 {
     if ((globalProgram) && (globalProgram->IsValid()))
         return;
-    if (program)
-        glUseProgram(program->GetId());
-}
-void Renderer::SetGlobalProgram(Program program)
-{
-    globalProgram = program;
     if (program)
         glUseProgram(program->GetId());
 }

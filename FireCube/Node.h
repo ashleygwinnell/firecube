@@ -1,3 +1,9 @@
+#ifndef NODE_H
+#define NODE_H
+
+#pragma warning(push)
+#pragma warning(disable:4251)
+
 namespace FireCube
 {
 class NodeResource;
@@ -319,3 +325,7 @@ private:
 */
 Node FIRECUBE_API LoadMesh(const std::string &filename);
 }
+
+#pragma warning(push)
+
+#endif

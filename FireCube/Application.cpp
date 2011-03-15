@@ -17,15 +17,10 @@ using namespace std;
 
 #include "utils.h"
 #include "Logger.h"
+#include "Filesystem.h"
 #include "ResourceManager.h"
 #include "Timer.h"
 #include "MyMath.h"
-#include "BoundingBox.h"
-#include "Texture.h"
-#include "Buffer.h"
-#include "Shaders.h"
-#include "Geometry.h"
-#include "FrameBuffer.h"
 #include "Font.h"
 #include "Renderer.h"
 #include "Application.h"
@@ -37,7 +32,6 @@ extern void InitializeRenderer();
 extern void DestroyRenderer();
 extern FT_Library freeTypeLibrary;
 
-std::vector<std::string> Application::searchPaths;
 Application::Application() : running(false), frameCount(0), fpsTime(0), fps(0)
 {
     Renderer::SetTextureManager(defaultTextureManager);
@@ -170,40 +164,4 @@ vec2 Application::GetCursorPos()
 	int x, y;
 	SDL_GetMouseState(&x, &y);
 	return vec2((float) x, (float) y);
-}
-void Application::AddSearchPath(const string &path)
-{
-    string npath = path;
-    if ((npath[npath.size() - 1] == '\\') || (npath[npath.size() - 1] == '/'))
-        npath = npath.substr(0, npath.size() - 1);
-    Application::searchPaths.push_back(npath);
-}
-const vector<string> &Application::GetSearchPaths()
-{
-    return Application::searchPaths;
-}
-std::string Application::SearchForFileName(const std::string &filename)
-{
-    bool found = false;
-    string ret;
-    if (!FileExists(filename))
-    {
-        const vector<string> &searchPaths = Application::GetSearchPaths();
-        for (unsigned int i = 0; i < searchPaths.size(); i++)
-        {
-            ret = searchPaths[i] + "\\" + filename;
-            if (FileExists(ret))
-            {
-                found = true;
-                break;
-            }
-        }
-    }
-    else
-        return filename;
-
-    if (found)
-        return ret;
-    else
-        return "";
 }

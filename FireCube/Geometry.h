@@ -6,15 +6,23 @@
 
 namespace FireCube
 {
+
+// Forward declarations.
+class NodeResource;
+typedef boost::shared_ptr<NodeResource> Node;
+class RenderQueue;
+class BufferResource;
+typedef boost::shared_ptr<BufferResource> Buffer;
 class GeometryResource;
+class ProgramUniformsList;
+class TextureResource;
+typedef boost::shared_ptr<TextureResource> Texture;
 
 /**
 * A shared pointer to a GeometryResource.
 */
 typedef boost::shared_ptr<GeometryResource> Geometry;
-class NodeResource;
-typedef boost::shared_ptr<NodeResource> Node;
-class RenderQueue;
+
 namespace Renderer
 {
 void FIRECUBE_API Render(Geometry geometry);
@@ -23,11 +31,6 @@ void FIRECUBE_API Render(Node node, const std::string &techniqueName, ProgramUni
 void FIRECUBE_API Render(RenderQueue &renderQueue, const std::string &techniqueName, ProgramUniformsList &programUniformsList);
 void FIRECUBE_API Render(RenderQueue &renderQueue);
 }
-
-/**
-* Specifies the maximum number of textures in various locations.
-*/
-const unsigned int MAX_TEXTURES = 6;
 
 /**
 * A class representing a material.

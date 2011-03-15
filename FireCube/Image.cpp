@@ -13,20 +13,9 @@ using namespace std;
 
 #include "utils.h"
 #include "Logger.h"
-#include "ResourceManager.h"
-#include "Timer.h"
+#include "Filesystem.h"
 #include "MyMath.h"
-#include "BoundingBox.h"
-#include "Texture.h"
-#include "Buffer.h"
-#include "Shaders.h"
-#include "Geometry.h"
-#include "FrameBuffer.h"
 #include "Image.h"
-#include "Font.h"
-#include "Renderer.h"
-#include "Application.h"
-
 
 using namespace FireCube;
 
@@ -37,7 +26,7 @@ Image::Image() : width(0), height(0), bpp(0)
 bool Image::Load(const string &filename)
 {
     SDL_Surface *image;
-    string fname = Application::SearchForFileName(filename);
+    string fname = Filesystem::SearchForFileName(filename);
     if (fname.empty())
         return false;
     image = IMG_Load(fname.c_str());

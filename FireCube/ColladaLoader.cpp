@@ -18,19 +18,14 @@ using namespace std;
 #include "MyMath.h"
 #include "BoundingBox.h"
 #include "Texture.h"
-#include "Buffer.h"
 #include "Shaders.h"
 #include "Geometry.h"
-#include "FrameBuffer.h"
-#include "Font.h"
 #include "Renderer.h"
-#include "Application.h"
 #include "tinyxml.h"
 #include "Light.h"
 #include "Node.h"
 #include "ModelLoaders.h"
 using namespace FireCube;
-
 
 ColladaLoader::ColladaLoader(const std::string &filename) : xmlDocument(filename)
 {

@@ -1,8 +1,13 @@
 #ifndef RENDER_QUEUE_H
 #define RENDER_QUEUE_H
 
+#pragma warning(push)
+#pragma warning(disable:4251)
+
 namespace FireCube
 {
+
+// Forward declarations.
 class RenderQueue;
 class GeometryResource;
 typedef boost::shared_ptr<GeometryResource> Geometry;
@@ -13,6 +18,9 @@ class RenderParameters;
 class Light;
 class NodeResource;
 typedef boost::shared_ptr<NodeResource> Node;
+class ProgramResource;
+typedef boost::shared_ptr<ProgramResource> Program;
+
 namespace Renderer
 {
 void FIRECUBE_API Render(RenderQueue &renderQueue);
@@ -73,4 +81,7 @@ private:
     std::vector<std::pair<mat4, Light>> activeLights;
 };
 }
+
+#pragma warning(pop)
+
 #endif

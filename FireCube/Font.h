@@ -6,7 +6,14 @@
 
 namespace FireCube
 {
+
+// Forward declarations.
 class FontResource;
+class TextureResource;
+typedef boost::shared_ptr<TextureResource> Texture;
+class vec2;
+class vec3;
+class vec4;
 
 /**
 * A shared pointer to a FontResource.

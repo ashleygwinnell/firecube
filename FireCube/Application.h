@@ -6,6 +6,14 @@
 
 namespace FireCube
 {
+
+// Forward declarations.
+class ShaderResource;
+typedef ResourceManager<ShaderResource> ShaderManager;
+class TextureResource;
+typedef boost::shared_ptr<TextureResource> Texture;
+typedef ResourceManager<TextureResource> TextureManager;
+
 /**
 * This class is responsible for the initialization and running of the application.
 */
@@ -91,24 +99,7 @@ public:
     * Called once initialization is complete to execute user specific initialization.
     */
     virtual bool Init();
-
-    /**
-    * Add a search path for resources.
-    * @param path The path to add.
-    */
-    static void AddSearchPath(const std::string &path);
-
-    /**
-    * Gets the list of search paths.
-    * @return The list of search paths.
-    */
-    static const std::vector<std::string> &GetSearchPaths();
-
-    /**
-    * Searches for file name using the search paths.
-    * @param filename The file name to search.
-    */
-    static std::string SearchForFileName(const std::string &filename);
+    
 private:	
     Timer timer;
     bool running;
@@ -119,8 +110,7 @@ private:
     int width, height;
     TextureManager defaultTextureManager;
     ShaderManager defaultShaderManager;
-    FontManager defaultFontManager;
-    static std::vector<std::string> searchPaths;
+    FontManager defaultFontManager;    
 };
 }
 #pragma warning(pop)

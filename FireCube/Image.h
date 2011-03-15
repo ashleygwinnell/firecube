@@ -1,6 +1,9 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+#pragma warning(push)
+#pragma warning(disable:4251)
+
 namespace FireCube
 {
 /**
@@ -40,4 +43,7 @@ private:
     std::vector<unsigned char> data;
 };
 }
+
+#pragma warning(pop)
+
 #endif

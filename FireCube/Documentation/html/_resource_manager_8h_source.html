@@ -64,77 +64,78 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00003"></a>00003 <span class="preprocessor"></span>
 <a name="l00004"></a>00004 <span class="keyword">namespace </span>FireCube
 <a name="l00005"></a>00005 {
-<a name="l00010"></a>00010 <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;
-<a name="l00011"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html">00011</a> <span class="keyword">class </span><a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager</a>
-<a name="l00012"></a>00012 {
-<a name="l00013"></a>00013 <span class="keyword">public</span>:
-<a name="l00014"></a>00014     <a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager&lt;T&gt;</a>()
-<a name="l00015"></a>00015     {
-<a name="l00016"></a>00016 
-<a name="l00017"></a>00017     }
-<a name="l00018"></a>00018     <span class="keyword">virtual</span> ~<a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager&lt;T&gt;</a>()
-<a name="l00019"></a>00019     {
-<a name="l00020"></a>00020         Logger::Write(Logger::LOG_INFO, <span class="stringliteral">&quot;Destroying resource manager&quot;</span>);
-<a name="l00021"></a>00021     }
-<a name="l00022"></a>00022 
-<a name="l00027"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#a273f13c1bad8d2c93ce7f93f2b0f7559">00027</a>     <a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager&lt;T&gt;</a>(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager&lt;T&gt;</a> &amp;r)
-<a name="l00028"></a>00028     {
-<a name="l00029"></a>00029         <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a> = r.resources;
-<a name="l00030"></a>00030     }
-<a name="l00031"></a>00031 
-<a name="l00036"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#ac47309f0adae432591cde0c6b023350d">00036</a>     boost::shared_ptr&lt;T&gt; <a class="code" href="class_fire_cube_1_1_resource_manager.html#ac47309f0adae432591cde0c6b023350d" title="Creates and loads a resource from the specified file.">Create</a>(<span class="keyword">const</span> std::string &amp;filename)
-<a name="l00037"></a>00037     {
-<a name="l00038"></a>00038         map&lt;std::string, boost::weak_ptr&lt;T&gt;&gt;::iterator i = <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.find(filename);
-<a name="l00039"></a>00039         <span class="keywordflow">if</span> (i != <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.end())
-<a name="l00040"></a>00040             <span class="keywordflow">if</span> (!i-&gt;second.expired())
-<a name="l00041"></a>00041                 <span class="keywordflow">return</span> i-&gt;second.lock();
-<a name="l00042"></a>00042         boost::shared_ptr&lt;T&gt; ret(<span class="keyword">new</span> T);
-<a name="l00043"></a>00043         std::string loadfile = <a class="code" href="class_fire_cube_1_1_application.html#a3a67462fbaecaa897aac786a0bdbe22f" title="Searches for file name using the search paths.">Application::SearchForFileName</a>(filename);
-<a name="l00044"></a>00044         <span class="keywordflow">if</span> (loadfile.empty())
-<a name="l00045"></a>00045             <span class="keywordflow">return</span> boost::shared_ptr&lt;T&gt;();
-<a name="l00046"></a>00046         <span class="keywordflow">if</span> (ret-&gt;Load(loadfile))
-<a name="l00047"></a>00047         {
-<a name="l00048"></a>00048             <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>[filename] = ret;
-<a name="l00049"></a>00049             <span class="keywordflow">return</span> ret;
-<a name="l00050"></a>00050         }
-<a name="l00051"></a>00051         <span class="keywordflow">else</span>
-<a name="l00052"></a>00052             <span class="keywordflow">return</span> boost::shared_ptr&lt;T&gt;();
-<a name="l00053"></a>00053     }
-<a name="l00054"></a>00054 
-<a name="l00060"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#a42adc45f42340fd5a3a49c07af84f804">00060</a>     boost::shared_ptr&lt;T&gt; <a class="code" href="class_fire_cube_1_1_resource_manager.html#a42adc45f42340fd5a3a49c07af84f804" title="Adds a new resource without loading it.">Add</a>(<span class="keyword">const</span> std::string &amp;name)
-<a name="l00061"></a>00061     {
-<a name="l00062"></a>00062         std::map&lt;std::string, boost::weak_ptr&lt;T&gt;&gt;::iterator i = <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.find(name);
-<a name="l00063"></a>00063         <span class="keywordflow">if</span> (i != <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.end())
-<a name="l00064"></a>00064             <span class="keywordflow">if</span> (!i-&gt;second.expired())
-<a name="l00065"></a>00065                 <span class="keywordflow">return</span> i-&gt;second.lock();
-<a name="l00066"></a>00066         boost::shared_ptr&lt;T&gt; ret(<span class="keyword">new</span> T);
-<a name="l00067"></a>00067         <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>[name] = ret;
-<a name="l00068"></a>00068         <span class="keywordflow">return</span> ret;
-<a name="l00069"></a>00069     }
-<a name="l00070"></a>00070 
-<a name="l00076"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#a44b68cfdffea0b2549669d3685c87476">00076</a>     <span class="keywordtype">void</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html#a42adc45f42340fd5a3a49c07af84f804" title="Adds a new resource without loading it.">Add</a>(<span class="keyword">const</span> std::string &amp;filename, boost::shared_ptr&lt;T&gt; res)
-<a name="l00077"></a>00077     {
-<a name="l00078"></a>00078         <span class="keywordflow">if</span> (<a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.find(filename) != <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.end())
-<a name="l00079"></a>00079             <span class="keywordflow">return</span>;
-<a name="l00080"></a>00080 
-<a name="l00081"></a>00081         <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>[filename] = res;
-<a name="l00082"></a>00082     }
-<a name="l00083"></a>00083 
-<a name="l00088"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#a3c75ef76943df9076745025e281e2e7a">00088</a>     boost::shared_ptr&lt;T&gt; <a class="code" href="class_fire_cube_1_1_resource_manager.html#a3c75ef76943df9076745025e281e2e7a" title="Returns a resource with a given filename, null if it does not exist.">Get</a>(<span class="keyword">const</span> std::string &amp;filename)
-<a name="l00089"></a>00089     {
-<a name="l00090"></a>00090         std::map&lt;std::string, boost::weak_ptr&lt;T&gt;&gt;::iterator i = <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.find(filename);
-<a name="l00091"></a>00091         <span class="keywordflow">if</span> (i != <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.end())
-<a name="l00092"></a>00092             <span class="keywordflow">if</span> (!i-&gt;second.expired())
-<a name="l00093"></a>00093                 <span class="keywordflow">return</span> i-&gt;second.lock();
+<a name="l00006"></a>00006 
+<a name="l00007"></a>00007 <span class="comment">// Forward declarations.</span>
+<a name="l00008"></a>00008 <span class="keyword">namespace </span>Filesystem
+<a name="l00009"></a>00009 {
+<a name="l00010"></a>00010    std::string FIRECUBE_API <a class="code" href="namespace_fire_cube_1_1_filesystem.html#a82ead44a24b65a52bc402902f3afaee2" title="Searches for file name using the search paths.">SearchForFileName</a>(<span class="keyword">const</span> std::string &amp;filename);
+<a name="l00011"></a>00011 }
+<a name="l00012"></a>00012 
+<a name="l00017"></a>00017 <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;
+<a name="l00018"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html">00018</a> <span class="keyword">class </span><a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager</a>
+<a name="l00019"></a>00019 {
+<a name="l00020"></a>00020 <span class="keyword">public</span>:
+<a name="l00021"></a>00021     <a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager&lt;T&gt;</a>()
+<a name="l00022"></a>00022     {
+<a name="l00023"></a>00023 
+<a name="l00024"></a>00024     }
+<a name="l00025"></a>00025     <span class="keyword">virtual</span> ~<a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager&lt;T&gt;</a>()
+<a name="l00026"></a>00026     {
+<a name="l00027"></a>00027         Logger::Write(Logger::LOG_INFO, <span class="stringliteral">&quot;Destroying resource manager&quot;</span>);
+<a name="l00028"></a>00028     }
+<a name="l00029"></a>00029 
+<a name="l00034"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#a273f13c1bad8d2c93ce7f93f2b0f7559">00034</a>     <a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager&lt;T&gt;</a>(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html" title="A templated class for a resource manager.">ResourceManager&lt;T&gt;</a> &amp;r)
+<a name="l00035"></a>00035     {
+<a name="l00036"></a>00036         <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a> = r.resources;
+<a name="l00037"></a>00037     }
+<a name="l00038"></a>00038 
+<a name="l00043"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#ac47309f0adae432591cde0c6b023350d">00043</a>     boost::shared_ptr&lt;T&gt; <a class="code" href="class_fire_cube_1_1_resource_manager.html#ac47309f0adae432591cde0c6b023350d" title="Creates and loads a resource from the specified file.">Create</a>(<span class="keyword">const</span> std::string &amp;filename)
+<a name="l00044"></a>00044     {
+<a name="l00045"></a>00045                 <span class="keywordtype">char</span> pFullPathName[1024];
+<a name="l00046"></a>00046                 <span class="keywordtype">string</span> fullPathName;
+<a name="l00047"></a>00047                 std::string loadfile = <a class="code" href="namespace_fire_cube_1_1_filesystem.html#a82ead44a24b65a52bc402902f3afaee2" title="Searches for file name using the search paths.">Filesystem::SearchForFileName</a>(filename);
+<a name="l00048"></a>00048                 <span class="keywordflow">if</span> (loadfile.empty())
+<a name="l00049"></a>00049                         <span class="keywordflow">return</span> boost::shared_ptr&lt;T&gt;();
+<a name="l00050"></a>00050                 <span class="keywordflow">if</span> (GetFullPathNameA(loadfile.c_str(),1024,pFullPathName,NULL) == 0)
+<a name="l00051"></a>00051                         <span class="keywordflow">return</span> boost::shared_ptr&lt;T&gt;();
+<a name="l00052"></a>00052                 fullPathName = pFullPathName;
+<a name="l00053"></a>00053                 map&lt;std::string, boost::weak_ptr&lt;T&gt;&gt;::iterator i = <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.find(fullPathName);
+<a name="l00054"></a>00054                 <span class="keywordflow">if</span> (i != <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.end())
+<a name="l00055"></a>00055                         <span class="keywordflow">if</span> (!i-&gt;second.expired())
+<a name="l00056"></a>00056                                 <span class="keywordflow">return</span> i-&gt;second.lock();
+<a name="l00057"></a>00057                 boost::shared_ptr&lt;T&gt; ret(<span class="keyword">new</span> T);
+<a name="l00058"></a>00058                 <span class="keywordflow">if</span> (ret-&gt;Load(loadfile))
+<a name="l00059"></a>00059                 {                                               
+<a name="l00060"></a>00060                         <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>[fullPathName] = ret;
+<a name="l00061"></a>00061                         <span class="keywordflow">return</span> ret;
+<a name="l00062"></a>00062                 }
+<a name="l00063"></a>00063                 <span class="keywordflow">else</span>
+<a name="l00064"></a>00064                         <span class="keywordflow">return</span> boost::shared_ptr&lt;T&gt;();
+<a name="l00065"></a>00065     }
+<a name="l00066"></a>00066 
+<a name="l00072"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#a44b68cfdffea0b2549669d3685c87476">00072</a>     <span class="keywordtype">void</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html#a44b68cfdffea0b2549669d3685c87476" title="Adds an already existing resource.">Add</a>(<span class="keyword">const</span> std::string &amp;filename, boost::shared_ptr&lt;T&gt; res)
+<a name="l00073"></a>00073     {
+<a name="l00074"></a>00074         <span class="keywordflow">if</span> (<a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.find(filename) != <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.end())
+<a name="l00075"></a>00075             <span class="keywordflow">return</span>;
+<a name="l00076"></a>00076 
+<a name="l00077"></a>00077         <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>[filename] = res;
+<a name="l00078"></a>00078     }
+<a name="l00079"></a>00079 
+<a name="l00084"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#a3c75ef76943df9076745025e281e2e7a">00084</a>     boost::shared_ptr&lt;T&gt; <a class="code" href="class_fire_cube_1_1_resource_manager.html#a3c75ef76943df9076745025e281e2e7a" title="Returns a resource with a given filename, null if it does not exist.">Get</a>(<span class="keyword">const</span> std::string &amp;filename)
+<a name="l00085"></a>00085     {
+<a name="l00086"></a>00086         std::map&lt;std::string, boost::weak_ptr&lt;T&gt;&gt;::iterator i = <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.find(filename);
+<a name="l00087"></a>00087         <span class="keywordflow">if</span> (i != <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>.end())
+<a name="l00088"></a>00088             <span class="keywordflow">if</span> (!i-&gt;second.expired())
+<a name="l00089"></a>00089                 <span class="keywordflow">return</span> i-&gt;second.lock();
+<a name="l00090"></a>00090 
+<a name="l00091"></a>00091         <span class="keywordflow">return</span> boost::shared_ptr&lt;T&gt;();
+<a name="l00092"></a>00092     }
+<a name="l00093"></a>00093 <span class="keyword">protected</span>:
 <a name="l00094"></a>00094 
-<a name="l00095"></a>00095         <span class="keywordflow">return</span> boost::shared_ptr&lt;T&gt;();
-<a name="l00096"></a>00096     }
-<a name="l00097"></a>00097 <span class="keyword">protected</span>:
-<a name="l00098"></a>00098 
-<a name="l00102"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185">00102</a>     std::map&lt;std::string, boost::weak_ptr&lt;T&gt;&gt; <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>;
-<a name="l00103"></a>00103 };
-<a name="l00104"></a>00104 }
-<a name="l00105"></a>00105 <span class="preprocessor">#endif</span>
+<a name="l00098"></a><a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185">00098</a>     std::map&lt;std::string, boost::weak_ptr&lt;T&gt;&gt; <a class="code" href="class_fire_cube_1_1_resource_manager.html#afc4a484282c27701e7489efc14d8a185" title="The list of resources contained in this resource manager.">resources</a>;
+<a name="l00099"></a>00099 };
+<a name="l00100"></a>00100 }
+<a name="l00101"></a>00101 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -151,7 +152,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sun Mar 13 2011 14:37:47 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 23:19:16 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

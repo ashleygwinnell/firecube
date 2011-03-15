@@ -16,18 +16,12 @@ using namespace std;
 
 #include "utils.h"
 #include "Logger.h"
+#include "Filesystem.h"
 #include "ResourceManager.h"
-#include "Timer.h"
 #include "MyMath.h"
-#include "BoundingBox.h"
 #include "Texture.h"
-#include "Buffer.h"
-#include "Shaders.h"
-#include "Geometry.h"
-#include "FrameBuffer.h"
 #include "Font.h"
 #include "Renderer.h"
-#include "Application.h"
 
 #include "privateFont.h"
 using namespace FireCube;
@@ -54,24 +48,26 @@ boost::shared_ptr<FontPage> FontManager::CreateNewPage()
 }
 Font FontManager::Create(const string &filename, int size)
 {
-    ostringstream f2;
-    f2 << filename << ":" << size;
-    map<std::string, boost::weak_ptr<FontResource>>::iterator i = resources.find(f2.str());
-    if (i != resources.end())
-        if (!i->second.expired())
-            return i->second.lock();
-    Font ret(new FontResource);
-    std::string loadfile = Application::SearchForFileName(filename);
-    if (loadfile.empty())
-        return Font();
-    ostringstream f;
-    f << loadfile << ":" << size;
-    if (ret->Load(loadfile, size))
-    {
-        resources[f2.str()] = ret;
-        return ret;
-    }
-    else
+	char pFullPathName[1024];
+	ostringstream fullPathName;
+	std::string loadfile = Filesystem::SearchForFileName(filename);
+	if (loadfile.empty())
+		return Font();
+	if (GetFullPathNameA(loadfile.c_str(),1024,pFullPathName,NULL) == 0)
+		return Font();
+	fullPathName << pFullPathName << ":" << size;
+	
+	map<std::string, boost::weak_ptr<FontResource>>::iterator i = resources.find(fullPathName.str());
+	if (i != resources.end())
+		if (!i->second.expired())
+			return i->second.lock();
+	Font ret(new FontResource);	
+	if (ret->Load(loadfile, size))
+	{						
+		resources[fullPathName.str()] = ret;
+		return ret;
+	}
+	else	
         return Font();
 }
 FontResource::FontResource()

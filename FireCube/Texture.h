@@ -7,6 +7,10 @@
 namespace FireCube
 {
 
+// Forward declarations.
+template<class T>
+class ResourceManager;
+
 /**
 * Specifies the type of texture filtering.
 */

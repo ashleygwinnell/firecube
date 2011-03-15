@@ -6,6 +6,12 @@
 
 namespace FireCube
 {
+
+// Forward declarations.
+template<class T>
+class ResourceManager;
+class BufferResource;
+typedef boost::shared_ptr<BufferResource> Buffer;
 class ProgramResource;
 
 /**
@@ -16,7 +22,6 @@ typedef boost::shared_ptr<ProgramResource> Program;
 namespace Renderer
 {
 void FIRECUBE_API UseProgram(Program program);
-void FIRECUBE_API SetGlobalProgram(Program program);
 }
 
 /**
@@ -73,8 +78,7 @@ typedef ResourceManager<ShaderResource> ShaderManager;
 */
 class FIRECUBE_API ProgramResource
 {
-    friend void Renderer::UseProgram(Program program);
-    friend void Renderer::SetGlobalProgram(Program program);
+    friend void Renderer::UseProgram(Program program);    
 public:
     ProgramResource();
     ~ProgramResource();
@@ -370,4 +374,5 @@ private:
 };
 
 }
+#pragma warning(pop)
 #endif

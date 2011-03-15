@@ -1,8 +1,13 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
+#pragma warning(push)
+#pragma warning(disable:4251)
+
 namespace FireCube
 {
+
+// Forward declarations.
 class FrameBufferResource;
 
 /**
@@ -82,5 +87,7 @@ private:
     Texture depthTexture;
 };
 }
+
+#pragma warning(pop)
 
 #endif

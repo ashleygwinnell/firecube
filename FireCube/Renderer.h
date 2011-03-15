@@ -6,10 +6,46 @@
 
 namespace FireCube
 {
+
+// Forward declarations.
+template<class T>
+class ResourceManager;
 class Application;
 class NodeResource;
 typedef boost::shared_ptr<NodeResource> Node;
+class GeometryResource;
+typedef boost::shared_ptr<GeometryResource> Geometry;
 class RenderQueue;
+class MaterialResource;
+typedef boost::shared_ptr<MaterialResource> Material;
+class FrameBufferResource;
+typedef boost::shared_ptr<FrameBufferResource> FrameBuffer;
+class ShaderResource;
+typedef ResourceManager<ShaderResource> ShaderManager;
+class ProgramResource;
+typedef boost::shared_ptr<ProgramResource> Program;
+class TechniqueResource;
+typedef boost::shared_ptr<TechniqueResource> Technique;
+class ProgramUniformsList;
+class TextureResource;
+typedef boost::shared_ptr<TextureResource> Texture;
+typedef ResourceManager<TextureResource> TextureManager;
+class FontResource;
+typedef boost::shared_ptr<FontResource> Font;
+class FontManager;
+class vec2;
+class vec3;
+class vec4;
+class mat3;
+class mat4;
+
+/**
+* Specifies the kind of primitives to render.
+*/
+enum RenderMode
+{
+	POINTS, LINES, TRIANGLES, TRIANGLE_STRIP, QUADS, LINE_LOOP, TRIANGLE_FAN
+};
 
 /**
 * A class storing information about rendering properties.
@@ -260,12 +296,6 @@ void FIRECUBE_API RestoreFrameBuffer();
 * Sets the rendering viewport.
 */
 void FIRECUBE_API SetViewport(int left, int right, int width, int height);
-
-/**
-* Sets a global program overriding any program assignment.
-* @param program The program to use
-*/
-void FIRECUBE_API SetGlobalProgram(Program program);
 
 /**
 * Sets a perspective projection.

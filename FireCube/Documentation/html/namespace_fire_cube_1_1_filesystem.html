@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>FireCube: FireCube::Face Class Reference</title>
+<title>FireCube: FireCube::Filesystem Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
@@ -28,8 +28,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="namespaces.html"><span>Namespaces</span></a></li>
+      <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -51,98 +51,110 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
-      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+      <li><a href="namespaces.html"><span>Namespace&#160;List</span></a></li>
+      <li><a href="namespacemembers.html"><span>Namespace&#160;Members</span></a></li>
     </ul>
   </div>
   <div id="nav-path" class="navpath">
     <ul>
       <li class="navelem"><a class="el" href="namespace_fire_cube.html">FireCube</a>      </li>
-      <li class="navelem"><a class="el" href="class_fire_cube_1_1_face.html">Face</a>      </li>
+      <li class="navelem"><a class="el" href="namespace_fire_cube_1_1_filesystem.html">Filesystem</a>      </li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<h1>FireCube::Face Class Reference</h1>  </div>
+<h1>FireCube::Filesystem Namespace Reference</h1>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="FireCube::Face" -->
-<p>Defines a face in a geometry.  
+
+<p>A namespace containing various functions to interact with the file system.  
 <a href="#_details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="_geometry_8h_source.html">Geometry.h</a>&gt;</code></p>
-
-<p><a href="class_fire_cube_1_1_face-members.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_face.html#ae607e15d1dde6d096ae9d4472ca46f4c">Face</a> (unsigned int v0, unsigned int v1, unsigned int v2)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a face from three indices.  <a href="#ae607e15d1dde6d096ae9d4472ca46f4c"></a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6478f0cd813add1c69b31640195eef52"></a><!-- doxytag: member="FireCube::Face::v" ref="a6478f0cd813add1c69b31640195eef52" args="[3]" -->
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_face.html#a6478f0cd813add1c69b31640195eef52">v</a> [3]</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The three indices of the face. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a23573961e4c50950fb358545081bd645"></a><!-- doxytag: member="FireCube::Face::normal" ref="a23573961e4c50950fb358545081bd645" args="" -->
-<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_face.html#a23573961e4c50950fb358545081bd645">normal</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The face's normal vector. <br/></td></tr>
+<tr><td colspan="2"><h2><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_filesystem.html#aa68e6d7f8e8b932570919eb76eb9cb48">AddSearchPath</a> (const std::string &amp;path)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a search path for resources.  <a href="#aa68e6d7f8e8b932570919eb76eb9cb48"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const FIRECUBE_API std::vector<br class="typebreak"/>
+&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_filesystem.html#ae91294e3a7c149d41355e74572447575">GetSearchPaths</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the list of search paths.  <a href="#ae91294e3a7c149d41355e74572447575"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string FIRECUBE_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fire_cube_1_1_filesystem.html#a82ead44a24b65a52bc402902f3afaee2">SearchForFileName</a> (const std::string &amp;filename)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for file name using the search paths.  <a href="#a82ead44a24b65a52bc402902f3afaee2"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Defines a face in a geometry. </p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="ae607e15d1dde6d096ae9d4472ca46f4c"></a><!-- doxytag: member="FireCube::Face::Face" ref="ae607e15d1dde6d096ae9d4472ca46f4c" args="(unsigned int v0, unsigned int v1, unsigned int v2)" -->
+<div class="textblock"><p>A namespace containing various functions to interact with the file system. </p>
+</div><hr/><h2>Function Documentation</h2>
+<a class="anchor" id="aa68e6d7f8e8b932570919eb76eb9cb48"></a><!-- doxytag: member="FireCube::Filesystem::AddSearchPath" ref="aa68e6d7f8e8b932570919eb76eb9cb48" args="(const std::string &amp;path)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Face::Face </td>
+          <td class="memname">void FireCube::Filesystem::AddSearchPath </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>v0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>v1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>v2</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Constructs a face from three indices. </p>
+<p>Add a search path for resources. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">v0</td><td>The first index. </td></tr>
-    <tr><td class="paramname">v1</td><td>The second index. </td></tr>
-    <tr><td class="paramname">v2</td><td>The third index. </td></tr>
+    <tr><td class="paramname">path</td><td>The path to add. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="_geometry_8h_source.html">Geometry.h</a></li>
-<li>Geometry.cpp</li>
-</ul>
+<a class="anchor" id="ae91294e3a7c149d41355e74572447575"></a><!-- doxytag: member="FireCube::Filesystem::GetSearchPaths" ref="ae91294e3a7c149d41355e74572447575" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const vector&lt; string &gt; &amp; FireCube::Filesystem::GetSearchPaths </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the list of search paths. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The list of search paths. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a82ead44a24b65a52bc402902f3afaee2"></a><!-- doxytag: member="FireCube::Filesystem::SearchForFileName" ref="a82ead44a24b65a52bc402902f3afaee2" args="(const std::string &amp;filename)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string FIRECUBE_API FireCube::Filesystem::SearchForFileName </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>filename</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Searches for file name using the search paths. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>The file name to search. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div>
 <!--- window showing the filter options -->
 <div id="MSearchSelectWindow"
