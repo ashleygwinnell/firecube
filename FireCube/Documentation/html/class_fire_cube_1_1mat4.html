@@ -67,7 +67,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a>  </div>
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a>  </div>
   <div class="headertitle">
 <h1>FireCube::mat4 Class Reference</h1>  </div>
 </div>
@@ -84,7 +85,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af8eb0b06fef5d9f694bd568196a85531"></a><!-- doxytag: member="FireCube::mat4::mat4" ref="af8eb0b06fef5d9f694bd568196a85531" args="()" -->
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#af8eb0b06fef5d9f694bd568196a85531">mat4</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a matrix and sets it to the identity matrix. <br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a matrix. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a35d3d085eaced25576fed8271fc51fa6"></a><!-- doxytag: member="FireCube::mat4::mat4" ref="a35d3d085eaced25576fed8271fc51fa6" args="(float v11, float v21, float v31, float v41, float v12, float v22, float v32, float v42, float v13, float v23, float v33, float v43, float v14, float v24, float v34, float v44)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a35d3d085eaced25576fed8271fc51fa6">mat4</a> (float v11, float v21, float v31, float v41, float v12, float v22, float v32, float v42, float v13, float v23, float v33, float v43, float v14, float v24, float v34, float v44)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a matrix for the specified value. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#afa7c82e3c7f75e52ba690637d8e84380">mat4</a> (float nv)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a matrix from a value.  <a href="#afa7c82e3c7f75e52ba690637d8e84380"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae6055f8f5fc93886310fabb2af7c3547"></a><!-- doxytag: member="FireCube::mat4::Clear" ref="ae6055f8f5fc93886310fabb2af7c3547" args="()" -->
@@ -102,32 +106,32 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the matrix to the identity matrix. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#ab886d77ff39ae32af8d35b2b81f01023">operator=</a> (const <a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;src)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns a matrix to another.  <a href="#ab886d77ff39ae32af8d35b2b81f01023"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aae448cc96c6eb22f232de891f4a0536d"></a><!-- doxytag: member="FireCube::mat4::operator+" ref="aae448cc96c6eb22f232de891f4a0536d" args="(mat4 &amp;src)" -->
-<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#aae448cc96c6eb22f232de891f4a0536d">operator+</a> (<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;src)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8d1a91f64be8d814835b10d3ad3365ab"></a><!-- doxytag: member="FireCube::mat4::operator+" ref="a8d1a91f64be8d814835b10d3ad3365ab" args="(const mat4 &amp;src) const " -->
+<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a8d1a91f64be8d814835b10d3ad3365ab">operator+</a> (const <a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;src) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds two matrices. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4f17295bb2d86bae6a5419b0f79cf688"></a><!-- doxytag: member="FireCube::mat4::operator&#45;" ref="a4f17295bb2d86bae6a5419b0f79cf688" args="(mat4 &amp;src)" -->
-<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a4f17295bb2d86bae6a5419b0f79cf688">operator-</a> (<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;src)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a877708691263807f24c0dd067c1e7a0d"></a><!-- doxytag: member="FireCube::mat4::operator&#45;" ref="a877708691263807f24c0dd067c1e7a0d" args="(const mat4 &amp;src) const " -->
+<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a877708691263807f24c0dd067c1e7a0d">operator-</a> (const <a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;src) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtracts two matrices. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a548619d3dbcdad1324518c8b51b50836"></a><!-- doxytag: member="FireCube::mat4::operator+=" ref="a548619d3dbcdad1324518c8b51b50836" args="(mat4 &amp;src)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a548619d3dbcdad1324518c8b51b50836">operator+=</a> (<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;src)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab51dd70449ecbc38ed5ebb1174927a2f"></a><!-- doxytag: member="FireCube::mat4::operator+=" ref="ab51dd70449ecbc38ed5ebb1174927a2f" args="(const mat4 &amp;src)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#ab51dd70449ecbc38ed5ebb1174927a2f">operator+=</a> (const <a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;src)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds two matrices and assign to this one. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a55f3eeee20ec493c11cc8b2e5d68fb42"></a><!-- doxytag: member="FireCube::mat4::operator&#45;=" ref="a55f3eeee20ec493c11cc8b2e5d68fb42" args="(mat4 &amp;src)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a55f3eeee20ec493c11cc8b2e5d68fb42">operator-=</a> (<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;src)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a48dd1cf0a1eb1f6b8024488a658a48a8"></a><!-- doxytag: member="FireCube::mat4::operator&#45;=" ref="a48dd1cf0a1eb1f6b8024488a658a48a8" args="(const mat4 &amp;src)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a48dd1cf0a1eb1f6b8024488a658a48a8">operator-=</a> (const <a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;src)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtracts two matrices and assign to this one. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5df8aa5fae9ec3d2790efe6904beacac"></a><!-- doxytag: member="FireCube::mat4::operator*" ref="a5df8aa5fae9ec3d2790efe6904beacac" args="(mat4 &amp;src)" -->
-<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a5df8aa5fae9ec3d2790efe6904beacac">operator*</a> (<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;src)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a92bdfe1ac2aa397c4090e4420445999b"></a><!-- doxytag: member="FireCube::mat4::operator*" ref="a92bdfe1ac2aa397c4090e4420445999b" args="(const mat4 &amp;src) const " -->
+<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a92bdfe1ac2aa397c4090e4420445999b">operator*</a> (const <a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;src) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplies two matrices. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2d0e13be0e8590ae10913e23d7655677"></a><!-- doxytag: member="FireCube::mat4::operator*" ref="a2d0e13be0e8590ae10913e23d7655677" args="(float src)" -->
-<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a2d0e13be0e8590ae10913e23d7655677">operator*</a> (float src)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a961a383ede222ef3c43a3e5368c44358"></a><!-- doxytag: member="FireCube::mat4::operator*" ref="a961a383ede222ef3c43a3e5368c44358" args="(float src) const " -->
+<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a961a383ede222ef3c43a3e5368c44358">operator*</a> (float src) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplies a matrix with a scalar. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a54754aa9038fa3ba154c62de0ba03fd0"></a><!-- doxytag: member="FireCube::mat4::operator*=" ref="a54754aa9038fa3ba154c62de0ba03fd0" args="(mat4 &amp;src)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a54754aa9038fa3ba154c62de0ba03fd0">operator*=</a> (<a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;src)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a643f04807e8527433f6234e763529a37"></a><!-- doxytag: member="FireCube::mat4::operator*=" ref="a643f04807e8527433f6234e763529a37" args="(const mat4 &amp;src)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a643f04807e8527433f6234e763529a37">operator*=</a> (const <a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;src)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplies two matrices and assign to this one. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6f7189f47dc5d3d189cf060cb09e4754"></a><!-- doxytag: member="FireCube::mat4::operator*" ref="a6f7189f47dc5d3d189cf060cb09e4754" args="(vec3 &amp;src)" -->
-<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a6f7189f47dc5d3d189cf060cb09e4754">operator*</a> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> &amp;src)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7ff0623d8cf00152e53384570617fa65"></a><!-- doxytag: member="FireCube::mat4::operator*" ref="a7ff0623d8cf00152e53384570617fa65" args="(const vec3 &amp;src) const " -->
+<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a7ff0623d8cf00152e53384570617fa65">operator*</a> (const <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> &amp;src) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplies a matrix with a 3d vector. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0cb96764110425dce3b0b23fd3dc3a7c"></a><!-- doxytag: member="FireCube::mat4::operator*" ref="a0cb96764110425dce3b0b23fd3dc3a7c" args="(vec4 &amp;src)" -->
-<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a0cb96764110425dce3b0b23fd3dc3a7c">operator*</a> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> &amp;src)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a645a968dd2649a8fb4e35a4f8b6a3d4b"></a><!-- doxytag: member="FireCube::mat4::operator*" ref="a645a968dd2649a8fb4e35a4f8b6a3d4b" args="(const vec4 &amp;src) const " -->
+<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a645a968dd2649a8fb4e35a4f8b6a3d4b">operator*</a> (const <a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> &amp;src) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplies a matrix with a 4d vector. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#afb6f4ba65b7dc1319071d884d2e830e7">operator()</a> (const unsigned int i, const unsigned int j)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets an element in the matrix.  <a href="#afb6f4ba65b7dc1319071d884d2e830e7"></a><br/></td></tr>
@@ -135,8 +139,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets an element in the matrix.  <a href="#a8e62236930fbdf68c746a9ae44dd053d"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a747cde54d3bc0fb715122e1bbfed51f2">Translate</a> (float x, float y, float z)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a translation matrix.  <a href="#a747cde54d3bc0fb715122e1bbfed51f2"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#afacecf1cb2afd504958efca0cc1586ac">Translate</a> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> t)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a translation matrix.  <a href="#afacecf1cb2afd504958efca0cc1586ac"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a06233365d1040e1a8b1cd5ab01aa02ea">Translate</a> (const <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> &amp;t)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a translation matrix.  <a href="#a06233365d1040e1a8b1cd5ab01aa02ea"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#acbe69948337b81f4a53e6df834b70fb2">Scale</a> (float x, float y, float z)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a scaling matrix.  <a href="#acbe69948337b81f4a53e6df834b70fb2"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#aedf7e2e9e71cdebdfc2d4d72630c24c4">RotateX</a> (float ang)</td></tr>
@@ -145,19 +149,19 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a rotation matrix along the Y axis.  <a href="#a3f4086f8bf17f49b71d5ac96dd17a669"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a822eab0c38be6b8a13ddec870307563a">RotateZ</a> (float ang)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a rotation matrix along the Z axis.  <a href="#a822eab0c38be6b8a13ddec870307563a"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a58632be8579b06fa914cbb7b62412dcf">Rotate</a> (<a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> rot)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a rotation matrix from an axis angle.  <a href="#a58632be8579b06fa914cbb7b62412dcf"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a3a7e6c657386c70961d54ef73b283fee">Rotate</a> (const <a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> &amp;rot)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a rotation matrix from an axis angle.  <a href="#a3a7e6c657386c70961d54ef73b283fee"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a83700bd0ac630bf9248e669634a03ece"></a><!-- doxytag: member="FireCube::mat4::Transpose" ref="a83700bd0ac630bf9248e669634a03ece" args="()" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a83700bd0ac630bf9248e669634a03ece">Transpose</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Transposes the matrix. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a60437ebb822de3c0a35d388ae9aa0ea0"></a><!-- doxytag: member="FireCube::mat4::Inverse" ref="a60437ebb822de3c0a35d388ae9aa0ea0" args="()" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a60437ebb822de3c0a35d388ae9aa0ea0">Inverse</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Inverts the matrix. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a97da3f2a56555b1779c2e421034c4570"></a><!-- doxytag: member="FireCube::mat4::GetPos" ref="a97da3f2a56555b1779c2e421034c4570" args="()" -->
-<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a97da3f2a56555b1779c2e421034c4570">GetPos</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1b01c79069a1687932a5d1b80aeb704c"></a><!-- doxytag: member="FireCube::mat4::GetPos" ref="a1b01c79069a1687932a5d1b80aeb704c" args="() const " -->
+<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a1b01c79069a1687932a5d1b80aeb704c">GetPos</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the translation in the matrix. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a39b43da963edc4880ff2f01dcb87a58f"></a><!-- doxytag: member="FireCube::mat4::GetDir" ref="a39b43da963edc4880ff2f01dcb87a58f" args="()" -->
-<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a39b43da963edc4880ff2f01dcb87a58f">GetDir</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add7091435674ddb581bb730646ead28f"></a><!-- doxytag: member="FireCube::mat4::GetDir" ref="add7091435674ddb581bb730646ead28f" args="() const " -->
+<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#add7091435674ddb581bb730646ead28f">GetDir</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the direction of the look at vector. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a9c57c724a8e2a1baf5cfa3b29f8ff9c5">GeneratePerspective</a> (float fov, float aspect, float nearz, float farz)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a perspective projection matrix.  <a href="#a9c57c724a8e2a1baf5cfa3b29f8ff9c5"></a><br/></td></tr>
@@ -165,14 +169,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates an orthographic projection matrix.  <a href="#ac931429ef3707d3ab3ec437a56fcf1e0"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#ac7b04e808783fa193954622d24de424f">LookAt</a> (<a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> pos, <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> at, <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> up)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a look-at matrix.  <a href="#ac7b04e808783fa193954622d24de424f"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a044d866521b55d745e3633112010bd93"></a><!-- doxytag: member="FireCube::mat4::ToMat3" ref="a044d866521b55d745e3633112010bd93" args="()" -->
-<a class="el" href="class_fire_cube_1_1mat3.html">mat3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a044d866521b55d745e3633112010bd93">ToMat3</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#ac034c206d6ad76a511b1f7b7691c109d">ExtractEulerAngles</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Extract the Euler angles for this matrix.  <a href="#ac034c206d6ad76a511b1f7b7691c109d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adfe2c2b0f607da126c7d721efa358bd8"></a><!-- doxytag: member="FireCube::mat4::ToMat3" ref="adfe2c2b0f607da126c7d721efa358bd8" args="() const " -->
+<a class="el" href="class_fire_cube_1_1mat3.html">mat3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#adfe2c2b0f607da126c7d721efa358bd8">ToMat3</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts to a <a class="el" href="class_fire_cube_1_1mat3.html" title="A 3x3 matrix.">mat3</a> by stripping the translation part. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a665ba622de508806cb13dc8fa7c1e3d0"></a><!-- doxytag: member="FireCube::mat4::m" ref="a665ba622de508806cb13dc8fa7c1e3d0" args="[16]" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a665ba622de508806cb13dc8fa7c1e3d0">m</a> [16]</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The elements of the matrix;. <br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6cb62c94b35de83db16e66fbf6f7df57"></a><!-- doxytag: member="FireCube::mat4::identity" ref="a6cb62c94b35de83db16e66fbf6f7df57" args="" -->
+static const <a class="el" href="class_fire_cube_1_1mat4.html">mat4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1mat4.html#a6cb62c94b35de83db16e66fbf6f7df57">identity</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">A 4x4 identity matrix. <br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>A 4x4 matrix. </p>
@@ -203,6 +214,25 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="ac034c206d6ad76a511b1f7b7691c109d"></a><!-- doxytag: member="FireCube::mat4::ExtractEulerAngles" ref="ac034c206d6ad76a511b1f7b7691c109d" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> mat4::ExtractEulerAngles </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Extract the Euler angles for this matrix. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A vector containing the three angles of rotation. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ac931429ef3707d3ab3ec437a56fcf1e0"></a><!-- doxytag: member="FireCube::mat4::GenerateOrthographic" ref="ac931429ef3707d3ab3ec437a56fcf1e0" args="(float left, float right, float bottom, float top, float zNear, float zFar)" -->
 <div class="memitem">
 <div class="memproto">
@@ -445,14 +475,14 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 </div>
 </div>
-<a class="anchor" id="a58632be8579b06fa914cbb7b62412dcf"></a><!-- doxytag: member="FireCube::mat4::Rotate" ref="a58632be8579b06fa914cbb7b62412dcf" args="(vec4 rot)" -->
+<a class="anchor" id="a3a7e6c657386c70961d54ef73b283fee"></a><!-- doxytag: member="FireCube::mat4::Rotate" ref="a3a7e6c657386c70961d54ef73b283fee" args="(const vec4 &amp;rot)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void mat4::Rotate </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec4.html">vec4</a>&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> &amp;&#160;</td>
           <td class="paramname"><em>rot</em></td><td>)</td>
           <td></td>
         </tr>
@@ -638,14 +668,14 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 </div>
 </div>
-<a class="anchor" id="afacecf1cb2afd504958efca0cc1586ac"></a><!-- doxytag: member="FireCube::mat4::Translate" ref="afacecf1cb2afd504958efca0cc1586ac" args="(vec3 t)" -->
+<a class="anchor" id="a06233365d1040e1a8b1cd5ab01aa02ea"></a><!-- doxytag: member="FireCube::mat4::Translate" ref="a06233365d1040e1a8b1cd5ab01aa02ea" args="(const vec3 &amp;t)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void mat4::Translate </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> &amp;&#160;</td>
           <td class="paramname"><em>t</em></td><td>)</td>
           <td></td>
         </tr>
@@ -725,7 +755,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 23:19:17 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:31:10 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

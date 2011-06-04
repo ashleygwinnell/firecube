@@ -70,8 +70,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00009"></a>00009 {
 <a name="l00010"></a>00010     LOG_DEBUG, LOG_INFO, LOG_TRACE, LOG_WARNING, LOG_ERROR
 <a name="l00011"></a>00011 };
-<a name="l00012"></a>00012 <span class="keywordtype">void</span> FIRECUBE_API Init(std::string filename);
-<a name="l00013"></a>00013 <span class="keywordtype">void</span> FIRECUBE_API Write(LogLevel level, std::string str);
+<a name="l00012"></a>00012 <span class="keywordtype">void</span> FIRECUBE_API Init(<span class="keyword">const</span> std::string &amp;filename);
+<a name="l00013"></a>00013 <span class="keywordtype">void</span> FIRECUBE_API Write(LogLevel level, <span class="keyword">const</span> std::string &amp;str);
 <a name="l00014"></a>00014 <span class="keywordtype">void</span> FIRECUBE_API SetLogLevel(LogLevel level);
 <a name="l00015"></a>00015 <span class="keywordtype">void</span> FIRECUBE_API SetLogOutput(<span class="keywordtype">bool</span> file, <span class="keywordtype">bool</span> con);
 <a name="l00016"></a>00016 <span class="keywordtype">void</span> FIRECUBE_API Close();
@@ -94,7 +94,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 23:19:16 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:31:10 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

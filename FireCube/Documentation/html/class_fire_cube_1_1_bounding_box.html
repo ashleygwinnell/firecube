@@ -87,14 +87,21 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Expands a bounding box to contain another.  <a href="#abff33e1fd3c3cd9e2deefc5b64444f4e"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a9f19fecc410252f0ee6e2db3fe414046">Expand</a> (const <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> &amp;v)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Expands a bounding box to contain a vertex.  <a href="#a9f19fecc410252f0ee6e2db3fe414046"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a8635d07e8590ea91b2f55c90dcde9fa3">GetWidth</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a8788740bdd9df7c5a8c192b273efb2b4">GetHeight</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a339079de9bb673bd93bc7935c40f88b4">GetDepth</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a804ad03970ed074df9bb59ba16a4704a">GetCenter</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a3ee06297d3868ce3f45289c8957551c0">GetMin</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a3b9195edb95c297fcbfad3d5f279c455">GetMax</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#ac1b0db1cacd2ade6d6f742ff011f268c">Contains</a> (const <a class="el" href="class_fire_cube_1_1_bounding_box.html">BoundingBox</a> &amp;bb)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether this bounding box entirely contains another one.  <a href="#ac1b0db1cacd2ade6d6f742ff011f268c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a982840255caa3d76bcbe76f65efe2c9c">GetWidth</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a5737ea1c882cd83507b7d78315f1d62b">GetHeight</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#ab9c1dd9bfcf8216e291df9efd2074fd0">GetDepth</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a940edad6864776b0523804c0680901c1">GetCenter</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#af82ef215c297b00ed1990373224a4a1a">SetMin</a> (const <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> &amp;min)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the minimum corner of this bounding box.  <a href="#af82ef215c297b00ed1990373224a4a1a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a307462a3b81a0d2180bdfd532d902a1c">GetMin</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a72e473304120f891587a41ebc9148e9b">SetMax</a> (const <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> &amp;max)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the maximum corner of this bounding box.  <a href="#a72e473304120f891587a41ebc9148e9b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a653f4eea5c79742caf407623ce7e9331">GetMax</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#aa4c29ec910c01d2eefdd3f13f018f935">Contains</a> (const <a class="el" href="class_fire_cube_1_1_bounding_box.html">BoundingBox</a> &amp;bb) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether this bounding box entirely contains another one.  <a href="#aa4c29ec910c01d2eefdd3f13f018f935"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#aff5180c5891b05e525aabc583796999b">Transform</a> (const <a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;mat)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Transforms the bounding box by a given 4x4 matrix.  <a href="#aff5180c5891b05e525aabc583796999b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_bounding_box.html#a7e0e222ea97eda67c05748f3e7f41ec7">GetSize</a> () const </td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>A class representing an axis aligned bounding box. </p>
@@ -136,7 +143,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ac1b0db1cacd2ade6d6f742ff011f268c"></a><!-- doxytag: member="FireCube::BoundingBox::Contains" ref="ac1b0db1cacd2ade6d6f742ff011f268c" args="(const BoundingBox &amp;bb)" -->
+<a class="anchor" id="aa4c29ec910c01d2eefdd3f13f018f935"></a><!-- doxytag: member="FireCube::BoundingBox::Contains" ref="aa4c29ec910c01d2eefdd3f13f018f935" args="(const BoundingBox &amp;bb) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -145,7 +152,7 @@ Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="class_fire_cube_1_1_bounding_box.html">BoundingBox</a> &amp;&#160;</td>
           <td class="paramname"><em>bb</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div>
@@ -212,7 +219,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a804ad03970ed074df9bb59ba16a4704a"></a><!-- doxytag: member="FireCube::BoundingBox::GetCenter" ref="a804ad03970ed074df9bb59ba16a4704a" args="()" -->
+<a class="anchor" id="a940edad6864776b0523804c0680901c1"></a><!-- doxytag: member="FireCube::BoundingBox::GetCenter" ref="a940edad6864776b0523804c0680901c1" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -220,7 +227,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> BoundingBox::GetCenter </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div>
@@ -229,7 +236,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a339079de9bb673bd93bc7935c40f88b4"></a><!-- doxytag: member="FireCube::BoundingBox::GetDepth" ref="a339079de9bb673bd93bc7935c40f88b4" args="()" -->
+<a class="anchor" id="ab9c1dd9bfcf8216e291df9efd2074fd0"></a><!-- doxytag: member="FireCube::BoundingBox::GetDepth" ref="ab9c1dd9bfcf8216e291df9efd2074fd0" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -237,7 +244,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname">float BoundingBox::GetDepth </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div>
@@ -246,7 +253,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a8788740bdd9df7c5a8c192b273efb2b4"></a><!-- doxytag: member="FireCube::BoundingBox::GetHeight" ref="a8788740bdd9df7c5a8c192b273efb2b4" args="()" -->
+<a class="anchor" id="a5737ea1c882cd83507b7d78315f1d62b"></a><!-- doxytag: member="FireCube::BoundingBox::GetHeight" ref="a5737ea1c882cd83507b7d78315f1d62b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -254,7 +261,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname">float BoundingBox::GetHeight </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div>
@@ -263,7 +270,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3b9195edb95c297fcbfad3d5f279c455"></a><!-- doxytag: member="FireCube::BoundingBox::GetMax" ref="a3b9195edb95c297fcbfad3d5f279c455" args="()" -->
+<a class="anchor" id="a653f4eea5c79742caf407623ce7e9331"></a><!-- doxytag: member="FireCube::BoundingBox::GetMax" ref="a653f4eea5c79742caf407623ce7e9331" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -271,7 +278,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> BoundingBox::GetMax </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div>
@@ -280,7 +287,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3ee06297d3868ce3f45289c8957551c0"></a><!-- doxytag: member="FireCube::BoundingBox::GetMin" ref="a3ee06297d3868ce3f45289c8957551c0" args="()" -->
+<a class="anchor" id="a307462a3b81a0d2180bdfd532d902a1c"></a><!-- doxytag: member="FireCube::BoundingBox::GetMin" ref="a307462a3b81a0d2180bdfd532d902a1c" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -288,7 +295,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname"><a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> BoundingBox::GetMin </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div>
@@ -297,7 +304,24 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a8635d07e8590ea91b2f55c90dcde9fa3"></a><!-- doxytag: member="FireCube::BoundingBox::GetWidth" ref="a8635d07e8590ea91b2f55c90dcde9fa3" args="()" -->
+<a class="anchor" id="a7e0e222ea97eda67c05748f3e7f41ec7"></a><!-- doxytag: member="FireCube::BoundingBox::GetSize" ref="a7e0e222ea97eda67c05748f3e7f41ec7" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_fire_cube_1_1vec3.html">FireCube::vec3</a> FireCube::BoundingBox::GetSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>The size of this bounding box. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a982840255caa3d76bcbe76f65efe2c9c"></a><!-- doxytag: member="FireCube::BoundingBox::GetWidth" ref="a982840255caa3d76bcbe76f65efe2c9c" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -305,12 +329,87 @@ Public Member Functions</h2></td></tr>
           <td class="memname">float BoundingBox::GetWidth </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>The width of the bounding box. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a72e473304120f891587a41ebc9148e9b"></a><!-- doxytag: member="FireCube::BoundingBox::SetMax" ref="a72e473304120f891587a41ebc9148e9b" args="(const vec3 &amp;max)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void BoundingBox::SetMax </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>max</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the maximum corner of this bounding box. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">max</td><td>The new maximum. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="af82ef215c297b00ed1990373224a4a1a"></a><!-- doxytag: member="FireCube::BoundingBox::SetMin" ref="af82ef215c297b00ed1990373224a4a1a" args="(const vec3 &amp;min)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void BoundingBox::SetMin </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>min</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the minimum corner of this bounding box. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">min</td><td>The new minimum. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="aff5180c5891b05e525aabc583796999b"></a><!-- doxytag: member="FireCube::BoundingBox::Transform" ref="aff5180c5891b05e525aabc583796999b" args="(const mat4 &amp;mat)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void BoundingBox::Transform </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1mat4.html">mat4</a> &amp;&#160;</td>
+          <td class="paramname"><em>mat</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Transforms the bounding box by a given 4x4 matrix. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mat</td><td>The matrix to transform with. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -333,7 +432,7 @@ Public Member Functions</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 23:19:16 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:31:10 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

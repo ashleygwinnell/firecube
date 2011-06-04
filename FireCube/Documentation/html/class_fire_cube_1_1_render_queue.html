@@ -85,26 +85,31 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9000737ca1d2e5edbc6656c966d97253"></a><!-- doxytag: member="FireCube::RenderQueue::Clear" ref="a9000737ca1d2e5edbc6656c966d97253" args="()" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_queue.html#a9000737ca1d2e5edbc6656c966d97253">Clear</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the rendering queue. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_queue.html#a5bc533c416669b2dd8bc6adf2873be21">AddNode</a> (<a class="el" href="namespace_fire_cube.html#abbbb0a6d2fbd15d84d4c3caf03facb79">Node</a> node)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a node to the rendering queue.  <a href="#a5bc533c416669b2dd8bc6adf2873be21"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_queue.html#a645ab5d82a3464c632a8cfb7c623e82f">AddNode</a> (NodePtr node)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a node to the rendering queue.  <a href="#a645ab5d82a3464c632a8cfb7c623e82f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_queue.html#a23fb97ddd2c303cc7c4e08a9b24f8453">AddNode</a> (NodePtr node, <a class="el" href="namespace_fire_cube.html#a018d1675e4c89f70d7c4a1ac71a448cc">CameraPtr</a> camera)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a node to the rendering queue.  <a href="#a23fb97ddd2c303cc7c4e08a9b24f8453"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acb7a5eb8482b0c8998838ee314645458"></a><!-- doxytag: member="FireCube::RenderQueue::Sort" ref="acb7a5eb8482b0c8998838ee314645458" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_queue.html#acb7a5eb8482b0c8998838ee314645458">Sort</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the render queue to reduce state changes. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a97cf8d221603fbbc52e066bfa92d99aa"></a><!-- doxytag: member="FireCube::RenderQueue::Renderer::Render" ref="a97cf8d221603fbbc52e066bfa92d99aa" args="(RenderQueue &amp;renderQueue)" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (<a class="el" href="class_fire_cube_1_1_render_queue.html">RenderQueue</a> &amp;renderQueue)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5b60efc750825a11c0903a6e5ff06d99"></a><!-- doxytag: member="FireCube::RenderQueue::Renderer::Render" ref="a5b60efc750825a11c0903a6e5ff06d99" args="(RenderQueue &amp;renderQueue, const std::string &amp;techniqueName, ProgramUniformsList &amp;programUniformsList)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (<a class="el" href="class_fire_cube_1_1_render_queue.html">RenderQueue</a> &amp;renderQueue, const std::string &amp;techniqueName, <a class="el" href="class_fire_cube_1_1_program_uniforms_list.html">ProgramUniformsList</a> &amp;programUniformsList)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae3413856c38fda3b2873070ecae23e90"></a><!-- doxytag: member="FireCube::RenderQueue::Renderer::Render" ref="ae3413856c38fda3b2873070ecae23e90" args="(RenderQueue &amp;renderQueue, const std::string &amp;techniqueName, const ProgramUniformsList &amp;programUniformsList)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (<a class="el" href="class_fire_cube_1_1_render_queue.html">RenderQueue</a> &amp;renderQueue, const std::string &amp;techniqueName, const <a class="el" href="class_fire_cube_1_1_program_uniforms_list.html">ProgramUniformsList</a> &amp;programUniformsList)</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>A class storing a list of rendering jobs. </p>
 </div><hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a5bc533c416669b2dd8bc6adf2873be21"></a><!-- doxytag: member="FireCube::RenderQueue::AddNode" ref="a5bc533c416669b2dd8bc6adf2873be21" args="(Node node)" -->
+<a class="anchor" id="a645ab5d82a3464c632a8cfb7c623e82f"></a><!-- doxytag: member="FireCube::RenderQueue::AddNode" ref="a645ab5d82a3464c632a8cfb7c623e82f" args="(NodePtr node)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void RenderQueue::AddNode </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespace_fire_cube.html#abbbb0a6d2fbd15d84d4c3caf03facb79">Node</a>&#160;</td>
+          <td class="paramtype">NodePtr&#160;</td>
           <td class="paramname"><em>node</em></td><td>)</td>
           <td></td>
         </tr>
@@ -116,6 +121,42 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> 
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">node</td><td>The node to enqueue. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a23fb97ddd2c303cc7c4e08a9b24f8453"></a><!-- doxytag: member="FireCube::RenderQueue::AddNode" ref="a23fb97ddd2c303cc7c4e08a9b24f8453" args="(NodePtr node, CameraPtr camera)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RenderQueue::AddNode </td>
+          <td>(</td>
+          <td class="paramtype">NodePtr&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_fire_cube.html#a018d1675e4c89f70d7c4a1ac71a448cc">CameraPtr</a>&#160;</td>
+          <td class="paramname"><em>camera</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Adds a node to the rendering queue. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td>The node to enqueue. </td></tr>
+    <tr><td class="paramname">camera</td><td>The camera used to cull this node. </td></tr>
   </table>
   </dd>
 </dl>
@@ -141,7 +182,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> 
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 23:19:17 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:31:10 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

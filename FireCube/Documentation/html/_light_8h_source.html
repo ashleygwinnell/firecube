@@ -71,19 +71,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00016"></a>00016 <span class="keyword">public</span>:
 <a name="l00021"></a>00021     <span class="keywordtype">void</span> SetType(<a class="code" href="namespace_fire_cube.html#aa3b90321ff2321015871d3431526ac54" title="Specifies the type of a light.">LightType</a> type);
 <a name="l00022"></a>00022 
-<a name="l00027"></a>00027     <a class="code" href="namespace_fire_cube.html#aa3b90321ff2321015871d3431526ac54" title="Specifies the type of a light.">LightType</a> GetType();
+<a name="l00027"></a>00027     <a class="code" href="namespace_fire_cube.html#aa3b90321ff2321015871d3431526ac54" title="Specifies the type of a light.">LightType</a> GetType() <span class="keyword">const</span>;
 <a name="l00028"></a>00028 
-<a name="l00033"></a>00033     <span class="keywordtype">void</span> SetAmbientColor(<a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> color);
+<a name="l00033"></a>00033     <span class="keywordtype">void</span> SetAmbientColor(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> &amp;color);
 <a name="l00034"></a>00034 
-<a name="l00039"></a>00039     <a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> GetAmbientColor();
+<a name="l00039"></a>00039     <a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> GetAmbientColor() <span class="keyword">const</span>;
 <a name="l00040"></a>00040 
-<a name="l00045"></a>00045     <span class="keywordtype">void</span> SetDiffuseColor(<a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> color);
+<a name="l00045"></a>00045     <span class="keywordtype">void</span> SetDiffuseColor(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> &amp;color);
 <a name="l00046"></a>00046 
-<a name="l00051"></a>00051     <a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> GetDiffuseColor();
+<a name="l00051"></a>00051     <a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> GetDiffuseColor() <span class="keyword">const</span>;
 <a name="l00052"></a>00052 
-<a name="l00057"></a>00057     <span class="keywordtype">void</span> SetSpecularColor(<a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> color);
+<a name="l00057"></a>00057     <span class="keywordtype">void</span> SetSpecularColor(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> &amp;color);
 <a name="l00058"></a>00058 
-<a name="l00063"></a>00063     <a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> GetSpecularColor();
+<a name="l00063"></a>00063     <a class="code" href="class_fire_cube_1_1vec4.html" title="A 4d vector.">vec4</a> GetSpecularColor() <span class="keyword">const</span>;
 <a name="l00064"></a>00064 
 <a name="l00069"></a>00069     <span class="keywordtype">bool</span> operator == (<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1_light.html" title="A class storing various properties of a light source.">Light</a> &amp;other) <span class="keyword">const</span>;
 <a name="l00070"></a>00070 
@@ -110,7 +110,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 23:19:16 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:31:10 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

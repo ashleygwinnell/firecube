@@ -82,8 +82,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_state.html#ab2f31718f3a3b0d316f2b263190eb667">FromMaterial</a> (<a class="el" href="namespace_fire_cube.html#a1bb6f9dc94403d77168d9cbb5fb7ccae">Material</a> mat)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the rendering from a material.  <a href="#ab2f31718f3a3b0d316f2b263190eb667"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_state.html#a2e05d35f0df1a404bd5eea0ce04fb02e">FromMaterial</a> (<a class="el" href="namespace_fire_cube.html#acf7ef8de5e3ecf2ad7bdbdbe56e50f7e">MaterialPtr</a> mat)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the rendering state from a material.  <a href="#a2e05d35f0df1a404bd5eea0ce04fb02e"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_state.html#a844b97497c14a2355789e3dd544b2a1c">SetDirectionalLighting</a> (bool enable)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether directional lighting should be used.  <a href="#a844b97497c14a2355789e3dd544b2a1c"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_render_state.html#ae4f5482717a1168f16da0657c60bbdde">SetPointLighting</a> (bool enable)</td></tr>
@@ -94,21 +94,21 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashes the rendering state.  <a href="#ade33686399f8f82a4e507e68acf2241a"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac3c151a98af5f2bc05e018e943c69123"></a><!-- doxytag: member="FireCube::RenderState::TechniqueResource" ref="ac3c151a98af5f2bc05e018e943c69123" args="" -->
-class&#160;</td><td class="memItemRight" valign="bottom"><b>TechniqueResource</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a807f0a09f6d88f6738f32cadeae4a3cd"></a><!-- doxytag: member="FireCube::RenderState::Technique" ref="a807f0a09f6d88f6738f32cadeae4a3cd" args="" -->
+class&#160;</td><td class="memItemRight" valign="bottom"><b>Technique</b></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>A class storing information about rendering properties. </p>
 <p>This class is used when generating a program. </p>
 </div><hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ab2f31718f3a3b0d316f2b263190eb667"></a><!-- doxytag: member="FireCube::RenderState::FromMaterial" ref="ab2f31718f3a3b0d316f2b263190eb667" args="(Material mat)" -->
+<a class="anchor" id="a2e05d35f0df1a404bd5eea0ce04fb02e"></a><!-- doxytag: member="FireCube::RenderState::FromMaterial" ref="a2e05d35f0df1a404bd5eea0ce04fb02e" args="(MaterialPtr mat)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void RenderState::FromMaterial </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespace_fire_cube.html#a1bb6f9dc94403d77168d9cbb5fb7ccae">Material</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespace_fire_cube.html#acf7ef8de5e3ecf2ad7bdbdbe56e50f7e">MaterialPtr</a>&#160;</td>
           <td class="paramname"><em>mat</em></td><td>)</td>
           <td></td>
         </tr>
@@ -116,7 +116,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>TechniqueResource</b
 </div>
 <div class="memdoc">
 
-<p>Generates the rendering from a material. </p>
+<p>Generates the rendering state from a material. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">mat</td><td>The material to generate the state from. </td></tr>
@@ -239,7 +239,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>TechniqueResource</b
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 23:19:17 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:31:10 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

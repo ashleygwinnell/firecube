@@ -81,27 +81,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a41e9e080cec38a58ad790e75714690c1"></a><!-- doxytag: member="FireCube::Technique::Create" ref="a41e9e080cec38a58ad790e75714690c1" args="()" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_technique.html#a41e9e080cec38a58ad790e75714690c1">Create</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the technique. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_technique.html#a9bc6b96fc058c60c600435748f950a0d">LoadShader</a> (const std::string &amp;filename)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads the specified shader.  <a href="#a9bc6b96fc058c60c600435748f950a0d"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_technique.html#a354c362fb162d18a769daa34662423be">LoadShader</a> (<a class="el" href="namespace_fire_cube.html#a92467059ef59121e94a9bbf38ee61ca4">ShaderType</a> type, const std::string &amp;source)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads the specified shader.  <a href="#a354c362fb162d18a769daa34662423be"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_fire_cube_1_1_program.html">Program</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_technique.html#af98b71bf40495f34b513196988379af2">GenerateProgram</a> (const <a class="el" href="class_fire_cube_1_1_render_state.html">RenderState</a> &amp;renderState)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a program from a given render state.  <a href="#af98b71bf40495f34b513196988379af2"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_technique.html#a31e8d7f6301d0a4780b8d7aff1b0f54c">operator bool</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_technique.html#aeed331eb1bc8937108a523472c6ae3a6">operator==</a> (const <a class="el" href="class_fire_cube_1_1_technique.html">Technique</a> &amp;technique) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_fire_cube.html#ad073aa501446f810a86522d5c7e77488">ProgramPtr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_technique.html#a353c4fa5abec279e2aa74e4ea30905cd">GenerateProgram</a> (const <a class="el" href="class_fire_cube_1_1_render_state.html">RenderState</a> &amp;renderState)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a program from a given render state.  <a href="#a353c4fa5abec279e2aa74e4ea30905cd"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>A class representing a technique. </p>
 </div><hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="af98b71bf40495f34b513196988379af2"></a><!-- doxytag: member="FireCube::Technique::GenerateProgram" ref="af98b71bf40495f34b513196988379af2" args="(const RenderState &amp;renderState)" -->
+<a class="anchor" id="a353c4fa5abec279e2aa74e4ea30905cd"></a><!-- doxytag: member="FireCube::Technique::GenerateProgram" ref="a353c4fa5abec279e2aa74e4ea30905cd" args="(const RenderState &amp;renderState)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_fire_cube_1_1_program.html">Program</a> Technique::GenerateProgram </td>
+          <td class="memname"><a class="el" href="namespace_fire_cube.html#ad073aa501446f810a86522d5c7e77488">ProgramPtr</a> Technique::GenerateProgram </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="class_fire_cube_1_1_render_state.html">RenderState</a> &amp;&#160;</td>
           <td class="paramname"><em>renderState</em></td><td>)</td>
@@ -184,41 +179,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
-<a class="anchor" id="a31e8d7f6301d0a4780b8d7aff1b0f54c"></a><!-- doxytag: member="FireCube::Technique::operator bool" ref="a31e8d7f6301d0a4780b8d7aff1b0f54c" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Technique::operator bool </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if points to an initialized resource, false otherwise. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="aeed331eb1bc8937108a523472c6ae3a6"></a><!-- doxytag: member="FireCube::Technique::operator==" ref="aeed331eb1bc8937108a523472c6ae3a6" args="(const Technique &amp;technique) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Technique::operator== </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1_technique.html">Technique</a> &amp;&#160;</td>
-          <td class="paramname"><em>technique</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>True of both objects points to the same resource, false otherwise. </dd></dl>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="_shaders_8h_source.html">Shaders.h</a></li>
 <li>Shaders.cpp</li>
@@ -238,7 +198,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Feb 16 2011 21:18:09 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:31:10 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

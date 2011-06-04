@@ -69,11 +69,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00008"></a>00008 {
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="comment">// Forward declarations.</span>
-<a name="l00011"></a><a class="code" href="namespace_fire_cube.html#a72bd4bf79584c5b42eac1b980e289826">00011</a> <span class="keyword">class </span><a class="code" href="class_fire_cube_1_1_shader_resource.html" title="A class representing a single shader.">ShaderResource</a>;
-<a name="l00012"></a>00012 <span class="keyword">typedef</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html">ResourceManager&lt;ShaderResource&gt;</a> <a class="code" href="namespace_fire_cube.html#a72bd4bf79584c5b42eac1b980e289826" title="A shader resource manager.">ShaderManager</a>;
-<a name="l00013"></a><a class="code" href="namespace_fire_cube.html#a38f4eb6e43999dbe11e3d172d72d8948">00013</a> <span class="keyword">class </span><a class="code" href="class_fire_cube_1_1_texture_resource.html" title="A 2d texture.">TextureResource</a>;
-<a name="l00014"></a>00014 <span class="keyword">typedef</span> boost::shared_ptr&lt;TextureResource&gt; <a class="code" href="namespace_fire_cube.html#a38f4eb6e43999dbe11e3d172d72d8948" title="A shared pointer to a TextureResource.">Texture</a>;
-<a name="l00015"></a><a class="code" href="namespace_fire_cube.html#a3374dd12f584766ebe38ceffe6f4a2d1">00015</a> <span class="keyword">typedef</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html">ResourceManager&lt;TextureResource&gt;</a> <a class="code" href="namespace_fire_cube.html#a3374dd12f584766ebe38ceffe6f4a2d1" title="A texture resource manager.">TextureManager</a>;
+<a name="l00011"></a><a class="code" href="namespace_fire_cube.html#aa625c018060223f084505e4d8da2ae82">00011</a> <span class="keyword">class </span><a class="code" href="class_fire_cube_1_1_shader.html" title="A class representing a single shader.">Shader</a>;
+<a name="l00012"></a>00012 <span class="keyword">typedef</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html">ResourceManager&lt;Shader&gt;</a> <a class="code" href="namespace_fire_cube.html#aa625c018060223f084505e4d8da2ae82" title="A shader resource manager.">ShaderManager</a>;
+<a name="l00013"></a><a class="code" href="namespace_fire_cube.html#a80f975755604a7746edd819dafb67f0e">00013</a> <span class="keyword">class </span><a class="code" href="class_fire_cube_1_1_texture.html" title="A 2d texture.">Texture</a>;
+<a name="l00014"></a>00014 <span class="keyword">typedef</span> boost::shared_ptr&lt;Texture&gt; <a class="code" href="namespace_fire_cube.html#a80f975755604a7746edd819dafb67f0e" title="A shared pointer to a TextureResource.">TexturePtr</a>;
+<a name="l00015"></a><a class="code" href="namespace_fire_cube.html#a664356e02366f0706820b927e85e24b7">00015</a> <span class="keyword">typedef</span> <a class="code" href="class_fire_cube_1_1_resource_manager.html">ResourceManager&lt;Texture&gt;</a> <a class="code" href="namespace_fire_cube.html#a664356e02366f0706820b927e85e24b7" title="A texture resource manager.">TextureManager</a>;
 <a name="l00016"></a>00016 
 <a name="l00020"></a><a class="code" href="class_fire_cube_1_1_application.html">00020</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_application.html" title="This class is responsible for the initialization and running of the application.">Application</a>
 <a name="l00021"></a>00021 {
@@ -99,7 +99,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00069"></a>00069 
 <a name="l00073"></a>00073     <span class="keywordtype">int</span> GetHeight() <span class="keyword">const</span>;
 <a name="l00074"></a>00074 
-<a name="l00078"></a>00078         <a class="code" href="class_fire_cube_1_1vec2.html" title="A 2d vector.">vec2</a> GetCursorPos();
+<a name="l00078"></a>00078         <a class="code" href="class_fire_cube_1_1vec2.html" title="A 2d vector.">vec2</a> GetCursorPos() <span class="keyword">const</span>;
 <a name="l00079"></a>00079 
 <a name="l00084"></a>00084     <span class="keyword">virtual</span> <span class="keywordtype">void</span> HandleInput(<span class="keywordtype">float</span> time) = 0;
 <a name="l00085"></a>00085 
@@ -140,7 +140,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 23:19:16 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:31:10 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

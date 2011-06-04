@@ -82,50 +82,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_font.html#a911c6447c41f2d5c4efad69038f224d2">Font</a> (boost::shared_ptr&lt; FontResource &gt; resource)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a font from a font resource.  <a href="#a911c6447c41f2d5c4efad69038f224d2"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_font.html#a6a7669862e9bd19c18bfb23b5b068462">Load</a> (const std::string &amp;name)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a font.  <a href="#a6a7669862e9bd19c18bfb23b5b068462"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_font.html#a769abb226b9f41ee12cc6edd61774852">Load</a> (const std::string &amp;name, int size)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a font.  <a href="#a769abb226b9f41ee12cc6edd61774852"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_font.html#a944e967eefbdca98c19314a757e14a34">operator bool</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_font.html#a19bf01d8b91e9c5eab748300316ddf16">operator==</a> (const <a class="el" href="class_fire_cube_1_1_font.html">Font</a> &amp;font) const </td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a03f7887adc0b982b1900a4b92370f917"></a><!-- doxytag: member="FireCube::Font::FontManager" ref="a03f7887adc0b982b1900a4b92370f917" args="" -->
 class&#160;</td><td class="memItemRight" valign="bottom"><b>FontManager</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aff609ad3e8a0debcca78c2e23bf4af74"></a><!-- doxytag: member="FireCube::Font::Renderer::RenderText" ref="aff609ad3e8a0debcca78c2e23bf4af74" args="(Font font, vec3 pos, vec4 color, const std::string &amp;str)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::RenderText</b> (<a class="el" href="class_fire_cube_1_1_font.html">Font</a> font, <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> pos, <a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color, const std::string &amp;str)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a66f5d5ed4dc4ea63474a94ae6e8ee2e1"></a><!-- doxytag: member="FireCube::Font::ResourceManager&lt; Font &gt;" ref="a66f5d5ed4dc4ea63474a94ae6e8ee2e1" args="" -->
+class&#160;</td><td class="memItemRight" valign="bottom"><b>ResourceManager&lt; Font &gt;</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a26ced6c26bd382f0ba4048e81af4bd91"></a><!-- doxytag: member="FireCube::Font::Renderer::RenderText" ref="a26ced6c26bd382f0ba4048e81af4bd91" args="(FontPtr font, const vec3 &amp;pos, const vec4 &amp;color, const std::string &amp;str)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::RenderText</b> (<a class="el" href="namespace_fire_cube.html#a1ccc711932136e7ebf3d3186d68e2f93">FontPtr</a> font, const <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> &amp;pos, const <a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> &amp;color, const std::string &amp;str)</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Holds the data for a single font face. </p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a911c6447c41f2d5c4efad69038f224d2"></a><!-- doxytag: member="FireCube::Font::Font" ref="a911c6447c41f2d5c4efad69038f224d2" args="(boost::shared_ptr&lt; FontResource &gt; resource)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Font::Font </td>
-          <td>(</td>
-          <td class="paramtype">boost::shared_ptr&lt; FontResource &gt;&#160;</td>
-          <td class="paramname"><em>resource</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Constructs a font from a font resource. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">resource</td><td>The resource to assign to this font. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
+</div><hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a6a7669862e9bd19c18bfb23b5b068462"></a><!-- doxytag: member="FireCube::Font::Load" ref="a6a7669862e9bd19c18bfb23b5b068462" args="(const std::string &amp;name)" -->
 <div class="memitem">
 <div class="memproto">
@@ -187,41 +159,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::RenderText<
 
 </div>
 </div>
-<a class="anchor" id="a944e967eefbdca98c19314a757e14a34"></a><!-- doxytag: member="FireCube::Font::operator bool" ref="a944e967eefbdca98c19314a757e14a34" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Font::operator bool </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if points to an initialized resource, false otherwise. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a19bf01d8b91e9c5eab748300316ddf16"></a><!-- doxytag: member="FireCube::Font::operator==" ref="a19bf01d8b91e9c5eab748300316ddf16" args="(const Font &amp;font) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Font::operator== </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1_font.html">Font</a> &amp;&#160;</td>
-          <td class="paramname"><em>font</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>True of both objects points to the same resource, false otherwise. </dd></dl>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="_font_8h_source.html">Font.h</a></li>
 <li>Font.cpp</li>
@@ -241,7 +178,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::RenderText<
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Feb 16 2011 21:18:09 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:31:10 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

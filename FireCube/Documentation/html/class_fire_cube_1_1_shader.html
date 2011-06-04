@@ -66,7 +66,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#friends">Friends</a>  </div>
   <div class="headertitle">
 <h1>FireCube::Shader Class Reference</h1>  </div>
 </div>
@@ -81,8 +82,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_shader.html#aa75c03e1d472e8177e71f70cb5804a01">Shader</a> (boost::shared_ptr&lt; ShaderResource &gt; resource)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a shader from a shader resource.  <a href="#aa75c03e1d472e8177e71f70cb5804a01"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_shader.html#a6784a95fd24275e96395ed30c708e436">Load</a> (const std::string &amp;filename)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a shader from a file.  <a href="#a6784a95fd24275e96395ed30c708e436"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_shader.html#ad5843d4b1b53057ca6a0ee5e6513da84">Create</a> (<a class="el" href="namespace_fire_cube.html#a92467059ef59121e94a9bbf38ee61ca4">ShaderType</a> type, const std::string &amp;source)</td></tr>
@@ -90,38 +89,16 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad29ed9049ee26a7c5a1d2d160472d0ec"></a><!-- doxytag: member="FireCube::Shader::GetId" ref="ad29ed9049ee26a7c5a1d2d160472d0ec" args="() const " -->
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_shader.html#ad29ed9049ee26a7c5a1d2d160472d0ec">GetId</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the resource id of the shader. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_shader.html#a67b78d5028b058cf345c3d522ad2beac">operator bool</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_shader.html#a368497556ccbd122cf958b13d674a832">operator==</a> (const <a class="el" href="class_fire_cube_1_1_shader.html">Shader</a> &amp;shader) const </td></tr>
+<tr><td colspan="2"><h2><a name="friends"></a>
+Friends</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0432bf4ab621f4098afac914ccb5371e"></a><!-- doxytag: member="FireCube::Shader::Program" ref="a0432bf4ab621f4098afac914ccb5371e" args="" -->
+class&#160;</td><td class="memItemRight" valign="bottom"><b>Program</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af4f4c4efde3a21b55fe21ef23186b7ff"></a><!-- doxytag: member="FireCube::Shader::ResourceManager&lt; Shader &gt;" ref="af4f4c4efde3a21b55fe21ef23186b7ff" args="" -->
+class&#160;</td><td class="memItemRight" valign="bottom"><b>ResourceManager&lt; Shader &gt;</b></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>A class representing a single shader. </p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="aa75c03e1d472e8177e71f70cb5804a01"></a><!-- doxytag: member="FireCube::Shader::Shader" ref="aa75c03e1d472e8177e71f70cb5804a01" args="(boost::shared_ptr&lt; ShaderResource &gt; resource)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Shader::Shader </td>
-          <td>(</td>
-          <td class="paramtype">boost::shared_ptr&lt; ShaderResource &gt;&#160;</td>
-          <td class="paramname"><em>resource</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Constructs a shader from a shader resource. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">resource</td><td>The resource to assign to this shader. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
+</div><hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="ad5843d4b1b53057ca6a0ee5e6513da84"></a><!-- doxytag: member="FireCube::Shader::Create" ref="ad5843d4b1b53057ca6a0ee5e6513da84" args="(ShaderType type, const std::string &amp;source)" -->
 <div class="memitem">
 <div class="memproto">
@@ -184,41 +161,6 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 
 </div>
 </div>
-<a class="anchor" id="a67b78d5028b058cf345c3d522ad2beac"></a><!-- doxytag: member="FireCube::Shader::operator bool" ref="a67b78d5028b058cf345c3d522ad2beac" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Shader::operator bool </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if points to an initialized resource, false otherwise. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a368497556ccbd122cf958b13d674a832"></a><!-- doxytag: member="FireCube::Shader::operator==" ref="a368497556ccbd122cf958b13d674a832" args="(const Shader &amp;shader) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Shader::operator== </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1_shader.html">Shader</a> &amp;&#160;</td>
-          <td class="paramname"><em>shader</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>True of both objects points to the same resource, false otherwise. </dd></dl>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="_shaders_8h_source.html">Shaders.h</a></li>
 <li>Shaders.cpp</li>
@@ -238,7 +180,7 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Feb 16 2011 21:18:09 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:31:10 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

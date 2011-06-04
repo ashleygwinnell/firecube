@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <h1>FireCube::FontManager Class Reference</h1>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="FireCube::FontManager" --><!-- doxytag: inherits="ResourceManager&lt; FontResource &gt;" -->
+<!-- doxytag: class="FireCube::FontManager" --><!-- doxytag: inherits="ResourceManager&lt; Font &gt;" -->
 <p>Manages the various fonts.  
 <a href="#_details">More...</a></p>
 
@@ -83,7 +83,7 @@ Inheritance diagram for FireCube::FontManager:</div>
  <div class="center">
   <img src="class_fire_cube_1_1_font_manager.png" usemap="#FireCube::FontManager_map" alt=""/>
   <map id="FireCube::FontManager_map" name="FireCube::FontManager_map">
-<area href="class_fire_cube_1_1_resource_manager.html" alt="FireCube::ResourceManager&lt; FontResource &gt;" shape="rect" coords="0,0,279,24"/>
+<area href="class_fire_cube_1_1_resource_manager.html" alt="FireCube::ResourceManager&lt; Font &gt;" shape="rect" coords="0,0,225,24"/>
 </map>
  </div></div>
 
@@ -91,24 +91,24 @@ Inheritance diagram for FireCube::FontManager:</div>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_fire_cube.html#a8b4cb89229266cbebfc5bcdd944a2b8b">Font</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_font_manager.html#ab1d64acaa8d20cacd98c7c7a4e96dcc6">Create</a> (const std::string &amp;filename, int size)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates and loads a font from the specified file.  <a href="#ab1d64acaa8d20cacd98c7c7a4e96dcc6"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_fire_cube.html#a1ccc711932136e7ebf3d3186d68e2f93">FontPtr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_font_manager.html#a67822ec0a4262c01ac1c7c56e3e704d4">Create</a> (const std::string &amp;filename, int size)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates and loads a font from the specified file.  <a href="#a67822ec0a4262c01ac1c7c56e3e704d4"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aac1064162fae6977bb213690f0b3efff"></a><!-- doxytag: member="FireCube::FontManager::FontResource" ref="aac1064162fae6977bb213690f0b3efff" args="" -->
-class&#160;</td><td class="memItemRight" valign="bottom"><b>FontResource</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aff609ad3e8a0debcca78c2e23bf4af74"></a><!-- doxytag: member="FireCube::FontManager::Renderer::RenderText" ref="aff609ad3e8a0debcca78c2e23bf4af74" args="(Font font, vec3 pos, vec4 color, const std::string &amp;str)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::RenderText</b> (<a class="el" href="namespace_fire_cube.html#a8b4cb89229266cbebfc5bcdd944a2b8b">Font</a> font, <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> pos, <a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> color, const std::string &amp;str)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad564b94b59dc295de3dfc4415d95cca8"></a><!-- doxytag: member="FireCube::FontManager::Font" ref="ad564b94b59dc295de3dfc4415d95cca8" args="" -->
+class&#160;</td><td class="memItemRight" valign="bottom"><b>Font</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a26ced6c26bd382f0ba4048e81af4bd91"></a><!-- doxytag: member="FireCube::FontManager::Renderer::RenderText" ref="a26ced6c26bd382f0ba4048e81af4bd91" args="(FontPtr font, const vec3 &amp;pos, const vec4 &amp;color, const std::string &amp;str)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::RenderText</b> (<a class="el" href="namespace_fire_cube.html#a1ccc711932136e7ebf3d3186d68e2f93">FontPtr</a> font, const <a class="el" href="class_fire_cube_1_1vec3.html">vec3</a> &amp;pos, const <a class="el" href="class_fire_cube_1_1vec4.html">vec4</a> &amp;color, const std::string &amp;str)</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Manages the various fonts. </p>
 </div><hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ab1d64acaa8d20cacd98c7c7a4e96dcc6"></a><!-- doxytag: member="FireCube::FontManager::Create" ref="ab1d64acaa8d20cacd98c7c7a4e96dcc6" args="(const std::string &amp;filename, int size)" -->
+<a class="anchor" id="a67822ec0a4262c01ac1c7c56e3e704d4"></a><!-- doxytag: member="FireCube::FontManager::Create" ref="a67822ec0a4262c01ac1c7c56e3e704d4" args="(const std::string &amp;filename, int size)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespace_fire_cube.html#a8b4cb89229266cbebfc5bcdd944a2b8b">Font</a> FontManager::Create </td>
+          <td class="memname"><a class="el" href="namespace_fire_cube.html#a1ccc711932136e7ebf3d3186d68e2f93">FontPtr</a> FontManager::Create </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>filename</em>, </td>
@@ -158,7 +158,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::RenderText<
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 23:19:16 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:31:10 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

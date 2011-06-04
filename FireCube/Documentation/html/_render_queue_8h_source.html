@@ -70,54 +70,56 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="comment">// Forward declarations.</span>
 <a name="l00011"></a>00011 <span class="keyword">class </span>RenderQueue;
-<a name="l00012"></a>00012 <span class="keyword">class </span>GeometryResource;
-<a name="l00013"></a>00013 <span class="keyword">typedef</span> boost::shared_ptr&lt;GeometryResource&gt; <a class="code" href="namespace_fire_cube.html#a184a39f5396dfaa4e52c1ec0b386620a" title="A shared pointer to a GeometryResource.">Geometry</a>;
-<a name="l00014"></a>00014 <span class="keyword">class </span>Surface;
-<a name="l00015"></a>00015 <span class="keyword">class </span>MaterialResource;
-<a name="l00016"></a>00016 <span class="keyword">typedef</span> boost::shared_ptr&lt;MaterialResource&gt; <a class="code" href="namespace_fire_cube.html#a1bb6f9dc94403d77168d9cbb5fb7ccae" title="A shared pointer to a MaterialResource.">Material</a>;
-<a name="l00017"></a>00017 <span class="keyword">class </span>RenderParameters;
-<a name="l00018"></a>00018 <span class="keyword">class </span>Light;
-<a name="l00019"></a>00019 <span class="keyword">class </span>NodeResource;
-<a name="l00020"></a>00020 <span class="keyword">typedef</span> boost::shared_ptr&lt;NodeResource&gt; <a class="code" href="namespace_fire_cube.html#abbbb0a6d2fbd15d84d4c3caf03facb79" title="A shared pointer to a NodeResource.">Node</a>;
-<a name="l00021"></a>00021 <span class="keyword">class </span>ProgramResource;
-<a name="l00022"></a>00022 <span class="keyword">typedef</span> boost::shared_ptr&lt;ProgramResource&gt; <a class="code" href="namespace_fire_cube.html#a307ae46704a16c8b80e5483845cb3b08" title="A shared pointer to a ProgramResource.">Program</a>;
-<a name="l00023"></a>00023 
-<a name="l00024"></a>00024 <span class="keyword">namespace </span>Renderer
-<a name="l00025"></a>00025 {
-<a name="l00026"></a>00026 <span class="keywordtype">void</span> FIRECUBE_API <a class="code" href="namespace_fire_cube_1_1_renderer.html#a62cce07ca52060e0c9ba48dfbe63e890" title="Renders a geometry.">Render</a>(RenderQueue &amp;renderQueue);
-<a name="l00027"></a>00027 <span class="keywordtype">void</span> FIRECUBE_API <a class="code" href="namespace_fire_cube_1_1_renderer.html#a62cce07ca52060e0c9ba48dfbe63e890" title="Renders a geometry.">Render</a>(RenderQueue &amp;renderQueue, <span class="keyword">const</span> std::string &amp;techniqueName, ProgramUniformsList &amp;programUniformsList);
-<a name="l00028"></a>00028 }
-<a name="l00032"></a><a class="code" href="class_fire_cube_1_1_render_job.html">00032</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_render_job.html" title="A class storing information of a rendering job.">RenderJob</a>
-<a name="l00033"></a>00033 {
-<a name="l00034"></a>00034 <span class="keyword">public</span>:
-<a name="l00038"></a><a class="code" href="class_fire_cube_1_1_render_job.html#aa4435e57f47d742c6d478b78d0312727">00038</a>     <a class="code" href="namespace_fire_cube.html#a184a39f5396dfaa4e52c1ec0b386620a" title="A shared pointer to a GeometryResource.">Geometry</a> <a class="code" href="class_fire_cube_1_1_render_job.html#aa4435e57f47d742c6d478b78d0312727" title="The geometry of this job.">geometry</a>;
-<a name="l00039"></a>00039 
-<a name="l00043"></a><a class="code" href="class_fire_cube_1_1_render_job.html#a1f3160345c96e6bfecb1d27730bdc016">00043</a>     <a class="code" href="class_fire_cube_1_1_surface.html" title="Defines a surface in a geometry.">Surface</a> *<a class="code" href="class_fire_cube_1_1_render_job.html#a1f3160345c96e6bfecb1d27730bdc016" title="The surface of this job.">surface</a>;
-<a name="l00044"></a>00044 
-<a name="l00048"></a><a class="code" href="class_fire_cube_1_1_render_job.html#ab8626e73d1ceee231c7b29f74f28c4ca">00048</a>     <a class="code" href="namespace_fire_cube.html#a1bb6f9dc94403d77168d9cbb5fb7ccae" title="A shared pointer to a MaterialResource.">Material</a> <a class="code" href="class_fire_cube_1_1_render_job.html#ab8626e73d1ceee231c7b29f74f28c4ca" title="The material of this job.">material</a>;
-<a name="l00049"></a>00049 
-<a name="l00053"></a><a class="code" href="class_fire_cube_1_1_render_job.html#a022cc0cc763c54a371afc377f5fe6dd3">00053</a>     <a class="code" href="class_fire_cube_1_1_render_parameters.html" title="A class holding information on various rendering parameters.">RenderParameters</a> <a class="code" href="class_fire_cube_1_1_render_job.html#a022cc0cc763c54a371afc377f5fe6dd3" title="The rendering parameters of this job.">renderParameters</a>;
-<a name="l00054"></a>00054 
-<a name="l00058"></a><a class="code" href="class_fire_cube_1_1_render_job.html#a40a7479ad665b8a0686514f2491fbeed">00058</a>     <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> <a class="code" href="class_fire_cube_1_1_render_job.html#a40a7479ad665b8a0686514f2491fbeed" title="The transformation to apply to this job.">transformation</a>;
-<a name="l00059"></a>00059 };
-<a name="l00063"></a><a class="code" href="class_fire_cube_1_1_render_queue.html">00063</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_render_queue.html" title="A class storing a list of rendering jobs.">RenderQueue</a>
-<a name="l00064"></a>00064 {
-<a name="l00065"></a>00065     <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="namespace_fire_cube_1_1_renderer.html#a62cce07ca52060e0c9ba48dfbe63e890" title="Renders a geometry.">Renderer::Render</a>(<a class="code" href="class_fire_cube_1_1_render_queue.html" title="A class storing a list of rendering jobs.">RenderQueue</a> &amp;renderQueue);
-<a name="l00066"></a>00066         <span class="keyword">friend</span> <span class="keywordtype">void</span> Renderer::Render(<a class="code" href="class_fire_cube_1_1_render_queue.html" title="A class storing a list of rendering jobs.">RenderQueue</a> &amp;renderQueue, <span class="keyword">const</span> std::string &amp;techniqueName, <a class="code" href="class_fire_cube_1_1_program_uniforms_list.html" title="A class storing a list of uniforms to be fed into a gpu program.">ProgramUniformsList</a> &amp;programUniformsList);
-<a name="l00067"></a>00067 <span class="keyword">public</span>:
-<a name="l00068"></a>00068 
-<a name="l00072"></a>00072     <span class="keywordtype">void</span> Clear();
+<a name="l00012"></a>00012 <span class="keyword">class </span>Geometry;
+<a name="l00013"></a>00013 <span class="keyword">typedef</span> boost::shared_ptr&lt;Geometry&gt; <a class="code" href="namespace_fire_cube.html#a23e73cf05914d101367e482a787bfd75" title="A shared pointer to a GeometryResource.">GeometryPtr</a>;
+<a name="l00014"></a>00014 <span class="keyword">class </span>Material;
+<a name="l00015"></a>00015 <span class="keyword">typedef</span> boost::shared_ptr&lt;Material&gt; <a class="code" href="namespace_fire_cube.html#acf7ef8de5e3ecf2ad7bdbdbe56e50f7e" title="A shared pointer to a MaterialResource.">MaterialPtr</a>;
+<a name="l00016"></a>00016 <span class="keyword">class </span>RenderParameters;
+<a name="l00017"></a>00017 <span class="keyword">class </span>Light;
+<a name="l00018"></a>00018 <span class="keyword">class </span>Node;
+<a name="l00019"></a>00019 <span class="keyword">typedef</span> boost::shared_ptr&lt;Node&gt; NodePtr;
+<a name="l00020"></a>00020 <span class="keyword">class </span>Program;
+<a name="l00021"></a>00021 <span class="keyword">typedef</span> boost::shared_ptr&lt;Program&gt; <a class="code" href="namespace_fire_cube.html#ad073aa501446f810a86522d5c7e77488" title="A shared pointer to a ProgramResource.">ProgramPtr</a>;
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 <span class="keyword">namespace </span>Renderer
+<a name="l00024"></a>00024 {
+<a name="l00025"></a>00025 <span class="keywordtype">void</span> FIRECUBE_API <a class="code" href="namespace_fire_cube_1_1_renderer.html#a2bf011307c0a661ff8f1a62798aa150f" title="Renders a geometry.">Render</a>(RenderQueue &amp;renderQueue);
+<a name="l00026"></a>00026 <span class="keywordtype">void</span> FIRECUBE_API <a class="code" href="namespace_fire_cube_1_1_renderer.html#a2bf011307c0a661ff8f1a62798aa150f" title="Renders a geometry.">Render</a>(RenderQueue &amp;renderQueue, <span class="keyword">const</span> std::string &amp;techniqueName, <span class="keyword">const</span> ProgramUniformsList &amp;programUniformsList);
+<a name="l00027"></a>00027 }
+<a name="l00031"></a><a class="code" href="class_fire_cube_1_1_render_job.html">00031</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_render_job.html" title="A class storing information of a rendering job.">RenderJob</a>
+<a name="l00032"></a>00032 {
+<a name="l00033"></a>00033 <span class="keyword">public</span>:
+<a name="l00037"></a><a class="code" href="class_fire_cube_1_1_render_job.html#ac3cc19bca3778f024e157b4a25ff9f27">00037</a>     <a class="code" href="namespace_fire_cube.html#a23e73cf05914d101367e482a787bfd75" title="A shared pointer to a GeometryResource.">GeometryPtr</a> <a class="code" href="class_fire_cube_1_1_render_job.html#ac3cc19bca3778f024e157b4a25ff9f27" title="The geometry of this job.">geometry</a>;
+<a name="l00038"></a>00038     
+<a name="l00042"></a><a class="code" href="class_fire_cube_1_1_render_job.html#a022cc0cc763c54a371afc377f5fe6dd3">00042</a>     <a class="code" href="class_fire_cube_1_1_render_parameters.html" title="A class holding information on various rendering parameters.">RenderParameters</a> <a class="code" href="class_fire_cube_1_1_render_job.html#a022cc0cc763c54a371afc377f5fe6dd3" title="The rendering parameters of this job.">renderParameters</a>;
+<a name="l00043"></a>00043 
+<a name="l00047"></a><a class="code" href="class_fire_cube_1_1_render_job.html#a40a7479ad665b8a0686514f2491fbeed">00047</a>     <a class="code" href="class_fire_cube_1_1mat4.html" title="A 4x4 matrix.">mat4</a> <a class="code" href="class_fire_cube_1_1_render_job.html#a40a7479ad665b8a0686514f2491fbeed" title="The transformation to apply to this job.">transformation</a>;
+<a name="l00048"></a>00048 
+<a name="l00052"></a><a class="code" href="class_fire_cube_1_1_render_job.html#a0656d3199a5647930bb6aa4c2e2dae85">00052</a>         <a class="code" href="namespace_fire_cube.html#ad073aa501446f810a86522d5c7e77488" title="A shared pointer to a ProgramResource.">ProgramPtr</a> <a class="code" href="class_fire_cube_1_1_render_job.html#a0656d3199a5647930bb6aa4c2e2dae85" title="The program used to render this job.">program</a>;
+<a name="l00053"></a>00053 };
+<a name="l00057"></a><a class="code" href="class_fire_cube_1_1_render_queue.html">00057</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_render_queue.html" title="A class storing a list of rendering jobs.">RenderQueue</a>
+<a name="l00058"></a>00058 {
+<a name="l00059"></a>00059     <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="namespace_fire_cube_1_1_renderer.html#a2bf011307c0a661ff8f1a62798aa150f" title="Renders a geometry.">Renderer::Render</a>(<a class="code" href="class_fire_cube_1_1_render_queue.html" title="A class storing a list of rendering jobs.">RenderQueue</a> &amp;renderQueue);
+<a name="l00060"></a>00060         <span class="keyword">friend</span> <span class="keywordtype">void</span> Renderer::Render(<a class="code" href="class_fire_cube_1_1_render_queue.html" title="A class storing a list of rendering jobs.">RenderQueue</a> &amp;renderQueue, <span class="keyword">const</span> std::string &amp;techniqueName, <span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1_program_uniforms_list.html" title="A class storing a list of uniforms to be fed into a gpu program.">ProgramUniformsList</a> &amp;programUniformsList);
+<a name="l00061"></a>00061 <span class="keyword">public</span>:
+<a name="l00062"></a>00062 
+<a name="l00066"></a>00066     <span class="keywordtype">void</span> Clear();
+<a name="l00067"></a>00067 
+<a name="l00072"></a>00072     <span class="keywordtype">void</span> AddNode(NodePtr node);
 <a name="l00073"></a>00073 
-<a name="l00078"></a>00078     <span class="keywordtype">void</span> AddNode(<a class="code" href="namespace_fire_cube.html#abbbb0a6d2fbd15d84d4c3caf03facb79" title="A shared pointer to a NodeResource.">Node</a> node);
-<a name="l00079"></a>00079 <span class="keyword">private</span>:
-<a name="l00080"></a>00080     std::vector&lt;RenderJob&gt; renderJobs;
-<a name="l00081"></a>00081     std::vector&lt;std::pair&lt;mat4, Light&gt;&gt; activeLights;
-<a name="l00082"></a>00082 };
-<a name="l00083"></a>00083 }
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085 <span class="preprocessor">#pragma warning(pop)</span>
-<a name="l00086"></a>00086 <span class="preprocessor"></span>
-<a name="l00087"></a>00087 <span class="preprocessor">#endif</span>
+<a name="l00079"></a>00079     <span class="keywordtype">void</span> AddNode(NodePtr node, <a class="code" href="namespace_fire_cube.html#a018d1675e4c89f70d7c4a1ac71a448cc" title="A shared pointer to a CameraResource.">CameraPtr</a> camera);
+<a name="l00080"></a>00080 
+<a name="l00084"></a>00084         <span class="keywordtype">void</span> Sort();
+<a name="l00085"></a>00085 
+<a name="l00086"></a>00086 <span class="keyword">private</span>:
+<a name="l00087"></a>00087     std::vector&lt;RenderJob&gt; renderJobs;
+<a name="l00088"></a>00088     std::vector&lt;std::pair&lt;mat4, Light&gt;&gt; activeLights;
+<a name="l00089"></a>00089 };
+<a name="l00090"></a>00090 }
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092 <span class="preprocessor">#pragma warning(pop)</span>
+<a name="l00093"></a>00093 <span class="preprocessor"></span>
+<a name="l00094"></a>00094 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -134,7 +136,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 23:19:16 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:31:10 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

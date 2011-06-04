@@ -104,8 +104,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a301726facc67e5f1adb29328fca9907b"></a><!-- doxytag: member="FireCube::Buffer::Bind" ref="a301726facc67e5f1adb29328fca9907b" args="()" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_buffer.html#a301726facc67e5f1adb29328fca9907b">Bind</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the buffer. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8e40a8076d8a0cb67cac75fe15c25a03"></a><!-- doxytag: member="FireCube::Buffer::IsValid" ref="a8e40a8076d8a0cb67cac75fe15c25a03" args="()" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_buffer.html#a8e40a8076d8a0cb67cac75fe15c25a03">IsValid</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afd9a5e530eef836621b3122f3d570ed2"></a><!-- doxytag: member="FireCube::Buffer::IsValid" ref="afd9a5e530eef836621b3122f3d570ed2" args="() const " -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_buffer.html#afd9a5e530eef836621b3122f3d570ed2">IsValid</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether the buffer is valid. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa27f8d7ddacfa451166dab5ad7002f74"></a><!-- doxytag: member="FireCube::Buffer::Destroy" ref="aa27f8d7ddacfa451166dab5ad7002f74" args="()" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_buffer.html#aa27f8d7ddacfa451166dab5ad7002f74">Destroy</a> ()</td></tr>
@@ -113,8 +113,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a174d5014741a504490c684729c454cc0"></a><!-- doxytag: member="FireCube::Buffer::GetId" ref="a174d5014741a504490c684729c454cc0" args="() const " -->
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_buffer.html#a174d5014741a504490c684729c454cc0">GetId</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the resource id of the buffer. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_buffer.html#a5bed2e43ddac19463e2d720982279f59">operator bool</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fire_cube_1_1_buffer.html#a85b93a42c0af613744f5f674c856662f">operator==</a> (const <a class="el" href="class_fire_cube_1_1_buffer.html">Buffer</a> &amp;buffer) const </td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>A buffer of data used for rendering. </p>
@@ -207,41 +205,6 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 
 </div>
 </div>
-<a class="anchor" id="a5bed2e43ddac19463e2d720982279f59"></a><!-- doxytag: member="FireCube::Buffer::operator bool" ref="a5bed2e43ddac19463e2d720982279f59" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Buffer::operator bool </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if points to an initialized resource, false otherwise. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a85b93a42c0af613744f5f674c856662f"></a><!-- doxytag: member="FireCube::Buffer::operator==" ref="a85b93a42c0af613744f5f674c856662f" args="(const Buffer &amp;buffer) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Buffer::operator== </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="class_fire_cube_1_1_buffer.html">Buffer</a> &amp;&#160;</td>
-          <td class="paramname"><em>buffer</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>True of both objects points to the same resource, false otherwise. </dd></dl>
-
-</div>
-</div>
 <a class="anchor" id="ab1dcab2f458c97d34373b512d9d71c49"></a><!-- doxytag: member="FireCube::Buffer::SetTexCoordStream" ref="ab1dcab2f458c97d34373b512d9d71c49" args="(unsigned int unit)" -->
 <div class="memitem">
 <div class="memproto">
@@ -311,7 +274,7 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Feb 16 2011 21:18:09 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:31:10 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>
