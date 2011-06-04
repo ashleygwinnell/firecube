@@ -25,37 +25,42 @@ using namespace std;
 #include "Node.h"
 #include "tinyxml.h"
 #include "ModelLoaders.h"
+#include "Buffer.h"
+#include "Shaders.h"
+#include "Plane.h"
+#include "Frustum.h"
+#include "Camera.h"
 
 using namespace FireCube;
 void Light::SetType(LightType type)
 {
     this->type = type;
 }
-LightType Light::GetType()
+LightType Light::GetType() const
 {
     return type;
 }
-void Light::SetAmbientColor(vec4 color)
+void Light::SetAmbientColor(const vec4 &color)
 {
     ambientColor = color;
 }
-vec4 Light::GetAmbientColor()
+vec4 Light::GetAmbientColor() const
 {
     return ambientColor;
 }
-void Light::SetDiffuseColor(vec4 color)
+void Light::SetDiffuseColor(const vec4 &color)
 {
     diffuseColor = color;
 }
-vec4 Light::GetDiffuseColor()
+vec4 Light::GetDiffuseColor() const
 {
     return diffuseColor;
 }
-void Light::SetSpecularColor(vec4 color)
+void Light::SetSpecularColor(const vec4 &color)
 {
     specularColor = color;
 }
-vec4 Light::GetSpecularColor()
+vec4 Light::GetSpecularColor() const
 {
     return specularColor;
 }
@@ -63,195 +68,156 @@ bool Light::operator == (const Light &other) const
 {
     return ambientColor == other.ambientColor && diffuseColor == other.diffuseColor && specularColor == other.specularColor && type == other.type;
 }
-NodeResource::NodeResource()
+Node::Node()
 {
     rotation.Set(0, 0, 0);
     translation.Set(0, 0, 0);
     scale.Set(1, 1, 1);
+	matTransform.Identity();
     renderParameters.lighting = true;
     renderParameters.fog = false;
+	renderParameters.technique = Renderer::GetTechnique("default");
+    localTransformationChanged = true;
+    worldTransformationChanged = true;
+    worldBoundingBoxChanged = true;
 }
-NodeResource::NodeResource(const string &name)
+Node::Node(const string &name)
 {
     rotation.Set(0, 0, 0);
     translation.Set(0, 0, 0);
     scale.Set(1, 1, 1);
+	matTransform.Identity();
     renderParameters.lighting = true;
     renderParameters.fog = false;
+	renderParameters.technique = Renderer::GetTechnique("default");
+    localTransformationChanged = true;
+    worldTransformationChanged = true;
+    worldBoundingBoxChanged = true;
     SetName(name);
 }
-void NodeResource::SetName(const string &name)
+void Node::SetName(const string &name)
 {
     this->name = name;
 }
-string NodeResource::GetName()
+string Node::GetName() const
 {
     return name;
 }
-Node &NodeResource::GetParent()
+NodePtr Node::GetParent()
 {
     return parent;
 }
-mat4 NodeResource::GetLocalTransformation()
+mat4 Node::GetLocalTransformation()
 {
-    if (!transformationChanged)
-        return transformation;
-    transformationChanged = false;
-    transformation.Identity();
-    transformation.Translate(translation);
-    transformation.Scale(scale.x, scale.y, scale.z);
-    transformation.RotateX(rotation.x);
-    transformation.RotateY(rotation.y);
-    transformation.RotateZ(rotation.z);
-    transformation *= matTransform;
-    return transformation;
+    if (!localTransformationChanged)
+        return localTransformation;
+    localTransformationChanged = false;
+    localTransformation.Identity();
+    localTransformation.Translate(translation);
+    localTransformation.Scale(scale.x, scale.y, scale.z);
+    localTransformation.RotateX(rotation.x);
+    localTransformation.RotateY(rotation.y);
+    localTransformation.RotateZ(rotation.z);
+    localTransformation *= matTransform;
+    return localTransformation;
 }
-mat4 NodeResource::GetWorldTransformation()
+mat4 Node::GetWorldTransformation()
 {
+    UpdateWorldTransformation();
     return worldTransformation;
 }
-void NodeResource::SetWorldTransformation(mat4 mat)
-{
-    worldTransformation = mat;
-}
 
-void NodeResource::SetTranslation(vec3 t)
+void Node::SetTranslation(const vec3 &t)
 {
-    transformationChanged = true;
     translation = t;
+    SetTransformationChanged();
 }
-vec3 NodeResource::GetTranslation()
+vec3 Node::GetTranslation() const
 {
     return translation;
 }
-void NodeResource::SetRotation(vec3 r)
+void Node::SetRotation(const vec3 &r)
 {
-    transformationChanged = true;
     rotation = r;
+    SetTransformationChanged();
 }
-vec3 NodeResource::GetRotation()
+vec3 Node::GetRotation() const
 {
     return rotation;
 }
-void NodeResource::SetScale(vec3 s)
+void Node::SetScale(const vec3 &s)
 {
-    transformationChanged = true;
     scale = s;
+    SetTransformationChanged();
 }
-vec3 NodeResource::GetScale()
+vec3 Node::GetScale() const
 {
     return scale;
 }
-void NodeResource::SetMatrixTransformation(mat4 t)
+void Node::SetMatrixTransformation(const mat4 &t)
 {
-    transformationChanged = true;
     matTransform = t;
+    SetTransformationChanged();
 }
-mat4 NodeResource::GetMatrixTransformation()
+mat4 Node::GetMatrixTransformation() const
 {
     return matTransform;
 }
-void NodeResource::Move(vec3 t)
+void Node::Move(const vec3 &t)
 {
-    transformationChanged = true;
     translation += t;
+    SetTransformationChanged();
 }
-void NodeResource::Rotate(vec3 r)
+void Node::Rotate(const vec3 &r)
 {
-    transformationChanged = true;
     rotation += r;
+    SetTransformationChanged();
 }
-void NodeResource::Scale(vec3 s)
+void Node::Scale(const vec3 &s)
 {
-    transformationChanged = true;
     scale.x *= s.x;
     scale.y *= s.y;
     scale.z *= s.z;
+    SetTransformationChanged();
 }
-void NodeResource::AddGeometry(Geometry geometry)
+void Node::SetGeometry(GeometryPtr geometry)
 {
-    geometries.push_back(geometry);
+    this->geometry = geometry;
+	SetBoundingBoxChanged();
 }
-void NodeResource::AddLight(Light light)
+void Node::AddLight(const Light &light)
 {
     lights.push_back(light);
 }
-void NodeResource::RemoveLight(Light light)
+void Node::RemoveLight(const Light &light)
 {
     vector<Light>::iterator i = std::find(lights.begin(), lights.end(), light);
     if (i != lights.end())
         lights.erase(i);
 }
-void NodeResource::RenderBoundingBox()
+void Node::RenderBoundingBox(vec4 color, bool onlyWithGeometry)
 {
-    /*float w=bbox.GetWidth();
-    float h=bbox.GetHeight();
-    float d=bbox.GetDepth();
-    vec3 v[8]={bbox.bmin,
-    		   bbox.bmin+vec3(w,0,0),
-    		   bbox.bmin+vec3(w,0,d),
-    		   bbox.bmin+vec3(0,0,d),
-    		   bbox.bmin+vec3(0,h,0),
-    		   bbox.bmin+vec3(w,h,0),
-    		   bbox.bmin+vec3(w,h,d),
-    		   bbox.bmin+vec3(0,h,d)};
-    unsigned int i[12*2]={0,1,1,2,2,3,3,0,4,5,5,6,6,7,7,4,0,4,1,5,2,6,3,7};
-    float color[4]={0.0f,1.0f,0.0f,1.0f};
-    if (parent)
-    	worldTransformation=parent->worldTransformation*GetTransformation();
-    else
-    	worldTransformation=GetTransformation();
-
-    Buffer vb(new BufferResource);
-    Buffer ib(new BufferResource);
-    vb->Create();
-    ib->Create();
-    vb->LoadData(v,sizeof(vec3)*8,STATIC);
-    ib->LoadIndexData(i,24,STATIC);
-    vb->SetVertexStream(3);
-    ib->SetIndexStream();
+    MaterialPtr mat(new Material);
+    mat->SetDiffuseColor(color);
     RenderState rs;
-    Program p(new ProgramResource);
-    p=sceneGraph->shaderGenerator.GenerateProgram(rs);
-    Renderer::UseProgram(p);
-    glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,color);
-    Renderer::SetModelViewMatrix(worldTransformation);
-    Renderer::RenderIndexStream(LINES,24);*/
-
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
-        (*i)->RenderBoundingBox();
+    rs.FromMaterial(mat);
+    ProgramPtr p = Renderer::GetTechnique("default")->GenerateProgram(rs);
+    Renderer::SaveModelViewMatrix();
+    Renderer::SetModelViewMatrix(Renderer::GetCamera()->GetViewMatrix());
+    RenderBoundingBox(mat, p, onlyWithGeometry);
+    Renderer::RestoreModelViewMatrix();
 }
-void NodeResource::UpdateBoundingBox()
+
+GeometryPtr Node::GetGeometry()
 {
-    /*bbox=BoundingBox();
-    for (vector<Node>::iterator i=children.begin();i!=children.end();i++)
-    {
-    	bbox.Expand((*i)->bbox);
-    }
-    for (vector<Model>::iterator i=attachedModels.begin();i!=attachedModels.end();i++)
-    {
-    	bbox.Expand((*i)->GetBoundingBox());
-    }
-
-    if (parent)
-    	parent->UpdateBoundingBox();*/
-
+    return geometry;
 }
-
-vector<Geometry> &NodeResource::GetGeometries()
-{
-    return geometries;
-}
-vector<Light> &NodeResource::GetLights()
+vector<Light> &Node::GetLights()
 {
     return lights;
 }
-void NodeResource::Render()
+void Node::Render()
 {
-    if (parent)
-        SetWorldTransformation(GetParent()->GetWorldTransformation()*GetLocalTransformation());
-    else
-        SetWorldTransformation(GetLocalTransformation());
     /*for (vector<Model>::iterator i=attachedModels.begin();i!=attachedModels.end();i++)
     {
     	sceneGraph->renderingQueue.push_back(make_pair(worldTransformation,*i));
@@ -260,10 +226,10 @@ void NodeResource::Render()
     {
     	sceneGraph->activeLights.push_back(make_pair(worldTransformation,*i));
     }*/
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
         (*i)->Render();
 }
-Node NodeResource::AddChild(Node node)
+NodePtr Node::AddChild(NodePtr node)
 {
     children.push_back(node);
     if (node->GetParent())
@@ -271,7 +237,7 @@ Node NodeResource::AddChild(Node node)
     node->parent = shared_from_this();
     return node;
 }
-void NodeResource::SetParent(Node parent)
+void Node::SetParent(NodePtr parent)
 {
     if (GetParent())
         GetParent()->RemoveChild(shared_from_this());
@@ -279,169 +245,282 @@ void NodeResource::SetParent(Node parent)
     if (parent)
         parent->children.push_back(shared_from_this());
 }
-Node NodeResource::GetChild(const string &name)
+NodePtr Node::GetChild(const string &name)
 {
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
         if ((*i)->GetName() == name)
             return *i;
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
     {
-        Node ret = (*i)->GetChild(name);
+        NodePtr ret = (*i)->GetChild(name);
         if (ret)
             return ret;
     }
-    return Node();
+    return NodePtr();
 }
-Node NodeResource::RemoveChild(Node node)
+NodePtr Node::RemoveChild(NodePtr node)
 {
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
         if ((*i) == node)
         {
             children.erase(i);
             return node;
         }
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
     {
-        Node ret = (*i)->RemoveChild(node);
+        NodePtr ret = (*i)->RemoveChild(node);
         if (ret)
             return ret;
     }
-    return Node();
+    return NodePtr();
 }
-Node NodeResource::RemoveChild(const string &name)
+NodePtr Node::RemoveChild(const string &name)
 {
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
         if ((*i)->GetName() == name)
         {
-            Node ret = *i;
+            NodePtr ret = *i;
             children.erase(i);
             return ret;
         }
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
     {
-        Node ret = (*i)->RemoveChild(name);
+        NodePtr ret = (*i)->RemoveChild(name);
         if (ret)
             return ret;
     }
-    return Node();
+    return NodePtr();
 }
-vector<Node> &NodeResource::GetChildren()
+vector<NodePtr> &Node::GetChildren()
 {
     return children;
 }
-void NodeResource::CreateHardNormals()
+void Node::CreateHardNormals()
 {
-    for (vector<Geometry>::iterator i = GetGeometries().begin(); i != GetGeometries().end(); i++)
-        (*i)->CreateHardNormals();
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    if (geometry)
+        geometry->CreateHardNormals();
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
     {
         (*i)->CreateHardNormals();
     }
 }
-RenderParameters &NodeResource::GetRenderParameters()
+RenderParameters &Node::GetRenderParameters()
 {
     return renderParameters;
 }
-void NodeResource::SetProgram(Program program)
+void Node::SetProgram(ProgramPtr program)
 {
     renderParameters.program = program;
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
     {
         (*i)->SetProgram(program);
     }
 }
-Program NodeResource::GetProgram()
+ProgramPtr Node::GetProgram() const
 {
     return renderParameters.program;
 }
-void NodeResource::SetTechnique(const string &name)
+void Node::SetTechnique(const string &name)
 {
     renderParameters.technique = Renderer::GetTechnique(name);
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
     {
         (*i)->SetTechnique(name);
     }
 }
-Technique NodeResource::GetTechnique() const
+TechniquePtr Node::GetTechnique() const
 {
     return renderParameters.technique;
 }
-void NodeResource::SetLighting(bool enabled)
+void Node::SetLighting(bool enabled)
 {
     renderParameters.lighting = enabled;
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
     {
         (*i)->SetLighting(enabled);
     }
 }
-bool NodeResource::GetLighting()
+bool Node::GetLighting() const
 {
     return renderParameters.lighting;
 }
-void NodeResource::SetFog(bool enabled)
+void Node::SetFog(bool enabled)
 {
     renderParameters.fog = enabled;
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
     {
         (*i)->SetFog(enabled);
     }
 }
-bool NodeResource::GetFog()
+bool Node::GetFog() const
 {
     return renderParameters.fog;
 }
-void NodeResource::SetFogColor(vec4 color)
+void Node::SetFogColor(const vec4 &color)
 {
     renderParameters.fogColor = color;
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
     {
         (*i)->SetFogColor(color);
     }
 }
-vec4 NodeResource::GetFogColor()
+vec4 Node::GetFogColor() const
 {
     return renderParameters.fogColor;
 }
-void NodeResource::SetFogDensity(float density)
+void Node::SetFogDensity(float density)
 {
     renderParameters.fogDensity = density;
-    for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
     {
         (*i)->SetFogDensity(density);
     }
 }
-float NodeResource::GetFogDensity()
+float Node::GetFogDensity() const
 {
     return renderParameters.fogDensity;
 }
-Node NodeResource::Clone()
+NodePtr Node::Clone() const
 {
-	Node ret(new NodeResource);
-	ret->geometries = geometries;
-	ret->lights = lights;
-	ret->localBoundingBox = localBoundingBox;
-	ret->matTransform = matTransform;
-	ret->name = name;
-	ret->renderParameters = renderParameters;
-	ret->rotation = rotation;
-	ret->scale = scale;
-	ret->transformation = transformation;
-	ret->transformationChanged = transformationChanged;
-	ret->translation = translation;
-	ret->worldBoundingBox = worldBoundingBox;
-	ret->worldTransformation = worldTransformation;	
-	for (vector<Node>::iterator i = children.begin(); i != children.end(); i++)
-	{
-		Node c=(*i)->Clone();
-		c->SetParent(ret);
-	}
-	return ret;
+    NodePtr ret(new Node);
+    ret->geometry = geometry;
+    ret->lights = lights;
+    ret->matTransform = matTransform;
+    ret->name = name;
+    ret->renderParameters = renderParameters;
+    ret->translation = translation;
+    ret->rotation = rotation;
+    ret->scale = scale;
+    ret->localTransformation = localTransformation;
+    ret->localTransformationChanged = localTransformationChanged;
+    ret->worldTransformation = worldTransformation;
+    ret->worldTransformationChanged = worldTransformationChanged;
+    ret->worldBoundingBox = worldBoundingBox;
+    ret->worldBoundingBoxChanged = worldBoundingBoxChanged;
+    for (vector<NodePtr>::const_iterator i = children.begin(); i != children.end(); i++)
+    {
+        NodePtr c = (*i)->Clone();
+        c->SetParent(ret);
+    }
+    return ret;
 }
-Node FIRECUBE_API FireCube::LoadMesh(const string &filename)
+void Node::SetTransformationChanged()
+{
+    worldTransformationChanged = true;
+    localTransformationChanged = true;
+    SetBoundingBoxChanged();
+    for (unsigned int i = 0; i < children.size(); i++)
+    {
+        children[i]->SetTransformationChanged();
+    }
+}
+void Node::UpdateWorldTransformation()
+{
+    if (!worldTransformationChanged)
+        return;
+
+    if (parent)
+    {
+        worldTransformation = parent->GetWorldTransformation() * GetLocalTransformation();
+        worldTransformationChanged = false;
+    }
+    else
+    {
+        worldTransformation = GetLocalTransformation();
+        worldTransformationChanged = false;
+    }
+}
+void Node::SetBoundingBoxChanged()
+{
+    worldBoundingBoxChanged = true;
+    worldBoundingBoxRenderingChanged = true;
+    NodePtr p = parent;
+    while (p)
+    {
+        if (p->worldBoundingBoxChanged)
+            break;
+        p->worldBoundingBoxChanged = true;
+        p->worldBoundingBoxRenderingChanged = true;
+        p = p->parent;
+    }
+}
+void Node::UpdateWorldBoundingBox()
+{
+    if (!worldBoundingBoxChanged)
+        return;
+
+    worldBoundingBox = BoundingBox();
+    if (geometry)
+    {
+        worldBoundingBox = geometry->GetBoundingBox();
+        worldBoundingBox.Transform(GetWorldTransformation());
+    }
+    for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+    {
+        worldBoundingBox.Expand((*i)->GetWorldBoundingBox());
+    }    
+    worldBoundingBoxChanged = false;
+}
+BoundingBox Node::GetWorldBoundingBox()
+{
+    UpdateWorldBoundingBox();
+    return worldBoundingBox;
+}
+void Node::RenderBoundingBox(MaterialPtr material, ProgramPtr program, bool onlyWithGeometry)
+{
+    if (!onlyWithGeometry || (onlyWithGeometry && geometry))
+    {
+        PrepareRenderBoundingBox();
+        bboxVBuffer->SetVertexStream(3);
+        bboxIBuffer->SetIndexStream();
+        Renderer::UseProgram(program);
+        Renderer::UseMaterial(material);
+        Renderer::RenderIndexStream(LINES, 24);
+    }
+
+    for (unsigned int i = 0; i < children.size(); i++)
+        children[i]->RenderBoundingBox(material, program, onlyWithGeometry);
+}
+void Node::PrepareRenderBoundingBox()
+{
+    if (!worldBoundingBoxRenderingChanged)
+        return;
+
+    if (!bboxVBuffer)
+    {
+        bboxVBuffer = BufferPtr(new Buffer);
+        bboxVBuffer->Create();
+    }
+    if (!bboxIBuffer)
+    {
+        bboxIBuffer = BufferPtr(new Buffer);
+        bboxIBuffer->Create();
+    }
+    BoundingBox bbox = GetWorldBoundingBox();
+    float w = bbox.GetWidth();
+    float h = bbox.GetHeight();
+    float d = bbox.GetDepth();
+    vec3 v[8] = {bbox.GetMin(),
+                 bbox.GetMin() + vec3(w, 0, 0),
+                 bbox.GetMin() + vec3(w, 0, d),
+                 bbox.GetMin() + vec3(0, 0, d),
+                 bbox.GetMin() + vec3(0, h, 0),
+                 bbox.GetMin() + vec3(w, h, 0),
+                 bbox.GetMin() + vec3(w, h, d),
+                 bbox.GetMin() + vec3(0, h, d)
+                };
+    unsigned int i[12 * 2] = {0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7};
+
+
+    bboxVBuffer->LoadData(v, sizeof(vec3) * 8, STREAM);
+    bboxIBuffer->LoadIndexData(i, 24, STREAM);
+    worldBoundingBoxRenderingChanged = false;
+}
+NodePtr FIRECUBE_API FireCube::LoadMesh(const string &filename)
 {
     string file = Filesystem::SearchForFileName(filename);
     if (file.empty())
-        return Node();
+        return NodePtr();
     string::size_type d;
     d = filename.find_last_of(".");
     //name=filename;
@@ -460,7 +539,7 @@ Node FIRECUBE_API FireCube::LoadMesh(const string &filename)
                 return m3dsLoader.GenerateSceneGraph();
             }
             else
-                return Node();
+                return NodePtr();
         }
         if (ext == "dae")
         {
@@ -471,8 +550,13 @@ Node FIRECUBE_API FireCube::LoadMesh(const string &filename)
                 return colladaLoader.GenerateSceneGraph();
             }
             else
-                return Node();
+                return NodePtr();
         }
     }
-    return Node();
+    return NodePtr();
+}
+
+vec3 Node::GetWorldPosition()
+{
+	return GetWorldTransformation() * vec3(0.0f, 0.0f, 0.0f);
 }

@@ -16,11 +16,11 @@ using namespace std;
 
 using namespace FireCube;
 
-BufferResource::BufferResource() : id(0)
+Buffer::Buffer() : id(0)
 {
 
 }
-BufferResource::~BufferResource()
+Buffer::~Buffer()
 {
     ostringstream ss;
     ss << "Destroyed buffer with id=" << id;
@@ -29,14 +29,14 @@ BufferResource::~BufferResource()
     id = 0;
 }
 
-void BufferResource::Create()
+void Buffer::Create()
 {
     glGenBuffers(1, &id);
     ostringstream ss;
     ss << "Created buffer with id=" << id;
     Logger::Write(Logger::LOG_INFO, ss.str());
 }
-bool BufferResource::LoadIndexData(void *data, unsigned int count, BufferType bt)
+bool Buffer::LoadIndexData(void *data, unsigned int count, BufferType bt)
 {
     GLenum e;
     if (bt == STREAM)
@@ -52,7 +52,7 @@ bool BufferResource::LoadIndexData(void *data, unsigned int count, BufferType bt
         return false;
     return true;
 }
-bool BufferResource::LoadData(void *data, unsigned int size, BufferType bt)
+bool Buffer::LoadData(void *data, unsigned int size, BufferType bt)
 {
     GLenum e;
     if (bt == STREAM)
@@ -68,19 +68,19 @@ bool BufferResource::LoadData(void *data, unsigned int size, BufferType bt)
         return false;
     return true;
 }
-void BufferResource::SetVertexStream(int numCoords)
+void Buffer::SetVertexStream(int numCoords)
 {
     glEnableClientState(GL_VERTEX_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, id);
     glVertexPointer(numCoords, GL_FLOAT, 0, 0);
 }
-void BufferResource::SetNormalStream()
+void Buffer::SetNormalStream()
 {
     glEnableClientState(GL_NORMAL_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, id);
     glNormalPointer(GL_FLOAT, 0, 0);
 }
-void BufferResource::SetTexCoordStream(unsigned int unit)
+void Buffer::SetTexCoordStream(unsigned int unit)
 {
     glClientActiveTexture(GL_TEXTURE0 + unit);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -88,25 +88,25 @@ void BufferResource::SetTexCoordStream(unsigned int unit)
     glTexCoordPointer(2, GL_FLOAT, 0, 0);
 }
 
-void BufferResource::SetColorStream()
+void Buffer::SetColorStream()
 {
     glEnableClientState(GL_COLOR_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, id);
     glColorPointer(3, GL_FLOAT, 0, 0);
 }
-void BufferResource::SetIndexStream()
+void Buffer::SetIndexStream()
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 }
-void BufferResource::Bind()
+void Buffer::Bind()
 {
     glBindBuffer(GL_ARRAY_BUFFER, id);
 }
-bool BufferResource::IsValid()
+bool Buffer::IsValid() const
 {
     return id != 0;
 }
-void BufferResource::Destroy()
+void Buffer::Destroy()
 {
     ostringstream ss;
     ss << "Destroyed buffer with id=" << id;
@@ -114,7 +114,7 @@ void BufferResource::Destroy()
     glDeleteBuffers(1, &id);
     id = 0;
 }
-unsigned int BufferResource::GetId() const
+unsigned int Buffer::GetId() const
 {
     return id;
 }

@@ -10,11 +10,13 @@ static inline vec3 proj(const vec3 & v1, const vec3 & v2);
 class FIRECUBE_API mat3
 {
 public:
-    /**
-    * Initializes the matrix to the identity matrix.
+    
+	/**
+    * Constructs a matrix.
     */
-    mat3() {
-        Identity();
+    mat3() 
+	{
+
     }
 
     /**
@@ -84,32 +86,32 @@ public:
     /**
     * Adds two matrices.
     */
-    inline mat3 operator+(mat3 &src);
+    inline mat3 operator+(const mat3 &src) const;
 
     /**
     * Subtracts two matrices.
     */
-    inline mat3 operator-(mat3 &src);
+    inline mat3 operator-(const mat3 &src) const;
 
     /**
     * Adds two matrices and assign to this one.
     */
-    inline void operator+=(mat3 &src);
+    inline void operator+=(const mat3 &src);
 
     /**
     * Subtracts two matrices and assign to this one.
     */
-    inline void operator-=(mat3 &src);
+    inline void operator-=(const mat3 &src);
 
     /**
     * Multiplies two matrices.
     */
-    mat3 operator*(mat3 &src);
+    mat3 operator*(const mat3 &src) const;
 
     /**
     * Multiplies two matrices and assign to this one.
     */
-    void operator*=(mat3 &src);
+    void operator*=(const mat3 &src);
 
     /**
     * Gets an element in the matrix.
@@ -166,12 +168,12 @@ public:
     /**
     * Returns the direction of the look at vector.
     */
-    vec3 GetDir();
+    vec3 GetDir() const;
 
     /**
     * Converts to a mat4 by complementing to a 4x4 identity matrix.
     */
-    mat4 ToMat4();
+    mat4 ToMat4() const;
 
     /**
     * Orthonormalizes the matrix.
@@ -195,25 +197,32 @@ public:
     */
     inline void SetCol(unsigned int i, const vec3 & col);
 
+	/**
+	* Extract the Euler angles for this matrix.
+	* @return A vector containing the three angles of rotation.
+	*/
+	vec3 ExtractEulerAngles() const;
+
     /**
     * The elements of the matrix;
     */
     float m[9];
+
+	/**
+	* A 3x3 identity matrix.
+	*/
+	static const mat3 identity;
 };
-/**
-* Transposes a matrix.
-*/
-mat3 FIRECUBE_API Transpose(const mat3 mat);
 
 /**
 * Multiplies a matrix with a scalar.
 */
-mat3 FIRECUBE_API operator*(const mat3 &a, const float &b);
+mat3 FIRECUBE_API operator*(const mat3 &a, float b);
 
 /**
 * Multiplies a matrix with a scalar.
 */
-mat3 FIRECUBE_API operator*(const float &a, const mat3 &b);
+mat3 FIRECUBE_API operator*(float a, const mat3 &b);
 
 /**
 * Multiplies a matrix with a vector.

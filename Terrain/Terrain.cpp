@@ -8,7 +8,7 @@ using namespace FireCube;
 
 Terrain::Terrain()
 {
-    material = Material(new MaterialResource);
+    material = MaterialPtr(new Material);
     material->SetAmbientColor(vec4(0.2f, 0.2f, 0.2f, 1.0f));
     material->SetDiffuseColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));
 }
@@ -22,11 +22,11 @@ bool Terrain::GenerateTerrain(const string &heightmap, const string &diffuse, ve
     diffuseTexture = Renderer::GetTextureManager().Create(diffuse);
     diffuseTexture->SetFiltering(NEAREST, NEAREST);
     terrainScale = sizeVertices;
-    program = Program(new ProgramResource);
+    program = ProgramPtr(new Program);
     program->Create(Renderer::GetShaderManager().Create("terrain.vert"), Renderer::GetShaderManager().Create("terrain.frag"));
-    vertexBuffer = Buffer(new BufferResource);
-    normalBuffer = Buffer(new BufferResource);
-    uvBuffer = Buffer(new BufferResource);
+    vertexBuffer = BufferPtr(new Buffer);
+    normalBuffer = BufferPtr(new Buffer);
+    uvBuffer = BufferPtr(new Buffer);
     normalBuffer->Create();
     vertexBuffer->Create();
     uvBuffer->Create();
@@ -37,14 +37,14 @@ bool Terrain::GenerateTerrain(const string &heightmap, const string &diffuse, ve
     vector<float> vertex((width - 1) * (height - 1) * 2 * 3 * 3);
     vector<float> normal((width - 1) * (height - 1) * 2 * 3 * 3);
     vector<float> uv((width - 1) * (height - 1) * 2 * 3 * 2);
-    DWORD currentIndex = 0;
-    DWORD normalCurrentIndex = 0;
-    DWORD uvCurrentIndex = 0;
+    unsigned int currentIndex = 0;
+    unsigned int normalCurrentIndex = 0;
+    unsigned int uvCurrentIndex = 0;
     vec2 verticesDiff(1.0f / (float)(width - 1)*sizeVertices.x, 1.0f / (float)(height - 1)*sizeVertices.z);
     vec2 uvDiff(1.0f / (float)(width - 1)*sizeUv.x, 1.0f / (float)(height - 1)*sizeUv.y);
-    for (DWORD y = 0; y < height - 1; y++)
+    for (unsigned int y = 0; y < height - 1; y++)
     {
-        for (DWORD x = 0; x < width - 1; x++)
+        for (unsigned int x = 0; x < width - 1; x++)
         {
             vertex[currentIndex++] = (float)x * verticesDiff.x;
             vertex[currentIndex++] = heightmapImage.GetPixel(x, y).x * sizeVertices.y;
@@ -162,7 +162,7 @@ bool Terrain::GenerateTerrain(const string &heightmap, const string &diffuse, ve
 
     return true;
 }
-DWORD Terrain::Render(Frustum &frustum)
+unsigned int Terrain::Render(Frustum &frustum)
 {
     Renderer::UseMaterial(material);
     vertexBuffer->SetVertexStream(3);

@@ -16,7 +16,7 @@ namespace GeometryGenerator
 * @param size The extents of the box.
 * @return The generated geometry.
 */
-Geometry FIRECUBE_API GenerateBox(vec3 size);
+GeometryPtr FIRECUBE_API GenerateBox(const vec3 &size);
 
 /**
 * Generates a box.
@@ -24,7 +24,7 @@ Geometry FIRECUBE_API GenerateBox(vec3 size);
 * @param material The material to assign to the geometry.
 * @return The generated geometry.
 */
-Geometry FIRECUBE_API GenerateBox(vec3 size, Material material);
+GeometryPtr FIRECUBE_API GenerateBox(const vec3 &size, MaterialPtr material);
 
 /**
 * Generates a sphere.
@@ -33,7 +33,7 @@ Geometry FIRECUBE_API GenerateBox(vec3 size, Material material);
 * @param columns The number of columns in the sphere.
 * @return The generated geometry.
 */
-Geometry FIRECUBE_API GenerateSphere(float radius, unsigned int rings, unsigned int columns);
+GeometryPtr FIRECUBE_API GenerateSphere(float radius, unsigned int rings, unsigned int columns);
 
 /**
 * Generates a sphere.
@@ -43,14 +43,14 @@ Geometry FIRECUBE_API GenerateSphere(float radius, unsigned int rings, unsigned 
 * @param material The material to assign to the geometry.
 * @return The generated geometry.
 */
-Geometry FIRECUBE_API GenerateSphere(float radius, unsigned int rings, unsigned int columns, Material material);
+GeometryPtr FIRECUBE_API GenerateSphere(float radius, unsigned int rings, unsigned int columns, MaterialPtr material);
 
 /**
 * Generates a plane.
 * @param size The extents of the plane.
 * @return The generated geometry.
 */
-Geometry FIRECUBE_API GeneratePlane(vec2 size);
+GeometryPtr FIRECUBE_API GeneratePlane(const vec2 &size);
 
 /**
 * Generates a plane.
@@ -58,7 +58,7 @@ Geometry FIRECUBE_API GeneratePlane(vec2 size);
 * @param material The material to assign to the geometry.
 * @return The generated geometry.
 */
-Geometry FIRECUBE_API GeneratePlane(vec2 size, Material material);
+GeometryPtr FIRECUBE_API GeneratePlane(const vec2 &size, MaterialPtr material);
 }
 }
 #pragma warning(pop)

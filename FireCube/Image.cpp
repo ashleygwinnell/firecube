@@ -53,15 +53,15 @@ bool Image::Load(const string &filename)
     }
     return false;
 }
-int Image::GetWidth()
+int Image::GetWidth() const
 {
     return width;
 }
-int Image::GetHeight()
+int Image::GetHeight() const
 {
     return height;
 }
-int Image::GetBPP()
+int Image::GetBPP() const
 {
     return bpp;
 }
@@ -69,23 +69,23 @@ vector<unsigned char> &Image::GetPixels()
 {
     return data;
 }
-vec4 Image::GetPixel(int x, int y)
+vec4 Image::GetPixel(int x, int y) const
 {
-    if (bpp == 8)
-    {
-        return vec4(GetPixels()[y * width * bpp / 8 + x * bpp / 8 + 0], 0.0f, 0.0f, 1.0f) / 255.0f;
-    }
-    else if (bpp == 16)
-    {
-        return vec4(GetPixels()[y * width * bpp / 8 + x * bpp / 8 + 0], GetPixels()[y * width * bpp / 8 + x * bpp / 8 + 1], 0.0f, 1.0f) / 255.0f;
-    }
-    else if (bpp == 24)
-    {
-        return vec4(GetPixels()[y * width * bpp / 8 + x * bpp / 8 + 0], GetPixels()[y * width * bpp / 8 + x * bpp / 8 + 1], GetPixels()[y * width * bpp / 8 + x * bpp / 8 + 2], 1.0f) / 255.0f;
-    }
-    else if (bpp == 32)
-    {
-        return vec4(GetPixels()[y * width * bpp / 8 + x * bpp / 8 + 0], GetPixels()[y * width * bpp / 8 + x * bpp / 8 + 1], GetPixels()[y * width * bpp / 8 + x * bpp / 8 + 2], GetPixels()[y * width * bpp / 8 + x * bpp / 8 + 3]) / 255.0f;
-    }
-    return vec4();
+	if (bpp == 8)
+	{
+		return vec4(data[y * width * bpp / 8 + x * bpp / 8 + 0], 0.0f, 0.0f, 1.0f) / 255.0f;
+	}
+	else if (bpp == 16)
+	{
+		return vec4(data[y * width * bpp / 8 + x * bpp / 8 + 0], data[y * width * bpp / 8 + x * bpp / 8 + 1], 0.0f, 1.0f) / 255.0f;
+	}
+	else if (bpp == 24)
+	{
+		return vec4(data[y * width * bpp / 8 + x * bpp / 8 + 0], data[y * width * bpp / 8 + x * bpp / 8 + 1], data[y * width * bpp / 8 + x * bpp / 8 + 2], 1.0f) / 255.0f;
+	}
+	else if (bpp == 32)
+	{
+		return vec4(data[y * width * bpp / 8 + x * bpp / 8 + 0], data[y * width * bpp / 8 + x * bpp / 8 + 1], data[y * width * bpp / 8 + x * bpp / 8 + 2], data[y * width * bpp / 8 + x * bpp / 8 + 3]) / 255.0f;
+	}
+	return vec4();
 }

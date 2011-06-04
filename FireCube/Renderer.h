@@ -11,41 +11,36 @@ namespace FireCube
 template<class T>
 class ResourceManager;
 class Application;
-class NodeResource;
-typedef boost::shared_ptr<NodeResource> Node;
-class GeometryResource;
-typedef boost::shared_ptr<GeometryResource> Geometry;
+class Node;
+typedef boost::shared_ptr<Node> NodePtr;
+class Geometry;
+typedef boost::shared_ptr<Geometry> GeometryPtr;
 class RenderQueue;
-class MaterialResource;
-typedef boost::shared_ptr<MaterialResource> Material;
-class FrameBufferResource;
-typedef boost::shared_ptr<FrameBufferResource> FrameBuffer;
-class ShaderResource;
-typedef ResourceManager<ShaderResource> ShaderManager;
-class ProgramResource;
-typedef boost::shared_ptr<ProgramResource> Program;
-class TechniqueResource;
-typedef boost::shared_ptr<TechniqueResource> Technique;
+class Material;
+typedef boost::shared_ptr<Material> MaterialPtr;
+class FrameBuffer;
+typedef boost::shared_ptr<FrameBuffer> FrameBufferPtr;
+class Shader;
+typedef ResourceManager<Shader> ShaderManager;
+class Program;
+typedef boost::shared_ptr<Program> ProgramPtr;
+class Technique;
+typedef boost::shared_ptr<Technique> TechniquePtr;
 class ProgramUniformsList;
-class TextureResource;
-typedef boost::shared_ptr<TextureResource> Texture;
-typedef ResourceManager<TextureResource> TextureManager;
-class FontResource;
-typedef boost::shared_ptr<FontResource> Font;
+class Texture;
+typedef boost::shared_ptr<Texture> TexturePtr;
+typedef ResourceManager<Texture> TextureManager;
+class Font;
+typedef boost::shared_ptr<Font> FontPtr;
 class FontManager;
 class vec2;
 class vec3;
 class vec4;
 class mat3;
 class mat4;
-
-/**
-* Specifies the kind of primitives to render.
-*/
-enum RenderMode
-{
-	POINTS, LINES, TRIANGLES, TRIANGLE_STRIP, QUADS, LINE_LOOP, TRIANGLE_FAN
-};
+class Camera;
+typedef boost::shared_ptr<Camera> CameraPtr;
+enum PrimitiveType;
 
 /**
 * A class storing information about rendering properties.
@@ -53,15 +48,15 @@ enum RenderMode
 */
 class FIRECUBE_API RenderState
 {
-    friend class TechniqueResource;
+    friend class Technique;
 public:
     RenderState();
 
     /**
-    * Generates the rendering from a material.
+    * Generates the rendering state from a material.
     * @param mat The material to generate the state from.
     */
-    void FromMaterial(Material mat);
+    void FromMaterial(MaterialPtr mat);
 
     /**
     * Sets whether directional lighting should be used.
@@ -102,13 +97,14 @@ class FIRECUBE_API RenderParameters
 public:
     /**
     * The program used for rendering.
+	* Can be an empty program. If so the technique is used to generate one.
     */
-    Program program;
+    ProgramPtr program;
 
     /**
     * The technique used for rendering.
     */
-    Technique technique;
+    TechniquePtr technique;
 
     /**
     * Specifies whether dynamic lighting is enabled.
@@ -141,19 +137,19 @@ namespace Renderer
 * @param color The color to clear the framebuffer.
 * @param depth The depth to set the depth buffer.
 */
-void FIRECUBE_API Clear(vec4 color, float depth);
+void FIRECUBE_API Clear(const vec4 &color, float depth);
 
 /**
 * Renders a geometry.
 * @param geometry The geometry to render.
 */
-void FIRECUBE_API Render(Geometry geometry);
+void FIRECUBE_API Render(GeometryPtr geometry);
 
 /**
 * Renders a scene node.
 * @param node The node to render.
 */
-void FIRECUBE_API Render(Node node);
+void FIRECUBE_API Render(NodePtr node);
 
 /**
 * Renders a render queue.
@@ -167,7 +163,7 @@ void FIRECUBE_API Render(RenderQueue &renderQueue);
 * @param techniqueName The name of the technique.
 * @param programUniformsList A list of values to assign to uniform variables of generated programs.
 */
-void FIRECUBE_API Render(Node node, const std::string &techniqueName, ProgramUniformsList &programUniformsList);
+void FIRECUBE_API Render(Node nodePtr, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
 
 /**
 * Renders a render queue using a specified technique.
@@ -175,23 +171,23 @@ void FIRECUBE_API Render(Node node, const std::string &techniqueName, ProgramUni
 * @param techniqueName The name of the technique.
 * @param programUniformsList A list of values to assign to uniform variables of generated programs.
 */
-void FIRECUBE_API Render(RenderQueue &renderQueue, const std::string &techniqueName, ProgramUniformsList &programUniformsList);
+void FIRECUBE_API Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
 
 
 /**
 * Sets the current modelview matrix.
 */
-void FIRECUBE_API SetModelViewMatrix(mat4 &m);
+void FIRECUBE_API SetModelViewMatrix(const mat4 &m);
 
 /**
 * Sets the current projection matrix.
 */
-void FIRECUBE_API SetProjectionMatrix(mat4 &m);
+void FIRECUBE_API SetProjectionMatrix(const mat4 &m);
 
 /**
 * Sets the a texture matrix.
 */
-void FIRECUBE_API SetTextureMatrix(mat4 &m, int unit);
+void FIRECUBE_API SetTextureMatrix(const mat4 &m, int unit);
 
 /**
 * Returns the current modelview matrix.
@@ -226,14 +222,14 @@ void FIRECUBE_API RestoreProjectionMatrix();
 /**
 * Multiplies the current modelview matrix by a given matrix.
 */
-void FIRECUBE_API MultiplyModelViewMatrix(mat4 &mat);
+void FIRECUBE_API MultiplyModelViewMatrix(const mat4 &mat);
 
 /**
 * Binds the specified texture.
 * @param tex The texture to bind
 * @param unit Specifies the texture unit.
 */
-void FIRECUBE_API UseTexture(Texture tex, unsigned int unit);
+void FIRECUBE_API UseTexture(TexturePtr tex, unsigned int unit);
 
 /**
 * Renders text.
@@ -242,21 +238,21 @@ void FIRECUBE_API UseTexture(Texture tex, unsigned int unit);
 * @param color The color of the text.
 * @param str The string to output.
 */
-void FIRECUBE_API RenderText(Font font, vec3 pos, vec4 color, const std::string &str);
+void FIRECUBE_API RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const std::string &str);
 
 /**
 * Renders an index stream.
-* @param mode The rendering mode.
+* @param primitiveType The primitive type.
 * @param count The number of indices to render.
 */
-void FIRECUBE_API RenderIndexStream(RenderMode mode, unsigned int count);
+void FIRECUBE_API RenderIndexStream(const PrimitiveType &primitiveType, unsigned int count);
 
 /**
 * Renders a stream.
-* @param mode The rendering mode.
+* @param primitiveType The primitive type.
 * @param count The number of indices to render.
 */
-void FIRECUBE_API RenderStream(RenderMode mode, unsigned int count);
+void FIRECUBE_API RenderStream(const PrimitiveType &primitiveType, unsigned int count);
 
 /**
 * Disables a texture coordinates stream.
@@ -273,19 +269,19 @@ void FIRECUBE_API DisableNormalStream();
 * Uses a program.
 * @param program The program to use.
 */
-void FIRECUBE_API UseProgram(Program program);
+void FIRECUBE_API UseProgram(ProgramPtr program);
 
 /**
 * Uses a material.
 * @param material The material to use.
 */
-void FIRECUBE_API UseMaterial(Material material);
+void FIRECUBE_API UseMaterial(MaterialPtr material);
 
 /**
 * Uses a frame buffer.
 * @param frameBuffer The frame buffer to use.
 */
-void FIRECUBE_API UseFrameBuffer(FrameBuffer frameBuffer);
+void FIRECUBE_API UseFrameBuffer(FrameBufferPtr frameBuffer);
 
 /**
 * Restores the default render buffer.
@@ -315,13 +311,13 @@ void FIRECUBE_API SetOrthographicProjection();
 * @param name The name of the technique.
 * @param technique The technique to associate with name.
 */
-void FIRECUBE_API AddTechnique(const std::string &name, Technique technique);
+void FIRECUBE_API AddTechnique(const std::string &name, TechniquePtr technique);
 
 /**
 * Get a technique by name.
 * @param name The name of the technique.
 */
-Technique FIRECUBE_API GetTechnique(const std::string &name);
+TechniquePtr FIRECUBE_API GetTechnique(const std::string &name);
 
 /**
 * Removes a technique.
@@ -329,6 +325,22 @@ Technique FIRECUBE_API GetTechnique(const std::string &name);
 */
 void FIRECUBE_API RemoveTechnique(const std::string &name);
 
+/**
+* Sets the current camera.
+* @param camera The camera to set.
+*/
+void FIRECUBE_API SetCamera(CameraPtr camera);
+
+/**
+* gets the current camera.
+* @return The current camera.
+*/
+CameraPtr FIRECUBE_API GetCamera();
+
+/**
+* Returns the number of triangles that were in the current frame.
+*/
+unsigned int FIRECUBE_API GetNumberOfTrianglesRendered();
 /**
 * Sets the current texture manager.
 */

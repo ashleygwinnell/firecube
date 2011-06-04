@@ -20,7 +20,7 @@ using namespace std;
 #include <gl/gl.h>
 #include <FireCube.h>
 #include <wx/glcanvas.h>
-#include "MyGlCanvas.h"
+#include "GlCanvas.h"
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
@@ -40,6 +40,7 @@ using namespace std;
 #include <wx/choicebk.h>
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
+#include <wx/treectrl.h>
 #include <wx/notebook.h>
 #include <wx/menu.h>
 #include <wx/statusbr.h>
@@ -56,10 +57,13 @@ class MainFrame : public wxFrame
 	private:
 	
 	protected:
+		GLCanvas *glCanvas;
 		wxNotebook* notebook1;
 		wxPanel* panel1;
 		wxStaticText* staticText1;
+		wxTextCtrl* textCtrl1;
 		wxStaticText* staticText2;
+		wxTextCtrl* textCtrl2;
 		wxPanel* panel2;
 		wxChoicebook* m_choicebook1;
 		wxPanel* panel3;
@@ -82,10 +86,14 @@ class MainFrame : public wxFrame
 		wxPanel* panel4;
 		wxButton* button2;
 		wxPanel* panel5;
+		wxPropertyGrid *propertyGrid1;
+		wxPanel* panel10;
+		wxTreeCtrl* treeCtrl2;
 		wxMenuBar* menuBar;
 		wxMenu* menu1;
 		wxMenu* menu2;
 		wxMenu* menu3;
+		wxStatusBar* statusBar1;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void CheckBox2Clicked( wxCommandEvent& event ) { event.Skip(); }
@@ -108,11 +116,6 @@ class MainFrame : public wxFrame
 		
 	
 	public:
-		MyGLCanvas *glCanvas;
-		wxTextCtrl* textCtrl1;
-		wxTextCtrl* textCtrl2;
-		wxPropertyGrid *propertyGrid1;
-		wxStatusBar* statusBar1;
 		
 		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("ModelViewer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 918,764 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~MainFrame();

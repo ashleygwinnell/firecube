@@ -5,7 +5,7 @@ class RigidBody
 public:
     RigidBody();
     void CalculateWorldProperties();
-    void Init(Node m, CollisionShape *cs);
+    void Init(NodePtr m, CollisionShape *cs);
     bool GetPointInfo(vec3 pos, vec3 &dir, float &dist);
     void GetBoundingSphere(vec3 &pos, float &radius);
     void Render(mat4 transform);
@@ -30,7 +30,7 @@ public:
     vec3 torque;
 
     CollisionShape *collisionShape;
-    Node model;
+    NodePtr model;
     vector<vec3> worldVertices;
     vector<int> collisions;
 };

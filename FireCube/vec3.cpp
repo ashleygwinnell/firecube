@@ -22,19 +22,19 @@ vec3 FireCube::operator-(const vec3 &a, const vec3 &b)
 {
     return vec3(a.x - b.x, a.y - b.y, a.z - b.z);
 }
-vec3 FireCube::operator*(const vec3 &a, const float &b)
+vec3 FireCube::operator*(const vec3 &a, float b)
 {
     return vec3(a.x * b, a.y * b, a.z * b);
 }
-vec3 FireCube::operator*(const float &a, const vec3 &b)
+vec3 FireCube::operator*(float a, const vec3 &b)
 {
     return vec3(b.x * a, b.y * a, b.z * a);
 }
-vec3 FireCube::operator/(const vec3 &a, const float &b)
+vec3 FireCube::operator/(const vec3 &a, float b)
 {
 	return vec3(a.x / b, a.y / b, a.z / b);
 }
-vec3 FireCube::operator/(const float &a, const vec3 &b)
+vec3 FireCube::operator/(float a, const vec3 &b)
 {
 	return vec3(b.x / a, b.y / a, b.z / a);
 }
@@ -54,13 +54,13 @@ void vec3::operator+=(const vec3 &src)
     y += src.y;
     z += src.z;
 }
-void vec3::operator-=(vec3 &src)
+void vec3::operator-=(const vec3 &src)
 {
     x -= src.x;
     y -= src.y;
     z -= src.z;
 }
-void vec3::operator*=(vec3 &src)
+void vec3::operator*=(const vec3 &src)
 {
     x *= src.x;
     y *= src.y;
@@ -72,7 +72,7 @@ void vec3::operator*=(float val)
     y *= val;
     z *= val;
 }
-void vec3::operator/=(vec3 &src)
+void vec3::operator/=(const vec3 &src)
 {
     x /= src.x;
     y /= src.y;
@@ -151,7 +151,7 @@ void vec3::RotateZ(float ang)
     x = nx;
     y = ny;
 }
-vec3 vec3::operator*(mat4 &src)
+vec3 vec3::operator*(const mat4 &src) const
 {
     return vec3(x * src.m[0] + y * src.m[4] + z * src.m[8] + src.m[12], x * src.m[1] + y * src.m[5] + z * src.m[9] + src.m[13], x * src.m[2] + y * src.m[6] + z * src.m[10] + src.m[14]);
 }
@@ -164,14 +164,14 @@ void vec3::FromAngles(float angx, float angy)
     y = (float)sin(angx);
     z = -cosx * (float)cos(angy);
 }
-vec3 vec3::TransformCoordinate(mat4 m)
+vec3 vec3::TransformCoordinate(const mat4 &m) const
 {
     float w = x * m.m[3] + y * m.m[7] + z * m.m[11] + m.m[15];
     vec3 ret = vec3(x * m.m[0] + y * m.m[4] + z * m.m[8] + m.m[12], x * m.m[1] + y * m.m[5] + z * m.m[9] + m.m[13], x * m.m[2] + y * m.m[6] + z * m.m[10] + m.m[14]);
     ret /= w;
     return ret;
 }
-vec3 vec3::TransformNormal(mat4 m)
+vec3 vec3::TransformNormal(const mat4 &m) const
 {
     mat4 t = m;
     vec3 ret = vec3(x * t.m[0] + y * t.m[4] + z * t.m[8], x * t.m[1] + y * t.m[5] + z * t.m[9], x * t.m[2] + y * t.m[6] + z * m.m[10]);
@@ -188,11 +188,11 @@ inline bool vec3::Sensible() const
 
     return true;
 }
-vec2 vec3::ToVec2()
+vec2 vec3::ToVec2() const
 {
     return vec2(x, y);
 }
-vec4 vec3::ToVec4()
+vec4 vec3::ToVec4() const
 {
     return vec4(x, y, z, 0);
 }

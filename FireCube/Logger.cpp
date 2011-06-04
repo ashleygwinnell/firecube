@@ -22,11 +22,11 @@ bool outputToFile = true, outputToCout = true;
 
 char* levelNames[] = {"[DEBUG]", "[INFO]", "[TRACE]", "[WARNING]", "[ERROR]"};
 
-void Logger::Init(string filename)
+void Logger::Init(const string &filename)
 {
     file.open(filename.c_str(), ios::out | ios::trunc);
 }
-void Logger::Write(LogLevel level, std::string str)
+void Logger::Write(LogLevel level, const string &str)
 {
     if (level < minLevel)
         return;

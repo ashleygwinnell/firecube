@@ -9,22 +9,21 @@ namespace FireCube
 
 // Forward declarations.
 class RenderQueue;
-class GeometryResource;
-typedef boost::shared_ptr<GeometryResource> Geometry;
-class Surface;
-class MaterialResource;
-typedef boost::shared_ptr<MaterialResource> Material;
+class Geometry;
+typedef boost::shared_ptr<Geometry> GeometryPtr;
+class Material;
+typedef boost::shared_ptr<Material> MaterialPtr;
 class RenderParameters;
 class Light;
-class NodeResource;
-typedef boost::shared_ptr<NodeResource> Node;
-class ProgramResource;
-typedef boost::shared_ptr<ProgramResource> Program;
+class Node;
+typedef boost::shared_ptr<Node> NodePtr;
+class Program;
+typedef boost::shared_ptr<Program> ProgramPtr;
 
 namespace Renderer
 {
 void FIRECUBE_API Render(RenderQueue &renderQueue);
-void FIRECUBE_API Render(RenderQueue &renderQueue, const std::string &techniqueName, ProgramUniformsList &programUniformsList);
+void FIRECUBE_API Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
 }
 /**
 * A class storing information of a rendering job.
@@ -35,18 +34,8 @@ public:
     /**
     * The geometry of this job.
     */
-    Geometry geometry;
-
-    /**
-    * The surface of this job.
-    */
-    Surface *surface;
-
-    /**
-    * The material of this job.
-    */
-    Material material;
-
+    GeometryPtr geometry;
+    
     /**
     * The rendering parameters of this job.
     */
@@ -56,6 +45,11 @@ public:
     * The transformation to apply to this job.
     */
     mat4 transformation;
+
+	/**
+	* The program used to render this job.
+	*/
+	ProgramPtr program;
 };
 /**
 * A class storing a list of rendering jobs.
@@ -63,7 +57,7 @@ public:
 class FIRECUBE_API RenderQueue
 {
     friend void Renderer::Render(RenderQueue &renderQueue);
-	friend void Renderer::Render(RenderQueue &renderQueue, const std::string &techniqueName, ProgramUniformsList &programUniformsList);
+	friend void Renderer::Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
 public:
 
     /**
@@ -75,7 +69,20 @@ public:
     * Adds a node to the rendering queue.
     * @param node The node to enqueue.
     */
-    void AddNode(Node node);
+    void AddNode(NodePtr node);
+
+	/**
+    * Adds a node to the rendering queue.
+    * @param node The node to enqueue.
+	* @param camera The camera used to cull this node.
+    */
+    void AddNode(NodePtr node, CameraPtr camera);
+
+	/**
+	* Sorts the render queue to reduce state changes.
+	*/
+	void Sort();
+
 private:
     std::vector<RenderJob> renderJobs;
     std::vector<std::pair<mat4, Light>> activeLights;

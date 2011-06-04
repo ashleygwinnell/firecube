@@ -22,9 +22,9 @@ using namespace std;
 
 using namespace FireCube;
 
-Material CreateDefaultMaterial()
+MaterialPtr CreateDefaultMaterial()
 {
-    Material material(new MaterialResource);
+    MaterialPtr material(new Material);
     material->SetName("Default");
     material->SetAmbientColor(vec4(0.3f, 0.3f, 0.3f, 1.0f));
     material->SetDiffuseColor(vec4(0.7f, 0.7f, 0.7f, 1.0f));
@@ -33,16 +33,16 @@ Material CreateDefaultMaterial()
     return material;
 }
 
-Geometry FIRECUBE_API GeometryGenerator::GenerateBox(vec3 size, Material material)
+GeometryPtr FIRECUBE_API GeometryGenerator::GenerateBox(const vec3 &size, MaterialPtr material)
 {
-    Geometry ret(new GeometryResource);
-    size = size * 0.5f;
+    GeometryPtr ret(new Geometry);
+    vec3 halfSize = size * 0.5f;
 
     // Front
-    ret->GetVertices().push_back(vec3(-size.x, -size.y, size.z));
-    ret->GetVertices().push_back(vec3(size.x, -size.y, size.z));
-    ret->GetVertices().push_back(vec3(-size.x, size.y, size.z));
-    ret->GetVertices().push_back(vec3(size.x, size.y, size.z));
+    ret->GetVertices().push_back(vec3(-halfSize.x, -halfSize.y, halfSize.z));
+    ret->GetVertices().push_back(vec3(halfSize.x, -halfSize.y, halfSize.z));
+    ret->GetVertices().push_back(vec3(-halfSize.x, halfSize.y, halfSize.z));
+    ret->GetVertices().push_back(vec3(halfSize.x, halfSize.y, halfSize.z));
     ret->GetNormals().push_back(vec3(0, 0, 1));
     ret->GetNormals().push_back(vec3(0, 0, 1));
     ret->GetNormals().push_back(vec3(0, 0, 1));
@@ -56,10 +56,10 @@ Geometry FIRECUBE_API GeometryGenerator::GenerateBox(vec3 size, Material materia
     ret->GetFaces().push_back(Face(ret->GetVertices().size() - 2, ret->GetVertices().size() - 3, ret->GetVertices().size() - 1));
     ret->GetFaces().back().normal = vec3(0, 0, 1);
     // Back
-    ret->GetVertices().push_back(vec3(size.x, -size.y, -size.z));
-    ret->GetVertices().push_back(vec3(-size.x, -size.y, -size.z));
-    ret->GetVertices().push_back(vec3(size.x, size.y, -size.z));
-    ret->GetVertices().push_back(vec3(-size.x, size.y, -size.z));
+    ret->GetVertices().push_back(vec3(halfSize.x, -halfSize.y, -halfSize.z));
+    ret->GetVertices().push_back(vec3(-halfSize.x, -halfSize.y, -halfSize.z));
+    ret->GetVertices().push_back(vec3(halfSize.x, halfSize.y, -halfSize.z));
+    ret->GetVertices().push_back(vec3(-halfSize.x, halfSize.y, -halfSize.z));
     ret->GetNormals().push_back(vec3(0, 0, -1));
     ret->GetNormals().push_back(vec3(0, 0, -1));
     ret->GetNormals().push_back(vec3(0, 0, -1));
@@ -73,10 +73,10 @@ Geometry FIRECUBE_API GeometryGenerator::GenerateBox(vec3 size, Material materia
     ret->GetFaces().push_back(Face(ret->GetVertices().size() - 2, ret->GetVertices().size() - 3, ret->GetVertices().size() - 1));
     ret->GetFaces().back().normal = vec3(0, 0, -1);
     // Left
-    ret->GetVertices().push_back(vec3(-size.x, -size.y, -size.z));
-    ret->GetVertices().push_back(vec3(-size.x, -size.y, size.z));
-    ret->GetVertices().push_back(vec3(-size.x, size.y, -size.z));
-    ret->GetVertices().push_back(vec3(-size.x, size.y, size.z));
+    ret->GetVertices().push_back(vec3(-halfSize.x, -halfSize.y, -halfSize.z));
+    ret->GetVertices().push_back(vec3(-halfSize.x, -halfSize.y, halfSize.z));
+    ret->GetVertices().push_back(vec3(-halfSize.x, halfSize.y, -halfSize.z));
+    ret->GetVertices().push_back(vec3(-halfSize.x, halfSize.y, halfSize.z));
     ret->GetNormals().push_back(vec3(-1, 0, 0));
     ret->GetNormals().push_back(vec3(-1, 0, 0));
     ret->GetNormals().push_back(vec3(-1, 0, 0));
@@ -90,10 +90,10 @@ Geometry FIRECUBE_API GeometryGenerator::GenerateBox(vec3 size, Material materia
     ret->GetFaces().push_back(Face(ret->GetVertices().size() - 2, ret->GetVertices().size() - 3, ret->GetVertices().size() - 1));
     ret->GetFaces().back().normal = vec3(-1, 0, 0);
     // Right
-    ret->GetVertices().push_back(vec3(size.x, -size.y, size.z));
-    ret->GetVertices().push_back(vec3(size.x, -size.y, -size.z));
-    ret->GetVertices().push_back(vec3(size.x, size.y, size.z));
-    ret->GetVertices().push_back(vec3(size.x, size.y, -size.z));
+    ret->GetVertices().push_back(vec3(halfSize.x, -halfSize.y, halfSize.z));
+    ret->GetVertices().push_back(vec3(halfSize.x, -halfSize.y, -halfSize.z));
+    ret->GetVertices().push_back(vec3(halfSize.x, halfSize.y, halfSize.z));
+    ret->GetVertices().push_back(vec3(halfSize.x, halfSize.y, -halfSize.z));
     ret->GetNormals().push_back(vec3(1, 0, 0));
     ret->GetNormals().push_back(vec3(1, 0, 0));
     ret->GetNormals().push_back(vec3(1, 0, 0));
@@ -107,10 +107,10 @@ Geometry FIRECUBE_API GeometryGenerator::GenerateBox(vec3 size, Material materia
     ret->GetFaces().push_back(Face(ret->GetVertices().size() - 2, ret->GetVertices().size() - 3, ret->GetVertices().size() - 1));
     ret->GetFaces().back().normal = vec3(1, 0, 0);
     // Top
-    ret->GetVertices().push_back(vec3(-size.x, size.y, size.z));
-    ret->GetVertices().push_back(vec3(size.x, size.y, size.z));
-    ret->GetVertices().push_back(vec3(-size.x, size.y, -size.z));
-    ret->GetVertices().push_back(vec3(size.x, size.y, -size.z));
+    ret->GetVertices().push_back(vec3(-halfSize.x, halfSize.y, halfSize.z));
+    ret->GetVertices().push_back(vec3(halfSize.x, halfSize.y, halfSize.z));
+    ret->GetVertices().push_back(vec3(-halfSize.x, halfSize.y, -halfSize.z));
+    ret->GetVertices().push_back(vec3(halfSize.x, halfSize.y, -halfSize.z));
     ret->GetNormals().push_back(vec3(0, 1, 0));
     ret->GetNormals().push_back(vec3(0, 1, 0));
     ret->GetNormals().push_back(vec3(0, 1, 0));
@@ -124,10 +124,10 @@ Geometry FIRECUBE_API GeometryGenerator::GenerateBox(vec3 size, Material materia
     ret->GetFaces().push_back(Face(ret->GetVertices().size() - 2, ret->GetVertices().size() - 3, ret->GetVertices().size() - 1));
     ret->GetFaces().back().normal = vec3(0, 1, 0);
     // Bottom
-    ret->GetVertices().push_back(vec3(-size.x, -size.y, -size.z));
-    ret->GetVertices().push_back(vec3(size.x, -size.y, -size.z));
-    ret->GetVertices().push_back(vec3(-size.x, -size.y, size.z));
-    ret->GetVertices().push_back(vec3(size.x, -size.y, size.z));
+    ret->GetVertices().push_back(vec3(-halfSize.x, -halfSize.y, -halfSize.z));
+    ret->GetVertices().push_back(vec3(halfSize.x, -halfSize.y, -halfSize.z));
+    ret->GetVertices().push_back(vec3(-halfSize.x, -halfSize.y, halfSize.z));
+    ret->GetVertices().push_back(vec3(halfSize.x, -halfSize.y, halfSize.z));
     ret->GetNormals().push_back(vec3(0, -1, 0));
     ret->GetNormals().push_back(vec3(0, -1, 0));
     ret->GetNormals().push_back(vec3(0, -1, 0));
@@ -141,21 +141,24 @@ Geometry FIRECUBE_API GeometryGenerator::GenerateBox(vec3 size, Material materia
     ret->GetFaces().push_back(Face(ret->GetVertices().size() - 2, ret->GetVertices().size() - 3, ret->GetVertices().size() - 1));
     ret->GetFaces().back().normal = vec3(0, -1, 0);
 
-    ret->GetSurfaces().push_back(Surface());
-    ret->GetSurfaces().back().face = ret->GetFaces();
-    ret->GetSurfaces().back().material = material;
-    ret->GetMaterials().push_back(material);
+	ret->SetPrimitiveType(TRIANGLES);
+	ret->SetPrimitiveCount(ret->GetFaces().size());
+	ret->SetIndexCount(ret->GetFaces().size() * 3);
+	ret->CopyFacesToIndexBuffer();
+
+    ret->SetMaterial(material);
+	ret->CalculateBoundingBox();
     ret->UpdateBuffers();
     return ret;
 }
-Geometry FIRECUBE_API GeometryGenerator::GenerateBox(vec3 size)
+GeometryPtr FIRECUBE_API GeometryGenerator::GenerateBox(const vec3 &size)
 {
     return GenerateBox(size, CreateDefaultMaterial());
 }
 
-Geometry FIRECUBE_API GeometryGenerator::GenerateSphere (float radius, unsigned int rings, unsigned int columns, Material material)
+GeometryPtr FIRECUBE_API GeometryGenerator::GenerateSphere (float radius, unsigned int rings, unsigned int columns, MaterialPtr material)
 {
-    Geometry ret(new GeometryResource);
+    GeometryPtr ret(new Geometry);
     vector<unsigned int> indices;
 
     ret->GetVertices().reserve((rings + 1) * (columns + 1));
@@ -203,30 +206,34 @@ Geometry FIRECUBE_API GeometryGenerator::GenerateSphere (float radius, unsigned 
             ret->GetFaces().push_back(f);
         }
     }
-    ret->GetSurfaces().push_back(Surface());
-    ret->GetSurfaces().back().face = ret->GetFaces();
-    ret->GetSurfaces().back().material = material;
-    ret->GetMaterials().push_back(material);
-    ret->UpdateBuffers();
+
+	ret->SetPrimitiveType(TRIANGLES);
+	ret->SetPrimitiveCount(ret->GetFaces().size());
+	ret->SetIndexCount(ret->GetFaces().size() * 3);
+	ret->CopyFacesToIndexBuffer();
+
+	ret->SetMaterial(material);
+	ret->CalculateBoundingBox();
+	ret->UpdateBuffers();
     return ret;
 }
-Geometry FIRECUBE_API GeometryGenerator::GenerateSphere (float radius, unsigned int rings, unsigned int columns)
+GeometryPtr FIRECUBE_API GeometryGenerator::GenerateSphere (float radius, unsigned int rings, unsigned int columns)
 {
     return GenerateSphere(radius, rings, columns, CreateDefaultMaterial());
 }
-Geometry FIRECUBE_API GeometryGenerator::GeneratePlane(vec2 size)
+GeometryPtr FIRECUBE_API GeometryGenerator::GeneratePlane(const vec2 &size)
 {
     return GeneratePlane(size, CreateDefaultMaterial());
 }
-Geometry FIRECUBE_API GeometryGenerator::GeneratePlane(vec2 size, Material material)
+GeometryPtr FIRECUBE_API GeometryGenerator::GeneratePlane(const vec2 &size, MaterialPtr material)
 {
-    Geometry ret(new GeometryResource);
-    size = size * 0.5f;
+    GeometryPtr ret(new Geometry);
+    vec2 halfSize = size * 0.5f;
 
-    ret->GetVertices().push_back(vec3(-size.x, 0, size.y));
-    ret->GetVertices().push_back(vec3(size.x, 0, size.y));
-    ret->GetVertices().push_back(vec3(-size.x, 0, -size.y));
-    ret->GetVertices().push_back(vec3(size.x, 0, -size.y));
+    ret->GetVertices().push_back(vec3(-halfSize.x, 0, halfSize.y));
+    ret->GetVertices().push_back(vec3(halfSize.x, 0, halfSize.y));
+    ret->GetVertices().push_back(vec3(-halfSize.x, 0, -halfSize.y));
+    ret->GetVertices().push_back(vec3(halfSize.x, 0, -halfSize.y));
     ret->GetNormals().push_back(vec3(0, 1, 0));
     ret->GetNormals().push_back(vec3(0, 1, 0));
     ret->GetNormals().push_back(vec3(0, 1, 0));
@@ -240,10 +247,13 @@ Geometry FIRECUBE_API GeometryGenerator::GeneratePlane(vec2 size, Material mater
     ret->GetFaces().push_back(Face(2, 1, 3));
     ret->GetFaces().back().normal = vec3(0, 1, 0);
 
-    ret->GetSurfaces().push_back(Surface());
-    ret->GetSurfaces().back().face = ret->GetFaces();
-    ret->GetSurfaces().back().material = material;
-    ret->GetMaterials().push_back(material);
-    ret->UpdateBuffers();
+	ret->SetPrimitiveType(TRIANGLES);
+	ret->SetPrimitiveCount(ret->GetFaces().size());
+	ret->SetIndexCount(ret->GetFaces().size() * 3);
+	ret->CopyFacesToIndexBuffer();
+
+	ret->SetMaterial(material);
+	ret->CalculateBoundingBox();
+	ret->UpdateBuffers();
     return ret;
 }

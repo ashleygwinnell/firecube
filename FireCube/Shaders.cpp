@@ -23,14 +23,14 @@ using namespace std;
 
 using namespace FireCube;
 
-ShaderResource::ShaderResource() : id(0)
+Shader::Shader() : id(0)
 {
 }
-ShaderResource::~ShaderResource()
+Shader::~Shader()
 {
     glDeleteShader(id);
 }
-bool ShaderResource::Load(const string &filename)
+bool Shader::Load(const string &filename)
 {
     GLenum shaderType;
     if (id != 0)
@@ -66,7 +66,7 @@ bool ShaderResource::Load(const string &filename)
 
     return true;
 }
-bool ShaderResource::Create(ShaderType type, const string &source)
+bool Shader::Create(ShaderType type, const string &source)
 {
     GLenum glShaderType;
     if (id != 0)
@@ -87,15 +87,15 @@ bool ShaderResource::Create(ShaderType type, const string &source)
     return true;
 
 }
-unsigned int ShaderResource::GetId() const
+unsigned int Shader::GetId() const
 {
     return id;
 }
-ProgramResource::ProgramResource() : id(0)
+Program::Program() : id(0)
 {
 
 }
-ProgramResource::~ProgramResource()
+Program::~Program()
 {
     ostringstream ss;
     ss << "Destroyed program with id=" << id;
@@ -103,7 +103,7 @@ ProgramResource::~ProgramResource()
     glDeleteProgram(id);
     id = 0;
 }
-void ProgramResource::Create()
+void Program::Create()
 {
     id = glCreateProgram();
     variables.clear();
@@ -111,23 +111,23 @@ void ProgramResource::Create()
     ss << "Created program with id=" << id;
     Logger::Write(Logger::LOG_INFO, ss.str());
 }
-void ProgramResource::Create(Shader shader1, Shader shader2)
+void Program::Create(ShaderPtr shader1, ShaderPtr shader2)
 {
     Create();
     Attach(shader1);
     Attach(shader2);
     Link();
 }
-void ProgramResource::Attach(Shader shader)
+void Program::Attach(ShaderPtr shader)
 {
     glAttachShader(id, shader->GetId());
 }
-void ProgramResource::Link()
+void Program::Link()
 {
     variables.clear();
     glLinkProgram(id);
 }
-void ProgramResource::SetUniform(const string &name, float value)
+void Program::SetUniform(const string &name, float value)
 {
     GLint location = -1;
     map<string, GLint>::iterator i = variables.find(name);
@@ -142,7 +142,7 @@ void ProgramResource::SetUniform(const string &name, float value)
     if (location != -1)
         glUniform1f(location, value);
 }
-void ProgramResource::SetUniform(const string &name, int value)
+void Program::SetUniform(const string &name, int value)
 {
     GLint location = -1;
     map<string, GLint>::iterator i = variables.find(name);
@@ -157,7 +157,7 @@ void ProgramResource::SetUniform(const string &name, int value)
     if (location != -1)
         glUniform1i(location, value);
 }
-void ProgramResource::SetUniform(const string &name, vec2 value)
+void Program::SetUniform(const string &name, const vec2 &value)
 {
     GLint location = -1;
     map<string, GLint>::iterator i = variables.find(name);
@@ -172,7 +172,7 @@ void ProgramResource::SetUniform(const string &name, vec2 value)
     if (location != -1)
         glUniform2fv(location, 1, &value.x);
 }
-void ProgramResource::SetUniform(const string &name, vec3 value)
+void Program::SetUniform(const string &name, const vec3 &value)
 {
     GLint location = -1;
     map<string, GLint>::iterator i = variables.find(name);
@@ -187,7 +187,7 @@ void ProgramResource::SetUniform(const string &name, vec3 value)
     if (location != -1)
         glUniform3fv(location, 1, &value.x);
 }
-void ProgramResource::SetUniform(const string &name, vec4 value)
+void Program::SetUniform(const string &name, const vec4 &value)
 {
     GLint location = -1;
     map<string, GLint>::iterator i = variables.find(name);
@@ -202,7 +202,7 @@ void ProgramResource::SetUniform(const string &name, vec4 value)
     if (location != -1)
         glUniform4fv(location, 1, &value.x);
 }
-void ProgramResource::SetUniform(const std::string &name, mat3 value)
+void Program::SetUniform(const std::string &name, const mat3 &value)
 {
     GLint location = -1;
     map<string, GLint>::iterator i = variables.find(name);
@@ -217,7 +217,7 @@ void ProgramResource::SetUniform(const std::string &name, mat3 value)
     if (location != -1)
         glUniformMatrix3fv(location, 1, false, value.m);
 }
-void ProgramResource::SetUniform(const std::string &name, mat4 value)
+void Program::SetUniform(const std::string &name, const mat4 &value)
 {
     GLint location = -1;
     map<string, GLint>::iterator i = variables.find(name);
@@ -232,7 +232,7 @@ void ProgramResource::SetUniform(const std::string &name, mat4 value)
     if (location != -1)
         glUniformMatrix4fv(location, 1, false, value.m);
 }
-void ProgramResource::SetUniform(const string &name, bool value)
+void Program::SetUniform(const string &name, bool value)
 {
     GLint location = -1;
     map<string, GLint>::iterator i = variables.find(name);
@@ -247,7 +247,7 @@ void ProgramResource::SetUniform(const string &name, bool value)
     if (location != -1)
         glUniform1i(location, value);
 }
-void ProgramResource::SetUniform(const string &name, const vector<bool> &value)
+void Program::SetUniform(const string &name, const vector<bool> &value)
 {
     GLint location = -1;
     map<string, GLint>::iterator i = variables.find(name);
@@ -265,7 +265,7 @@ void ProgramResource::SetUniform(const string &name, const vector<bool> &value)
     if (location != -1)
         glUniform1iv(location, value.size(), &tmp[0]);
 }
-void ProgramResource::SetUniform(const string &name, const vector<int> &value)
+void Program::SetUniform(const string &name, const vector<int> &value)
 {
     GLint location = -1;
     map<string, GLint>::iterator i = variables.find(name);
@@ -280,7 +280,7 @@ void ProgramResource::SetUniform(const string &name, const vector<int> &value)
     if (location != -1)
         glUniform1iv(location, value.size(), &value[0]);
 }
-void ProgramResource::SetAttribute(const std::string &name, Buffer buffer, int size)
+void Program::SetAttribute(const std::string &name, BufferPtr buffer, int size)
 {
     GLint location = -1;
     map<string, GLint>::iterator i = variables.find(name);
@@ -299,7 +299,7 @@ void ProgramResource::SetAttribute(const std::string &name, Buffer buffer, int s
         glEnableVertexAttribArray(location);
     }
 }
-string ProgramResource::GetInfoLog()
+string Program::GetInfoLog() const
 {
     int infologLength = 0;
     int charsWritten  = 0;
@@ -317,17 +317,17 @@ string ProgramResource::GetInfoLog()
     return ret;
 
 }
-bool ProgramResource::IsValid() const
+bool Program::IsValid() const
 {
     return id != 0;
 }
-unsigned int ProgramResource::GetId() const
+unsigned int Program::GetId() const
 {
     return id;
 }
 
 
-bool TechniqueResource::LoadShader(const string &filename)
+bool Technique::LoadShader(const string &filename)
 {
     string name = Filesystem::SearchForFileName(filename);
     if (name.empty())
@@ -352,7 +352,7 @@ bool TechniqueResource::LoadShader(const string &filename)
     *source = string((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
     return true;
 }
-bool TechniqueResource::LoadShader(ShaderType type, const string &source)
+bool Technique::LoadShader(ShaderType type, const string &source)
 {
     if (type == VERTEX_SHADER)
         vertexShaderCode = source;
@@ -363,10 +363,10 @@ bool TechniqueResource::LoadShader(ShaderType type, const string &source)
 
     return true;
 }
-Program TechniqueResource::GenerateProgram(const RenderState &renderState)
+ProgramPtr Technique::GenerateProgram(const RenderState &renderState)
 {
     unsigned int key = renderState.ToInt();
-    map<unsigned int, Program>::iterator i = programs.find(key);
+    map<unsigned int, ProgramPtr>::iterator i = programs.find(key);
     if (i != programs.end())
         return i->second;
 
@@ -383,10 +383,10 @@ Program TechniqueResource::GenerateProgram(const RenderState &renderState)
         defines << "#define POINT_LIGHTING" << endl;
     ostringstream vertexShaderSource;
     ostringstream fragmentShaderSource;
-    Shader vertexShader(new ShaderResource), fragmentShader(new ShaderResource);
+    ShaderPtr vertexShader(new Shader), fragmentShader(new Shader);
     vertexShaderSource << defines.str() << vertexShaderCode;
     fragmentShaderSource << defines.str() << fragmentShaderCode;
-    Program p(new ProgramResource);
+    ProgramPtr p(new Program);
     vertexShader->Create(VERTEX_SHADER, vertexShaderSource.str());
     fragmentShader->Create(FRAGMENT_SHADER, fragmentShaderSource.str());
     p->Create(vertexShader, fragmentShader);
@@ -399,9 +399,9 @@ void ProgramUniformsList::SetIntValue(const string &name, int value)
 {
     intMap[name] = value;
 }
-int ProgramUniformsList::GetIntValue(const string &name)
+int ProgramUniformsList::GetIntValue(const string &name) const
 {
-    map<string, int>::iterator i = intMap.find(name);
+    map<string, int>::const_iterator i = intMap.find(name);
     if (i == intMap.end())
         return 0;
     return i->second;
@@ -410,64 +410,64 @@ void ProgramUniformsList::SetFloatValue(const string &name, float value)
 {
     floatMap[name] = value;
 }
-float ProgramUniformsList::GetFloatValue(const string &name)
+float ProgramUniformsList::GetFloatValue(const string &name) const
 {
-    map<string, float>::iterator i = floatMap.find(name);
+    map<string, float>::const_iterator i = floatMap.find(name);
     if (i == floatMap.end())
         return 0.0f;
     return i->second;
 }
-void ProgramUniformsList::SetVec2Value(const string &name, vec2 value)
+void ProgramUniformsList::SetVec2Value(const string &name, const vec2 &value)
 {
     vec2Map[name] = value;
 }
-vec2 ProgramUniformsList::GetVec2Value(const string &name)
+vec2 ProgramUniformsList::GetVec2Value(const string &name) const
 {
-    map<string, vec2>::iterator i = vec2Map.find(name);
+    map<string, vec2>::const_iterator i = vec2Map.find(name);
     if (i == vec2Map.end())
         return vec2();
     return i->second;
 }
-void ProgramUniformsList::SetVec3Value(const string &name, vec3 value)
+void ProgramUniformsList::SetVec3Value(const string &name, const vec3 &value)
 {
     vec3Map[name] = value;
 }
-vec3 ProgramUniformsList::GetVec3Value(const string &name)
+vec3 ProgramUniformsList::GetVec3Value(const string &name) const
 {
-    map<string, vec3>::iterator i = vec3Map.find(name);
+    map<string, vec3>::const_iterator i = vec3Map.find(name);
     if (i == vec3Map.end())
         return vec3();
     return i->second;
 }
-void ProgramUniformsList::SetVec4Value(const string &name, vec4 value)
+void ProgramUniformsList::SetVec4Value(const string &name, const vec4 &value)
 {
     vec4Map[name] = value;
 }
-vec4 ProgramUniformsList::GetVec4Value(const string &name)
+vec4 ProgramUniformsList::GetVec4Value(const string &name) const
 {
-    map<string, vec4>::iterator i = vec4Map.find(name);
+    map<string, vec4>::const_iterator i = vec4Map.find(name);
     if (i == vec4Map.end())
         return vec4();
     return i->second;
 }
-void ProgramUniformsList::SetMat3Value(const string &name, mat3 value)
+void ProgramUniformsList::SetMat3Value(const string &name, const mat3 &value)
 {
     mat3Map[name] = value;
 }
-mat3 ProgramUniformsList::GetMat3Value(const string &name)
+mat3 ProgramUniformsList::GetMat3Value(const string &name) const
 {
-    map<string, mat3>::iterator i = mat3Map.find(name);
+    map<string, mat3>::const_iterator i = mat3Map.find(name);
     if (i == mat3Map.end())
         return mat3();
     return i->second;
 }
-void ProgramUniformsList::SetMat4Value(const string &name, mat4 value)
+void ProgramUniformsList::SetMat4Value(const string &name, const mat4 &value)
 {
     mat4Map[name] = value;
 }
-mat4 ProgramUniformsList::GetMat4Value(const string &name)
+mat4 ProgramUniformsList::GetMat4Value(const string &name) const
 {
-    map<string, mat4>::iterator i = mat4Map.find(name);
+    map<string, mat4>::const_iterator i = mat4Map.find(name);
     if (i == mat4Map.end())
         return mat4();
     return i->second;
@@ -517,21 +517,21 @@ void ProgramUniformsList::RemoveValue(const string &name)
         return;
     }
 }
-void ProgramUniformsList::ApplyForProgram(Program program)
+void ProgramUniformsList::ApplyForProgram(ProgramPtr program) const
 {
     Renderer::UseProgram(program);
-    for (map<string, int>::iterator i = intMap.begin(); i != intMap.end(); i++)
+    for (map<string, int>::const_iterator i = intMap.begin(); i != intMap.end(); i++)
         program->SetUniform(i->first, i->second);
-    for (map<string, float>::iterator i = floatMap.begin(); i != floatMap.end(); i++)
+    for (map<string, float>::const_iterator i = floatMap.begin(); i != floatMap.end(); i++)
         program->SetUniform(i->first, i->second);
-    for (map<string, vec2>::iterator i = vec2Map.begin(); i != vec2Map.end(); i++)
+    for (map<string, vec2>::const_iterator i = vec2Map.begin(); i != vec2Map.end(); i++)
         program->SetUniform(i->first, i->second);
-    for (map<string, vec3>::iterator i = vec3Map.begin(); i != vec3Map.end(); i++)
+    for (map<string, vec3>::const_iterator i = vec3Map.begin(); i != vec3Map.end(); i++)
         program->SetUniform(i->first, i->second);
-    for (map<string, vec4>::iterator i = vec4Map.begin(); i != vec4Map.end(); i++)
+    for (map<string, vec4>::const_iterator i = vec4Map.begin(); i != vec4Map.end(); i++)
         program->SetUniform(i->first, i->second);
-    for (map<string, mat3>::iterator i = mat3Map.begin(); i != mat3Map.end(); i++)
+    for (map<string, mat3>::const_iterator i = mat3Map.begin(); i != mat3Map.end(); i++)
         program->SetUniform(i->first, i->second);
-    for (map<string, mat4>::iterator i = mat4Map.begin(); i != mat4Map.end(); i++)
+    for (map<string, mat4>::const_iterator i = mat4Map.begin(); i != mat4Map.end(); i++)
         program->SetUniform(i->first, i->second);
 }

@@ -49,7 +49,7 @@ public:
     * Checks whether two vectors are not equal.
     * @return True if the two vectors are not equal, false otherwise.
     */
-    int operator!=(vec2 &src)
+    int operator!=(const vec2 &src) const
     {
         return !(src == (*this));
     }
@@ -62,12 +62,12 @@ public:
     /**
     * Subtracts two vectors and assign to this one.
     */
-    void operator-=(vec2 &src);
+    void operator-=(const vec2 &src);
 
     /**
     * Multiplies two vectors(component-wise) and assign to this one.
     */
-    void operator*=(vec2 &src);
+    void operator*=(const vec2 &src);
 
     /**
     * Multiplies the vector with a scalar and assign to this one.
@@ -77,7 +77,7 @@ public:
     /**
     * Divides two vectors(component-wise) and assign to this one.
     */
-    void operator/=(vec2 &src);
+    void operator/=(const vec2 &src);
 
     /**
     * Divides the vector with a scalar and assign to this one.
@@ -87,7 +87,7 @@ public:
     /**
     * Multiplies two vectors(component-wise).
     */
-    vec2 operator*(vec2 &src)
+    vec2 operator*(const vec2 &src) const
     {
         return vec2(x * src.x, y * src.y);
     }
@@ -96,12 +96,12 @@ public:
     /**
     * Multiplies a vector with a 4d matrix.
     */
-    vec2 operator*(mat4 &src);
+    vec2 operator*(const mat4 &src) const;
 
     /**
     * Divides two vectors(component-wise).
     */
-    vec2 operator/(vec2 &src)
+    vec2 operator/(const vec2 &src) const
     {
         return vec2(x / src.x, y / src.y);
     }
@@ -110,7 +110,7 @@ public:
     /**
     * Negates a vector.
     */
-    vec2 operator-(void) {
+    vec2 operator-() {
         return vec2(-x, -y);
     }
 
@@ -188,7 +188,7 @@ public:
     /**
     * Performs a cross product between two vectors.
     */
-    float Cross(const vec2 &p, const vec2 &q);
+    float Cross(const vec2 &p, const vec2 &q) const;
 
     /**
     * Sets the coordinates of the vector.
@@ -211,12 +211,12 @@ public:
     /**
     * Converts to a vec3 by setting the z component to zero.
     */
-    vec3 ToVec3();
+    vec3 ToVec3() const;
 
     /**
     * Converts to a vec4 by setting the z,w components to zero.
     */
-    vec4 ToVec4();
+    vec4 ToVec4() const;
 
     /**
     * Sets the length of the vector.
@@ -238,12 +238,12 @@ public:
     * Transforms the vector by a matrix treating it as a vertex.<br>
     * Multiplies the 3d vector (x,y,1) by the matrix and then divides it by the w component.
     */
-    vec2 TransformCoordinate(mat4 m);
+    vec2 TransformCoordinate(const mat4 &m) const;
 
     /**
     * Transforms the vector by a matrix treating it as a normal.
     */
-    vec2 TransformNormal(mat4 m);
+    vec2 TransformNormal(const mat4 &m) const;
 
     /**
     * Checks whether the vector contain valid floating point numbers.
@@ -274,22 +274,22 @@ vec2 FIRECUBE_API operator-(const vec2 &a, const vec2 &b);
 /**
 * Multiplies a vector with a scalar.
 */
-vec2 FIRECUBE_API operator*(const vec2 &a, const float &b);
+vec2 FIRECUBE_API operator*(const vec2 &a, float b);
 
 /**
 * Multiplies a vector with a scalar.
 */
-vec2 FIRECUBE_API operator*(const float &a, const vec2 &b);
+vec2 FIRECUBE_API operator*(float a, const vec2 &b);
 
 /**
 * Divides a vector with a scalar.
 */
-vec2 FIRECUBE_API operator/(const vec2 &a, const float &b);
+vec2 FIRECUBE_API operator/(const vec2 &a, float b);
 
 /**
 * Divides a vector with a scalar.
 */
-vec2 FIRECUBE_API operator/(const float &a, const vec2 &b);
+vec2 FIRECUBE_API operator/(float a, const vec2 &b);
 
 /**
 * Performs a cross product between two vectors.

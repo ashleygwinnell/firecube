@@ -4,14 +4,15 @@ using namespace std;
 #include "wx/wx.h"
 #include "wx/colordlg.h"
 #include <wx/glcanvas.h>
-#include "MyGLCanvas.h"
+#include "Document.h"
+#include "GLCanvas.h"
 #include "MyMainFrame.h"
 #include "main.h"
 
 
 MyMainFrame::MyMainFrame( wxWindow* parent )
     :
-    MainFrame( parent )
+    MainFrame( parent ), theApp((MyApp*)wxTheApp)
 {
     this->Connect(propertyGrid1->GetId(), wxEVT_PG_CHANGED, wxCommandEventHandler(MyMainFrame::PropertyGrid1Changed));
 
@@ -19,69 +20,63 @@ MyMainFrame::MyMainFrame( wxWindow* parent )
 }
 void MyMainFrame::MenuItem1Clicked( wxCommandEvent& event )
 {
-    ((MyApp*)wxTheApp)->frame->Close();
+    Close();
 }
 void MyMainFrame::MenuItem2Clicked( wxCommandEvent& event )
 {
-    wxString file = wxFileSelector(wxT("Open"), 0, 0, wxT("3ds,dae"), wxT("*.3ds;*.dae"));
-    FireCubeApp *fcApp = &(((MyApp*)wxTheApp)->fireCubeApp);
+    wxString file = wxFileSelector(wxT("Open"), 0, 0, wxT("3ds,dae"), wxT("*.3ds;*.dae"));    
     std::string sfile = file;
     if (sfile == "")
         return;
     string::size_type d = sfile.find_last_of("\\");
-    fcApp->LoadModel(sfile);
+    theApp->LoadDocument(sfile);
 }
 void MyMainFrame::MenuItem3Clicked( wxCommandEvent& event )
-{
-    FireCubeApp *fcApp = &(((MyApp*)wxTheApp)->fireCubeApp);
+{    
     wxString file = wxFileSelector(wxT("Open"), 0, 0, wxT("vert"), wxT("*.vert"));
     std::string sfile = file;
     if (sfile == "")
         return;
-    fcApp->vshader = FireCube::Renderer::GetShaderManager().Create(sfile);
-    fcApp->program->Create(fcApp->vshader, fcApp->fshader);
-    glCanvas->customProgram = true;
-    fcApp->root->SetProgram(fcApp->program);
+    theApp->GetApplicationParameters().vshader = FireCube::Renderer::GetShaderManager().Create(sfile);
+    theApp->GetApplicationParameters().program->Create(theApp->GetApplicationParameters().vshader, theApp->GetApplicationParameters().fshader);
+    theApp->GetApplicationParameters().customProgram = true;
+	theApp->GetDocument().GetRoot()->SetProgram(theApp->GetApplicationParameters().program);    
 }
 void MyMainFrame::MenuItem4Clicked( wxCommandEvent& event )
-{
-    FireCubeApp *fcApp = &(((MyApp*)wxTheApp)->fireCubeApp);
+{    
     wxString file = wxFileSelector(wxT("Open"), 0, 0, wxT("frag"), wxT("*.frag"));
-    FireCubeApp *app = &(((MyApp*)wxTheApp)->fireCubeApp);
     std::string sfile = file;
     if (sfile == "")
         return;
-    fcApp->fshader = FireCube::Renderer::GetShaderManager().Create(sfile);
-    fcApp->program->Create(fcApp->vshader, fcApp->fshader);
-    glCanvas->customProgram = true;
-    fcApp->root->SetProgram(fcApp->program);
+    theApp->GetApplicationParameters().fshader = FireCube::Renderer::GetShaderManager().Create(sfile);
+    theApp->GetApplicationParameters().program->Create(theApp->GetApplicationParameters().vshader, theApp->GetApplicationParameters().fshader);
+	theApp->GetApplicationParameters().customProgram = true;
+	theApp->GetDocument().GetRoot()->SetProgram(theApp->GetApplicationParameters().program);    
 }
 void MyMainFrame::MenuItem7Clicked( wxCommandEvent& event )
 {
-    FireCubeApp *fcApp = &(((MyApp*)wxTheApp)->fireCubeApp);
-    FireCubeApp *app = &(((MyApp*)wxTheApp)->fireCubeApp);
-    glCanvas->customProgram = false;
-    fcApp->root->SetProgram(FireCube::Program());
+    theApp->GetApplicationParameters().customProgram = false;
+    theApp->GetDocument().GetRoot()->SetProgram(FireCube::ProgramPtr());
 }
 void MyMainFrame::CheckBox2Clicked( wxCommandEvent& event )
 {
-    glCanvas->renderNormals = !glCanvas->renderNormals;
+    glCanvas->SetRenderingNormals(!glCanvas->GetRenderingNormals());
     glCanvas->Refresh();
 }
 void MyMainFrame::CheckBox4Clicked( wxCommandEvent& event )
 {
-    glCanvas->renderTangents = !glCanvas->renderTangents;
+    glCanvas->SetRenderingTangents(!glCanvas->GetRenderingTangents());
     glCanvas->Refresh();
 }
 void MyMainFrame::RadioBox1Clicked( wxCommandEvent& event )
 {
     int selected = radioBox1->GetSelection();
     if (selected == 0)
-        glCanvas->renderingMode = GL_POINT;
+        glCanvas->SetRenderingMode(GL_POINT);
     else if (selected == 1)
-        glCanvas->renderingMode = GL_LINE;
+        glCanvas->SetRenderingMode(GL_LINE);
     else if (selected == 2)
-        glCanvas->renderingMode = GL_FILL;
+        glCanvas->SetRenderingMode(GL_FILL);
 
     glCanvas->Refresh();
 }
@@ -90,29 +85,28 @@ void MyMainFrame::TextCtrl3TextEnter( wxCommandEvent& event )
     double l;
     if (textCtrl3->GetValue().ToDouble(&l))
     {
-        glCanvas->normalsLength = (float)l;
-        MyApp *app = (MyApp*)wxTheApp;
-        app->fireCubeApp.GenerateNormals(glCanvas->normalsLength);
-        app->fireCubeApp.GenerateTangents(glCanvas->normalsLength);
-        app->fireCubeApp.GenerateBitangents(glCanvas->normalsLength);
+		theApp->GetApplicationParameters().normalsLength = (float)l;        
+        theApp->GetDocument().GenerateNormals(theApp->GetApplicationParameters().normalsLength);
+        theApp->GetDocument().GenerateTangents(theApp->GetApplicationParameters().normalsLength);
+		theApp->GetDocument().GenerateBitangents(theApp->GetApplicationParameters().normalsLength);
         glCanvas->Refresh();
     }
 }
 void MyMainFrame::CheckBox3Clicked( wxCommandEvent& event )
 {
-    glCanvas->cullFaceEnabled = !glCanvas->cullFaceEnabled;
+    glCanvas->SetCullFace(!glCanvas->GetCullFace());
     glCanvas->Refresh();
 }
 void MyMainFrame::ColourPicker1Changed( wxColourPickerEvent& event )
 {
     wxColor color = colourPicker1->GetColour();
-    glCanvas->bgColor = FireCube::vec4(color.Red() / 255.0f, color.Green() / 255.0f, color.Blue() / 255.0f, 1.0f);
+    glCanvas->SetBackgroundColor(FireCube::vec4(color.Red() / 255.0f, color.Green() / 255.0f, color.Blue() / 255.0f, 1.0f));
     glCanvas->Refresh();
 }
 void MyMainFrame::Button1Clicked( wxCommandEvent& event )
 {
-    glCanvas->rot = FireCube::vec3(0, 0, -5);
-    glCanvas->lookat = FireCube::vec3(0, 0, 0);
+    glCanvas->SetRotation(FireCube::vec3(0, 0, 0.0f));
+    glCanvas->SetZoom(5.0f);
     glCanvas->Refresh();
 }
 void MyMainFrame::Button2Clicked( wxCommandEvent& event )
@@ -179,9 +173,14 @@ void MyMainFrame::MenuItem6Clicked( wxCommandEvent& event )
 
     Layout();
 }
-void MyMainFrame::AddMaterial(DWORD id, FireCube::Material mat)
+bool MyMainFrame::AddMaterial(DWORD id, FireCube::MaterialPtr mat)
 {
-    materialMap[id] = mat;
+    for (map<DWORD, FireCube::MaterialPtr>::iterator i = materialMap.begin(); i != materialMap.end(); i++)
+	{
+		if (i->second == mat)					
+			return false;
+	}
+	materialMap[id] = mat;
     ostringstream oss;
     oss << "Material " << id;
     propertyGrid1->Append(new wxPropertyCategory(oss.str()) );
@@ -209,6 +208,7 @@ void MyMainFrame::AddMaterial(DWORD id, FireCube::Material mat)
     propertyGrid1->Append(new wxFileProperty("Normal texture", ossNormalTexture.str(), mat->GetNormalTexture() ? mat->GetNormalTexture()->GetFileName() : ""));
 
     propertyGrid1->Refresh();
+	return true;
 }
 void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 {
@@ -219,7 +219,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
         DWORD id;
         istringstream idss(properyName.substr(4));
         idss >> id;
-        FireCube::Material mat = materialMap[id];
+        FireCube::MaterialPtr mat = materialMap[id];
         mat->SetName(evt->GetPropertyValueAsString().c_str());
     }
     if (properyName.substr(0, 7) == "Ambient")
@@ -227,7 +227,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
         DWORD id;
         istringstream idss(properyName.substr(7));
         idss >> id;
-        FireCube::Material mat = materialMap[id];
+        FireCube::MaterialPtr mat = materialMap[id];
         wxColor col = ((wxColourProperty*)evt->GetProperty())->GetVal().m_colour;
         mat->SetAmbientColor(FireCube::vec4(col.Red() / 255.0f, col.Green() / 255.0f, col.Blue() / 255.0f, mat->GetAmbientColor().w));
     }
@@ -236,7 +236,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
         DWORD id;
         istringstream idss(properyName.substr(7));
         idss >> id;
-        FireCube::Material mat = materialMap[id];
+        FireCube::MaterialPtr mat = materialMap[id];
         wxColor col = ((wxColourProperty*)evt->GetProperty())->GetVal().m_colour;
         mat->SetDiffuseColor(FireCube::vec4(col.Red() / 255.0f, col.Green() / 255.0f, col.Blue() / 255.0f, mat->GetDiffuseColor().w));
     }
@@ -245,7 +245,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
         DWORD id;
         istringstream idss(properyName.substr(8));
         idss >> id;
-        FireCube::Material mat = materialMap[id];
+        FireCube::MaterialPtr mat = materialMap[id];
         wxColor col = ((wxColourProperty*)evt->GetProperty())->GetVal().m_colour;
         mat->SetSpecularColor(FireCube::vec4(col.Red() / 255.0f, col.Green() / 255.0f, col.Blue() / 255.0f, mat->GetSpecularColor().w));
     }
@@ -254,7 +254,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
         DWORD id;
         istringstream idss(properyName.substr(9));
         idss >> id;
-        FireCube::Material mat = materialMap[id];
+        FireCube::MaterialPtr mat = materialMap[id];
         mat->SetShininess((float)evt->GetPropertyValueAsDouble());
     }
     if (properyName.substr(0, 14) == "TextureDiffuse")
@@ -262,7 +262,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
         DWORD id;
         istringstream idss(properyName.substr(14));
         idss >> id;
-        FireCube::Material mat = materialMap[id];
+        FireCube::MaterialPtr mat = materialMap[id];
         mat->SetDiffuseTexture(FireCube::Renderer::GetTextureManager().Create(evt->GetPropertyValueAsString().ToAscii()));
     }
     if (properyName.substr(0, 13) == "TextureNormal")
@@ -270,8 +270,69 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
         DWORD id;
         istringstream idss(properyName.substr(13));
         idss >> id;
-        FireCube::Material mat = materialMap[id];
+        FireCube::MaterialPtr mat = materialMap[id];
         mat->SetNormalTexture(FireCube::Renderer::GetTextureManager().Create(evt->GetPropertyValueAsString().ToAscii()));
     }
-    glCanvas->Refresh();
+    glCanvas->Refresh();	
+}
+void MyMainFrame::PopulateTreeWithNode(FireCube::NodePtr node, wxTreeCtrl *tree)
+{
+	tree->DeleteAllItems();
+	TreeItemData *data = new TreeItemData;
+	data->node = node;
+	wxTreeItemId id = tree->AddRoot("root", -1, -1, data);
+	PopulateTreeWithNode(node, id, tree);
+}
+void MyMainFrame::PopulateTreeWithNode(FireCube::NodePtr node, wxTreeItemId treeNode, wxTreeCtrl *tree)
+{
+	for (unsigned int i = 0; i < node->GetChildren().size(); i++)
+	{
+		FireCube::NodePtr child = node->GetChildren()[i];
+		TreeItemData *data = new TreeItemData;
+		data->node = child;
+		wxTreeItemId id = tree->AppendItem(treeNode, child->GetName(), -1, -1, data);
+		PopulateTreeWithNode(child, id, tree);
+	}
+}
+
+void MyMainFrame::UpdateUI(Document &document)
+{
+	if (document.HasTangents())
+	{
+		glCanvas->SetRenderingTangents(checkBox4->GetValue());
+		checkBox4->Enable(true);
+	}
+	else
+	{
+		glCanvas->SetRenderingTangents(false);
+		checkBox4->Enable(false);
+	}
+	ostringstream oss, oss2;
+	oss << document.GetVertexCount();
+	oss2 << document.GetFaceCount();
+	textCtrl1->SetValue(oss.str());
+	textCtrl2->SetValue(oss2.str());
+	propertyGrid1->Clear();
+	unsigned int id = 1;
+	AddMaterials(id, document.GetRoot());
+	PopulateTreeWithNode(document.GetRoot(), treeCtrl2);
+}
+
+void MyMainFrame::SetStatusBarText(const string &text)
+{
+	statusBar1->SetStatusText(text);
+}
+GLCanvas *MyMainFrame::GetMainGLCanvas()
+{
+	return glCanvas;
+}
+void MyMainFrame::AddMaterials(unsigned int &id, FireCube::NodePtr node)
+{	
+	if (node->GetGeometry())
+	{        
+		if (AddMaterial(id, node->GetGeometry()->GetMaterial()))
+			id++;
+	}
+	for (vector<FireCube::NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
+		AddMaterials(id, *i);
 }

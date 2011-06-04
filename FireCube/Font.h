@@ -8,9 +8,9 @@ namespace FireCube
 {
 
 // Forward declarations.
-class FontResource;
-class TextureResource;
-typedef boost::shared_ptr<TextureResource> Texture;
+class Font;
+class Texture;
+typedef boost::shared_ptr<Texture> TexturePtr;
 class vec2;
 class vec3;
 class vec4;
@@ -18,11 +18,11 @@ class vec4;
 /**
 * A shared pointer to a FontResource.
 */
-typedef boost::shared_ptr<FontResource> Font;
+typedef boost::shared_ptr<Font> FontPtr;
 
 namespace Renderer
 {
-void FIRECUBE_API RenderText(Font font, vec3 pos, vec4 color, const std::string &str);
+void FIRECUBE_API RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const std::string &str);
 }
 
 class FontImpl;
@@ -45,7 +45,7 @@ public:
 class FIRECUBE_API FontPage
 {
 public:
-    Texture tex;
+    TexturePtr tex;
     vec2 curPos;
     int textureSize;
 };
@@ -53,14 +53,14 @@ public:
 /**
 * Holds the data for a single font face.
 */
-class FIRECUBE_API FontResource
+class FIRECUBE_API Font
 {
-    friend void Renderer::RenderText(Font font, vec3 pos, vec4 color, const std::string &str);
+    friend void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const std::string &str);
     friend class FontManager;
-    friend class ResourceManager<FontResource>;
+    friend class ResourceManager<Font>;
 public:
-    FontResource();
-    ~FontResource();
+    Font();
+    ~Font();
 
     /**
     * Loads a font.
@@ -85,10 +85,10 @@ private:
 /**
 * Manages the various fonts.
 */
-class FIRECUBE_API FontManager : public ResourceManager<FontResource>
+class FIRECUBE_API FontManager : public ResourceManager<Font>
 {
-    friend class FontResource;
-    friend void Renderer::RenderText(Font font, vec3 pos, vec4 color, const std::string &str);
+    friend class Font;
+    friend void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const std::string &str);
 public:
     FontManager();
     /**
@@ -96,7 +96,7 @@ public:
     * @param filename The file to load.
     * @param size The size of the font.
     */
-    Font Create(const std::string &filename, int size);
+    FontPtr Create(const std::string &filename, int size);
 private:
     std::vector<boost::weak_ptr<FontPage>> page;
     boost::shared_ptr<FontPage> CreateNewPage();

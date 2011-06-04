@@ -19,28 +19,28 @@ enum TextureFilter
     NEAREST, LINEAR, MIPMAP
 };
 
-class TextureResource;
+class Texture;
 
 /**
 * A shared pointer to a TextureResource.
 */
-typedef boost::shared_ptr<TextureResource> Texture;
+typedef boost::shared_ptr<Texture> TexturePtr;
 
 namespace Renderer
 {
-void FIRECUBE_API UseTexture(Texture tex, unsigned int unit);
+void FIRECUBE_API UseTexture(TexturePtr tex, unsigned int unit);
 }
 
 /**
 * A 2d texture.
 */
-class FIRECUBE_API TextureResource
+class FIRECUBE_API Texture
 {
-    friend class ResourceManager<TextureResource>;
-    friend void Renderer::UseTexture(Texture tex, unsigned int unit);
+    friend class ResourceManager<Texture>;
+    friend void Renderer::UseTexture(TexturePtr tex, unsigned int unit);
 public:
-    TextureResource();
-    ~TextureResource();
+    Texture();
+    ~Texture();
 
     /**
     * Loads a texture.
@@ -51,7 +51,7 @@ public:
     /**
     * Returns whether the texture is valid.
     */
-    bool IsValid();
+    bool IsValid() const;
 
     /**
     * Creates a new texture.
@@ -88,7 +88,7 @@ private:
 /**
 * A texture resource manager.
 */
-typedef ResourceManager<TextureResource> TextureManager;
+typedef ResourceManager<Texture> TextureManager;
 }
 #pragma warning(pop)
 #endif

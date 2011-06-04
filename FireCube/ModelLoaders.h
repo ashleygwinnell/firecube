@@ -59,7 +59,7 @@ public:
     class Mesh
     {
     public:
-        Material material;
+        MaterialPtr material;
         vector<Face> face;
     };
     class Object
@@ -74,7 +74,7 @@ public:
 
     M3dsLoader();
     bool Load(const string &filename);
-    Node GenerateSceneGraph();
+    NodePtr GenerateSceneGraph();
 private:
     void ReadMainChunk();
     void ReadEdit3dsChunk(unsigned int length);
@@ -88,17 +88,17 @@ private:
     void ReadMaterialListChunk(unsigned int length);
     void ReadMaterialNameChunk();
     vec4 ReadMaterialColorChunk(unsigned int length);
-    Texture ReadMaterialTexMapChunk(unsigned int length);
+    TexturePtr ReadMaterialTexMapChunk(unsigned int length);
     float ReadMaterialShininessChunk(unsigned int length);
     string ReadMapNameChunk();
     vec4 ReadColorFChunk();
     vec4 ReadColorBChunk();
     float ReadPercentageBChunk();
     float ReadPercentageFChunk();
-    Material GetMaterialByName(const string &name);
+    MaterialPtr GetMaterialByName(const string &name);
     vector<char> buffer;
-    Material curMaterial;
-    vector<Material> materials;
+    MaterialPtr curMaterial;
+    vector<MaterialPtr> materials;
     vector<pair<pair<unsigned int, unsigned int>, string>> meshMaterial;
     vector<pair<unsigned int, mat4>> objectMatrix;
     vector<Object> object;
@@ -249,6 +249,7 @@ public:
     class Geometry
     {
     public:
+		string name;
         Mesh mesh;
     };
     class Effect
@@ -305,8 +306,8 @@ public:
     mat4 GetTransformMatrix(vector<Transform> &transformations);
     void DeleteNodes(Node *node);
     void ApplySemanticMapping(Sampler &sampler, SemanticMapping &table);
-    FireCube::Node GenerateSceneGraph(Node *node);
-    FireCube::Node GenerateSceneGraph();
+    FireCube::NodePtr GenerateSceneGraph(Node *node);
+    FireCube::NodePtr GenerateSceneGraph();
     InputType SemanticToInputType(const string &semantic);
     template <typename Type>
     Type& ResolveLibraryReference( std::map<std::string, Type>& pLibrary, const std::string& pURL)
@@ -326,6 +327,7 @@ private:
     map<string, Source> sources;
     map<string, Node*> nodeLibrary;
     map<unsigned int, unsigned int> tempMap;
+	map<string, FireCube::MaterialPtr> generatedMaterials;
     Node *root;
     float unit;
     UpDirection upDirection;

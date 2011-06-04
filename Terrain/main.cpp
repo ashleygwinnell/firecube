@@ -11,7 +11,7 @@ vec3 pos(0, 2, 0);
 vec3 speed;
 vec3 angSpeed;
 vec3 ang(0, (float)PI, 0);
-Frustum frustum;
+::Frustum frustum;
 int main(int argc, char *argv[])
 {
     if (!app.Initialize())
@@ -24,11 +24,11 @@ bool App::Init()
     Filesystem::AddSearchPath("../Assets/Textures");
     SetTitle("Terrain");
     font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 18);
-    program = Program(new ProgramResource);
+    program = ProgramPtr(new Program);
     program->Create(Renderer::GetShaderManager().Create("diffuseWithFog.vert"), Renderer::GetShaderManager().Create("diffuseWithFog.frag"));
     if (!terrain.GenerateTerrain("../Assets/Textures/heightmap.bmp", "../Assets/Textures/diffuse.bmp", vec3(512.0f, 50.0f, 512.0f), vec2(1.0f, 1.0f)))
         return false;
-    root = Node(new NodeResource("root"));
+    root = NodePtr(new Node("root"));
     node = LoadMesh("../Assets/Models/teapot.3ds");
     node->Move(vec3(5, 5, 5));
     node->CreateHardNormals();
@@ -55,7 +55,7 @@ void App::Render(float time)
 {
     Renderer::SetPerspectiveProjection(60.0f, 0.1f, 200.0f);
     Renderer::Clear(vec4(0.30f, 0.42f, 0.95f, 1.0f), 1.0f);
-    mat4 t;
+    mat4 t = mat4::identity;
     t.RotateX(ang.x);
     t.RotateY(ang.y);
     t.RotateZ(-angSpeed.z);
@@ -66,7 +66,9 @@ void App::Render(float time)
     program->SetUniform("fogColor", vec4(0.30f, 0.42f, 0.95f, 1.0f));
     program->SetUniform("lightDir", t * vec3(1, -1, 1));
 
-    frustum.ExtractFrustum();
+	mat4 mdl = Renderer::GetModelViewMatrix();
+	mat4 proj = Renderer::GetProjectionMatrix();
+    frustum.Extract(mdl, proj);
     DWORD n = terrain.Render(frustum);
 
     root->SetMatrixTransformation(t);
@@ -74,7 +76,7 @@ void App::Render(float time)
     Renderer::Render(root);
 
     Renderer::SetOrthographicProjection();
-    Renderer::SetModelViewMatrix(mat4());
+    Renderer::SetModelViewMatrix(mat4::identity);
     ostringstream oss, oss2;
     oss << "FPS:" << app.GetFps();
     Renderer::RenderText(font, vec3(0, 0, 0), vec4(1.0f, 1.0f, 1.0f, 1.0f), oss.str());

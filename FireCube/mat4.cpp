@@ -15,6 +15,34 @@ using namespace std;
 using namespace FireCube;
 #include <cmath>
 
+const mat4 mat4::identity(1.0f, 0.0f, 0.0f, 0.0f, 
+						  0.0f, 1.0f, 0.0f, 0.0f, 
+						  0.0f, 0.0f, 1.0f, 0.0f, 
+						  0.0f, 0.0f, 0.0f, 1.0f);
+
+inline mat4::mat4(float v11, float v21, float v31, float v41, float v12, float v22, float v32, float v42, float v13, float v23, float v33, float v43, float v14, float v24, float v34, float v44)
+{
+	m[0] = v11;
+	m[1] = v21;
+	m[2] = v31;
+	m[3] = v41;
+
+	m[4] = v12;
+	m[5] = v22;
+	m[6] = v32;
+	m[7] = v42;
+
+	m[8] = v13;
+	m[9] = v23;
+	m[10] = v33;
+	m[11] = v43;
+
+	m[12] = v14;
+	m[13] = v24;
+	m[14] = v34;
+	m[15] = v44;
+}
+
 inline void mat4::Identity()
 {
     m[0] = m[5] = m[10] = m[15] = 1;
@@ -30,7 +58,7 @@ inline mat4 mat4::operator=(const mat4 &src)
     return (*this);
 }
 
-inline mat4 mat4::operator+(mat4 &src)
+inline mat4 mat4::operator+(const mat4 &src) const
 {
     mat4 ret;
     ret.m[0] = m[0] + src.m[0];
@@ -51,7 +79,7 @@ inline mat4 mat4::operator+(mat4 &src)
     ret.m[15] = m[15] + src.m[15];
     return ret;
 }
-inline mat4 mat4::operator-(mat4 &src)
+inline mat4 mat4::operator-(const mat4 &src) const
 {
     mat4 ret;
     ret.m[0] = m[0] - src.m[0];
@@ -72,7 +100,7 @@ inline mat4 mat4::operator-(mat4 &src)
     ret.m[15] = m[15] - src.m[15];
     return ret;
 }
-inline void mat4::operator+=(mat4 &src)
+inline void mat4::operator+=(const mat4 &src)
 {
     m[0] += src.m[0];
     m[1] += src.m[1];
@@ -91,7 +119,7 @@ inline void mat4::operator+=(mat4 &src)
     m[14] += src.m[14];
     m[15] += src.m[15];
 }
-inline void mat4::operator-=(mat4 &src)
+inline void mat4::operator-=(const mat4 &src)
 {
     m[0] -= src.m[0];
     m[1] -= src.m[1];
@@ -110,7 +138,7 @@ inline void mat4::operator-=(mat4 &src)
     m[14] -= src.m[14];
     m[15] -= src.m[15];
 }
-mat4 mat4::operator*(float src)
+mat4 mat4::operator*(float src) const
 {
     mat4 ret;
     ret.m[0] = m[0] * src;
@@ -131,15 +159,15 @@ mat4 mat4::operator*(float src)
     ret.m[15] = m[15] * src;
     return ret;
 }
-vec3 mat4::operator*(vec3 &src)
+vec3 mat4::operator*(const vec3 &src) const
 {
     return vec3(src.x * m[0] + src.y * m[4] + src.z * m[8] + m[12], src.x * m[1] + src.y * m[5] + src.z * m[9] + m[13], src.x * m[2] + src.y * m[6] + src.z * m[10] + m[14]);
 }
-vec4 mat4::operator*(vec4 &src)
+vec4 mat4::operator*(const vec4 &src) const
 {
 	return vec4(src.x * m[0] + src.y * m[4] + src.z * m[8] + src.w * m[12], src.x * m[1] + src.y * m[5] + src.z * m[9] + src.w * m[13], src.x * m[2] + src.y * m[6] + src.z * m[10] + src.w * m[14], src.x * m[3] + src.y * m[7] + src.z * m[11] + src.w * m[15]);
 }
-mat4 mat4::operator*(mat4 &src)
+mat4 mat4::operator*(const mat4 &src) const
 {
     mat4 ret;
     ret.m[0] = m[0] * src.m[0] + m[4] * src.m[1] + m[8] * src.m[2] + m[12] * src.m[3];
@@ -164,7 +192,7 @@ mat4 mat4::operator*(mat4 &src)
 
     return ret;
 }
-void mat4::operator*=(mat4 &src)
+void mat4::operator*=(const mat4 &src)
 {
     mat4 tmp = *this;
     m[0] = tmp.m[0] * src.m[0] + tmp.m[4] * src.m[1] + tmp.m[8] * src.m[2] + tmp.m[12] * src.m[3];
@@ -189,19 +217,19 @@ void mat4::operator*=(mat4 &src)
 }
 void mat4::Translate(float x, float y, float z)
 {
-    mat4 trans;
+    mat4 trans = mat4::identity;
     trans.m[12] = x;
     trans.m[13] = y;
     trans.m[14] = z;
     (*this) = (*this) * trans;
 }
-void mat4::Translate(vec3 t)
+void mat4::Translate(const vec3 &t)
 {
     Translate(t.x, t.y, t.z);
 }
 void mat4::Scale(float x, float y, float z)
 {
-    mat4 scale;
+    mat4 scale = mat4::identity;
     scale.m[0] = x;
     scale.m[5] = y;
     scale.m[10] = z;
@@ -209,7 +237,7 @@ void mat4::Scale(float x, float y, float z)
 }
 void mat4::RotateX(float ang)
 {
-    mat4 rot;
+    mat4 rot = mat4::identity;
     float cs = (float)cos(ang);
     float sn = (float)sin(ang);
 
@@ -222,7 +250,7 @@ void mat4::RotateX(float ang)
 }
 void mat4::RotateY(float ang)
 {
-    mat4 rot;
+    mat4 rot = mat4::identity;
     float cs = (float)cos(ang);
     float sn = (float)sin(ang);
 
@@ -234,7 +262,7 @@ void mat4::RotateY(float ang)
 }
 void mat4::RotateZ(float ang)
 {
-    mat4 rot;
+    mat4 rot = mat4::identity;
     float cs = (float)cos(ang);
     float sn = (float)sin(ang);
 
@@ -244,9 +272,9 @@ void mat4::RotateZ(float ang)
     rot.m[5] = cs;
     (*this) = (*this) * rot;
 }
-void mat4::Rotate(vec4 rot)
+void mat4::Rotate(const vec4 &rot)
 {
-    mat4 rotm;
+    mat4 rotm = mat4::identity;
     float c = cos(rot.w);
     float s = sin(rot.w);
     float t = 1.0f - c;
@@ -321,13 +349,13 @@ void mat4::Inverse()
 
     *this = ret;
 }
-vec3 mat4::GetDir()
+vec3 mat4::GetDir() const
 {
     vec3 dr(-m[2], -m[6], -m[10]);
     return dr;
 }
 
-vec3 mat4::GetPos()
+vec3 mat4::GetPos() const
 {
     vec3 ps;
     ps.x = (m[0] * m[12] + m[1] * m[13] + m[2] * m[14]);
@@ -362,7 +390,7 @@ void mat4::GenerateOrthographic(float left, float right, float bottom, float top
 }
 void mat4::LookAt(vec3 pos, vec3 at, vec3 up)
 {
-    mat4 trans;
+    mat4 trans = mat4::identity;
     vec3 f = at - pos;
 
     up.Normalize();
@@ -400,7 +428,23 @@ void mat4::LookAt(vec3 pos, vec3 at, vec3 up)
     trans.Translate(-pos.x, -pos.y, -pos.z);
     (*this) *= trans;
 }
-mat3 mat4::ToMat3()
+vec3 mat4::ExtractEulerAngles() const
+{
+	vec3 rotation;
+	rotation.y = asin(-m[8]);
+	if ((-m[8] < -0.99999f) || (-m[8] < -0.99999f))
+	{
+		rotation.x = 0.0f;
+		rotation.z = atan2(-m[1], m[5]);
+	}
+	else
+	{
+		rotation.x = atan2(m[9], m[10]);
+		rotation.z = atan2(m[4], m[0]);
+	}	
+	return rotation;
+}
+mat3 mat4::ToMat3() const
 {
     mat3 ret;
 

@@ -25,9 +25,9 @@ int main(int argc, char *argv[])
     app.pShader = Renderer::GetShaderManager().Create("p.frag");
     app.pShader2 = Renderer::GetShaderManager().Create("p2.frag");
     app.font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 18);
-    app.program = Program(new ProgramResource);
+    app.program = ProgramPtr(new Program);
     app.program->Create(app.vShader, app.pShader);
-    app.program2 = Program(new ProgramResource);
+    app.program2 = ProgramPtr(new Program);
     app.program2->Create(app.vShader, app.pShader2);
     app.model = LoadMesh("../Assets/Models/physcube.3ds");
     app.sphere = LoadMesh("../Assets/Models/sphere2.3ds");
@@ -51,19 +51,23 @@ void App::Update(float t)
 }
 void App::Render(float t)
 {
-    Renderer::SetPerspectiveProjection(60.0f, 0.1f, 100.0f);
+	mat4 projection;
+	projection.GeneratePerspective(90.0f, (float) GetWidth() / (float) GetHeight(), 0.1f, 1000.0f);
+	Renderer::GetCamera()->SetProjectionMatrix(projection);   
     Renderer::Clear(vec4(0.2f, 0.2f, 0.6f, 1.0f), 1.0f);
-    mat4 m;
+    mat4 m = mat4::identity;
     m.RotateX(rot.x);
     m.RotateY(rot.y);
     m.Translate(-camPos);
-    Renderer::SetModelViewMatrix(m);
+    //Renderer::SetModelViewMatrix(m);
+	//Renderer::GetCamera()->SetRotation(vec3(rot.x, rot.y, 0));
+	//Renderer::GetCamera()->SetPosition(camPos);
     Renderer::UseProgram(program);
     app.program->SetUniform("tex0", 0);
     s.Render(m);
 
     Renderer::SetOrthographicProjection();
-    Renderer::SetModelViewMatrix(mat4());
+    Renderer::SetModelViewMatrix(mat4::identity);
     ostringstream oss;
     oss << "FPS:" << app.GetFps();
     Renderer::RenderText(font, vec3(0, 0, 0), vec4(1, 1, 1, 1), oss.str());

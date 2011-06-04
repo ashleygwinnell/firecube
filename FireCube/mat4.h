@@ -9,12 +9,19 @@ namespace FireCube
 class FIRECUBE_API mat4
 {
 public:
-    /**
-    * Constructs a matrix and sets it to the identity matrix.
+    
+	/**
+    * Constructs a matrix.
     */
-    mat4() {
-        Identity();
+    mat4()
+	{        
+
     }
+
+	/**
+    * Constructs a matrix for the specified value.
+    */
+    inline mat4(float v11, float v21, float v31, float v41, float v12, float v22, float v32, float v42, float v13, float v23, float v33, float v43, float v14, float v24, float v34, float v44);
 
     /**
     * Constructs a matrix from a value.
@@ -81,47 +88,47 @@ public:
     /**
     * Adds two matrices.
     */
-    inline mat4 operator+(mat4 &src);
+    inline mat4 operator+(const mat4 &src) const;
 
     /**
     * Subtracts two matrices.
     */
-    inline mat4 operator-(mat4 &src);
+    inline mat4 operator-(const mat4 &src) const;
 
     /**
     * Adds two matrices and assign to this one.
     */
-    inline void operator+=(mat4 &src);
+    inline void operator+=(const mat4 &src);
 
     /**
     * Subtracts two matrices and assign to this one.
     */
-    inline void operator-=(mat4 &src);
+    inline void operator-=(const mat4 &src);
 
     /**
     * Multiplies two matrices.
     */
-    mat4 operator*(mat4 &src);
+    mat4 operator*(const mat4 &src) const;
 
     /**
     * Multiplies a matrix with a scalar.
     */
-    mat4 operator*(float src);
+    mat4 operator*(float src) const;
 
     /**
     * Multiplies two matrices and assign to this one.
     */
-    void operator*=(mat4 &src);
+    void operator*=(const mat4 &src);
 
     /**
     * Multiplies a matrix with a 3d vector.
     */
-    vec3 operator*(vec3 &src);
+    vec3 operator*(const vec3 &src) const;
 
 	/**
     * Multiplies a matrix with a 4d vector.
     */
-    vec4 operator*(vec4 &src);
+    vec4 operator*(const vec4 &src) const;
 
     /**
     * Gets an element in the matrix.
@@ -151,7 +158,7 @@ public:
     * Creates a translation matrix.
     * @param t A vec3 representing the translation.
     */
-    void Translate(vec3 t);
+    void Translate(const vec3 &t);
 
     /**
     * Creates a scaling matrix.
@@ -183,7 +190,7 @@ public:
     * Creates a rotation matrix from an axis angle.
     * @param rot The axis angle(x,y,z,a).
     */
-    void Rotate(vec4 rot);
+    void Rotate(const vec4 &rot);
 
     /**
     * Transposes the matrix.
@@ -198,12 +205,12 @@ public:
     /**
     * Returns the translation in the matrix.
     */
-    vec3 GetPos();
+    vec3 GetPos() const;
 
     /**
     * Returns the direction of the look at vector.
     */
-    vec3 GetDir();
+    vec3 GetDir() const;
 
     /**
     * Generates a perspective projection matrix.
@@ -233,15 +240,26 @@ public:
     */
     void LookAt(vec3 pos, vec3 at, vec3 up);
 
+	/**
+	* Extract the Euler angles for this matrix.
+	* @return A vector containing the three angles of rotation.
+	*/
+	vec3 ExtractEulerAngles() const;
+
     /**
     * Converts to a mat3 by stripping the translation part.
     */
-    mat3 ToMat3();
+    mat3 ToMat3() const;
 
     /**
     * The elements of the matrix;
     */
     float m[16];
+
+	/**
+	* A 4x4 identity matrix.
+	*/
+	static const mat4 identity;
 };
 }
 #endif

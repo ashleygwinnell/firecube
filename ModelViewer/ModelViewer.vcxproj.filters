@@ -21,10 +21,13 @@
     <ClCompile Include="mainframe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MyGLCanvas.cpp">
+    <ClCompile Include="MyMainFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MyMainFrame.cpp">
+    <ClCompile Include="GLCanvas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Document.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,10 +38,13 @@
     <ClInclude Include="mainframe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MyGLCanvas.h">
+    <ClInclude Include="MyMainFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MyMainFrame.h">
+    <ClInclude Include="GLCanvas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Document.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

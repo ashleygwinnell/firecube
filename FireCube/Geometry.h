@@ -8,45 +8,54 @@ namespace FireCube
 {
 
 // Forward declarations.
-class NodeResource;
-typedef boost::shared_ptr<NodeResource> Node;
+class Node;
+typedef boost::shared_ptr<Node> NodePtr;
 class RenderQueue;
-class BufferResource;
-typedef boost::shared_ptr<BufferResource> Buffer;
-class GeometryResource;
+class Buffer;
+typedef boost::shared_ptr<Buffer> BufferPtr;
+class Geometry;
 class ProgramUniformsList;
-class TextureResource;
-typedef boost::shared_ptr<TextureResource> Texture;
+class Texture;
+typedef boost::shared_ptr<Texture> TexturePtr;
+
+/**
+* Specifies the kind of primitives to render.
+*/
+enum PrimitiveType
+{
+	POINTS, LINES, TRIANGLES, TRIANGLE_STRIP, QUADS, LINE_LOOP, TRIANGLE_FAN
+};
+
 
 /**
 * A shared pointer to a GeometryResource.
 */
-typedef boost::shared_ptr<GeometryResource> Geometry;
+typedef boost::shared_ptr<Geometry> GeometryPtr;
 
 namespace Renderer
 {
-void FIRECUBE_API Render(Geometry geometry);
-void FIRECUBE_API Render(Node node);
-void FIRECUBE_API Render(Node node, const std::string &techniqueName, ProgramUniformsList &programUniformsList);
-void FIRECUBE_API Render(RenderQueue &renderQueue, const std::string &techniqueName, ProgramUniformsList &programUniformsList);
+void FIRECUBE_API Render(GeometryPtr geometry);
+void FIRECUBE_API Render(NodePtr node);
+void FIRECUBE_API Render(NodePtr node, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
+void FIRECUBE_API Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
 void FIRECUBE_API Render(RenderQueue &renderQueue);
 }
 
 /**
 * A class representing a material.
 */
-class FIRECUBE_API MaterialResource
+class FIRECUBE_API Material
 {
 public:
-    MaterialResource();
-    ~MaterialResource();
+    Material();
+    ~Material();
 
 
     /**
     * Gets the name of this material.
     * @return The name of the material.
     */
-    std::string GetName();
+    std::string GetName() const;
 
     /**
     * Sets the name of the material.
@@ -58,43 +67,43 @@ public:
     * Gets the ambient color of this material.
     * @return The ambient color of this material.
     */
-    vec4 GetAmbientColor();
+    vec4 GetAmbientColor() const;
 
     /**
     * Sets the ambient color of this material.
     * @param color The color to set the ambient to.
     */
-    void SetAmbientColor(vec4 color);
+    void SetAmbientColor(const vec4 &color);
 
     /**
     * Gets the diffuse color of this material.
     * @return The diffuse color of this material.
     */
-    vec4 GetDiffuseColor();
+    vec4 GetDiffuseColor() const;
 
     /**
     * Sets the diffuse color of this material.
     * @param color The color to set the diffuse to.
     */
-    void SetDiffuseColor(vec4 color);
+    void SetDiffuseColor(const vec4 &color);
 
     /**
     * Gets the specular color of this material.
     * @return The specular color of this material.
     */
-    vec4 GetSpecularColor();
+    vec4 GetSpecularColor() const;
 
     /**
     * Sets the specular color of this material.
     * @param color The color to set the specular to.
     */
-    void SetSpecularColor(vec4 color);
+    void SetSpecularColor(const vec4 &color);
 
     /**
     * Gets the shininess factor of this material.
     * @return The shininess factor of this material.
     */
-    float GetShininess();
+    float GetShininess() const;
 
     /**
     * Sets the shininess factor of this material.
@@ -106,25 +115,25 @@ public:
     * Gets the diffuse texture of this material.
     * @return The diffuse texture of this material.
     */
-    Texture GetDiffuseTexture();
+    TexturePtr GetDiffuseTexture();
 
     /**
     * Sets the diffuse texture of this material.
     * @param texture The new diffuse texture map.
     */
-    void SetDiffuseTexture(Texture texture);
+    void SetDiffuseTexture(TexturePtr texture);
 
     /**
     * Gets the normal texture of this material.
     * @return The normal texture of this material.
     */
-    Texture GetNormalTexture();
+    TexturePtr GetNormalTexture();
 
     /**
     * Sets the normal texture of this material.
     * @param texture The new normal texture map.
     */
-    void SetNormalTexture(Texture texture);
+    void SetNormalTexture(TexturePtr texture);
 
 private:
 
@@ -133,14 +142,14 @@ private:
     vec4 diffuse;
     vec4 specular;
     float shininess;
-    Texture diffuseTexture;
-    Texture normalTexture;
+    TexturePtr diffuseTexture;
+    TexturePtr normalTexture;
 };
 
 /**
 * A shared pointer to a MaterialResource.
 */
-typedef boost::shared_ptr<MaterialResource> Material;
+typedef boost::shared_ptr<Material> MaterialPtr;
 
 /**
 * Defines an edge in a geometry.
@@ -183,41 +192,18 @@ public:
 };
 
 /**
-* Defines a surface in a geometry.
-* A surface is a list of faces sharing the same material.
-*/
-class FIRECUBE_API Surface
-{
-public:
-    /**
-    * The material associated with the surface.
-    */
-    Material material;
-
-    /**
-    * The list of faces of this surface.
-    */
-    std::vector<Face> face;
-
-    /**
-    * An index buffer used for rendering.
-    */
-    Buffer indexBuffer;
-};
-
-/**
 * A class representing a geometry.
-* Geometries consists of vertices(position, normal, etc..), surfaces and materials.
+* Geometries consists of vertices(position, normal, etc..), faces and a material.
 */
-class FIRECUBE_API GeometryResource
+class FIRECUBE_API Geometry
 {
-    friend void Renderer::Render(Geometry geometry);
-    friend void Renderer::Render(Node node);
-    friend void Renderer::Render(Node node, const std::string &techniqueName, ProgramUniformsList &programUniformsList);
-	friend void Renderer::Render(RenderQueue &renderQueue, const std::string &techniqueName, ProgramUniformsList &programUniformsList);
+    friend void Renderer::Render(GeometryPtr geometry);
+    friend void Renderer::Render(NodePtr node);
+    friend void Renderer::Render(NodePtr node, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
+	friend void Renderer::Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
     friend void Renderer::Render(RenderQueue &renderQueue);
 public:
-    ~GeometryResource();
+    ~Geometry();
 
     /**
     * Calculates the bounding box of this model.
@@ -226,23 +212,17 @@ public:
     /**
     * Returns the bounding box of this model.
     */
-    BoundingBox GetBoundingBox();
+    BoundingBox GetBoundingBox() const;
     /**
     * Applies a transformation to the model vertices.
     * @param transform The transformation matrix.
     */
-    void ApplyTransformation(mat4 &transform);
-    /**
-    * Searches for a material by name.
-    * @param name The name of the material.
-    * @return The material.
-    */
-    Material GetMaterialByName(const std::string &name);
+    void ApplyTransformation(const mat4 &transform);
     /**
     * Reduces the geometry by removing duplicated vertices.
     * @return The reduced geometry.
     */
-    Geometry Reduce();
+    GeometryPtr Reduce() const;
     /**
     * Calculates face and vertex normals.
     */
@@ -283,29 +263,78 @@ public:
     * Returns the diffuse uv of this geometry.
     */
     std::vector<vec2> &GetDiffuseUV();
-    /**
-    * Returns the surfaces of this geometry.
+	/**
+    * Returns the indices of this geometry.
     */
-    std::vector<Surface> &GetSurfaces();
-    /**
-    * Returns the materials of this geometry.
+    std::vector<unsigned int> &GetIndices();
+    
+	/**
+	* Copies the triangles defined in the faces of this geometry to the index buffer.
+	*/
+	void CopyFacesToIndexBuffer();
+
+	/**
+    * Returns the material of this geometry.
     */
-    std::vector<Material> &GetMaterials();
+    MaterialPtr GetMaterial();
+
+	/**
+	* Sets the material of this geometry.
+	* @param material The material to assign to this geometry.
+	*/
+	void SetMaterial(MaterialPtr material);
+
+	/**
+	* Sets the primitive type to be rendered by this geometry.
+	* @param primitiveTpye The type of the primitive.
+	*/
+	void SetPrimitiveType(PrimitiveType primitiveType);
+
+	/**
+	* @return The primitive type of this geometry.
+	*/
+	PrimitiveType GetPrimitiveType() const;
+
+	/**
+	* Sets the amount of primitives to be rendered by this geometry.
+	* @param primitiveCount The number of primitives.
+	*/
+	void SetPrimitiveCount(unsigned int primitiveCount);
+
+	/**
+	* @return The amount of primitives rendered by this geometry.
+	*/
+	unsigned int GetPrimitiveCount() const;
+
+	/**
+	* Sets the number of elements contained in the index buffer.
+	* @indexCount The number of indices.
+	*/
+	void SetIndexCount(unsigned int indexCount);
+
+	/**
+	* @return The number of elements contained in the index buffer.	
+	*/
+	unsigned int GetIndexCount() const;
 
 private:
     std::vector<vec3> vertex;
     std::vector<vec3> normal;
     std::vector<vec3> tangent;
-    std::vector<vec3> bitangent;
-    std::vector<Surface> surface;
+    std::vector<vec3> bitangent;    
     std::vector<Face> face;
+	std::vector<unsigned int> indices;
     std::vector<vec2> diffuseUV;
-    Buffer vertexBuffer;
-    Buffer diffuseUVBuffer;
-    Buffer normalBuffer;
-    Buffer tangentBuffer;
-    Buffer bitangentBuffer;
-    std::vector<Material> material;
+    BufferPtr vertexBuffer;
+    BufferPtr diffuseUVBuffer;
+    BufferPtr normalBuffer;
+    BufferPtr tangentBuffer;
+    BufferPtr bitangentBuffer;
+	BufferPtr indexBuffer;
+    MaterialPtr material;
+	PrimitiveType primitiveType;
+	unsigned int primitiveCount;
+	unsigned int indexCount;
     BoundingBox bbox;
 };
 }

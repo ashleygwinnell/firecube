@@ -20,7 +20,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	fgSizer1->SetFlexibleDirection( wxBOTH );
 	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	glCanvas = new MyGLCanvas(this, wxID_ANY,wxDefaultPosition,wxSize(1,1));
+	glCanvas = new GLCanvas(this, wxID_ANY,wxDefaultPosition,wxSize(1,1));
 	fgSizer1->Add( glCanvas, 0, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer2;
@@ -195,6 +195,17 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	panel5->Layout();
 	fgSizer5->Fit( panel5 );
 	notebook1->AddPage( panel5, wxT("Materials"), false );
+	panel10 = new wxPanel( notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer6;
+	bSizer6 = new wxBoxSizer( wxVERTICAL );
+	
+	treeCtrl2 = new wxTreeCtrl( panel10, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), wxTR_DEFAULT_STYLE|wxTR_HIDE_ROOT );
+	bSizer6->Add( treeCtrl2, 1, wxALL|wxEXPAND, 5 );
+	
+	panel10->SetSizer( bSizer6 );
+	panel10->Layout();
+	bSizer6->Fit( panel10 );
+	notebook1->AddPage( panel10, wxT("Scene"), false );
 	
 	bSizer2->Add( notebook1, 1, wxEXPAND | wxALL, 5 );
 	

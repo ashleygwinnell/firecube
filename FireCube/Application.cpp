@@ -30,6 +30,7 @@ using namespace FireCube;
 
 extern void InitializeRenderer();
 extern void DestroyRenderer();
+extern void ResetNumberOfTrianglesRendered();
 extern FT_Library freeTypeLibrary;
 
 Application::Application() : running(false), frameCount(0), fpsTime(0), fps(0)
@@ -69,7 +70,7 @@ bool Application::Initialize(int width, int height, int bpp, int multisample, bo
 
     Renderer::SetViewport(0, 0, width, height);
     Renderer::SetPerspectiveProjection(90.0f, 0.1f, 100);
-    Renderer::SetModelViewMatrix(mat4());
+    Renderer::SetModelViewMatrix(mat4::identity);
     this->width = width;
     this->height = height;
     return InitializeNoWindow();
@@ -99,7 +100,7 @@ void Application::Run()
     SDL_Event event;
     Logger::Write(Logger::LOG_INFO, string("Entering main loop..."));
     while (running)
-    {
+    {		
         deltaTime = (float)timer.Passed();
         timer.Update();
         while(SDL_PollEvent(&event))
@@ -124,6 +125,7 @@ void Application::Run()
             else if (event.type == SDL_QUIT)
                 running = false;
         }
+		ResetNumberOfTrianglesRendered();
         HandleInput(deltaTime);
         Update(deltaTime);
         Render(deltaTime);
@@ -159,7 +161,7 @@ int Application::GetHeight() const
 {
     return height;
 }
-vec2 Application::GetCursorPos()
+vec2 Application::GetCursorPos() const
 {
 	int x, y;
 	SDL_GetMouseState(&x, &y);

@@ -21,11 +21,11 @@ enum BufferType
 /**
 * A buffer of data used for rendering.
 */
-class FIRECUBE_API BufferResource
+class FIRECUBE_API Buffer
 {
 public:
-    BufferResource();
-    ~BufferResource();
+    Buffer();
+    ~Buffer();
 
     /**
     * Creates a new buffer.
@@ -76,7 +76,7 @@ public:
     /**
     * Returns whether the buffer is valid.
     */
-    bool IsValid();
+    bool IsValid() const;
     /**
     * Destroys the buffer.
     */
@@ -94,7 +94,7 @@ private:
 /**
 * A shared pointer to a BufferResource.
 */
-typedef boost::shared_ptr<BufferResource> Buffer;
+typedef boost::shared_ptr<Buffer> BufferPtr;
 
 }
 #pragma warning(pop)

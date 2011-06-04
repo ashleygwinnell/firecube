@@ -33,5 +33,9 @@
 #include "Light.h"
 #include "Node.h"
 #include "GeometryGenerator.h"
+#include "Plane.h"
+#include "Frustum.h"
+#include "Camera.h"
+#include "NodeObserverCamera.h"
 
 #endif

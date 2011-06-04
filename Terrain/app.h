@@ -6,8 +6,8 @@ public:
     void Update(float time);
     void Render(float time);
 
-    Node root, node;
-    Program program;
-    Font font;
+    NodePtr root, node;
+    ProgramPtr program;
+    FontPtr font;
     Terrain terrain;
 };

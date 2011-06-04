@@ -5,10 +5,10 @@ class App : public Application
     void Render(float time);
     void HandleInput(float time);
 
-    Font font;
-    Node root, node, node2;
-    Program program;
-    Buffer uvBuffer, vBuffer;
-    FrameBuffer fbo;
+    FontPtr font;
+    NodePtr root, node, node2;
+    ProgramPtr program;
+    BufferPtr uvBuffer, vBuffer;
+    FrameBufferPtr fbo;
     float ang;
 };

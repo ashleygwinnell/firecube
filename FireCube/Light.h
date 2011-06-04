@@ -24,43 +24,43 @@ public:
     * Gets the type of this light.
     * @return The type of this light.
     */
-    LightType GetType();
+    LightType GetType() const;
 
     /**
     * Sets the ambient color of this light.
     * @param color The ambient color to set.
     */
-    void SetAmbientColor(vec4 color);
+    void SetAmbientColor(const vec4 &color);
 
     /**
     * Gets the ambient color of this light.
     * @return The ambient color of this light.
     */
-    vec4 GetAmbientColor();
+    vec4 GetAmbientColor() const;
 
     /**
     * Sets the diffuse color of this light.
     * @param color The diffuse color to set.
     */
-    void SetDiffuseColor(vec4 color);
+    void SetDiffuseColor(const vec4 &color);
 
     /**
     * Gets the diffuse color of this light.
     * @return The diffuse color of this light.
     */
-    vec4 GetDiffuseColor();
+    vec4 GetDiffuseColor() const;
 
     /**
     * Sets the specular color of this light.
     * @param color The specular color to set.
     */
-    void SetSpecularColor(vec4 color);
+    void SetSpecularColor(const vec4 &color);
 
     /**
     * Gets the specular color of this light.
     * @return The specular color of this light.
     */
-    vec4 GetSpecularColor();
+    vec4 GetSpecularColor() const;
 
     /**
     * Checks whether two lights are equal.

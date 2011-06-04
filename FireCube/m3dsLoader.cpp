@@ -51,7 +51,7 @@ bool M3dsLoader::Load(const string &filename)
     {
         if (object[k].mesh.size() == 0) // No material specified, create a default one.
         {
-            Material mat(new MaterialResource);
+            MaterialPtr mat(new Material);
             mat->SetAmbientColor(vec4(0, 0, 0, 1));
             mat->SetDiffuseColor(vec4(1, 1, 1, 1));
             mat->SetSpecularColor(vec4(0, 0, 0, 1));
@@ -64,40 +64,45 @@ bool M3dsLoader::Load(const string &filename)
     }
     return true;
 }
-Node M3dsLoader::GenerateSceneGraph()
+NodePtr M3dsLoader::GenerateSceneGraph()
 {
-    Node ret(new NodeResource);
+    NodePtr ret(new Node);
     for (unsigned int i = 0; i < object.size(); i++)
-    {
-        Geometry geom(new GeometryResource);
-
-        geom->GetVertices() = object[i].vertex;
-        geom->GetDiffuseUV() = object[i].uv;
-        geom->GetMaterials() = materials;
-        for (unsigned int j = 0; j < object[i].mesh.size(); j++)
+    {   
+		NodePtr objectNode(new Node(object[i].name));
+		ret->AddChild(objectNode);
+		for (unsigned int j = 0; j < object[i].mesh.size(); j++)
         {
+			GeometryPtr geom(new Geometry);
+
+			geom->GetVertices() = object[i].vertex;
+			geom->GetDiffuseUV() = object[i].uv;			
+
             Mesh &mesh = object[i].mesh[j];
-            geom->GetSurfaces().push_back(Surface());
-            Surface &surface = geom->GetSurfaces().back();
-            surface.material = mesh.material;
+            geom->SetMaterial(mesh.material);
             for (unsigned int k = 0; k < mesh.face.size(); k++)
             {
                 Face f;
                 f.v[0] = mesh.face[k].v[0];
                 f.v[1] = mesh.face[k].v[1];
                 f.v[2] = mesh.face[k].v[2];
-                surface.face.push_back(f);
                 geom->GetFaces().push_back(f);
             }
-        }
-        geom->CalculateNormals();
-        geom->CalculateTangents();
-        geom->UpdateBuffers();
-        Node node(new NodeResource(object[i].name));
-        node->AddGeometry(geom);
-        ret->AddChild(node);
-    }
-    ret->SetTechnique("default");
+			geom->CopyFacesToIndexBuffer();
+			geom->SetPrimitiveType(TRIANGLES);
+			geom->SetPrimitiveCount(geom->GetFaces().size());
+			geom->SetIndexCount(geom->GetFaces().size() * 3);
+			geom->CalculateNormals();
+			geom->CalculateTangents();
+			geom->UpdateBuffers();
+			geom->CalculateBoundingBox();
+			ostringstream oss;
+			oss << object[i].name << "-surface-" << j;
+			NodePtr node(new Node(oss.str()));
+			node->SetGeometry(geom);
+			objectNode->AddChild(node);
+        }        
+    }    
     return ret;
 }
 void M3dsLoader::ReadMainChunk()
@@ -249,7 +254,7 @@ void M3dsLoader::ReadMaterialFaceList()
 void M3dsLoader::ReadObjectMatrixChunk()
 {
     float *arr = (float*)curPos;
-    mat4 mat;
+    mat4 mat = mat4::identity;
     mat.m[0] = arr[0];
     mat.m[4] = arr[1];
     mat.m[8] = arr[2];
@@ -292,7 +297,7 @@ void M3dsLoader::ReadMaterialListChunk(unsigned int length)
 }
 void M3dsLoader::ReadMaterialNameChunk()
 {
-    curMaterial = Material(new MaterialResource);
+    curMaterial = MaterialPtr(new Material);
     materials.push_back(curMaterial);
     curMaterial->SetName(curPos);
     curPos += curMaterial->GetName().size() + 1;
@@ -361,9 +366,9 @@ string M3dsLoader::ReadMapNameChunk()
     curPos += ret.size() + 1;
     return ret;
 }
-Texture M3dsLoader::ReadMaterialTexMapChunk(unsigned int length)
+TexturePtr M3dsLoader::ReadMaterialTexMapChunk(unsigned int length)
 {
-    Texture ret;
+    TexturePtr ret;
     char *startPos = curPos;
     while ((unsigned int)(curPos - startPos) < length)
     {
@@ -377,15 +382,15 @@ Texture M3dsLoader::ReadMaterialTexMapChunk(unsigned int length)
     }
     return ret;
 }
-Material M3dsLoader::GetMaterialByName(const string &name)
+MaterialPtr M3dsLoader::GetMaterialByName(const string &name)
 {
-    vector<Material>::iterator i = materials.begin();
+    vector<MaterialPtr>::iterator i = materials.begin();
     for (; i != materials.end(); i++)
     {
         if ((*i)->GetName() == name)
             return *i;
     }
-    return Material();
+    return MaterialPtr();
 }
 float M3dsLoader::ReadPercentageBChunk()
 {

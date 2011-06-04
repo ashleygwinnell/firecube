@@ -17,34 +17,34 @@ bool App::Init()
     Filesystem::AddSearchPath("../Assets/Models");
     SetTitle("SceneGraph Test Application");
     font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 18);
-    Geometry lightMarker = GeometryGenerator::GenerateSphere(0.1f, 10, 10);
-    root = Node(new NodeResource("Root"));
+    GeometryPtr lightMarker = GeometryGenerator::GenerateSphere(0.1f, 10, 10);
+    root = NodePtr(new Node("Root"));
     Light l;
     l.SetAmbientColor(vec4(0.3f, 0.3f, 0.3f, 1));
     l.SetDiffuseColor(vec4(1.0f, 1.0f, 1.0f, 1));
     l.SetSpecularColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
     l.SetType(FireCube::POINT);
-    Node nn(new NodeResource("Ln"));
+    NodePtr nn(new Node("Ln"));
     nn->SetParent(root);
-    Node lightNode(new NodeResource("LightNode1"));
+    NodePtr lightNode(new Node("LightNode1"));
     lightNode->SetParent(nn);
     lightNode->AddLight(l);
     lightNode->Move(vec3(0, 0, 4.0f));
     lightNode->SetLighting(false);
-    lightNode->AddGeometry(lightMarker);
+    lightNode->SetGeometry(lightMarker);
 
-    Material mat(new MaterialResource);
+    MaterialPtr mat(new Material);
     mat->SetAmbientColor(vec4(0.3f, 0.3f, 0.3f, 1.0f));
     mat->SetDiffuseColor(vec4(0.7f, 0.7f, 0.7f, 1.0f));
     mat->SetSpecularColor(vec4(0.3f, 0.3f, 0.3f, 1.0f));
     mat->SetShininess(20.0f);
     mat->SetDiffuseTexture(Renderer::GetTextureManager().Create("earthmap1k.jpg"));
-    Node n(new NodeResource("Earth"));
+    NodePtr n(new Node("Earth"));
     n->SetParent(root);
-    n->AddGeometry(GeometryGenerator::GenerateSphere(2.0f, 32, 32, mat));
+    n->SetGeometry(GeometryGenerator::GenerateSphere(2.0f, 32, 32, mat));
 
     n = root->AddChild(LoadMesh("../Assets/Models/teapot.3ds"));
-    n->SetName("Teapot");
+	n->SetName("Teapot");
     n->CreateHardNormals();
     n->Move(vec3(8, -2, 0));
 
@@ -64,11 +64,12 @@ void App::Update(float t)
 void App::Render(float t)
 {
     Renderer::Clear(vec4(0.2f, 0.2f, 0.6f, 1.0f), 1.0f);
-    Renderer::SetPerspectiveProjection(90.0f, 0.1f, 1000.0f);
-    Renderer::SetModelViewMatrix(mat4());
+	mat4 projection;
+    projection.GeneratePerspective(90.0f, (float) GetWidth() / (float) GetHeight(), 0.1f, 1000.0f);
+	Renderer::GetCamera()->SetProjectionMatrix(projection);    
     Renderer::Render(root);
-    //sg.Root()->RenderBoundingBox();
-    Renderer::SetModelViewMatrix(mat4());
+    //root->RenderBoundingBox(vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    Renderer::SetModelViewMatrix(mat4::identity);
     Renderer::SetOrthographicProjection();
     ostringstream oss;
     oss << "FPS:" << app.GetFps();

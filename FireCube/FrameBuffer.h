@@ -8,27 +8,27 @@ namespace FireCube
 {
 
 // Forward declarations.
-class FrameBufferResource;
+class FrameBuffer;
 
 /**
 * A shared pointer to a FrameBufferResource.
 */
-typedef boost::shared_ptr<FrameBufferResource> FrameBuffer;
+typedef boost::shared_ptr<FrameBuffer> FrameBufferPtr;
 
 namespace Renderer
 {
-void FIRECUBE_API UseFrameBuffer(FrameBuffer frameBuffer);
+void FIRECUBE_API UseFrameBuffer(FrameBufferPtr frameBuffer);
 }
 
 /**
 * A class representing a frame buffer.
 */
-class FIRECUBE_API FrameBufferResource
+class FIRECUBE_API FrameBuffer
 {
-    friend void Renderer::UseFrameBuffer(FrameBuffer frameBuffer);
+    friend void Renderer::UseFrameBuffer(FrameBufferPtr frameBuffer);
 public:
-    FrameBufferResource();
-    ~FrameBufferResource();
+    FrameBuffer();
+    ~FrameBuffer();
     /**
     * Creates a frame buffer.
     * @param width The width of the frame buffer and it's sub-images(depth buffer, render targets).
@@ -53,27 +53,27 @@ public:
     * @param texture The texture.
     * @param attachmentPoint The attachment point to add to.
     */
-    void SetRenderTarget(Texture texture, int attachmentPoint);
+    void SetRenderTarget(TexturePtr texture, int attachmentPoint);
     /**
     * Returns a texture from an attachment point.
     */
-    Texture GetRenderTarget(int attachmentPoint);
+    TexturePtr GetRenderTarget(int attachmentPoint);
     /**
     * Returns a texture from the depth buffer.
     */
-    Texture GetDepthBuffer();
+    TexturePtr GetDepthBuffer();
     /**
     * Checks whether the frame buffer is valid and can be rendered to.
     */
-    bool IsValid();
+    bool IsValid() const;
     /**
     * Returns the width of the frame buffer.
     */
-    int GetWidth();
+    int GetWidth() const;
     /**
     * Returns the height of the frame buffer.
     */
-    int GetHeight();
+    int GetHeight() const;
     /**
     * Returns the resource id of the frame buffer.
     */
@@ -83,8 +83,8 @@ private:
     int width, height;
     GLuint id;
     GLuint depthBuffer;
-    Texture texture[MAX_TEXTURES];
-    Texture depthTexture;
+    TexturePtr texture[MAX_TEXTURES];
+    TexturePtr depthTexture;
 };
 }
 

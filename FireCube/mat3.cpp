@@ -15,7 +15,11 @@ using namespace std;
 using namespace FireCube;
 #include <cmath>
 
-mat3 FireCube::operator*(const mat3 &a, const float &b)
+const mat3 mat3::identity(1.0f, 0.0f, 0.0f, 
+						  0.0f, 1.0f, 0.0f, 
+						  0.0f, 0.0f, 1.0f);
+
+mat3 FireCube::operator*(const mat3 &a, float b)
 {
     mat3 ret;
     ret.m[0] = a.m[0] * b;
@@ -29,7 +33,7 @@ mat3 FireCube::operator*(const mat3 &a, const float &b)
     ret.m[8] = a.m[8] * b;
     return ret;
 }
-mat3 FireCube::operator*(const float &a, const mat3 &b)
+mat3 FireCube::operator*(float a, const mat3 &b)
 {
     mat3 ret;
     ret.m[0] = b.m[0] * a;
@@ -100,7 +104,7 @@ inline mat3 mat3::operator=(const mat3 &src)
     memcpy(m, src.m, sizeof(float) * 9);
     return (*this);
 }
-inline mat3 mat3::operator+(mat3 &src)
+inline mat3 mat3::operator+(const mat3 &src) const
 {
     mat3 ret;
     ret.m[0] = m[0] + src.m[0];
@@ -114,7 +118,7 @@ inline mat3 mat3::operator+(mat3 &src)
     ret.m[8] = m[8] + src.m[8];
     return ret;
 }
-inline mat3 mat3::operator-(mat3 &src)
+inline mat3 mat3::operator-(const mat3 &src) const
 {
     mat3 ret;
     ret.m[0] = m[0] - src.m[0];
@@ -128,7 +132,7 @@ inline mat3 mat3::operator-(mat3 &src)
     ret.m[8] = m[8] - src.m[8];
     return ret;
 }
-inline void mat3::operator+=(mat3 &src)
+inline void mat3::operator+=(const mat3 &src)
 {
     m[0] += src.m[0];
     m[1] += src.m[1];
@@ -140,7 +144,7 @@ inline void mat3::operator+=(mat3 &src)
     m[7] += src.m[7];
     m[8] += src.m[8];
 }
-inline void mat3::operator-=(mat3 &src)
+inline void mat3::operator-=(const mat3 &src)
 {
     m[0] -= src.m[0];
     m[1] -= src.m[1];
@@ -152,7 +156,7 @@ inline void mat3::operator-=(mat3 &src)
     m[7] -= src.m[7];
     m[8] -= src.m[8];
 }
-mat3 mat3::operator*(mat3 &src)
+mat3 mat3::operator*(const mat3 &src) const
 {
     mat3 ret;
     ret.m[0] = m[0] * src.m[0] + m[3] * src.m[1] + m[6] * src.m[2];
@@ -169,7 +173,7 @@ mat3 mat3::operator*(mat3 &src)
 
     return ret;
 }
-void mat3::operator*=(mat3 &src)
+void mat3::operator*=(const mat3 &src)
 {
     mat3 tmp = *this;
     m[0] = tmp.m[0] * src.m[0] + tmp.m[3] * src.m[1] + tmp.m[6] * src.m[2];
@@ -263,14 +267,14 @@ void mat3::Inverse()
 
     *this = ret;
 }
-vec3 mat3::GetDir()
+vec3 mat3::GetDir() const
 {
     vec3 dr(-m[2], -m[5], -m[8]);
     return dr;
 }
-mat4 mat3::ToMat4()
+mat4 mat3::ToMat4() const
 {
-    mat4 ret;
+    mat4 ret = mat4::identity;
 
     ret.m[0] = m[0];
     ret.m[1] = m[1];
@@ -345,4 +349,20 @@ inline void mat3::SetCol(unsigned int i, const vec3 & col)
     m[o]   = col[0];
     m[o + 1] = col[1];
     m[o + 2] = col[2];
+}
+vec3 mat3::ExtractEulerAngles() const
+{
+	vec3 rotation;
+	rotation.y = asin(-m[6]);
+	if ((-m[6] < -0.999f) || (-m[6] < -0.999f))
+	{
+		rotation.x = 0.0f;
+		rotation.z = atan2(-m[1], m[4]);
+	}
+	else
+	{
+		rotation.x = atan2( m[7], m[8] );
+		rotation.z = atan2( m[3], m[0] );
+	}	
+	return rotation;
 }

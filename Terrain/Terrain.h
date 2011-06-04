@@ -5,21 +5,21 @@ class Terrain
 public:
     Terrain();
     bool GenerateTerrain(const string &heightmap, const string &diffuse, vec3 sizeVertices, vec2 sizeUv);
-    DWORD Render(Frustum &frustum);
+    unsigned int Render(Frustum &frustum);
     float GetHeight(vec2 pos);
     int GetWidth();
     int GetHeight();
     vec3 GetNormal(vec2 pos);
 private:
     QuadTree quadtree;
-    Material material;
-    Program program;
-    Texture diffuseTexture;
+    MaterialPtr material;
+    ProgramPtr program;
+    TexturePtr diffuseTexture;
     vec3 terrainScale;
     Image heightmapImage;
-    Buffer vertexBuffer;
-    Buffer uvBuffer;
-    Buffer normalBuffer;
-    DWORD width, height;
+    BufferPtr vertexBuffer;
+    BufferPtr uvBuffer;
+    BufferPtr normalBuffer;
+    unsigned int width, height;
 };
 #endif

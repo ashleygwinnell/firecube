@@ -46,33 +46,64 @@ void BoundingBox::Expand(const vec3 &v)
     bmax.y = max(bmax.y, v.y);
     bmax.z = max(bmax.z, v.z);
 }
-float BoundingBox::GetWidth()
+float BoundingBox::GetWidth() const
 {
     return bmax.x - bmin.x;
 }
-float BoundingBox::GetHeight()
+float BoundingBox::GetHeight() const
 {
     return bmax.y - bmin.y;
 }
-float BoundingBox::GetDepth()
+float BoundingBox::GetDepth() const
 {
     return bmax.z - bmin.z;
 }
-vec3 BoundingBox::GetCenter()
+vec3 BoundingBox::GetCenter() const
 {
     return (bmin + bmax) / 2.0f;
 }
-bool BoundingBox::Contains(const BoundingBox &bb)
+bool BoundingBox::Contains(const BoundingBox &bb) const
 {
     if (bb.bmin.x >= bmin.x && bb.bmin.y >= bmin.y && bb.bmin.z >= bmin.z && bb.bmax.x <= bmax.x &&  bb.bmax.y <= bmax.y &&  bb.bmax.z <= bmax.z)
         return true;
     return false;
 }
-vec3 BoundingBox::GetMin()
+void BoundingBox::SetMin(const vec3 &min)
+{
+	bmin = min;
+}
+vec3 BoundingBox::GetMin() const
 {
     return bmin;
 }
-vec3 BoundingBox::GetMax()
+void BoundingBox::SetMax(const vec3 &max)
+{
+	bmax = max;
+}
+
+vec3 BoundingBox::GetMax() const
 {
     return bmax;
+}
+void BoundingBox::Transform(const mat4 &mat)
+{
+	float w=GetWidth();
+	float h=GetHeight();
+	float d=GetDepth();
+	vec3 v[8]={GetMin(),
+		GetMin()+vec3(w,0,0),
+		GetMin()+vec3(w,0,d),
+		GetMin()+vec3(0,0,d),
+		GetMin()+vec3(0,h,0),
+		GetMin()+vec3(w,h,0),
+		GetMin()+vec3(w,h,d),
+		GetMin()+vec3(0,h,d)};
+	bmin = bmax = v[0] * mat;
+	for (unsigned int i = 1; i < 8; i++)
+		Expand(v[i] * mat);
+}
+
+FireCube::vec3 FireCube::BoundingBox::GetSize() const
+{
+	return bmax-bmin;
 }

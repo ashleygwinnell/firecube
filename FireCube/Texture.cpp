@@ -19,10 +19,10 @@ using namespace std;
 
 using namespace FireCube;
 
-TextureResource::TextureResource() : id(0)
+Texture::Texture() : id(0)
 {
 }
-TextureResource::~TextureResource()
+Texture::~Texture()
 {
     ostringstream ss;
     ss << "Destroyed texture with id=" << id;
@@ -30,11 +30,11 @@ TextureResource::~TextureResource()
     glDeleteTextures(1, &id);
     id = 0;
 }
-bool TextureResource::IsValid()
+bool Texture::IsValid() const
 {
     return id != 0;
 }
-bool TextureResource::Create()
+bool Texture::Create()
 {
     glGenTextures(1, &id);
     ostringstream ss;
@@ -42,7 +42,7 @@ bool TextureResource::Create()
     Logger::Write(Logger::LOG_INFO, ss.str());
     return id != 0;
 }
-bool TextureResource::Load(const std::string &filename)
+bool Texture::Load(const std::string &filename)
 {
     SDL_Surface *image;
     image = IMG_Load(filename.c_str());
@@ -77,12 +77,12 @@ bool TextureResource::Load(const std::string &filename)
     }
     return false;
 }
-void TextureResource::GenerateMipMaps()
+void Texture::GenerateMipMaps()
 {
     glBindTexture(GL_TEXTURE_2D, id);
     glGenerateMipmap(GL_TEXTURE_2D);
 }
-void TextureResource::SetFiltering(TextureFilter minFilter, TextureFilter magFilter)
+void Texture::SetFiltering(TextureFilter minFilter, TextureFilter magFilter)
 {
     GLint min, mag;
 
@@ -105,11 +105,11 @@ void TextureResource::SetFiltering(TextureFilter minFilter, TextureFilter magFil
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
 
 }
-string TextureResource::GetFileName() const
+string Texture::GetFileName() const
 {
     return filename;
 }
-unsigned int TextureResource::GetId() const
+unsigned int Texture::GetId() const
 {
     return id;
 }

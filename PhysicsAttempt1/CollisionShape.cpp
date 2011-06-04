@@ -10,24 +10,24 @@ CollisionShape::CollisionShape() : radius(0), interpolateMesh(true)
 {
 
 }
-Geometry CollisionShape::GetFirstGeometry(Node node)
+GeometryPtr CollisionShape::GetFirstGeometry(NodePtr node)
 {
-    if (node->GetGeometries().size() > 0)
-        return node->GetGeometries()[0];
+    if (node->GetGeometry())
+        return node->GetGeometry();
     else
     {
-        for (vector<Node>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
+        for (vector<NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
         {
-            Geometry g = GetFirstGeometry(*i);
+            GeometryPtr g = GetFirstGeometry(*i);
             if (g)
                 return g;
         }
     }
-    return Geometry();
+    return GeometryPtr();
 }
-void CollisionShape::FromNode(Node node, int sizex, int sizey, int sizez, float extraSize)
+void CollisionShape::FromNode(NodePtr node, int sizex, int sizey, int sizez, float extraSize)
 {
-    Geometry g = GetFirstGeometry(node);
+    GeometryPtr g = GetFirstGeometry(node);
     g = g->Reduce();
     vertex = g->GetVertices();
     face = g->GetFaces();

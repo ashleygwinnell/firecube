@@ -35,7 +35,7 @@ FontManager::FontManager()
 boost::shared_ptr<FontPage> FontManager::CreateNewPage()
 {
     boost::shared_ptr<FontPage> p(new FontPage);
-    p->tex = Texture(new TextureResource);
+    p->tex = TexturePtr(new Texture);
     p->tex->Create();
     glBindTexture(GL_TEXTURE_2D, p->tex->GetId());
     unsigned char empty[512 * 512];
@@ -46,41 +46,41 @@ boost::shared_ptr<FontPage> FontManager::CreateNewPage()
     page.push_back(p);
     return p;
 }
-Font FontManager::Create(const string &filename, int size)
+FontPtr FontManager::Create(const string &filename, int size)
 {
 	char pFullPathName[1024];
 	ostringstream fullPathName;
 	std::string loadfile = Filesystem::SearchForFileName(filename);
 	if (loadfile.empty())
-		return Font();
+		return FontPtr();
 	if (GetFullPathNameA(loadfile.c_str(),1024,pFullPathName,NULL) == 0)
-		return Font();
+		return FontPtr();
 	fullPathName << pFullPathName << ":" << size;
 	
-	map<std::string, boost::weak_ptr<FontResource>>::iterator i = resources.find(fullPathName.str());
+	map<std::string, boost::weak_ptr<Font>>::iterator i = resources.find(fullPathName.str());
 	if (i != resources.end())
 		if (!i->second.expired())
 			return i->second.lock();
-	Font ret(new FontResource);	
+	FontPtr ret(new Font);	
 	if (ret->Load(loadfile, size))
 	{						
 		resources[fullPathName.str()] = ret;
 		return ret;
 	}
 	else	
-        return Font();
+        return FontPtr();
 }
-FontResource::FontResource()
+Font::Font()
 {
     glyph.resize(256);
     fontImpl = new FontImpl;
 }
-FontResource::~FontResource()
+Font::~Font()
 {
     Logger::Write(Logger::LOG_INFO, "Destroying font");
     delete fontImpl;
 }
-bool FontResource::AddChar(char c)
+bool Font::AddChar(char c)
 {
     int error;
     FT_UInt glyph_index;
@@ -112,7 +112,7 @@ bool FontResource::AddChar(char c)
 
     return true;
 }
-bool FontResource::Load(const string &name, int size)
+bool Font::Load(const string &name, int size)
 {
     Logger::Write(Logger::LOG_INFO, "Loading font with name:" + name);
     int error = 0;
@@ -157,7 +157,7 @@ bool FontResource::Load(const string &name, int size)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     return true;
 }
-bool FontResource::Load(const string &name)
+bool Font::Load(const string &name)
 {
     return Load(name, 18);
 }

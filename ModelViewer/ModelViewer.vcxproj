@@ -86,15 +86,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Document.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainframe.cpp" />
-    <ClCompile Include="MyGLCanvas.cpp" />
+    <ClCompile Include="GLCanvas.cpp" />
     <ClCompile Include="MyMainFrame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Document.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="mainframe.h" />
-    <ClInclude Include="MyGLCanvas.h" />
+    <ClInclude Include="GLCanvas.h" />
     <ClInclude Include="MyMainFrame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

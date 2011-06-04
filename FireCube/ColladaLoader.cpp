@@ -336,7 +336,9 @@ void ColladaLoader::ReadGeometryLibrary(TiXmlNode *parent)
             if (element->ValueStr() == "geometry")
             {
                 string id = element->Attribute("id");
+				string name = element->Attribute("name");
                 geometryLibrary[id] = Geometry();
+				geometryLibrary[id].name = name;
                 ReadGeometry(element, geometryLibrary[id]);
             }
         }
@@ -958,11 +960,11 @@ void ColladaLoader::DeleteNodes(Node *node)
 }
 mat4 ColladaLoader::CalculateTranformation(vector<Transform> &transformations)
 {
-    mat4 ret;
+    mat4 ret = mat4::identity;
     for (unsigned int i = 0; i < transformations.size(); i++)
     {
         Transform &t = transformations[i];
-        mat4 temp;
+        mat4 temp = mat4::identity;
         if (t.type == TRANSFORM_TRANSLATE)
         {
             temp.Translate(t.v[0], t.v[1], t.v[2]);
@@ -1060,11 +1062,11 @@ vec3 ColladaLoader::GetScale(vector<Transform> &transformations)
 }
 mat4 ColladaLoader::GetTransformMatrix(vector<Transform> &transformations)
 {
-    mat4 ret;
+    mat4 ret = mat4::identity;
     for (unsigned int i = 0; i < transformations.size(); i++)
     {
         Transform &t = transformations[i];
-        mat4 temp;
+        mat4 temp = mat4::identity;
         if (t.type == TRANSFORM_MATRIX)
         {
             for (unsigned int j = 0; j < 16; j++)
@@ -1129,9 +1131,9 @@ string ColladaLoader::FixFileName(string &filename)
     }
     return file;
 }
-FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
-{
-    FireCube::Node ret(new NodeResource(node->name));
+FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
+{	
+    FireCube::NodePtr ret(new FireCube::Node(node->name));
     vec3 translation = GetTranslation(node->transformations);
     vec3 rotation = GetRotation(node->transformations);
     vec3 scale = GetScale(node->transformations);
@@ -1142,76 +1144,73 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
     ret->SetMatrixTransformation(transformation);
     for (unsigned int i = 0; i < node->geometryInstances.size(); i++)
     {
-        GeometryInstance &gi = node->geometryInstances[i];
+		FireCube::NodePtr geomNode(new FireCube::Node);
+		GeometryInstance &gi = node->geometryInstances[i];
         map<string, Geometry>::iterator iter = geometryLibrary.find(gi.url);
         if (iter == geometryLibrary.end())
             continue;
         Geometry &geom = iter->second;
-        Mesh &mesh = geom.mesh;
-        FireCube::Geometry geometry(new GeometryResource);
-        ret->AddGeometry(geometry);
-        geometry->GetVertices() = mesh.vertices;
-        for (unsigned int j = 0; j < geometry->GetVertices().size(); j++)
+		geomNode->SetName(geom.name);
+		ret->AddChild(geomNode);
+        Mesh &mesh = geom.mesh;                       
+		vector<vec3> vertices = mesh.vertices;
+        for (unsigned int j = 0; j < vertices.size(); j++)
         {
-            //geometry->vertex[j]=geometry->vertex[j]*transformation;
             if (upDirection == X_UP)
             {
-                std::swap(geometry->GetVertices()[j].x, geometry->GetVertices()[j].y);
-                geometry->GetVertices()[j].x *= -1;
+                std::swap(vertices[j].x, vertices[j].y);
+                vertices[j].x *= -1;
             }
             else if (upDirection == Z_UP)
             {
-                std::swap(geometry->GetVertices()[j].y, geometry->GetVertices()[j].z);
-                geometry->GetVertices()[j].z *= -1;
+                std::swap(vertices[j].y, vertices[j].z);
+                vertices[j].z *= -1;
             }
-        }
-        geometry->GetNormals() = mesh.normals;
-        for (unsigned int j = 0; j < geometry->GetNormals().size(); j++)
-        {
-            //geometry->normal[j]=geometry->normal[j].TransformNormal(transformation);
+        }        
+		vector<vec3> normals = mesh.normals;
+        for (unsigned int j = 0; j < normals.size(); j++)
+        {            
             if (upDirection == X_UP)
             {
-                std::swap(geometry->GetNormals()[j].x, geometry->GetNormals()[j].y);
-                geometry->GetNormals()[j].x *= -1;
+                std::swap(normals[j].x, normals[j].y);
+                normals[j].x *= -1;
             }
             else if (upDirection == Z_UP)
             {
-                std::swap(geometry->GetNormals()[j].y, geometry->GetNormals()[j].z);
-                geometry->GetNormals()[j].z *= -1;
+                std::swap(normals[j].y, normals[j].z);
+                normals[j].z *= -1;
             }
-            geometry->GetNormals()[j].Normalize();
-        }
-        geometry->GetTangents() = mesh.tangents;
-        for (unsigned int j = 0; j < geometry->GetTangents().size(); j++)
-        {
-            //geometry->normal[j]=geometry->normal[j].TransformNormal(transformation);
+            normals[j].Normalize();
+        }        
+		vector<vec3> tangents = mesh.tangents;
+        for (unsigned int j = 0; j < tangents.size(); j++)
+        {            
             if (upDirection == X_UP)
             {
-                std::swap(geometry->GetTangents()[j].x, geometry->GetTangents()[j].y);
-                geometry->GetTangents()[j].x *= -1;
+                std::swap(tangents[j].x, tangents[j].y);
+                tangents[j].x *= -1;
             }
             else if (upDirection == Z_UP)
             {
-                std::swap(geometry->GetTangents()[j].y, geometry->GetTangents()[j].z);
-                geometry->GetTangents()[j].z *= -1;
+                std::swap(tangents[j].y, tangents[j].z);
+                tangents[j].z *= -1;
             }
-            geometry->GetTangents()[j].Normalize();
-        }
-        geometry->GetBitangents() = mesh.binormals;
-        for (unsigned int j = 0; j < geometry->GetBitangents().size(); j++)
-        {
-            //geometry->normal[j]=geometry->normal[j].TransformNormal(transformation);
+            tangents[j].Normalize();
+        }        
+		vector<vec3> bitangents = mesh.binormals;
+        for (unsigned int j = 0; j < bitangents.size(); j++)
+        {            
             if (upDirection == X_UP)
             {
-                std::swap(geometry->GetBitangents()[j].x, geometry->GetBitangents()[j].y);
-                geometry->GetBitangents()[j].x *= -1;
+                std::swap(bitangents[j].x, bitangents[j].y);
+                bitangents[j].x *= -1;
             }
             else if (upDirection == Z_UP)
             {
-                std::swap(geometry->GetBitangents()[j].y, geometry->GetBitangents()[j].z);
-                geometry->GetBitangents()[j].z *= -1;
+                std::swap(bitangents[j].y, bitangents[j].z);
+                bitangents[j].z *= -1;
             }
-            geometry->GetBitangents()[j].Normalize();
+            bitangents[j].Normalize();
         }
         unsigned int writePos = 0;
         for (unsigned int j = 0; j < 4; j++)
@@ -1227,23 +1226,46 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
         unsigned int vertexIndex = 0;
         for (unsigned int j = 0; j < mesh.subMeshes.size(); j++)
         {
+			FireCube::NodePtr surfaceNode(new FireCube::Node());
+			ostringstream surfaceNodeName;
+			surfaceNodeName << geomNode->GetName() << "-surface-" << j;
+			surfaceNode->SetName(surfaceNodeName.str());
+			FireCube::GeometryPtr geometry(new FireCube::Geometry);
             SubMesh &subMesh = mesh.subMeshes[j];
             map<string, SemanticMapping>::iterator iter = gi.materials.find(subMesh.material);
             SemanticMapping *table = NULL;
             if (iter != gi.materials.end())
                 table = &iter->second;
             Material &mat = materialLibrary[table->materialName];
-            Effect &effect = effectLibrary[mat.effect];
-            geometry->GetSurfaces().push_back(FireCube::Surface());
-            FireCube::Surface &surface = geometry->GetSurfaces().back();
-            FireCube::Material fmat(new MaterialResource);
-            geometry->GetMaterials().push_back(fmat);
-            fmat->SetAmbientColor(effect.ambientColor);
-            fmat->SetDiffuseColor(effect.diffuseColor);
-            fmat->SetSpecularColor(effect.specularColor);
-            fmat->SetShininess(effect.shininess);
-            fmat->SetName(subMesh.material);
-            surface.material = fmat;
+            Effect &effect = effectLibrary[mat.effect];			
+            geomNode->AddChild(surfaceNode);
+			surfaceNode->SetGeometry(geometry);
+			geometry->GetVertices() = vertices;
+			geometry->GetNormals() = normals;
+			geometry->GetTangents() = tangents;
+			geometry->GetBitangents() = bitangents;
+            FireCube::MaterialPtr fmat;
+			map<string, FireCube::MaterialPtr>:: iterator matIter = generatedMaterials.find(subMesh.material);
+			if (matIter != generatedMaterials.end())
+			{
+				fmat = matIter->second;
+			}
+			else
+			{
+				fmat = FireCube::MaterialPtr(new FireCube::Material);
+				generatedMaterials[subMesh.material] = fmat;
+				fmat->SetAmbientColor(effect.ambientColor);
+				fmat->SetDiffuseColor(effect.diffuseColor);
+				fmat->SetSpecularColor(effect.specularColor);
+				fmat->SetShininess(effect.shininess);
+				fmat->SetName(subMesh.material);            
+				if (effect.diffuseSampler.name != "")
+				{
+					fmat->SetDiffuseTexture(Renderer::GetTextureManager().Create(GetTextureFileNameFromSampler(effect, effect.diffuseSampler)));
+				}
+			}
+            geometry->SetMaterial(fmat);
+            
             if (table)
             {
                 ApplySemanticMapping(effect.ambientSampler, *table);
@@ -1252,8 +1274,7 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
             }
             if (effect.diffuseSampler.name != "")
             {
-                unsigned int map = 0;
-                fmat->SetDiffuseTexture(Renderer::GetTextureManager().Create(GetTextureFileNameFromSampler(effect, effect.diffuseSampler)));
+                unsigned int map = 0;                
                 if (effect.diffuseSampler.uvId != -1)
                     map = effect.diffuseSampler.uvId;
                 else
@@ -1277,8 +1298,7 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
                     Face f;
                     f.v[0] = subMesh.indices[p * 3 + 0];
                     f.v[1] = subMesh.indices[p * 3 + 1];
-                    f.v[2] = subMesh.indices[p * 3 + 2];
-                    surface.face.push_back(f);
+                    f.v[2] = subMesh.indices[p * 3 + 2];                    
                     geometry->GetFaces().push_back(f);
                 }
             }
@@ -1291,30 +1311,31 @@ FireCube::Node ColladaLoader::GenerateSceneGraph(Node *node)
                     Face f;
                     f.v[0] = subMesh.indices[p * 3 + 0];
                     f.v[1] = subMesh.indices[p * 3 + 1];
-                    f.v[2] = subMesh.indices[p * 3 + 2];
-                    surface.face.push_back(f);
+                    f.v[2] = subMesh.indices[p * 3 + 2];                    
                     geometry->GetFaces().push_back(f);
                 }
             }
-
-        }
-        if (geometry->GetTangents().size() == 0)
-            geometry->CalculateTangents();
-
-        geometry->UpdateBuffers();
+			if (geometry->GetTangents().size() == 0)
+				geometry->CalculateTangents();
+			geometry->CopyFacesToIndexBuffer();
+			geometry->SetPrimitiveType(TRIANGLES);
+			geometry->SetPrimitiveCount(geometry->GetFaces().size());
+			geometry->SetIndexCount(geometry->GetFaces().size() * 3);
+			geometry->CalculateBoundingBox();
+			geometry->UpdateBuffers();
+        }    
     }
     for (unsigned int i = 0; i < node->children.size(); i++)
     {
-        FireCube::Node c = GenerateSceneGraph(node->children[i]);
+        FireCube::NodePtr c = GenerateSceneGraph(node->children[i]);
         ret->AddChild(c);
     }
 
     return ret;
 }
-FireCube::Node ColladaLoader::GenerateSceneGraph()
+FireCube::NodePtr ColladaLoader::GenerateSceneGraph()
 {
-    FireCube::Node ret = GenerateSceneGraph(root);
-    ret->SetTechnique("default");
+    FireCube::NodePtr ret = GenerateSceneGraph(root);    
     return ret;
 }
 TiXmlElement *ColladaLoader::GetChildElement(TiXmlNode *node, const string &elmName)

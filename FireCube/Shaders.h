@@ -10,18 +10,18 @@ namespace FireCube
 // Forward declarations.
 template<class T>
 class ResourceManager;
-class BufferResource;
-typedef boost::shared_ptr<BufferResource> Buffer;
-class ProgramResource;
+class Buffer;
+typedef boost::shared_ptr<Buffer> BufferPtr;
+class Program;
 
 /**
 * A shared pointer to a ProgramResource.
 */
-typedef boost::shared_ptr<ProgramResource> Program;
+typedef boost::shared_ptr<Program> ProgramPtr;
 
 namespace Renderer
 {
-void FIRECUBE_API UseProgram(Program program);
+void FIRECUBE_API UseProgram(ProgramPtr program);
 }
 
 /**
@@ -35,13 +35,13 @@ enum ShaderType
 /**
 * A class representing a single shader.
 */
-class FIRECUBE_API ShaderResource
+class FIRECUBE_API Shader
 {
-    friend class ProgramResource;
-    friend class ResourceManager<ShaderResource>;
+    friend class Program;
+    friend class ResourceManager<Shader>;
 public:
-    ShaderResource();
-    ~ShaderResource();
+    Shader();
+    ~Shader();
 
     /**
     * Loads a shader from a file. The shader type is determined by the extension of the file: .vert for a vertex shader, .frag for a fragment shader.
@@ -66,22 +66,22 @@ private:
 /**
 * A shared pointer to a ShaderResource.
 */
-typedef boost::shared_ptr<ShaderResource> Shader;
+typedef boost::shared_ptr<Shader> ShaderPtr;
 
 /**
 * A shader resource manager.
 */
-typedef ResourceManager<ShaderResource> ShaderManager;
+typedef ResourceManager<Shader> ShaderManager;
 
 /**
 * A class representing a gpu program.
 */
-class FIRECUBE_API ProgramResource
+class FIRECUBE_API Program
 {
-    friend void Renderer::UseProgram(Program program);    
+    friend void Renderer::UseProgram(ProgramPtr program);    
 public:
-    ProgramResource();
-    ~ProgramResource();
+    Program();
+    ~Program();
 
     /**
     * Creates the program.
@@ -91,13 +91,13 @@ public:
     /**
     * Creates the program and attaches two shaders to it.
     */
-    void Create(Shader shader1, Shader shader2);
+    void Create(ShaderPtr shader1, ShaderPtr shader2);
 
     /**
     * Attaches a shader to the program.
     * @param shader The shader to attach.
     */
-    void Attach(Shader shader);
+    void Attach(ShaderPtr shader);
 
     /**
     * Links the program.
@@ -123,35 +123,35 @@ public:
     * @param name The name of the variable.
     * @param value The value to assign for it.
     */
-    void SetUniform(const std::string &name, vec2 value);
+    void SetUniform(const std::string &name, const vec2 &value);
 
     /**
     * Sets a 3d uniform float.
     * @param name The name of the variable.
     * @param value The value to assign for it.
     */
-    void SetUniform(const std::string &name, vec3 value);
+    void SetUniform(const std::string &name, const vec3 &value);
 
     /**
     * Sets a 4d uniform float.
     * @param name The name of the variable.
     * @param value The value to assign for it.
     */
-    void SetUniform(const std::string &name, vec4 value);
+    void SetUniform(const std::string &name, const vec4 &value);
 
     /**
     * Sets a 3x3 uniform matrix.
     * @param name The name of the variable.
     * @param value The value to assign for it.
     */
-    void SetUniform(const std::string &name, mat3 value);
+    void SetUniform(const std::string &name, const mat3 &value);
 
     /**
     * Sets a 4x4 uniform matrix.
     * @param name The name of the variable.
     * @param value The value to assign for it.
     */
-    void SetUniform(const std::string &name, mat4 value);
+    void SetUniform(const std::string &name, const mat4 &value);
 
     /**
     * Sets a 1d uniform boolean.
@@ -180,12 +180,12 @@ public:
     * @param buffer The buffer from which data will be read.
     * @param size The number of elements in each attribue.
     */
-    void SetAttribute(const std::string &name, Buffer buffer, int size);
+    void SetAttribute(const std::string &name, BufferPtr buffer, int size);
 
     /**
     * @return Returns the compile log for this program.
     */
-    std::string GetInfoLog();
+    std::string GetInfoLog() const;
 
     /**
     * Returns whether the program is valid.
@@ -206,13 +206,9 @@ class RenderState;
 /**
 * A class representing a technique.
 */
-class FIRECUBE_API TechniqueResource
+class FIRECUBE_API Technique
 {
 public:
-    /**
-    * Creates the technique.
-    */
-    void Create();
 
     /**
     * Loads the specified shader.
@@ -233,10 +229,10 @@ public:
     * Generates a program from a given render state.
     * @param renderState The render state to use to generate the program.
     */
-    Program GenerateProgram(const RenderState &renderState);
+    ProgramPtr GenerateProgram(const RenderState &renderState);
 
 private:
-    std::map<unsigned int, Program> programs;
+    std::map<unsigned int, ProgramPtr> programs;
     std::string vertexShaderCode;
     std::string fragmentShaderCode;
 };
@@ -244,7 +240,7 @@ private:
 /**
 * A shared pointer to a TechniqueResource.
 */
-typedef boost::shared_ptr<TechniqueResource> Technique;
+typedef boost::shared_ptr<Technique> TechniquePtr;
 
 /**
 * A class storing a list of uniforms to be fed into a gpu program.
@@ -265,7 +261,7 @@ public:
     * @param name The name of the uniform variable.
     * @return The value of the uniform variable.
     */
-    int GetIntValue(const std::string &name);
+    int GetIntValue(const std::string &name) const;
 
     /**
     * Assigns a float value to a named uniform variable.
@@ -279,77 +275,77 @@ public:
     * @param name The name of the uniform variable.
     * @return The value of the uniform variable.
     */
-    float GetFloatValue(const std::string &name);
+    float GetFloatValue(const std::string &name) const;
 
     /**
     * Assigns a 2d vector value to a named uniform variable.
     * @param name The name of the uniform variable.
     * @param value The value to assign.
     */
-    void SetVec2Value(const std::string &name, vec2 value);
+    void SetVec2Value(const std::string &name, const vec2 &value);
 
     /**
     * Gets the value of a 2d vector uniform variable.
     * @param name The name of the uniform variable.
     * @return The value of the uniform variable.
     */
-    vec2 GetVec2Value(const std::string &name);
+    vec2 GetVec2Value(const std::string &name) const;
 
     /**
     * Assigns a 3d vector value to a named uniform variable.
     * @param name The name of the uniform variable.
     * @param value The value to assign.
     */
-    void SetVec3Value(const std::string &name, vec3 value);
+    void SetVec3Value(const std::string &name, const vec3 &value);
 
     /**
     * Gets the value of a 3d vector uniform variable.
     * @param name The name of the uniform variable.
     * @return The value of the uniform variable.
     */
-    vec3 GetVec3Value(const std::string &name);
+    vec3 GetVec3Value(const std::string &name) const;
 
     /**
     * Assigns a 4d vector value to a named uniform variable.
     * @param name The name of the uniform variable.
     * @param value The value to assign.
     */
-    void SetVec4Value(const std::string &name, vec4 value);
+    void SetVec4Value(const std::string &name, const vec4 &value);
 
     /**
     * Gets the value of a 4d vector uniform variable.
     * @param name The name of the uniform variable.
     * @return The value of the uniform variable.
     */
-    vec4 GetVec4Value(const std::string &name);
+    vec4 GetVec4Value(const std::string &name) const;
 
     /**
     * Assigns a 3x3 matrix value to a named uniform variable.
     * @param name The name of the uniform variable.
     * @param value The value to assign.
     */
-    void SetMat3Value(const std::string &name, mat3 value);
+    void SetMat3Value(const std::string &name, const mat3 &value);
 
     /**
     * Gets the value of a 3x3 matrix uniform variable.
     * @param name The name of the uniform variable.
     * @return The value of the uniform variable.
     */
-    mat3 GetMat3Value(const std::string &name);
+    mat3 GetMat3Value(const std::string &name) const;
 
     /**
     * Assigns a 4x4 matrix value to a named uniform variable.
     * @param name The name of the uniform variable.
     * @param value The value to assign.
     */
-    void SetMat4Value(const std::string &name, mat4 value);
+    void SetMat4Value(const std::string &name, const mat4 &value);
 
     /**
     * Gets the value of a 4x4 matrix uniform variable.
     * @param name The name of the uniform variable.
     * @return The value of the uniform variable.
     */
-    mat4 GetMat4Value(const std::string &name);
+    mat4 GetMat4Value(const std::string &name) const;
 
     /**
     * Removes a variable from the list.
@@ -361,7 +357,7 @@ public:
     * Applies the list to a gpu program.
     * @param program The program to apply the list to.
     */
-    void ApplyForProgram(Program program);
+    void ApplyForProgram(ProgramPtr program) const;
 
 private:
     std::map<std::string, int> intMap;

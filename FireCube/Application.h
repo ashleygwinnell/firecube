@@ -8,11 +8,11 @@ namespace FireCube
 {
 
 // Forward declarations.
-class ShaderResource;
-typedef ResourceManager<ShaderResource> ShaderManager;
-class TextureResource;
-typedef boost::shared_ptr<TextureResource> Texture;
-typedef ResourceManager<TextureResource> TextureManager;
+class Shader;
+typedef ResourceManager<Shader> ShaderManager;
+class Texture;
+typedef boost::shared_ptr<Texture> TexturePtr;
+typedef ResourceManager<Texture> TextureManager;
 
 /**
 * This class is responsible for the initialization and running of the application.
@@ -75,7 +75,7 @@ public:
 	/**
 	* Returns the cursor position.
 	*/
-	vec2 GetCursorPos();
+	vec2 GetCursorPos() const;
 
     /**
     * User should override this to handle the input.

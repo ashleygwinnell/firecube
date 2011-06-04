@@ -95,8 +95,9 @@ RigidBody::RigidBody()
 {
     mass = 1.0f;
     invMass = 1.0f / mass;
+	orientaion = mat3::identity;
 }
-void RigidBody::Init(Node m, CollisionShape *cs)
+void RigidBody::Init(NodePtr m, CollisionShape *cs)
 {
     model = m;
     collisionShape = cs;
@@ -121,7 +122,7 @@ bool RigidBody::GetPointInfo(vec3 pos, vec3 &dir, float &dist)
 }
 void RigidBody::Render(mat4 transform)
 {
-    mat4 t;
+    mat4 t = mat4::identity;
     t.Translate(position);
     t *= orientaion.ToMat4();
     model->SetMatrixTransformation(transform * t);

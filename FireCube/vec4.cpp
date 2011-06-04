@@ -22,19 +22,19 @@ vec4 FireCube::operator-(const vec4 &a, const vec4 &b)
 {
     return vec4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 }
-vec4 FireCube::operator*(const vec4 &a, const float &b)
+vec4 FireCube::operator*(const vec4 &a, float b)
 {
     return vec4(a.x * b, a.y * b, a.z * b, a.w * b);
 }
-vec4 FireCube::operator*(const float &a, const vec4 &b)
+vec4 FireCube::operator*(float a, const vec4 &b)
 {
     return vec4(b.x * a, b.y * a, b.z * a, b.w * a);
 }
-vec4 FireCube::operator/(const vec4 &a, const float &b)
+vec4 FireCube::operator/(const vec4 &a, float b)
 {
 	return vec4(a.x / b, a.y / b, a.z / b, a.w / b);
 }
-vec4 FireCube::operator/(const float &a, const vec4 &b)
+vec4 FireCube::operator/(float a, const vec4 &b)
 {
 	return vec4(b.x / a, b.y / a, b.z / a, b.w / a);
 }
@@ -56,14 +56,14 @@ void vec4::operator+=(const vec4 &src)
     z += src.z;
     w += src.w;
 }
-void vec4::operator-=(vec4 &src)
+void vec4::operator-=(const vec4 &src)
 {
     x -= src.x;
     y -= src.y;
     z -= src.z;
     w -= src.w;
 }
-void vec4::operator*=(vec4 &src)
+void vec4::operator*=(const vec4 &src)
 {
     x *= src.x;
     y *= src.y;
@@ -77,7 +77,7 @@ void vec4::operator*=(float val)
     z *= val;
     w *= val;
 }
-void vec4::operator/=(vec4 &src)
+void vec4::operator/=(const vec4 &src)
 {
     x /= src.x;
     y /= src.y;
@@ -161,7 +161,7 @@ void vec4::RotateZ(float ang)
     x = nx;
     y = ny;
 }
-vec4 vec4::operator*(mat4 &src)
+vec4 vec4::operator*(const mat4 &src) const
 {
     return vec4(x * src.m[0] + y * src.m[4] + z * src.m[8] + w * src.m[12], x * src.m[1] + y * src.m[5] + z * src.m[9] + w * src.m[13], x * src.m[2] + y * src.m[6] + z * src.m[10] + w * src.m[14], x * src.m[3] + y * src.m[7] + z * src.m[11] + w * src.m[15]);
 }
@@ -174,7 +174,7 @@ void vec4::FromAngles(float angx, float angy)
     y = (float)sin(angx);
     z = -cosx * (float)cos(angy);
 }
-vec3 vec4::TransformCoordinate(mat4 m)
+vec3 vec4::TransformCoordinate(const mat4 &m) const
 {
 	float tw = x * m.m[3] + y * m.m[7] + z * m.m[11] + w * m.m[15];
 	vec3 ret = vec3(x * m.m[0] + y * m.m[4] + z * m.m[8] + m.m[12], x * m.m[1] + y * m.m[5] + z * m.m[9] + m.m[13], x * m.m[2] + y * m.m[6] + z * m.m[10] + m.m[14]);
@@ -194,11 +194,11 @@ inline bool vec4::Sensible() const
 
     return true;
 }
-vec2 vec4::ToVec2()
+vec2 vec4::ToVec2() const
 {
     return vec2(x, y);
 }
-vec3 vec4::ToVec3()
+vec3 vec4::ToVec3() const
 {
     return vec3(x, y, z);
 }

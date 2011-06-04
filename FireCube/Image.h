@@ -21,15 +21,15 @@ public:
     /**
     * Returns the width of the image.
     */
-    int GetWidth();
+    int GetWidth() const;
     /**
     * Returns the height of the image.
     */
-    int GetHeight();
+    int GetHeight() const;
     /**
     * Returns the number of bits per pixel of the image.
     */
-    int GetBPP();
+    int GetBPP() const;
     /**
     * Returns the image pixel data.
     */
@@ -37,7 +37,7 @@ public:
     /**
     * Returns a pixel.
     */
-    vec4 GetPixel(int x, int y);
+    vec4 GetPixel(int x, int y) const;
 private:
     int width, height, bpp;
     std::vector<unsigned char> data;

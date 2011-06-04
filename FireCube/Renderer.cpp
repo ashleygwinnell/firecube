@@ -30,21 +30,26 @@ using namespace std;
 #include "privateFont.h"
 #include "Light.h"
 #include "Node.h"
+#include "Plane.h"
+#include "Frustum.h"
+#include "Camera.h"
 
 using namespace FireCube;
-Program textShader;
-Buffer textVertexBuffer;
-Buffer textUvBuffer;
+ProgramPtr textShader;
+BufferPtr textVertexBuffer;
+BufferPtr textUvBuffer;
 TextureManager *currentTextureManager = NULL;
 ShaderManager *currentShaderManager = NULL;
 FontManager *currentFontManager = NULL;
-Program globalProgram;
-map<string, Technique> techniques;
+ProgramPtr globalProgram;
+map<string, TechniquePtr> techniques;
+CameraPtr camera;
+unsigned int numberOfTrianglesRendered = 0;
 RenderState::RenderState() : directionalLighting(false), diffuseTexture(false), fog(false), pointLighting(false), normalTexture(false)
 {
 
 }
-void RenderState::FromMaterial(Material mat)
+void RenderState::FromMaterial(MaterialPtr mat)
 {
     if (mat->GetDiffuseTexture())
         this->diffuseTexture = true;
@@ -80,34 +85,34 @@ unsigned int RenderState::ToInt() const
     return ret;
 }
 
-void Renderer::Clear(vec4 color, float depth)
+void Renderer::Clear(const vec4 &color, float depth)
 {
     glClearColor(color.x, color.y, color.z, color.w);
     glClearDepth(depth);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
-void Renderer::SetModelViewMatrix(mat4 &m)
-{
-    glMatrixMode(GL_MODELVIEW);
+void Renderer::SetModelViewMatrix(const mat4 &m)
+{    
     glLoadMatrixf(m.m);
 }
-void Renderer::SetTextureMatrix(mat4 &m, int unit)
+void Renderer::SetTextureMatrix(const mat4 &m, int unit)
 {
     glActiveTexture(GL_TEXTURE0 + unit);
     glMatrixMode(GL_TEXTURE);
     glLoadMatrixf(m.m);
+	glMatrixMode(GL_MODELVIEW);
 }
-void Renderer::SetProjectionMatrix(mat4 &m)
+void Renderer::SetProjectionMatrix(const mat4 &m)
 {
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(m.m);
+	glMatrixMode(GL_MODELVIEW);
 }
-void FIRECUBE_API Renderer::Render(Geometry geometry)
+void FIRECUBE_API Renderer::Render(GeometryPtr geometry)
 {
     if (!geometry)
         return;
-
-    vector<Surface>::iterator i = geometry->surface.begin();
+    
     if (geometry->vertexBuffer)
         geometry->vertexBuffer->SetVertexStream(3);
     if (geometry->diffuseUVBuffer)
@@ -118,52 +123,50 @@ void FIRECUBE_API Renderer::Render(Geometry geometry)
         geometry->normalBuffer->SetNormalStream();
     else
         Renderer::DisableNormalStream();
-    for (; i != geometry->surface.end(); i++)
-    {
-        Renderer::UseMaterial(i->material);
-        if (i->indexBuffer)
-            i->indexBuffer->SetIndexStream();
-        Renderer::RenderIndexStream(TRIANGLES, i->face.size() * 3);
-    }
-
+    
+	Renderer::UseMaterial(geometry->material);
+	if (geometry->indexBuffer)
+		geometry->indexBuffer->SetIndexStream();
+	Renderer::RenderIndexStream(TRIANGLES, geometry->face.size() * 3);
 }
 void Renderer::SaveModelViewMatrix()
-{
-    glMatrixMode(GL_MODELVIEW);
+{    
     glPushMatrix();
 }
 void Renderer::RestoreModelViewMatrix()
-{
-    glMatrixMode(GL_MODELVIEW);
+{    
     glPopMatrix();
 }
 void Renderer::SaveProjectionMatrix()
 {
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
+	glMatrixMode(GL_MODELVIEW);
 }
 void Renderer::RestoreProjectionMatrix()
 {
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
 }
 
-void Renderer::MultiplyModelViewMatrix(mat4 &mat)
-{
-    glMatrixMode(GL_MODELVIEW);
+void Renderer::MultiplyModelViewMatrix(const mat4 &mat)
+{    
     glMultMatrixf(mat.m);
 }
-void Renderer::UseTexture(Texture tex, unsigned int unit)
+void Renderer::UseTexture(TexturePtr tex, unsigned int unit)
 {
     if (!tex)
         return;
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, tex->id);
 }
-void Renderer::RenderText(Font font, vec3 pos, vec4 color, const string &str)
+void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const string &str)
 {
     if (!font)
         return;
+	if (str.empty())
+		return;
     static vector<vec3> vBuffer;
     static vector<vec2> uvBuffer;
     vBuffer.resize(str.size() * 4);
@@ -223,10 +226,10 @@ void Renderer::RenderText(Font font, vec3 pos, vec4 color, const string &str)
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
 }
-void Renderer::RenderIndexStream(RenderMode mode, unsigned int count)
+void Renderer::RenderIndexStream(const PrimitiveType &primitiveType, unsigned int count)
 {
     GLenum glmode;
-    switch (mode)
+    switch (primitiveType)
     {
     case POINTS:
         glmode = GL_POINTS;
@@ -252,10 +255,10 @@ void Renderer::RenderIndexStream(RenderMode mode, unsigned int count)
     }
     glDrawElements(glmode, count, GL_UNSIGNED_INT, 0);
 }
-void Renderer::RenderStream(RenderMode mode, unsigned int count)
+void Renderer::RenderStream(const PrimitiveType &primitiveType, unsigned int count)
 {
     GLenum glmode;
-    switch (mode)
+    switch (primitiveType)
     {
     case POINTS:
         glmode = GL_POINTS;
@@ -281,14 +284,14 @@ void Renderer::RenderStream(RenderMode mode, unsigned int count)
     }
     glDrawArrays(glmode, 0, count);
 }
-void Renderer::UseProgram(Program program)
+void Renderer::UseProgram(ProgramPtr program)
 {
     if ((globalProgram) && (globalProgram->IsValid()))
         return;
     if (program)
         glUseProgram(program->GetId());
 }
-void Renderer::UseMaterial(Material material)
+void Renderer::UseMaterial(MaterialPtr material)
 {
     if (!material)
         return;
@@ -325,15 +328,19 @@ void Renderer::SetOrthographicProjection()
     p.GenerateOrthographic(0, (float)viewport[2], (float)viewport[3], 0, 0, 1);
     SetProjectionMatrix(p);
 }
+void ResetNumberOfTrianglesRendered()
+{
+	numberOfTrianglesRendered = 0;
+}
 void InitializeRenderer()
 {
-    Shader vShader(new ShaderResource);
-    Shader fShader(new ShaderResource);
+    ShaderPtr vShader(new Shader);
+    ShaderPtr fShader(new Shader);
 
-    textShader = Program(new ProgramResource);
-    textVertexBuffer = Buffer(new BufferResource);
+    textShader = ProgramPtr(new Program);
+    textVertexBuffer = BufferPtr(new Buffer);
     textVertexBuffer->Create();
-    textUvBuffer = Buffer(new BufferResource);
+    textUvBuffer = BufferPtr(new Buffer);
     textUvBuffer->Create();
     vShader->Create(VERTEX_SHADER, "void main() \
 								  {	\
@@ -350,7 +357,7 @@ void InitializeRenderer()
 									} ");
     textShader->Create(vShader, fShader);
 
-    Technique technique(new TechniqueResource);
+    TechniquePtr technique(new Technique);
     if (!technique->LoadShader("default.vert") && !technique->LoadShader("Shaders/default.vert") && !technique->LoadShader("../Assets/Shaders/default.vert") && !technique->LoadShader("./Assets/Shaders/default.vert"))
         Logger::Write(Logger::LOG_WARNING, "Could not load default technique's vertex shader");
     else
@@ -360,6 +367,7 @@ void InitializeRenderer()
         else
             Renderer::AddTechnique("default", technique);
     }
+	Renderer::SetCamera(CameraPtr(new Camera));
 }
 void Renderer::SetTextureManager(TextureManager &textureManager)
 {
@@ -387,11 +395,11 @@ FontManager &Renderer::GetFontManager()
 }
 void DestroyRenderer()
 {
-    textVertexBuffer = Buffer();
-    textUvBuffer = Buffer();
-    textShader = Program();
+    textVertexBuffer = BufferPtr();
+    textUvBuffer = BufferPtr();
+    textShader = ProgramPtr();
 }
-void Renderer::UseFrameBuffer(FrameBuffer frameBuffer)
+void Renderer::UseFrameBuffer(FrameBufferPtr frameBuffer)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->id);
     glViewport(0, 0, frameBuffer->width, frameBuffer->height);
@@ -434,13 +442,13 @@ void Renderer::DisableNormalStream()
 {
     glDisableClientState(GL_NORMAL_ARRAY);
 }
-void FIRECUBE_API Renderer::Render(Node node)
+void FIRECUBE_API Renderer::Render(NodePtr node)
 {
 	RenderQueue renderQueue;
-	renderQueue.AddNode(node);
+	renderQueue.AddNode(node, camera);
 	Renderer::Render(renderQueue);
 }
-void FIRECUBE_API Renderer::Render(Node node, const string &techniqueName, ProgramUniformsList &programUniformsList)
+void FIRECUBE_API Renderer::Render(NodePtr node, const string &techniqueName, const ProgramUniformsList &programUniformsList)
 {
 	RenderQueue renderQueue;
 	renderQueue.AddNode(node);
@@ -448,14 +456,39 @@ void FIRECUBE_API Renderer::Render(Node node, const string &techniqueName, Progr
 }
 void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 {
-	Renderer::SaveModelViewMatrix();
+	Renderer::SetModelViewMatrix(camera->GetViewMatrix());
+	Renderer::SetProjectionMatrix(camera->GetProjectionMatrix());
 	bool firstPass = true;
 	vector<pair<mat4, Light>>::iterator i;
 	vector<RenderJob>::iterator j;
+	ProgramPtr lastProgram;
+	GeometryPtr lastGeometry;
 	glEnable(GL_BLEND);
 
 	for (i = renderQueue.activeLights.begin(); i != renderQueue.activeLights.end(); i++)
 	{
+		for (j = renderQueue.renderJobs.begin(); j != renderQueue.renderJobs.end(); j++)
+		{
+			//if (j->renderParameters.lighting)
+			{
+				if (j->renderParameters.program && j->renderParameters.program->IsValid())
+					j->program = j->renderParameters.program;
+				else
+				{
+					RenderState rs;
+					rs.FromMaterial(j->geometry->GetMaterial());
+					if (i->second.GetType() == DIRECTIONAL)
+						rs.SetDirectionalLighting(true);
+					else if (i->second.GetType() == POINT)
+						rs.SetPointLighting(true);					
+					rs.SetFog(j->renderParameters.fog);
+					TechniquePtr technique = j->renderParameters.technique;
+					if (technique)
+						j->program = technique->GenerateProgram(rs);					
+				}
+			}		
+		}
+		renderQueue.Sort();
 		if (firstPass)
 		{
 			glDepthFunc(GL_LESS);
@@ -471,9 +504,129 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 		for (j = renderQueue.renderJobs.begin(); j != renderQueue.renderJobs.end(); j++)
 		{
 			if (j->renderParameters.lighting)
-			{				
-				Renderer::SetModelViewMatrix(j->transformation);				
+			{		
+				Renderer::SaveModelViewMatrix();
+				Renderer::MultiplyModelViewMatrix(j->transformation);				
+
+				ProgramPtr p;
+				Renderer::UseMaterial(j->geometry->GetMaterial());
+				p = j->program;
+				if (!p)
+					continue;
+				if (lastProgram != p)
+				{
+					lastProgram = p;
+					Renderer::UseProgram(p);					
+					if (i->second.GetType() == DIRECTIONAL)
+					{
+						p->SetUniform("directionalLightDir", vec3(0, 0, 1).TransformNormal(camera->GetViewMatrix() * i->first));
+						p->SetUniform("lightAmbient", i->second.GetAmbientColor());
+						p->SetUniform("lightDiffuse", i->second.GetDiffuseColor());
+						p->SetUniform("lightSpecular", i->second.GetSpecularColor());
+					}
+					else if (i->second.GetType() == POINT)
+					{
+						p->SetUniform("lightPosition", vec3(0, 0, 0) * camera->GetViewMatrix() * i->first);
+						p->SetUniform("lightAmbient", i->second.GetAmbientColor());
+						p->SetUniform("lightDiffuse", i->second.GetDiffuseColor());
+						p->SetUniform("lightSpecular", i->second.GetSpecularColor());
+					}				
+					if (j->renderParameters.fog)
+					{
+						if (firstPass)
+							p->SetUniform("fogColor", j->renderParameters.fogColor);
+						else
+							p->SetUniform("fogColor", vec4(0, 0, 0, 0));
+						p->SetUniform("fogDensity", j->renderParameters.fogDensity);
+					}
+					if (j->geometry->GetMaterial()->GetDiffuseTexture())
+						p->SetUniform("diffuseMap", 0);
+					if (j->geometry->GetMaterial()->GetNormalTexture())
+						p->SetUniform("normalMap", 1);
+				}
+				if (lastGeometry != j->geometry)
+				{
+					lastGeometry = j->geometry;
+					if (j->geometry->vertexBuffer)
+						j->geometry->vertexBuffer->SetVertexStream(3);
+					if (j->geometry->diffuseUVBuffer)
+						j->geometry->diffuseUVBuffer->SetTexCoordStream(0);
+					else
+						Renderer::DisableTexCoordStream(0);
+					if (j->geometry->normalBuffer)
+						j->geometry->normalBuffer->SetNormalStream();
+					else
+						Renderer::DisableNormalStream();											
+					if (j->geometry->tangentBuffer)
+						p->SetAttribute("atrTangent", j->geometry->tangentBuffer, 3);
+					if (j->geometry->bitangentBuffer)
+						p->SetAttribute("atrBitangent", j->geometry->bitangentBuffer, 3);
+					if (j->geometry->indexBuffer)					
+						j->geometry->indexBuffer->SetIndexStream();
+
+				}
+				Renderer::RenderIndexStream(j->geometry->GetPrimitiveType(), j->geometry->GetIndexCount());
+				numberOfTrianglesRendered += j->geometry->face.size();
 				
+				Renderer::RestoreModelViewMatrix();
+			}
+		}
+		firstPass = false;
+	}
+	glDepthMask(true);
+	glDisable(GL_BLEND);
+
+	for (j = renderQueue.renderJobs.begin(); j != renderQueue.renderJobs.end(); j++)
+	{
+		if (!j->renderParameters.lighting)
+		{
+			if (j->renderParameters.program && j->renderParameters.program->IsValid())
+				j->program = j->renderParameters.program;
+			else
+			{
+				RenderState rs;
+				rs.FromMaterial(j->geometry->GetMaterial());
+				rs.SetDirectionalLighting(false);
+				rs.SetPointLighting(false);					
+				rs.SetFog(j->renderParameters.fog);
+				TechniquePtr technique = j->renderParameters.technique;
+				if (technique)
+					j->program = technique->GenerateProgram(rs);					
+			}
+		}		
+	}
+	renderQueue.Sort();
+	for (j = renderQueue.renderJobs.begin(); j != renderQueue.renderJobs.end(); j++)
+	{		
+		if (!j->renderParameters.lighting)
+		{			
+			Renderer::SaveModelViewMatrix();
+			Renderer::MultiplyModelViewMatrix(j->transformation);
+						
+
+			ProgramPtr p;
+			Renderer::UseMaterial(j->geometry->GetMaterial());
+			p = j->program;
+			if (!p)
+				continue;
+			
+			if (lastProgram != p)
+			{
+				lastProgram = p;
+				Renderer::UseProgram(p);
+				if (j->renderParameters.fog)
+				{
+					p->SetUniform("fogColor", j->renderParameters.fogColor);
+					p->SetUniform("fogDensity", j->renderParameters.fogDensity);
+				}
+				if (j->geometry->GetMaterial()->GetDiffuseTexture())
+					p->SetUniform("diffuseMap", 0);
+				if (j->geometry->GetMaterial()->GetNormalTexture())
+					p->SetUniform("normalMap", 1);
+			}
+			if (lastGeometry != j->geometry)
+			{
+				lastGeometry = j->geometry;
 				if (j->geometry->vertexBuffer)
 					j->geometry->vertexBuffer->SetVertexStream(3);
 				if (j->geometry->diffuseUVBuffer)
@@ -483,137 +636,29 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 				if (j->geometry->normalBuffer)
 					j->geometry->normalBuffer->SetNormalStream();
 				else
-					Renderer::DisableNormalStream();				
-				
-				Program p;
-				Renderer::UseMaterial(j->material);
-				if (j->renderParameters.program && j->renderParameters.program->IsValid())
-					p = j->renderParameters.program;
-				else
-				{
-					RenderState rs;
-					rs.FromMaterial(j->material);
-					if (j->renderParameters.lighting)
-					{
-						if (i->second.GetType() == DIRECTIONAL)
-							rs.SetDirectionalLighting(true);
-						else if (i->second.GetType() == POINT)
-							rs.SetPointLighting(true);
-					}
-					rs.SetFog(j->renderParameters.fog);
-					Technique technique = j->renderParameters.technique;
-					if (technique)
-						p = technique->GenerateProgram(rs);
-					if (!p)
-						break;
-					Renderer::UseProgram(p);
-					if (j->renderParameters.lighting)
-					{
-						if (i->second.GetType() == DIRECTIONAL)
-						{
-							p->SetUniform("directionalLightDir", vec3(0, 0, 1).TransformNormal(i->first));
-							p->SetUniform("lightAmbient", i->second.GetAmbientColor());
-							p->SetUniform("lightDiffuse", i->second.GetDiffuseColor());
-							p->SetUniform("lightSpecular", i->second.GetSpecularColor());
-						}
-						else if (i->second.GetType() == POINT)
-						{
-							p->SetUniform("lightPosition", vec3(0, 0, 0) * i->first);
-							p->SetUniform("lightAmbient", i->second.GetAmbientColor());
-							p->SetUniform("lightDiffuse", i->second.GetDiffuseColor());
-							p->SetUniform("lightSpecular", i->second.GetSpecularColor());
-						}
-					}
-					if (j->renderParameters.fog)
-					{
-						if (firstPass)
-							p->SetUniform("fogColor", j->renderParameters.fogColor);
-						else
-							p->SetUniform("fogColor", vec4(0, 0, 0, 0));
-						p->SetUniform("fogDensity", j->renderParameters.fogDensity);
-					}
-				}
-				Renderer::UseProgram(p);
+					Renderer::DisableNormalStream();			
+
 				if (j->geometry->tangentBuffer)
 					p->SetAttribute("atrTangent", j->geometry->tangentBuffer, 3);
 				if (j->geometry->bitangentBuffer)
 					p->SetAttribute("atrBitangent", j->geometry->bitangentBuffer, 3);
-				if (j->material->GetDiffuseTexture())
-					p->SetUniform("diffuseMap", 0);
-				if (j->material->GetNormalTexture())
-					p->SetUniform("normalMap", 1);
-				if (j->surface->indexBuffer)
-					j->surface->indexBuffer->SetIndexStream();
-				Renderer::RenderIndexStream(TRIANGLES, j->surface->face.size() * 3);								
-			}
+				if (j->geometry->indexBuffer)
+					j->geometry->indexBuffer->SetIndexStream();
+			}			
+						
+			Renderer::RenderIndexStream(j->geometry->GetPrimitiveType(), j->geometry->GetIndexCount());
+			numberOfTrianglesRendered += j->geometry->face.size();			
+			Renderer::RestoreModelViewMatrix();
 		}
-		firstPass = false;
-	}
-	glDepthMask(true);
-	glDisable(GL_BLEND);
-	for (j = renderQueue.renderJobs.begin(); j != renderQueue.renderJobs.end(); j++)
-	{
-		if (!j->renderParameters.lighting)
-		{			
-			Renderer::SetModelViewMatrix(j->transformation);
-			
-			if (j->geometry->vertexBuffer)
-				j->geometry->vertexBuffer->SetVertexStream(3);
-			if (j->geometry->diffuseUVBuffer)
-				j->geometry->diffuseUVBuffer->SetTexCoordStream(0);
-			else
-				Renderer::DisableTexCoordStream(0);
-			if (j->geometry->normalBuffer)
-				j->geometry->normalBuffer->SetNormalStream();
-			else
-				Renderer::DisableNormalStream();			
-
-			Program p;
-			Renderer::UseMaterial(j->material);
-			if (j->renderParameters.program && j->renderParameters.program->IsValid())
-				p = j->renderParameters.program;
-			else
-			{
-				RenderState rs;
-				rs.FromMaterial(j->material);
-
-				rs.SetFog(j->renderParameters.fog);
-				rs.SetDirectionalLighting(false);
-				rs.SetPointLighting(false);
-				Technique technique = j->renderParameters.technique;
-				if (technique)
-					p = technique->GenerateProgram(rs);
-				if (!p)
-					break;
-				Renderer::UseProgram(p);
-				if (j->renderParameters.fog)
-				{
-					p->SetUniform("fogColor", j->renderParameters.fogColor);
-					p->SetUniform("fogDensity", j->renderParameters.fogDensity);
-				}
-			}
-			Renderer::UseProgram(p);
-			if (j->geometry->tangentBuffer)
-				p->SetAttribute("atrTangent", j->geometry->tangentBuffer, 3);
-			if (j->geometry->bitangentBuffer)
-				p->SetAttribute("atrBitangent", j->geometry->bitangentBuffer, 3);
-			if (j->material->GetDiffuseTexture())
-				p->SetUniform("diffuseMap", 0);
-			if (j->material->GetNormalTexture())
-				p->SetUniform("normalMap", 1);
-			if (j->surface->indexBuffer)
-				j->surface->indexBuffer->SetIndexStream();
-				Renderer::RenderIndexStream(TRIANGLES, j->surface->face.size() * 3);						
-		}
-	}	
-	Renderer::RestoreModelViewMatrix();
+	}		
 }
-void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &techniqueName, ProgramUniformsList &programUniformsList)
-{
-	Renderer::SaveModelViewMatrix();
+void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList)
+{	
+	Renderer::SetModelViewMatrix(camera->GetViewMatrix());
+	Renderer::SetProjectionMatrix(camera->GetProjectionMatrix());
 	bool firstPass = true;
 	vector<pair<mat4, Light>>::iterator i;
-	vector<RenderJob>::iterator j;
+	vector<RenderJob>::iterator j;	
 	glEnable(GL_BLEND);
 
 	for (i = renderQueue.activeLights.begin(); i != renderQueue.activeLights.end(); i++)
@@ -634,7 +679,8 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 		{
 			if (j->renderParameters.lighting)
 			{                
-				Renderer::SetModelViewMatrix(j->transformation);				
+				Renderer::SaveModelViewMatrix();
+				Renderer::MultiplyModelViewMatrix(j->transformation);
 				
 				if (j->geometry->vertexBuffer)
 					j->geometry->vertexBuffer->SetVertexStream(3);
@@ -647,11 +693,11 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 				else
 					Renderer::DisableNormalStream();
 				
-				Program p;
-				Renderer::UseMaterial(j->material);
+				ProgramPtr p;
+				Renderer::UseMaterial(j->geometry->GetMaterial());
 
 				RenderState rs;
-				rs.FromMaterial(j->material);
+				rs.FromMaterial(j->geometry->GetMaterial());
 				if (j->renderParameters.lighting)
 				{
 					if (i->second.GetType() == DIRECTIONAL)
@@ -661,26 +707,26 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 				}
 
 				rs.SetFog(j->renderParameters.fog);
-				Technique technique = GetTechnique(techniqueName);
+				TechniquePtr technique = GetTechnique(techniqueName);
 				if (technique)
 					p = technique->GenerateProgram(rs);
 				if (!p)
-					break;
-				Renderer::UseProgram(p);
-
+					continue;
+				
+				Renderer::UseProgram(p);				
 				programUniformsList.ApplyForProgram(p);
 				if (j->renderParameters.lighting)
 				{
 					if (i->second.GetType() == DIRECTIONAL)
 					{
-						p->SetUniform("directionalLightDir", vec3(0, 0, 1).TransformNormal(i->first));
+						p->SetUniform("directionalLightDir", vec3(0, 0, 1).TransformNormal(camera->GetViewMatrix() * i->first));
 						p->SetUniform("lightAmbient", i->second.GetAmbientColor());
 						p->SetUniform("lightDiffuse", i->second.GetDiffuseColor());
 						p->SetUniform("lightSpecular", i->second.GetSpecularColor());
 					}
 					else if (i->second.GetType() == POINT)
 					{
-						p->SetUniform("lightPosition", vec3(0, 0, 0) * i->first);
+						p->SetUniform("lightPosition", vec3(0, 0, 0) * camera->GetViewMatrix() * i->first);
 						p->SetUniform("lightAmbient", i->second.GetAmbientColor());
 						p->SetUniform("lightDiffuse", i->second.GetDiffuseColor());
 						p->SetUniform("lightSpecular", i->second.GetSpecularColor());
@@ -699,13 +745,17 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 					p->SetAttribute("atrTangent", j->geometry->tangentBuffer, 3);
 				if (j->geometry->bitangentBuffer)
 					p->SetAttribute("atrBitangent", j->geometry->bitangentBuffer, 3);
-				if (j->material->GetDiffuseTexture())
+				if (j->geometry->GetMaterial()->GetDiffuseTexture())
 					p->SetUniform("diffuseMap", 0);
-				if (j->material->GetNormalTexture())
+				if (j->geometry->GetMaterial()->GetNormalTexture())
 					p->SetUniform("normalMap", 1);
-				if (j->surface->indexBuffer)
-					j->surface->indexBuffer->SetIndexStream();
-				Renderer::RenderIndexStream(TRIANGLES, j->surface->face.size() * 3);				              
+				if (j->geometry->indexBuffer)
+				{
+					j->geometry->indexBuffer->SetIndexStream();
+					Renderer::RenderIndexStream(j->geometry->GetPrimitiveType(), j->geometry->GetIndexCount());
+					numberOfTrianglesRendered += j->geometry->face.size();
+				}
+				Renderer::RestoreModelViewMatrix();
 			}
 		}
 		firstPass = false;
@@ -716,7 +766,8 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 	{
 		if (!j->renderParameters.lighting)
 		{            
-			Renderer::SetModelViewMatrix(j->transformation);
+			Renderer::SaveModelViewMatrix();
+			Renderer::MultiplyModelViewMatrix(j->transformation);
 			
 			if (j->geometry->vertexBuffer)
 				j->geometry->vertexBuffer->SetVertexStream(3);
@@ -729,22 +780,22 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 			else
 				Renderer::DisableNormalStream();
 			
-			Program p;
-			Renderer::UseMaterial(j->material);
+			ProgramPtr p;
+			Renderer::UseMaterial(j->geometry->GetMaterial());
 
 			RenderState rs;
-			rs.FromMaterial(j->material);
+			rs.FromMaterial(j->geometry->GetMaterial());
 
 			rs.SetFog(j->renderParameters.fog);
 			rs.SetDirectionalLighting(false);
 			rs.SetPointLighting(false);
-			Technique technique = GetTechnique(techniqueName);
+			TechniquePtr technique = GetTechnique(techniqueName);
 			if (technique)
 				p = technique->GenerateProgram(rs);
 			if (!p)
-				break;
-			Renderer::UseProgram(p);
-
+				continue;
+			
+			Renderer::UseProgram(p);			
 			programUniformsList.ApplyForProgram(p);
 			if (j->renderParameters.fog)
 			{
@@ -756,31 +807,47 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 				p->SetAttribute("atrTangent", j->geometry->tangentBuffer, 3);
 			if (j->geometry->bitangentBuffer)
 				p->SetAttribute("atrBitangent", j->geometry->bitangentBuffer, 3);
-			if (j->material->GetDiffuseTexture())
+			if (j->geometry->GetMaterial()->GetDiffuseTexture())
 				p->SetUniform("diffuseMap", 0);
-			if (j->material->GetNormalTexture())
+			if (j->geometry->GetMaterial()->GetNormalTexture())
 				p->SetUniform("normalMap", 1);
-			if (j->surface->indexBuffer)
-				j->surface->indexBuffer->SetIndexStream();
-			Renderer::RenderIndexStream(TRIANGLES, j->surface->face.size() * 3);			      
+			if (j->geometry->indexBuffer)
+			{
+				j->geometry->indexBuffer->SetIndexStream();
+				Renderer::RenderIndexStream(j->geometry->GetPrimitiveType(), j->geometry->GetIndexCount());
+				numberOfTrianglesRendered += j->geometry->face.size();
+			}
+			Renderer::RestoreModelViewMatrix();
 		}
 	}
 	Renderer::RestoreModelViewMatrix();
 }
-void FIRECUBE_API Renderer::AddTechnique(const std::string &name, Technique technique)
+void FIRECUBE_API Renderer::AddTechnique(const std::string &name, TechniquePtr technique)
 {
     techniques[name] = technique;
 }
-Technique FIRECUBE_API Renderer::GetTechnique(const std::string &name)
+TechniquePtr FIRECUBE_API Renderer::GetTechnique(const std::string &name)
 {
-    map<string, Technique>::iterator i = techniques.find(name);
+    map<string, TechniquePtr>::iterator i = techniques.find(name);
     if (i != techniques.end())
         return i->second;
-    return Technique();
+    return TechniquePtr();
 }
 void FIRECUBE_API Renderer::RemoveTechnique(const std::string &name)
 {
-    map<string, Technique>::iterator i = techniques.find(name);
+    map<string, TechniquePtr>::iterator i = techniques.find(name);
     if (i != techniques.end())
         techniques.erase(i);
+}
+void FIRECUBE_API Renderer::SetCamera(CameraPtr camera)
+{
+	::camera = camera;
+}
+CameraPtr FIRECUBE_API Renderer::GetCamera()
+{
+	return camera;
+}
+unsigned int FIRECUBE_API Renderer::GetNumberOfTrianglesRendered()
+{
+	return numberOfTrianglesRendered;
 }
