@@ -69,8 +69,8 @@ void GLCanvas::Init()
 	GetClientSize(&w, &h);
 	mat.GeneratePerspective(90.0f,(float) w / (float) h, 0.1f, 1000.0f);
 	renderingParameters.camera = FireCube::NodeObserverCameraPtr(new FireCube::NodeObserverCamera);
-	renderingParameters.camera->SetZoom(5.0f);
-	renderingParameters.camera->SetMaxZoom(10000.0f);
+	renderingParameters.camera->SetDistance(5.0f);
+	renderingParameters.camera->SetMaxDistance(10000.0f);
 	renderingParameters.camera->SetProjectionMatrix(mat);
 }
 void GLCanvas::Render()
@@ -270,11 +270,11 @@ FireCube::vec3 GLCanvas::GetRotation()
 {
 	return renderingParameters.camera->GetRotation();
 }
-void GLCanvas::SetZoom(float v)
+void GLCanvas::SetDistance(float v)
 {
-	renderingParameters.camera->SetZoom(v);
+	renderingParameters.camera->SetDistance(v);
 }
-float GLCanvas::GetZoom() const
+float GLCanvas::GetDistance() const
 {
-	return renderingParameters.camera->GetZoom();
+	return renderingParameters.camera->GetDistance();
 }

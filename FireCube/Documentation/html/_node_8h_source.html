@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>FireCube: Node.h Source File</title>
+<title>FireCube: Scene/Node.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
@@ -56,7 +56,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
 <div class="header">
   <div class="headertitle">
-<h1>Node.h</h1>  </div>
+<h1>Scene/Node.h</h1>  </div>
 </div>
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef NODE_H</span>
@@ -69,21 +69,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00008"></a>00008 {
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="comment">// Forward declarations.</span>
-<a name="l00011"></a>00011 <span class="keyword">typedef</span> boost::shared_ptr&lt;Node&gt; NodePtr;
-<a name="l00012"></a>00012 <span class="keyword">class </span>Geometry;
-<a name="l00013"></a>00013 <span class="keyword">typedef</span> boost::shared_ptr&lt;Geometry&gt; <a class="code" href="namespace_fire_cube.html#a23e73cf05914d101367e482a787bfd75" title="A shared pointer to a GeometryResource.">GeometryPtr</a>;
-<a name="l00014"></a>00014 <span class="keyword">class </span>Light;
-<a name="l00015"></a>00015 <span class="keyword">class </span>Material;
-<a name="l00016"></a>00016 <span class="keyword">typedef</span> boost::shared_ptr&lt;Material&gt; <a class="code" href="namespace_fire_cube.html#acf7ef8de5e3ecf2ad7bdbdbe56e50f7e" title="A shared pointer to a MaterialResource.">MaterialPtr</a>;
-<a name="l00017"></a><a class="code" href="namespace_fire_cube.html#ad073aa501446f810a86522d5c7e77488">00017</a> <span class="keyword">class </span><a class="code" href="class_fire_cube_1_1_program.html" title="A class representing a gpu program.">Program</a>;
-<a name="l00018"></a>00018 <span class="keyword">typedef</span> boost::shared_ptr&lt;Program&gt; <a class="code" href="namespace_fire_cube.html#ad073aa501446f810a86522d5c7e77488" title="A shared pointer to a ProgramResource.">ProgramPtr</a>;
-<a name="l00019"></a>00019 
-<a name="l00027"></a><a class="code" href="class_fire_cube_1_1_node.html">00027</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_node.html" title="A shared pointer to a NodeResource.">Node</a> : <span class="keyword">public</span> boost::enable_shared_from_this&lt;Node&gt;
+<a name="l00011"></a>00011 
+<a name="l00015"></a>00015 <span class="keyword">typedef</span> boost::shared_ptr&lt;Node&gt; <a class="code" href="namespace_fire_cube.html#aea7080494fcaf382237485bb311c4d9f" title="A shared pointer to a Node.">NodePtr</a>;
+<a name="l00016"></a>00016 <span class="keyword">class </span>Geometry;
+<a name="l00017"></a>00017 <span class="keyword">typedef</span> boost::shared_ptr&lt;Geometry&gt; <a class="code" href="namespace_fire_cube.html#a23e73cf05914d101367e482a787bfd75" title="A shared pointer to a GeometryResource.">GeometryPtr</a>;
+<a name="l00018"></a>00018 <span class="keyword">class </span>Light;
+<a name="l00019"></a>00019 <span class="keyword">class </span>Material;
+<a name="l00020"></a>00020 <span class="keyword">typedef</span> boost::shared_ptr&lt;Material&gt; <a class="code" href="namespace_fire_cube.html#acf7ef8de5e3ecf2ad7bdbdbe56e50f7e" title="A shared pointer to a MaterialResource.">MaterialPtr</a>;
+<a name="l00021"></a>00021 <span class="keyword">class </span>Program;
+<a name="l00022"></a>00022 <span class="keyword">typedef</span> boost::shared_ptr&lt;Program&gt; <a class="code" href="namespace_fire_cube.html#ad073aa501446f810a86522d5c7e77488" title="A shared pointer to a ProgramResource.">ProgramPtr</a>;
+<a name="l00023"></a>00023 
+<a name="l00027"></a><a class="code" href="class_fire_cube_1_1_node.html">00027</a> <span class="keyword">class </span>FIRECUBE_API <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a> : <span class="keyword">public</span> boost::enable_shared_from_this&lt;Node&gt;
 <a name="l00028"></a>00028 {
 <a name="l00029"></a>00029 <span class="keyword">public</span>:
-<a name="l00030"></a>00030     <a class="code" href="class_fire_cube_1_1_node.html" title="A shared pointer to a NodeResource.">Node</a>();
+<a name="l00030"></a>00030     <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a>();
 <a name="l00031"></a>00031 
-<a name="l00036"></a>00036     <a class="code" href="class_fire_cube_1_1_node.html" title="A shared pointer to a NodeResource.">Node</a>(<span class="keyword">const</span> std::string &amp;name);
+<a name="l00036"></a>00036     <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a>(<span class="keyword">const</span> std::string &amp;name);
 <a name="l00037"></a>00037 
 <a name="l00042"></a>00042     <span class="keywordtype">void</span> SetName(<span class="keyword">const</span> std::string &amp;name);
 <a name="l00043"></a>00043 
@@ -115,9 +116,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00121"></a>00121 
 <a name="l00126"></a>00126     <span class="keywordtype">void</span> Scale(<span class="keyword">const</span> <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> &amp;s);
 <a name="l00127"></a>00127 
-<a name="l00132"></a>00132     NodePtr GetParent();
+<a name="l00132"></a>00132     <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a> *GetParent();
 <a name="l00133"></a>00133 
-<a name="l00138"></a>00138     <span class="keywordtype">void</span> SetParent(NodePtr parent);
+<a name="l00138"></a>00138     <span class="keywordtype">void</span> SetParent(<a class="code" href="namespace_fire_cube.html#aea7080494fcaf382237485bb311c4d9f" title="A shared pointer to a Node.">NodePtr</a> parent);
 <a name="l00139"></a>00139 
 <a name="l00144"></a>00144     std::vector&lt;NodePtr&gt; &amp;GetChildren();
 <a name="l00145"></a>00145 
@@ -131,13 +132,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00169"></a>00169 
 <a name="l00174"></a>00174     std::vector&lt;Light&gt; &amp;GetLights();
 <a name="l00175"></a>00175 
-<a name="l00180"></a>00180     NodePtr AddChild(NodePtr node);
+<a name="l00180"></a>00180     <a class="code" href="namespace_fire_cube.html#aea7080494fcaf382237485bb311c4d9f" title="A shared pointer to a Node.">NodePtr</a> AddChild(<a class="code" href="namespace_fire_cube.html#aea7080494fcaf382237485bb311c4d9f" title="A shared pointer to a Node.">NodePtr</a> node);
 <a name="l00181"></a>00181 
-<a name="l00187"></a>00187     NodePtr GetChild(<span class="keyword">const</span> std::string &amp;name);
+<a name="l00187"></a>00187     <a class="code" href="namespace_fire_cube.html#aea7080494fcaf382237485bb311c4d9f" title="A shared pointer to a Node.">NodePtr</a> GetChild(<span class="keyword">const</span> std::string &amp;name);
 <a name="l00188"></a>00188 
-<a name="l00193"></a>00193     NodePtr RemoveChild(<span class="keyword">const</span> std::string &amp;name);
+<a name="l00193"></a>00193     <a class="code" href="namespace_fire_cube.html#aea7080494fcaf382237485bb311c4d9f" title="A shared pointer to a Node.">NodePtr</a> RemoveChild(<span class="keyword">const</span> std::string &amp;name);
 <a name="l00194"></a>00194 
-<a name="l00199"></a>00199     NodePtr RemoveChild(NodePtr node);
+<a name="l00199"></a>00199     <a class="code" href="namespace_fire_cube.html#aea7080494fcaf382237485bb311c4d9f" title="A shared pointer to a Node.">NodePtr</a> RemoveChild(<a class="code" href="namespace_fire_cube.html#aea7080494fcaf382237485bb311c4d9f" title="A shared pointer to a Node.">NodePtr</a> node);
 <a name="l00200"></a>00200 
 <a name="l00204"></a>00204     <span class="keywordtype">void</span> Render();
 <a name="l00205"></a>00205 
@@ -173,7 +174,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00294"></a>00294 
 <a name="l00299"></a>00299     <span class="keywordtype">float</span> GetFogDensity() <span class="keyword">const</span>;
 <a name="l00300"></a>00300         
-<a name="l00305"></a>00305         NodePtr Clone() <span class="keyword">const</span>;
+<a name="l00305"></a>00305         <a class="code" href="namespace_fire_cube.html#aea7080494fcaf382237485bb311c4d9f" title="A shared pointer to a Node.">NodePtr</a> Clone() <span class="keyword">const</span>;
 <a name="l00306"></a>00306 
 <a name="l00310"></a>00310         <a class="code" href="class_fire_cube_1_1vec3.html" title="A 3d vector.">vec3</a> GetWorldPosition();
 <a name="l00311"></a>00311 
@@ -201,7 +202,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00333"></a>00333         <span class="keywordtype">bool</span> worldBoundingBoxRenderingChanged;
 <a name="l00334"></a>00334 
 <a name="l00335"></a>00335 
-<a name="l00336"></a>00336     NodePtr parent;
+<a name="l00336"></a>00336     <a class="code" href="class_fire_cube_1_1_node.html" title="A class representing a node in a scene graph.">Node</a> *parent;
 <a name="l00337"></a>00337     std::string name;
 <a name="l00338"></a>00338     <a class="code" href="class_fire_cube_1_1_render_parameters.html" title="A class holding information on various rendering parameters.">RenderParameters</a> renderParameters;
 <a name="l00339"></a>00339 
@@ -210,7 +211,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00342"></a>00342     
 <a name="l00343"></a>00343 };
 <a name="l00344"></a>00344 
-<a name="l00351"></a>00351 NodePtr FIRECUBE_API <a class="code" href="namespace_fire_cube.html#a9f2c073c3b238902adf72302ed0f3b7f" title="Loads a node from a file.">LoadMesh</a>(<span class="keyword">const</span> std::string &amp;filename);
+<a name="l00351"></a>00351 <a class="code" href="namespace_fire_cube.html#aea7080494fcaf382237485bb311c4d9f" title="A shared pointer to a Node.">NodePtr</a> FIRECUBE_API <a class="code" href="namespace_fire_cube.html#a9f2c073c3b238902adf72302ed0f3b7f" title="Loads a node from a file.">LoadMesh</a>(<span class="keyword">const</span> std::string &amp;filename);
 <a name="l00352"></a>00352 }
 <a name="l00353"></a>00353 
 <a name="l00354"></a>00354 <span class="preprocessor">#pragma warning(push)</span>
@@ -232,7 +233,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:40:29 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jun 7 2011 13:38:49 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

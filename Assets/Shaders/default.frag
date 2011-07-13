@@ -1,4 +1,6 @@
-varying vec3 normal;
+#if !defined(NORMAL_MAPPING)
+	varying vec3 normal;
+#endif
 
 #if defined(DIRECTIONAL_LIGHTING) || defined(POINT_LIGHTING)
 	uniform vec4 lightAmbient;
@@ -19,42 +21,43 @@ varying vec3 normal;
 #endif		
 void main()
 {
-	vec4 color=vec4(0.0,0.0,0.0,1.0);
+	vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
+	vec4 factor = lightAmbient * gl_FrontMaterial.ambient;	
 	#if !defined(DIRECTIONAL_LIGHTING) && !defined(POINT_LIGHTING)
 		#ifdef DIFFUSE_MAPPING
-			color=gl_FrontMaterial.diffuse*texture2D(diffuseMap,gl_TexCoord[0].xy);
+			color = gl_FrontMaterial.diffuse * texture2D(diffuseMap, gl_TexCoord[0].xy);
 		#else
-			color=gl_FrontMaterial.diffuse;
+			color = gl_FrontMaterial.diffuse;
 		#endif
 	#else
-		color=lightAmbient * gl_FrontMaterial.ambient;		
 		#ifdef NORMAL_MAPPING
-			vec3 n=normalize(texture2D(normalMap, gl_TexCoord[0].xy).xyz * 2.0 - 1.0);
+			vec3 n = normalize(texture2D(normalMap, gl_TexCoord[0].xy).xyz * 2.0 - 1.0);
 		#else
-			vec3 n=normalize(normal);
+			vec3 n = normalize(normal);
 		#endif
-		vec3 l=normalize(lightDir);
-		float lambertTerm=dot(n,l);
-		if (lambertTerm>0.0)
+		vec3 l = normalize(lightDir);
+		float lambertTerm = dot(n, l);
+		if (lambertTerm > 0.0)
 		{
-			#ifdef DIFFUSE_MAPPING
-				color += gl_FrontMaterial.diffuse*lightDiffuse*lambertTerm*texture2D(diffuseMap,gl_TexCoord[0].xy);
-			#else
-				color += gl_FrontMaterial.diffuse*lightDiffuse*lambertTerm;
-			#endif
+			factor += gl_FrontMaterial.diffuse * lightDiffuse * lambertTerm;
 			vec3 E = normalize(eyeVec);
 			vec3 R = reflect(-l, n);
-			float specular = max(pow( max(dot(R, E), 0.0), gl_FrontMaterial.shininess ),0.0);
-			color += gl_FrontMaterial.specular*lightSpecular*specular;
-		}		
+			float specular = max(pow(max(dot(R, E), 0.0), gl_FrontMaterial.shininess), 0.0);
+			color += gl_FrontMaterial.specular * lightSpecular * specular;
+		}
+		#ifdef DIFFUSE_MAPPING
+			color += factor * texture2D(diffuseMap, gl_TexCoord[0].xy);
+		#else
+			color += factor;
+		#endif
 	#endif
 	#ifdef FOG
 		const float LOG2 = 1.442695;
 		float z = gl_FragCoord.z / gl_FragCoord.w;
-		float fogFactor = exp2( -fogDensity* fogDensity* z * z * LOG2 );
+		float fogFactor = exp2(-fogDensity * fogDensity * z * z * LOG2);
 		fogFactor = clamp(fogFactor, 0.0, 1.0);
 		color = mix(fogColor, color, fogFactor );
 	#endif
 	
-	gl_FragColor=color;
+	gl_FragColor = color;
 }

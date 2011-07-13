@@ -10,6 +10,78 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="Dependencies\GLee.c" />
+    <ClCompile Include="Dependencies\tinyxml.cpp" />
+    <ClCompile Include="Dependencies\tinyxmlerror.cpp" />
+    <ClCompile Include="Dependencies\tinyxmlparser.cpp" />
+    <ClCompile Include="Geometry\ColladaLoader.cpp" />
+    <ClCompile Include="Geometry\Geometry.cpp" />
+    <ClCompile Include="Geometry\GeometryGenerator.cpp" />
+    <ClCompile Include="Geometry\m3dsLoader.cpp" />
+    <ClCompile Include="Geometry\ObjLoader.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Math\BoundingBox.cpp" />
+    <ClCompile Include="Math\Frustum.cpp" />
+    <ClCompile Include="Math\mat3.cpp" />
+    <ClCompile Include="Math\mat4.cpp" />
+    <ClCompile Include="Math\Plane.cpp" />
+    <ClCompile Include="Math\vec2.cpp" />
+    <ClCompile Include="Math\vec3.cpp" />
+    <ClCompile Include="Math\vec4.cpp" />
+    <ClCompile Include="Rendering\Buffer.cpp" />
+    <ClCompile Include="Rendering\Font.cpp" />
+    <ClCompile Include="Rendering\FrameBuffer.cpp" />
+    <ClCompile Include="Rendering\Renderer.cpp" />
+    <ClCompile Include="Rendering\RenderQueue.cpp" />
+    <ClCompile Include="Rendering\Shaders.cpp" />
+    <ClCompile Include="Rendering\Texture.cpp" />
+    <ClCompile Include="Scene\Camera.cpp" />
+    <ClCompile Include="Scene\Node.cpp" />
+    <ClCompile Include="Scene\NodeObserverCamera.cpp" />
+    <ClCompile Include="Utils\Filesystem.cpp" />
+    <ClCompile Include="Utils\Image.cpp" />
+    <ClCompile Include="Utils\Logger.cpp" />
+    <ClCompile Include="Utils\Timer.cpp" />
+    <ClCompile Include="Utils\utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application\Application.h" />
+    <ClInclude Include="Dependencies\GLee.h" />
+    <ClInclude Include="Dependencies\tinyxml.h" />
+    <ClInclude Include="FireCube.h" />
+    <ClInclude Include="Geometry\Geometry.h" />
+    <ClInclude Include="Geometry\GeometryGenerator.h" />
+    <ClInclude Include="Geometry\ModelLoaders.h" />
+    <ClInclude Include="Math\BoundingBox.h" />
+    <ClInclude Include="Math\Frustum.h" />
+    <ClInclude Include="Math\mat3.h" />
+    <ClInclude Include="Math\mat4.h" />
+    <ClInclude Include="Math\MyMath.h" />
+    <ClInclude Include="Math\Plane.h" />
+    <ClInclude Include="Math\vec2.h" />
+    <ClInclude Include="Math\vec3.h" />
+    <ClInclude Include="Math\vec4.h" />
+    <ClInclude Include="Rendering\Buffer.h" />
+    <ClInclude Include="Rendering\Font.h" />
+    <ClInclude Include="Rendering\FrameBuffer.h" />
+    <ClInclude Include="Rendering\privateFont.h" />
+    <ClInclude Include="Rendering\Renderer.h" />
+    <ClInclude Include="Rendering\RenderQueue.h" />
+    <ClInclude Include="Rendering\Shaders.h" />
+    <ClInclude Include="Rendering\Texture.h" />
+    <ClInclude Include="Scene\Camera.h" />
+    <ClInclude Include="Scene\Light.h" />
+    <ClInclude Include="Scene\Node.h" />
+    <ClInclude Include="Scene\NodeObserverCamera.h" />
+    <ClInclude Include="Utils\Filesystem.h" />
+    <ClInclude Include="Utils\Image.h" />
+    <ClInclude Include="Utils\Logger.h" />
+    <ClInclude Include="Utils\ResourceManager.h" />
+    <ClInclude Include="Utils\Timer.h" />
+    <ClInclude Include="Utils\utils.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{66AD911D-22A7-415E-A8E1-C746E779E0F7}</ProjectGuid>
     <RootNamespace>FireCube</RootNamespace>
@@ -50,7 +122,7 @@
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Dev\SDL-1.2.14\include;C:\Dev\SDL_image-1.2.10\include;C:\Dev\boost_1_46_0;.\Dependencies\FreeType\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\SDL-1.2.14\include;C:\Dev\SDL_image-1.2.10\include;C:\Dev\boost_1_46_0;.\Dependencies\FreeType\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;FIRECUBE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -102,77 +174,6 @@
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Application.cpp" />
-    <ClCompile Include="BoundingBox.cpp" />
-    <ClCompile Include="Buffer.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="ColladaLoader.cpp" />
-    <ClCompile Include="Filesystem.cpp" />
-    <ClCompile Include="Font.cpp" />
-    <ClCompile Include="FrameBuffer.cpp" />
-    <ClCompile Include="Frustum.cpp" />
-    <ClCompile Include="Geometry.cpp" />
-    <ClCompile Include="GeometryGenerator.cpp" />
-    <ClCompile Include="GLee.c" />
-    <ClCompile Include="Image.cpp" />
-    <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="m3dsLoader.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="mat3.cpp" />
-    <ClCompile Include="mat4.cpp" />
-    <ClCompile Include="Node.cpp" />
-    <ClCompile Include="NodeObserverCamera.cpp" />
-    <ClCompile Include="Plane.cpp" />
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="RenderQueue.cpp" />
-    <ClCompile Include="Shaders.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="tinyxml.cpp" />
-    <ClCompile Include="tinyxmlerror.cpp" />
-    <ClCompile Include="tinyxmlparser.cpp" />
-    <ClCompile Include="utils.cpp" />
-    <ClCompile Include="vec2.cpp" />
-    <ClCompile Include="vec3.cpp" />
-    <ClCompile Include="vec4.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="BoundingBox.h" />
-    <ClInclude Include="Buffer.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Filesystem.h" />
-    <ClInclude Include="FireCube.h" />
-    <ClInclude Include="Font.h" />
-    <ClInclude Include="FrameBuffer.h" />
-    <ClInclude Include="Frustum.h" />
-    <ClInclude Include="Geometry.h" />
-    <ClInclude Include="GeometryGenerator.h" />
-    <ClInclude Include="GLee.h" />
-    <ClInclude Include="Image.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="mat3.h" />
-    <ClInclude Include="mat4.h" />
-    <ClInclude Include="ModelLoaders.h" />
-    <ClInclude Include="MyMath.h" />
-    <ClInclude Include="Node.h" />
-    <ClInclude Include="NodeObserverCamera.h" />
-    <ClInclude Include="Plane.h" />
-    <ClInclude Include="privateFont.h" />
-    <ClInclude Include="Renderer.h" />
-    <ClInclude Include="RenderQueue.h" />
-    <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="Shaders.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="tinyxml.h" />
-    <ClInclude Include="utils.h" />
-    <ClInclude Include="vec2.h" />
-    <ClInclude Include="vec3.h" />
-    <ClInclude Include="vec4.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

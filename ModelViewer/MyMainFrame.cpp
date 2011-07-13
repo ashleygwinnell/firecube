@@ -24,7 +24,7 @@ void MyMainFrame::MenuItem1Clicked( wxCommandEvent& event )
 }
 void MyMainFrame::MenuItem2Clicked( wxCommandEvent& event )
 {
-    wxString file = wxFileSelector(wxT("Open"), 0, 0, wxT("3ds,dae"), wxT("*.3ds;*.dae"));    
+    wxString file = wxFileSelector(wxT("Open"), 0, 0, wxT("3ds,dae,obj"), wxT("*.3ds;*.dae;*.obj"));    
     std::string sfile = file;
     if (sfile == "")
         return;
@@ -106,7 +106,7 @@ void MyMainFrame::ColourPicker1Changed( wxColourPickerEvent& event )
 void MyMainFrame::Button1Clicked( wxCommandEvent& event )
 {
     glCanvas->SetRotation(FireCube::vec3(0, 0, 0.0f));
-    glCanvas->SetZoom(5.0f);
+    glCanvas->SetDistance(5.0f);
     glCanvas->Refresh();
 }
 void MyMainFrame::Button2Clicked( wxCommandEvent& event )

@@ -49,7 +49,7 @@ bool App::Init()
 	defaultCamera->SetTarget(node);
 	defaultCamera->SetMinAngX((float) (-PI / 2.0));
 	defaultCamera->SetMaxAngX((float) (PI / 2.0));	
-	defaultCamera->SetZoom(3.0f);
+	defaultCamera->SetDistance(3.0f);
 	lightCamera = CameraPtr(new Camera);
     return true;
 }
@@ -97,7 +97,6 @@ void App::Render(float t)
     Renderer::RestoreFrameBuffer();
     Renderer::SetViewport(0, 0, app.GetWidth(), app.GetHeight());
     Renderer::Clear(vec4(0.2f, 0.2f, 0.6f, 1.0f), 1.0f);    
-    Renderer::RestoreFrameBuffer();
     Renderer::UseTexture(fb->GetDepthBuffer(), 1);    
 	Renderer::SetCamera(defaultCamera);
     Renderer::Render(app.node, "shadowMap", programUniformsList);

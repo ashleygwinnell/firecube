@@ -2,7 +2,6 @@
 #include <fstream>
 using namespace std;
 using namespace FireCube;
-#include "Frustum.h"
 #include "QuadTree.h"
 #include "Terrain.h"
 

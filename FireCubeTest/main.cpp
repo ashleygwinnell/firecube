@@ -22,7 +22,7 @@ bool App::Init()
 {
     Filesystem::AddSearchPath("../Assets/Textures");
     SetTitle(string("FireCube Test Application"));
-    font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 18);
+	font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 18);
     root = NodePtr(new Node("Root"));
     NodePtr node;
     node = LoadMesh("../Assets/Models/teapot2.3ds");    

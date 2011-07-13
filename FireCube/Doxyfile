@@ -612,7 +612,14 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = .
+INPUT                  = . \
+                         Rendering\ \
+                         Math\ \
+                         Scene\ \
+                         Utils\ \
+                         Geometry\ \
+                         Utils\ \
+                         Application\
 
 # This tag can be used to specify the character encoding of the source files 
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 
@@ -677,17 +684,17 @@ EXCLUDE                = Debug \
                          Release \
                          Dependencies \
                          .svn \
-                         privateFont.h \
-                         ModelLoaders.h \
-                         m3dsLoader.cpp \
-                         ColladaLoader.cpp \
-                         tinyxml.cpp \
-                         tinyxml.h \
-                         tinyxmlerror.cpp \
-                         tinyxmlparser.cpp \
-                         GLee.h \
-                         GLee.c \
-                         MyMath.h
+                         Math\MyMath.h \
+                         Dependencies\GLee.c \
+                         Dependencies\GLee.h \
+                         Dependencies\tinyxmlparser.cpp \
+                         Dependencies\tinyxmlerror.cpp \
+                         Dependencies\tinyxml.h \
+                         Dependencies\tinyxml.cpp \
+                         Geometry\ColladaLoader.cpp \
+                         Geometry\m3dsLoader.cpp \
+                         Rendering\privateFont.h \
+                         Geometry\ModelLoaders.h
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix file system feature) are excluded 

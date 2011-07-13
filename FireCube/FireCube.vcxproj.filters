@@ -1,222 +1,234 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{8a6af3d7-d356-4be7-9653-9560748311b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{70d5fc25-caf9-4a0c-985e-6c22f197e2cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{807f528e-5064-41ab-ba4b-80ae47348a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{76917075-7079-4b73-a31e-30d41fbc4013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{a86ceddb-9ab9-4313-809f-c4fa963ef2fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies">
+      <UniqueIdentifier>{286a9a6a-ca76-4211-9cee-f4fbc298a0ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{4ebd6c78-ede8-408b-9ade-f9f143a99717}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Rendering\Buffer.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Buffer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Rendering\Font.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="ColladaLoader.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Rendering\FrameBuffer.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Font.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Rendering\Renderer.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="FrameBuffer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Rendering\RenderQueue.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="GLee.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Rendering\Shaders.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Image.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Rendering\Texture.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Math\BoundingBox.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="m3dsLoader.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Math\Frustum.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Math\mat3.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="mat3.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Math\mat4.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="mat4.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Math\Plane.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Math\vec2.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Math\vec3.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Math\vec4.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="tinyxml.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Application\Application.cpp">
+      <Filter>Application</Filter>
     </ClCompile>
-    <ClCompile Include="tinyxmlerror.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Geometry\ColladaLoader.cpp">
+      <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="tinyxmlparser.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Geometry\Geometry.cpp">
+      <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="utils.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Geometry\GeometryGenerator.cpp">
+      <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="vec2.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Geometry\m3dsLoader.cpp">
+      <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="vec3.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Dependencies\GLee.c">
+      <Filter>Dependencies</Filter>
     </ClCompile>
-    <ClCompile Include="vec4.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Dependencies\tinyxml.cpp">
+      <Filter>Dependencies</Filter>
     </ClCompile>
-    <ClCompile Include="BoundingBox.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Dependencies\tinyxmlerror.cpp">
+      <Filter>Dependencies</Filter>
     </ClCompile>
-    <ClCompile Include="Geometry.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Dependencies\tinyxmlparser.cpp">
+      <Filter>Dependencies</Filter>
     </ClCompile>
-    <ClCompile Include="Node.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Utils\Filesystem.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="GeometryGenerator.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Utils\Image.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="RenderQueue.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Utils\Logger.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Shaders.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Utils\Timer.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Filesystem.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Utils\utils.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Scene\Camera.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Scene\Node.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Frustum.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Scene\NodeObserverCamera.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="NodeObserverCamera.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Geometry\ObjLoader.cpp">
+      <Filter>Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\Buffer.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Buffer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\Font.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="FireCube.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\FrameBuffer.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\privateFont.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="FrameBuffer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\Renderer.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="GLee.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\RenderQueue.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\Shaders.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Rendering\Texture.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="mat3.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Math\BoundingBox.h">
+      <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="mat4.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Math\Frustum.h">
+      <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="ModelLoaders.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Math\mat3.h">
+      <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="MyMath.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Math\mat4.h">
+      <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="privateFont.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Math\MyMath.h">
+      <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Math\Plane.h">
+      <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Math\vec2.h">
+      <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Shaders.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Math\vec3.h">
+      <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Math\vec4.h">
+      <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Application\Application.h">
+      <Filter>Application</Filter>
     </ClInclude>
-    <ClInclude Include="tinyxml.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Geometry\Geometry.h">
+      <Filter>Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="utils.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Geometry\GeometryGenerator.h">
+      <Filter>Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="vec2.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Geometry\ModelLoaders.h">
+      <Filter>Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="vec3.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Dependencies\GLee.h">
+      <Filter>Dependencies</Filter>
     </ClInclude>
-    <ClInclude Include="vec4.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Dependencies\tinyxml.h">
+      <Filter>Dependencies</Filter>
     </ClInclude>
-    <ClInclude Include="BoundingBox.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Utils\Filesystem.h">
+      <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Utils\Image.h">
+      <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Geometry.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Utils\Logger.h">
+      <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Node.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Utils\ResourceManager.h">
+      <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="GeometryGenerator.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Utils\Timer.h">
+      <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="RenderQueue.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Utils\utils.h">
+      <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Filesystem.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Scene\Camera.h">
+      <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Scene\Light.h">
+      <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Plane.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Scene\Node.h">
+      <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Frustum.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Scene\NodeObserverCamera.h">
+      <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="NodeObserverCamera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="FireCube.h" />
   </ItemGroup>
 </Project>

@@ -47,8 +47,8 @@ public:
 	bool GetRenderingTangents();
 	void SetRotation(FireCube::vec3 rotation);
 	FireCube::vec3 GetRotation();
-	void SetZoom(float v);
-	float GetZoom() const;
+	void SetDistance(float v);
+	float GetDistance() const;
     
 private:
     bool init;

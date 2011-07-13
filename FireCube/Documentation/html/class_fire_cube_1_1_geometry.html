@@ -147,9 +147,9 @@ Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab881cbd28431e2135dd9100b18fd2478"></a><!-- doxytag: member="FireCube::Geometry::Renderer::Render" ref="ab881cbd28431e2135dd9100b18fd2478" args="(GeometryPtr geometry)" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (<a class="el" href="namespace_fire_cube.html#a23e73cf05914d101367e482a787bfd75">GeometryPtr</a> geometry)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3e8772a6552c2fef79e9a993892ca1d4"></a><!-- doxytag: member="FireCube::Geometry::Renderer::Render" ref="a3e8772a6552c2fef79e9a993892ca1d4" args="(NodePtr node)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (NodePtr node)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (<a class="el" href="namespace_fire_cube.html#aea7080494fcaf382237485bb311c4d9f">NodePtr</a> node)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae7eac2d508b65727a1a719c81e033ff0"></a><!-- doxytag: member="FireCube::Geometry::Renderer::Render" ref="ae7eac2d508b65727a1a719c81e033ff0" args="(NodePtr node, const std::string &amp;techniqueName, const ProgramUniformsList &amp;programUniformsList)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (NodePtr node, const std::string &amp;techniqueName, const <a class="el" href="class_fire_cube_1_1_program_uniforms_list.html">ProgramUniformsList</a> &amp;programUniformsList)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (<a class="el" href="namespace_fire_cube.html#aea7080494fcaf382237485bb311c4d9f">NodePtr</a> node, const std::string &amp;techniqueName, const <a class="el" href="class_fire_cube_1_1_program_uniforms_list.html">ProgramUniformsList</a> &amp;programUniformsList)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae3413856c38fda3b2873070ecae23e90"></a><!-- doxytag: member="FireCube::Geometry::Renderer::Render" ref="ae3413856c38fda3b2873070ecae23e90" args="(RenderQueue &amp;renderQueue, const std::string &amp;techniqueName, const ProgramUniformsList &amp;programUniformsList)" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> (<a class="el" href="class_fire_cube_1_1_render_queue.html">RenderQueue</a> &amp;renderQueue, const std::string &amp;techniqueName, const <a class="el" href="class_fire_cube_1_1_program_uniforms_list.html">ProgramUniformsList</a> &amp;programUniformsList)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a97cf8d221603fbbc52e066bfa92d99aa"></a><!-- doxytag: member="FireCube::Geometry::Renderer::Render" ref="a97cf8d221603fbbc52e066bfa92d99aa" args="(RenderQueue &amp;renderQueue)" -->
@@ -270,7 +270,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> 
 <div class="memdoc">
 
 <p>Sets the number of elements contained in the index buffer. </p>
-<p>The number of indices. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">indexCount</td><td>The number of indices. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -342,7 +347,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> 
 <p>Sets the primitive type to be rendered by this geometry. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">primitiveTpye</td><td>The type of the primitive. </td></tr>
+    <tr><td class="paramname">primitiveType</td><td>The type of the primitive. </td></tr>
   </table>
   </dd>
 </dl>
@@ -350,8 +355,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="_geometry_8h_source.html">Geometry.h</a></li>
-<li>Geometry.cpp</li>
+<li>Geometry/<a class="el" href="_geometry_8h_source.html">Geometry.h</a></li>
+<li>Geometry/Geometry.cpp</li>
 </ul>
 </div>
 <!--- window showing the filter options -->
@@ -368,7 +373,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Renderer::Render</b> 
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat Jun 4 2011 17:40:29 for FireCube by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jun 7 2011 13:38:49 for FireCube by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>
