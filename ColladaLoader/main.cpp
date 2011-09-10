@@ -4,11 +4,11 @@ using namespace FireCube;
 #include "tinyxml.h"
 #include "ColladaLoader.h"
 
-class App : public Application
+class App : public Application, public InputListener
 {
 public:
     virtual void Update(float t);
-    virtual void HandleInput(float t);
+    virtual void HandleInput(float t, const MappedInput &input);
     virtual void Render(float t);
     NodePtr node;
 };
@@ -16,9 +16,10 @@ void App::Update(float t)
 {
 
 }
-void App::HandleInput(float t)
+void App::HandleInput(float t, const MappedInput &input)
 {
-
+	if (input.IsActionTriggered("Close"))
+		Close();
 }
 void App::Render(float t)
 {
@@ -34,6 +35,8 @@ void main()
 {
     Filesystem::AddSearchPath("../Assets/Textures");
     App app;
+	app.GetInputManager().AddInputListener(&app);
+	app.GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
     ColladaLoader l("../Assets/Models/duck_triangulate.dae");
     l.Load();
     app.Initialize();
@@ -43,6 +46,7 @@ void main()
     Light light;
     light.SetAmbientColor(vec4(1, 1, 1, 1));
     light.SetDiffuseColor(vec4(1, 1, 1, 1));
+	light.SetSpecularColor(vec4(0, 0, 0, 1));
     app.node->AddLight(light);
     
     app.Run();

@@ -67,37 +67,37 @@ public:
     * Gets the ambient color of this material.
     * @return The ambient color of this material.
     */
-    vec4 GetAmbientColor() const;
+    vec3 GetAmbientColor() const;
 
     /**
     * Sets the ambient color of this material.
     * @param color The color to set the ambient to.
     */
-    void SetAmbientColor(const vec4 &color);
+    void SetAmbientColor(const vec3 &color);
 
     /**
     * Gets the diffuse color of this material.
     * @return The diffuse color of this material.
     */
-    vec4 GetDiffuseColor() const;
+    vec3 GetDiffuseColor() const;
 
     /**
     * Sets the diffuse color of this material.
     * @param color The color to set the diffuse to.
     */
-    void SetDiffuseColor(const vec4 &color);
+    void SetDiffuseColor(const vec3 &color);
 
     /**
     * Gets the specular color of this material.
     * @return The specular color of this material.
     */
-    vec4 GetSpecularColor() const;
+    vec3 GetSpecularColor() const;
 
     /**
     * Sets the specular color of this material.
     * @param color The color to set the specular to.
     */
-    void SetSpecularColor(const vec4 &color);
+    void SetSpecularColor(const vec3 &color);
 
     /**
     * Gets the shininess factor of this material.
@@ -135,15 +135,27 @@ public:
     */
     void SetNormalTexture(TexturePtr texture);
 
+	/**
+    * Gets the opacity of this material.
+    * @return The opacity factor of this material.
+    */
+	float GetOpacity() const;
+
+	/**
+    * Sets the opacity of this material.
+    * @param value The opacity.
+    */
+	void SetOpacity(float value);
 private:
 
     std::string name;
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
     float shininess;
     TexturePtr diffuseTexture;
     TexturePtr normalTexture;
+	float opacity;
 };
 
 /**

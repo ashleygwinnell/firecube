@@ -17,6 +17,12 @@ bool App::Init()
 {
     Filesystem::AddSearchPath("../Assets/Textures");
     SetTitle(string("Shadow Mapping Test Application"));
+	GetInputManager().AddInputListener(this);
+	GetInputManager().AddMapping(MOUSE_AXIS_X_REL, "mouseX");
+	GetInputManager().AddMapping(MOUSE_AXIS_Y_REL, "mouseY");
+	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
+	GetInputManager().AddMapping(KEY_MOUSE_LEFT_BUTTON, STATE, "Rotate");
+	GetInputManager().AddMapping(KEY_MOUSE_RIGHT_BUTTON, STATE, "Zoom");
     node = LoadMesh("../Assets/Models/scene.3ds");
     node->SetLighting(false);
     font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 18);
@@ -107,20 +113,15 @@ void App::Render(float t)
     oss << "FPS:" << app.GetFps();
     Renderer::RenderText(app.font, vec3(0, (float)app.GetHeight() - 20.0f, 0.0f), vec4(1, 1, 1, 1), oss.str());
 }
-void App::HandleInput(float t)
+void App::HandleInput(float t, const MappedInput &input)
 {
-    ::POINT p;
-    vec3 m;
-    ::GetCursorPos(&p);
-    m.x = (float)p.x;
-    m.y = (float)p.y;
-    if (GetAsyncKeyState(1))    
-		defaultCamera->Rotate(vec3(t * (lastPos.y - m.y) / 2.0f, t * (lastPos.x - m.x) / 2.0f, 0.0f));        
+    if (input.IsActionTriggered("Close"))
+		Close();
+    if (input.IsStateOn("Rotate"))
+		defaultCamera->Rotate(vec3(t * -input.GetValue("mouseY") / 2.0f, t * -input.GetValue("mouseX") / 2.0f, 0.0f));        
     
-    if (GetAsyncKeyState(2))
-        defaultCamera->Zoom(t * (lastPos.y - m.y) * 2.0f);
-
-    lastPos = m;
+	if (input.IsStateOn("Zoom"))
+        defaultCamera->Zoom(t * -input.GetValue("mouseY") * 2.0f);
 }
 void App::RenderDepth()
 {

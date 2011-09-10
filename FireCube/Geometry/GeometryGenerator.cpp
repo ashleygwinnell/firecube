@@ -26,9 +26,9 @@ MaterialPtr CreateDefaultMaterial()
 {
     MaterialPtr material(new Material);
     material->SetName("Default");
-    material->SetAmbientColor(vec4(0.3f, 0.3f, 0.3f, 1.0f));
-    material->SetDiffuseColor(vec4(0.7f, 0.7f, 0.7f, 1.0f));
-    material->SetSpecularColor(vec4(0.2f, 0.2f, 0.2f, 1.0f));
+    material->SetAmbientColor(vec3(0.3f, 0.3f, 0.3f));
+    material->SetDiffuseColor(vec3(0.7f, 0.7f, 0.7f));
+    material->SetSpecularColor(vec3(0.2f, 0.2f, 0.2f));
     material->SetShininess(50.0f);
     return material;
 }

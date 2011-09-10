@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="Application\Input.cpp" />
     <ClCompile Include="Dependencies\GLee.c" />
     <ClCompile Include="Dependencies\tinyxml.cpp" />
     <ClCompile Include="Dependencies\tinyxmlerror.cpp" />
@@ -48,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
+    <ClInclude Include="Application\Input.h" />
     <ClInclude Include="Dependencies\GLee.h" />
     <ClInclude Include="Dependencies\tinyxml.h" />
     <ClInclude Include="FireCube.h" />

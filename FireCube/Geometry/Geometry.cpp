@@ -22,7 +22,7 @@ using namespace std;
 #include "Geometry/Geometry.h"
 
 using namespace FireCube;
-Material::Material() : shininess(128.0f)
+Material::Material() : shininess(128.0f), opacity(1.0f)
 {
 
 }
@@ -38,27 +38,27 @@ void Material::SetName(const string &name)
 {
     this->name = name;
 }
-vec4 Material::GetAmbientColor() const
+vec3 Material::GetAmbientColor() const
 {
     return ambient;
 }
-void Material::SetAmbientColor(const vec4 &color)
+void Material::SetAmbientColor(const vec3 &color)
 {
     ambient = color;
 }
-vec4 Material::GetDiffuseColor() const
+vec3 Material::GetDiffuseColor() const
 {
     return diffuse;
 }
-void Material::SetDiffuseColor(const vec4 &color)
+void Material::SetDiffuseColor(const vec3 &color)
 {
     diffuse = color;
 }
-vec4 Material::GetSpecularColor() const
+vec3 Material::GetSpecularColor() const
 {
     return specular;
 }
-void Material::SetSpecularColor(const vec4 &color)
+void Material::SetSpecularColor(const vec3 &color)
 {
     specular = color;
 }
@@ -86,6 +86,14 @@ void Material::SetNormalTexture(TexturePtr texture)
 {
     normalTexture = texture;
 }
+float Material::GetOpacity() const
+{
+	return opacity;
+}
+void Material::SetOpacity(float value)
+{
+	opacity = value;
+}
 
 Face::Face()
 {
@@ -108,10 +116,8 @@ Geometry::~Geometry()
 void Geometry::CalculateNormals()
 {
     normal.resize(vertex.size());
-    for (unsigned int n = 0; n < normal.size(); n++)
-    {
-        normal[n] = vec3(0, 0, 0);
-    }
+    std::fill(normal.begin(), normal.end(), vec3(0, 0, 0));
+
     for (unsigned int f = 0; f < face.size(); f++)
     {
         vec3 v1 = vertex[face[f].v[1]] - vertex[face[f].v[0]];
@@ -136,20 +142,19 @@ void Geometry::CalculateTangents()
     if ((normal.size() == 0) || (diffuseUV.size() == 0))
         return;
     vector<vec3> tan(vertex.size() * 2);
-    for (unsigned int i = 0; i < tan.size(); i++)
-        tan[i].Set(0.0f, 0.0f, 0.0f);
-
+	std::fill(tan.begin(), tan.end(), vec3(0, 0, 0));
+    
     for (unsigned int i = 0; i < face.size(); i++)
     {
         Face &face = this->face[i];
 
-        vec3 v0 = vertex[face.v[0]];
-        vec3 v1 = vertex[face.v[1]];
-        vec3 v2 = vertex[face.v[2]];
+        const vec3 &v0 = vertex[face.v[0]];
+        const vec3 &v1 = vertex[face.v[1]];
+        const vec3 &v2 = vertex[face.v[2]];
 
-        vec2 uv0 = diffuseUV[face.v[0]];
-        vec2 uv1 = diffuseUV[face.v[1]];
-        vec2 uv2 = diffuseUV[face.v[2]];
+        const vec2 &uv0 = diffuseUV[face.v[0]];
+        const vec2 &uv1 = diffuseUV[face.v[1]];
+        const vec2 &uv2 = diffuseUV[face.v[2]];
 
         float x1 = v1.x - v0.x;
         float x2 = v2.x - v0.x;

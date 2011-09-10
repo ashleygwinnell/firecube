@@ -21,6 +21,12 @@ int main(int argc, char *argv[])
     if (!app.Initialize())
         return 0;
     app.SetTitle(string("Physics Test"));
+	app.GetInputManager().AddInputListener(&app);
+	app.GetInputManager().AddMapping(MOUSE_AXIS_X_REL, "mouseX");
+	app.GetInputManager().AddMapping(MOUSE_AXIS_Y_REL, "mouseY");
+	app.GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
+	app.GetInputManager().AddMapping(KEY_MOUSE_LEFT_BUTTON, STATE, "Rotate");
+	app.GetInputManager().AddMapping(KEY_MOUSE_RIGHT_BUTTON, STATE, "Forward");
     app.vShader = Renderer::GetShaderManager().Create("v.vert");
     app.pShader = Renderer::GetShaderManager().Create("p.frag");
     app.pShader2 = Renderer::GetShaderManager().Create("p2.frag");
@@ -72,30 +78,27 @@ void App::Render(float t)
     oss << "FPS:" << app.GetFps();
     Renderer::RenderText(font, vec3(0, 0, 0), vec4(1, 1, 1, 1), oss.str());
 }
-void App::HandleInput(float t)
+void App::HandleInput(float t, const MappedInput &input)
 {
     body1.CalculateWorldProperties();
     body2.CalculateWorldProperties();
-    ::POINT p;
-    vec3 m;
-    ::GetCursorPos(&p);
-    m.x = (float)p.x;
-    m.y = (float)p.y;
-    if (GetAsyncKeyState(1))
+
+	if (input.IsActionTriggered("Close"))
+		Close();
+    if (input.IsStateOn("Rotate"))
     {
-        rot.x += t * (lastPos.y - m.y) / 2.0f;
-        rot.y += t * (lastPos.x - m.x) / 2.0f;
+        rot.x += t * -input.GetValue("mouseY") / 2.0f;
+        rot.y += t * -input.GetValue("mouseX") / 2.0f;
 
         rot.x -= rot.x >= 2 * PI ? (float)(2 * PI) : 0;
         rot.x += rot.x < 0 ? (float)(2 * PI) : 0;
         rot.y -= rot.y >= 2 * PI ? (float)(2 * PI) : 0;
         rot.y += rot.y < 0 ? (float)(2 * PI) : 0;
     }
-    if (GetAsyncKeyState(2))
+    if (input.IsStateOn("Forward"))
     {
         vec3 v;
         v.FromAngles(rot.x, rot.y);
-        camPos += v * (lastPos.y - m.y) * t;
-    }
-    lastPos = m;
+        camPos += v * -input.GetValue("mouseY") * t;
+    }    
 }

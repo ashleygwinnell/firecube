@@ -254,9 +254,9 @@ NodePtr ObjLoader::GenerateSceneGraph()
 	{
 		MaterialPtr material(new FireCube::Material);
 		material->SetName(i->first);
-		material->SetAmbientColor(vec4(i->second.ambientColor.x, i->second.ambientColor.y, i->second.ambientColor.z, 1.0f));
-		material->SetDiffuseColor(vec4(i->second.diffuseColor.x, i->second.diffuseColor.y, i->second.diffuseColor.z, 1.0f));
-		material->SetSpecularColor(vec4(i->second.specularColor.x, i->second.specularColor.y, i->second.specularColor.z, 1.0f));
+		material->SetAmbientColor(vec3(i->second.ambientColor.x, i->second.ambientColor.y, i->second.ambientColor.z));
+		material->SetDiffuseColor(vec3(i->second.diffuseColor.x, i->second.diffuseColor.y, i->second.diffuseColor.z));
+		material->SetSpecularColor(vec3(i->second.specularColor.x, i->second.specularColor.y, i->second.specularColor.z));
 		material->SetShininess(i->second.shininess);
 		if (!i->second.diffuseTextureName.empty())
 		{

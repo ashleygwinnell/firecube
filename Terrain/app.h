@@ -1,8 +1,8 @@
-class App : public Application
+class App : public Application, public InputListener
 {
 public:
     bool Init();
-    void HandleInput(float time);
+    void HandleInput(float time, const MappedInput &input);
     void Update(float time);
     void Render(float time);
 

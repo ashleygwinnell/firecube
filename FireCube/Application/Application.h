@@ -70,19 +70,8 @@ public:
     /**
     * Returns the window's height.
     */
-    int GetHeight() const;
-
-	/**
-	* Returns the cursor position.
-	*/
-	vec2 GetCursorPos() const;
-
-    /**
-    * User should override this to handle the input.
-    * Called once per frame.
-    */
-    virtual void HandleInput(float time) = 0;
-
+    int GetHeight() const;	
+    
     /**
     * User should override this to handle the game logic.
     * Called once per frame.
@@ -100,7 +89,18 @@ public:
     */
     virtual bool Init();
     
-private:	
+	/**
+	* Returns the input manager.
+	*/
+
+	InputManager &GetInputManager();
+
+private:
+	void InitKeyMap();
+	std::map<int, Key> keyMap;
+	std::map<int, bool> keyState;
+	std::map<int, Key> mouseMap;
+	std::map<int, bool> mouseState;
     Timer timer;
     bool running;
     float deltaTime;
@@ -110,7 +110,8 @@ private:
     int width, height;
     TextureManager defaultTextureManager;
     ShaderManager defaultShaderManager;
-    FontManager defaultFontManager;    
+    FontManager defaultFontManager;
+	InputManager inputManager;
 };
 }
 #pragma warning(pop)

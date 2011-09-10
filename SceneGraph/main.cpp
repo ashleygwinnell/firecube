@@ -16,6 +16,8 @@ bool App::Init()
     Filesystem::AddSearchPath("../Assets/Textures");
     Filesystem::AddSearchPath("../Assets/Models");
     SetTitle("SceneGraph Test Application");
+	GetInputManager().AddInputListener(this);
+	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
     font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 18);
     GeometryPtr lightMarker = GeometryGenerator::GenerateSphere(0.1f, 10, 10);
     root = NodePtr(new Node("Root"));
@@ -75,7 +77,9 @@ void App::Render(float t)
     oss << "FPS:" << app.GetFps();
     Renderer::RenderText(app.font, vec3(0, (float)app.GetHeight() - 20.0f, 0.0f), vec4(1, 1, 1, 1), oss.str());
 }
-void App::HandleInput(float t)
+void App::HandleInput(float t, const MappedInput &input)
 {
+	if (input.IsActionTriggered("Close"))
+		Close();
 }
 

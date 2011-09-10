@@ -22,10 +22,21 @@ bool App::Init()
 {
     Filesystem::AddSearchPath("../Assets/Textures");
     SetTitle(string("FireCube Test Application"));
+	GetInputManager().AddInputListener(this);
+	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
+	GetInputManager().AddMapping(MOUSE_AXIS_X_RELATIVE, "mouseX");
+	GetInputManager().AddMapping(MOUSE_AXIS_Y_RELATIVE, "mouseY");
+	GetInputManager().AddMapping(KEY_MOUSE_LEFT_BUTTON, STATE, "RotateObject", MODIFIER_SHIFT);
+	GetInputManager().AddMapping(KEY_MOUSE_RIGHT_BUTTON, STATE, "RotateLight", MODIFIER_SHIFT);
+
+	TechniquePtr t(new Technique);
+	t->LoadShader("../Assets/Shaders/debugNormals.vert");
+	t->LoadShader("../Assets/Shaders/debugNormals.frag");
+	Renderer::AddTechnique("debugNormals", t);
 	font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 18);
     root = NodePtr(new Node("Root"));
     NodePtr node;
-    node = LoadMesh("../Assets/Models/teapot2.3ds");    
+    node = LoadMesh("../Assets/Models/teapot2.3ds");    	
     root->AddChild(node);
     node = NodePtr(new Node("LightNode"));
     Light light;
@@ -37,8 +48,11 @@ bool App::Init()
     root->AddChild(node);
     SetNormalMap(root, Renderer::GetTextureManager().Create("normalMap.jpg"));
 	
-	camera = Renderer::GetCamera();
-	camera->SetPosition(vec3(0.0f, 0.0f, 4.0f));
+	camera = NodeObserverCameraPtr(new NodeObserverCamera(GetInputManager()));
+	camera->SetTarget(node);
+	camera->SetDistance(5.0f);
+	
+	Renderer::SetCamera(camera);
     return true;
 }
 void App::Update(float t)
@@ -58,14 +72,20 @@ void App::Render(float t)
     oss << "FPS:" << app.GetFps();
     Renderer::RenderText(app.font, vec3(0, (float)app.GetHeight() - 20.0f, 0.0f), vec4(1, 1, 1, 1), oss.str());
 }
-void App::HandleInput(float t)
+void App::HandleInput(float t, const MappedInput &input)
 {
-    static vec2 lastPos;
-    vec2 pos;
-    pos=GetCursorPos();    
-    if (GetAsyncKeyState(1))
-        root->GetChildren()[0]->Rotate(vec3(lastPos.y - pos.y, lastPos.x - pos.x, 0)*t);
-    if (GetAsyncKeyState(2))
-        root->GetChildren()[1]->Rotate(vec3(lastPos.y - pos.y, lastPos.x - pos.x, 0)*t);
-    lastPos = pos;
+	if (input.IsActionTriggered("Close"))
+		Close();
+	
+	if (input.IsStateOn("RotateObject"))
+	{
+	    vec2 rot(-input.GetValue("mouseY"), -input.GetValue("mouseX"));
+		root->GetChildren()[0]->Rotate(vec3(rot.x, rot.y, 0)*t);	
+	}
+	
+	if (input.IsStateOn("RotateLight"))
+	{
+		vec2 rot(-input.GetValue("mouseY"), -input.GetValue("mouseX"));
+		root->GetChildren()[1]->Rotate(vec3(rot.x, rot.y, 0)*t);		
+	}
 }

@@ -128,6 +128,9 @@
     <ClCompile Include="Geometry\ObjLoader.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Input.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Buffer.h">
@@ -230,5 +233,8 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="FireCube.h" />
+    <ClInclude Include="Application\Input.h">
+      <Filter>Application</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

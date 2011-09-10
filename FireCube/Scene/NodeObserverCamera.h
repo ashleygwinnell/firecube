@@ -23,6 +23,11 @@ public:
 	NodeObserverCamera();
 
 	/**
+	* Constructs a NodeObserverCamera and add default key behavior.
+	*/
+	NodeObserverCamera(InputManager &inputManager);
+
+	/**
 	* Returns the view matrix of this camera.
 	*/
 	virtual mat4 GetViewMatrix();
@@ -122,6 +127,14 @@ public:
 	virtual vec3 GetPosition() const;
 
 private:
+	class NodeObserverCameraInputListener : public InputListener
+	{		
+	public:
+		void SetCamera(NodeObserverCamera *cam);
+		void HandleInput(float time, const MappedInput &input);
+	private:
+		NodeObserverCamera *camera;
+	};
 	void CheckRanges();
 	vec3 lastTargetPosition;
 	NodePtr target;
@@ -129,7 +142,8 @@ private:
 	float minDistance;
 	float maxDistance;
 	float minAngX;
-	float maxAngX;	
+	float maxAngX;
+	NodeObserverCameraInputListener inputListener;
 };
 
 /**

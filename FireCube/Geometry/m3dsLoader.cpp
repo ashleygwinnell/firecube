@@ -52,9 +52,9 @@ bool M3dsLoader::Load(const string &filename)
         if (object[k].mesh.size() == 0) // No material specified, create a default one.
         {
             MaterialPtr mat(new Material);
-            mat->SetAmbientColor(vec4(0, 0, 0, 1));
-            mat->SetDiffuseColor(vec4(1, 1, 1, 1));
-            mat->SetSpecularColor(vec4(0, 0, 0, 1));
+            mat->SetAmbientColor(vec3(0, 0, 0));
+            mat->SetDiffuseColor(vec3(1, 1, 1));
+            mat->SetSpecularColor(vec3(0, 0, 0));
             materials.push_back(mat);
             object[k].mesh.push_back(Mesh());
             Mesh &mesh = object[k].mesh.back();
@@ -302,9 +302,9 @@ void M3dsLoader::ReadMaterialNameChunk()
     curMaterial->SetName(curPos);
     curPos += curMaterial->GetName().size() + 1;
 }
-vec4 M3dsLoader::ReadColorFChunk()
+vec3 M3dsLoader::ReadColorFChunk()
 {
-    vec4 ret;
+    vec3 ret;
     ret.x = *(float*)curPos;
     curPos += 4;
     ret.y = *(float*)curPos;
@@ -313,9 +313,9 @@ vec4 M3dsLoader::ReadColorFChunk()
     curPos += 4;
     return ret;
 }
-vec4 M3dsLoader::ReadColorBChunk()
+vec3 M3dsLoader::ReadColorBChunk()
 {
-    vec4 ret;
+    vec3 ret;
     ret.x = (float)(*(unsigned char*)curPos) / 255.0f;
     curPos++;
     ret.y = (float)(*(unsigned char*)curPos) / 255.0f;
@@ -324,9 +324,9 @@ vec4 M3dsLoader::ReadColorBChunk()
     curPos++;
     return ret;
 }
-vec4 M3dsLoader::ReadMaterialColorChunk(unsigned int length)
+vec3 M3dsLoader::ReadMaterialColorChunk(unsigned int length)
 {
-    vec4 ret;
+    vec3 ret;
     char *startPos = curPos;
     while ((unsigned int)(curPos - startPos) < length)
     {

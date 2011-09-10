@@ -10,6 +10,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <iostream>
 #include <queue>
+#include <set>
 #include <windows.h>
 #include <gl/gl.h>
 
@@ -29,6 +30,7 @@
 #include "Rendering/Font.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/RenderQueue.h"
+#include "Application/Input.h"
 #include "Application/Application.h"
 #include "Scene/Light.h"
 #include "Scene/Node.h"

@@ -1254,9 +1254,9 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 			{
 				fmat = FireCube::MaterialPtr(new FireCube::Material);
 				generatedMaterials[subMesh.material] = fmat;
-				fmat->SetAmbientColor(effect.ambientColor);
-				fmat->SetDiffuseColor(effect.diffuseColor);
-				fmat->SetSpecularColor(effect.specularColor);
+				fmat->SetAmbientColor(vec3(effect.ambientColor.x, effect.ambientColor.y, effect.ambientColor.z));
+				fmat->SetDiffuseColor(vec3(effect.diffuseColor.x, effect.diffuseColor.y, effect.diffuseColor.z));
+				fmat->SetSpecularColor(vec3(effect.specularColor.x, effect.specularColor.y, effect.specularColor.z));
 				fmat->SetShininess(effect.shininess);
 				fmat->SetName(subMesh.material);            
 				if (effect.diffuseSampler.name != "")

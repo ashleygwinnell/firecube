@@ -6,6 +6,7 @@
 #include <boost/weak_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <sstream>
+#include <set>
 using namespace std;
 #include <SDL.h>
 #include <windows.h>
@@ -17,6 +18,7 @@ using namespace std;
 #include "Math/Plane.h"
 #include "Math/Frustum.h"
 #include "Scene/Camera.h"
+#include "Application/Input.h"
 #include "Scene/NodeObserverCamera.h"
 #include "Math/BoundingBox.h"
 #include "Rendering/Renderer.h"
@@ -35,6 +37,26 @@ NodeObserverCamera::NodeObserverCamera()
 	minAngX = -(float)PI / 2.0f + 0.001f;
 	maxAngX = (float)PI / 2.0f - 0.001f;
 }
+
+NodeObserverCamera::NodeObserverCamera(InputManager &inputManager)
+{
+	rotation.Set(0.0f, 0.0f, 0.0f);
+	distance = 10.0f;
+	minDistance = 0.1f;
+	maxDistance = 100.0f;
+	minAngX = -(float)PI / 2.0f + 0.001f;
+	maxAngX = (float)PI / 2.0f - 0.001f;
+
+	inputListener.SetCamera(this);
+	inputManager.AddInputListener(&inputListener);
+	inputManager.AddMapping(KEY_MOUSE_LEFT_BUTTON, STATE, "NodeObserverCamera_Rotate", MODIFIER_NONE);
+	inputManager.AddMapping(KEY_MOUSE_RIGHT_BUTTON, STATE, "NodeObserverCamera_Zoom", MODIFIER_NONE);
+	inputManager.AddMapping(KEY_MOUSE_WHEEL_UP, ACTION, "NodeObserverCamera_ZoomIn");
+	inputManager.AddMapping(KEY_MOUSE_WHEEL_DOWN, ACTION, "NodeObserverCamera_ZoomOut");
+	inputManager.AddMapping(MOUSE_AXIS_X_RELATIVE, "NodeObserverCamera_MouseX");
+	inputManager.AddMapping(MOUSE_AXIS_Y_RELATIVE, "NodeObserverCamera_MouseY");
+}
+
 mat4 NodeObserverCamera::GetViewMatrix()
 {		
 	if (!target)			
@@ -54,15 +76,19 @@ mat4 NodeObserverCamera::GetViewMatrix()
 	viewMatrixChanged = false;
 	return viewMatrix;
 }
+
 void NodeObserverCamera::SetTarget(NodePtr node)
 {
 	target = node;
 	viewMatrixChanged = true;
+	frustumChanged = true;
 }
+
 NodePtr NodeObserverCamera::GetTarget() const
 {
 	return target;
 }
+
 Frustum &NodeObserverCamera::GetFrustum()
 {
 	vec3 targetPos = target->GetWorldPosition();
@@ -71,42 +97,51 @@ Frustum &NodeObserverCamera::GetFrustum()
 	UpdateFrustum();
 	return frustum;
 }
+
 void NodeObserverCamera::SetMinDistance(float v)
 {
 	minDistance = v;
 	CheckRanges();
 }
+
 float NodeObserverCamera::GetMinDistance() const
 {
 	return minDistance;
 }
+
 void NodeObserverCamera::SetMaxDistance(float v)
 {
 	maxDistance = v;
 	CheckRanges();
 }
+
 float NodeObserverCamera::GetMaxDistance() const
 {
 	return maxDistance;
 }
+
 void NodeObserverCamera::SetMinAngX(float v)
 {
 	minAngX = v;
 	CheckRanges();
 }
+
 float NodeObserverCamera::GetMinAngX() const
 {
 	return minAngX;
 }
+
 void NodeObserverCamera::SetMaxAngX(float v)
 {
 	maxAngX = v;
 	CheckRanges();
 }
+
 float NodeObserverCamera::GetMaxAngX() const
 {
 	return maxAngX;
 }
+
 void NodeObserverCamera::CheckRanges()
 {
 	if (distance < minDistance)
@@ -134,36 +169,41 @@ void NodeObserverCamera::CheckRanges()
 		viewMatrixChanged = true;
 		frustumChanged = true;
 	}
-
 }
+
 void NodeObserverCamera::SetDistance(float v)
 {
 	distance = v;
 	viewMatrixChanged = true;
 	frustumChanged = true;
 }
+
 float NodeObserverCamera::GetDistance() const
 {
 	return distance;
 }
+
 void NodeObserverCamera::Zoom(float v)
 {
 	distance -= v;
 	viewMatrixChanged = true;
 	frustumChanged = true;
 }
+
 void NodeObserverCamera::RotateX(float v)
 {
 	rotation.x += v;
 	viewMatrixChanged = true;
 	frustumChanged = true;
 }
+
 void NodeObserverCamera::RotateY(float v)
 {
 	rotation.y += v;
 	viewMatrixChanged = true;
 	frustumChanged = true;
 }
+
 vec3 NodeObserverCamera::GetPosition() const
 {
 	if (!target)			
@@ -173,4 +213,26 @@ vec3 NodeObserverCamera::GetPosition() const
 	dir.FromAngles(rotation.x, rotation.y);
 	dir*=-distance;	
 	return targetPos + dir;
+}
+
+void NodeObserverCamera::NodeObserverCameraInputListener::SetCamera(NodeObserverCamera *cam)
+{
+	camera = cam;
+}
+
+void NodeObserverCamera::NodeObserverCameraInputListener::HandleInput(float time, const MappedInput &input)
+{
+	if (input.IsActionTriggered("NodeObserverCamera_ZoomIn"))
+		camera->Zoom(time * 10.0f);
+	if (input.IsActionTriggered("NodeObserverCamera_ZoomOut"))
+		camera->Zoom(-time * 10.0f);
+	if (input.IsStateOn("NodeObserverCamera_Rotate"))
+	{
+		camera->RotateX(-input.GetValue("NodeObserverCamera_MouseY") * time);
+		camera->RotateY(-input.GetValue("NodeObserverCamera_MouseX") * time);
+	}
+	if (input.IsStateOn("NodeObserverCamera_Zoom"))
+	{
+		camera->Zoom(-input.GetValue("NodeObserverCamera_MouseY") * time);		
+	}
 }

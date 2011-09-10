@@ -195,7 +195,7 @@ void Node::RemoveLight(const Light &light)
     if (i != lights.end())
         lights.erase(i);
 }
-void Node::RenderBoundingBox(vec4 color, bool onlyWithGeometry)
+void Node::RenderBoundingBox(vec3 color, bool onlyWithGeometry)
 {
     MaterialPtr mat(new Material);
     mat->SetDiffuseColor(color);

@@ -218,7 +218,7 @@ public:
 	* @param color The color to render the boxes with.
 	* @param onlyWithGeometry Specifies whether to render bounding boxes only for nodes that has a geometry associated with them, defaults to true. 
     */
-    void RenderBoundingBox(vec4 color, bool onlyWithGeometry = true);
+    void RenderBoundingBox(vec3 color, bool onlyWithGeometry = true);
 
     /**
     * Gets the render parameters of this node.

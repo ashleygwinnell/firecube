@@ -8,6 +8,8 @@ bool App::Init()
 {
     Filesystem::AddSearchPath("../Assets/Textures");
     Filesystem::AddSearchPath("../Assets/Models");
+	GetInputManager().AddInputListener(this);
+	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
     SetTitle("FBO Example");
     font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 10);
     root = NodePtr(new Node("Root"));
@@ -107,9 +109,10 @@ void App::Render(float time)
     oss << "FPS:" << GetFps();
     Renderer::RenderText(font, vec3(0, 0, 0), vec4(1, 1, 1, 1), oss.str());
 }
-void App::HandleInput(float time)
+void App::HandleInput(float time, const MappedInput &input)
 {
-
+	if (input.IsActionTriggered("Close"))
+		Close();
 }
 int main(int argc, char *argv[])
 {

@@ -87,12 +87,12 @@ private:
     void ReadObjectMatrixChunk();
     void ReadMaterialListChunk(unsigned int length);
     void ReadMaterialNameChunk();
-    vec4 ReadMaterialColorChunk(unsigned int length);
+    vec3 ReadMaterialColorChunk(unsigned int length);
     TexturePtr ReadMaterialTexMapChunk(unsigned int length);
     float ReadMaterialShininessChunk(unsigned int length);
     string ReadMapNameChunk();
-    vec4 ReadColorFChunk();
-    vec4 ReadColorBChunk();
+    vec3 ReadColorFChunk();
+    vec3 ReadColorBChunk();
     float ReadPercentageBChunk();
     float ReadPercentageFChunk();
     MaterialPtr GetMaterialByName(const string &name);

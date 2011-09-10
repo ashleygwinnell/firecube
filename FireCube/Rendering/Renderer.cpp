@@ -296,9 +296,9 @@ void Renderer::UseMaterial(MaterialPtr material)
     if (!material)
         return;
 
-    vec4 ambientColor = material->GetAmbientColor();
-    vec4 diffuseColor = material->GetDiffuseColor();
-    vec4 specularColor = material->GetSpecularColor();
+    vec4 ambientColor = vec4(material->GetAmbientColor().x, material->GetAmbientColor().y, material->GetAmbientColor().z, 1.0f);
+    vec4 diffuseColor = vec4(material->GetDiffuseColor().x, material->GetDiffuseColor().y, material->GetDiffuseColor().z, 1.0f);
+    vec4 specularColor = vec4(material->GetSpecularColor().x, material->GetSpecularColor().y, material->GetSpecularColor().z, 1.0f);
     glMaterialfv(GL_FRONT, GL_AMBIENT, &ambientColor.x);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, &diffuseColor.x);
     glMaterialfv(GL_FRONT, GL_SPECULAR, &specularColor.x);

@@ -22,6 +22,24 @@ bool App::Init()
 {
     Filesystem::AddSearchPath("../Assets/Textures");
     SetTitle("Terrain");
+	GetInputManager().AddInputListener(this);
+	GetInputManager().AddMapping(MOUSE_AXIS_X_REL, "mouseX");
+	GetInputManager().AddMapping(MOUSE_AXIS_Y_REL, "mouseY");
+	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
+	GetInputManager().AddMapping(KEY_W, STATE, "Forward");
+	GetInputManager().AddMapping(KEY_S, STATE, "Backward");
+	GetInputManager().AddMapping(KEY_A, STATE, "Left");
+	GetInputManager().AddMapping(KEY_D, STATE, "Right");
+	GetInputManager().AddMapping(KEY_W, STATE, "ForwardFast", MODIFIER_SHIFT);
+	GetInputManager().AddMapping(KEY_S, STATE, "BackwardFast", MODIFIER_SHIFT);
+	GetInputManager().AddMapping(KEY_A, STATE, "LeftFast", MODIFIER_SHIFT);
+	GetInputManager().AddMapping(KEY_D, STATE, "RightFast", MODIFIER_SHIFT);
+	GetInputManager().AddMapping(KEY_LEFT, STATE, "RotateLeft");
+	GetInputManager().AddMapping(KEY_RIGHT, STATE, "RotateRight");
+	GetInputManager().AddMapping(KEY_UP, STATE, "RotateUp");
+	GetInputManager().AddMapping(KEY_DOWN, STATE, "RotateDown");
+	GetInputManager().AddMapping(KEY_MOUSE_LEFT_BUTTON, STATE, "RotateBoth");
+
     font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 18);
     program = ProgramPtr(new Program);
     program->Create(Renderer::GetShaderManager().Create("diffuseWithFog.vert"), Renderer::GetShaderManager().Create("diffuseWithFog.frag"));
@@ -82,44 +100,49 @@ void App::Render(float time)
     oss2 << "Rendered triangles: " << n;
     Renderer::RenderText(font, vec3(0, 20, 0), vec4(1.0f, 1.0f, 0.0f, 1.0f), oss2.str());
 }
-void App::HandleInput(float time)
+void App::HandleInput(float time, const MappedInput &input)
 {
-    static vec2 lastPos;
-    ::POINT p;
-    ::GetCursorPos(&p);
-    vec2 curPos((float)p.x, (float)p.y);
-    if (GetAsyncKeyState(1))
+    if (input.IsActionTriggered("Close"))
+		Close();
+    if (input.IsStateOn("RotateBoth"))
     {
-        angSpeed.x += -(curPos.y - lastPos.y) * time * 0.1f;
-        angSpeed.y += -(curPos.x - lastPos.x) * time * 0.1f;
+        angSpeed.x += -input.GetValue("mouseY") * time * 0.1f;
+        angSpeed.y += -input.GetValue("mouseX") * time * 0.1f;
     }
-    if (GetAsyncKeyState(VK_LEFT))
+    if (input.IsStateOn("RotateLeft"))
     {
         angSpeed.y += time * 0.3f;
         angSpeed.z += time * 0.5f;
     }
-    if (GetAsyncKeyState(VK_RIGHT))
+    if (input.IsStateOn("RotateRight"))
     {
         angSpeed.y -= time * 0.3f;
         angSpeed.z -= time * 0.5f;
     }
-    if (GetAsyncKeyState(VK_UP))
+    if (input.IsStateOn("RotateDown"))
         angSpeed.x -= time * 0.3f;
-    if (GetAsyncKeyState(VK_DOWN))
+    if (input.IsStateOn("RotateUp"))
         angSpeed.x += time * 0.3f;
     vec3 dir;
-    float scale = 0.4f;
-    if (GetAsyncKeyState(VK_SHIFT))
-        scale = 2.0f;
-    dir.FromAngles(ang.x, ang.y);
-    if (GetAsyncKeyState('W'))
-        speed += dir * time * scale;
-    if (GetAsyncKeyState('S'))
-        speed -= dir * time * scale;
-    vec3 strafe = Cross(dir, vec3(0, 1, 0)).Normalize();
-    if (GetAsyncKeyState('A'))
-        speed -= strafe * time * scale;
-    if (GetAsyncKeyState('D'))
-        speed += strafe * time * scale;
-    lastPos = curPos;
+    
+	dir.FromAngles(ang.x, ang.y);
+	vec3 strafe = Cross(dir, vec3(0, 1, 0)).Normalize();
+
+    if (input.IsStateOn("Forward"))
+        speed += dir * time * 0.4f;
+    if (input.IsStateOn("Backward"))
+        speed -= dir * time * 0.4f;    
+    if (input.IsStateOn("Left"))
+        speed -= strafe * time * 0.4f;
+    if (input.IsStateOn("Right"))
+        speed += strafe * time * 0.4f;    
+
+	if (input.IsStateOn("ForwardFast"))
+		speed += dir * time * 2.0f;
+	if (input.IsStateOn("BackwardFast"))
+		speed -= dir * time * 2.0f;	
+	if (input.IsStateOn("LeftFast"))
+		speed -= strafe * time * 2.0f;
+	if (input.IsStateOn("RightFast"))
+		speed += strafe * time * 2.0f;    
 }
