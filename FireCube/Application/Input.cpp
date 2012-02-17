@@ -5,8 +5,6 @@
 #include <algorithm>
 using namespace std;
 
-#include <SDL.h>
-
 #include "Utils/utils.h"
 #include "Application/Input.h"
 using namespace FireCube;

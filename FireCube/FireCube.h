@@ -25,6 +25,7 @@
 #include "Rendering/Buffer.h"
 #include "Rendering/Shaders.h"
 #include "Geometry/Geometry.h"
+#include "Geometry/Material.h"
 #include "Rendering/FrameBuffer.h"
 #include "Utils/Image.h"
 #include "Rendering/Font.h"

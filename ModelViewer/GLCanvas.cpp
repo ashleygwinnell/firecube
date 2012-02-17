@@ -1,6 +1,6 @@
 #include <FireCube.h>
 using namespace std;
-
+using namespace FireCube;
 #include <wx/wx.h>
 #include <wx/glcanvas.h>
 #include "Document.h"
@@ -32,43 +32,58 @@ GLCanvas::~GLCanvas()
 }
 void GLCanvas::Init()
 {
-    FireCube::Filesystem::AddSearchPath("../Assets/Textures");
+    Filesystem::AddSearchPath("../Assets/Textures");
     theApp->fcApp.InitializeNoWindow();
 
-    renderingParameters.bgColor = FireCube::vec4(0.249f, 0.521f, 1.0f, 1.0f);
+    renderingParameters.bgColor = vec4(0.249f, 0.521f, 1.0f, 1.0f);
     renderingParameters.renderingMode = GL_FILL;
     renderingParameters.cullFaceEnabled = true;
     renderingParameters.renderNormals = false;
     renderingParameters.renderTangents = false;    
 
-    theApp->GetApplicationParameters().vshader = FireCube::Renderer::GetShaderManager().Create("plainColor.vert");
-    theApp->GetApplicationParameters().fshader = FireCube::Renderer::GetShaderManager().Create("plainColor.frag");
-    theApp->GetApplicationParameters().program = FireCube::ProgramPtr(new FireCube::Program);
+	renderingParameters.grid = GeometryPtr(new Geometry);    
+	renderingParameters.gridNode = NodePtr(new Node);
+	MaterialPtr material(new Material);
+	renderingParameters.grid->SetMaterial(material);
+	material->SetDiffuseColor(vec3(1, 1, 1));
+	renderingParameters.gridNode->SetGeometry(renderingParameters.grid);
+	renderingParameters.gridNode->SetLighting(false);
+
+    theApp->GetApplicationParameters().vshader = Renderer::GetShaderManager().Create("plainColor.vert");
+    theApp->GetApplicationParameters().fshader = Renderer::GetShaderManager().Create("plainColor.frag");
+    theApp->GetApplicationParameters().program = ProgramPtr(new Program);
     theApp->GetApplicationParameters().program->Create(theApp->GetApplicationParameters().vshader, theApp->GetApplicationParameters().fshader);
 
-   
-    FireCube::ShaderPtr nvShader(new FireCube::Shader);
-    FireCube::ShaderPtr nfShader(new FireCube::Shader);
-    nvShader->Create(FireCube::VERTEX_SHADER, "void main() \
-								  {	\
-									gl_Position = ftransform(); \
-								  } ");
+	renderingParameters.gridMaterial = MaterialPtr(new Material);
+	renderingParameters.gridMaterial->SetAmbientColor(vec3(0,0,0));
+	renderingParameters.gridMaterial->SetDiffuseColor(vec3(1,1,1));
+	renderingParameters.gridMaterial->SetSpecularColor(vec3(0,0,0));
 
-    nfShader->Create(FireCube::FRAGMENT_SHADER, "uniform vec4 color; \
-									void main() \
-									{ \
-									gl_FragColor = color;  \
-									} ");
-    renderingParameters.plainColorProgram = FireCube::ProgramPtr(new FireCube::Program);
-    renderingParameters.plainColorProgram->Create(nvShader, nfShader);
+	renderingParameters.normalsMaterial = MaterialPtr(new Material);
+	renderingParameters.normalsMaterial->SetAmbientColor(vec3(0,0,0));
+	renderingParameters.normalsMaterial->SetDiffuseColor(vec3(0,0,1));
+	renderingParameters.normalsMaterial->SetSpecularColor(vec3(0,0,0));
+
+	renderingParameters.tangentsMaterial = MaterialPtr(new Material);
+	renderingParameters.tangentsMaterial->SetAmbientColor(vec3(0,0,0));
+	renderingParameters.tangentsMaterial->SetDiffuseColor(vec3(1,0,0));
+	renderingParameters.tangentsMaterial->SetSpecularColor(vec3(0,0,0));
+
+	renderingParameters.bitangentsMaterial = MaterialPtr(new Material);
+	renderingParameters.bitangentsMaterial->SetAmbientColor(vec3(0,0,0));
+	renderingParameters.bitangentsMaterial->SetDiffuseColor(vec3(0,1,0));
+	renderingParameters.bitangentsMaterial->SetSpecularColor(vec3(0,0,0));
+   
+	ShaderProperties shaderProperties;	
+    renderingParameters.plainColorProgram = Renderer::GetTechnique("default")->GenerateProgram(shaderProperties);    
     
     theApp->LoadDocument("../Assets/Models/teapot2.3ds");
     CreateGrid(2, 20);
-	FireCube::mat4 mat;
+	mat4 mat;
 	int w, h;
 	GetClientSize(&w, &h);
 	mat.GeneratePerspective(90.0f,(float) w / (float) h, 0.1f, 1000.0f);
-	renderingParameters.camera = FireCube::NodeObserverCameraPtr(new FireCube::NodeObserverCamera);
+	renderingParameters.camera = NodeObserverCameraPtr(new NodeObserverCamera);
 	renderingParameters.camera->SetDistance(5.0f);
 	renderingParameters.camera->SetMaxDistance(10000.0f);
 	renderingParameters.camera->SetProjectionMatrix(mat);
@@ -83,15 +98,11 @@ void GLCanvas::Render()
         init = true;
         Init();
     }
-    FireCube::Renderer::Clear(renderingParameters.bgColor, 1.0f);
-    /*FireCube::vec3 dir;
-	dir.FromAngles(renderingParameters.rot.x, renderingParameters.rot.y);
-	dir*=renderingParameters.rot.z;
-	FireCube::Renderer::GetCamera()->SetPosition(dir);
-	FireCube::Renderer::GetCamera()->LookAt(FireCube::vec3(0.0f, 0.0f, 0.0f), FireCube::vec3(0.0f, 1.0f, 0.0f));*/
-	FireCube::Renderer::SetCamera(renderingParameters.camera);
+    Renderer::Clear(renderingParameters.bgColor, 1.0f);
+    
+	Renderer::UseCamera(renderingParameters.camera);
 	renderingParameters.camera->SetTarget(theApp->GetDocument().GetRoot());
-    FireCube::Renderer::SetModelViewMatrix(FireCube::Renderer::GetCamera()->GetViewMatrix());
+    
     RenderGrid();
     if (renderingParameters.cullFaceEnabled)
         glEnable(GL_CULL_FACE);
@@ -100,31 +111,31 @@ void GLCanvas::Render()
 
     glPolygonMode(GL_FRONT_AND_BACK, renderingParameters.renderingMode);
     
-    FireCube::Renderer::Render(theApp->GetDocument().GetRoot());
+    Renderer::Render(theApp->GetDocument().GetRoot());
     if (renderingParameters.renderNormals)
     {
-        FireCube::Renderer::UseProgram(renderingParameters.plainColorProgram);
-        renderingParameters.plainColorProgram->SetUniform("color", FireCube::vec4(0, 0, 1, 1));
-        theApp->GetDocument().GetNormalRenderingBuffer()->SetVertexStream(3);
-        FireCube::Renderer::RenderStream(FireCube::LINES, theApp->GetDocument().GetNormalRenderingBufferSize());
+        Renderer::UseProgram(renderingParameters.plainColorProgram);
+		Renderer::UseMaterial(renderingParameters.plainColorProgram, renderingParameters.normalsMaterial);
+        theApp->GetDocument().GetNormalRenderingBuffer()->SetVertexAttribute(0, 3, 0, 0);
+        Renderer::RenderStream(LINES, theApp->GetDocument().GetNormalRenderingBufferSize());
     }
     if (renderingParameters.renderTangents)
     {
-        FireCube::Renderer::UseProgram(renderingParameters.plainColorProgram);
-        renderingParameters.plainColorProgram->SetUniform("color", FireCube::vec4(1, 0, 0, 1));
-        theApp->GetDocument().GetTangentRenderingBuffer()->SetVertexStream(3);
-        FireCube::Renderer::RenderStream(FireCube::LINES, theApp->GetDocument().GetNormalRenderingBufferSize());
-        
-        renderingParameters.plainColorProgram->SetUniform("color", FireCube::vec4(0, 1, 0, 1));
-        theApp->GetDocument().GetBitangentRenderingBuffer()->SetVertexStream(3);
-        FireCube::Renderer::RenderStream(FireCube::LINES, theApp->GetDocument().GetNormalRenderingBufferSize());
+        Renderer::UseProgram(renderingParameters.plainColorProgram);        
+		Renderer::UseMaterial(renderingParameters.plainColorProgram, renderingParameters.tangentsMaterial);
+        theApp->GetDocument().GetTangentRenderingBuffer()->SetVertexAttribute(0, 3, 0, 0);
+        Renderer::RenderStream(LINES, theApp->GetDocument().GetNormalRenderingBufferSize());
+                
+		Renderer::UseMaterial(renderingParameters.plainColorProgram, renderingParameters.bitangentsMaterial);
+        theApp->GetDocument().GetBitangentRenderingBuffer()->SetVertexAttribute(0, 3, 0, 0);
+        Renderer::RenderStream(LINES, theApp->GetDocument().GetNormalRenderingBufferSize());
     }
     SwapBuffers();
 }
 
 void GLCanvas::OnEnterWindow( wxMouseEvent& event )
 {
-    lastpos = FireCube::vec2(event.GetPosition().x, event.GetPosition().y);
+    lastpos = vec2(event.GetPosition().x, event.GetPosition().y);
 }
 
 void GLCanvas::OnPaint( wxPaintEvent& WXUNUSED(event) )
@@ -146,7 +157,7 @@ void GLCanvas::OnSize(wxSizeEvent& event)
         SetCurrent();
         glViewport(0, 0, (GLint) w, (GLint) h);
     }
-	FireCube::mat4 mat;
+	mat4 mat;
 	mat.GeneratePerspective(90.0f,(float) w / (float) h, 0.1f, 1000.0f);
 	renderingParameters.camera->SetProjectionMatrix(mat);
 
@@ -158,7 +169,7 @@ void GLCanvas::OnEraseBackground(wxEraseEvent& WXUNUSED(event))
 }
 void GLCanvas::OnMotion(wxMouseEvent& event)
 {
-    FireCube::vec2 curpos(event.GetPosition().x, event.GetPosition().y);
+    vec2 curpos(event.GetPosition().x, event.GetPosition().y);
     if (event.LeftIsDown())
     {
         renderingParameters.camera->RotateX(-(curpos.y - lastpos.y) / 60.0f);
@@ -184,44 +195,35 @@ void GLCanvas::OnMouseWheel(wxMouseEvent& event)
     this->Refresh(false);
 }
 void GLCanvas::CreateGrid(float size, DWORD numberOfCells)
-{
-    vector<FireCube::vec3> vertices;
-    vector<DWORD> indices;
+{	 
+	renderingParameters.grid->GetVertices().clear();
     for (DWORD i = 0; i < numberOfCells + 1; i++)
     {
-        FireCube::vec3 pos1((float)i * size - size * (float)numberOfCells / 2.0f, 0, -size * (float)numberOfCells / 2.0f);
-        FireCube::vec3 pos2((float)i * size - size * (float)numberOfCells / 2.0f, 0, size * (float)numberOfCells / 2.0f);
-        FireCube::vec3 pos3(-size * (float)numberOfCells / 2.0f, 0, (float)i * size - size * (float)numberOfCells / 2.0f);
-        FireCube::vec3 pos4(size * (float)numberOfCells / 2.0f, 0, (float)i * size - size * (float)numberOfCells / 2.0f);
-        vertices.push_back(pos1);
-        vertices.push_back(pos2);
-        vertices.push_back(pos3);
-        vertices.push_back(pos4);
+        vec3 pos1((float)i * size - size * (float)numberOfCells / 2.0f, 0, -size * (float)numberOfCells / 2.0f);
+        vec3 pos2((float)i * size - size * (float)numberOfCells / 2.0f, 0, size * (float)numberOfCells / 2.0f);
+        vec3 pos3(-size * (float)numberOfCells / 2.0f, 0, (float)i * size - size * (float)numberOfCells / 2.0f);
+        vec3 pos4(size * (float)numberOfCells / 2.0f, 0, (float)i * size - size * (float)numberOfCells / 2.0f);
+        renderingParameters.grid->GetVertices().push_back(pos1);
+        renderingParameters.grid->GetVertices().push_back(pos2);
+        renderingParameters.grid->GetVertices().push_back(pos3);
+        renderingParameters.grid->GetVertices().push_back(pos4);
     }
-    renderingParameters.gridCount = vertices.size();
-    renderingParameters.gridVertex = FireCube::BufferPtr(new FireCube::Buffer);
-    renderingParameters.gridVertex->Create();
-    renderingParameters.gridVertex->LoadData(&vertices[0], vertices.size()*sizeof(FireCube::vec3), FireCube::STATIC);
+	renderingParameters.grid->SetPrimitiveType(LINES);
+	renderingParameters.grid->SetPrimitiveCount(renderingParameters.grid->GetVertices().size() / 2);    
+	renderingParameters.grid->SetVertexCount(renderingParameters.grid->GetVertices().size());    
+    renderingParameters.grid->UpdateBuffers();	
 }
 void GLCanvas::RenderGrid()
-{    
-    glDisable(GL_BLEND);
-
-    FireCube::Renderer::UseProgram(renderingParameters.plainColorProgram);
-    renderingParameters.plainColorProgram->SetUniform("color", FireCube::vec4(0.7f, 0.7f, 0.7f, 1.0f));
-    renderingParameters.gridVertex->SetVertexStream(3);
-    FireCube::Renderer::DisableNormalStream();
-    for (DWORD i = 0; i < FireCube::MAX_TEXTURES; i++)
-        FireCube::Renderer::DisableTexCoordStream(i);
-    FireCube::Renderer::RenderStream(FireCube::LINES, renderingParameters.gridCount);
+{            
+    Renderer::Render(renderingParameters.gridNode);
 }
 
-void GLCanvas::SetBackgroundColor(FireCube::vec4 color)
+void GLCanvas::SetBackgroundColor(vec4 color)
 {
 	renderingParameters.bgColor = color;
 }
 
-FireCube::vec4 GLCanvas::GetBackgroundColor()
+vec4 GLCanvas::GetBackgroundColor()
 {
 	return renderingParameters.bgColor;
 }
@@ -261,12 +263,12 @@ bool GLCanvas::GetRenderingTangents()
 	return renderingParameters.renderTangents;
 }
 
-void GLCanvas::SetRotation(FireCube::vec3 rotation)
+void GLCanvas::SetRotation(vec3 rotation)
 {
 	renderingParameters.camera->SetRotation(rotation);
 }
 
-FireCube::vec3 GLCanvas::GetRotation()
+vec3 GLCanvas::GetRotation()
 {
 	return renderingParameters.camera->GetRotation();
 }

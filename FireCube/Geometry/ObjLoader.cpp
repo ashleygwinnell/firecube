@@ -9,7 +9,7 @@
 using namespace std;
 #include <SDL.h>
 #include <windows.h>
-#include "Dependencies/GLee.h"
+#include "Dependencies/glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -18,6 +18,7 @@ using namespace std;
 #include "Math/BoundingBox.h"
 #include "Rendering/Texture.h"
 #include "Geometry/Geometry.h"
+#include "Geometry/Material.h"
 #include "Rendering/Renderer.h"
 #include "Dependencies/tinyxml.h"
 #include "Scene/Light.h"
@@ -33,7 +34,7 @@ ObjLoader::ObjLoader()
 	currentFaces = &objects["default"].facesWithoutMaterial;
 }
 
-void ObjLoader::Load(const string &filename)
+void ObjLoader::Load(const string &filename, ModelLoadingOptions options)
 {
 	ifstream ifs(filename);
 	string line;
@@ -61,6 +62,7 @@ void ObjLoader::Load(const string &filename)
 	}	
 	if (objects["default"].facesWithoutMaterial.size() == 0 && objects["default"].materialFaces.size() == 0)
 		objects.erase("default");
+	this->options = options;
 }
 void ObjLoader::ParseVertexLine(const string &line)
 {
@@ -325,12 +327,22 @@ NodePtr ObjLoader::GenerateSceneGraph()
 				geometry->GetFaces().push_back(generatedFace);
 			}
 			geometry->GetVertices() = generatedVertices;
+			if (options.flipU || options.flipV)
+			{
+				for (unsigned int k = 0; k < generatedTexCoords.size(); k++)
+				{
+					if (options.flipU)
+						generatedTexCoords[k].x = 1 - generatedTexCoords[k].x;
+					if (options.flipV)
+						generatedTexCoords[k].y = 1 - generatedTexCoords[k].y;
+				}
+			}
 			geometry->GetDiffuseUV() = generatedTexCoords;
 			geometry->GetNormals() = generatedNormals;
 			geometry->SetMaterial(generatedMaterials[j->first]);
 			geometry->SetPrimitiveType(TRIANGLES);
 			geometry->SetPrimitiveCount(j->second.size());
-			geometry->SetIndexCount(geometry->GetIndices().size());
+			geometry->SetVertexCount(geometry->GetIndices().size());
 			if (geometry->GetNormals().empty())
 				geometry->CalculateNormals();
 			geometry->CalculateTangents();

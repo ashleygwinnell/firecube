@@ -12,7 +12,7 @@ using namespace std;
 #include <windows.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "Dependencies/GLee.h"
+#include "Dependencies/glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -23,6 +23,7 @@ using namespace std;
 #include "Rendering/Buffer.h"
 #include "Rendering/Shaders.h"
 #include "Geometry/Geometry.h"
+#include "Geometry/Material.h"
 #include "Rendering/FrameBuffer.h"
 #include "Rendering/Font.h"
 #include "Rendering/Renderer.h"
@@ -35,41 +36,48 @@ using namespace std;
 #include "Scene/Camera.h"
 
 using namespace FireCube;
-ProgramPtr textShader;
 BufferPtr textVertexBuffer;
-BufferPtr textUvBuffer;
+GLuint textVao = 0;
 TextureManager *currentTextureManager = NULL;
 ShaderManager *currentShaderManager = NULL;
 FontManager *currentFontManager = NULL;
-ProgramPtr globalProgram;
 map<string, TechniquePtr> techniques;
 CameraPtr camera;
 unsigned int numberOfTrianglesRendered = 0;
-RenderState::RenderState() : directionalLighting(false), diffuseTexture(false), fog(false), pointLighting(false), normalTexture(false)
+GLuint textureSampler;
+
+/** \cond */
+struct FontVertex
+{
+	vec3 position;
+	vec2 uv;
+};
+/** \endcond */
+ShaderProperties::ShaderProperties() : directionalLighting(false), diffuseTexture(false), fog(false), pointLighting(false), normalTexture(false)
 {
 
 }
-void RenderState::FromMaterial(MaterialPtr mat)
+void ShaderProperties::FromMaterial(MaterialPtr mat)
 {
     if (mat->GetDiffuseTexture())
         this->diffuseTexture = true;
     if (mat->GetNormalTexture())
         this->normalTexture = true;
 }
-void RenderState::SetDirectionalLighting(bool enable)
+void ShaderProperties::SetDirectionalLighting(bool enable)
 {
     directionalLighting = enable;
 }
-void RenderState::SetPointLighting(bool enable)
+void ShaderProperties::SetPointLighting(bool enable)
 {
     pointLighting = enable;
 }
 
-void RenderState::SetFog(bool enable)
+void ShaderProperties::SetFog(bool enable)
 {
     fog = enable;
 }
-unsigned int RenderState::ToInt() const
+unsigned int ShaderProperties::ToInt() const
 {
     unsigned int ret = 0;
     if (directionalLighting)
@@ -91,93 +99,51 @@ void Renderer::Clear(const vec4 &color, float depth)
     glClearDepth(depth);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
-void Renderer::SetModelViewMatrix(const mat4 &m)
-{    
-    glLoadMatrixf(m.m);
-}
-void Renderer::SetTextureMatrix(const mat4 &m, int unit)
-{
-    glActiveTexture(GL_TEXTURE0 + unit);
-    glMatrixMode(GL_TEXTURE);
-    glLoadMatrixf(m.m);
-	glMatrixMode(GL_MODELVIEW);
-}
-void Renderer::SetProjectionMatrix(const mat4 &m)
-{
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(m.m);
-	glMatrixMode(GL_MODELVIEW);
-}
-void FIRECUBE_API Renderer::Render(GeometryPtr geometry)
-{
-    if (!geometry)
-        return;
-    
-    if (geometry->vertexBuffer)
-        geometry->vertexBuffer->SetVertexStream(3);
-    if (geometry->diffuseUVBuffer)
-        geometry->diffuseUVBuffer->SetTexCoordStream(0);
-    else
-        Renderer::DisableTexCoordStream(0);
-    if (geometry->normalBuffer)
-        geometry->normalBuffer->SetNormalStream();
-    else
-        Renderer::DisableNormalStream();
-    
-	Renderer::UseMaterial(geometry->material);
-	if (geometry->indexBuffer)
-		geometry->indexBuffer->SetIndexStream();
-	Renderer::RenderIndexStream(TRIANGLES, geometry->face.size() * 3);
-}
-void Renderer::SaveModelViewMatrix()
-{    
-    glPushMatrix();
-}
-void Renderer::RestoreModelViewMatrix()
-{    
-    glPopMatrix();
-}
-void Renderer::SaveProjectionMatrix()
-{
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-	glMatrixMode(GL_MODELVIEW);
-}
-void Renderer::RestoreProjectionMatrix()
-{
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-}
 
-void Renderer::MultiplyModelViewMatrix(const mat4 &mat)
-{    
-    glMultMatrixf(mat.m);
-}
 void Renderer::UseTexture(TexturePtr tex, unsigned int unit)
 {
     if (!tex)
         return;
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, tex->id);
+	
+	GLint min, mag;
+
+	if (tex->minFilter == NEAREST)
+		min = GL_NEAREST;
+	else if (tex->minFilter == LINEAR)
+		min = GL_LINEAR;
+	else if (tex->minFilter == MIPMAP)
+		min = GL_LINEAR_MIPMAP_LINEAR;
+
+	if (tex->magFilter == NEAREST)
+		mag = GL_NEAREST;
+	else if (tex->magFilter == LINEAR)
+		mag = GL_LINEAR;
+
+	glSamplerParameteri(textureSampler, GL_TEXTURE_MAG_FILTER, mag);
+	glSamplerParameteri(textureSampler, GL_TEXTURE_MIN_FILTER, min);
+	
+	glBindSampler(unit, textureSampler);
 }
 void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const string &str)
-{
+{	
     if (!font)
         return;
 	if (str.empty())
 		return;
-    static vector<vec3> vBuffer;
-    static vector<vec2> uvBuffer;
-    vBuffer.resize(str.size() * 4);
-    uvBuffer.resize(str.size() * 4);
-    if (textShader->IsValid())
+    static vector<FontVertex> vBuffer;    
+    vBuffer.resize(str.size() * 6);    
+	ProgramPtr textProgram = Renderer::GetTechnique("font")->GenerateProgram(ShaderProperties());
+    if (textProgram->IsValid())
     {
-        UseProgram(textShader);
-        textShader->SetUniform("tex0", 0);
-        textShader->SetUniform("textColor", color);
+        UseProgram(textProgram);
+        textProgram->SetUniform("tex0", 0);
+        textProgram->SetUniform("textColor", color);
+		textProgram->SetUniform("modelViewMatrix", Renderer::GetCamera()->GetViewMatrix());
+		textProgram->SetUniform("projectionMatrix", Renderer::GetCamera()->GetProjectionMatrix());
     }
-    int numQuads = 0;
+    int numTris = 0;
 
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
@@ -194,6 +160,12 @@ void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, cons
             curPos.x += font->glyph[c].advance;
             continue;
         }
+		if (c == '\n')
+		{
+			curPos.x = pos.x;
+			curPos.y += font->size;
+			continue;
+		}
         if (font->glyph[c].size != vec2(0, 0))
         {
 
@@ -205,25 +177,31 @@ void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, cons
                 FT_Get_Kerning( font->fontImpl->face, previous, glyphIndex, FT_KERNING_DEFAULT, &delta );
                 curPos.x += delta.x >> 6;
             }
-            vBuffer[numQuads * 4 + 0] = vec3(font->glyph[c].bitmapOffset.x + curPos.x, font->glyph[c].bitmapOffset.y + curPos.y, curPos.z);
-            vBuffer[numQuads * 4 + 1] = vec3(font->glyph[c].bitmapOffset.x + curPos.x, font->glyph[c].bitmapOffset.y + curPos.y + font->glyph[c].size.y, curPos.z);
-            vBuffer[numQuads * 4 + 2] = vec3(font->glyph[c].bitmapOffset.x + curPos.x + font->glyph[c].size.x, font->glyph[c].bitmapOffset.y + curPos.y + font->glyph[c].size.y, curPos.z);
-            vBuffer[numQuads * 4 + 3] = vec3(font->glyph[c].bitmapOffset.x + curPos.x + font->glyph[c].size.x, font->glyph[c].bitmapOffset.y + curPos.y, curPos.z);
-            uvBuffer[numQuads * 4 + 0] = vec2(font->glyph[c].uv.x, font->glyph[c].uv.y);
-            uvBuffer[numQuads * 4 + 1] = vec2(font->glyph[c].uv.x, font->glyph[c].uv.y + font->glyph[c].size.y / 512.0f);
-            uvBuffer[numQuads * 4 + 2] = vec2(font->glyph[c].uv.x + font->glyph[c].size.x / 512.0f, font->glyph[c].uv.y + font->glyph[c].size.y / 512.0f);
-            uvBuffer[numQuads * 4 + 3] = vec2(font->glyph[c].uv.x + font->glyph[c].size.x / 512.0f, font->glyph[c].uv.y);
-            numQuads++;
+			
+            vBuffer[numTris * 3 + 0].position = vec3(font->glyph[c].bitmapOffset.x + curPos.x, font->glyph[c].bitmapOffset.y + curPos.y, curPos.z);
+            vBuffer[numTris * 3 + 1].position = vec3(font->glyph[c].bitmapOffset.x + curPos.x, font->glyph[c].bitmapOffset.y + curPos.y + font->glyph[c].size.y, curPos.z);
+            vBuffer[numTris * 3 + 2].position = vec3(font->glyph[c].bitmapOffset.x + curPos.x + font->glyph[c].size.x, font->glyph[c].bitmapOffset.y + curPos.y, curPos.z);
+			vBuffer[numTris * 3 + 0].uv = vec2(font->glyph[c].uv.x, font->glyph[c].uv.y);
+			vBuffer[numTris * 3 + 1].uv = vec2(font->glyph[c].uv.x, font->glyph[c].uv.y + font->glyph[c].size.y / 512.0f);
+			vBuffer[numTris * 3 + 2].uv = vec2(font->glyph[c].uv.x + font->glyph[c].size.x / 512.0f, font->glyph[c].uv.y);
+			numTris++;
+			
+			vBuffer[numTris * 3 + 0].position = vec3(font->glyph[c].bitmapOffset.x + curPos.x + font->glyph[c].size.x, font->glyph[c].bitmapOffset.y + curPos.y, curPos.z);
+			vBuffer[numTris * 3 + 1].position = vec3(font->glyph[c].bitmapOffset.x + curPos.x, font->glyph[c].bitmapOffset.y + curPos.y + font->glyph[c].size.y, curPos.z);			
+			vBuffer[numTris * 3 + 2].position = vec3(font->glyph[c].bitmapOffset.x + curPos.x + font->glyph[c].size.x, font->glyph[c].bitmapOffset.y + curPos.y + font->glyph[c].size.y, curPos.z);
+			vBuffer[numTris * 3 + 0].uv = vec2(font->glyph[c].uv.x + font->glyph[c].size.x / 512.0f, font->glyph[c].uv.y);
+			vBuffer[numTris * 3 + 1].uv = vec2(font->glyph[c].uv.x, font->glyph[c].uv.y + font->glyph[c].size.y / 512.0f);
+			vBuffer[numTris * 3 + 2].uv = vec2(font->glyph[c].uv.x + font->glyph[c].size.x / 512.0f, font->glyph[c].uv.y + font->glyph[c].size.y / 512.0f);
+			numTris++;
+
             curPos.x += font->glyph[c].advance;
             previous = glyphIndex;
         }
-    }
-    textVertexBuffer->LoadData(&vBuffer[0], numQuads * 4 * sizeof(vec3), STREAM);
-    textUvBuffer->LoadData(&uvBuffer[0], numQuads * 4 * sizeof(vec2), STREAM);
-    textUvBuffer->SetTexCoordStream(0);
-    textVertexBuffer->SetVertexStream(3);
-    RenderStream(QUADS, numQuads * 4);
-    glDisable(GL_BLEND);
+    }		
+    textVertexBuffer->LoadData(&vBuffer[0], numTris * 3 * sizeof(FontVertex), STREAM);
+	glBindVertexArray(textVao);
+	RenderStream(TRIANGLES, numTris * 3);
+	glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
 }
 void Renderer::RenderIndexStream(const PrimitiveType &primitiveType, unsigned int count)
@@ -249,11 +227,15 @@ void Renderer::RenderIndexStream(const PrimitiveType &primitiveType, unsigned in
     case LINE_LOOP:
         glmode = GL_LINE_LOOP;
         break;
+	case LINE_STRIP:
+		glmode = GL_LINE_STRIP;
+		break;
     case TRIANGLE_FAN:
         glmode = GL_TRIANGLE_FAN;
         break;
     }
     glDrawElements(glmode, count, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
 void Renderer::RenderStream(const PrimitiveType &primitiveType, unsigned int count)
 {
@@ -278,20 +260,22 @@ void Renderer::RenderStream(const PrimitiveType &primitiveType, unsigned int cou
     case LINE_LOOP:
         glmode = GL_LINE_LOOP;
         break;
+	case LINE_STRIP:
+		glmode = GL_LINE_STRIP;
+		break;
     case TRIANGLE_FAN:
         glmode = GL_TRIANGLE_FAN;
         break;
     }
     glDrawArrays(glmode, 0, count);
+	glBindVertexArray(0);
 }
 void Renderer::UseProgram(ProgramPtr program)
 {
-    if ((globalProgram) && (globalProgram->IsValid()))
-        return;
     if (program)
         glUseProgram(program->GetId());
 }
-void Renderer::UseMaterial(MaterialPtr material)
+void Renderer::UseMaterial(ProgramPtr program, MaterialPtr material)
 {
     if (!material)
         return;
@@ -299,10 +283,11 @@ void Renderer::UseMaterial(MaterialPtr material)
     vec4 ambientColor = vec4(material->GetAmbientColor().x, material->GetAmbientColor().y, material->GetAmbientColor().z, 1.0f);
     vec4 diffuseColor = vec4(material->GetDiffuseColor().x, material->GetDiffuseColor().y, material->GetDiffuseColor().z, 1.0f);
     vec4 specularColor = vec4(material->GetSpecularColor().x, material->GetSpecularColor().y, material->GetSpecularColor().z, 1.0f);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, &ambientColor.x);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, &diffuseColor.x);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, &specularColor.x);
-    glMaterialf(GL_FRONT, GL_SHININESS, material->GetShininess());
+    program->SetUniform("materialAmbient", ambientColor);
+	program->SetUniform("materialDiffuse", diffuseColor);
+	program->SetUniform("materialSpecular", specularColor);
+	program->SetUniform("materialShininess", material->GetShininess());
+	
     if ((material->GetDiffuseTexture()) && (material->GetDiffuseTexture()->IsValid()))
     {
         UseTexture(material->GetDiffuseTexture(), 0);
@@ -312,50 +297,14 @@ void Renderer::UseMaterial(MaterialPtr material)
         UseTexture(material->GetNormalTexture(), 1);
     }
 }
-void Renderer::SetPerspectiveProjection(float fov, float zNear, float zFar)
-{
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    mat4 p;
-    p.GeneratePerspective(fov, (float)viewport[2] / (float)viewport[3], zNear, zFar);
-    SetProjectionMatrix(p);
-}
-void Renderer::SetOrthographicProjection()
-{
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    mat4 p;
-    p.GenerateOrthographic(0, (float)viewport[2], (float)viewport[3], 0, 0, 1);
-    SetProjectionMatrix(p);
-}
 void ResetNumberOfTrianglesRendered()
 {
 	numberOfTrianglesRendered = 0;
 }
 void InitializeRenderer()
 {
-    ShaderPtr vShader(new Shader);
-    ShaderPtr fShader(new Shader);
-
-    textShader = ProgramPtr(new Program);
-    textVertexBuffer = BufferPtr(new Buffer);
-    textVertexBuffer->Create();
-    textUvBuffer = BufferPtr(new Buffer);
-    textUvBuffer->Create();
-    vShader->Create(VERTEX_SHADER, "void main() \
-								  {	\
-								  gl_TexCoord[0]=gl_MultiTexCoord0; \
-								  gl_Position = ftransform(); \
-								  } ");
-
-    fShader->Create(FRAGMENT_SHADER, "uniform vec4 textColor; \
-									uniform sampler2D tex0; \
-									void main() \
-									{ \
-									float alpha=texture2D(tex0,gl_TexCoord[0].st).a; \
-									gl_FragColor = vec4(textColor.r,textColor.g,textColor.b,textColor.a*alpha);  \
-									} ");
-    textShader->Create(vShader, fShader);
+	textVertexBuffer = BufferPtr(new Buffer);
+	textVertexBuffer->Create();
 
     TechniquePtr technique(new Technique);
     if (!technique->LoadShader("default.vert") && !technique->LoadShader("Shaders/default.vert") && !technique->LoadShader("../Assets/Shaders/default.vert") && !technique->LoadShader("./Assets/Shaders/default.vert"))
@@ -367,7 +316,32 @@ void InitializeRenderer()
         else
             Renderer::AddTechnique("default", technique);
     }
-	Renderer::SetCamera(CameraPtr(new Camera));
+
+	technique = TechniquePtr(new Technique);
+	if (!technique->LoadShader("font.vert") && !technique->LoadShader("Shaders/font.vert") && !technique->LoadShader("../Assets/Shaders/font.vert") && !technique->LoadShader("./Assets/Shaders/font.vert"))
+		Logger::Write(Logger::LOG_WARNING, "Could not load font technique's vertex shader");
+	else
+	{
+		if (!technique->LoadShader("font.frag") && !technique->LoadShader("Shaders/font.frag") && !technique->LoadShader("../Assets/Shaders/font.frag") && !technique->LoadShader("./Assets/Shaders/font.frag"))
+			Logger::Write(Logger::LOG_WARNING, "Could not load font technique's fragment shader");
+		else
+			Renderer::AddTechnique("font", technique);
+	}
+
+	Renderer::UseCamera(CameraPtr(new Camera));
+		
+	glGenSamplers(1, &textureSampler);	
+	glSamplerParameteri(textureSampler, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glSamplerParameteri(textureSampler, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	
+	glGenVertexArrays(1, &textVao);
+	glBindVertexArray(textVao);
+	textVertexBuffer->SetVertexAttribute(0, 3, sizeof(FontVertex), 0);
+	textVertexBuffer->SetVertexAttribute(4, 2, sizeof(FontVertex), sizeof(vec3));
+	Renderer::DisableVertexAttribute(1);
+	Renderer::DisableVertexAttribute(2);
+	Renderer::DisableVertexAttribute(3);
+	glBindVertexArray(0);
 }
 void Renderer::SetTextureManager(TextureManager &textureManager)
 {
@@ -397,8 +371,6 @@ void DestroyRenderer()
 {
 	techniques.clear();
     textVertexBuffer = BufferPtr();
-    textUvBuffer = BufferPtr();
-    textShader = ProgramPtr();
 }
 void Renderer::UseFrameBuffer(FrameBufferPtr frameBuffer)
 {
@@ -421,27 +393,13 @@ void Renderer::SetViewport(int left, int right, int width, int height)
 {
     glViewport(left, right, width, height);
 }
-mat4 Renderer::GetModelViewMatrix()
-{
-    mat4 ret;
-    glGetFloatv(GL_MODELVIEW_MATRIX, ret.m);
-    return ret;
-}
-mat4 Renderer::GetProjectionMatrix()
-{
-    mat4 ret;
-    glGetFloatv(GL_PROJECTION_MATRIX, ret.m);
-    return ret;
-
-}
 void Renderer::DisableTexCoordStream(unsigned int unit)
 {
-    glClientActiveTexture(GL_TEXTURE0 + unit);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    Renderer::DisableVertexAttribute(4);
 }
 void Renderer::DisableNormalStream()
 {
-    glDisableClientState(GL_NORMAL_ARRAY);
+    Renderer::DisableVertexAttribute(1);
 }
 void FIRECUBE_API Renderer::Render(NodePtr node)
 {
@@ -457,8 +415,6 @@ void FIRECUBE_API Renderer::Render(NodePtr node, const string &techniqueName, co
 }
 void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 {
-	Renderer::SetModelViewMatrix(camera->GetViewMatrix());
-	Renderer::SetProjectionMatrix(camera->GetProjectionMatrix());
 	int passNum = 0;
 	vector<pair<mat4, Light>>::iterator i;
 	vector<RenderJob>::iterator j;
@@ -474,16 +430,16 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 				j->program = j->renderParameters.program;
 			else
 			{
-				RenderState rs;
-				rs.FromMaterial(j->geometry->GetMaterial());
+				ShaderProperties shaderProperties;
+				shaderProperties.FromMaterial(j->geometry->GetMaterial());
 				if (i->second.GetType() == DIRECTIONAL)
-					rs.SetDirectionalLighting(true);
+					shaderProperties.SetDirectionalLighting(true);
 				else if (i->second.GetType() == POINT)
-					rs.SetPointLighting(true);					
-				rs.SetFog(j->renderParameters.fog);
+					shaderProperties.SetPointLighting(true);					
+				shaderProperties.SetFog(j->renderParameters.fog);
 				TechniquePtr technique = j->renderParameters.technique;
 				if (technique)
-					j->program = technique->GenerateProgram(rs);					
+					j->program = technique->GenerateProgram(shaderProperties);					
 			}		
 		}
 		renderQueue.Sort(RenderQueue::NORMAL);
@@ -500,15 +456,12 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 			glDepthMask(false);
 		}
 		for (j = renderQueue.renderJobs[RenderQueue::NORMAL].begin(); j != renderQueue.renderJobs[RenderQueue::NORMAL].end(); j++)
-		{
-			Renderer::SaveModelViewMatrix();
-			Renderer::MultiplyModelViewMatrix(j->transformation);				
-
-			ProgramPtr p;
-			Renderer::UseMaterial(j->geometry->GetMaterial());
+		{			
+			ProgramPtr p;			
 			p = j->program;
 			if (!p)
-				continue;
+				continue;						
+				
 			if (lastProgram != p)
 			{
 				lastProgram = p;
@@ -526,12 +479,18 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 					p->SetUniform("lightAmbient", i->second.GetAmbientColor());
 					p->SetUniform("lightDiffuse", i->second.GetDiffuseColor());
 					p->SetUniform("lightSpecular", i->second.GetSpecularColor());
-				}									
-				if (j->geometry->GetMaterial()->GetDiffuseTexture())
-					p->SetUniform("diffuseMap", 0);
-				if (j->geometry->GetMaterial()->GetNormalTexture())
-					p->SetUniform("normalMap", 1);
+				}													
 			}
+			if (j->geometry->GetMaterial()->GetDiffuseTexture())
+				p->SetUniform("diffuseMap", 0);
+			if (j->geometry->GetMaterial()->GetNormalTexture())
+				p->SetUniform("normalMap", 1);
+			p->SetUniform("modelViewMatrix", Renderer::GetCamera()->GetViewMatrix() * j->transformation);
+			p->SetUniform("projectionMatrix", Renderer::GetCamera()->GetProjectionMatrix());
+			mat3 normalMatrix = (Renderer::GetCamera()->GetViewMatrix()  * j->transformation).ToMat3();
+			normalMatrix.Inverse();
+			normalMatrix.Transpose();				
+			p->SetUniform("normalMatrix", normalMatrix);
 			if (j->renderParameters.fog)
 			{
 				if (passNum == 0)
@@ -548,28 +507,16 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 			if (lastGeometry != j->geometry)
 			{
 				lastGeometry = j->geometry;
-				if (j->geometry->vertexBuffer)
-					j->geometry->vertexBuffer->SetVertexStream(3);
-				if (j->geometry->diffuseUVBuffer)
-					j->geometry->diffuseUVBuffer->SetTexCoordStream(0);
-				else
-					Renderer::DisableTexCoordStream(0);
-				if (j->geometry->normalBuffer)
-					j->geometry->normalBuffer->SetNormalStream();
-				else
-					Renderer::DisableNormalStream();											
-				if (j->geometry->tangentBuffer)
-					p->SetAttribute("atrTangent", j->geometry->tangentBuffer, 3);
-				if (j->geometry->bitangentBuffer)
-					p->SetAttribute("atrBitangent", j->geometry->bitangentBuffer, 3);
-				if (j->geometry->indexBuffer)					
-					j->geometry->indexBuffer->SetIndexStream();
-
+				glBindVertexArray(j->geometry->vao);	
+				Renderer::UseMaterial(p, j->geometry->GetMaterial());
 			}
-			Renderer::RenderIndexStream(j->geometry->GetPrimitiveType(), j->geometry->GetIndexCount());
-			numberOfTrianglesRendered += j->geometry->face.size();
-
-			Renderer::RestoreModelViewMatrix();			
+			
+			if (j->geometry->indexBuffer && j->geometry->indexBuffer->IsValid())			
+				Renderer::RenderIndexStream(j->geometry->GetPrimitiveType(), j->geometry->GetVertexCount());							
+			else
+				Renderer::RenderStream(j->geometry->GetPrimitiveType(), j->geometry->GetVertexCount());							
+			
+			numberOfTrianglesRendered += j->geometry->GetPrimitiveCount();			
 		}
 		passNum++;
 	}
@@ -582,29 +529,24 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 			j->program = j->renderParameters.program;
 		else
 		{
-			RenderState rs;
-			rs.FromMaterial(j->geometry->GetMaterial());
-			rs.SetDirectionalLighting(false);
-			rs.SetPointLighting(false);					
-			rs.SetFog(j->renderParameters.fog);
+			ShaderProperties shaderProperties;
+			shaderProperties.FromMaterial(j->geometry->GetMaterial());
+			shaderProperties.SetDirectionalLighting(false);
+			shaderProperties.SetPointLighting(false);					
+			shaderProperties.SetFog(j->renderParameters.fog);
 			TechniquePtr technique = j->renderParameters.technique;
 			if (technique)
-				j->program = technique->GenerateProgram(rs);					
+				j->program = technique->GenerateProgram(shaderProperties);					
 		}				
 	}
 	renderQueue.Sort(RenderQueue::NON_LIGHTED);
 	for (j = renderQueue.renderJobs[RenderQueue::NON_LIGHTED].begin(); j != renderQueue.renderJobs[RenderQueue::NON_LIGHTED].end(); j++)
 	{		
-		Renderer::SaveModelViewMatrix();
-		Renderer::MultiplyModelViewMatrix(j->transformation);
-
-
-		ProgramPtr p;
-		Renderer::UseMaterial(j->geometry->GetMaterial());
+		ProgramPtr p;		
 		p = j->program;
 		if (!p)
-			continue;
-
+			continue;		
+			
 		if (lastProgram != p)
 		{
 			lastProgram = p;
@@ -613,37 +555,35 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 			{
 				p->SetUniform("fogColor", j->renderParameters.fogColor);
 				p->SetUniform("fogDensity", j->renderParameters.fogDensity);
-			}
-			if (j->geometry->GetMaterial()->GetDiffuseTexture())
-				p->SetUniform("diffuseMap", 0);
-			if (j->geometry->GetMaterial()->GetNormalTexture())
-				p->SetUniform("normalMap", 1);
-		}			
+			}			
+		}	
+		if (j->geometry->GetMaterial()->GetDiffuseTexture())
+			p->SetUniform("diffuseMap", 0);
+		if (j->geometry->GetMaterial()->GetNormalTexture())
+			p->SetUniform("normalMap", 1);
+		p->SetUniform("modelViewMatrix", Renderer::GetCamera()->GetViewMatrix() * j->transformation);
+		p->SetUniform("projectionMatrix", Renderer::GetCamera()->GetProjectionMatrix());
+		mat3 normalMatrix = (Renderer::GetCamera()->GetViewMatrix() * j->transformation).ToMat3();
+		normalMatrix.Inverse();
+		normalMatrix.Transpose();			
+		p->SetUniform("normalMatrix", normalMatrix);
 		if (lastGeometry != j->geometry)
 		{
 			lastGeometry = j->geometry;
-			if (j->geometry->vertexBuffer)
-				j->geometry->vertexBuffer->SetVertexStream(3);
-			if (j->geometry->diffuseUVBuffer)
-				j->geometry->diffuseUVBuffer->SetTexCoordStream(0);
-			else
-				Renderer::DisableTexCoordStream(0);
-			if (j->geometry->normalBuffer)
-				j->geometry->normalBuffer->SetNormalStream();
-			else
-				Renderer::DisableNormalStream();			
-
-			if (j->geometry->tangentBuffer)
-				p->SetAttribute("atrTangent", j->geometry->tangentBuffer, 3);
-			if (j->geometry->bitangentBuffer)
-				p->SetAttribute("atrBitangent", j->geometry->bitangentBuffer, 3);
-			if (j->geometry->indexBuffer)
-				j->geometry->indexBuffer->SetIndexStream();
+			glBindVertexArray(j->geometry->vao);	
+			Renderer::UseMaterial(p, j->geometry->GetMaterial());
 		}			
-
-		Renderer::RenderIndexStream(j->geometry->GetPrimitiveType(), j->geometry->GetIndexCount());
-		numberOfTrianglesRendered += j->geometry->face.size();			
-		Renderer::RestoreModelViewMatrix();		
+		
+		if (j->geometry->indexBuffer && j->geometry->indexBuffer->IsValid())
+		{
+			Renderer::RenderIndexStream(j->geometry->GetPrimitiveType(), j->geometry->GetVertexCount());			
+			numberOfTrianglesRendered += j->geometry->GetPrimitiveCount();			
+		}
+		else
+		{
+			Renderer::RenderStream(j->geometry->GetPrimitiveType(), j->geometry->GetVertexCount());			
+			numberOfTrianglesRendered += j->geometry->GetPrimitiveCount();			
+		}
 	}		
 }
 void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList)
@@ -667,7 +607,7 @@ void FIRECUBE_API Renderer::RemoveTechnique(const std::string &name)
     if (i != techniques.end())
         techniques.erase(i);
 }
-void FIRECUBE_API Renderer::SetCamera(CameraPtr camera)
+void FIRECUBE_API Renderer::UseCamera(CameraPtr camera)
 {
 	::camera = camera;
 }
@@ -678,4 +618,8 @@ CameraPtr FIRECUBE_API Renderer::GetCamera()
 unsigned int FIRECUBE_API Renderer::GetNumberOfTrianglesRendered()
 {
 	return numberOfTrianglesRendered;
+}
+void FIRECUBE_API Renderer::DisableVertexAttribute(int index)
+{
+	glDisableVertexAttribArray(index);
 }

@@ -36,9 +36,9 @@ bool App::Init()
     lightNode->SetGeometry(lightMarker);
 
     MaterialPtr mat(new Material);
-    mat->SetAmbientColor(vec4(0.3f, 0.3f, 0.3f, 1.0f));
-    mat->SetDiffuseColor(vec4(0.7f, 0.7f, 0.7f, 1.0f));
-    mat->SetSpecularColor(vec4(0.3f, 0.3f, 0.3f, 1.0f));
+    mat->SetAmbientColor(vec3(0.3f, 0.3f, 0.3f));
+    mat->SetDiffuseColor(vec3(0.7f, 0.7f, 0.7f));
+    mat->SetSpecularColor(vec3(0.3f, 0.3f, 0.3f));
     mat->SetShininess(20.0f);
     mat->SetDiffuseTexture(Renderer::GetTextureManager().Create("earthmap1k.jpg"));
     NodePtr n(new Node("Earth"));
@@ -57,22 +57,27 @@ bool App::Init()
 
     root->Move(vec3(0, 0, -10));
     root->SetTechnique("default");
+
+	camera = CameraPtr(new Camera);
+	orthographicCamera = CameraPtr(new Camera);
     return true;
 }
 void App::Update(float t)
 {
-    root->GetChild("Ln")->Rotate(vec3(0, 0.02f, 0));
+    root->GetChild("Ln")->Rotate(vec3(0, 0.02f, 0));	
 }
 void App::Render(float t)
 {
     Renderer::Clear(vec4(0.2f, 0.2f, 0.6f, 1.0f), 1.0f);
 	mat4 projection;
     projection.GeneratePerspective(90.0f, (float) GetWidth() / (float) GetHeight(), 0.1f, 1000.0f);
-	Renderer::GetCamera()->SetProjectionMatrix(projection);    
+	camera->SetProjectionMatrix(projection);    
+	Renderer::UseCamera(camera);
     Renderer::Render(root);
     //root->RenderBoundingBox(vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    Renderer::SetModelViewMatrix(mat4::identity);
-    Renderer::SetOrthographicProjection();
+    projection.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);
+	orthographicCamera->SetProjectionMatrix(projection);
+	Renderer::UseCamera(orthographicCamera);
     ostringstream oss;
     oss << "FPS:" << app.GetFps();
     Renderer::RenderText(app.font, vec3(0, (float)app.GetHeight() - 20.0f, 0.0f), vec4(1, 1, 1, 1), oss.str());

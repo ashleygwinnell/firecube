@@ -44,13 +44,13 @@ enum PrimitiveType;
 
 /**
 * A class storing information about rendering properties.
-* This class is used when generating a program.
+* This class is used when generating a Program from a Technique.
 */
-class FIRECUBE_API RenderState
+class FIRECUBE_API ShaderProperties
 {
     friend class Technique;
 public:
-    RenderState();
+    ShaderProperties();
 
     /**
     * Generates the rendering state from a material.
@@ -140,12 +140,6 @@ namespace Renderer
 void FIRECUBE_API Clear(const vec4 &color, float depth);
 
 /**
-* Renders a geometry.
-* @param geometry The geometry to render.
-*/
-void FIRECUBE_API Render(GeometryPtr geometry);
-
-/**
 * Renders a scene node.
 * @param node The node to render.
 */
@@ -172,57 +166,6 @@ void FIRECUBE_API Render(NodePtr node, const std::string &techniqueName, const P
 * @param programUniformsList A list of values to assign to uniform variables of generated programs.
 */
 void FIRECUBE_API Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
-
-
-/**
-* Sets the current modelview matrix.
-*/
-void FIRECUBE_API SetModelViewMatrix(const mat4 &m);
-
-/**
-* Sets the current projection matrix.
-*/
-void FIRECUBE_API SetProjectionMatrix(const mat4 &m);
-
-/**
-* Sets the a texture matrix.
-*/
-void FIRECUBE_API SetTextureMatrix(const mat4 &m, int unit);
-
-/**
-* Returns the current modelview matrix.
-*/
-mat4 FIRECUBE_API GetModelViewMatrix();
-
-/**
-* Returns the current projection matrix.
-*/
-mat4 FIRECUBE_API GetProjectionMatrix();
-
-/**
-* Pushes the the current modelview matrix to the stack.
-*/
-void FIRECUBE_API SaveModelViewMatrix();
-
-/**
-* Pops the top modelview matrix from the stack and sets it to be the current matrix.
-*/
-void FIRECUBE_API RestoreModelViewMatrix();
-
-/**
-* Pushes the the current projection matrix to the stack.
-*/
-void FIRECUBE_API SaveProjectionMatrix();
-
-/**
-* Pops the top projection matrix from the stack and sets it to be the current matrix.
-*/
-void FIRECUBE_API RestoreProjectionMatrix();
-
-/**
-* Multiplies the current modelview matrix by a given matrix.
-*/
-void FIRECUBE_API MultiplyModelViewMatrix(const mat4 &mat);
 
 /**
 * Binds the specified texture.
@@ -273,9 +216,10 @@ void FIRECUBE_API UseProgram(ProgramPtr program);
 
 /**
 * Uses a material.
+* @param program The program to apply the material to.
 * @param material The material to use.
 */
-void FIRECUBE_API UseMaterial(MaterialPtr material);
+void FIRECUBE_API UseMaterial(ProgramPtr program, MaterialPtr material);
 
 /**
 * Uses a frame buffer.
@@ -292,19 +236,6 @@ void FIRECUBE_API RestoreFrameBuffer();
 * Sets the rendering viewport.
 */
 void FIRECUBE_API SetViewport(int left, int right, int width, int height);
-
-/**
-* Sets a perspective projection.
-* @param fov The field of view in degrees.
-* @param zNear The near clipping plane.
-* @param zFar The far clipping plane.
-*/
-void FIRECUBE_API SetPerspectiveProjection(float fov, float zNear, float zFar);
-
-/**
-* Sets an orthographic projection with a one to one pixel ratio.
-*/
-void FIRECUBE_API SetOrthographicProjection();
 
 /**
 * Adds a technique to the list of techniques.
@@ -326,10 +257,10 @@ TechniquePtr FIRECUBE_API GetTechnique(const std::string &name);
 void FIRECUBE_API RemoveTechnique(const std::string &name);
 
 /**
-* Sets the current camera.
-* @param camera The camera to set.
+* Uses the passed camera for consequent rendering calls.
+* @param camera The camera to use.
 */
-void FIRECUBE_API SetCamera(CameraPtr camera);
+void FIRECUBE_API UseCamera(CameraPtr camera);
 
 /**
 * gets the current camera.
@@ -338,9 +269,18 @@ void FIRECUBE_API SetCamera(CameraPtr camera);
 CameraPtr FIRECUBE_API GetCamera();
 
 /**
-* Returns the number of triangles that were in the current frame.
+* Returns the number of triangles that were rendered in the current frame.
 */
 unsigned int FIRECUBE_API GetNumberOfTrianglesRendered();
+
+
+/**
+* Disabled a vertex attribute.
+* @param index The index of the attribute.
+*/
+void FIRECUBE_API DisableVertexAttribute(int index);
+
+
 /**
 * Sets the current texture manager.
 */

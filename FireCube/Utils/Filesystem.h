@@ -24,6 +24,7 @@ namespace Filesystem
     /**
     * Searches for file name using the search paths.
     * @param filename The file name to search.
+	* @return A path to the file if it was found or an empty string if it wasn't.
     */
     std::string FIRECUBE_API SearchForFileName(const std::string &filename);
 }

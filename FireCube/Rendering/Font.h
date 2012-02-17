@@ -16,7 +16,7 @@ class vec3;
 class vec4;
 
 /**
-* A shared pointer to a FontResource.
+* A shared pointer to a Font.
 */
 typedef boost::shared_ptr<Font> FontPtr;
 
@@ -28,6 +28,7 @@ void FIRECUBE_API RenderText(FontPtr font, const vec3 &pos, const vec4 &color, c
 class FontImpl;
 
 /**
+* @cond
 * Stores information about a specific glyph.
 */
 class FIRECUBE_API Glyph
@@ -38,8 +39,10 @@ public:
     vec2 bitmapOffset;
     int advance;
 };
+/** @endcond */
 
 /**
+* @cond
 * Stores information about a font page.
 */
 class FIRECUBE_API FontPage
@@ -49,9 +52,10 @@ public:
     vec2 curPos;
     int textureSize;
 };
+/** @endcond */
 
 /**
-* Holds the data for a single font face.
+* This class holds the data needed to draw text with a specific font and size.
 */
 class FIRECUBE_API Font
 {
@@ -64,7 +68,7 @@ public:
 
     /**
     * Loads a font.
-    * @param name The file to load separated with : and an integer representing the font size.
+    * @param name The file to load.
     */
     bool Load(const std::string &name);
 

@@ -12,7 +12,7 @@
 using namespace std;
 #include <Windows.h>
 #include <SDL.h>
-#include "Dependencies/GLee.h"
+#include "Dependencies/glew.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -33,9 +33,10 @@ using namespace FireCube;
 extern void InitializeRenderer();
 extern void DestroyRenderer();
 extern void ResetNumberOfTrianglesRendered();
+
 extern FT_Library freeTypeLibrary;
 
-Application::Application() : running(false), frameCount(0), fpsTime(0), fps(0)
+Application::Application() : running(false), frameCount(0), fpsTime(0), fps(0), context(NULL), mainWindow(NULL)
 {
     Renderer::SetTextureManager(defaultTextureManager);
     Renderer::SetShaderManager(defaultShaderManager);
@@ -46,6 +47,10 @@ Application::~Application()
 {
 	DestroyRenderer();
 	Logger::Write(Logger::LOG_INFO, string("Destroying application"));
+	if (context)
+		SDL_GL_DeleteContext(*context);
+	if (mainWindow)
+		SDL_DestroyWindow(mainWindow);
 	SDL_Quit();
 }
 
@@ -55,37 +60,43 @@ bool Application::Initialize()
 }
 
 bool Application::Initialize(int width, int height, int bpp, int multisample, bool fullscreen)
-{
-    SDL_Surface *screen;
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+{    
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
         return false;
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	
     if (multisample)
     {
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, multisample);
     }
-
-    screen = SDL_SetVideoMode(width, height, bpp, SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : SDL_RESIZABLE));
-    if (!screen)
-        return false;
-
-    Renderer::SetViewport(0, 0, width, height);
-    Renderer::SetPerspectiveProjection(90.0f, 0.1f, 100);
-    Renderer::SetModelViewMatrix(mat4::identity);
+	mainWindow = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+		width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
+	
+	if (!mainWindow)
+		return false;
+    
+	context = new SDL_GLContext;
+    *context = SDL_GL_CreateContext(mainWindow);	
+	Renderer::SetViewport(0, 0, width, height);
     this->width = width;
     this->height = height;
-	InitKeyMap();
+	InitKeyMap();	
     return InitializeNoWindow();
 }
 
 bool Application::InitializeNoWindow()
 {
+	glewExperimental = GL_TRUE;
+	glewInit();
     Logger::Init("log.txt");
     Logger::Write(Logger::LOG_INFO, string("Initializing application"));
     timer.Init();
@@ -115,33 +126,35 @@ void Application::Run()
         while(SDL_PollEvent(&event))
         {
             if (event.type == SDL_KEYDOWN)
-            {              
+            {				
 				map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
 				if (k != keyMap.end())
-				{
-					KeyModifier modifier = MODIFIER_NONE;					
+				{					
 					map<int, bool>::iterator i = keyState.find(event.key.keysym.sym);
 					bool previouslyPressed = i != keyState.end() && i->second == true;
 					keyState[event.key.keysym.sym] = true;
-					modifier = (KeyModifier) (modifier | (keyState[SDLK_LSHIFT] ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
-					modifier = (KeyModifier) (modifier | (keyState[SDLK_RSHIFT] ? MODIFIER_RIGHT_SHIFT : MODIFIER_NONE));
-					modifier = (KeyModifier) (modifier | (keyState[SDLK_LCTRL] ? MODIFIER_LEFT_CTRL : MODIFIER_NONE));
-					modifier = (KeyModifier) (modifier | (keyState[SDLK_RCTRL] ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
-					modifier = (KeyModifier) (modifier | (keyState[SDLK_LALT] ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
-					modifier = (KeyModifier) (modifier | (keyState[SDLK_RALT] ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
+					SDL_Keymod keyMod = SDL_GetModState();
+					KeyModifier modifier = MODIFIER_NONE;
+					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
+					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? MODIFIER_RIGHT_SHIFT : MODIFIER_NONE));
+					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? MODIFIER_LEFT_CTRL : MODIFIER_NONE));
+					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
+					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
+					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
 					inputManager.SetRawKeyState(k->second, true, previouslyPressed, modifier);
 					
 				}
             }
 			else if (event.type == SDL_KEYUP)
 			{
+				SDL_Keymod keyMod = SDL_GetModState();
 				KeyModifier modifier = MODIFIER_NONE;
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_LSHIFT] ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_RSHIFT] ? MODIFIER_RIGHT_SHIFT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_LCTRL] ? MODIFIER_LEFT_CTRL : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_RCTRL] ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_LALT] ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_RALT] ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? MODIFIER_RIGHT_SHIFT : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? MODIFIER_LEFT_CTRL : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
 				map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
 				if (k != keyMap.end())
 				{
@@ -150,14 +163,15 @@ void Application::Run()
 				}
 			}
 			else if (event.type == SDL_MOUSEBUTTONDOWN)
-			{
+			{					
+				SDL_Keymod keyMod = SDL_GetModState();
 				KeyModifier modifier = MODIFIER_NONE;
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_LSHIFT] ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_RSHIFT] ? MODIFIER_RIGHT_SHIFT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_LCTRL] ? MODIFIER_LEFT_CTRL : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_RCTRL] ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_LALT] ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_RALT] ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? MODIFIER_RIGHT_SHIFT : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? MODIFIER_LEFT_CTRL : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
 				map<int, Key>::iterator k = mouseMap.find(event.button.button);
 				if (k != mouseMap.end())
 				{
@@ -169,13 +183,14 @@ void Application::Run()
 			}
 			else if (event.type == SDL_MOUSEBUTTONUP)
 			{
+				SDL_Keymod keyMod = SDL_GetModState();
 				KeyModifier modifier = MODIFIER_NONE;
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_LSHIFT] ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_RSHIFT] ? MODIFIER_RIGHT_SHIFT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_LCTRL] ? MODIFIER_LEFT_CTRL : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_RCTRL] ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_LALT] ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | (keyState[SDLK_RALT] ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? MODIFIER_RIGHT_SHIFT : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? MODIFIER_LEFT_CTRL : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
 				map<int, Key>::iterator k = mouseMap.find(event.button.button);
 				if (k != mouseMap.end())
 				{
@@ -185,11 +200,15 @@ void Application::Run()
 			}
             else if (event.type == SDL_MOUSEMOTION)
             {
-				inputManager.SetRawAnalogValue(MOUSE_AXIS_X_RELATIVE, event.motion.xrel);
-				inputManager.SetRawAnalogValue(MOUSE_AXIS_Y_RELATIVE, event.motion.yrel);
-				inputManager.SetRawAnalogValue(MOUSE_AXIS_X_ABSOLUTE, event.motion.x);
-				inputManager.SetRawAnalogValue(MOUSE_AXIS_Y_ABSOLUTE, event.motion.y);
+				inputManager.SetRawAnalogValue(MOUSE_AXIS_X_RELATIVE, (float) event.motion.xrel);
+				inputManager.SetRawAnalogValue(MOUSE_AXIS_Y_RELATIVE, (float) event.motion.yrel);
+				inputManager.SetRawAnalogValue(MOUSE_AXIS_X_ABSOLUTE, (float) event.motion.x);
+				inputManager.SetRawAnalogValue(MOUSE_AXIS_Y_ABSOLUTE, (float) event.motion.y);
             }
+			else if (event.type == SDL_MOUSEWHEEL)
+			{				
+				inputManager.SetRawAnalogValue(MOUSE_WHEEL_Y_RELATIVE, ((float) event.wheel.y) / 60.0f);
+			}
             else if (event.type == SDL_VIDEORESIZE)
             {
                 width = event.resize.w;
@@ -203,13 +222,13 @@ void Application::Run()
         inputManager.DispatchInput(deltaTime);
         Update(deltaTime);
         Render(deltaTime);
-        SDL_GL_SwapBuffers();
+        SDL_GL_SwapWindow(mainWindow);
         frameCount += 1.0f;
         fpsTime += deltaTime;
         if (fpsTime >= 1.0f)
         {
             fps = frameCount / fpsTime;
-            fpsTime -= 1.0f;
+            fpsTime = 0.0f;
             frameCount = 0;
         }
     }
@@ -218,7 +237,7 @@ void Application::Run()
 
 void Application::SetTitle(const string &title)
 {
-    SDL_WM_SetCaption(title.c_str(), NULL);
+    SDL_SetWindowTitle(mainWindow, title.c_str());
 }
 
 float Application::GetFps() const
@@ -295,9 +314,8 @@ void Application::InitKeyMap()
 	keyMap[SDLK_RCTRL] = KEY_RIGHT_CTRL;
 	keyMap[SDLK_LALT] = KEY_LEFT_ALT;
 	keyMap[SDLK_RALT] = KEY_RIGHT_ALT;
+	keyMap[SDLK_TAB] = KEY_TAB;
 	mouseMap[1] = KEY_MOUSE_LEFT_BUTTON;
 	mouseMap[2] = KEY_MOUSE_MIDDLE_BUTTON;
 	mouseMap[3] = KEY_MOUSE_RIGHT_BUTTON;
-	mouseMap[4] = KEY_MOUSE_WHEEL_UP;
-	mouseMap[5] = KEY_MOUSE_WHEEL_DOWN;
 }

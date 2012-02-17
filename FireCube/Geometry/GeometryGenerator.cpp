@@ -8,18 +8,14 @@
 #include <boost/weak_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 using namespace std;
-#include <SDL.h>
-#include <windows.h>
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include "Dependencies/GLee.h"
+#include "Dependencies/glew.h"
 
 #include "Utils/utils.h"
 #include "Math/MyMath.h"
 #include "Math/BoundingBox.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/GeometryGenerator.h"
-
+#include "Geometry/Material.h"
 using namespace FireCube;
 
 MaterialPtr CreateDefaultMaterial()
@@ -143,7 +139,7 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GenerateBox(const vec3 &size, Materi
 
 	ret->SetPrimitiveType(TRIANGLES);
 	ret->SetPrimitiveCount(ret->GetFaces().size());
-	ret->SetIndexCount(ret->GetFaces().size() * 3);
+	ret->SetVertexCount(ret->GetFaces().size() * 3);
 	ret->CopyFacesToIndexBuffer();
 
     ret->SetMaterial(material);
@@ -193,23 +189,32 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GenerateSphere (float radius, unsign
         }
     }
     ret->GetFaces().push_back(Face(indices[0], indices[1], indices[2]));
+	vec3 p = ret->GetVertices()[indices[1]] - ret->GetVertices()[indices[0]];
+	vec3 q = ret->GetVertices()[indices[2]] - ret->GetVertices()[indices[0]]; 
+	ret->GetFaces().back().normal = Cross(p, q).Normalize();
     for (unsigned int i = 3; i < indices.size(); i++)
     {
         if (i % 2 == 1)
         {
             Face f(indices[i - 1], indices[i - 2], indices[i]);
             ret->GetFaces().push_back(f);
+			vec3 p = ret->GetVertices()[indices[i - 2]] - ret->GetVertices()[indices[i - 1]];
+			vec3 q = ret->GetVertices()[indices[i]] - ret->GetVertices()[indices[i - 1]]; 
+			ret->GetFaces().back().normal = Cross(p, q).Normalize();
         }
         else
         {
             Face f(indices[i - 2], indices[i - 1], indices[i]);
             ret->GetFaces().push_back(f);
+			vec3 p = ret->GetVertices()[indices[i - 1]] - ret->GetVertices()[indices[i - 2]];
+			vec3 q = ret->GetVertices()[indices[i]] - ret->GetVertices()[indices[i - 2]]; 
+			ret->GetFaces().back().normal = Cross(p, q).Normalize();
         }
     }
 
 	ret->SetPrimitiveType(TRIANGLES);
 	ret->SetPrimitiveCount(ret->GetFaces().size());
-	ret->SetIndexCount(ret->GetFaces().size() * 3);
+	ret->SetVertexCount(ret->GetFaces().size() * 3);
 	ret->CopyFacesToIndexBuffer();
 
 	ret->SetMaterial(material);
@@ -249,7 +254,7 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GeneratePlane(const vec2 &size, Mate
 
 	ret->SetPrimitiveType(TRIANGLES);
 	ret->SetPrimitiveCount(ret->GetFaces().size());
-	ret->SetIndexCount(ret->GetFaces().size() * 3);
+	ret->SetVertexCount(ret->GetFaces().size() * 3);
 	ret->CopyFacesToIndexBuffer();
 
 	ret->SetMaterial(material);
@@ -257,3 +262,67 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GeneratePlane(const vec2 &size, Mate
 	ret->UpdateBuffers();
     return ret;
 }
+
+
+
+/*
+GeometryPtr FIRECUBE_API GeometryGenerator::GenerateSphere (float radius, unsigned int rings, unsigned int columns, MaterialPtr material)
+{
+GeometryPtr ret(new Geometry);
+vector<unsigned int> indices;
+
+ret->GetVertices().reserve((rings + 1) * (columns + 1));
+ret->GetNormals().reserve((rings + 1) * (columns + 1));
+ret->GetDiffuseUV().reserve((rings + 1) * (columns + 1));
+indices.reserve(6 * rings * (columns + 1));
+
+const float fDeltaRingAngle = (float)PI / rings;
+const float fDeltacolumnAngle = 2 * (float)PI / columns;
+
+unsigned int vertexIndex = 0;
+
+for(unsigned int ring = 0; ring < rings + 1 ; ring++)
+{
+const float r0 = std::sin(ring * fDeltaRingAngle);
+const float y0 = std::cos(ring * fDeltaRingAngle);
+
+for(unsigned column = 0; column < columns + 1 ; column++)
+{
+vec3 pos(-r0 * std::sin(column * fDeltacolumnAngle), y0, -r0 * std::cos(column * fDeltacolumnAngle));
+vec2 uv(column / (float)columns, ring / (float) rings);
+
+ret->GetVertices().push_back(pos * radius);
+ret->GetNormals().push_back(pos.Normalize());
+ret->GetDiffuseUV().push_back(uv);
+if(ring != rings)
+{				
+indices.push_back(vertexIndex + columns + 1);
+indices.push_back(vertexIndex);
+indices.push_back(vertexIndex + columns);
+indices.push_back(vertexIndex + columns + 1);
+indices.push_back(vertexIndex + 1);
+indices.push_back(vertexIndex);
+++vertexIndex;
+}
+}
+}
+for (unsigned int i = 0; i < indices.size(); i +=3)
+{
+Face f(indices[i], indices[i + 1], indices[i + 2]);
+ret->GetFaces().push_back(f);
+vec3 p = ret->GetVertices()[indices[i + 1]] - ret->GetVertices()[indices[i]];
+vec3 q = ret->GetVertices()[indices[i + 2]] - ret->GetVertices()[indices[i]]; 
+ret->GetFaces().back().normal = Cross(p, q).Normalize();
+}			
+
+ret->SetPrimitiveType(TRIANGLES);
+ret->SetPrimitiveCount(ret->GetFaces().size());
+ret->SetVertexCount(ret->GetFaces().size() * 3);
+ret->CopyFacesToIndexBuffer();
+
+ret->SetMaterial(material);
+ret->CalculateBoundingBox();
+ret->UpdateBuffers();
+return ret;
+}
+*/

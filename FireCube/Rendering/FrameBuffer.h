@@ -11,7 +11,7 @@ namespace FireCube
 class FrameBuffer;
 
 /**
-* A shared pointer to a FrameBufferResource.
+* A shared pointer to a FrameBuffer.
 */
 typedef boost::shared_ptr<FrameBuffer> FrameBufferPtr;
 

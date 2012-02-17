@@ -10,13 +10,14 @@ using namespace std;
 #include <windows.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "Dependencies/GLee.h"
+#include "Dependencies/glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
 #include "Math/MyMath.h"
 #include "Math/BoundingBox.h"
 #include "Geometry/Geometry.h"
+#include "Geometry/Material.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/RenderQueue.h"
 #include "Scene/Light.h"

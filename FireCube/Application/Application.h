@@ -4,6 +4,11 @@
 #pragma warning(push)
 #pragma warning(disable:4251)
 
+#ifndef FIRECUBE_EXPORTS
+class SDL_Window;
+class SDL_GLContext;
+#endif
+
 namespace FireCube
 {
 
@@ -112,6 +117,9 @@ private:
     ShaderManager defaultShaderManager;
     FontManager defaultFontManager;
 	InputManager inputManager;
+
+	SDL_Window *mainWindow;
+	SDL_GLContext *context;
 };
 }
 #pragma warning(pop)

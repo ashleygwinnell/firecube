@@ -7,8 +7,8 @@ class App : public Application, public InputListener
 
     FontPtr font;
     NodePtr root, node, node2;
-    ProgramPtr program;
-    BufferPtr uvBuffer, vBuffer;
+	NodePtr mainRoot;
     FrameBufferPtr fbo;
-    float ang;
+    CameraPtr camera;
+	CameraPtr orthographicCamera;
 };

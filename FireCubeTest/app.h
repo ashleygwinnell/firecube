@@ -8,4 +8,5 @@ public:
     FontPtr font;
     NodePtr root;
 	NodeObserverCameraPtr camera;
+	CameraPtr orthographicCamera;
 };

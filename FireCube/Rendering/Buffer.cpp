@@ -8,7 +8,7 @@
 using namespace std;
 #include <SDL.h>
 #include <windows.h>
-#include "Dependencies/GLee.h"
+#include "Dependencies/glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -68,40 +68,12 @@ bool Buffer::LoadData(void *data, unsigned int size, BufferType bt)
         return false;
     return true;
 }
-void Buffer::SetVertexStream(int numCoords)
-{
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glBindBuffer(GL_ARRAY_BUFFER, id);
-    glVertexPointer(numCoords, GL_FLOAT, 0, 0);
-}
-void Buffer::SetNormalStream()
-{
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glBindBuffer(GL_ARRAY_BUFFER, id);
-    glNormalPointer(GL_FLOAT, 0, 0);
-}
-void Buffer::SetTexCoordStream(unsigned int unit)
-{
-    glClientActiveTexture(GL_TEXTURE0 + unit);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glBindBuffer(GL_ARRAY_BUFFER, id);
-    glTexCoordPointer(2, GL_FLOAT, 0, 0);
-}
 
-void Buffer::SetColorStream()
-{
-    glEnableClientState(GL_COLOR_ARRAY);
-    glBindBuffer(GL_ARRAY_BUFFER, id);
-    glColorPointer(3, GL_FLOAT, 0, 0);
-}
 void Buffer::SetIndexStream()
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 }
-void Buffer::Bind()
-{
-    glBindBuffer(GL_ARRAY_BUFFER, id);
-}
+
 bool Buffer::IsValid() const
 {
     return id != 0;
@@ -117,4 +89,10 @@ void Buffer::Destroy()
 unsigned int Buffer::GetId() const
 {
     return id;
+}
+void Buffer::SetVertexAttribute(int index, int numCoords, int stride, int offset)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, id);
+	glEnableVertexAttribArray(index);
+	glVertexAttribPointer(index, numCoords, GL_FLOAT, GL_FALSE, stride, (void*) offset);
 }

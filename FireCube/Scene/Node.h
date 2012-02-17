@@ -21,6 +21,16 @@ typedef boost::shared_ptr<Material> MaterialPtr;
 class Program;
 typedef boost::shared_ptr<Program> ProgramPtr;
 
+
+class FIRECUBE_API ModelLoadingOptions
+{
+public:
+	ModelLoadingOptions();
+
+	bool flipU;
+	bool flipV;
+};
+
 /**
 * A class representing a node in a scene graph.
 */
@@ -344,11 +354,11 @@ private:
 
 /**
 * Loads a node from a file.
-* Supported file formats are 3ds and Collada.
+* Supported file formats are 3ds, Collada and obj.
 * @param filename The file to load.
 * @return The loaded node.
 */
-NodePtr FIRECUBE_API LoadMesh(const std::string &filename);
+NodePtr FIRECUBE_API LoadMesh(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());
 }
 
 #pragma warning(push)

@@ -7,9 +7,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 using namespace std;
-#include <SDL.h>
-#include <windows.h>
-#include "Dependencies/GLee.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"

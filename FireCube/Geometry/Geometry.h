@@ -17,151 +17,34 @@ class Geometry;
 class ProgramUniformsList;
 class Texture;
 typedef boost::shared_ptr<Texture> TexturePtr;
+class Material;
 
 /**
 * Specifies the kind of primitives to render.
 */
 enum PrimitiveType
 {
-	POINTS, LINES, TRIANGLES, TRIANGLE_STRIP, QUADS, LINE_LOOP, TRIANGLE_FAN
+	POINTS, LINES, TRIANGLES, TRIANGLE_STRIP, QUADS, LINE_LOOP, LINE_STRIP, TRIANGLE_FAN
 };
 
 
 /**
-* A shared pointer to a GeometryResource.
+* A shared pointer to a Geometry.
 */
 typedef boost::shared_ptr<Geometry> GeometryPtr;
 
+/**
+* A shared pointer to a Material.
+*/
+typedef boost::shared_ptr<Material> MaterialPtr;
+
 namespace Renderer
 {
-void FIRECUBE_API Render(GeometryPtr geometry);
 void FIRECUBE_API Render(NodePtr node);
 void FIRECUBE_API Render(NodePtr node, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
 void FIRECUBE_API Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
 void FIRECUBE_API Render(RenderQueue &renderQueue);
 }
-
-/**
-* A class representing a material.
-*/
-class FIRECUBE_API Material
-{
-public:
-    Material();
-    ~Material();
-
-
-    /**
-    * Gets the name of this material.
-    * @return The name of the material.
-    */
-    std::string GetName() const;
-
-    /**
-    * Sets the name of the material.
-    * @param name The name of the material.
-    */
-    void SetName(const std::string &name);
-
-    /**
-    * Gets the ambient color of this material.
-    * @return The ambient color of this material.
-    */
-    vec3 GetAmbientColor() const;
-
-    /**
-    * Sets the ambient color of this material.
-    * @param color The color to set the ambient to.
-    */
-    void SetAmbientColor(const vec3 &color);
-
-    /**
-    * Gets the diffuse color of this material.
-    * @return The diffuse color of this material.
-    */
-    vec3 GetDiffuseColor() const;
-
-    /**
-    * Sets the diffuse color of this material.
-    * @param color The color to set the diffuse to.
-    */
-    void SetDiffuseColor(const vec3 &color);
-
-    /**
-    * Gets the specular color of this material.
-    * @return The specular color of this material.
-    */
-    vec3 GetSpecularColor() const;
-
-    /**
-    * Sets the specular color of this material.
-    * @param color The color to set the specular to.
-    */
-    void SetSpecularColor(const vec3 &color);
-
-    /**
-    * Gets the shininess factor of this material.
-    * @return The shininess factor of this material.
-    */
-    float GetShininess() const;
-
-    /**
-    * Sets the shininess factor of this material.
-    * @param value The shininess factor.
-    */
-    void SetShininess(float value);
-
-    /**
-    * Gets the diffuse texture of this material.
-    * @return The diffuse texture of this material.
-    */
-    TexturePtr GetDiffuseTexture();
-
-    /**
-    * Sets the diffuse texture of this material.
-    * @param texture The new diffuse texture map.
-    */
-    void SetDiffuseTexture(TexturePtr texture);
-
-    /**
-    * Gets the normal texture of this material.
-    * @return The normal texture of this material.
-    */
-    TexturePtr GetNormalTexture();
-
-    /**
-    * Sets the normal texture of this material.
-    * @param texture The new normal texture map.
-    */
-    void SetNormalTexture(TexturePtr texture);
-
-	/**
-    * Gets the opacity of this material.
-    * @return The opacity factor of this material.
-    */
-	float GetOpacity() const;
-
-	/**
-    * Sets the opacity of this material.
-    * @param value The opacity.
-    */
-	void SetOpacity(float value);
-private:
-
-    std::string name;
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-    float shininess;
-    TexturePtr diffuseTexture;
-    TexturePtr normalTexture;
-	float opacity;
-};
-
-/**
-* A shared pointer to a MaterialResource.
-*/
-typedef boost::shared_ptr<Material> MaterialPtr;
 
 /**
 * Defines an edge in a geometry.
@@ -208,13 +91,14 @@ public:
 * Geometries consists of vertices(position, normal, etc..), faces and a material.
 */
 class FIRECUBE_API Geometry
-{
-    friend void Renderer::Render(GeometryPtr geometry);
+{    
     friend void Renderer::Render(NodePtr node);
     friend void Renderer::Render(NodePtr node, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
 	friend void Renderer::Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
     friend void Renderer::Render(RenderQueue &renderQueue);
 public:
+	Geometry();
+
     ~Geometry();
 
     /**
@@ -319,15 +203,21 @@ public:
 	unsigned int GetPrimitiveCount() const;
 
 	/**
-	* Sets the number of elements contained in the index buffer.
-	* @param indexCount The number of indices.
+	* Sets the number of vertices to be rendered by this geometry.<br>	
+	* @param vertexCount The number of vertices.
 	*/
-	void SetIndexCount(unsigned int indexCount);
+	void SetVertexCount(unsigned int vertexCount);
 
 	/**
-	* @return The number of elements contained in the index buffer.	
+	* @return The number of vertices to be rendered by this geometry.	
 	*/
-	unsigned int GetIndexCount() const;
+	unsigned int GetVertexCount() const;
+
+	/**
+	* Clones this Geometry.
+	* @return A new cloned Geometry of this one.
+	*/
+	GeometryPtr Clone();
 
 private:
     std::vector<vec3> vertex;
@@ -346,8 +236,9 @@ private:
     MaterialPtr material;
 	PrimitiveType primitiveType;
 	unsigned int primitiveCount;
-	unsigned int indexCount;
+	unsigned int vertexCount;
     BoundingBox bbox;
+	GLuint vao;
 };
 }
 #pragma warning(pop)

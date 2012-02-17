@@ -14,10 +14,15 @@ public:
 		bool cullFaceEnabled;
 		bool renderNormals;
 		bool renderTangents;		
-		FireCube::BufferPtr gridVertex;
+		FireCube::NodePtr gridNode;
+		FireCube::GeometryPtr grid;
 		DWORD gridCount;
 		FireCube::ProgramPtr plainColorProgram;
 		FireCube::NodeObserverCameraPtr camera;
+		FireCube::MaterialPtr gridMaterial;
+		FireCube::MaterialPtr normalsMaterial;
+		FireCube::MaterialPtr tangentsMaterial;
+		FireCube::MaterialPtr bitangentsMaterial;
 	};
     GLCanvas( wxWindow *parent, wxWindowID id = wxID_ANY,
                 const wxPoint& pos = wxDefaultPosition,

@@ -8,8 +8,6 @@
 using namespace std;
 #include <SDL.h>
 #include <SDL_image.h>
-#include <windows.h>
-#include "Dependencies/GLee.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"

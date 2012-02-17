@@ -6,8 +6,9 @@ This folder should have the following structure:
 
 FreeType
 Dependencies.txt
-GLee.c
-GLee.h
+glew.c
+glew.h
+wglew.h
 tinyxml.cpp
 tinyxml.h
 tinyxmlerror.cpp

@@ -51,8 +51,8 @@ bool App::Init()
 	camera = NodeObserverCameraPtr(new NodeObserverCamera(GetInputManager()));
 	camera->SetTarget(node);
 	camera->SetDistance(5.0f);
-	
-	Renderer::SetCamera(camera);
+		
+	orthographicCamera = CameraPtr(new Camera);
     return true;
 }
 void App::Update(float t)
@@ -65,9 +65,12 @@ void App::Render(float t)
 	mat4 projection;
 	projection.GeneratePerspective(60.0f, (float)GetWidth() / (float)GetHeight(), 0.1f, 100.0f);	
 	camera->SetProjectionMatrix(projection);		
-    Renderer::Render(root);		
-    Renderer::SetOrthographicProjection();
-	Renderer::SetModelViewMatrix(mat4::identity);
+	Renderer::UseCamera(camera);
+    Renderer::Render(root);
+	mat4 ortho;
+	ortho.GenerateOrthographic(0, (float) app.GetWidth(), (float) app.GetHeight(), 0, 0, 1);	
+	orthographicCamera->SetProjectionMatrix(ortho);	
+	Renderer::UseCamera(orthographicCamera);
     ostringstream oss;
     oss << "FPS:" << app.GetFps();
     Renderer::RenderText(app.font, vec3(0, (float)app.GetHeight() - 20.0f, 0.0f), vec4(1, 1, 1, 1), oss.str());

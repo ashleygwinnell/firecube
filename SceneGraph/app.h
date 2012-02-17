@@ -7,4 +7,6 @@ public:
     bool Init();
     FontPtr font;
     NodePtr root;
+	CameraPtr orthographicCamera;
+	CameraPtr camera;
 };

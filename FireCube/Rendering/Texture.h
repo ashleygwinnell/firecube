@@ -22,7 +22,7 @@ enum TextureFilter
 class Texture;
 
 /**
-* A shared pointer to a TextureResource.
+* A shared pointer to a Texture.
 */
 typedef boost::shared_ptr<Texture> TexturePtr;
 
@@ -83,6 +83,7 @@ public:
 private:
     GLuint id;
     std::string filename;
+	TextureFilter minFilter, magFilter;
 };
 
 /**

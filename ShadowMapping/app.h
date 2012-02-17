@@ -13,7 +13,7 @@ public:
     FontPtr font;
     ProgramPtr plain, program;
     mat4 lightProj, lightModelview;
-	CameraPtr lightCamera;
+	CameraPtr lightCamera, orthographicCamera;
 	NodeObserverCameraPtr defaultCamera;
     ProgramUniformsList programUniformsList;
     BufferPtr vBuffer;

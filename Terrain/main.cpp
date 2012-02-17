@@ -23,8 +23,8 @@ bool App::Init()
     Filesystem::AddSearchPath("../Assets/Textures");
     SetTitle("Terrain");
 	GetInputManager().AddInputListener(this);
-	GetInputManager().AddMapping(MOUSE_AXIS_X_REL, "mouseX");
-	GetInputManager().AddMapping(MOUSE_AXIS_Y_REL, "mouseY");
+	GetInputManager().AddMapping(MOUSE_AXIS_X_RELATIVE, "mouseX");
+	GetInputManager().AddMapping(MOUSE_AXIS_Y_RELATIVE, "mouseY");
 	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
 	GetInputManager().AddMapping(KEY_W, STATE, "Forward");
 	GetInputManager().AddMapping(KEY_S, STATE, "Backward");

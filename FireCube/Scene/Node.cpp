@@ -12,7 +12,7 @@ using namespace std;
 #include <SDL.h>
 #include <SDL_image.h>
 #include <windows.h>
-#include "Dependencies/GLee.h"
+#include "Dependencies/glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -20,6 +20,7 @@ using namespace std;
 #include "Math/MyMath.h"
 #include "Math/BoundingBox.h"
 #include "Geometry/Geometry.h"
+#include "Geometry/Material.h"
 #include "Rendering/Renderer.h"
 #include "Scene/Light.h"
 #include "Scene/Node.h"
@@ -199,13 +200,13 @@ void Node::RenderBoundingBox(vec3 color, bool onlyWithGeometry)
 {
     MaterialPtr mat(new Material);
     mat->SetDiffuseColor(color);
-    RenderState rs;
-    rs.FromMaterial(mat);
-    ProgramPtr p = Renderer::GetTechnique("default")->GenerateProgram(rs);
-    Renderer::SaveModelViewMatrix();
-    Renderer::SetModelViewMatrix(Renderer::GetCamera()->GetViewMatrix());
+    ShaderProperties shaderProperties;
+    shaderProperties.FromMaterial(mat);
+    ProgramPtr p = Renderer::GetTechnique("default")->GenerateProgram(shaderProperties);
+    //Renderer::SaveModelViewMatrix();
+    //Renderer::SetModelViewMatrix(Renderer::GetCamera()->GetViewMatrix());
     RenderBoundingBox(mat, p, onlyWithGeometry);
-    Renderer::RestoreModelViewMatrix();
+    //Renderer::RestoreModelViewMatrix();
 }
 
 GeometryPtr Node::GetGeometry()
@@ -475,10 +476,10 @@ void Node::RenderBoundingBox(MaterialPtr material, ProgramPtr program, bool only
     if (!onlyWithGeometry || (onlyWithGeometry && geometry))
     {
         PrepareRenderBoundingBox();
-        bboxVBuffer->SetVertexStream(3);
+        bboxVBuffer->SetVertexAttribute(0, 3, 0, 0);
         bboxIBuffer->SetIndexStream();
         Renderer::UseProgram(program);
-        Renderer::UseMaterial(material);
+        Renderer::UseMaterial(program, material);
         Renderer::RenderIndexStream(LINES, 24);
     }
 
@@ -520,7 +521,7 @@ void Node::PrepareRenderBoundingBox()
     bboxIBuffer->LoadIndexData(i, 24, STREAM);
     worldBoundingBoxRenderingChanged = false;
 }
-NodePtr FIRECUBE_API FireCube::LoadMesh(const string &filename)
+NodePtr FIRECUBE_API FireCube::LoadMesh(const string &filename, ModelLoadingOptions options)
 {
     string file = Filesystem::SearchForFileName(filename);
     if (file.empty())
@@ -538,7 +539,7 @@ NodePtr FIRECUBE_API FireCube::LoadMesh(const string &filename)
         {
             M3dsLoader m3dsLoader;
 
-            if (m3dsLoader.Load(file))
+            if (m3dsLoader.Load(file, options))
             {
                 return m3dsLoader.GenerateSceneGraph();
             }
@@ -549,7 +550,7 @@ NodePtr FIRECUBE_API FireCube::LoadMesh(const string &filename)
         {
             ColladaLoader colladaLoader(file);
 
-            if (colladaLoader.Load())
+            if (colladaLoader.Load(options))
             {
                 return colladaLoader.GenerateSceneGraph();
             }
@@ -560,7 +561,7 @@ NodePtr FIRECUBE_API FireCube::LoadMesh(const string &filename)
 		{
 			ObjLoader objLoader;
 
-			objLoader.Load(file);
+			objLoader.Load(file, options);
 			return objLoader.GenerateSceneGraph();			
 		}
     }

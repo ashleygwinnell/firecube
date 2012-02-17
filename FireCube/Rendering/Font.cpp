@@ -10,7 +10,7 @@ using namespace std;
 #include <windows.h>
 #include <SDL.h>
 #include <SDL_image.h>
-#include <gl/gl.h>
+#include "Dependencies/glew.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -40,7 +40,7 @@ boost::shared_ptr<FontPage> FontManager::CreateNewPage()
     glBindTexture(GL_TEXTURE_2D, p->tex->GetId());
     unsigned char empty[512 * 512];
     ZeroMemory(empty, 512 * 512);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, 512, 512, 0, GL_ALPHA, GL_UNSIGNED_BYTE, empty);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, empty);
     p->textureSize = 512;
     p->curPos = vec2(0, 0);
     page.push_back(p);
@@ -103,7 +103,7 @@ bool Font::AddChar(char c)
     }
     if (page->textureSize - page->curPos.y < fontImpl->face->glyph->bitmap.rows)
         return false;
-    glTexSubImage2D(GL_TEXTURE_2D, 0, (int)page->curPos.x, (int)page->curPos.y, fontImpl->face->glyph->bitmap.width, fontImpl->face->glyph->bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, fontImpl->face->glyph->bitmap.buffer);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, (int)page->curPos.x, (int)page->curPos.y, fontImpl->face->glyph->bitmap.width, fontImpl->face->glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, fontImpl->face->glyph->bitmap.buffer);
     glyph[c].uv = page->curPos / 512.0f;
     glyph[c].size = vec2((float)fontImpl->face->glyph->bitmap.width, (float)fontImpl->face->glyph->bitmap.rows);
     glyph[c].bitmapOffset = vec2((float)fontImpl->face->glyph->bitmap_left, size - (float)fontImpl->face->glyph->bitmap_top);
@@ -155,6 +155,8 @@ bool Font::Load(const string &name, int size)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
     return true;
 }
 bool Font::Load(const string &name)

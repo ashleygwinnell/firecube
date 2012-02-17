@@ -9,7 +9,7 @@
 using namespace std;
 #include <SDL.h>
 #include <windows.h>
-#include "Dependencies/GLee.h"
+#include "Dependencies/glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -18,6 +18,7 @@ using namespace std;
 #include "Math/BoundingBox.h"
 #include "Rendering/Texture.h"
 #include "Geometry/Geometry.h"
+#include "Geometry/Material.h"
 #include "Rendering/Renderer.h"
 #include "Dependencies/tinyxml.h"
 #include "Scene/Light.h"
@@ -30,7 +31,7 @@ M3dsLoader::M3dsLoader()
 {
 
 }
-bool M3dsLoader::Load(const string &filename)
+bool M3dsLoader::Load(const string &filename, ModelLoadingOptions options)
 {
     ifstream f(filename.c_str(), ios::in | ios::binary | ios::ate);
     if (!f.is_open())
@@ -62,6 +63,7 @@ bool M3dsLoader::Load(const string &filename)
             mesh.face = object[k].face;
         }
     }
+	this->options = options;
     return true;
 }
 NodePtr M3dsLoader::GenerateSceneGraph()
@@ -77,7 +79,16 @@ NodePtr M3dsLoader::GenerateSceneGraph()
 
 			geom->GetVertices() = object[i].vertex;
 			geom->GetDiffuseUV() = object[i].uv;			
-
+			if (options.flipU || options.flipV)
+			{
+				for (unsigned int k = 0; k < geom->GetDiffuseUV().size(); k++)
+				{
+					if (options.flipU)
+						geom->GetDiffuseUV()[k].x = 1 - geom->GetDiffuseUV()[k].x;
+					if (options.flipV)
+						geom->GetDiffuseUV()[k].y = 1 - geom->GetDiffuseUV()[k].y;
+				}
+			}
             Mesh &mesh = object[i].mesh[j];
             geom->SetMaterial(mesh.material);
             for (unsigned int k = 0; k < mesh.face.size(); k++)
@@ -91,7 +102,7 @@ NodePtr M3dsLoader::GenerateSceneGraph()
 			geom->CopyFacesToIndexBuffer();
 			geom->SetPrimitiveType(TRIANGLES);
 			geom->SetPrimitiveCount(geom->GetFaces().size());
-			geom->SetIndexCount(geom->GetFaces().size() * 3);
+			geom->SetVertexCount(geom->GetFaces().size() * 3);
 			geom->CalculateNormals();
 			geom->CalculateTangents();
 			geom->UpdateBuffers();

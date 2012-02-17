@@ -12,7 +12,7 @@ using namespace std;
 #include <SDL.h>
 #include <SDL_image.h>
 #include <windows.h>
-#include "Dependencies/GLee.h"
+#include "Dependencies/glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -22,97 +22,34 @@ using namespace std;
 #include "Geometry/Geometry.h"
 
 using namespace FireCube;
-Material::Material() : shininess(128.0f), opacity(1.0f)
-{
-
-}
-Material::~Material()
-{
-
-}
-string Material::GetName() const
-{
-    return name;
-}
-void Material::SetName(const string &name)
-{
-    this->name = name;
-}
-vec3 Material::GetAmbientColor() const
-{
-    return ambient;
-}
-void Material::SetAmbientColor(const vec3 &color)
-{
-    ambient = color;
-}
-vec3 Material::GetDiffuseColor() const
-{
-    return diffuse;
-}
-void Material::SetDiffuseColor(const vec3 &color)
-{
-    diffuse = color;
-}
-vec3 Material::GetSpecularColor() const
-{
-    return specular;
-}
-void Material::SetSpecularColor(const vec3 &color)
-{
-    specular = color;
-}
-float Material::GetShininess() const
-{
-    return shininess;
-}
-void Material::SetShininess(float value)
-{
-    shininess = value;
-}
-TexturePtr Material::GetDiffuseTexture()
-{
-    return diffuseTexture;
-}
-void Material::SetDiffuseTexture(TexturePtr texture)
-{
-    diffuseTexture = texture;
-}
-TexturePtr Material::GetNormalTexture()
-{
-    return normalTexture;
-}
-void Material::SetNormalTexture(TexturePtr texture)
-{
-    normalTexture = texture;
-}
-float Material::GetOpacity() const
-{
-	return opacity;
-}
-void Material::SetOpacity(float value)
-{
-	opacity = value;
-}
 
 Face::Face()
 {
 
 }
+
 Face::Face(unsigned int v0, unsigned int v1, unsigned int v2)
 {
     v[0] = v0;
     v[1] = v1;
     v[2] = v2;
 }
+
 Face::~Face()
 {
 
 }
+
+Geometry::Geometry() : vao(0), vertexCount(0), primitiveCount(0)
+{
+
+}
+
 Geometry::~Geometry()
 {
     Logger::Write(Logger::LOG_INFO, string("Destroyed geometry"));
 }
+
 void Geometry::CalculateNormals()
 {
     normal.resize(vertex.size());
@@ -124,7 +61,7 @@ void Geometry::CalculateNormals()
         vec3 v2 = vertex[face[f].v[2]] - vertex[face[f].v[0]];
         vec3 n = Cross(v1, v2);
         face[f].normal = n;
-        face[f].normal.Normalize();       
+        face[f].normal.Normalize();
         normal[face[f].v[0]] += n;
         normal[face[f].v[1]] += n;
         normal[face[f].v[2]] += n;
@@ -137,13 +74,14 @@ void Geometry::CalculateNormals()
     normalBuffer->Create();
     normalBuffer->LoadData(&normal[0], sizeof(vec3)*normal.size(), STATIC);
 }
+
 void Geometry::CalculateTangents()
 {
     if ((normal.size() == 0) || (diffuseUV.size() == 0))
         return;
     vector<vec3> tan(vertex.size() * 2);
-	std::fill(tan.begin(), tan.end(), vec3(0, 0, 0));
-    
+    std::fill(tan.begin(), tan.end(), vec3(0, 0, 0));
+
     for (unsigned int i = 0; i < face.size(); i++)
     {
         Face &face = this->face[i];
@@ -201,76 +139,84 @@ void Geometry::CalculateTangents()
     bitangentBuffer->Create();
     bitangentBuffer->LoadData(&bitangent[0], sizeof(vec3)*bitangent.size(), STATIC);
 }
+
 void Geometry::CreateHardNormals()
 {
     vector<vec3> originalVertices = vertex;
     vector<vec2> originalDiffuseUV = diffuseUV;
-	vector<Face> originalFaces = face;
-	vector<vec3> originalTangents = tangent;
-	vector<vec3> originalBitangents = bitangent;
+    vector<Face> originalFaces = face;
+    vector<vec3> originalTangents = tangent;
+    vector<vec3> originalBitangents = bitangent;
     unsigned int currentIndex = 0;
     face.clear();
     vertex.clear();
     normal.clear();
     diffuseUV.clear();
-	tangent.clear();
-	bitangent.clear();
-	for (unsigned int i = 0; i < originalFaces.size(); i++)
-	{
-		vec3 v0 = originalVertices[originalFaces[i].v[0]];
-		vec3 v1 = originalVertices[originalFaces[i].v[1]];
-		vec3 v2 = originalVertices[originalFaces[i].v[2]];
-		vec3 n = Cross(v1 - v0, v2 - v0).Normalize();
-		vertex.push_back(v0);
-		vertex.push_back(v1);
-		vertex.push_back(v2);
-		normal.push_back(n);
-		normal.push_back(n);
-		normal.push_back(n);
-		if (originalDiffuseUV.size() > 0)
-		{
-			vec2 uv0, uv1, uv2;
-			uv0 = originalDiffuseUV[originalFaces[i].v[0]];
-			uv1 = originalDiffuseUV[originalFaces[i].v[1]];
-			uv2 = originalDiffuseUV[originalFaces[i].v[2]];
+    tangent.clear();
+    bitangent.clear();
+    for (unsigned int i = 0; i < originalFaces.size(); i++)
+    {
+        vec3 v0 = originalVertices[originalFaces[i].v[0]];
+        vec3 v1 = originalVertices[originalFaces[i].v[1]];
+        vec3 v2 = originalVertices[originalFaces[i].v[2]];
+        vec3 n = Cross(v1 - v0, v2 - v0).Normalize();
+        vertex.push_back(v0);
+        vertex.push_back(v1);
+        vertex.push_back(v2);
+        normal.push_back(n);
+        normal.push_back(n);
+        normal.push_back(n);
+        if (originalDiffuseUV.size() > 0)
+        {
+            vec2 uv0, uv1, uv2;
+            uv0 = originalDiffuseUV[originalFaces[i].v[0]];
+            uv1 = originalDiffuseUV[originalFaces[i].v[1]];
+            uv2 = originalDiffuseUV[originalFaces[i].v[2]];
 
-			diffuseUV.push_back(uv0);
-			diffuseUV.push_back(uv1);
-			diffuseUV.push_back(uv2);
-		}
-		if (originalTangents.size() > 0)
-		{
-			vec3 t0, t1, t2;
-			t0 = originalTangents[originalFaces[i].v[0]];
-			t1 = originalTangents[originalFaces[i].v[1]];
-			t2 = originalTangents[originalFaces[i].v[2]];
+            diffuseUV.push_back(uv0);
+            diffuseUV.push_back(uv1);
+            diffuseUV.push_back(uv2);
+        }
+        if (originalTangents.size() > 0)
+        {
+            vec3 t0, t1, t2;
+            t0 = originalTangents[originalFaces[i].v[0]];
+            t1 = originalTangents[originalFaces[i].v[1]];
+            t2 = originalTangents[originalFaces[i].v[2]];
 
-			tangent.push_back(t0);
-			tangent.push_back(t1);
-			tangent.push_back(t2);
-		}
-		if (originalBitangents.size() > 0)
-		{
-			vec3 t0, t1, t2;
-			t0 = originalBitangents[originalFaces[i].v[0]];
-			t1 = originalBitangents[originalFaces[i].v[1]];
-			t2 = originalBitangents[originalFaces[i].v[2]];
+            tangent.push_back(t0);
+            tangent.push_back(t1);
+            tangent.push_back(t2);
+        }
+        if (originalBitangents.size() > 0)
+        {
+            vec3 t0, t1, t2;
+            t0 = originalBitangents[originalFaces[i].v[0]];
+            t1 = originalBitangents[originalFaces[i].v[1]];
+            t2 = originalBitangents[originalFaces[i].v[2]];
 
-			bitangent.push_back(t0);
-			bitangent.push_back(t1);
-			bitangent.push_back(t2);
-		}
-		Face f(currentIndex, currentIndex + 1, currentIndex + 2);
-		f.normal = n;
-		currentIndex+=3;
-		face.push_back(f);
-	}
-	CopyFacesToIndexBuffer();
-	CalculateBoundingBox();
+            bitangent.push_back(t0);
+            bitangent.push_back(t1);
+            bitangent.push_back(t2);
+        }
+        Face f(currentIndex, currentIndex + 1, currentIndex + 2);
+        f.normal = n;
+        currentIndex += 3;
+        face.push_back(f);
+    }
+    CopyFacesToIndexBuffer();
+	SetVertexCount(indices.size());
+	SetPrimitiveCount(indices.size() / 3);
+    CalculateBoundingBox();
     UpdateBuffers();
 }
+
 void Geometry::UpdateBuffers()
 {
+	if (vao == 0)
+		glGenVertexArrays(1, &vao);
+
+    glBindVertexArray(vao);
     if (!vertexBuffer)
     {
         vertexBuffer = BufferPtr(new Buffer);
@@ -282,6 +228,9 @@ void Geometry::UpdateBuffers()
         oss << "buffer id:" << vertexBuffer->GetId() << " Couldn't upload vertex data";
         Logger::Write(Logger::LOG_ERROR, oss.str());
     }
+    else
+        vertexBuffer->SetVertexAttribute(0, 3, 0, 0);
+
     if (normal.size() != 0)
     {
         if (!normalBuffer)
@@ -295,6 +244,8 @@ void Geometry::UpdateBuffers()
             oss << "buffer id:" << normalBuffer->GetId() << " Couldn't upload vertex data";
             Logger::Write(Logger::LOG_ERROR, oss.str());
         }
+        else
+            normalBuffer->SetVertexAttribute(1, 3, 0, 0);
     }
     else
         normalBuffer = BufferPtr();
@@ -312,6 +263,8 @@ void Geometry::UpdateBuffers()
             oss << "buffer id:" << tangentBuffer->GetId() << " Couldn't upload vertex data";
             Logger::Write(Logger::LOG_ERROR, oss.str());
         }
+        else
+            tangentBuffer->SetVertexAttribute(2, 3, 0, 0);
     }
     else
         tangentBuffer = BufferPtr();
@@ -323,12 +276,14 @@ void Geometry::UpdateBuffers()
             bitangentBuffer = BufferPtr(new Buffer);
             bitangentBuffer->Create();
         }
-        if (!bitangentBuffer->LoadData(&bitangent[0], sizeof(vec3)*bitangent.size(), STATIC))
+        if (!bitangentBuffer->LoadData(&bitangent[0], sizeof(vec3) * bitangent.size(), STATIC))
         {
             ostringstream oss;
             oss << "buffer id:" << bitangentBuffer->GetId() << " Couldn't upload vertex data";
             Logger::Write(Logger::LOG_ERROR, oss.str());
         }
+        else
+            bitangentBuffer->SetVertexAttribute(3, 3, 0, 0);
     }
     else
         bitangentBuffer = BufferPtr();
@@ -346,25 +301,30 @@ void Geometry::UpdateBuffers()
             oss << "buffer id:" << diffuseUVBuffer->GetId() << " Couldn't upload vertex data";
             Logger::Write(Logger::LOG_ERROR, oss.str());
         }
+        else
+            diffuseUVBuffer->SetVertexAttribute(4, 2, 0, 0);
     }
     else
         diffuseUVBuffer = BufferPtr();
 
-	if (!indices.empty())
-	{	
-		if (!indexBuffer)
-		{
-			indexBuffer = BufferPtr(new Buffer);
-			indexBuffer->Create();
-		}
-		if (!indexBuffer->LoadIndexData(&indices[0], indices.size(), STATIC))
-		{
-			ostringstream oss;
-			oss << "buffer id:" << indexBuffer->GetId() << " Couldn't upload vertex data";
-			Logger::Write(Logger::LOG_ERROR, oss.str());
-		}
-	}
+    if (!indices.empty())
+    {
+        if (!indexBuffer)
+        {
+            indexBuffer = BufferPtr(new Buffer);
+            indexBuffer->Create();
+        }
+        if (!indexBuffer->LoadIndexData(&indices[0], indices.size(), STATIC))
+        {
+            ostringstream oss;
+            oss << "buffer id:" << indexBuffer->GetId() << " Couldn't upload vertex data";
+            Logger::Write(Logger::LOG_ERROR, oss.str());
+        }
+        else
+            indexBuffer->SetIndexStream();
+    }
 }
+
 GeometryPtr Geometry::Reduce() const
 {
     GeometryPtr geometry(new Geometry);
@@ -398,6 +358,7 @@ GeometryPtr Geometry::Reduce() const
     }
     return geometry;
 }
+
 void Geometry::ApplyTransformation(const mat4 &transform)
 {
     for (unsigned int i = 0; i < vertex.size(); i++)
@@ -408,85 +369,122 @@ void Geometry::ApplyTransformation(const mat4 &transform)
 
     CalculateNormals();
 }
+
 BoundingBox Geometry::GetBoundingBox() const
-{	
+{
     return bbox;
 }
+
 void Geometry::CalculateBoundingBox()
 {
-	bbox = BoundingBox();
+    bbox = BoundingBox();
     for (vector<vec3>::iterator j = vertex.begin(); j != vertex.end(); j++)
     {
         bbox.Expand(*j);
     }
 }
+
 vector<vec3> &Geometry::GetVertices()
 {
     return vertex;
 }
+
 vector<vec3> &Geometry::GetNormals()
 {
     return normal;
 }
+
 vector<vec3> &Geometry::GetTangents()
 {
     return tangent;
 }
+
 vector<vec3> &Geometry::GetBitangents()
 {
     return bitangent;
 }
+
 vector<Face> &Geometry::GetFaces()
 {
     return face;
 }
+
 vector<vec2> &Geometry::GetDiffuseUV()
 {
     return diffuseUV;
 }
+
 vector<unsigned int> &Geometry::GetIndices()
 {
-	return indices;
+    return indices;
 }
+
 MaterialPtr Geometry::GetMaterial()
 {
     return material;
 }
+
 void Geometry::SetMaterial(MaterialPtr material)
 {
-	this->material = material;
+    this->material = material;
 }
+
 void Geometry::SetPrimitiveType(PrimitiveType primitiveType)
 {
-	this->primitiveType = primitiveType;
+    this->primitiveType = primitiveType;
 }
+
 PrimitiveType Geometry::GetPrimitiveType() const
 {
-	return primitiveType;
+    return primitiveType;
 }
+
 void Geometry::SetPrimitiveCount(unsigned int primitiveCount)
 {
-	this->primitiveCount = primitiveCount;
+    this->primitiveCount = primitiveCount;
 }
+
 unsigned int Geometry::GetPrimitiveCount() const
 {
-	return primitiveCount;
+    return primitiveCount;
 }
-void Geometry::SetIndexCount(unsigned int indexCount)
+
+void Geometry::SetVertexCount(unsigned int vertexCount)
 {
-	this->indexCount = indexCount;
+    this->vertexCount = vertexCount;
 }
-unsigned int Geometry::GetIndexCount() const
+
+unsigned int Geometry::GetVertexCount() const
 {
-	return indexCount;
+    return vertexCount;
 }
+
 void Geometry::CopyFacesToIndexBuffer()
 {
-	indices.resize(face.size() * 3);
-	for (unsigned int i = 0; i < face.size(); i++)
-	{
-		indices[i * 3 + 0] = face[i].v[0];
-		indices[i * 3 + 1] = face[i].v[1];
-		indices[i * 3 + 2] = face[i].v[2];
-	}
+    indices.resize(face.size() * 3);
+    for (unsigned int i = 0; i < face.size(); i++)
+    {
+        indices[i * 3 + 0] = face[i].v[0];
+        indices[i * 3 + 1] = face[i].v[1];
+        indices[i * 3 + 2] = face[i].v[2];
+    }
+}
+
+GeometryPtr Geometry::Clone()
+{
+	GeometryPtr ret(new Geometry);
+	ret->bbox = this->bbox;
+	ret->bitangent = this->bitangent;
+	ret->diffuseUV = this->diffuseUV;
+	ret->face = this->face;
+	ret->indices = this->indices;
+	ret->material = this->material;
+	ret->normal = this->normal;
+	ret->primitiveCount = this->primitiveCount;
+	ret->primitiveType = this->primitiveType;
+	ret->tangent = this->tangent;
+	ret->vertex = this->vertex;
+	ret->vertexCount = this->vertexCount;
+	
+	return ret;
 }

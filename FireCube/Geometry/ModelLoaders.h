@@ -73,7 +73,7 @@ public:
     };
 
     M3dsLoader();
-    bool Load(const string &filename);
+    bool Load(const string &filename, ModelLoadingOptions options);
     NodePtr GenerateSceneGraph();
 private:
     void ReadMainChunk();
@@ -103,6 +103,7 @@ private:
     vector<pair<unsigned int, mat4>> objectMatrix;
     vector<Object> object;
     char *curPos;
+	ModelLoadingOptions options;
 };
 
 class ObjLoader
@@ -143,7 +144,7 @@ public:
 		bool operator < (const MapKey &other) const;
 	};
 	ObjLoader();
-	void Load(const string &filename);
+	void Load(const string &filename, ModelLoadingOptions options);
 	NodePtr GenerateSceneGraph();
 private:
 	string ExtractDirectory(const string &filename);
@@ -174,6 +175,7 @@ private:
 	map<string, Material> materials;
 	Material *currentMaterial;
 	string baseDir;
+	ModelLoadingOptions options;
 };
 
 class ColladaLoader
@@ -337,7 +339,7 @@ public:
     };
     ColladaLoader(const string &filename);
     ~ColladaLoader();
-    bool Load();
+    bool Load(ModelLoadingOptions options);
     TiXmlElement *GetChildElement(TiXmlNode *node, const string &elmName);
     void ReadLibraries(TiXmlNode *parent);
     void ReadAsset(TiXmlNode *parent);
@@ -402,7 +404,9 @@ private:
     Node *root;
     float unit;
     UpDirection upDirection;
+	ModelLoadingOptions options;
 };
+
 }
 #pragma warning(pop)
 #endif

@@ -1,13 +1,18 @@
+#version 330
+
+out vec4 outputColor;
+smooth in vec2 texcoord;
+
 #if !defined(NORMAL_MAPPING)
-	varying vec3 normal;
+	smooth in vec3 normal;
 #endif
 
 #if defined(DIRECTIONAL_LIGHTING) || defined(POINT_LIGHTING)
 	uniform vec4 lightAmbient;
 	uniform vec4 lightDiffuse;
 	uniform vec4 lightSpecular;
-	varying vec3 lightDir;
-	varying vec3 eyeVec;
+	smooth in vec3 lightDir;
+	smooth in vec3 eyeVec;
 #endif
 #ifdef DIFFUSE_MAPPING
 	uniform sampler2D diffuseMap;
@@ -18,20 +23,24 @@
 #ifdef FOG
 	uniform float fogDensity;
 	uniform vec4 fogColor;
-#endif		
+#endif
+uniform vec4 materialAmbient;
+uniform vec4 materialDiffuse;
+uniform vec4 materialSpecular;
+uniform float materialShininess;
 void main()
 {
-	vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
-	vec4 factor = lightAmbient * gl_FrontMaterial.ambient;	
+	vec4 color = vec4(0.0, 0.0, 0.0, 1.0);	
 	#if !defined(DIRECTIONAL_LIGHTING) && !defined(POINT_LIGHTING)
 		#ifdef DIFFUSE_MAPPING
-			color = gl_FrontMaterial.diffuse * texture2D(diffuseMap, gl_TexCoord[0].xy);
+			color = materialDiffuse * texture(diffuseMap, texcoord.xy);
 		#else
-			color = gl_FrontMaterial.diffuse;
+			color = materialDiffuse;
 		#endif
 	#else
+		vec4 factor = lightAmbient * materialAmbient;
 		#ifdef NORMAL_MAPPING
-			vec3 n = normalize(texture2D(normalMap, gl_TexCoord[0].xy).xyz * 2.0 - 1.0);
+			vec3 n = normalize(texture(normalMap, texcoord.xy).xyz * 2.0 - 1.0);
 		#else
 			vec3 n = normalize(normal);
 		#endif
@@ -39,14 +48,14 @@ void main()
 		float lambertTerm = dot(n, l);
 		if (lambertTerm > 0.0)
 		{
-			factor += gl_FrontMaterial.diffuse * lightDiffuse * lambertTerm;
+			factor += materialDiffuse * lightDiffuse * lambertTerm;
 			vec3 E = normalize(eyeVec);
 			vec3 R = reflect(-l, n);
-			float specular = max(pow(max(dot(R, E), 0.0), gl_FrontMaterial.shininess), 0.0);
-			color += gl_FrontMaterial.specular * lightSpecular * specular;
+			float specular = max(pow(max(dot(R, E), 0.0), materialShininess), 0.0);
+			color += materialSpecular * lightSpecular * specular;
 		}
 		#ifdef DIFFUSE_MAPPING
-			color += factor * texture2D(diffuseMap, gl_TexCoord[0].xy);
+			color += factor * texture(diffuseMap, texcoord.xy);
 		#else
 			color += factor;
 		#endif
@@ -59,5 +68,5 @@ void main()
 		color = mix(fogColor, color, fogFactor );
 	#endif
 	
-	gl_FragColor = color;
+	outputColor = color;
 }

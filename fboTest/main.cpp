@@ -21,90 +21,65 @@ bool App::Init()
     root->AddLight(light);
     node = LoadMesh("../Assets/Models/1.3ds");
     root->AddChild(node);
-    node->Move(vec3(1.3f, 0, -3));
-    program = ProgramPtr(new Program);
-    program->Create(Renderer::GetShaderManager().Create("1.vert"), Renderer::GetShaderManager().Create("1.frag"));
-    Renderer::UseProgram(program);
-    program->SetUniform("tex", 0);
-    node->SetProgram(program);
-    vector<vec3> vb;
-    vector<vec2> uvb;
-    vb.push_back(vec3(-1, 1, 0));
-    vb.push_back(vec3(-1, -1, 0));
-    vb.push_back(vec3(1, -1, 0));
-    vb.push_back(vec3(1, 1, 0));
-    vb.push_back(vec3(-1, 1, 0));
-    vb.push_back(vec3(1, 1, 0));
-    vb.push_back(vec3(1, -1, 0));
-    vb.push_back(vec3(-1, -1, 0));
-
-    uvb.push_back(vec2(0, 1));
-    uvb.push_back(vec2(0, 0));
-    uvb.push_back(vec2(1, 0));
-    uvb.push_back(vec2(1, 1));
-    uvb.push_back(vec2(0, 1));
-    uvb.push_back(vec2(1, 1));
-    uvb.push_back(vec2(1, 0));
-    uvb.push_back(vec2(0, 0));
-    vBuffer = BufferPtr(new Buffer);
-    uvBuffer = BufferPtr(new Buffer);
-    vBuffer->Create();
-    vBuffer->LoadData(&vb[0], sizeof(vec3)*vb.size(), STATIC);
-    uvBuffer->Create();
-    uvBuffer->LoadData(&uvb[0], sizeof(vec2)*uvb.size(), STATIC);
+    node->Move(vec3(1.3f, 0, -3));    	
     node2 = LoadMesh("../Assets/Models/teapot2.3ds");
     root->AddChild(node2);
     node2->Move(vec3(-1.3f, 0, -3));
+
+	mainRoot = NodePtr(new Node);
+	mainRoot->SetGeometry(GeometryGenerator::GeneratePlane(vec2(2,2)));    
+	mainRoot->Rotate(vec3(-(float) PI / 2.0f, 0, 0));
+	mainRoot->SetLighting(false);	
+
     fbo = FrameBufferPtr(new FrameBuffer);
     fbo->Create(128, 128);
     fbo->AddDepthBuffer();
     fbo->AddRenderTarget(0);
     fbo->GetRenderTarget(0)->GenerateMipMaps();
-    ang = 0;
+	mainRoot->GetGeometry()->GetMaterial()->SetDiffuseTexture(fbo->GetRenderTarget(0));
+
     if (fbo->IsValid() == false)
     {
         Logger::Write(Logger::LOG_ERROR, "Error: couldn't create FBO.\n");
         return false;
     }
+	camera = CameraPtr(new Camera);
+	orthographicCamera = CameraPtr(new Camera);
     return true;
 }
 void App::Update(float time)
 {
-    ang += time * 1.5f;
+	node->Rotate(vec3(time * 1.5f, time * 1.5f, 0));
+	node2->Rotate(vec3(time * 1.5f, time * 1.5f, 0));	
 }
 void App::Render(float time)
 {
 	mat4 projection;
-	projection.GeneratePerspective(90.0f, (float) GetWidth() / (float) GetHeight(), 0.1f, 1000.0f);
-	Renderer::GetCamera()->SetProjectionMatrix(projection);    
-
-    mat4 t;
-    node->Rotate(vec3(time * 1.5f, time * 1.5f, 0));
-    node2->Rotate(vec3(time * 1.5f, time * 1.5f, 0));
-    Renderer::UseFrameBuffer(fbo);
+	projection.GeneratePerspective(90.0f, (float) fbo->GetWidth() / (float) fbo->GetHeight(), 0.1f, 1000.0f);
+	camera->SetProjectionMatrix(projection);    
+	camera->SetPosition(vec3(0 ,0 ,0));
+	camera->SetRotation(vec3(0, 0, 0));	
+	Renderer::UseCamera(camera);
+    Renderer::UseFrameBuffer(fbo);	
     Renderer::Clear(vec4(0.2f, 0.4f, 0.4f, 1.0f), 1.0f);    
     Renderer::Render(root);
-    Renderer::SetOrthographicProjection();
-    Renderer::SetModelViewMatrix(mat4::identity);
+    projection.GenerateOrthographic(0, (float) fbo->GetWidth(), (float) fbo->GetHeight(), 0, 0, 1);
+	orthographicCamera->SetProjectionMatrix(projection);
+	Renderer::UseCamera(orthographicCamera);
     Renderer::RenderText(font, vec3(0, 0, 0), vec4(1, 1, 1, 1), "FBO Test.");
 
+	
     Renderer::RestoreFrameBuffer();
-    Renderer::SetViewport(0, 0, GetWidth(), GetHeight());
-    t.Identity();
-    t.Translate(vec3(0, 0, -2.5f));
-    t.RotateY(ang / 3.0f);
-    Renderer::SetModelViewMatrix(t);
+    Renderer::SetViewport(0, 0, GetWidth(), GetHeight());    
+    camera->SetPosition(vec3(0, 0, 1.5f));    
     Renderer::Clear(vec4(0.4f, 0.4f, 0.4f, 1.0f), 1.0f);
-    Renderer::SetPerspectiveProjection(90, 0.1f, 100);
-    Renderer::UseProgram(program);
-    vBuffer->SetVertexStream(3);
-    uvBuffer->SetTexCoordStream(0);
+    Renderer::UseCamera(camera);
     fbo->GetRenderTarget(0)->GenerateMipMaps();
-    Renderer::UseTexture(fbo->GetRenderTarget(0), 0);
-    Renderer::RenderStream(QUADS, 8);
+    Renderer::Render(mainRoot);
 
-    Renderer::SetOrthographicProjection();
-    Renderer::SetModelViewMatrix(mat4::identity);
+	projection.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);
+	orthographicCamera->SetProjectionMatrix(projection);
+    Renderer::UseCamera(orthographicCamera);
     ostringstream oss;
     oss << "FPS:" << GetFps();
     Renderer::RenderText(font, vec3(0, 0, 0), vec4(1, 1, 1, 1), oss.str());

@@ -15,7 +15,7 @@ typedef boost::shared_ptr<Buffer> BufferPtr;
 class Program;
 
 /**
-* A shared pointer to a ProgramResource.
+* A shared pointer to a Program.
 */
 typedef boost::shared_ptr<Program> ProgramPtr;
 
@@ -64,7 +64,7 @@ private:
 };
 
 /**
-* A shared pointer to a ShaderResource.
+* A shared pointer to a Shader.
 */
 typedef boost::shared_ptr<Shader> ShaderPtr;
 
@@ -202,7 +202,7 @@ private:
     std::map<std::string, GLint> variables;
 };
 
-class RenderState;
+class ShaderProperties;
 /**
 * A class representing a technique.
 */
@@ -226,10 +226,10 @@ public:
     bool LoadShader(ShaderType type, const std::string &source);
 
     /**
-    * Generates a program from a given render state.
-    * @param renderState The render state to use to generate the program.
+    * Generates a program from a given shader properties.
+    * @param shaderProperties The shader properties to use to generate the program.
     */
-    ProgramPtr GenerateProgram(const RenderState &renderState);
+    ProgramPtr GenerateProgram(const ShaderProperties &shaderProperties);
 
 private:
     std::map<unsigned int, ProgramPtr> programs;
@@ -238,7 +238,7 @@ private:
 };
 
 /**
-* A shared pointer to a TechniqueResource.
+* A shared pointer to a Technique.
 */
 typedef boost::shared_ptr<Technique> TechniquePtr;
 

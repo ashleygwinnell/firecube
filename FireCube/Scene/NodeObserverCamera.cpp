@@ -10,7 +10,7 @@
 using namespace std;
 #include <SDL.h>
 #include <windows.h>
-#include "Dependencies/GLee.h"
+#include "Dependencies/glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -50,11 +50,10 @@ NodeObserverCamera::NodeObserverCamera(InputManager &inputManager)
 	inputListener.SetCamera(this);
 	inputManager.AddInputListener(&inputListener);
 	inputManager.AddMapping(KEY_MOUSE_LEFT_BUTTON, STATE, "NodeObserverCamera_Rotate", MODIFIER_NONE);
-	inputManager.AddMapping(KEY_MOUSE_RIGHT_BUTTON, STATE, "NodeObserverCamera_Zoom", MODIFIER_NONE);
-	inputManager.AddMapping(KEY_MOUSE_WHEEL_UP, ACTION, "NodeObserverCamera_ZoomIn");
-	inputManager.AddMapping(KEY_MOUSE_WHEEL_DOWN, ACTION, "NodeObserverCamera_ZoomOut");
+	inputManager.AddMapping(KEY_MOUSE_MIDDLE_BUTTON, STATE, "NodeObserverCamera_Zoom", MODIFIER_NONE);
 	inputManager.AddMapping(MOUSE_AXIS_X_RELATIVE, "NodeObserverCamera_MouseX");
 	inputManager.AddMapping(MOUSE_AXIS_Y_RELATIVE, "NodeObserverCamera_MouseY");
+	inputManager.AddMapping(MOUSE_WHEEL_Y_RELATIVE, "NodeObserverCamera_MouseWheelY");
 }
 
 mat4 NodeObserverCamera::GetViewMatrix()
@@ -222,10 +221,10 @@ void NodeObserverCamera::NodeObserverCameraInputListener::SetCamera(NodeObserver
 
 void NodeObserverCamera::NodeObserverCameraInputListener::HandleInput(float time, const MappedInput &input)
 {
-	if (input.IsActionTriggered("NodeObserverCamera_ZoomIn"))
-		camera->Zoom(time * 10.0f);
-	if (input.IsActionTriggered("NodeObserverCamera_ZoomOut"))
-		camera->Zoom(-time * 10.0f);
+	if (input.HasValue("NodeObserverCamera_MouseWheelY"))
+	{
+		camera->Zoom(time * input.GetValue("NodeObserverCamera_MouseWheelY"));
+	}
 	if (input.IsStateOn("NodeObserverCamera_Rotate"))
 	{
 		camera->RotateX(-input.GetValue("NodeObserverCamera_MouseY") * time);

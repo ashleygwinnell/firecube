@@ -88,9 +88,6 @@
     <ClCompile Include="Geometry\m3dsLoader.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Dependencies\GLee.c">
-      <Filter>Dependencies</Filter>
-    </ClCompile>
     <ClCompile Include="Dependencies\tinyxml.cpp">
       <Filter>Dependencies</Filter>
     </ClCompile>
@@ -130,6 +127,12 @@
     </ClCompile>
     <ClCompile Include="Application\Input.cpp">
       <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Dependencies\glew.c">
+      <Filter>Dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\Material.cpp">
+      <Filter>Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -196,9 +199,6 @@
     <ClInclude Include="Geometry\ModelLoaders.h">
       <Filter>Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Dependencies\GLee.h">
-      <Filter>Dependencies</Filter>
-    </ClInclude>
     <ClInclude Include="Dependencies\tinyxml.h">
       <Filter>Dependencies</Filter>
     </ClInclude>
@@ -235,6 +235,9 @@
     <ClInclude Include="FireCube.h" />
     <ClInclude Include="Application\Input.h">
       <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Material.h">
+      <Filter>Geometry</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

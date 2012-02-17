@@ -14,18 +14,23 @@ using namespace std;
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
 #include "Utils/ResourceManager.h"
-#include "Utils/Timer.h"
 #include "Math/MyMath.h"
 #include "Math/BoundingBox.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Shaders.h"
 #include "Geometry/Geometry.h"
+#include "Geometry/Material.h"
 #include "Rendering/Renderer.h"
 #include "Dependencies/tinyxml.h"
 #include "Scene/Light.h"
 #include "Scene/Node.h"
 #include "Geometry/ModelLoaders.h"
 using namespace FireCube;
+
+ModelLoadingOptions::ModelLoadingOptions() : flipU(false), flipV(false)
+{
+
+}
 
 ColladaLoader::ColladaLoader(const std::string &filename) : xmlDocument(filename)
 {
@@ -36,7 +41,7 @@ ColladaLoader::~ColladaLoader()
     for (; i != nodeLibrary.end(); i++)
         DeleteNodes(i->second);
 }
-bool ColladaLoader::Load()
+bool ColladaLoader::Load(ModelLoadingOptions options)
 {
     xmlDocument.LoadFile();
     TiXmlElement *e = GetChildElement(&xmlDocument, "COLLADA");
@@ -47,6 +52,7 @@ bool ColladaLoader::Load()
     if (version.substr(0, 3) == "1.4")
         ReadLibraries(e);
 
+	this->options = options;
     return true;
 }
 void ColladaLoader::ReadLibraries(TiXmlNode *parent)
@@ -1290,6 +1296,16 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
                     }
                 }
                 geometry->GetDiffuseUV() = mesh.texcoords[map];
+				if (options.flipU || options.flipV)
+				{
+					for (unsigned int k = 0; k < geometry->GetDiffuseUV().size(); k++)
+					{
+						if (options.flipU)
+							geometry->GetDiffuseUV()[k].x = 1 - geometry->GetDiffuseUV()[k].x;
+						if (options.flipV)
+							geometry->GetDiffuseUV()[k].y = 1 - geometry->GetDiffuseUV()[k].y;
+					}
+				}				
             }
             if (subMesh.primitiveType == PRIMITIVE_TRIANGLES)
             {
@@ -1320,7 +1336,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 			geometry->CopyFacesToIndexBuffer();
 			geometry->SetPrimitiveType(TRIANGLES);
 			geometry->SetPrimitiveCount(geometry->GetFaces().size());
-			geometry->SetIndexCount(geometry->GetFaces().size() * 3);
+			geometry->SetVertexCount(geometry->GetFaces().size() * 3);
 			geometry->CalculateBoundingBox();
 			geometry->UpdateBuffers();
         }    

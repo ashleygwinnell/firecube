@@ -7,9 +7,6 @@
 #include <sstream>
 #include <limits>
 using namespace std;
-#include <SDL.h>
-#include <windows.h>
-#include "Dependencies/GLee.h"
 
 #include "Utils/utils.h"
 #include "Math/MyMath.h"

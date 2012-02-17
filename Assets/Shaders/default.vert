@@ -1,39 +1,49 @@
+#version 330
+
 #ifdef POINT_LIGHTING
-	varying vec3 lightDir;
-	varying vec3 eyeVec;
+	smooth out vec3 lightDir;
+	smooth out vec3 eyeVec;
 	uniform vec3 lightPosition;
 #endif
 
 #ifdef DIRECTIONAL_LIGHTING	
-	varying vec3 lightDir;
-	varying vec3 eyeVec;
+	smooth out vec3 lightDir;
+	smooth out vec3 eyeVec;
 	uniform vec3 directionalLightDir;
 #endif
 
-attribute vec3 atrTangent;
-attribute vec3 atrBitangent;
+layout (location = 0) in vec3 atrPosition;
+layout (location = 1) in vec3 atrNormal;
+layout (location = 2) in vec3 atrTangent;
+layout (location = 3) in vec3 atrBitangent;
+layout (location = 4) in vec2 atrTexCoord;
+
 #if !defined(NORMAL_MAPPING)
-	varying vec3 normal;
+	smooth out vec3 normal;
 #endif
+smooth out vec2 texcoord;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform mat3 normalMatrix;
 void  main()
 {
-	gl_TexCoord[0] = gl_MultiTexCoord0;
+	texcoord = atrTexCoord;
 	#ifdef POINT_LIGHTING	
-		vec3 vVertex = vec3(gl_ModelViewMatrix * gl_Vertex);
+		vec3 vVertex = vec3(modelViewMatrix * vec4(atrPosition, 1.0));
 		lightDir= vec3(lightPosition - vVertex);
 		eyeVec = -vVertex;
 	#endif
 	#ifdef DIRECTIONAL_LIGHTING
 		lightDir = directionalLightDir;
-		eyeVec = -vec3(gl_ModelViewMatrix * gl_Vertex);		
+		eyeVec = -vec3(modelViewMatrix  * vec4(atrPosition, 1.0));		
 	#endif
 	#ifdef NORMAL_MAPPING
-		mat3 tbn = mat3(normalize(atrTangent), normalize(atrBitangent), normalize(gl_Normal));
-		eyeVec = eyeVec * gl_NormalMatrix * tbn;
-		lightDir = lightDir * gl_NormalMatrix * tbn;
+		mat3 tbn = mat3(normalize(atrTangent), normalize(atrBitangent), normalize(atrNormal));
+		eyeVec = eyeVec * normalMatrix * tbn;
+		lightDir = lightDir * normalMatrix * tbn;
 	#endif
 	#if !defined(NORMAL_MAPPING)
-		normal = gl_NormalMatrix * gl_Normal;
+		normal = normalMatrix * atrNormal;
 	#endif
-	gl_Position = ftransform();
+	gl_Position = projectionMatrix * modelViewMatrix * vec4(atrPosition, 1.0);
 }

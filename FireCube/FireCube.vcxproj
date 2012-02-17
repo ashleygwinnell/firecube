@@ -13,7 +13,9 @@
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="Application\Input.cpp" />
-    <ClCompile Include="Dependencies\GLee.c" />
+    <ClCompile Include="Dependencies\glew.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;GLEW_STATIC;FIRECUBE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
     <ClCompile Include="Dependencies\tinyxml.cpp" />
     <ClCompile Include="Dependencies\tinyxmlerror.cpp" />
     <ClCompile Include="Dependencies\tinyxmlparser.cpp" />
@@ -21,6 +23,7 @@
     <ClCompile Include="Geometry\Geometry.cpp" />
     <ClCompile Include="Geometry\GeometryGenerator.cpp" />
     <ClCompile Include="Geometry\m3dsLoader.cpp" />
+    <ClCompile Include="Geometry\Material.cpp" />
     <ClCompile Include="Geometry\ObjLoader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\BoundingBox.cpp" />
@@ -50,11 +53,11 @@
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="Application\Input.h" />
-    <ClInclude Include="Dependencies\GLee.h" />
     <ClInclude Include="Dependencies\tinyxml.h" />
     <ClInclude Include="FireCube.h" />
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\GeometryGenerator.h" />
+    <ClInclude Include="Geometry\Material.h" />
     <ClInclude Include="Geometry\ModelLoaders.h" />
     <ClInclude Include="Math\BoundingBox.h" />
     <ClInclude Include="Math\Frustum.h" />
@@ -124,8 +127,8 @@
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Dev\SDL-1.2.14\include;C:\Dev\SDL_image-1.2.10\include;C:\Dev\boost_1_46_0;.\Dependencies\FreeType\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;FIRECUBE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Dev\SDL-1.3.0\include;C:\Dev\SDL_image-1.2.10-SDL-1.3.0;C:\Dev\boost_1_46_0;.\Dependencies\FreeType\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;GLEW_BUILD;FIRECUBE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -136,7 +139,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;sdl.lib;sdl_image.lib;freetype242MT_D.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Dev\SDL-1.2.14\lib;C:\Dev\SDL_image-1.2.10\lib;.\Dependencies\FreeType\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Dev\SDL-1.3.0\VisualC\SDL\Win32\Release;C:\Dev\SDL_image-1.2.10-SDL-1.3.0\VisualC\Release;.\Dependencies\FreeType\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>MSVCRT;LIBCMTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>

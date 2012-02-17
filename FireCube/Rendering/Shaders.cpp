@@ -11,7 +11,7 @@ using namespace std;
 #include <windows.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "Dependencies/GLee.h"
+#include "Dependencies/glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -64,6 +64,20 @@ bool Shader::Load(const string &filename)
     glCompileShader(id);
     delete [] buffer;
 
+	GLint status;
+	glGetShaderiv(id, GL_COMPILE_STATUS, &status);
+	if (status == GL_FALSE)
+	{
+		GLint infoLogLength;
+		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+		GLchar *strInfoLog = new GLchar[infoLogLength + 1];
+		glGetShaderInfoLog(id, infoLogLength, NULL, strInfoLog);
+
+		Logger::Write(Logger::LOG_ERROR, strInfoLog);
+		delete[] strInfoLog;
+	}
+
     return true;
 }
 bool Shader::Create(ShaderType type, const string &source)
@@ -83,6 +97,20 @@ bool Shader::Create(ShaderType type, const string &source)
     id = glCreateShader(glShaderType);
     glShaderSource(id, 1, (const char**)&buffer, NULL);
     glCompileShader(id);
+
+	GLint status;
+	glGetShaderiv(id, GL_COMPILE_STATUS, &status);
+	if (status == GL_FALSE)
+	{
+		GLint infoLogLength;
+		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+		GLchar *strInfoLog = new GLchar[infoLogLength + 1];
+		glGetShaderInfoLog(id, infoLogLength, NULL, strInfoLog);
+
+		Logger::Write(Logger::LOG_ERROR, strInfoLog);
+		delete[] strInfoLog;
+	}
 
     return true;
 
@@ -126,6 +154,19 @@ void Program::Link()
 {
     variables.clear();
     glLinkProgram(id);
+
+	GLint status;
+	glGetProgramiv (id, GL_LINK_STATUS, &status);
+	if (status == GL_FALSE)
+	{
+		GLint infoLogLength;
+		glGetProgramiv(id, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+		GLchar *strInfoLog = new GLchar[infoLogLength + 1];
+		glGetProgramInfoLog(id, infoLogLength, NULL, strInfoLog);
+		Logger::Write(Logger::LOG_ERROR, strInfoLog);
+		delete[] strInfoLog;
+	}
 }
 void Program::SetUniform(const string &name, float value)
 {
@@ -292,12 +333,9 @@ void Program::SetAttribute(const std::string &name, BufferPtr buffer, int size)
         if (location != -1)
             variables[name] = location;
     }
-    if (location != -1)
-    {
-        buffer->Bind();
-        glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, 0, 0);
-        glEnableVertexAttribArray(location);
-    }
+    if (location != -1)    
+		buffer->SetVertexAttribute(location, size, 0, 0);        
+    
 }
 string Program::GetInfoLog() const
 {
@@ -363,23 +401,23 @@ bool Technique::LoadShader(ShaderType type, const string &source)
 
     return true;
 }
-ProgramPtr Technique::GenerateProgram(const RenderState &renderState)
+ProgramPtr Technique::GenerateProgram(const ShaderProperties &shaderProperties)
 {
-    unsigned int key = renderState.ToInt();
+    unsigned int key = shaderProperties.ToInt();
     map<unsigned int, ProgramPtr>::iterator i = programs.find(key);
     if (i != programs.end())
         return i->second;
 
     ostringstream defines;
-    if (renderState.diffuseTexture)
+    if (shaderProperties.diffuseTexture)
         defines << "#define DIFFUSE_MAPPING" << endl;
-    if (renderState.directionalLighting)
+    if (shaderProperties.directionalLighting)
         defines << "#define DIRECTIONAL_LIGHTING" << endl;
-    if (renderState.fog)
+    if (shaderProperties.fog)
         defines << "#define FOG" << endl;
-    if (renderState.normalTexture)
+    if (shaderProperties.normalTexture)
         defines << "#define NORMAL_MAPPING" << endl;
-    if (renderState.pointLighting)
+    if (shaderProperties.pointLighting)
         defines << "#define POINT_LIGHTING" << endl;
     ostringstream vertexShaderSource;
     ostringstream fragmentShaderSource;
