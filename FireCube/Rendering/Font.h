@@ -10,7 +10,7 @@ namespace FireCube
 // Forward declarations.
 class Font;
 class Texture;
-typedef boost::shared_ptr<Texture> TexturePtr;
+typedef std::shared_ptr<Texture> TexturePtr;
 class vec2;
 class vec3;
 class vec4;
@@ -18,7 +18,7 @@ class vec4;
 /**
 * A shared pointer to a Font.
 */
-typedef boost::shared_ptr<Font> FontPtr;
+typedef std::shared_ptr<Font> FontPtr;
 
 namespace Renderer
 {
@@ -61,7 +61,7 @@ class FIRECUBE_API Font
 {
     friend void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const std::string &str);
     friend class FontManager;
-    friend class ResourceManager<Font>;
+    friend class ResourcePool<Font>;
 public:
     Font();
     ~Font();
@@ -82,19 +82,20 @@ public:
 private:
     bool AddChar(char c);
     std::vector<Glyph> glyph;
-    boost::shared_ptr<FontPage> page;
+    std::shared_ptr<FontPage> page;
     FontImpl *fontImpl;
     int size;
 };
+
 /**
-* Manages the various fonts.
+* A font resource pool.
 */
-class FIRECUBE_API FontManager : public ResourceManager<Font>
+class FIRECUBE_API FontPool : public ResourcePool<Font>
 {
     friend class Font;
     friend void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const std::string &str);
 public:
-    FontManager();
+    FontPool();
     /**
     * Creates and loads a font from the specified file.
     * @param filename The file to load.
@@ -102,8 +103,8 @@ public:
     */
     FontPtr Create(const std::string &filename, int size);
 private:
-    std::vector<boost::weak_ptr<FontPage>> page;
-    boost::shared_ptr<FontPage> CreateNewPage();
+    std::vector<std::weak_ptr<FontPage>> page;
+    std::shared_ptr<FontPage> CreateNewPage();
 };
 }
 #pragma warning(pop)

@@ -5,9 +5,6 @@
 #include <sstream>
 #include <map>
 #include <queue>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 using namespace std;
 #include <SDL.h>
 #include <SDL_image.h>

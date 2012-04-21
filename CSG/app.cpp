@@ -12,7 +12,7 @@ bool App::Init()
 	camera->SetMaxAngX(3.14f / 2.0f);
 	camera->SetMinAngX(-3.14f / 2.0f);
 	orthographicCamera = CameraPtr(new Camera);
-	font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 18);
+	font = Renderer::GetFontPool().Create("c:\\windows\\fonts\\arial.ttf", 18);
 	GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");	
 

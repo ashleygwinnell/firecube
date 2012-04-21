@@ -160,7 +160,7 @@ void QuadTree::RenderLines(NodePtr node)
     vv.push_back(vec3(node->boundingBox.GetMax().x, 20.0f, node->boundingBox.GetMax().z));
     vv.push_back(vec3(node->boundingBox.GetMin().x, 20.0f, node->boundingBox.GetMax().z));
     v->LoadData(&vv[0], sizeof(vec3)*vv.size(), DYNAMIC);
-    v->SetVertexStream(3);
+    //v->SetVertexStream(3);
     Renderer::RenderStream(LINE_LOOP, vv.size());
     for (unsigned int j = 0; j < 4; j++)
         if (node->child[j])

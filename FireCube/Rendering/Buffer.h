@@ -15,7 +15,7 @@ namespace FireCube
 */
 enum BufferType
 {
-    STATIC, DYNAMIC, STREAM
+	STATIC, DYNAMIC, STREAM
 };
 
 /**
@@ -24,36 +24,36 @@ enum BufferType
 class FIRECUBE_API Buffer
 {
 public:
-    Buffer();
-    ~Buffer();
+	Buffer();
+	~Buffer();
 
-    /**
-    * Creates a new buffer.
-    */
-    void Create();
-    
 	/**
-    * Loads the specified data to the buffer.
-    * @param data Pointer to the data to be stored.
-    * @param size Size of the data in bytes.
-    * @param bt The buffer type.
-    * @return true on success.
-    */
-    bool LoadData(void *data, unsigned int size, BufferType bt);
-    
+	* Creates a new buffer.
+	*/
+	void Create();
+	
 	/**
-    * Specific function to load index data.
-    * @param data Pointer to the indices to be stored.
-    * @param count Number of indices.
-    * @param bt The buffer type.
-    * @return true on success.
-    */
-    bool LoadIndexData(void *data, unsigned int count, BufferType bt);    
-    
+	* Loads the specified data to the buffer.
+	* @param data Pointer to the data to be stored.
+	* @param size Size of the data in bytes.
+	* @param bt The buffer type.
+	* @return true on success.
+	*/
+	bool LoadData(void *data, unsigned int size, BufferType bt);
+	
 	/**
-    * Binds the buffer as an index stream.
-    */
-    void SetIndexStream();
+	* Specific function to load index data.
+	* @param data Pointer to the indices to be stored.
+	* @param count Number of indices.
+	* @param bt The buffer type.
+	* @return true on success.
+	*/
+	bool LoadIndexData(void *data, unsigned int count, BufferType bt);    
+	
+	/**
+	* Binds the buffer as an index stream.
+	*/
+	void SetIndexStream();
 	
 	/**
 	* Binds the buffer as a vertex attribute.
@@ -63,31 +63,31 @@ public:
 	* @param offset The offset in bytes where this attribute starts from the beginning of the buffer.
 	*/
 	void SetVertexAttribute(int index, int numCoords, int stride, int offset);    	
-    
+	
 	/**
-    * Returns whether the buffer is valid.
-    */
-    bool IsValid() const;
-    
+	* Returns whether the buffer is valid.
+	*/
+	bool IsValid() const;
+	
 	/**
-    * Destroys the buffer.
-    */
-    void Destroy();
-    
+	* Destroys the buffer.
+	*/
+	void Destroy();
+	
 	/**
-    * Returns the resource id of the buffer.
-    */
-    unsigned int GetId() const;
+	* Returns the resource id of the buffer.
+	*/
+	unsigned int GetId() const;
 
 private:
 
-    GLuint id;
+	GLuint id;
 };
 
 /**
 * A shared pointer to a Buffer.
 */
-typedef boost::shared_ptr<Buffer> BufferPtr;
+typedef std::shared_ptr<Buffer> BufferPtr;
 
 }
 #pragma warning(pop)

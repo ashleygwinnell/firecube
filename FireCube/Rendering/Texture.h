@@ -9,14 +9,14 @@ namespace FireCube
 
 // Forward declarations.
 template<class T>
-class ResourceManager;
+class ResourcePool;
 
 /**
 * Specifies the type of texture filtering.
 */
 enum TextureFilter
 {
-    NEAREST, LINEAR, MIPMAP
+	NEAREST, LINEAR, MIPMAP
 };
 
 class Texture;
@@ -24,7 +24,7 @@ class Texture;
 /**
 * A shared pointer to a Texture.
 */
-typedef boost::shared_ptr<Texture> TexturePtr;
+typedef std::shared_ptr<Texture> TexturePtr;
 
 namespace Renderer
 {
@@ -36,60 +36,60 @@ void FIRECUBE_API UseTexture(TexturePtr tex, unsigned int unit);
 */
 class FIRECUBE_API Texture
 {
-    friend class ResourceManager<Texture>;
-    friend void Renderer::UseTexture(TexturePtr tex, unsigned int unit);
+	friend class ResourcePool<Texture>;
+	friend void Renderer::UseTexture(TexturePtr tex, unsigned int unit);
 public:
-    Texture();
-    ~Texture();
+	Texture();
+	~Texture();
 
-    /**
-    * Loads a texture.
-    * @param filename The file to load.
-    */
-    bool Load(const std::string &filename);
+	/**
+	* Loads a texture.
+	* @param filename The file to load.
+	*/
+	bool Load(const std::string &filename);
 
-    /**
-    * Returns whether the texture is valid.
-    */
-    bool IsValid() const;
+	/**
+	* Returns whether the texture is valid.
+	*/
+	bool IsValid() const;
 
-    /**
-    * Creates a new texture.
-    */
-    bool Create();
+	/**
+	* Creates a new texture.
+	*/
+	bool Create();
 
-    /**
-    * Generates mipmaps for the texture.
-    */
-    void GenerateMipMaps();
+	/**
+	* Generates mipmaps for the texture.
+	*/
+	void GenerateMipMaps();
 
-    /**
-    * Sets the texture filtering.
-    * @param minFilter The minifying filter.
-    * @param magFilter The magnification filter.
-    */
-    void SetFiltering(TextureFilter minFilter, TextureFilter magFilter);
+	/**
+	* Sets the texture filtering.
+	* @param minFilter The minifying filter.
+	* @param magFilter The magnification filter.
+	*/
+	void SetFiltering(TextureFilter minFilter, TextureFilter magFilter);
 
-    /**
-    * Returns the file name of the texture.
-    */
-    std::string GetFileName() const;
+	/**
+	* Returns the file name of the texture.
+	*/
+	std::string GetFileName() const;
 
-    /**
-    * Returns the resource id of the texture.
-    */
-    unsigned int GetId() const;
+	/**
+	* Returns the resource id of the texture.
+	*/
+	unsigned int GetId() const;
 
 private:
-    GLuint id;
-    std::string filename;
+	GLuint id;
+	std::string filename;
 	TextureFilter minFilter, magFilter;
 };
 
 /**
-* A texture resource manager.
+* A texture resource pool.
 */
-typedef ResourceManager<Texture> TextureManager;
+typedef ResourcePool<Texture> TexturePool;
 }
 #pragma warning(pop)
 #endif

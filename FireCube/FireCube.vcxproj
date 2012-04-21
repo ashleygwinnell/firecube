@@ -83,9 +83,17 @@
     <ClInclude Include="Utils\Filesystem.h" />
     <ClInclude Include="Utils\Image.h" />
     <ClInclude Include="Utils\Logger.h" />
-    <ClInclude Include="Utils\ResourceManager.h" />
+    <ClInclude Include="Utils\ResourcePool.h" />
     <ClInclude Include="Utils\Timer.h" />
     <ClInclude Include="Utils\utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Assets\Shaders\debugNormals.frag" />
+    <None Include="..\Assets\Shaders\debugNormals.vert" />
+    <None Include="..\Assets\Shaders\default.frag" />
+    <None Include="..\Assets\Shaders\default.vert" />
+    <None Include="..\Assets\Shaders\font.frag" />
+    <None Include="..\Assets\Shaders\font.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{66AD911D-22A7-415E-A8E1-C746E779E0F7}</ProjectGuid>
@@ -127,7 +135,7 @@
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Dev\SDL-1.3.0\include;C:\Dev\SDL_image-1.2.10-SDL-1.3.0;C:\Dev\boost_1_46_0;.\Dependencies\FreeType\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\SDL-1.3.0\include;C:\Dev\SDL_image-1.2.10-SDL-1.3.0;.\Dependencies\FreeType\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;GLEW_BUILD;FIRECUBE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

@@ -2,8 +2,6 @@
 #include <vector>
 #include <map>
 #include <queue>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 #include <iostream>
 #include <streambuf>
 #include <set>
@@ -19,7 +17,7 @@ using namespace std;
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
 #include "Utils/Filesystem.h"
-#include "Utils/ResourceManager.h"
+#include "Utils/ResourcePool.h"
 #include "Utils/Timer.h"
 #include "Math/MyMath.h"
 #include "Rendering/Font.h"
@@ -36,11 +34,11 @@ extern void ResetNumberOfTrianglesRendered();
 
 extern FT_Library freeTypeLibrary;
 
-Application::Application() : running(false), frameCount(0), fpsTime(0), fps(0), context(NULL), mainWindow(NULL)
+Application::Application() : running(false), frameCount(0), fpsTime(0), fps(0), context(nullptr), mainWindow(nullptr)
 {
-    Renderer::SetTextureManager(defaultTextureManager);
-    Renderer::SetShaderManager(defaultShaderManager);
-    Renderer::SetFontManager(defaultFontManager);
+	Renderer::SetTexturePool(defaultTexturePool);
+	Renderer::SetShaderPool(defaultShaderPool);
+	Renderer::SetFontPool(defaultFontPool);
 }
 
 Application::~Application()
@@ -56,77 +54,77 @@ Application::~Application()
 
 bool Application::Initialize()
 {
-    return Initialize(800, 600, 32, 0, false);
+	return Initialize(800, 600, 32, 0, false);
 }
 
 bool Application::Initialize(int width, int height, int bpp, int multisample, bool fullscreen)
 {    
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
-        return false;
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		return false;
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	
-    if (multisample)
-    {
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, multisample);
-    }
-	mainWindow = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+	if (multisample)
+	{
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, multisample);
+	}
+	mainWindow = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
 	
 	if (!mainWindow)
 		return false;
-    
+	
 	context = new SDL_GLContext;
-    *context = SDL_GL_CreateContext(mainWindow);	
+	*context = SDL_GL_CreateContext(mainWindow);	
 	Renderer::SetViewport(0, 0, width, height);
-    this->width = width;
-    this->height = height;
+	this->width = width;
+	this->height = height;
 	InitKeyMap();	
-    return InitializeNoWindow();
+	return InitializeNoWindow();
 }
 
 bool Application::InitializeNoWindow()
 {
 	glewExperimental = GL_TRUE;
 	glewInit();
-    Logger::Init("log.txt");
-    Logger::Write(Logger::LOG_INFO, string("Initializing application"));
-    timer.Init();
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    srand(GetTickCount());
-    FT_Init_FreeType(&freeTypeLibrary);
-    InitializeRenderer();
-    return Init();
+	Logger::Init("log.txt");
+	Logger::Write(Logger::LOG_INFO, string("Initializing application"));
+	timer.Init();
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	srand(GetTickCount());
+	FT_Init_FreeType(&freeTypeLibrary);
+	InitializeRenderer();
+	return Init();
 }
 
 bool Application::Close()
 {
 	running = false;  
-    return true;
+	return true;
 }
 
 void Application::Run()
 {
-    running = true;
-    SDL_Event event;
-    Logger::Write(Logger::LOG_INFO, string("Entering main loop..."));
-    while (running)
-    {
-        deltaTime = (float) timer.Passed();
-        timer.Update();
-        while(SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_KEYDOWN)
-            {				
+	running = true;
+	SDL_Event event;
+	Logger::Write(Logger::LOG_INFO, string("Entering main loop..."));
+	while (running)
+	{
+		deltaTime = (float) timer.Passed();
+		timer.Update();
+		while(SDL_PollEvent(&event))
+		{
+			if (event.type == SDL_KEYDOWN)
+			{				
 				map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
 				if (k != keyMap.end())
 				{					
@@ -144,7 +142,7 @@ void Application::Run()
 					inputManager.SetRawKeyState(k->second, true, previouslyPressed, modifier);
 					
 				}
-            }
+			}
 			else if (event.type == SDL_KEYUP)
 			{
 				SDL_Keymod keyMod = SDL_GetModState();
@@ -198,66 +196,66 @@ void Application::Run()
 					mouseState[event.button.button] = false;
 				}
 			}
-            else if (event.type == SDL_MOUSEMOTION)
-            {
+			else if (event.type == SDL_MOUSEMOTION)
+			{
 				inputManager.SetRawAnalogValue(MOUSE_AXIS_X_RELATIVE, (float) event.motion.xrel);
 				inputManager.SetRawAnalogValue(MOUSE_AXIS_Y_RELATIVE, (float) event.motion.yrel);
 				inputManager.SetRawAnalogValue(MOUSE_AXIS_X_ABSOLUTE, (float) event.motion.x);
 				inputManager.SetRawAnalogValue(MOUSE_AXIS_Y_ABSOLUTE, (float) event.motion.y);
-            }
+			}
 			else if (event.type == SDL_MOUSEWHEEL)
 			{				
 				inputManager.SetRawAnalogValue(MOUSE_WHEEL_Y_RELATIVE, ((float) event.wheel.y) / 60.0f);
 			}
-            else if (event.type == SDL_VIDEORESIZE)
-            {
-                width = event.resize.w;
-                height = event.resize.h;
-                Renderer::SetViewport(0, 0, event.resize.w, event.resize.h);
-            }
-            else if (event.type == SDL_QUIT)
-                running = false;
-        }		
-        ResetNumberOfTrianglesRendered();
-        inputManager.DispatchInput(deltaTime);
-        Update(deltaTime);
-        Render(deltaTime);
-        SDL_GL_SwapWindow(mainWindow);
-        frameCount += 1.0f;
-        fpsTime += deltaTime;
-        if (fpsTime >= 1.0f)
-        {
-            fps = frameCount / fpsTime;
-            fpsTime = 0.0f;
-            frameCount = 0;
-        }
-    }
-    Logger::Write(Logger::LOG_INFO, string("Exiting main loop..."));
+			else if (event.type == SDL_VIDEORESIZE)
+			{
+				width = event.resize.w;
+				height = event.resize.h;
+				Renderer::SetViewport(0, 0, event.resize.w, event.resize.h);
+			}
+			else if (event.type == SDL_QUIT)
+				running = false;
+		}		
+		ResetNumberOfTrianglesRendered();
+		inputManager.DispatchInput(deltaTime);
+		Update(deltaTime);
+		Render(deltaTime);
+		SDL_GL_SwapWindow(mainWindow);
+		frameCount += 1.0f;
+		fpsTime += deltaTime;
+		if (fpsTime >= 1.0f)
+		{
+			fps = frameCount / fpsTime;
+			fpsTime = 0.0f;
+			frameCount = 0;
+		}
+	}
+	Logger::Write(Logger::LOG_INFO, string("Exiting main loop..."));
 }
 
 void Application::SetTitle(const string &title)
 {
-    SDL_SetWindowTitle(mainWindow, title.c_str());
+	SDL_SetWindowTitle(mainWindow, title.c_str());
 }
 
 float Application::GetFps() const
 {
-    return fps;
+	return fps;
 }
 
 bool Application::Init()
 {
-    return true;
+	return true;
 }
 
 int Application::GetWidth() const
 {
-    return width;
+	return width;
 }
 
 int Application::GetHeight() const
 {
-    return height;
+	return height;
 }
 
 InputManager &Application::GetInputManager()
@@ -315,6 +313,7 @@ void Application::InitKeyMap()
 	keyMap[SDLK_LALT] = KEY_LEFT_ALT;
 	keyMap[SDLK_RALT] = KEY_RIGHT_ALT;
 	keyMap[SDLK_TAB] = KEY_TAB;
+	keyMap[SDLK_SPACE] = KEY_SPACE;
 	mouseMap[1] = KEY_MOUSE_LEFT_BUTTON;
 	mouseMap[2] = KEY_MOUSE_MIDDLE_BUTTON;
 	mouseMap[3] = KEY_MOUSE_RIGHT_BUTTON;

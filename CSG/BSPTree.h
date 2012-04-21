@@ -9,7 +9,7 @@ public:
 	GeometryPtr GetGeometry();	
 private:
 	class Node;
-	typedef boost::shared_ptr<Node> NodePtr;
+	typedef std::shared_ptr<Node> NodePtr;
 	class Node
 	{
 	public:

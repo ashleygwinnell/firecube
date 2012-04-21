@@ -12,14 +12,14 @@ namespace FireCube
 /**
 * A shared pointer to a Node.
 */
-typedef boost::shared_ptr<Node> NodePtr;
+typedef std::shared_ptr<Node> NodePtr;
 class Geometry;
-typedef boost::shared_ptr<Geometry> GeometryPtr;
+typedef std::shared_ptr<Geometry> GeometryPtr;
 class Light;
 class Material;
-typedef boost::shared_ptr<Material> MaterialPtr;
+typedef std::shared_ptr<Material> MaterialPtr;
 class Program;
-typedef boost::shared_ptr<Program> ProgramPtr;
+typedef std::shared_ptr<Program> ProgramPtr;
 
 
 class FIRECUBE_API ModelLoadingOptions
@@ -34,279 +34,286 @@ public:
 /**
 * A class representing a node in a scene graph.
 */
-class FIRECUBE_API Node : public boost::enable_shared_from_this<Node>
+class FIRECUBE_API Node : public std::enable_shared_from_this<Node>
 {
 public:
-    Node();
+	Node();
 
-    /**
-    * Constructs a node.
-    * @param name The name of this node.
-    */
-    Node(const std::string &name);
+	/**
+	* Constructs a node.
+	* @param name The name of this node.
+	*/
+	Node(const std::string &name);
 
-    /**
-    * Sets the name of this node.
-    * @param name The name to give to this node.
-    */
-    void SetName(const std::string &name);
+	/**
+	* Sets the name of this node.
+	* @param name The name to give to this node.
+	*/
+	void SetName(const std::string &name);
 
-    /**
-    * Gets the name of this node.
-    * @return The name of this node.
-    */
-    std::string GetName() const;
+	/**
+	* Gets the name of this node.
+	* @return The name of this node.
+	*/
+	std::string GetName() const;
 
-    /**
-    * Gets the local transformation of this node.
-    * @return The local transformation of this node.
-    */
-    mat4 GetLocalTransformation();
+	/**
+	* Gets the local transformation of this node.
+	* @return The local transformation of this node.
+	*/
+	mat4 GetLocalTransformation();
 
-    /**
-    * Gets the world transformation of this node.
-    * @return The world transformation of this node.
-    */
-    mat4 GetWorldTransformation();
+	/**
+	* Gets the world transformation of this node.
+	* @return The world transformation of this node.
+	*/
+	mat4 GetWorldTransformation();
 
-    /**
-    * Sets the translation of this node.
-    * @param t The translation to assign to this node.
-    */
-    void SetTranslation(const vec3 &t);
+	/**
+	* Sets the translation of this node.
+	* @param t The translation to assign to this node.
+	*/
+	void SetTranslation(const vec3 &t);
 
-    /**
-    * Gets the translation of this node.
-    * @return The translation of this node.
-    */
-    vec3 GetTranslation() const;
+	/**
+	* Gets the translation of this node.
+	* @return The translation of this node.
+	*/
+	vec3 GetTranslation() const;
 
-    /**
-    * Sets the rotation of this node.
-    * @param r The rotation(Euler angles) to assign to this node.
-    */
-    void SetRotation(const vec3 &r);
+	/**
+	* Sets the rotation of this node.
+	* @param r The rotation matrix to assign to this node.
+	*/
+	void SetRotation(const mat4 &r);
 
-    /**
-    * Gets the rotation of this node.
-    * @return The rotation(Euler angles) of this node.
-    */
-    vec3 GetRotation() const;
+	/**
+	* Gets the rotation of this node.
+	* @return The rotation matrix of this node.
+	*/
+	mat4 GetRotation() const;
 
-    /**
-    * Sets the scale of this node.
-    * @param s The scale to assign to this node.
-    */
-    void SetScale(const vec3 &s);
+	/**
+	* Sets the scale of this node.
+	* @param s The scale to assign to this node.
+	*/
+	void SetScale(const vec3 &s);
 
-    /**
-    * Gets the scale of this node.
-    * @return The scale of this node.
-    */
-    vec3 GetScale() const;
+	/**
+	* Gets the scale of this node.
+	* @return The scale of this node.
+	*/
+	vec3 GetScale() const;
 
-    /**
-    * Sets the matrix transformation of this node.
-    * @param t The matrix transformation to assign to this node.
-    */
-    void SetMatrixTransformation(const mat4 &t);
+	/**
+	* Sets the matrix transformation of this node.
+	* @param t The matrix transformation to assign to this node.
+	*/
+	void SetMatrixTransformation(const mat4 &t);
 
-    /**
-    * Gets the matrix transformation of this node.
-    * @return The matrix transformation of this node.
-    */
-    mat4 GetMatrixTransformation() const;
+	/**
+	* Gets the matrix transformation of this node.
+	* @return The matrix transformation of this node.
+	*/
+	mat4 GetMatrixTransformation() const;
 
-    /**
-    * Translates the node.
-    * @param t The translation vector.
-    */
-    void Move(const vec3 &t);
+	/**
+	* Translates the node.
+	* @param t The translation vector.
+	*/
+	void Move(const vec3 &t);
 
-    /**
-    * Rotates the node.
-    * @param r The rotation vector(Euler angles).
-    */
-    void Rotate(const vec3 &r);
+	/**
+	* Rotates the node.
+	* @param r The rotation vector(Euler angles).
+	*/
+	void Rotate(const vec3 &r);
 
-    /**
-    * Scales the node.
-    * @param s The scale vector.
-    */
-    void Scale(const vec3 &s);
+	/**
+	* Scales the node.
+	* @param s The scale vector.
+	*/
+	void Scale(const vec3 &s);
+	/**
+	* Make the node look at a specific point.
+	* @param position The new position of the node;
+	* @param at The look at position;
+	* @param up The up vector;
+	*/
+	void LookAt(vec3 position, vec3 at, vec3 up);
 
-    /**
-    * Gets the parent of this node.
-    * @return The parent of this node.
-    */
-    Node *GetParent();
+	/**
+	* Gets the parent of this node.
+	* @return The parent of this node.
+	*/
+	Node *GetParent();
 
-    /**
-    * Sets the parent of this node.
-    * @param parent The new parent to assign to this node
-    */
-    void SetParent(NodePtr parent);
+	/**
+	* Sets the parent of this node.
+	* @param parent The new parent to assign to this node
+	*/
+	void SetParent(NodePtr parent);
 
-    /**
-    * Gets the children of this node.
-    * @return A list of children.
-    */
-    std::vector<NodePtr> &GetChildren();
+	/**
+	* Gets the children of this node.
+	* @return A list of children.
+	*/
+	std::vector<NodePtr> &GetChildren();
 
-    /**
-    * Sets the geometry of this node.
-    * @param geometry The geometry to set.
-    */
-    void SetGeometry(GeometryPtr geometry);
+	/**
+	* Sets the geometry of this node.
+	* @param geometry The geometry to set.
+	*/
+	void SetGeometry(GeometryPtr geometry);
 
-    /**
-    * Gets the geometry of this node.
-    * @return The geometry of this node.
-    */
-    GeometryPtr GetGeometry();
+	/**
+	* Gets the geometry of this node.
+	* @return The geometry of this node.
+	*/
+	GeometryPtr GetGeometry();
 
-    /**
-    * Adds a light to this node.
-    * @param light The light to add.
-    */
-    void AddLight(const Light &light);
+	/**
+	* Adds a light to this node.
+	* @param light The light to add.
+	*/
+	void AddLight(const Light &light);
 
-    /**
-    * Removes a light from this node.
-    * @param light The light to remove.
-    */
-    void RemoveLight(const Light &light);
+	/**
+	* Removes a light from this node.
+	* @param light The light to remove.
+	*/
+	void RemoveLight(const Light &light);
 
-    /**
-    * Gets the lights of this node.
-    * @return A list of lights.
-    */
-    std::vector<Light> &GetLights();
+	/**
+	* Gets the lights of this node.
+	* @return A list of lights.
+	*/
+	std::vector<Light> &GetLights();
 
-    /**
-    * Adds a child node.
-    * @param node The node to add as a child.
-    */
-    NodePtr AddChild(NodePtr node);
+	/**
+	* Adds a child node.
+	* @param node The node to add as a child.
+	*/
+	NodePtr AddChild(NodePtr node);
 
-    /**
-    * Gets a child node by name.
-    * @param name The name of the node.
-    * @return The child node.
-    */
-    NodePtr GetChild(const std::string &name);
+	/**
+	* Gets a child node by name.
+	* @param name The name of the node.
+	* @return The child node.
+	*/
+	NodePtr GetChild(const std::string &name);
 
-    /**
-    * Removes a child node.
-    * @param name The name of the child node to remove.
-    */
-    NodePtr RemoveChild(const std::string &name);
+	/**
+	* Removes a child node.
+	* @param name The name of the child node to remove.
+	*/
+	NodePtr RemoveChild(const std::string &name);
 
-    /**
-    * Removes a child node.
-    * @param node The child node to remove.
-    */
-    NodePtr RemoveChild(NodePtr node);
+	/**
+	* Removes a child node.
+	* @param node The child node to remove.
+	*/
+	NodePtr RemoveChild(NodePtr node);
 
-    /**
-    * Renders the node.
-    */
-    void Render();
+	/**
+	* Renders the node.
+	*/
+	void Render();
 
-    /**
-    * Creates hard normals for all geometries of the sub tree under this node.
-    */
-    void CreateHardNormals();
+	/**
+	* Creates hard normals for all geometries of the sub tree under this node.
+	*/
+	void CreateHardNormals();
 
 	/**
 	* Returns the local bounding box of this node;
 	*/
 	BoundingBox GetWorldBoundingBox();
 
-    /**
-    * Renders the bounding boxes of the sub tree under this node.
+	/**
+	* Renders the bounding boxes of the sub tree under this node.
 	* @param color The color to render the boxes with.
 	* @param onlyWithGeometry Specifies whether to render bounding boxes only for nodes that has a geometry associated with them, defaults to true. 
-    */
-    void RenderBoundingBox(vec3 color, bool onlyWithGeometry = true);
+	*/
+	void RenderBoundingBox(vec3 color, bool onlyWithGeometry = true);
 
-    /**
-    * Gets the render parameters of this node.
-    * @return The render parameters of this node.
-    */
-    RenderParameters &GetRenderParameters();
+	/**
+	* Gets the render parameters of this node.
+	* @return The render parameters of this node.
+	*/
+	RenderParameters &GetRenderParameters();
 
-    /**
-    * Sets the program used for rendering of the sub tree under this node.
-    * @param program The program to set.
-    */
-    void SetProgram(ProgramPtr program);
+	/**
+	* Sets the program used for rendering of the sub tree under this node.
+	* @param program The program to set.
+	*/
+	void SetProgram(ProgramPtr program);
 
-    /**
-    * Gets the program of this node.
-    * @return The program used for rendering of this node.
-    */
-    ProgramPtr GetProgram() const;
+	/**
+	* Gets the program of this node.
+	* @return The program used for rendering of this node.
+	*/
+	ProgramPtr GetProgram() const;
 
-    /**
-    * Sets the technique used for rendering of the sub tree under this node.
-    * @param name The name of the technique to set.
-    */
-    void SetTechnique(const std::string &name);
+	/**
+	* Sets the technique used for rendering of the sub tree under this node.
+	* @param name The name of the technique to set.
+	*/
+	void SetTechnique(const std::string &name);
 
-    /**
-    * Gets the technique of this node.
-    * @return The technique used for rendering of this node.
-    */
-    TechniquePtr GetTechnique() const;
+	/**
+	* Gets the technique of this node.
+	* @return The technique used for rendering of this node.
+	*/
+	TechniquePtr GetTechnique() const;
 
-    /**
-    * Sets whether dynamic lighting is enabled for the sub tree under this node.
-    * @param enabled True to enable, false to disable.
-    */
-    void SetLighting(bool enabled = true);
+	/**
+	* Sets whether dynamic lighting is enabled for the sub tree under this node.
+	* @param enabled True to enable, false to disable.
+	*/
+	void SetLighting(bool enabled = true);
 
-    /**
-    * Checks whether dynamic lighting is enabled for this node.
-    * @return True if enabled, false otherwise.
-    */
-    bool GetLighting() const;
+	/**
+	* Checks whether dynamic lighting is enabled for this node.
+	* @return True if enabled, false otherwise.
+	*/
+	bool GetLighting() const;
 
-    /**
-    * Sets whether fog is enabled for the sub tree under this node.
-    * @param enabled True to enable, false to disable.
-    */
-    void SetFog(bool enabled = true);
+	/**
+	* Sets whether fog is enabled for the sub tree under this node.
+	* @param enabled True to enable, false to disable.
+	*/
+	void SetFog(bool enabled = true);
 
-    /**
-    * Checks whether fog is enabled for this node.
-    * @return True if enabled, false otherwise.
-    */
-    bool GetFog() const;
+	/**
+	* Checks whether fog is enabled for this node.
+	* @return True if enabled, false otherwise.
+	*/
+	bool GetFog() const;
 
-    /**
-    * Sets the fog color for the sub tree under this node.
-    * @param color The fog color to set.
-    */
-    void SetFogColor(const vec4 &color);
+	/**
+	* Sets the fog color for the sub tree under this node.
+	* @param color The fog color to set.
+	*/
+	void SetFogColor(const vec4 &color);
 
-    /**
-    * Gets the fog color of this node.
-    * @return The fog color.
-    */
-    vec4 GetFogColor() const;
+	/**
+	* Gets the fog color of this node.
+	* @return The fog color.
+	*/
+	vec4 GetFogColor() const;
 
-    /**
-    * Sets the fog density for the sub tree under this node.
-    * @param density The fog density to set.
-    */
-    void SetFogDensity(float density);
+	/**
+	* Sets the fog density for the sub tree under this node.
+	* @param density The fog density to set.
+	*/
+	void SetFogDensity(float density);
 
-    /**
-    * Gets the fog density of this node.
-    * @return The fog density.
-    */
-    float GetFogDensity() const;
+	/**
+	* Gets the fog density of this node.
+	* @return The fog density.
+	*/
+	float GetFogDensity() const;
 	
 	/**
 	* Clones the node.
@@ -323,19 +330,19 @@ private:
 	void SetTransformationChanged();
 	void SetBoundingBoxChanged();
 	void UpdateWorldTransformation();	
-    void UpdateWorldBoundingBox();
+	void UpdateWorldBoundingBox();
 	void RenderBoundingBox(MaterialPtr material, ProgramPtr program, bool onlyWithGeometry);
 	void PrepareRenderBoundingBox();
-    std::vector<NodePtr> children;
-    GeometryPtr geometry;
-    std::vector<Light> lights;
-    
+	std::vector<NodePtr> children;
+	GeometryPtr geometry;
+	std::vector<Light> lights;
+	
 	vec3 translation;
-    vec3 rotation;
-    vec3 scale;
-    mat4 matTransform;
-    mat4 localTransformation;
-    bool worldTransformationChanged;	    
+	mat4 rotation;
+	vec3 scale;
+	mat4 matTransform;
+	mat4 localTransformation;
+	bool worldTransformationChanged;	    
 	bool localTransformationChanged;
 	mat4 worldTransformation;
 	BoundingBox worldBoundingBox;
@@ -343,13 +350,13 @@ private:
 	bool worldBoundingBoxRenderingChanged;
 
 
-    Node *parent;
-    std::string name;
-    RenderParameters renderParameters;
+	Node *parent;
+	std::string name;
+	RenderParameters renderParameters;
 
 	BufferPtr bboxVBuffer;
 	BufferPtr bboxIBuffer;
-    
+	
 };
 
 /**

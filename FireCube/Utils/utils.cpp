@@ -3,8 +3,6 @@
 #include <map>
 #include <queue>
 #include <fstream>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 using namespace std;
 
 #include "Utils/utils.h"
@@ -15,10 +13,12 @@ inline bool FireCube::IsFinite(float val)
 {
     return ((val < 1e8) && (val > -1e8));
 }
+
 inline float FireCube::RangedRandom(float v1, float v2)
 {
     return v1 + (v2 - v1) * ((float)rand()) / ((float)RAND_MAX);
 }
+
 string FireCube::ToLower(const string &str)
 {
     string ret;
@@ -27,6 +27,7 @@ string FireCube::ToLower(const string &str)
         ret += tolower(*i);
     return ret;
 }
+
 string FireCube::ToUpper(const string &str)
 {
     string ret;
@@ -35,6 +36,7 @@ string FireCube::ToUpper(const string &str)
         ret += toupper(*i);
     return ret;
 }
+
 string FireCube::GetFileName(const string &file)
 {
     string::size_type i = file.find_last_of("/");
@@ -52,6 +54,7 @@ string FireCube::GetFileName(const string &file)
 
     return file.substr(maxi);
 }
+
 bool FireCube::FileExists(const string &file)
 {
     ifstream f(file.c_str(), ios::binary);

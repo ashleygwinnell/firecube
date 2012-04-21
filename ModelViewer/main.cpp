@@ -13,9 +13,9 @@ bool MyApp::OnInit()
 {
 	applicationParameters.normalsLength = 0.1f;
 	applicationParameters.customProgram = false;
-    frame = new MyMainFrame(NULL);
-    frame->Show(true);
-    return true;
+	frame = new MyMainFrame(nullptr);
+	frame->Show(true);
+	return true;
 }
 void FireCubeApp::HandleInput(float t)
 {
@@ -29,15 +29,15 @@ void FireCubeApp::Update(float t)
 
 void MyApp::LoadDocument(const string &filename)
 {
-    FireCube::Timer t;
-    t.Init();
-    if (!document.Load(filename))
+	FireCube::Timer t;
+	t.Init();
+	if (!document.Load(filename))
 		return;
-    ostringstream oss3;
-    oss3 << "Loading completed in " << t.Passed() << " seconds.";
-    frame->SetStatusBarText(oss3.str());
-    if (applicationParameters.customProgram)
-        document.GetRoot()->SetProgram(applicationParameters.program);
+	ostringstream oss3;
+	oss3 << "Loading completed in " << t.Passed() << " seconds.";
+	frame->SetStatusBarText(oss3.str());
+	if (applicationParameters.customProgram)
+		document.GetRoot()->SetProgram(applicationParameters.program);
 
 	document.GenerateNormals(applicationParameters.normalsLength);
 	document.GenerateTangents(applicationParameters.normalsLength);

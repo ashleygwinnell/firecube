@@ -33,7 +33,7 @@ bool App::Init()
 	t->LoadShader("../Assets/Shaders/debugNormals.vert");
 	t->LoadShader("../Assets/Shaders/debugNormals.frag");
 	Renderer::AddTechnique("debugNormals", t);
-	font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 18);
+	font = Renderer::GetFontPool().Create("c:\\windows\\fonts\\arial.ttf", 18);
     root = NodePtr(new Node("Root"));
     NodePtr node;
     node = LoadMesh("../Assets/Models/teapot2.3ds");    	
@@ -46,7 +46,7 @@ bool App::Init()
     light.SetSpecularColor(vec4(0.2f, 0.2f, 0.2f, 1.0f));
     node->AddLight(light);
     root->AddChild(node);
-    SetNormalMap(root, Renderer::GetTextureManager().Create("normalMap.jpg"));
+    SetNormalMap(root, Renderer::GetTexturePool().Create("normalMap.jpg"));
 	
 	camera = NodeObserverCameraPtr(new NodeObserverCamera(GetInputManager()));
 	camera->SetTarget(node);

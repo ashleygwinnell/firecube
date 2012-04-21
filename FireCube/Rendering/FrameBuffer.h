@@ -13,7 +13,7 @@ class FrameBuffer;
 /**
 * A shared pointer to a FrameBuffer.
 */
-typedef boost::shared_ptr<FrameBuffer> FrameBufferPtr;
+typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
 
 namespace Renderer
 {

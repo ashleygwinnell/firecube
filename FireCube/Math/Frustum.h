@@ -17,8 +17,8 @@ class FIRECUBE_API Frustum
 {
 public:
 	/**
-    * Constructs a frustum.
-    */
+	* Constructs a frustum.
+	*/
 	Frustum();
 
 	/**

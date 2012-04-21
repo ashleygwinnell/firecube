@@ -2,8 +2,6 @@
 #include <vector>
 #include <map>
 #include <queue>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 #include <sstream>
 using namespace std;
 
@@ -21,10 +19,12 @@ void Filesystem::AddSearchPath(const string &path)
 		npath = npath.substr(0, npath.size() - 1);
 	searchPaths.push_back(npath);
 }
+
 const vector<string> &Filesystem::GetSearchPaths()
 {
 	return searchPaths;
 }
+
 string Filesystem::SearchForFileName(const string &filename)
 {	
 	string ret;

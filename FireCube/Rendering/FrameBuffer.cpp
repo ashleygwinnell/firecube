@@ -5,8 +5,6 @@
 #include <sstream>
 #include <iostream>
 using namespace std;
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 #include <Windows.h>
 #include "Dependencies/glew.h"
 #include <gl/GL.h>
@@ -24,6 +22,7 @@ FrameBuffer::FrameBuffer() : id(0), depthBuffer(0)
 {
 
 }
+
 FrameBuffer::~FrameBuffer()
 {
     if (id)
@@ -37,17 +36,19 @@ FrameBuffer::~FrameBuffer()
         depthBuffer = 0;
     }
 }
+
 void FrameBuffer::Create(const int width, const int height)
 {
     this->width = width;
     this->height = height;
     glGenFramebuffers(1, &id);
 }
+
 void FrameBuffer::SetRenderTarget(TexturePtr texture, const int attachmentPoint)
 {
     this->texture[attachmentPoint] = texture;
     Renderer::UseTexture(texture, 0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -56,6 +57,7 @@ void FrameBuffer::SetRenderTarget(TexturePtr texture, const int attachmentPoint)
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachmentPoint, GL_TEXTURE_2D, texture->GetId(), 0);
     glBindFramebuffer(GL_FRAMEBUFFER, id);
 }
+
 void FrameBuffer::AddDepthBuffer()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, id);
@@ -64,6 +66,7 @@ void FrameBuffer::AddDepthBuffer()
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 }
+
 void FrameBuffer::AddDepthBufferTexture()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, id);
@@ -77,10 +80,11 @@ void FrameBuffer::AddDepthBufferTexture()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
     glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
-    glTexImage2D (GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D (GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
 
     glFramebufferTexture2D (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture->GetId(), 0);
 }
+
 void FrameBuffer::AddRenderTarget(const int attachmentPoint)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, id);
@@ -88,17 +92,19 @@ void FrameBuffer::AddRenderTarget(const int attachmentPoint)
     texture[attachmentPoint] = TexturePtr(new Texture);
     texture[attachmentPoint]->Create();
     Renderer::UseTexture(texture[attachmentPoint], 0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachmentPoint, GL_TEXTURE_2D, texture[attachmentPoint]->GetId(), 0);
 }
+
 TexturePtr FrameBuffer::GetRenderTarget(const int attachmentPoint)
 {
     return texture[attachmentPoint];
 }
+
 TexturePtr FrameBuffer::GetDepthBuffer()
 {
     return depthTexture;
@@ -123,14 +129,17 @@ bool FrameBuffer::IsValid() const
         return false;
     return true;
 }
+
 int FrameBuffer::GetWidth() const
 {
     return width;
 }
+
 int FrameBuffer::GetHeight() const
 {
     return height;
 }
+
 unsigned int FrameBuffer::GetId() const
 {
     return id;

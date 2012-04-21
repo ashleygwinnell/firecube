@@ -11,7 +11,7 @@ bool App::Init()
 	GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
     SetTitle("FBO Example");
-    font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 10);
+    font = Renderer::GetFontPool().Create("c:\\windows\\fonts\\arial.ttf", 10);
     root = NodePtr(new Node("Root"));
     Light light;
     light.SetAmbientColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));

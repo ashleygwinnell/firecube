@@ -1,5 +1,10 @@
+#version 330
+
+out vec4 outputColor;
+smooth in vec2 texcoord;
+
 uniform sampler2D tex;
 void main()
 {
-	gl_FragColor=texture2D(tex,gl_TexCoord[0].st);	
+	outputColor = texture2D(tex,texcoord);	
 }

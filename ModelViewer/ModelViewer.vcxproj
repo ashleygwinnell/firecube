@@ -47,7 +47,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Dev\wxpropgrid-1.4.7\include;C:\Dev\wxMSW-2.8.10\lib\vc_lib\mswd;C:\Dev\wxMSW-2.8.10\include;$(VisualStudioDir)\Projects\FireCube\FireCube;C:\Dev\boost_1_46_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\wxpropgrid-1.4.7\include;C:\Dev\wxMSW-2.8.10\lib\vc_lib\mswd;C:\Dev\wxMSW-2.8.10\include;$(VisualStudioDir)\Projects\FireCube\FireCube;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;wxUSE_GUI=1;__WXMSW__;__WXDEBUG__;NOPCH;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

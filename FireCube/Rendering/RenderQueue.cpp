@@ -2,9 +2,6 @@
 #include <vector>
 #include <map>
 #include <queue>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 using namespace std;
 #include <SDL.h>
 #include <windows.h>
@@ -31,8 +28,8 @@ using namespace FireCube;
 
 void RenderQueue::Clear()
 {
-    renderJobs.clear();
-    activeLights.clear();
+	renderJobs.clear();
+	activeLights.clear();
 }
 
 void RenderQueue::AddNode(NodePtr node)
@@ -55,12 +52,12 @@ void RenderQueue::AddNode(NodePtr node)
 		job->renderParameters = node->GetRenderParameters();
 		job->transformation = node->GetWorldTransformation();		
 	}	    
-    for (vector<Light>::iterator i = node->GetLights().begin(); i != node->GetLights().end(); i++)
-    {
-        activeLights.push_back(make_pair(node->GetWorldTransformation(), *i));
-    }
-    for (vector<NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
-        AddNode(*i);
+	for (vector<Light>::iterator i = node->GetLights().begin(); i != node->GetLights().end(); i++)
+	{
+		activeLights.push_back(make_pair(node->GetWorldTransformation(), *i));
+	}
+	for (vector<NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
+		AddNode(*i);
 }
 
 void RenderQueue::AddNode(NodePtr node, CameraPtr camera)
@@ -91,6 +88,7 @@ void RenderQueue::AddNode(NodePtr node, CameraPtr camera)
 	for (vector<NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
 		AddNode(*i, camera);
 }
+
 bool RenderJobCompare(const RenderJob &job1, const RenderJob &job2)
 {
 	unsigned int id1, id2;
@@ -111,6 +109,7 @@ bool RenderJobCompare(const RenderJob &job1, const RenderJob &job2)
 	else
 		return job1.geometry < job2.geometry;
 }
+
 void RenderQueue::Sort(QueueType type)
 {	
 	sort(renderJobs[type].begin(), renderJobs[type].end(), RenderJobCompare);

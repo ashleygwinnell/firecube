@@ -4,8 +4,6 @@
 #include <iostream>
 #include <map>
 #include <queue>
-#include <boost/shared_array.hpp>
-#include <boost/weak_ptr.hpp>
 using namespace std;
 #include <windows.h>
 #include <SDL.h>
@@ -17,7 +15,7 @@ using namespace std;
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
 #include "Utils/Filesystem.h"
-#include "Utils/ResourceManager.h"
+#include "Utils/ResourcePool.h"
 #include "Math/MyMath.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Font.h"
@@ -28,13 +26,14 @@ using namespace FireCube;
 
 FT_Library  freeTypeLibrary;
 
-FontManager::FontManager()
+FontPool::FontPool()
 {
 
 }
-boost::shared_ptr<FontPage> FontManager::CreateNewPage()
+
+std::shared_ptr<FontPage> FontPool::CreateNewPage()
 {
-    boost::shared_ptr<FontPage> p(new FontPage);
+    std::shared_ptr<FontPage> p(new FontPage);
     p->tex = TexturePtr(new Texture);
     p->tex->Create();
     glBindTexture(GL_TEXTURE_2D, p->tex->GetId());
@@ -46,40 +45,44 @@ boost::shared_ptr<FontPage> FontManager::CreateNewPage()
     page.push_back(p);
     return p;
 }
-FontPtr FontManager::Create(const string &filename, int size)
+
+FontPtr FontPool::Create(const string &filename, int size)
 {
-	char pFullPathName[1024];
-	ostringstream fullPathName;
-	std::string loadfile = Filesystem::SearchForFileName(filename);
-	if (loadfile.empty())
-		return FontPtr();
-	if (GetFullPathNameA(loadfile.c_str(),1024,pFullPathName,NULL) == 0)
-		return FontPtr();
-	fullPathName << pFullPathName << ":" << size;
-	
-	map<std::string, boost::weak_ptr<Font>>::iterator i = resources.find(fullPathName.str());
-	if (i != resources.end())
-		if (!i->second.expired())
-			return i->second.lock();
-	FontPtr ret(new Font);	
-	if (ret->Load(loadfile, size))
-	{						
-		resources[fullPathName.str()] = ret;
-		return ret;
-	}
-	else	
+    char pFullPathName[1024];
+    ostringstream fullPathName;
+    std::string loadfile = Filesystem::SearchForFileName(filename);
+    if (loadfile.empty())
+        return FontPtr();
+    if (GetFullPathNameA(loadfile.c_str(), 1024, pFullPathName, nullptr) == 0)
+        return FontPtr();
+    fullPathName << pFullPathName << ":" << size;
+
+    map<std::string, std::weak_ptr<Font>>::iterator i = pool.find(fullPathName.str());
+    if (i != pool.end())
+        if (!i->second.expired())
+            return i->second.lock();
+    FontPtr ret(new Font);
+    if (ret->Load(loadfile, size))
+    {
+        pool[fullPathName.str()] = ret;
+        return ret;
+    }
+    else
         return FontPtr();
 }
+
 Font::Font()
 {
     glyph.resize(256);
     fontImpl = new FontImpl;
 }
+
 Font::~Font()
 {
     Logger::Write(Logger::LOG_INFO, "Destroying font");
     delete fontImpl;
 }
+
 bool Font::AddChar(char c)
 {
     int error;
@@ -112,6 +115,7 @@ bool Font::AddChar(char c)
 
     return true;
 }
+
 bool Font::Load(const string &name, int size)
 {
     Logger::Write(Logger::LOG_INFO, "Loading font with name:" + name);
@@ -124,13 +128,13 @@ bool Font::Load(const string &name, int size)
     error = FT_Set_Pixel_Sizes(fontImpl->face, 0, size);
     if (error)
         return false;
-    vector<boost::weak_ptr<FontPage>>::iterator p = Renderer::GetFontManager().page.begin();
+    vector<std::weak_ptr<FontPage>>::iterator p = Renderer::GetFontPool().page.begin();
     bool found = false;
-    for (; p != Renderer::GetFontManager().page.end(); p++)
+    for (; p != Renderer::GetFontPool().page.end(); p++)
     {
         if (!p->expired())
         {
-            boost::shared_ptr<FontPage> pg = p->lock();
+            std::shared_ptr<FontPage> pg = p->lock();
             int availSpace = (pg->textureSize - ((int)pg->curPos.y + size)) * pg->textureSize + (pg->textureSize - ((int)pg->curPos.x + size)) * size;
             if (availSpace >= (int)strlen(text)*size * size)
             {
@@ -143,7 +147,7 @@ bool Font::Load(const string &name, int size)
         page = (*p).lock();
     else
     {
-        page = Renderer::GetFontManager().CreateNewPage();
+        page = Renderer::GetFontPool().CreateNewPage();
     }
     glBindTexture(GL_TEXTURE_2D, page->tex->GetId());
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -155,10 +159,11 @@ bool Font::Load(const string &name, int size)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
     return true;
 }
+
 bool Font::Load(const string &name)
 {
     return Load(name, 18);

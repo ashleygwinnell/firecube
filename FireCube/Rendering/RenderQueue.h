@@ -10,15 +10,15 @@ namespace FireCube
 // Forward declarations.
 class RenderQueue;
 class Geometry;
-typedef boost::shared_ptr<Geometry> GeometryPtr;
+typedef std::shared_ptr<Geometry> GeometryPtr;
 class Material;
-typedef boost::shared_ptr<Material> MaterialPtr;
+typedef std::shared_ptr<Material> MaterialPtr;
 class RenderParameters;
 class Light;
 class Node;
-typedef boost::shared_ptr<Node> NodePtr;
+typedef std::shared_ptr<Node> NodePtr;
 class Program;
-typedef boost::shared_ptr<Program> ProgramPtr;
+typedef std::shared_ptr<Program> ProgramPtr;
 
 namespace Renderer
 {
@@ -31,20 +31,20 @@ void FIRECUBE_API Render(RenderQueue &renderQueue, const std::string &techniqueN
 class FIRECUBE_API RenderJob
 {
 public:
-    /**
-    * The geometry of this job.
-    */
-    GeometryPtr geometry;
-    
-    /**
-    * The rendering parameters of this job.
-    */
-    RenderParameters renderParameters;
+	/**
+	* The geometry of this job.
+	*/
+	GeometryPtr geometry;
+	
+	/**
+	* The rendering parameters of this job.
+	*/
+	RenderParameters renderParameters;
 
-    /**
-    * The transformation to apply to this job.
-    */
-    mat4 transformation;
+	/**
+	* The transformation to apply to this job.
+	*/
+	mat4 transformation;
 
 	/**
 	* The program used to render this job.
@@ -56,7 +56,7 @@ public:
 */
 class FIRECUBE_API RenderQueue
 {
-    friend void Renderer::Render(RenderQueue &renderQueue);
+	friend void Renderer::Render(RenderQueue &renderQueue);
 	friend void Renderer::Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
 public:
 	/**
@@ -68,23 +68,23 @@ public:
 	};
 
 
-    /**
-    * Clears the rendering queue.
-    */
-    void Clear();
-
-    /**
-    * Adds a node to the rendering queue.
-    * @param node The node to enqueue.
-    */
-    void AddNode(NodePtr node);
+	/**
+	* Clears the rendering queue.
+	*/
+	void Clear();
 
 	/**
-    * Adds a node to the rendering queue.
-    * @param node The node to enqueue.
+	* Adds a node to the rendering queue.
+	* @param node The node to enqueue.
+	*/
+	void AddNode(NodePtr node);
+
+	/**
+	* Adds a node to the rendering queue.
+	* @param node The node to enqueue.
 	* @param camera The camera used to cull this node.
-    */
-    void AddNode(NodePtr node, CameraPtr camera);
+	*/
+	void AddNode(NodePtr node, CameraPtr camera);
 
 	/**
 	* Sorts the render queue to reduce state changes.
@@ -93,8 +93,8 @@ public:
 	void Sort(QueueType type);
 
 private:	
-    std::map<QueueType, std::vector<RenderJob>> renderJobs;
-    std::vector<std::pair<mat4, Light>> activeLights;
+	std::map<QueueType, std::vector<RenderJob>> renderJobs;
+	std::vector<std::pair<mat4, Light>> activeLights;
 };
 }
 

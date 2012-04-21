@@ -4,7 +4,7 @@ public:
     void HandleInput(float t, const MappedInput &input);
     void Render(float t);
     void Update(float t);
-    void SetupLight();
+    void SetupLight(ProgramUniformsList &uniforms);
     void RenderShadowMap();
     void RenderDepth();
     bool Init();
@@ -16,6 +16,7 @@ public:
 	CameraPtr lightCamera, orthographicCamera;
 	NodeObserverCameraPtr defaultCamera;
     ProgramUniformsList programUniformsList;
-    BufferPtr vBuffer;
-    BufferPtr uvBuffer;
+	GeometryPtr quad;    
+	BufferPtr vBuffer;
+	BufferPtr uvBuffer;
 };

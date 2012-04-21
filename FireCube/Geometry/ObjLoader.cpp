@@ -3,9 +3,6 @@
 #include <map>
 #include <queue>
 #include <fstream>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 using namespace std;
 #include <SDL.h>
 #include <windows.h>
@@ -13,7 +10,7 @@ using namespace std;
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
-#include "Utils/ResourceManager.h"
+#include "Utils/ResourcePool.h"
 #include "Math/MyMath.h"
 #include "Math/BoundingBox.h"
 #include "Rendering/Texture.h"
@@ -266,9 +263,9 @@ NodePtr ObjLoader::GenerateSceneGraph()
 			if (textureName[0] == '/' || textureName[0] == '\\')
 				textureName = textureName.substr(1);
 
-			TexturePtr texture = Renderer::GetTextureManager().Create(baseDir + "\\" + textureName);
+			TexturePtr texture = Renderer::GetTexturePool().Create(baseDir + "\\" + textureName);
 			if (!texture)
-				texture = Renderer::GetTextureManager().Create(textureName);
+				texture = Renderer::GetTexturePool().Create(textureName);
 			material->SetDiffuseTexture(texture);
 		}
 		if (!i->second.normalTextureName.empty())
@@ -277,9 +274,9 @@ NodePtr ObjLoader::GenerateSceneGraph()
 			if (textureName[0] == '/' || textureName[0] == '\\')
 				textureName = textureName.substr(1);
 
-			TexturePtr texture = Renderer::GetTextureManager().Create(baseDir + "\\" + textureName);
+			TexturePtr texture = Renderer::GetTexturePool().Create(baseDir + "\\" + textureName);
 			if (!texture)
-				texture = Renderer::GetTextureManager().Create(textureName);
+				texture = Renderer::GetTexturePool().Create(textureName);
 			material->SetNormalTexture(texture);
 		}
 		generatedMaterials[i->first] = material;

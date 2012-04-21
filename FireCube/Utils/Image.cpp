@@ -2,8 +2,6 @@
 #include <vector>
 #include <map>
 #include <queue>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 #include <sstream>
 using namespace std;
 #include <SDL.h>
@@ -21,52 +19,58 @@ Image::Image() : width(0), height(0), bitsPerPixel(0)
 {
 
 }
+
 bool Image::Load(const string &filename)
 {
-    SDL_Surface *image;
-    string fname = Filesystem::SearchForFileName(filename);
-    if (fname.empty())
-        return false;
-    image = IMG_Load(fname.c_str());
-    if (image)
-    {
-        bitsPerPixel = image->format->BitsPerPixel;
-        width = image->w;
-        height = image->h;
-        data.resize(width * height * bitsPerPixel / 8);
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                for (int j = 0; j < bitsPerPixel / 8; j++)
-                {
-                    unsigned int i = y * height * bitsPerPixel / 8 + x * bitsPerPixel / 8 + j;
-                    data[i] = ((unsigned char*)(image->pixels))[y * image->pitch + x * bitsPerPixel / 8 + j];
-                }
-            }
-        }
-        SDL_FreeSurface(image);
+	SDL_Surface *image;
+	string fname = Filesystem::SearchForFileName(filename);
+	if (fname.empty())
+		return false;
+	image = IMG_Load(fname.c_str());
+	if (image)
+	{
+		bitsPerPixel = image->format->BitsPerPixel;
+		width = image->w;
+		height = image->h;
+		data.resize(width * height * bitsPerPixel / 8);
+		for (int y = 0; y < height; y++)
+		{
+			for (int x = 0; x < width; x++)
+			{
+				for (int j = 0; j < bitsPerPixel / 8; j++)
+				{
+					unsigned int i = y * height * bitsPerPixel / 8 + x * bitsPerPixel / 8 + j;
+					data[i] = ((unsigned char*)(image->pixels))[y * image->pitch + x * bitsPerPixel / 8 + j];
+				}
+			}
+		}
+		SDL_FreeSurface(image);
 
-        return true;
-    }
-    return false;
+		return true;
+	}
+	return false;
 }
+
 int Image::GetWidth() const
 {
-    return width;
+	return width;
 }
+
 int Image::GetHeight() const
 {
-    return height;
+	return height;
 }
+
 int Image::GetBitsPerPixel() const
 {
-    return bitsPerPixel;
+	return bitsPerPixel;
 }
+
 vector<unsigned char> &Image::GetPixels()
 {
-    return data;
+	return data;
 }
+
 vec4 Image::GetPixel(int x, int y) const
 {
 	if (bitsPerPixel == 8)

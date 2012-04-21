@@ -9,7 +9,7 @@ namespace FireCube
 
 // Forward declarations.
 class Node;
-typedef boost::shared_ptr<Node> NodePtr;
+typedef std::shared_ptr<Node> NodePtr;
 
 /**
 * A class representing a node observer camera.
@@ -149,7 +149,7 @@ private:
 /**
 * A shared pointer to a NodeObserverCamera.
 */
-typedef boost::shared_ptr<NodeObserverCamera> NodeObserverCameraPtr;
+typedef std::shared_ptr<NodeObserverCamera> NodeObserverCameraPtr;
 
 }
 #pragma warning(pop)

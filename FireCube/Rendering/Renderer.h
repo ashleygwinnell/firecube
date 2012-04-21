@@ -9,37 +9,37 @@ namespace FireCube
 
 // Forward declarations.
 template<class T>
-class ResourceManager;
+class ResourcePool;
 class Application;
 class Node;
-typedef boost::shared_ptr<Node> NodePtr;
+typedef std::shared_ptr<Node> NodePtr;
 class Geometry;
-typedef boost::shared_ptr<Geometry> GeometryPtr;
+typedef std::shared_ptr<Geometry> GeometryPtr;
 class RenderQueue;
 class Material;
-typedef boost::shared_ptr<Material> MaterialPtr;
+typedef std::shared_ptr<Material> MaterialPtr;
 class FrameBuffer;
-typedef boost::shared_ptr<FrameBuffer> FrameBufferPtr;
+typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
 class Shader;
-typedef ResourceManager<Shader> ShaderManager;
+typedef ResourcePool<Shader> ShaderPool;
 class Program;
-typedef boost::shared_ptr<Program> ProgramPtr;
+typedef std::shared_ptr<Program> ProgramPtr;
 class Technique;
-typedef boost::shared_ptr<Technique> TechniquePtr;
+typedef std::shared_ptr<Technique> TechniquePtr;
 class ProgramUniformsList;
 class Texture;
-typedef boost::shared_ptr<Texture> TexturePtr;
-typedef ResourceManager<Texture> TextureManager;
+typedef std::shared_ptr<Texture> TexturePtr;
+typedef ResourcePool<Texture> TexturePool;
 class Font;
-typedef boost::shared_ptr<Font> FontPtr;
-class FontManager;
+typedef std::shared_ptr<Font> FontPtr;
+class FontPool;
 class vec2;
 class vec3;
 class vec4;
 class mat3;
 class mat4;
 class Camera;
-typedef boost::shared_ptr<Camera> CameraPtr;
+typedef std::shared_ptr<Camera> CameraPtr;
 enum PrimitiveType;
 
 /**
@@ -48,45 +48,45 @@ enum PrimitiveType;
 */
 class FIRECUBE_API ShaderProperties
 {
-    friend class Technique;
+	friend class Technique;
 public:
-    ShaderProperties();
+	ShaderProperties();
 
-    /**
-    * Generates the rendering state from a material.
-    * @param mat The material to generate the state from.
-    */
-    void FromMaterial(MaterialPtr mat);
+	/**
+	* Generates the rendering state from a material.
+	* @param mat The material to generate the state from.
+	*/
+	void FromMaterial(MaterialPtr mat);
 
-    /**
-    * Sets whether directional lighting should be used.
-    * @param enable True to enable, false to disable.
-    */
-    void SetDirectionalLighting(bool enable);
+	/**
+	* Sets whether directional lighting should be used.
+	* @param enable True to enable, false to disable.
+	*/
+	void SetDirectionalLighting(bool enable);
 
-    /**
-    * Sets whether point lighting should be used.
-    * @param enable True to enable, false to disable.
-    */
-    void SetPointLighting(bool enable);
+	/**
+	* Sets whether point lighting should be used.
+	* @param enable True to enable, false to disable.
+	*/
+	void SetPointLighting(bool enable);
 
-    /**
-    * Sets whether fog should be used.
-    * @param enable True to enable, false to disable.
-    */
-    void SetFog(bool enable);
+	/**
+	* Sets whether fog should be used.
+	* @param enable True to enable, false to disable.
+	*/
+	void SetFog(bool enable);
 
-    /**
-    * Hashes the rendering state.
-    * @return An integer representing this rendering state.
-    */
-    unsigned int ToInt() const;
+	/**
+	* Hashes the rendering state.
+	* @return An integer representing this rendering state.
+	*/
+	unsigned int ToInt() const;
 private:
-    bool directionalLighting;
-    bool pointLighting;
-    bool diffuseTexture;
-    bool normalTexture;
-    bool fog;
+	bool directionalLighting;
+	bool pointLighting;
+	bool diffuseTexture;
+	bool normalTexture;
+	bool fog;
 };
 
 /**
@@ -95,36 +95,36 @@ private:
 class FIRECUBE_API RenderParameters
 {
 public:
-    /**
-    * The program used for rendering.
+	/**
+	* The program used for rendering.
 	* Can be an empty program. If so the technique is used to generate one.
-    */
-    ProgramPtr program;
+	*/
+	ProgramPtr program;
 
-    /**
-    * The technique used for rendering.
-    */
-    TechniquePtr technique;
+	/**
+	* The technique used for rendering.
+	*/
+	TechniquePtr technique;
 
-    /**
-    * Specifies whether dynamic lighting is enabled.
-    */
-    bool lighting;
+	/**
+	* Specifies whether dynamic lighting is enabled.
+	*/
+	bool lighting;
 
-    /**
-    * Specifies whether fog is enabled.
-    */
-    bool fog;
+	/**
+	* Specifies whether fog is enabled.
+	*/
+	bool fog;
 
-    /**
-    * The fog color.
-    */
-    vec4 fogColor;
+	/**
+	* The fog color.
+	*/
+	vec4 fogColor;
 
-    /**
-    * The fog density.
-    */
-    float fogDensity;
+	/**
+	* The fog density.
+	*/
+	float fogDensity;
 };
 
 /**
@@ -282,34 +282,34 @@ void FIRECUBE_API DisableVertexAttribute(int index);
 
 
 /**
-* Sets the current texture manager.
+* Sets the current texture pool.
 */
-void FIRECUBE_API SetTextureManager(TextureManager &textureManager);
+void FIRECUBE_API SetTexturePool(TexturePool &texturePool);
 
 /**
-* Gets the current texture manager.
+* Gets the current texture pool.
 */
-TextureManager FIRECUBE_API &GetTextureManager();
+TexturePool FIRECUBE_API &GetTexturePool();
 
 /**
-* Sets the current shader manager.
+* Sets the current shader pool.
 */
-void FIRECUBE_API SetShaderManager(ShaderManager &shaderManager);
+void FIRECUBE_API SetShaderPool(ShaderPool &shaderPool);
 
 /**
-* Gets the current shader manager.
+* Gets the current shader pool.
 */
-ShaderManager FIRECUBE_API &GetShaderManager();
+ShaderPool FIRECUBE_API &GetShaderPool();
 
 /**
-* Sets the current font manager.
+* Sets the current font pool.
 */
-void FIRECUBE_API SetFontManager(FontManager &fontManager);
+void FIRECUBE_API SetFontPool(FontPool &fonPool);
 
 /**
-* Gets the current font manager.
+* Gets the current font pool.
 */
-FontManager FIRECUBE_API &GetFontManager();
+FontPool FIRECUBE_API &GetFontPool();
 };
 }
 #pragma warning(pop)

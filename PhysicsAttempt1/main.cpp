@@ -27,10 +27,10 @@ int main(int argc, char *argv[])
 	app.GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
 	app.GetInputManager().AddMapping(KEY_MOUSE_LEFT_BUTTON, STATE, "Rotate");
 	app.GetInputManager().AddMapping(KEY_MOUSE_RIGHT_BUTTON, STATE, "Forward");
-    app.vShader = Renderer::GetShaderManager().Create("v.vert");
-    app.pShader = Renderer::GetShaderManager().Create("p.frag");
-    app.pShader2 = Renderer::GetShaderManager().Create("p2.frag");
-    app.font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 18);
+    app.vShader = Renderer::GetShaderPool().Create("v.vert");
+    app.pShader = Renderer::GetShaderPool().Create("p.frag");
+    app.pShader2 = Renderer::GetShaderPool().Create("p2.frag");
+    app.font = Renderer::GetFontPool().Create("c:\\windows\\fonts\\arial.ttf", 18);
     app.program = ProgramPtr(new Program);
     app.program->Create(app.vShader, app.pShader);
     app.program2 = ProgramPtr(new Program);

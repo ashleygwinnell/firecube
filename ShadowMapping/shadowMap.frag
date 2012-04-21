@@ -1,19 +1,42 @@
-uniform sampler2DShadow shadowMap;
+#version 330
+
+out vec4 outputColor;
+uniform sampler2D shadowMap;
 uniform sampler2D tex;
-varying vec4 projShadow;
-varying vec3 norm;
-uniform vec3 lightPos;
+smooth in vec4 projShadow;
+smooth in vec3 norm;
+smooth in vec3 lightDir;
+
+uniform vec4 materialAmbient;
+uniform vec4 materialDiffuse;
+uniform vec4 materialSpecular;
+uniform float materialShininess;
+smooth in vec2 texcoord;
+float CalcShadowFactor(vec4 LightSpacePos)
+{
+	vec3 ProjCoords = LightSpacePos.xyz / LightSpacePos.w;
+	vec2 UVCoords;
+	UVCoords.x = ProjCoords.x;
+	UVCoords.y = ProjCoords.y;
+	float Depth = texture(shadowMap, UVCoords).x;			
+	//if (LightSpacePos.w < 0.0) 
+	//	return 1.0;
+	if (Depth < (ProjCoords.z + 0.00005))
+		return 0.2;
+	else
+		return 1.0;
+} 
 void main()
 {
-	vec3 diffuse = gl_FrontMaterial.diffuse * gl_LightSource[0].diffuse;
-	vec3 ambient = gl_FrontMaterial.ambient * gl_LightSource[0].ambient;
-	ambient += gl_LightModel.ambient * gl_FrontMaterial.ambient;	
+	vec4 ambient = materialAmbient * vec4(0.2,0.2,0.2,1);
+	vec4 diffuse = materialDiffuse * vec4(1.0,1.0,1.0,1);
 
-	vec3 lightDir=normalize(vec3(vec4(lightPos,1.0) * gl_ModelViewMatrix));
-	float ndotl=max(dot(norm,lightDir),0.0);	
+	float ndotl=max(dot(normalize(norm),normalize(lightDir)),0.0);	
 	
-	vec3 ts=vec3(texture2D(tex,gl_TexCoord[0].st));
-	vec3 color=ambient*ts;
-	color+=ts*ndotl*diffuse*shadow2DProj(shadowMap, projShadow);	
-	gl_FragColor = vec4(color, 1.0);	
+	vec4 ts=texture2D(tex,texcoord);
+	vec4 color=ambient;	
+	float depth = CalcShadowFactor(projShadow);
+	color+=ndotl*diffuse * depth;
+	color = color * ts;	
+	outputColor = color;		
 }

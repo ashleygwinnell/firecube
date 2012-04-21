@@ -5,9 +5,6 @@
 #include <vector>
 #include <sstream>
 #include <map>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <iostream>
 #include <queue>
 #include <set>
@@ -17,7 +14,7 @@
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
 #include "Utils/Filesystem.h"
-#include "Utils/ResourceManager.h"
+#include "Utils/ResourcePool.h"
 #include "Utils/Timer.h"
 #include "Math/MyMath.h"
 #include "Math/BoundingBox.h"

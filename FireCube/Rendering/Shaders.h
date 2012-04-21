@@ -11,13 +11,13 @@ namespace FireCube
 template<class T>
 class ResourceManager;
 class Buffer;
-typedef boost::shared_ptr<Buffer> BufferPtr;
+typedef std::shared_ptr<Buffer> BufferPtr;
 class Program;
 
 /**
 * A shared pointer to a Program.
 */
-typedef boost::shared_ptr<Program> ProgramPtr;
+typedef std::shared_ptr<Program> ProgramPtr;
 
 namespace Renderer
 {
@@ -66,7 +66,7 @@ private:
 /**
 * A shared pointer to a Shader.
 */
-typedef boost::shared_ptr<Shader> ShaderPtr;
+typedef std::shared_ptr<Shader> ShaderPtr;
 
 /**
 * A shader resource manager.
@@ -240,7 +240,7 @@ private:
 /**
 * A shared pointer to a Technique.
 */
-typedef boost::shared_ptr<Technique> TechniquePtr;
+typedef std::shared_ptr<Technique> TechniquePtr;
 
 /**
 * A class storing a list of uniforms to be fed into a gpu program.

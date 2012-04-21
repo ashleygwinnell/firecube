@@ -26,6 +26,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{4ebd6c78-ede8-408b-9ade-f9f143a99717}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{3ca4d186-9e01-453f-aa66-3ecd987df8f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Rendering\Buffer.cpp">
@@ -211,9 +214,6 @@
     <ClInclude Include="Utils\Logger.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\ResourceManager.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\Timer.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -239,5 +239,28 @@
     <ClInclude Include="Geometry\Material.h">
       <Filter>Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\ResourcePool.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Assets\Shaders\debugNormals.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Assets\Shaders\debugNormals.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Assets\Shaders\default.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Assets\Shaders\default.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Assets\Shaders\font.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Assets\Shaders\font.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

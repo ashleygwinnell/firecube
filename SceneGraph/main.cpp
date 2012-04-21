@@ -18,7 +18,7 @@ bool App::Init()
     SetTitle("SceneGraph Test Application");
 	GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
-    font = Renderer::GetFontManager().Create("c:\\windows\\fonts\\arial.ttf", 18);
+    font = Renderer::GetFontPool().Create("c:\\windows\\fonts\\arial.ttf", 18);
     GeometryPtr lightMarker = GeometryGenerator::GenerateSphere(0.1f, 10, 10);
     root = NodePtr(new Node("Root"));
     Light l;
@@ -40,7 +40,7 @@ bool App::Init()
     mat->SetDiffuseColor(vec3(0.7f, 0.7f, 0.7f));
     mat->SetSpecularColor(vec3(0.3f, 0.3f, 0.3f));
     mat->SetShininess(20.0f);
-    mat->SetDiffuseTexture(Renderer::GetTextureManager().Create("earthmap1k.jpg"));
+    mat->SetDiffuseTexture(Renderer::GetTexturePool().Create("earthmap1k.jpg"));
     NodePtr n(new Node("Earth"));
     n->SetParent(root);
     n->SetGeometry(GeometryGenerator::GenerateSphere(2.0f, 32, 32, mat));

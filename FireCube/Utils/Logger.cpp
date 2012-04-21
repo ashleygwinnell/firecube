@@ -4,8 +4,6 @@
 #include <queue>
 #include <fstream>
 #include <iostream>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 using namespace std;
 
 #include "Utils/utils.h"
@@ -23,6 +21,7 @@ void Logger::Init(const string &filename)
 {
     file.open(filename.c_str(), ios::out | ios::trunc);
 }
+
 void Logger::Write(LogLevel level, const string &str)
 {
     if (level < minLevel)
@@ -35,15 +34,18 @@ void Logger::Write(LogLevel level, const string &str)
     if (outputToCout)
         cout << levelNames[level] << ": " << str << endl;
 }
+
 void FIRECUBE_API Logger::SetLogLevel(Logger::LogLevel level)
 {
     minLevel = level;
 }
+
 void FIRECUBE_API Logger::SetLogOutput(bool file, bool con)
 {
     outputToFile = file;
     outputToCout = con;
 }
+
 void Logger::Close()
 {
     file.close();

@@ -14,8 +14,8 @@ class FIRECUBE_API Camera
 {
 public:
 	/**
-    * Constructs a camera.    
-    */
+	* Constructs a camera.    
+	*/
 	Camera();
 
 	/**
@@ -112,7 +112,7 @@ protected:
 /**
 * A shared pointer to a Camera.
 */
-typedef boost::shared_ptr<Camera> CameraPtr;
+typedef std::shared_ptr<Camera> CameraPtr;
 
 }
 #pragma warning(pop)
