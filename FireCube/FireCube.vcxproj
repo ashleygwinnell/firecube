@@ -55,10 +55,12 @@
     <ClInclude Include="Application\Input.h" />
     <ClInclude Include="Dependencies\tinyxml.h" />
     <ClInclude Include="FireCube.h" />
+    <ClInclude Include="Geometry\ColladaLoader.h" />
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\GeometryGenerator.h" />
+    <ClInclude Include="Geometry\m3dsLoader.h" />
     <ClInclude Include="Geometry\Material.h" />
-    <ClInclude Include="Geometry\ModelLoaders.h" />
+    <ClInclude Include="Geometry\ObjLoader.h" />
     <ClInclude Include="Math\BoundingBox.h" />
     <ClInclude Include="Math\Frustum.h" />
     <ClInclude Include="Math\mat3.h" />

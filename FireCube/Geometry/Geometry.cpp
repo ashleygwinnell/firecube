@@ -51,14 +51,16 @@ void Geometry::CalculateNormals()
 {
 	normal.resize(vertex.size());
 	std::fill(normal.begin(), normal.end(), vec3(0, 0, 0));
-
+	
 	for (unsigned int f = 0; f < face.size(); f++)
 	{
+		// Calculate face normals.
 		vec3 v1 = vertex[face[f].v[1]] - vertex[face[f].v[0]];
 		vec3 v2 = vertex[face[f].v[2]] - vertex[face[f].v[0]];
 		vec3 n = Cross(v1, v2);
 		face[f].normal = n;
 		face[f].normal.Normalize();
+		// Add this normal to the three vertex normals forming this face.
 		normal[face[f].v[0]] += n;
 		normal[face[f].v[1]] += n;
 		normal[face[f].v[2]] += n;
@@ -67,6 +69,7 @@ void Geometry::CalculateNormals()
 	{
 		normal[n].Normalize();
 	}
+	// Load the normals to the normal buffer.
 	normalBuffer = BufferPtr(new Buffer);
 	normalBuffer->Create();
 	normalBuffer->LoadData(&normal[0], sizeof(vec3)*normal.size(), STATIC);
@@ -139,6 +142,11 @@ void Geometry::CalculateTangents()
 
 void Geometry::CreateHardNormals()
 {
+	// Makes this geometry have hard normals.
+	// This is done by duplicating the vertices and setting each vertex normal to
+	// be equal to the face normal it belongs to.
+	if (primitiveType != TRIANGLES)
+		return;
 	vector<vec3> originalVertices = vertex;
 	vector<vec2> originalDiffuseUV = diffuseUV;
 	vector<Face> originalFaces = face;
@@ -157,9 +165,11 @@ void Geometry::CreateHardNormals()
 		vec3 v1 = originalVertices[originalFaces[i].v[1]];
 		vec3 v2 = originalVertices[originalFaces[i].v[2]];
 		vec3 n = Cross(v1 - v0, v2 - v0).Normalize();
+		// Add three vertices for each face.
 		vertex.push_back(v0);
 		vertex.push_back(v1);
 		vertex.push_back(v2);
+		// Duplicate the face normal three times.
 		normal.push_back(n);
 		normal.push_back(n);
 		normal.push_back(n);
@@ -201,7 +211,7 @@ void Geometry::CreateHardNormals()
 		currentIndex += 3;
 		face.push_back(f);
 	}
-	CopyFacesToIndexBuffer();
+	CopyFacesToIndices();
 	SetVertexCount(indices.size());
 	SetPrimitiveCount(indices.size() / 3);
 	CalculateBoundingBox();
@@ -334,6 +344,7 @@ GeometryPtr Geometry::Reduce() const
 			vec3 v = vertex[geometry->face[i].v[j]];
 			bool found = false;
 			unsigned int k;
+			// Find another vertex which is equal to v.
 			for (k = 0; k < geometry->vertex.size(); k++)
 			{
 				if ((vertex[k] - v).Length2() == 0.0f)
@@ -341,30 +352,21 @@ GeometryPtr Geometry::Reduce() const
 					found = true;
 					break;
 				}
-			}
+			}			
 			if (found == false)
 			{
+				// If none found, add v to the vertices list.
 				geometry->vertex.push_back(v);
 				geometry->face[i].v[j] = geometry->vertex.size() - 1;
 			}
 			else
 			{
+				// Otherwise use the previously added vertex.
 				geometry->face[i].v[j] = k;
 			}
 		}
 	}
 	return geometry;
-}
-
-void Geometry::ApplyTransformation(const mat4 &transform)
-{
-	for (unsigned int i = 0; i < vertex.size(); i++)
-	{
-		vertex[i] = vertex[i] * transform;
-	}
-	vertexBuffer->LoadData(&vertex[0], sizeof(vec3)*vertex.size(), STATIC);
-
-	CalculateNormals();
 }
 
 BoundingBox Geometry::GetBoundingBox() const
@@ -456,7 +458,7 @@ unsigned int Geometry::GetVertexCount() const
 	return vertexCount;
 }
 
-void Geometry::CopyFacesToIndexBuffer()
+void Geometry::CopyFacesToIndices()
 {
 	indices.resize(face.size() * 3);
 	for (unsigned int i = 0; i < face.size(); i++)

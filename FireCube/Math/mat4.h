@@ -188,9 +188,10 @@ public:
 
 	/**
 	* Creates a rotation matrix from an axis angle.
-	* @param rot The axis angle(x,y,z,a).
+	* @param axis The axis of rotation.
+	* @param angle Then angle (in radians).
 	*/
-	void Rotate(const vec4 &rot);
+	void Rotate(const vec3 &axis, float angle);
 
 	/**
 	* Transposes the matrix.

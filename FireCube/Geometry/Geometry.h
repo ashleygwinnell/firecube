@@ -105,69 +105,79 @@ public:
 	* Calculates the bounding box of this model.
 	*/
 	void CalculateBoundingBox();
+	
 	/**
 	* Returns the bounding box of this model.
 	*/
 	BoundingBox GetBoundingBox() const;
-	/**
-	* Applies a transformation to the model vertices.
-	* @param transform The transformation matrix.
-	*/
-	void ApplyTransformation(const mat4 &transform);
+		
 	/**
 	* Reduces the geometry by removing duplicated vertices.
 	* @return The reduced geometry.
 	*/
 	GeometryPtr Reduce() const;
+	
 	/**
 	* Calculates face and vertex normals.
 	*/
 	void CalculateNormals();
+	
 	/**
 	* Calculates tangents and bitangents.
 	*/
 	void CalculateTangents();
+	
 	/**
 	* Creates hard normals for the mesh.
 	*/
 	void CreateHardNormals();
+	
 	/**
-	* Updates the buffers.
+	* Updates the vertex buffers.
+	* Copies the local copies of the vertices attributes (position, normals, etc) and indices
+	* to the appropriate vertex buffers in this geometry.
 	*/
 	void UpdateBuffers();
+	
 	/**
 	* Returns the vertices of this geometry.
 	*/
 	std::vector<vec3> &GetVertices();
+	
 	/**
 	* Returns the normals of this geometry.
 	*/
 	std::vector<vec3> &GetNormals();
+	
 	/**
 	* Returns the normals of this geometry.
 	*/
 	std::vector<vec3> &GetTangents();
+	
 	/**
 	* Returns the normals of this geometry.
 	*/
 	std::vector<vec3> &GetBitangents();
+	
 	/**
 	* Returns the faces of this geometry.
 	*/
 	std::vector<Face> &GetFaces();
+	
 	/**
 	* Returns the diffuse uv of this geometry.
 	*/
 	std::vector<vec2> &GetDiffuseUV();
+	
 	/**
 	* Returns the indices of this geometry.
 	*/
 	std::vector<unsigned int> &GetIndices();
 	
 	/**
-	* Copies the triangles defined in the faces of this geometry to the index buffer.
+	* Copies the triangles defined in the faces of this geometry to the indices array.
 	*/
-	void CopyFacesToIndexBuffer();
+	void CopyFacesToIndices();
 
 	/**
 	* Returns the material of this geometry.

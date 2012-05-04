@@ -20,7 +20,7 @@ using namespace std;
 #include "Dependencies/tinyxml.h"
 #include "Scene/Light.h"
 #include "Scene/Node.h"
-#include "Geometry/ModelLoaders.h"
+#include "Geometry/ObjLoader.h"
 
 using namespace FireCube;
 
@@ -61,6 +61,7 @@ void ObjLoader::Load(const string &filename, ModelLoadingOptions options)
 		objects.erase("default");
 	this->options = options;
 }
+
 void ObjLoader::ParseVertexLine(const string &line)
 {
 	istringstream iss(line.substr(2));
@@ -70,6 +71,7 @@ void ObjLoader::ParseVertexLine(const string &line)
 	iss >> vertex.z;
 	vertices.push_back(vertex);
 }
+
 void ObjLoader::ParseTexCoordLine(const string &line)
 {
 	istringstream iss(line.substr(3));
@@ -79,6 +81,7 @@ void ObjLoader::ParseTexCoordLine(const string &line)
 	uv.y = 1.0f - uv.y;
 	texCoords.push_back(uv);
 }
+
 void ObjLoader::ParseNormalLine(const string &line)
 {
 	istringstream iss(line.substr(3));
@@ -89,6 +92,7 @@ void ObjLoader::ParseNormalLine(const string &line)
 	normal.Normalize();
 	normals.push_back(normal);
 }
+
 void ObjLoader::ParseFaceLine(const string &line)
 {	
 	Face f;
@@ -104,6 +108,7 @@ void ObjLoader::ParseFaceLine(const string &line)
 	ParseFaceEntry(line.substr(i1), f.v[2], f.t[2], f.n[2], f.hasTextureCoordinates, f.hasNormal);
 	currentFaces->push_back(f);
 }
+
 void ObjLoader::ParseFaceEntry(const string &entry, unsigned int &v, unsigned int &t, unsigned int &n, bool &hasTextureCoordinates, bool &hasNormal)
 {
 	int i1 = entry.find_first_of('/');
@@ -141,6 +146,7 @@ void ObjLoader::ParseFaceEntry(const string &entry, unsigned int &v, unsigned in
 	else
 		hasTextureCoordinates = false;
 }
+
 void ObjLoader::ParseObjectLine(const string &line)
 {
 	string name = line.substr(2);
@@ -155,6 +161,7 @@ void ObjLoader::ParseObjectLine(const string &line)
 	}
 
 }
+
 void ObjLoader::ParseUseMtlLine(const string &line)
 {	
 	lastMaterial = line.substr(7);
@@ -162,10 +169,12 @@ void ObjLoader::ParseUseMtlLine(const string &line)
 		currentObject->materialFaces[lastMaterial] = vector<Face>();
 	currentFaces = &currentObject->materialFaces[lastMaterial];
 }
+
 void ObjLoader::ParseMtlLibLine(const string &line)
 {
 	ParseMaterialFile(line.substr(7));	
 }
+
 void ObjLoader::ParseMaterialFile(const string &filename)
 {	
 	ifstream ifs(baseDir + "\\" + filename);
@@ -191,12 +200,14 @@ void ObjLoader::ParseMaterialFile(const string &filename)
 			ParseNormalTextureMap(line);		
 	}
 }
+
 void ObjLoader::ParseNewMtlLine(const string &line)
 {
 	string name = line.substr(7);
 	materials[name] = Material();
 	currentMaterial = &materials[name];
 }
+
 void ObjLoader::ParseAmbientColorLine(const string &line)
 {
 	istringstream iss(line.substr(3));	
@@ -204,6 +215,7 @@ void ObjLoader::ParseAmbientColorLine(const string &line)
 	iss >> currentMaterial->ambientColor.y;
 	iss >> currentMaterial->ambientColor.z;	 
 }
+
 void ObjLoader::ParseDiffuseColorLine(const string &line)
 {
 	istringstream iss(line.substr(3));	
@@ -211,6 +223,7 @@ void ObjLoader::ParseDiffuseColorLine(const string &line)
 	iss >> currentMaterial->diffuseColor.y;
 	iss >> currentMaterial->diffuseColor.z;	 
 }
+
 void ObjLoader::ParseSpecularColorLine(const string &line)
 {
 	istringstream iss(line.substr(3));	
@@ -218,10 +231,12 @@ void ObjLoader::ParseSpecularColorLine(const string &line)
 	iss >> currentMaterial->specularColor.y;
 	iss >> currentMaterial->specularColor.z;	 
 }
+
 void ObjLoader::ParseDiffuseTextureMap(const string &line)
 {
 	currentMaterial->diffuseTextureName = line.substr(7);
 }
+
 void ObjLoader::ParseNormalTextureMap(const string &line)
 {
 	if (line.substr(0,4) == "bump")
@@ -229,11 +244,13 @@ void ObjLoader::ParseNormalTextureMap(const string &line)
 	else if (line.substr(0,8) == "map_bump")
 		currentMaterial->normalTextureName = line.substr(9);
 }
+
 void ObjLoader::ParseShininessLine(const string &line)
 {
 	istringstream iss(line.substr(3));
 	iss >> currentMaterial->shininess;
 }
+
 string ObjLoader::ExtractDirectory(const string &filename)
 {
 	int i = filename.find_last_of('\\');
@@ -241,6 +258,7 @@ string ObjLoader::ExtractDirectory(const string &filename)
 		return "";
 	return filename.substr(0, i);
 }
+
 NodePtr ObjLoader::GenerateSceneGraph()
 {
 	NodePtr root(new Node);
@@ -349,6 +367,7 @@ NodePtr ObjLoader::GenerateSceneGraph()
 	}
 	return root;
 }
+
 ObjLoader::Material::Material()
 {
 	ambientColor.Set(0.0f, 0.0f, 0.0f);
@@ -356,14 +375,17 @@ ObjLoader::Material::Material()
 	specularColor.Set((0.0f, 0.0f, 0.0f));
 	shininess = 100.0f;
 }
+
 ObjLoader::MapKey::MapKey()
 {
 
 }
+
 ObjLoader::MapKey::MapKey(unsigned int vv, unsigned int vt, unsigned int vn) : v(vv), t(vt), n(vn)
 {
 
 }
+
 bool ObjLoader::MapKey::operator < (const MapKey &other) const
 {
 	if (v < other.v)

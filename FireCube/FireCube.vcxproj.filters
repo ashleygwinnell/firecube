@@ -199,9 +199,6 @@
     <ClInclude Include="Geometry\GeometryGenerator.h">
       <Filter>Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Geometry\ModelLoaders.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="Dependencies\tinyxml.h">
       <Filter>Dependencies</Filter>
     </ClInclude>
@@ -241,6 +238,15 @@
     </ClInclude>
     <ClInclude Include="Utils\ResourcePool.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\ColladaLoader.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\m3dsLoader.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\ObjLoader.h">
+      <Filter>Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

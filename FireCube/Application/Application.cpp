@@ -119,19 +119,23 @@ void Application::Run()
 	Logger::Write(Logger::LOG_INFO, string("Entering main loop..."));
 	while (running)
 	{
+		// Get time passed since last frame.
 		deltaTime = (float) timer.Passed();
 		timer.Update();
 		while(SDL_PollEvent(&event))
 		{
 			if (event.type == SDL_KEYDOWN)
-			{				
+			{		
+				// Get the mapping between SDL key code and the engine's key enum.
 				map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
 				if (k != keyMap.end())
 				{					
+					// Check if previously pressed and update the key state.
 					map<int, bool>::iterator i = keyState.find(event.key.keysym.sym);
 					bool previouslyPressed = i != keyState.end() && i->second == true;
 					keyState[event.key.keysym.sym] = true;
 					SDL_Keymod keyMod = SDL_GetModState();
+					// Check for key modifiers.
 					KeyModifier modifier = MODIFIER_NONE;
 					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
 					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? MODIFIER_RIGHT_SHIFT : MODIFIER_NONE));
@@ -139,12 +143,14 @@ void Application::Run()
 					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
 					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
 					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
+					// Update the input manager's state.
 					inputManager.SetRawKeyState(k->second, true, previouslyPressed, modifier);
 					
 				}
 			}
 			else if (event.type == SDL_KEYUP)
 			{
+				// Check for key modifiers.
 				SDL_Keymod keyMod = SDL_GetModState();
 				KeyModifier modifier = MODIFIER_NONE;
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
@@ -153,15 +159,19 @@ void Application::Run()
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
+				// Get the mapping between SDL key code and the engine's key enum.
 				map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
 				if (k != keyMap.end())
 				{
+					// Update the input manager's state
 					inputManager.SetRawKeyState(k->second, false, true, modifier);
+					// Update the key state.
 					keyState[event.key.keysym.sym] = false;
 				}
 			}
 			else if (event.type == SDL_MOUSEBUTTONDOWN)
 			{					
+				// Check for key modifiers.
 				SDL_Keymod keyMod = SDL_GetModState();
 				KeyModifier modifier = MODIFIER_NONE;
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
@@ -170,17 +180,21 @@ void Application::Run()
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
+				// Get the mapping between SDL key code and the engine's key enum.
 				map<int, Key>::iterator k = mouseMap.find(event.button.button);
 				if (k != mouseMap.end())
 				{
+					// Check if previously pressed and update the key state.
 					map<int, bool>::iterator i = mouseState.find(event.button.button);
 					bool previouslyPressed = i != mouseState.end() && i->second == true;
+					// Update the input manager's state.
 					inputManager.SetRawKeyState(k->second, true, previouslyPressed, modifier);
 					mouseState[event.button.button] = true;
 				}
 			}
 			else if (event.type == SDL_MOUSEBUTTONUP)
 			{
+				// Check for key modifiers.
 				SDL_Keymod keyMod = SDL_GetModState();
 				KeyModifier modifier = MODIFIER_NONE;
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
@@ -189,26 +203,32 @@ void Application::Run()
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
+				// Get the mapping between SDL key code and the engine's key enum.
 				map<int, Key>::iterator k = mouseMap.find(event.button.button);
 				if (k != mouseMap.end())
 				{
+					// Update the input manager's state.
 					inputManager.SetRawKeyState(k->second, false, true, modifier);
+					// Update the key state.
 					mouseState[event.button.button] = false;
 				}
 			}
 			else if (event.type == SDL_MOUSEMOTION)
 			{
+				// Set the corresponding analog values of the input manager (mouse location).
 				inputManager.SetRawAnalogValue(MOUSE_AXIS_X_RELATIVE, (float) event.motion.xrel);
 				inputManager.SetRawAnalogValue(MOUSE_AXIS_Y_RELATIVE, (float) event.motion.yrel);
 				inputManager.SetRawAnalogValue(MOUSE_AXIS_X_ABSOLUTE, (float) event.motion.x);
 				inputManager.SetRawAnalogValue(MOUSE_AXIS_Y_ABSOLUTE, (float) event.motion.y);
 			}
 			else if (event.type == SDL_MOUSEWHEEL)
-			{				
+			{	
+				// Set the corresponding analog values of the input manager (mouse wheel).
 				inputManager.SetRawAnalogValue(MOUSE_WHEEL_Y_RELATIVE, ((float) event.wheel.y) / 60.0f);
 			}
 			else if (event.type == SDL_VIDEORESIZE)
 			{
+				// Update the renderer's viewport with the new window size.
 				width = event.resize.w;
 				height = event.resize.h;
 				Renderer::SetViewport(0, 0, event.resize.w, event.resize.h);
@@ -217,8 +237,11 @@ void Application::Run()
 				running = false;
 		}		
 		ResetNumberOfTrianglesRendered();
+		// Dispatch input to all input listeners.
 		inputManager.DispatchInput(deltaTime);
+		// Update the scene.
 		Update(deltaTime);
+		// Render the scene.
 		Render(deltaTime);
 		SDL_GL_SwapWindow(mainWindow);
 		frameCount += 1.0f;

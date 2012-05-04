@@ -267,26 +267,26 @@ void mat4::RotateZ(float ang)
 	rot.m[5] = cs;
 	(*this) = (*this) * rot;
 }
-void mat4::Rotate(const vec4 &rot)
+void mat4::Rotate(const vec3 &axis, float angle)
 {
 	mat4 rotm = mat4::identity;
-	float c = cos(rot.w);
-	float s = sin(rot.w);
+	float c = cos(angle);
+	float s = sin(angle);
 	float t = 1.0f - c;
-	rotm.m[0] = c + rot.x * rot.x * t;
-	rotm.m[5] = c + rot.y * rot.y * t;
-	rotm.m[10] = c + rot.z * rot.z * t;
+	rotm.m[0] = c + axis.x * axis.x * t;
+	rotm.m[5] = c + axis.y * axis.y * t;
+	rotm.m[10] = c + axis.z * axis.z * t;
 
-	float tmp1 = rot.x * rot.y * t;
-	float tmp2 = rot.z * s;
+	float tmp1 = axis.x * axis.y * t;
+	float tmp2 = axis.z * s;
 	rotm.m[4] = tmp1 + tmp2;
 	rotm.m[1] = tmp1 - tmp2;
-	tmp1 = rot.x * rot.z * t;
-	tmp2 = rot.y * s;
+	tmp1 = axis.x * axis.z * t;
+	tmp2 = axis.y * s;
 	rotm.m[8] = tmp1 - tmp2;
 	rotm.m[2] = tmp1 + tmp2;
-	tmp1 = rot.y * rot.z * t;
-	tmp2 = rot.x * s;
+	tmp1 = axis.y * axis.z * t;
+	tmp2 = axis.x * s;
 	rotm.m[9] = tmp1 + tmp2;
 	rotm.m[6] = tmp1 - tmp2;
 

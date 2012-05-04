@@ -137,7 +137,7 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GenerateBox(const vec3 &size, Materi
 	ret->SetPrimitiveType(TRIANGLES);
 	ret->SetPrimitiveCount(ret->GetFaces().size());
 	ret->SetVertexCount(ret->GetFaces().size() * 3);
-	ret->CopyFacesToIndexBuffer();
+	ret->CopyFacesToIndices();
 
 	ret->SetMaterial(material);
 	ret->CalculateBoundingBox();
@@ -212,7 +212,7 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GenerateSphere (float radius, unsign
 	ret->SetPrimitiveType(TRIANGLES);
 	ret->SetPrimitiveCount(ret->GetFaces().size());
 	ret->SetVertexCount(ret->GetFaces().size() * 3);
-	ret->CopyFacesToIndexBuffer();
+	ret->CopyFacesToIndices();
 
 	ret->SetMaterial(material);
 	ret->CalculateBoundingBox();
@@ -252,7 +252,7 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GeneratePlane(const vec2 &size, Mate
 	ret->SetPrimitiveType(TRIANGLES);
 	ret->SetPrimitiveCount(ret->GetFaces().size());
 	ret->SetVertexCount(ret->GetFaces().size() * 3);
-	ret->CopyFacesToIndexBuffer();
+	ret->CopyFacesToIndices();
 
 	ret->SetMaterial(material);
 	ret->CalculateBoundingBox();
