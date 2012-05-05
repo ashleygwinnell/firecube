@@ -43,10 +43,12 @@ inline void mat4::Identity()
 	m[0] = m[5] = m[10] = m[15] = 1;
 	m[1] = m[2] = m[3] = m[4] = m[6] = m[7] = m[8] = m[9] = m[11] = m[12] = m[13] = m[14] = 0;
 }
+
 inline void mat4::Zero()
 {
 	m[0] = m[1] = m[2] = m[3] = m[4] = m[5] = m[6] = m[7] = m[8] = m[9] = m[10] = m[11] = m[12] = m[13] = m[14] = m[15] = 0;
 }
+
 inline mat4 mat4::operator=(const mat4 &src)
 {
 	memcpy(m, src.m, sizeof(float) * 16);
@@ -74,6 +76,7 @@ inline mat4 mat4::operator+(const mat4 &src) const
 	ret.m[15] = m[15] + src.m[15];
 	return ret;
 }
+
 inline mat4 mat4::operator-(const mat4 &src) const
 {
 	mat4 ret;
@@ -95,6 +98,7 @@ inline mat4 mat4::operator-(const mat4 &src) const
 	ret.m[15] = m[15] - src.m[15];
 	return ret;
 }
+
 inline void mat4::operator+=(const mat4 &src)
 {
 	m[0] += src.m[0];
@@ -114,6 +118,7 @@ inline void mat4::operator+=(const mat4 &src)
 	m[14] += src.m[14];
 	m[15] += src.m[15];
 }
+
 inline void mat4::operator-=(const mat4 &src)
 {
 	m[0] -= src.m[0];
@@ -133,6 +138,7 @@ inline void mat4::operator-=(const mat4 &src)
 	m[14] -= src.m[14];
 	m[15] -= src.m[15];
 }
+
 mat4 mat4::operator*(float src) const
 {
 	mat4 ret;
@@ -154,14 +160,17 @@ mat4 mat4::operator*(float src) const
 	ret.m[15] = m[15] * src;
 	return ret;
 }
+
 vec3 mat4::operator*(const vec3 &src) const
 {
 	return vec3(src.x * m[0] + src.y * m[4] + src.z * m[8] + m[12], src.x * m[1] + src.y * m[5] + src.z * m[9] + m[13], src.x * m[2] + src.y * m[6] + src.z * m[10] + m[14]);
 }
+
 vec4 mat4::operator*(const vec4 &src) const
 {
 	return vec4(src.x * m[0] + src.y * m[4] + src.z * m[8] + src.w * m[12], src.x * m[1] + src.y * m[5] + src.z * m[9] + src.w * m[13], src.x * m[2] + src.y * m[6] + src.z * m[10] + src.w * m[14], src.x * m[3] + src.y * m[7] + src.z * m[11] + src.w * m[15]);
 }
+
 mat4 mat4::operator*(const mat4 &src) const
 {
 	mat4 ret;
@@ -187,6 +196,7 @@ mat4 mat4::operator*(const mat4 &src) const
 
 	return ret;
 }
+
 void mat4::operator*=(const mat4 &src)
 {
 	mat4 tmp = *this;
@@ -210,6 +220,7 @@ void mat4::operator*=(const mat4 &src)
 	m[14] = tmp.m[2] * src.m[12] + tmp.m[6] * src.m[13] + tmp.m[10] * src.m[14] + tmp.m[14] * src.m[15];
 	m[15] = tmp.m[3] * src.m[12] + tmp.m[7] * src.m[13] + tmp.m[11] * src.m[14] + tmp.m[15] * src.m[15];
 }
+
 void mat4::Translate(float x, float y, float z)
 {
 	mat4 trans = mat4::identity;
@@ -218,10 +229,12 @@ void mat4::Translate(float x, float y, float z)
 	trans.m[14] = z;
 	(*this) = (*this) * trans;
 }
+
 void mat4::Translate(const vec3 &t)
 {
 	Translate(t.x, t.y, t.z);
 }
+
 void mat4::Scale(float x, float y, float z)
 {
 	mat4 scale = mat4::identity;
@@ -230,6 +243,7 @@ void mat4::Scale(float x, float y, float z)
 	scale.m[10] = z;
 	(*this) = (*this) * scale;
 }
+
 void mat4::RotateX(float ang)
 {
 	mat4 rot = mat4::identity;
@@ -243,6 +257,7 @@ void mat4::RotateX(float ang)
 	(*this) = (*this) * rot;
 
 }
+
 void mat4::RotateY(float ang)
 {
 	mat4 rot = mat4::identity;
@@ -255,6 +270,7 @@ void mat4::RotateY(float ang)
 	rot.m[10] = cs;
 	(*this) = (*this) * rot;
 }
+
 void mat4::RotateZ(float ang)
 {
 	mat4 rot = mat4::identity;
@@ -267,6 +283,7 @@ void mat4::RotateZ(float ang)
 	rot.m[5] = cs;
 	(*this) = (*this) * rot;
 }
+
 void mat4::Rotate(const vec3 &axis, float angle)
 {
 	mat4 rotm = mat4::identity;
@@ -292,6 +309,7 @@ void mat4::Rotate(const vec3 &axis, float angle)
 
 	(*this) = (*this) * rotm;
 }
+
 void mat4::Transpose()
 {
 	mat4 t = *this;
@@ -311,6 +329,7 @@ void mat4::Transpose()
 	m[13] = t.m[7];
 	m[14] = t.m[11];
 }
+
 void mat4::Inverse()
 {
 	mat4 &mm = *this;
@@ -344,6 +363,7 @@ void mat4::Inverse()
 
 	*this = ret;
 }
+
 vec3 mat4::GetDirection() const
 {
 	vec3 dr(-m[2], -m[6], -m[10]);
@@ -358,6 +378,7 @@ vec3 mat4::GetPosition() const
 	ps.z = (m[8] * m[12] + m[9] * m[13] + m[10] * m[14]);
 	return ps;
 }
+
 void mat4::GeneratePerspective(float fov, float aspect, float nearz, float farz)
 {
 	float f = (float)(cos(fov / 180.0f * PI / 2) / sin(fov / 180.0f * PI / 2));
@@ -369,6 +390,7 @@ void mat4::GeneratePerspective(float fov, float aspect, float nearz, float farz)
 	m[14] = (float)((2 * farz * nearz) / (nearz - farz));
 	m[15] = 0;
 }
+
 void mat4::GenerateOrthographic(float left, float right, float bottom, float top, float zNear, float zFar)
 {
 	float tx = -(right + left) / (right - left);
@@ -383,6 +405,7 @@ void mat4::GenerateOrthographic(float left, float right, float bottom, float top
 	m[14] = tz;
 
 }
+
 void mat4::LookAt(vec3 pos, vec3 at, vec3 up)
 {
 	mat4 trans = mat4::identity;
@@ -421,6 +444,7 @@ void mat4::LookAt(vec3 pos, vec3 at, vec3 up)
 	trans.Translate(-pos.x, -pos.y, -pos.z);
 	(*this) *= trans;
 }
+
 vec3 mat4::ExtractEulerAngles() const
 {
 	vec3 rotation;
@@ -437,6 +461,7 @@ vec3 mat4::ExtractEulerAngles() const
 	}	
 	return rotation;
 }
+
 mat3 mat4::ToMat3() const
 {
 	mat3 ret;

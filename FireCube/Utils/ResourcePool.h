@@ -47,7 +47,8 @@ public:
 		std::string loadfile = Filesystem::SearchForFileName(filename);
 		if (loadfile.empty())
 			return std::shared_ptr<T>();
-		if (GetFullPathNameA(loadfile.c_str(),1024,pFullPathName,NULL) == 0)
+		// Get the full path name of the given file
+		if (GetFullPathNameA(loadfile.c_str(), 1024, pFullPathName, nullptr) == 0)
 			return std::shared_ptr<T>();
 		fullPathName = pFullPathName;
 		map<std::string, std::weak_ptr<T>>::iterator i = pool.find(fullPathName);

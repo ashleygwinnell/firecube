@@ -94,6 +94,8 @@ vec3 BoundingBox::GetMax() const
 
 void BoundingBox::Transform(const mat4 &mat)
 {
+	// Apply the transformation to the eight corners of the bounding box
+	// and create a new one containing all of these
 	float w=GetWidth();
 	float h=GetHeight();
 	float d=GetDepth();

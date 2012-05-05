@@ -18,6 +18,7 @@ Frustum::Frustum()
 {
 	
 }
+
 void Frustum::Extract(const mat4 &viewMatrix, const mat4 &projectionMatrix)
 {
 	mat4 viewProj = projectionMatrix * viewMatrix;
@@ -95,13 +96,17 @@ void Frustum::Extract(const mat4 &viewMatrix, const mat4 &projectionMatrix)
 	distance /= length;
 	nearPlane = Plane(normal, distance);
 }
+
 bool Frustum::Contains(const BoundingBox &boundingBox) const
 {
 	const Plane *planes[6] = {&rightPlane, &leftPlane, &bottomPlane, &topPlane, &farPlane, &nearPlane};
 	vec3 min = boundingBox.GetMin();
 	vec3 max = boundingBox.GetMax();
+
+	// Iterate over all frustum planes
 	for (unsigned int i = 0; i < 6; i++)
 	{
+		// Check each corner of the bounding box against this plane
 		if (planes[i]->GetDistance(vec3(min.x, min.y, min.z)) > 0.0f) continue;
 		if (planes[i]->GetDistance(vec3(max.x, min.y, min.z)) > 0.0f) continue;
 		if (planes[i]->GetDistance(vec3(min.x, max.y, min.z)) > 0.0f) continue;
@@ -109,9 +114,10 @@ bool Frustum::Contains(const BoundingBox &boundingBox) const
 		if (planes[i]->GetDistance(vec3(min.x, min.y, max.z)) > 0.0f) continue;
 		if (planes[i]->GetDistance(vec3(max.x, min.y, max.z)) > 0.0f) continue;
 		if (planes[i]->GetDistance(vec3(min.x, max.y, max.z)) > 0.0f) continue;
-		if (planes[i]->GetDistance(vec3(max.x, max.y, max.z)) > 0.0f) continue;		
+		if (planes[i]->GetDistance(vec3(max.x, max.y, max.z)) > 0.0f) continue;
+		
+		// If all corners are behind this plane then the bounding box must be out side the frustum
 		return false;
 	}
 	return true;
-	
 }

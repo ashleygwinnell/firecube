@@ -29,6 +29,7 @@ mat3 FireCube::operator*(const mat3 &a, float b)
 	ret.m[8] = a.m[8] * b;
 	return ret;
 }
+
 mat3 FireCube::operator*(float a, const mat3 &b)
 {
 	mat3 ret;
@@ -44,10 +45,12 @@ mat3 FireCube::operator*(float a, const mat3 &b)
 	return ret;
 
 }
+
 vec3 FireCube::operator*(const mat3 &a, const vec3 &b)
 {
 	return vec3(b.x * a.m[0] + b.y * a.m[3] + b.z * a.m[6], b.x * a.m[1] + b.y * a.m[4] + b.z * a.m[7], b.x * a.m[2] + b.y * a.m[5] + b.z * a.m[8]);
 }
+
 vec3 FireCube::operator*(const vec3 &a, const mat3 &b)
 {
 	return vec3(a.x * b.m[0] + a.y * b.m[3] + a.z * b.m[6], a.x * b.m[1] + a.y * b.m[4] + a.z * b.m[7], a.x * b.m[2] + a.y * b.m[5] + a.z * b.m[8]);
@@ -69,6 +72,7 @@ inline mat3::mat3(float v11, float v21, float v31, // first column
 	m[7] = v23;
 	m[8] = v33;
 }
+
 inline mat3::mat3(const vec3 & v1, // first column
 				  const vec3 & v2,
 				  const vec3 & v3)
@@ -91,15 +95,18 @@ inline void mat3::Identity()
 	m[0] = m[4] = m[8] = 1;
 	m[1] = m[2] = m[3] = m[5] = m[6] = m[7] = 0;
 }
+
 inline void mat3::Zero()
 {
 	m[0] = m[1] = m[2] = m[3] = m[4] = m[5] = m[6] = m[7] = m[8] = 0;
 }
+
 inline mat3 mat3::operator=(const mat3 &src)
 {
 	memcpy(m, src.m, sizeof(float) * 9);
 	return (*this);
 }
+
 inline mat3 mat3::operator+(const mat3 &src) const
 {
 	mat3 ret;
@@ -114,6 +121,7 @@ inline mat3 mat3::operator+(const mat3 &src) const
 	ret.m[8] = m[8] + src.m[8];
 	return ret;
 }
+
 inline mat3 mat3::operator-(const mat3 &src) const
 {
 	mat3 ret;
@@ -128,6 +136,7 @@ inline mat3 mat3::operator-(const mat3 &src) const
 	ret.m[8] = m[8] - src.m[8];
 	return ret;
 }
+
 inline void mat3::operator+=(const mat3 &src)
 {
 	m[0] += src.m[0];
@@ -140,6 +149,7 @@ inline void mat3::operator+=(const mat3 &src)
 	m[7] += src.m[7];
 	m[8] += src.m[8];
 }
+
 inline void mat3::operator-=(const mat3 &src)
 {
 	m[0] -= src.m[0];
@@ -152,6 +162,7 @@ inline void mat3::operator-=(const mat3 &src)
 	m[7] -= src.m[7];
 	m[8] -= src.m[8];
 }
+
 mat3 mat3::operator*(const mat3 &src) const
 {
 	mat3 ret;
@@ -169,6 +180,7 @@ mat3 mat3::operator*(const mat3 &src) const
 
 	return ret;
 }
+
 void mat3::operator*=(const mat3 &src)
 {
 	mat3 tmp = *this;
@@ -184,6 +196,7 @@ void mat3::operator*=(const mat3 &src)
 	m[7] = tmp.m[1] * src.m[6] + tmp.m[4] * src.m[7] + tmp.m[7] * src.m[8];
 	m[8] = tmp.m[2] * src.m[6] + tmp.m[5] * src.m[7] + tmp.m[8] * src.m[8];
 }
+
 void mat3::Scale(float x, float y, float z)
 {
 	mat3 scale;
@@ -192,6 +205,7 @@ void mat3::Scale(float x, float y, float z)
 	scale.m[8] = z;
 	(*this) = (*this) * scale;
 }
+
 void mat3::RotateX(float ang)
 {
 	mat3 rot;
@@ -205,6 +219,7 @@ void mat3::RotateX(float ang)
 	(*this) = (*this) * rot;
 
 }
+
 void mat3::RotateY(float ang)
 {
 	mat3 rot;
@@ -217,6 +232,7 @@ void mat3::RotateY(float ang)
 	rot.m[8] = cs;
 	(*this) = (*this) * rot;
 }
+
 void mat3::RotateZ(float ang)
 {
 	mat3 rot;
@@ -229,6 +245,7 @@ void mat3::RotateZ(float ang)
 	rot.m[4] = cs;
 	(*this) = (*this) * rot;
 }
+
 void mat3::Transpose()
 {
 	mat3 t = *this;
@@ -241,6 +258,7 @@ void mat3::Transpose()
 	m[6] = t.m[2];
 	m[7] = t.m[5];
 }
+
 void mat3::Inverse()
 {
 	mat3 &mm = *this;
@@ -263,11 +281,13 @@ void mat3::Inverse()
 
 	*this = ret;
 }
+
 vec3 mat3::GetDir() const
 {
 	vec3 dr(-m[2], -m[5], -m[8]);
 	return dr;
 }
+
 mat4 mat3::ToMat4() const
 {
 	mat4 ret = mat4::identity;
@@ -286,6 +306,7 @@ mat4 mat3::ToMat4() const
 
 	return ret;
 }
+
 static inline vec3 FireCube::proj(const vec3 & v1, const vec3 & v2)
 {
 	return v1.Dot(v2) * v1 / v1.Length2();
@@ -293,6 +314,7 @@ static inline vec3 FireCube::proj(const vec3 & v1, const vec3 & v2)
 
 inline void mat3::Orthonormalize()
 {
+	// Gram–Schmidt orthonormalization process.
 	vec3 u1(operator()(0, 0), operator()(1, 0), operator()(2, 0));
 	vec3 u2(operator()(0, 1), operator()(1, 1), operator()(2, 1));
 	vec3 u3(operator()(0, 2), operator()(1, 2), operator()(2, 2));
@@ -324,6 +346,7 @@ inline void mat3::Orthonormalize()
 		this->Identity();
 	}
 }
+
 inline bool mat3::Sensible() const
 {
 	for (unsigned i = 0 ; i < 9 ; ++i)
@@ -333,6 +356,7 @@ inline bool mat3::Sensible() const
 	}
 	return true;
 }
+
 inline vec3 mat3::GetCol(unsigned int i) const
 {
 	const unsigned int o = i * 3;
@@ -346,6 +370,7 @@ inline void mat3::SetCol(unsigned int i, const vec3 & col)
 	m[o + 1] = col[1];
 	m[o + 2] = col[2];
 }
+
 vec3 mat3::ExtractEulerAngles() const
 {
 	vec3 rotation;

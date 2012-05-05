@@ -33,51 +33,6 @@ using namespace std;
 
 using namespace FireCube;
 
-void Light::SetType(LightType type)
-{
-	this->type = type;
-}
-
-LightType Light::GetType() const
-{
-	return type;
-}
-
-void Light::SetAmbientColor(const vec4 &color)
-{
-	ambientColor = color;
-}
-
-vec4 Light::GetAmbientColor() const
-{
-	return ambientColor;
-}
-
-void Light::SetDiffuseColor(const vec4 &color)
-{
-	diffuseColor = color;
-}
-
-vec4 Light::GetDiffuseColor() const
-{
-	return diffuseColor;
-}
-
-void Light::SetSpecularColor(const vec4 &color)
-{
-	specularColor = color;
-}
-
-vec4 Light::GetSpecularColor() const
-{
-	return specularColor;
-}
-
-bool Light::operator == (const Light &other) const
-{
-	return ambientColor == other.ambientColor && diffuseColor == other.diffuseColor && specularColor == other.specularColor && type == other.type;
-}
-
 Node::Node() : parent(nullptr)
 {
 	rotation = mat4::identity;
@@ -274,6 +229,7 @@ void Node::Render()
 NodePtr Node::AddChild(NodePtr node)
 {
 	children.push_back(node);
+	// If the node has a parent, remove it from the parent's children list
 	if (node->GetParent())
 		node->GetParent()->RemoveChild(node);
 	node->parent = this;
@@ -308,12 +264,14 @@ NodePtr Node::GetChild(const string &name)
 NodePtr Node::RemoveChild(NodePtr node)
 {
 	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	{
 		if ((*i) == node)
 		{
 			children.erase(i);
 			SetBoundingBoxChanged();
 			return node;
 		}
+	}
 	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 	{
 		NodePtr ret = (*i)->RemoveChild(node);

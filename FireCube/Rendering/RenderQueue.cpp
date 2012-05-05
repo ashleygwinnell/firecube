@@ -91,6 +91,7 @@ void RenderQueue::AddNode(NodePtr node, CameraPtr camera)
 
 bool RenderJobCompare(const RenderJob &job1, const RenderJob &job2)
 {
+	// Sort by program then by texture and lastly by geometry	
 	unsigned int id1, id2;
 	id1 = job1.program->GetId() * 256;
 	id2 = job2.program->GetId() * 256;

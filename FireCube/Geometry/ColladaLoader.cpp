@@ -50,12 +50,12 @@ ColladaLoader::~ColladaLoader()
 bool ColladaLoader::Load(ModelLoadingOptions options)
 {
 	xmlDocument.LoadFile();
-	// Get the root element.
+	// Get the root element
 	TiXmlElement *e = GetChildElement(&xmlDocument, "COLLADA");
 	if (e == nullptr)
 		return false;
 
-	// Only Collada version 1.4 is supported.
+	// Only Collada version 1.4 is supported
 	string version = e->Attribute("version");
 	if (version.substr(0, 3) == "1.4")
 		ReadLibraries(e);
@@ -66,7 +66,7 @@ bool ColladaLoader::Load(ModelLoadingOptions options)
 
 void ColladaLoader::ReadLibraries(TiXmlNode *parent)
 {
-	// Parse the libraries in this Collada file.
+	// Parse the libraries in this Collada file
 	TiXmlNode *node;
 	TiXmlElement *element;
 	for (node = parent->FirstChild(); node != nullptr; node = node->NextSibling())
@@ -131,13 +131,13 @@ void ColladaLoader::ReadImageLibrary(TiXmlNode *parent)
 		if (node->Type() == TiXmlNode::ELEMENT)
 		{
 			element = node->ToElement();
-			// Parse child elements of type "image".
+			// Parse child elements of type "image"
 			if (element->ValueStr() == "image")
 			{
-				// Read it's id.
+				// Read it's id
 				string id = element->Attribute("id");
 				imageLibrary[id] = Image();
-				// Parse this image element.
+				// Parse this image element
 				ReadImage(element, imageLibrary[id]);
 			}
 		}
@@ -153,7 +153,7 @@ void ColladaLoader::ReadImage(TiXmlNode *parent, Image &img)
 		if (node->Type() == TiXmlNode::ELEMENT)
 		{
 			element = node->ToElement();
-			// Read the image's file name.
+			// Read the image's file name
 			if (element->ValueStr() == "init_from")
 			{
 				img.initFrom = element->GetText();
@@ -170,14 +170,14 @@ void ColladaLoader::ReadMaterialLibrary(TiXmlNode *parent)
 	{
 		if (node->Type() == TiXmlNode::ELEMENT)
 		{
-			// Parse child elements of type "material".
+			// Parse child elements of type "material"
 			element = node->ToElement();
 			if (element->ValueStr() == "material")
 			{
-				// Read it's id.
+				// Read it's id
 				string id = element->Attribute("id");
 				materialLibrary[id] = Material();
-				// Read the child elements describing this material.
+				// Read the child elements describing this material
 				ReadMaterial(element, materialLibrary[id]);
 			}
 		}
@@ -192,7 +192,7 @@ void ColladaLoader::ReadMaterial(TiXmlNode *parent, Material &mat)
 	{
 		if (node->Type() == TiXmlNode::ELEMENT)
 		{
-			// Read the effect associated with this material.
+			// Read the effect associated with this material
 			element = node->ToElement();
 			if (element->ValueStr() == "instance_effect")
 			{
@@ -211,14 +211,14 @@ void ColladaLoader::ReadEffectLibrary(TiXmlNode *parent)
 	{
 		if (node->Type() == TiXmlNode::ELEMENT)
 		{
-			// Parse child elements of type "effect".
+			// Parse child elements of type "effect"
 			element = node->ToElement();
 			if (element->ValueStr() == "effect")
 			{
-				// Read it's id.
+				// Read it's id
 				string id = element->Attribute("id");
 				effectLibrary[id] = Effect();
-				// Parse this effect element.
+				// Parse this effect element
 				ReadEffect(element, effectLibrary[id]);
 			}
 		}
@@ -227,7 +227,7 @@ void ColladaLoader::ReadEffectLibrary(TiXmlNode *parent)
 
 void ColladaLoader::ReadEffect(TiXmlNode *parent, Effect &effect)
 {
-	// For now, only the profile common is supported in effect elements.
+	// For now, only the profile common is supported in effect elements
 	TiXmlNode *node;
 	TiXmlElement *element;
 	for (node = parent->FirstChild(); node != nullptr; node = node->NextSibling())
@@ -251,10 +251,10 @@ void ColladaLoader::ReadEffectProfileCommon(TiXmlNode *parent, Effect &effect)
 		{
 			element = node->ToElement();
 			if (element->ValueStr() == "technique")
-				ReadEffectProfileCommon(element, effect); // Just descend into this element.
+				ReadEffectProfileCommon(element, effect); // Just descend into this element
 			else if (element->ValueStr() == "newparam")
 			{
-				// Read a param of this effect and associate it with it's sid.
+				// Read a param of this effect and associate it with it's sid
 				string sid = element->Attribute("sid");
 				effect.effectParams[sid] = EffectParam();
 				ReadEffectParam(element, effect.effectParams[sid]);
@@ -281,11 +281,11 @@ void ColladaLoader::ReadEffectProfileCommon(TiXmlNode *parent, Effect &effect)
 				ReadEffectProfileCommon(element, effect);
 			}
 			else if (element->ValueStr() == "ambient")
-				ReadEffectColor(element, effect.ambientColor, effect.ambientSampler); // Read the ambient color (and/or texture).
+				ReadEffectColor(element, effect.ambientColor, effect.ambientSampler); // Read the ambient color (and/or texture)
 			else if (element->ValueStr() == "diffuse")
-				ReadEffectColor(element, effect.diffuseColor, effect.diffuseSampler); // Read the diffuse color (and/or texture).
+				ReadEffectColor(element, effect.diffuseColor, effect.diffuseSampler); // Read the diffuse color (and/or texture)
 			else if (element->ValueStr() == "specular")
-				ReadEffectColor(element, effect.specularColor, effect.specularSampler); // Read the specular color (and/or texture).
+				ReadEffectColor(element, effect.specularColor, effect.specularSampler); // Read the specular color (and/or texture)
 			else if (element->ValueStr() == "shininess") // Read the shininess value of this effect
 				ReadEffectFloat(element, effect.shininess);
 		}
@@ -326,7 +326,7 @@ void ColladaLoader::ReadEffectParam(TiXmlNode *parent, EffectParam &effectParam)
 void ColladaLoader::ReadEffectColor(TiXmlNode *parent, vec4 &color, Sampler &sampler)
 {
 	// Reads a color of some lighting term (ambient, diffuse, ...)
-	// The color can be an actual color and/or a texture.
+	// The color can be an actual color and/or a texture
 	TiXmlNode *node;
 	TiXmlElement *element;
 	for (node = parent->FirstChild(); node != nullptr; node = node->NextSibling())
@@ -334,17 +334,17 @@ void ColladaLoader::ReadEffectColor(TiXmlNode *parent, vec4 &color, Sampler &sam
 		if (node->Type() == TiXmlNode::ELEMENT)
 		{
 			element = node->ToElement();
-			// Parse child elements of type "color" which contains RGBA values.
+			// Parse child elements of type "color" which contains RGBA values
 			if (element->ValueStr() == "color")
 			{
 				string data = element->GetText();
 				istringstream iss(data);
 				iss >> color.x >> color.y >> color.z >> color.w;
 			}
-			// Parse child elements of type "texture".
+			// Parse child elements of type "texture"
 			else if (element->ValueStr() == "texture")
 			{
-				// Read the sampler's name and the texture coordinate set.				
+				// Read the sampler's name and the texture coordinate set		
 				sampler.name = element->Attribute("texture");
 				sampler.uvCoords = element->Attribute("texcoord");
 			}
@@ -380,7 +380,7 @@ void ColladaLoader::ReadGeometryLibrary(TiXmlNode *parent)
 		if (node->Type() == TiXmlNode::ELEMENT)
 		{
 			element = node->ToElement();
-			// Read all geometries.
+			// Read all geometries
 			if (element->ValueStr() == "geometry")
 			{
 				string id = element->Attribute("id");
@@ -404,7 +404,7 @@ void ColladaLoader::ReadGeometry(TiXmlNode *parent, Geometry &geometry)
 		if (node->Type() == TiXmlNode::ELEMENT)
 		{
 			element = node->ToElement();
-			// Read the mesh of this geometry.
+			// Read the mesh of this geometry
 			if (element->ValueStr() == "mesh")
 				ReadMesh(element, geometry.mesh);
 		}
@@ -421,24 +421,24 @@ void ColladaLoader::ReadMesh(TiXmlNode *parent, Mesh &mesh)
 		if (node->Type() == TiXmlNode::ELEMENT)
 		{
 			element = node->ToElement();
-			// Read a source element which specifies a piece of data.
+			// Read a source element which specifies a piece of data
 			if (element->ValueStr() == "source")
 			{
 				string id = element->Attribute("id");
 				sources[id] = Source();
 				ReadSource(element, sources[id]);
 			}
-			// Read the vertices of this mesh.
+			// Read the vertices of this mesh
 			else if (element->ValueStr() == "vertices")
 			{
 				ReadVertexData(element, mesh);
 			}
-			// Read a triangles list.
+			// Read a triangles list
 			else if (element->ValueStr() == "triangles")
 			{
 				ReadTriangles(element, mesh);
 			}
-			// Read a polygon list.
+			// Read a polygon list
 			else if (element->ValueStr() == "polylist")
 			{
 				ReadPolylist(element, mesh);
@@ -456,7 +456,7 @@ void ColladaLoader::ReadSource(TiXmlNode *parent, Source &source)
 		if (node->Type() == TiXmlNode::ELEMENT)
 		{
 			element = node->ToElement();
-			// Read a float array.
+			// Read a float array
 			if (element->ValueStr() == "float_array")
 			{
 				ReadDataArray(element, source.dataArray);
@@ -465,7 +465,7 @@ void ColladaLoader::ReadSource(TiXmlNode *parent, Source &source)
 				ReadSource(element, source);
 			else if (element->ValueStr() == "accessor")
 			{
-				// Read the accessor of this source which specifies an access pattern to this source.
+				// Read the accessor of this source which specifies an access pattern to this source
 				ReadAccessor(element, source.accessor);
 			}
 		}
@@ -493,9 +493,9 @@ void ColladaLoader::ReadAccessor(TiXmlNode *parent, Accessor &accesor)
 {
 	TiXmlNode *node;
 	TiXmlElement *element = parent->ToElement();	
-	// count specifies the number of "data units".
-	// stride specifies the number of elements regarded as one "data unit". stride should be >= number of params in the accessor.
-	// offset specifies an offset into the data array.
+	// count specifies the number of "data units"
+	// stride specifies the number of elements regarded as one "data unit". stride should be >= number of params in the accessor
+	// offset specifies an offset into the data array
 	if (element->QueryIntAttribute("count", &accesor.count) != TIXML_SUCCESS)
 		return;
 	
@@ -515,7 +515,7 @@ void ColladaLoader::ReadAccessor(TiXmlNode *parent, Accessor &accesor)
 			if (element->ValueStr() == "param")
 			{								
 				const char *name = element->Attribute("name");				 
-				if (name == nullptr || *name == '\0') // If param has no "name" attribute or is empty, just skip this offset.
+				if (name == nullptr || *name == '\0') // If param has no "name" attribute or is empty, just skip this offset
 				{
 					currentOffset++;
 				}
@@ -533,7 +533,7 @@ void ColladaLoader::ReadVertexData(TiXmlNode *parent, Mesh &mesh)
 	TiXmlNode *node;
 	TiXmlElement *element = parent->ToElement();
 	mesh.vertexId = element->Attribute("id");
-	// This element should have an "input" element with a "POSITION" semantic.
+	// This element should have an "input" element with a "POSITION" semantic
 	for (node = parent->FirstChild(); node != nullptr; node = node->NextSibling())
 	{
 		if (node->Type() == TiXmlNode::ELEMENT)
@@ -549,7 +549,7 @@ void ColladaLoader::ReadVertexData(TiXmlNode *parent, Mesh &mesh)
 
 void ColladaLoader::ReadInputChannel(TiXmlNode *parent, vector<InputChannel> &inputChannels)
 {
-	// An input channel maps streams of data to their logical meaning (normals, uv, ...).
+	// An input channel maps streams of data to their logical meaning (normals, uv, ...)
 	TiXmlNode *node;
 	TiXmlElement *element = parent->ToElement();
 	inputChannels.push_back(InputChannel());
@@ -578,7 +578,7 @@ void ColladaLoader::ReadInputChannel(TiXmlNode *parent, vector<InputChannel> &in
 
 void ColladaLoader::ReadTriangles(TiXmlNode *parent, Mesh &mesh)
 {
-	// Each triangle element is a list of trianlges sharing a single material.
+	// Each triangle element is a list of trianlges sharing a single material
 	TiXmlNode *node;
 	TiXmlElement *element = parent->ToElement();
 
@@ -591,7 +591,7 @@ void ColladaLoader::ReadTriangles(TiXmlNode *parent, Mesh &mesh)
 	subMesh.numPrimtives = count;
 	subMesh.primitiveType = PRIMITIVE_TRIANGLES;
 
-	// Read all the input channels for this sub mesh and then it's triangles indices.
+	// Read all the input channels for this sub mesh and then it's triangles indices
 	for (node = parent->FirstChild(); node != nullptr; node = node->NextSibling())
 	{
 		if (node->Type() == TiXmlNode::ELEMENT)
@@ -607,7 +607,7 @@ void ColladaLoader::ReadTriangles(TiXmlNode *parent, Mesh &mesh)
 
 void ColladaLoader::ReadPolylist(TiXmlNode *parent, Mesh &mesh)
 {
-	// Each poly list element is a list of polygons sharing a single material.
+	// Each poly list element is a list of polygons sharing a single material
 	TiXmlNode *node;
 	TiXmlElement *element = parent->ToElement();
 
@@ -620,7 +620,7 @@ void ColladaLoader::ReadPolylist(TiXmlNode *parent, Mesh &mesh)
 	subMesh.numPrimtives = count;
 	subMesh.primitiveType = PRIMITIVE_POLYLIST;
 
-	// Read all the input channels for this sub mesh, the vertices count for each polygon and it's indices.
+	// Read all the input channels for this sub mesh, the vertices count for each polygon and it's indices
 	for (node = parent->FirstChild(); node != nullptr; node = node->NextSibling())
 	{
 		if (node->Type() == TiXmlNode::ELEMENT)
@@ -710,14 +710,14 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 	vector<int> indices;
 	int offset = 1;
 	int vertexOffset = 0;
-	// Determine the number of indices which belonbg to a single vertex.
+	// Determine the number of indices which belong to a single vertex
 	for (unsigned int i = 0; i < primInputChannels.size(); i++)
 	{
 		offset = max(offset, primInputChannels[i].offset + 1);
 		if (primInputChannels[i].type == INPUT_VERTEX)
 			vertexOffset = primInputChannels[i].offset;
 	}
-	// Allocate space for the indices.
+	// Allocate space for the indices
 	int expectedIndicesCount = 0;
 	if (subMesh.primitiveType == PRIMITIVE_TRIANGLES)
 		expectedIndicesCount = count * 3;
@@ -730,7 +730,7 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 
 	indices.reserve(expectedIndicesCount * offset);
 
-	// Read all the indices.
+	// Read all the indices
 	istringstream iss(element->GetText());
 	while (!iss.eof())
 	{
@@ -738,7 +738,7 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 		iss >> idx;
 		indices.push_back(idx);
 	}
-	// Resolve all the source for each input channel.
+	// Resolve all the source for each input channel
 	for (unsigned int i = 0; i < mesh.inputChannels.size(); i++)
 	{
 		if (mesh.inputChannels[i].source == nullptr)
@@ -755,7 +755,7 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 		}
 	}
 	vector<int>::iterator idx = indices.begin();
-	// Iterate over all primitives.
+	// Iterate over all primitives
 	for (int i = 0; i < count; i++)
 	{
 		int pointCount = 0;
@@ -768,10 +768,10 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 			Logger::Write(Logger::LOG_ERROR, "Error in Collada loader, polygons with more than 3 vertices are not implemented yet");
 			continue;
 		}
-		// Iterate over each vertex in the primitive.
+		// Iterate over each vertex in the primitive
 		for (int j = 0; j < pointCount; j++)
 		{
-			// Create the indices array belonging to this vertex.
+			// Create the indices array belonging to this vertex
 			int ind[15];
 			for (int o = 0; o < offset; o++)
 			{
@@ -779,19 +779,19 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 				idx++;
 			}
 			
-			// Hash the vertex.
+			// Hash the vertex
 			unsigned int h = MurmurHash2(ind, offset * 4, 0x1234);
 			map<unsigned int, unsigned int>::iterator iter = tempMap.find(h);
 			if (iter == tempMap.end())
 			{
 				for (unsigned int k = 0; k < mesh.inputChannels.size(); k++)
 				{
-					// Read all the vertex data from the sources and store them in their appropriate arrays in the mesh.
+					// Read all the vertex data from the sources and store them in their appropriate arrays in the mesh
 					GetDataFromChannel(mesh.inputChannels[k], ind[vertexOffset], mesh);
 				}
 				for (unsigned int k = 0; k < primInputChannels.size(); k++)
 				{
-					// Read all the vertex data from the sources and store them in their appropriate arrays in the mesh.
+					// Read all the vertex data from the sources and store them in their appropriate arrays in the mesh
 					GetDataFromChannel(primInputChannels[k], ind[primInputChannels[k].offset], mesh);
 				}
 				tempMap[h] = mesh.vertices.size() - 1;
@@ -807,9 +807,9 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 void ColladaLoader::GetDataFromChannel(InputChannel &ic, int index, Mesh &mesh)
 {
 	// This functions is responsible to read data from a source and apply the input semantic on it, that is
-	// storing it in the appropriate array.
+	// storing it in the appropriate array
 
-	// TODO: handle input of type "vertex" correctly (they point to the vertices element).
+	// TODO: handle input of type "vertex" correctly (they point to the vertices element)
 	if (ic.type == INPUT_VERTEX)
 		return;
 
@@ -835,7 +835,7 @@ void ColladaLoader::GetDataFromChannel(InputChannel &ic, int index, Mesh &mesh)
 
 void ColladaLoader::ReadSceneLibrary(TiXmlNode *parent)
 {
-	// Read the scene graph.
+	// Read the scene graph
 	TiXmlNode *node;
 	TiXmlElement *element;
 	for (node = parent->FirstChild(); node != nullptr; node = node->NextSibling())
@@ -867,7 +867,7 @@ void ColladaLoader::ReadSceneNode(TiXmlNode *parent, Node *node)
 			element = tnode->ToElement();
 			if (element->ValueStr() == "node")
 			{
-				// Create a new node.
+				// Create a new node
 				Node *n = new Node();
 				n->id = element->Attribute("id");
 				n->name = element->Attribute("name");
@@ -887,18 +887,18 @@ void ColladaLoader::ReadSceneNode(TiXmlNode *parent, Node *node)
 			if (element->ValueStr() == "instance_node")
 			{				
 				node->nodeInstances.push_back(NodeInstance());
-				string url = element->Attribute("url"); // Read the id of the node this node instance is referring to.
+				string url = element->Attribute("url"); // Read the id of the node this node instance is referring to
 				node->nodeInstances.back().url = url.substr(1);
 			}
 			else if (element->ValueStr() == "instance_geometry")
 			{
-				string url = element->Attribute("url"); // Read the id of the geometry this geometry instance is referring to.
+				string url = element->Attribute("url"); // Read the id of the geometry this geometry instance is referring to
 				GeometryInstance gi;
 				gi.url = url.substr(1);
 				ReadNodeGeometryInstance(element, gi);
 				node->geometryInstances.push_back(gi);
 			}
-			// Read the transformations of this node.
+			// Read the transformations of this node
 			else if (element->ValueStr() == "lookat")
 				ReadTransformation(element, node);
 			else if (element->ValueStr() == "rotate")
@@ -930,8 +930,8 @@ void ColladaLoader::ReadNodeGeometryInstance(TiXmlNode *parent, GeometryInstance
 				ReadNodeGeometryInstance(element, gi);
 			else if (element->ValueStr() == "instance_material")
 			{
-				string symbol = element->Attribute("symbol"); // The symbolic name of the material as referenced in the geometry element.
-				string target = element->Attribute("target"); // The actual name of the material (as it appears in the material library).
+				string symbol = element->Attribute("symbol"); // The symbolic name of the material as referenced in the geometry element
+				string target = element->Attribute("target"); // The actual name of the material (as it appears in the material library)
 				gi.materialInstance[symbol] = MaterialInstance();
 				MaterialInstance &materialInstance = gi.materialInstance[symbol];
 				materialInstance.materialName = target.substr(1);
@@ -954,14 +954,14 @@ void ColladaLoader::ReadMaterialVertexInputBinding(TiXmlNode *parent, MaterialIn
 			element = tnode->ToElement();
 			if (element->ValueStr() == "bind_vertex_input")
 			{
-				// This element connects between an effect vertex input and a geometry vertex input.
+				// This element connects between an effect vertex input and a geometry vertex input
 				// For example the effect might have input for normal texture coordinates which it calls "TEXCOORD_NORMAL"
-				// and the geometry might define it's normal texture coordinates in the TEXCOORD semantic with "set" equals to 2.
+				// and the geometry might define it's normal texture coordinates in the TEXCOORD semantic with "set" equals to 2
 				InputSemanticEntry is;
-				string s = element->Attribute("semantic"); // Read the effect parameter to connect.
-				string n = element->Attribute("input_semantic"); // Read the vertex input semantic.
+				string s = element->Attribute("semantic"); // Read the effect parameter to connect
+				string n = element->Attribute("input_semantic"); // Read the vertex input semantic
 				is.type = SemanticToInputType(n);
-				if (element->QueryIntAttribute("input_set", &is.set) != TIXML_SUCCESS) // Read the vertex input semantic set.
+				if (element->QueryIntAttribute("input_set", &is.set) != TIXML_SUCCESS) // Read the vertex input semantic set
 					is.set = -1;
 				materialInstance.inputMap[s] = is;
 			}
@@ -980,7 +980,7 @@ void ColladaLoader::ReadScene(TiXmlNode *parent)
 		if (tnode->Type() == TiXmlNode::ELEMENT)
 		{
 			element = tnode->ToElement();
-			// Read the root node of the scene graph.
+			// Read the root node of the scene graph
 			if (element->ValueStr() == "instance_visual_scene")
 			{
 				string url = element->Attribute("url");
@@ -995,7 +995,7 @@ void ColladaLoader::ReadScene(TiXmlNode *parent)
 
 void ColladaLoader::ReadTransformation(TiXmlNode *parent, Node *node)
 {
-	// Reads a single transformation.
+	// Reads a single transformation
 	TiXmlElement *element = parent->ToElement();
 	Transform t;
 	if (element->ValueStr() == "lookat")
@@ -1163,7 +1163,7 @@ mat4 ColladaLoader::GetTransformMatrix(vector<Transform> &transformations)
 void ColladaLoader::ApplyMaterialInstanceSemanticMapping(Sampler &sampler, MaterialInstance &materialInstance)
 {
 	// Applies the semantic mapping between texture coordinates in an effect
-	// and texture coordinates defines in a geometry.
+	// and texture coordinates defines in a geometry
 	map<string, InputSemanticEntry>::iterator iter = materialInstance.inputMap.find(sampler.uvCoords);
 	sampler.uvId = -1;
 	if (iter != materialInstance.inputMap.end())
@@ -1175,7 +1175,7 @@ void ColladaLoader::ApplyMaterialInstanceSemanticMapping(Sampler &sampler, Mater
 
 string ColladaLoader::GetTextureFileNameFromSampler(Effect &effect, Sampler &sampler)
 {
-	// A sampler points to a surface param in an effect which points to an image in the image library.
+	// A sampler points to a surface param in an effect which points to an image in the image library
 	string cur = sampler.name;
 	map<string, EffectParam>::iterator i;
 	while ((i = effect.effectParams.find(cur)) != effect.effectParams.end())
@@ -1193,7 +1193,7 @@ string ColladaLoader::GetTextureFileNameFromSampler(Effect &effect, Sampler &sam
 
 string ColladaLoader::FixFileName(string &filename)
 {
-	// Removes "file://" and replaces "%20" with spaces.
+	// Removes "file://" and replaces "%20" with spaces
 	string::size_type i = 0;
 	string file = filename;
 	while ((file[i] == '.') || (file[i] == '/'))
@@ -1215,7 +1215,7 @@ string ColladaLoader::FixFileName(string &filename)
 
 FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 {	
-	// This function converts a given Collada node to the engine's Node class.
+	// This function converts a given Collada node to the engine's Node class
 
 	// Allocate a new node.
 	FireCube::NodePtr ret(new FireCube::Node(node->name));
@@ -1234,7 +1234,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 	ret->SetScale(scale);
 	ret->SetMatrixTransformation(transformation);
 
-	// Iterate over all geometry instances in this node.
+	// Iterate over all geometry instances in this node
 	// In Collada terms, each mesh can have a group of triangles with different materials.
 	// We translate it to the engine's world by creating a node for the geometry and then creating a child node
 	// for each group of triangles with a given material and make it point to the generated engine's Geometry class.
@@ -1250,7 +1250,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 		ret->AddChild(geomNode);
 		Mesh &mesh = geom.mesh;               
 		
-		// Flip vertices, normals, tangents and bitangents if needed.
+		// Flip vertices, normals, tangents and bitangents if needed
 		vector<vec3> vertices = mesh.vertices;
 		for (unsigned int j = 0; j < vertices.size(); j++)
 		{
@@ -1326,7 +1326,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 		}
 		*/
 
-		// Iterate over every sub mesh and create a Geometry and a Node for it.
+		// Iterate over every sub mesh and create a Geometry and a Node for it
 		unsigned int vertexIndex = 0;
 		for (unsigned int j = 0; j < mesh.subMeshes.size(); j++)
 		{
@@ -1337,14 +1337,14 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 			FireCube::GeometryPtr geometry(new FireCube::Geometry);
 			SubMesh &subMesh = mesh.subMeshes[j];
 
-			// Use the material instance to resolve the material name of this sub mesh.
+			// Use the material instance to resolve the material name of this sub mesh
 			map<string, MaterialInstance>::iterator iter = gi.materialInstance.find(subMesh.material);
 			MaterialInstance *materialInstance = nullptr;
 			if (iter != gi.materialInstance.end())
 				materialInstance = &iter->second;
 			Material &mat = materialLibrary[materialInstance->materialName];
 			Effect &effect = effectLibrary[mat.effect];
-			// Add the newly created node as a child of the geometry node.
+			// Add the newly created node as a child of the geometry node
 			geomNode->AddChild(surfaceNode);
 			surfaceNode->SetGeometry(geometry);
 			geometry->GetVertices() = vertices;
@@ -1375,7 +1375,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 			
 			if (materialInstance)
 			{
-				// Resolve the set number of the texture coordinates associated with each sampler.
+				// Resolve the set number of the texture coordinates associated with each sampler
 				ApplyMaterialInstanceSemanticMapping(effect.ambientSampler, *materialInstance);
 				ApplyMaterialInstanceSemanticMapping(effect.diffuseSampler, *materialInstance);
 				ApplyMaterialInstanceSemanticMapping(effect.specularSampler, *materialInstance);
@@ -1389,7 +1389,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 				else
 				{
 					// If the set number was not specified by the material instance try to get it from the texture
-					// coordinates name of the sampler.
+					// coordinates name of the sampler
 					string::iterator s = effect.diffuseSampler.uvCoords.begin();
 					while (s != effect.diffuseSampler.uvCoords.end() && (*s < '0' || *s > '9'))
 						s++;
@@ -1413,7 +1413,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 				}				
 			}
 			
-			// Create the faces of this geometry.
+			// Create the faces of this geometry
 			if (subMesh.primitiveType == PRIMITIVE_TRIANGLES)
 			{
 				for (int p = 0; p < subMesh.numPrimtives; p++)
@@ -1449,7 +1449,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 		}    
 	}
 	
-	// Recursively generate a scene graph for this node's children.
+	// Recursively generate a scene graph for this node's children
 	for (unsigned int i = 0; i < node->children.size(); i++)
 	{
 		FireCube::NodePtr c = GenerateSceneGraph(node->children[i]);

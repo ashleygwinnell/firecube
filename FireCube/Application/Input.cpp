@@ -57,7 +57,7 @@ void InputManager::DispatchInput(float time)
 
 void InputManager::AddMapping(Key key, InputMappingType inputMappingType, const std::string &actionName, KeyModifier modifier)
 {
-	// Add a mapping to the list of mappings of the given key.
+	// Add a mapping to the list of mappings of the given key
 	InputMapping mapping;
 	mapping.inputMappingType = inputMappingType;
 	mapping.actionName = actionName;
@@ -71,7 +71,7 @@ void InputManager::RemoveMapping(Key key, InputMappingType inputMappingType, con
 	if (i == mappedKeys.end())
 		return;
 
-	// Search for this specific mapping in the list of mappings of the given key and remove it if found.
+	// Search for this specific mapping in the list of mappings of the given key and remove it if found
 	vector<InputMapping>::iterator j = i->second.begin();
 	for (; j != i->second.end(); j++)
 	{
@@ -94,7 +94,7 @@ void InputManager::RemoveMapping(AnalogInput analogInput, const std::string &nam
 	if (i == mappedAnalogs.end())
 		return;
 
-	// Search for the mapping name in the list of mappings for the given analog input and remove it if found.
+	// Search for the mapping name in the list of mappings for the given analog input and remove it if found
 	vector<string>::iterator j = i->second.begin();
 	for (; j != i->second.end(); j++)
 	{

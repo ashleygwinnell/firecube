@@ -45,7 +45,7 @@ public:
 	*/
 	vec4 GetPixel(int x, int y) const;
 private:
-	int width, height, bitsPerPixel;
+	int width, height, bytesPerPixel;
 	std::vector<unsigned char> data;
 };
 }

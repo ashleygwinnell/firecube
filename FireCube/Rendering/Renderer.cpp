@@ -131,9 +131,7 @@ void Renderer::UseTexture(TexturePtr tex, unsigned int unit)
 
 void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const string &str)
 {	
-	if (!font)
-		return;
-	if (str.empty())
+	if (!font || str.empty())
 		return;
 	static vector<FontVertex> vBuffer;    
 	vBuffer.resize(str.size() * 6);    
@@ -160,27 +158,29 @@ void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, cons
 		char c = *i;
 		if (c == 32)
 		{
+			// If current glyph is space simply advance the current position
 			curPos.x += font->glyph[c].advance;
 			continue;
 		}
-		if (c == '\n')
+		else if (c == '\n')
 		{
+			// If current glyph is new line set the current position accordingly
 			curPos.x = pos.x;
 			curPos.y += font->size;
 			continue;
 		}
-		if (font->glyph[c].size != vec2(0, 0))
+		else if (font->glyph[c].size != vec2(0, 0))
 		{
 
 			FT_UInt glyphIndex = FT_Get_Char_Index( font->fontImpl->face, c );
-			/* retrieve kerning distance and move pen position */
+			// Retrieve kerning distance and move pen position
 			if ( useKerning && previous && glyphIndex )
 			{
 				FT_Vector delta;
 				FT_Get_Kerning( font->fontImpl->face, previous, glyphIndex, FT_KERNING_DEFAULT, &delta );
 				curPos.x += delta.x >> 6;
 			}
-			
+			// Populate the vertex buffer with the position and the texture coordinates of the current glyph
 			vBuffer[numTris * 3 + 0].position = vec3(font->glyph[c].bitmapOffset.x + curPos.x, font->glyph[c].bitmapOffset.y + curPos.y, curPos.z);
 			vBuffer[numTris * 3 + 1].position = vec3(font->glyph[c].bitmapOffset.x + curPos.x, font->glyph[c].bitmapOffset.y + curPos.y + font->glyph[c].size.y, curPos.z);
 			vBuffer[numTris * 3 + 2].position = vec3(font->glyph[c].bitmapOffset.x + curPos.x + font->glyph[c].size.x, font->glyph[c].bitmapOffset.y + curPos.y, curPos.z);
@@ -311,10 +311,8 @@ void ResetNumberOfTrianglesRendered()
 }
 
 void InitializeRenderer()
-{
-	textVertexBuffer = BufferPtr(new Buffer);
-	textVertexBuffer->Create();
-
+{	
+	// Load the default technique
 	TechniquePtr technique(new Technique);
 	if (!technique->LoadShader("default.vert") && !technique->LoadShader("Shaders/default.vert") && !technique->LoadShader("../Assets/Shaders/default.vert") && !technique->LoadShader("./Assets/Shaders/default.vert"))
 		Logger::Write(Logger::LOG_WARNING, "Could not load default technique's vertex shader");
@@ -326,6 +324,7 @@ void InitializeRenderer()
 			Renderer::AddTechnique("default", technique);
 	}
 
+	// Load the font technique
 	technique = TechniquePtr(new Technique);
 	if (!technique->LoadShader("font.vert") && !technique->LoadShader("Shaders/font.vert") && !technique->LoadShader("../Assets/Shaders/font.vert") && !technique->LoadShader("./Assets/Shaders/font.vert"))
 		Logger::Write(Logger::LOG_WARNING, "Could not load font technique's vertex shader");
@@ -337,8 +336,10 @@ void InitializeRenderer()
 			Renderer::AddTechnique("font", technique);
 	}
 
+	// Create a default camera
 	Renderer::UseCamera(CameraPtr(new Camera));
 		
+	// Create texture samplers for each texture unit (hard coded to 16)
 	glGenSamplers(16, textureSampler);	
 	for (int i = 0; i < 16; i++)
 	{
@@ -347,8 +348,11 @@ void InitializeRenderer()
 	}
 	
 	
+	// Create a vertex buffer for text rendering	
 	glGenVertexArrays(1, &textVao);
 	glBindVertexArray(textVao);
+	textVertexBuffer = BufferPtr(new Buffer);
+	textVertexBuffer->Create();
 	textVertexBuffer->SetVertexAttribute(0, 3, sizeof(FontVertex), 0);
 	textVertexBuffer->SetVertexAttribute(4, 2, sizeof(FontVertex), sizeof(vec3));
 	Renderer::DisableVertexAttribute(1);
@@ -391,6 +395,9 @@ void DestroyRenderer()
 {
 	techniques.clear();
 	textVertexBuffer = BufferPtr();
+	camera = CameraPtr();
+	glDeleteVertexArrays(1, &textVao);
+	glDeleteSamplers(16, textureSampler);
 }
 
 void Renderer::UseFrameBuffer(FrameBufferPtr frameBuffer)
@@ -437,7 +444,7 @@ void FIRECUBE_API Renderer::Render(NodePtr node)
 void FIRECUBE_API Renderer::Render(NodePtr node, const string &techniqueName, const ProgramUniformsList &programUniformsList)
 {
 	RenderQueue renderQueue;
-	renderQueue.AddNode(node);
+	renderQueue.AddNode(node, camera);
 	Renderer::Render(renderQueue, techniqueName, programUniformsList);
 }
 
@@ -450,14 +457,17 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 	GeometryPtr lastGeometry;
 	glEnable(GL_BLEND);
 
+	// Iterate over all lights
 	for (i = renderQueue.activeLights.begin(); i != renderQueue.activeLights.end(); i++)
 	{
+		// Set a program for each lighted render job
 		for (j = renderQueue.renderJobs[RenderQueue::NORMAL].begin(); j != renderQueue.renderJobs[RenderQueue::NORMAL].end(); j++)
-		{
+		{			
 			if (j->renderParameters.program && j->renderParameters.program->IsValid())
-				j->program = j->renderParameters.program;
+				j->program = j->renderParameters.program; // if a program was specified use it
 			else
 			{
+				// otherwise use the technique and the shader properties to generate one
 				ShaderProperties shaderProperties;
 				shaderProperties.FromMaterial(j->geometry->GetMaterial());
 				if (i->second.GetType() == DIRECTIONAL)
@@ -470,6 +480,7 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 					j->program = technique->GenerateProgram(shaderProperties);					
 			}		
 		}
+		// Sort render queue of lighted jobs
 		renderQueue.Sort(RenderQueue::NORMAL);
 		if (passNum == 0)
 		{
@@ -483,6 +494,7 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 			glBlendFunc(GL_ONE, GL_ONE);
 			glDepthMask(false);
 		}
+		// Iterate over all lighted render jobs
 		for (j = renderQueue.renderJobs[RenderQueue::NORMAL].begin(); j != renderQueue.renderJobs[RenderQueue::NORMAL].end(); j++)
 		{			
 			ProgramPtr p;			
@@ -490,9 +502,9 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 			if (!p)
 				continue;						
 				
+			// If this program is different from the last one update some of it's uniforms
 			if (lastProgram != p)
-			{
-				lastProgram = p;
+			{				
 				Renderer::UseProgram(p);					
 				if (i->second.GetType() == DIRECTIONAL)
 				{
@@ -509,12 +521,17 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 					p->SetUniform("lightSpecular", i->second.GetSpecularColor());
 				}													
 			}
+			// Diffuse texture map
 			if (j->geometry->GetMaterial()->GetDiffuseTexture())
 				p->SetUniform("diffuseMap", 0);
+			// Normal map
 			if (j->geometry->GetMaterial()->GetNormalTexture())
 				p->SetUniform("normalMap", 1);
+			// View transformation
 			p->SetUniform("modelViewMatrix", Renderer::GetCamera()->GetViewMatrix() * j->transformation);
+			// Projection transformation
 			p->SetUniform("projectionMatrix", Renderer::GetCamera()->GetProjectionMatrix());
+			// Normal matrix which equals the inverse transpose of the modelview matrix
 			mat3 normalMatrix = (Renderer::GetCamera()->GetViewMatrix()  * j->transformation).ToMat3();
 			normalMatrix.Inverse();
 			normalMatrix.Transpose();				
@@ -532,6 +549,7 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 				if (lastProgram != p)
 					p->SetUniform("fogDensity", j->renderParameters.fogDensity);
 			}
+			// Set material properties if this geometry is different from the last one 
 			if (lastGeometry != j->geometry)
 			{
 				lastGeometry = j->geometry;				
@@ -544,19 +562,22 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 			else
 				Renderer::RenderStream(j->geometry->GetPrimitiveType(), j->geometry->GetVertexCount());							
 			
+			lastProgram = p;
 			numberOfTrianglesRendered += j->geometry->GetPrimitiveCount();			
 		}
 		passNum++;
 	}
 	glDepthMask(true);
 	glDisable(GL_BLEND);
-
+	
+	// Set a program for each non lighted render job
 	for (j = renderQueue.renderJobs[RenderQueue::NON_LIGHTED].begin(); j != renderQueue.renderJobs[RenderQueue::NON_LIGHTED].end(); j++)
 	{		
 		if (j->renderParameters.program && j->renderParameters.program->IsValid())
-			j->program = j->renderParameters.program;
+			j->program = j->renderParameters.program; // if a program was specified use it
 		else
 		{
+			// otherwise use the technique and the shader properties to generate one
 			ShaderProperties shaderProperties;
 			shaderProperties.FromMaterial(j->geometry->GetMaterial());
 			shaderProperties.SetDirectionalLighting(false);
@@ -567,14 +588,18 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 				j->program = technique->GenerateProgram(shaderProperties);					
 		}				
 	}
+	
+	// Sort render queue of non lighted jobs
 	renderQueue.Sort(RenderQueue::NON_LIGHTED);
+	// Iterate over all non lighted render jobs
 	for (j = renderQueue.renderJobs[RenderQueue::NON_LIGHTED].begin(); j != renderQueue.renderJobs[RenderQueue::NON_LIGHTED].end(); j++)
 	{		
 		ProgramPtr p;		
 		p = j->program;
 		if (!p)
 			continue;		
-			
+		
+		// If this program is different from the last one update some of it's uniforms
 		if (lastProgram != p)
 		{
 			lastProgram = p;
@@ -585,16 +610,22 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 				p->SetUniform("fogDensity", j->renderParameters.fogDensity);
 			}			
 		}	
+		// Diffuse texture map
 		if (j->geometry->GetMaterial()->GetDiffuseTexture())
 			p->SetUniform("diffuseMap", 0);
+		// Normal map
 		if (j->geometry->GetMaterial()->GetNormalTexture())
 			p->SetUniform("normalMap", 1);
+		// View transformation
 		p->SetUniform("modelViewMatrix", Renderer::GetCamera()->GetViewMatrix() * j->transformation);
+		// Projection transformation
 		p->SetUniform("projectionMatrix", Renderer::GetCamera()->GetProjectionMatrix());
+		// Normal matrix which equals the inverse transpose of the modelview matrix
 		mat3 normalMatrix = (Renderer::GetCamera()->GetViewMatrix() * j->transformation).ToMat3();
 		normalMatrix.Inverse();
 		normalMatrix.Transpose();			
 		p->SetUniform("normalMatrix", normalMatrix);
+		// Set material properties if this geometry is different from the last one 
 		if (lastGeometry != j->geometry)
 		{
 			lastGeometry = j->geometry;
@@ -624,10 +655,13 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 	GeometryPtr lastGeometry;
 	glEnable(GL_BLEND);
 
+	// Iterate over all lights
 	for (i = renderQueue.activeLights.begin(); i != renderQueue.activeLights.end(); i++)
 	{
+		// Set a program for each lighted render job
 		for (j = renderQueue.renderJobs[RenderQueue::NORMAL].begin(); j != renderQueue.renderJobs[RenderQueue::NORMAL].end(); j++)
 		{
+			// Use the specified technique and the shader properties to generate a program
 			ShaderProperties shaderProperties;
 			shaderProperties.FromMaterial(j->geometry->GetMaterial());
 			if (i->second.GetType() == DIRECTIONAL)
@@ -640,6 +674,7 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 				j->program = technique->GenerateProgram(shaderProperties);					
 
 		}
+		// Sort render queue of lighted jobs
 		renderQueue.Sort(RenderQueue::NORMAL);
 		if (passNum == 0)
 		{
@@ -653,6 +688,7 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 			glBlendFunc(GL_ONE, GL_ONE);
 			glDepthMask(false);
 		}
+		// Iterate over all lighted render jobs
 		for (j = renderQueue.renderJobs[RenderQueue::NORMAL].begin(); j != renderQueue.renderJobs[RenderQueue::NORMAL].end(); j++)
 		{			
 			ProgramPtr p;			
@@ -660,9 +696,9 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 			if (!p)
 				continue;						
 
+			// If this program is different from the last one update some of it's uniforms
 			if (lastProgram != p)
-			{
-				lastProgram = p;
+			{				
 				Renderer::UseProgram(p);					
 				if (i->second.GetType() == DIRECTIONAL)
 				{
@@ -678,14 +714,20 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 					p->SetUniform("lightDiffuse", i->second.GetDiffuseColor());
 					p->SetUniform("lightSpecular", i->second.GetSpecularColor());
 				}	
+				// Apply the given uniforms list
 				programUniformsList.ApplyForProgram(p);
 			}
+			// Diffuse texture map
 			if (j->geometry->GetMaterial()->GetDiffuseTexture())
 				p->SetUniform("diffuseMap", 0);
+			// Normal map
 			if (j->geometry->GetMaterial()->GetNormalTexture())
 				p->SetUniform("normalMap", 1);
+			// View transformation
 			p->SetUniform("modelViewMatrix", Renderer::GetCamera()->GetViewMatrix() * j->transformation);
+			// Projection transformation
 			p->SetUniform("projectionMatrix", Renderer::GetCamera()->GetProjectionMatrix());
+			// Normal matrix which equals the inverse transpose of the modelview matrix
 			mat3 normalMatrix = (Renderer::GetCamera()->GetViewMatrix()  * j->transformation).ToMat3();
 			normalMatrix.Inverse();
 			normalMatrix.Transpose();				
@@ -703,6 +745,7 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 				if (lastProgram != p)
 					p->SetUniform("fogDensity", j->renderParameters.fogDensity);
 			}
+			// Set material properties if this geometry is different from the last one 
 			if (lastGeometry != j->geometry)
 			{
 				lastGeometry = j->geometry;
@@ -715,6 +758,7 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 			else
 				Renderer::RenderStream(j->geometry->GetPrimitiveType(), j->geometry->GetVertexCount());							
 
+			lastProgram = p;
 			numberOfTrianglesRendered += j->geometry->GetPrimitiveCount();			
 		}
 		passNum++;
@@ -722,9 +766,10 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 	glDepthMask(true);
 	glDisable(GL_BLEND);
 
+	// Set a program for each non lighted render job
 	for (j = renderQueue.renderJobs[RenderQueue::NON_LIGHTED].begin(); j != renderQueue.renderJobs[RenderQueue::NON_LIGHTED].end(); j++)
-	{		
-		
+	{			
+		// Use the specified technique and the shader properties to generate a program
 		ShaderProperties shaderProperties;
 		shaderProperties.FromMaterial(j->geometry->GetMaterial());
 		shaderProperties.SetDirectionalLighting(false);
@@ -735,7 +780,10 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 			j->program = technique->GenerateProgram(shaderProperties);					
 						
 	}
+
+	// Sort render queue of non lighted jobs
 	renderQueue.Sort(RenderQueue::NON_LIGHTED);
+	// Iterate over all non lighted render jobs
 	for (j = renderQueue.renderJobs[RenderQueue::NON_LIGHTED].begin(); j != renderQueue.renderJobs[RenderQueue::NON_LIGHTED].end(); j++)
 	{		
 		ProgramPtr p;		
@@ -743,6 +791,7 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 		if (!p)
 			continue;		
 
+		// If this program is different from the last one update some of it's uniforms
 		if (lastProgram != p)
 		{
 			lastProgram = p;
@@ -753,17 +802,23 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 				p->SetUniform("fogDensity", j->renderParameters.fogDensity);
 			}
 			programUniformsList.ApplyForProgram(p);
-		}	
+		}
+		// Diffuse texture map
 		if (j->geometry->GetMaterial()->GetDiffuseTexture())
 			p->SetUniform("diffuseMap", 0);
+		// Normal map
 		if (j->geometry->GetMaterial()->GetNormalTexture())
 			p->SetUniform("normalMap", 1);
+		// View transformation
 		p->SetUniform("modelViewMatrix", Renderer::GetCamera()->GetViewMatrix() * j->transformation);
+		// Projection transformation
 		p->SetUniform("projectionMatrix", Renderer::GetCamera()->GetProjectionMatrix());
+		// Normal matrix which equals the inverse transpose of the modelview matrix
 		mat3 normalMatrix = (Renderer::GetCamera()->GetViewMatrix() * j->transformation).ToMat3();
 		normalMatrix.Inverse();
 		normalMatrix.Transpose();			
 		p->SetUniform("normalMatrix", normalMatrix);
+		// Set material properties if this geometry is different from the last one 
 		if (lastGeometry != j->geometry)
 		{
 			lastGeometry = j->geometry;

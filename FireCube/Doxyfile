@@ -701,8 +701,10 @@ EXCLUDE                = Debug \
                          Geometry\ColladaLoader.cpp \
                          Geometry\m3dsLoader.cpp \
                          Rendering\privateFont.h \
-                         Geometry\ModelLoaders.h \
-                         Geometry\ObjLoader.cpp
+                         Geometry\ObjLoader.cpp \
+                         Geometry\m3dsLoader.h \
+                         Geometry\ObjLoader.h \
+                         Geometry\ColladaLoader.h
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix file system feature) are excluded 

@@ -21,13 +21,23 @@ typedef std::shared_ptr<Material> MaterialPtr;
 class Program;
 typedef std::shared_ptr<Program> ProgramPtr;
 
+/**
+* A class describing various parameters to apply to models when loaded from a file
+*/
 
 class FIRECUBE_API ModelLoadingOptions
 {
 public:
 	ModelLoadingOptions();
-
+	
+	/**
+	* Boolean flag specifying whether to flip u texture coordinate.
+	*/
 	bool flipU;
+
+	/**
+	* Boolean flag specifying whether to flip v texture coordinate.
+	*/
 	bool flipV;
 };
 
@@ -363,6 +373,7 @@ private:
 * Loads a node from a file.
 * Supported file formats are 3ds, Collada and obj.
 * @param filename The file to load.
+* @param options Model loading options to apply to the loaded object.
 * @return The loaded node.
 */
 NodePtr FIRECUBE_API LoadMesh(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());

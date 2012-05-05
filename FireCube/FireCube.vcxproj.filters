@@ -137,6 +137,9 @@
     <ClCompile Include="Geometry\Material.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\Light.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Buffer.h">

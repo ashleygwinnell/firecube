@@ -15,7 +15,7 @@ using namespace std;
 
 using namespace FireCube;
 
-Image::Image() : width(0), height(0), bitsPerPixel(0)
+Image::Image() : width(0), height(0), bytesPerPixel(0)
 {
 
 }
@@ -28,19 +28,19 @@ bool Image::Load(const string &filename)
 		return false;
 	image = IMG_Load(fname.c_str());
 	if (image)
-	{
-		bitsPerPixel = image->format->BitsPerPixel;
+	{		
+		bytesPerPixel = image->format->BitsPerPixel / 8;
 		width = image->w;
 		height = image->h;
-		data.resize(width * height * bitsPerPixel / 8);
+		data.resize(width * height * bytesPerPixel);
 		for (int y = 0; y < height; y++)
 		{
 			for (int x = 0; x < width; x++)
 			{
-				for (int j = 0; j < bitsPerPixel / 8; j++)
+				for (int j = 0; j < bytesPerPixel; j++)
 				{
-					unsigned int i = y * height * bitsPerPixel / 8 + x * bitsPerPixel / 8 + j;
-					data[i] = ((unsigned char*)(image->pixels))[y * image->pitch + x * bitsPerPixel / 8 + j];
+					unsigned int i = y * height * bytesPerPixel + x * bytesPerPixel + j;
+					data[i] = ((unsigned char*)(image->pixels))[y * image->pitch + x * bytesPerPixel + j];
 				}
 			}
 		}
@@ -63,7 +63,7 @@ int Image::GetHeight() const
 
 int Image::GetBitsPerPixel() const
 {
-	return bitsPerPixel;
+	return bytesPerPixel * 8;
 }
 
 vector<unsigned char> &Image::GetPixels()
@@ -73,21 +73,21 @@ vector<unsigned char> &Image::GetPixels()
 
 vec4 Image::GetPixel(int x, int y) const
 {
-	if (bitsPerPixel == 8)
+	if (bytesPerPixel == 1)
 	{
-		return vec4(data[y * width * bitsPerPixel / 8 + x * bitsPerPixel / 8 + 0], 0.0f, 0.0f, 1.0f) / 255.0f;
+		return vec4(data[y * width * bytesPerPixel + x * bytesPerPixel + 0], 0.0f, 0.0f, 1.0f) / 255.0f;
 	}
-	else if (bitsPerPixel == 16)
+	else if (bytesPerPixel == 2)
 	{
-		return vec4(data[y * width * bitsPerPixel / 8 + x * bitsPerPixel / 8 + 0], data[y * width * bitsPerPixel / 8 + x * bitsPerPixel / 8 + 1], 0.0f, 1.0f) / 255.0f;
+		return vec4(data[y * width * bytesPerPixel + x * bytesPerPixel + 0], data[y * width * bytesPerPixel + x * bytesPerPixel + 1], 0.0f, 1.0f) / 255.0f;
 	}
-	else if (bitsPerPixel == 24)
+	else if (bytesPerPixel == 3)
 	{
-		return vec4(data[y * width * bitsPerPixel / 8 + x * bitsPerPixel / 8 + 0], data[y * width * bitsPerPixel / 8 + x * bitsPerPixel / 8 + 1], data[y * width * bitsPerPixel / 8 + x * bitsPerPixel / 8 + 2], 1.0f) / 255.0f;
+		return vec4(data[y * width * bytesPerPixel + x * bytesPerPixel + 0], data[y * width * bytesPerPixel + x * bytesPerPixel + 1], data[y * width * bytesPerPixel + x * bytesPerPixel + 2], 1.0f) / 255.0f;
 	}
-	else if (bitsPerPixel == 32)
+	else if (bytesPerPixel == 4)
 	{
-		return vec4(data[y * width * bitsPerPixel / 8 + x * bitsPerPixel / 8 + 0], data[y * width * bitsPerPixel / 8 + x * bitsPerPixel / 8 + 1], data[y * width * bitsPerPixel / 8 + x * bitsPerPixel / 8 + 2], data[y * width * bitsPerPixel / 8 + x * bitsPerPixel / 8 + 3]) / 255.0f;
+		return vec4(data[y * width * bytesPerPixel + x * bytesPerPixel + 0], data[y * width * bytesPerPixel + x * bytesPerPixel + 1], data[y * width * bytesPerPixel + x * bytesPerPixel + 2], data[y * width * bytesPerPixel + x * bytesPerPixel + 3]) / 255.0f;
 	}
 	return vec4();
 }

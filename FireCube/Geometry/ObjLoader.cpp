@@ -32,10 +32,11 @@ ObjLoader::ObjLoader()
 }
 
 void ObjLoader::Load(const string &filename, ModelLoadingOptions options)
-{
+{	
 	ifstream ifs(filename);
 	string line;
 	baseDir = ExtractDirectory(filename);
+	// Parse the file one line at a time
 	while(getline(ifs, line))
 	{		
 		if (line.empty())
@@ -63,7 +64,7 @@ void ObjLoader::Load(const string &filename, ModelLoadingOptions options)
 }
 
 void ObjLoader::ParseVertexLine(const string &line)
-{
+{	
 	istringstream iss(line.substr(2));
 	vec3 vertex;
 	iss >> vertex.x;
@@ -112,7 +113,7 @@ void ObjLoader::ParseFaceLine(const string &line)
 void ObjLoader::ParseFaceEntry(const string &entry, unsigned int &v, unsigned int &t, unsigned int &n, bool &hasTextureCoordinates, bool &hasNormal)
 {
 	int i1 = entry.find_first_of('/');
-	if (i1 == string::npos)
+	if (i1 == string::npos) // Only vertex index is specified
 	{
 		istringstream iss(entry);
 		iss >> v;
@@ -122,7 +123,7 @@ void ObjLoader::ParseFaceEntry(const string &entry, unsigned int &v, unsigned in
 	}
 
 	int i2 = entry.find_first_of('/', i1 + 1);
-	if (i2 == string::npos)
+	if (i2 == string::npos) // vertex and texture coordinate
 	{
 		istringstream iss1(entry.substr(0, i1));
 		istringstream iss2(entry.substr(i1 + 1));
@@ -137,7 +138,7 @@ void ObjLoader::ParseFaceEntry(const string &entry, unsigned int &v, unsigned in
 	iss1 >> v;	
 	iss2 >> n;
 	hasNormal = true;
-	if (i2 - i1 - 1 > 0)
+	if (i2 - i1 - 1 > 0) // vertex texture coordinate and normal
 	{
 		istringstream iss(entry.substr(i1 + 1, i2 - i1 - 1));
 		iss >> t;
@@ -149,6 +150,7 @@ void ObjLoader::ParseFaceEntry(const string &entry, unsigned int &v, unsigned in
 
 void ObjLoader::ParseObjectLine(const string &line)
 {
+	// Create a new object
 	string name = line.substr(2);
 	objects[name] = Object();
 	currentObject = &objects[name];
@@ -156,6 +158,7 @@ void ObjLoader::ParseObjectLine(const string &line)
 		currentFaces = &objects[name].facesWithoutMaterial;
 	else
 	{
+		// If a previous material was specified all faces from now on will use it
 		objects[name].materialFaces[lastMaterial] = vector<Face>();
 		currentFaces = &objects[name].materialFaces[lastMaterial];
 	}
@@ -164,6 +167,7 @@ void ObjLoader::ParseObjectLine(const string &line)
 
 void ObjLoader::ParseUseMtlLine(const string &line)
 {	
+	// All faces of current object will now use this material
 	lastMaterial = line.substr(7);
 	if (currentObject->materialFaces.find(lastMaterial) == currentObject->materialFaces.end())
 		currentObject->materialFaces[lastMaterial] = vector<Face>();
@@ -261,12 +265,15 @@ string ObjLoader::ExtractDirectory(const string &filename)
 
 NodePtr ObjLoader::GenerateSceneGraph()
 {
+	// Create the root node
 	NodePtr root(new Node);
 	map<string, MaterialPtr> generatedMaterials;
 	vector<vec3> generatedVertices;
 	vector<vec2> generatedTexCoords;
 	vector<vec3> generatedNormals;
 	map<MapKey, unsigned int> indicesMap;
+
+	// Generate materials
 	for (map<string, Material>::iterator i = materials.begin(); i != materials.end(); i++)
 	{
 		MaterialPtr material(new FireCube::Material);
@@ -299,15 +306,20 @@ NodePtr ObjLoader::GenerateSceneGraph()
 		}
 		generatedMaterials[i->first] = material;
 	}
+
+	// Iterate over all objects
 	for (map<string, Object>::iterator i = objects.begin(); i != objects.end(); i++)
 	{
+		// Create a node for the object
 		NodePtr node(new Node(i->first));
 		node->SetParent(root);
 		int surfaceNum = 0;
+		// Iterate over faces for each material
 		for (map<string, vector<Face>>::iterator j = i->second.materialFaces.begin(); j != i->second.materialFaces.end(); j++, surfaceNum++)
-		{
+		{			
 			ostringstream oss;
 			oss << "surface-" << surfaceNum;
+			// Create a node and a geometry for each surface
 			NodePtr surfaceNode(new Node(oss.str()));
 			GeometryPtr geometry(new Geometry);
 			surfaceNode->SetGeometry(geometry);
@@ -319,9 +331,11 @@ NodePtr ObjLoader::GenerateSceneGraph()
 				for (int vertexIndex = 0; vertexIndex < 3; vertexIndex++)
 				{
 					MapKey key(face.v[vertexIndex], face.t[vertexIndex], face.n[vertexIndex]);					
+					// Search this vertex (combination of v/n/t) in the list of vertices
 					map<MapKey, unsigned int>::iterator keyIter = indicesMap.find(key);
 					if (keyIter == indicesMap.end())
 					{
+						// If not found add it and store it in the map of generated vertices
 						generatedVertices.push_back(vertices[face.v[vertexIndex] - 1]);
 						if (face.hasTextureCoordinates)
 							generatedTexCoords.push_back(texCoords[face.t[vertexIndex] - 1]);
@@ -335,10 +349,12 @@ NodePtr ObjLoader::GenerateSceneGraph()
 					}
 					else
 					{
+						// If found simply add it's index to the index array
 						geometry->GetIndices().push_back(keyIter->second);
 						generatedFace.v[vertexIndex] = keyIter->second;
 					}
 				}
+				// Add the generated face to the list of faces
 				geometry->GetFaces().push_back(generatedFace);
 			}
 			geometry->GetVertices() = generatedVertices;

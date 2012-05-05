@@ -42,6 +42,7 @@
     <ClCompile Include="Rendering\Shaders.cpp" />
     <ClCompile Include="Rendering\Texture.cpp" />
     <ClCompile Include="Scene\Camera.cpp" />
+    <ClCompile Include="Scene\Light.cpp" />
     <ClCompile Include="Scene\Node.cpp" />
     <ClCompile Include="Scene\NodeObserverCamera.cpp" />
     <ClCompile Include="Utils\Filesystem.cpp" />

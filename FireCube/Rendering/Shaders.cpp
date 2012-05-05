@@ -23,6 +23,7 @@ using namespace FireCube;
 
 Shader::Shader() : id(0)
 {
+
 }
 
 Shader::~Shader()
@@ -36,6 +37,7 @@ bool Shader::Load(const string &filename)
 	if (id != 0)
 		glDeleteShader(id);
 
+	// Determine shader type from file extension
 	string::size_type d;
 	d = filename.find_last_of(".");
 	if (d != string::npos)
@@ -55,7 +57,7 @@ bool Shader::Load(const string &filename)
 	{
 		return false;
 	}
-	unsigned int l = (unsigned int)f.tellg();
+	unsigned int l = (unsigned int) f.tellg();
 	char *buffer = new char[l + 1];
 	f.seekg(0, ios_base::beg);
 	f.read(buffer, l);
@@ -426,11 +428,13 @@ bool Technique::LoadShader(ShaderType type, const string &source)
 
 ProgramPtr Technique::GenerateProgram(const ShaderProperties &shaderProperties)
 {
+	// Hash the shader properties and cehck if already generated
 	unsigned int key = shaderProperties.ToInt();
 	map<unsigned int, ProgramPtr>::iterator i = programs.find(key);
 	if (i != programs.end())
 		return i->second;
 
+	// Add defines to the shader source according to the shader properties
 	ostringstream defines;
 	if (shaderProperties.diffuseTexture)
 		defines << "#define DIFFUSE_MAPPING" << endl;

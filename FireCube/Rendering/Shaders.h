@@ -9,7 +9,7 @@ namespace FireCube
 
 // Forward declarations.
 template<class T>
-class ResourceManager;
+class ResourcePool;
 class Buffer;
 typedef std::shared_ptr<Buffer> BufferPtr;
 class Program;
@@ -38,7 +38,7 @@ enum ShaderType
 class FIRECUBE_API Shader
 {
     friend class Program;
-    friend class ResourceManager<Shader>;
+    friend class ResourcePool<Shader>;
 public:
     Shader();
     ~Shader();
@@ -69,9 +69,9 @@ private:
 typedef std::shared_ptr<Shader> ShaderPtr;
 
 /**
-* A shader resource manager.
+* A shader resource pool.
 */
-typedef ResourceManager<Shader> ShaderManager;
+typedef ResourcePool<Shader> ShaderPool;
 
 /**
 * A class representing a gpu program.

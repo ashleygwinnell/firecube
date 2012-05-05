@@ -22,7 +22,7 @@ typedef std::shared_ptr<Font> FontPtr;
 
 namespace Renderer
 {
-void FIRECUBE_API RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const std::string &str);
+	void FIRECUBE_API RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const std::string &str);
 }
 
 class FontImpl;
@@ -34,10 +34,10 @@ class FontImpl;
 class FIRECUBE_API Glyph
 {
 public:
-    vec2 uv;
-    vec2 size;
-    vec2 bitmapOffset;
-    int advance;
+	vec2 uv;
+	vec2 size;
+	vec2 bitmapOffset;
+	int advance;
 };
 /** @endcond */
 
@@ -48,9 +48,9 @@ public:
 class FIRECUBE_API FontPage
 {
 public:
-    TexturePtr tex;
-    vec2 curPos;
-    int textureSize;
+	TexturePtr tex;
+	vec2 curPos;
+	int textureSize;
 };
 /** @endcond */
 
@@ -59,32 +59,32 @@ public:
 */
 class FIRECUBE_API Font
 {
-    friend void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const std::string &str);
-    friend class FontManager;
-    friend class ResourcePool<Font>;
+	friend void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const std::string &str);
+	friend class FontManager;
+	friend class ResourcePool<Font>;
 public:
-    Font();
-    ~Font();
+	Font();
+	~Font();
 
-    /**
-    * Loads a font.
-    * @param name The file to load.
-    */
-    bool Load(const std::string &name);
+	/**
+	* Loads a font.
+	* @param name The file to load.
+	*/
+	bool Load(const std::string &name);
 
-    /**
-    * Loads a font.
-    * @param name The file to load.
-    * @param size The size of the font.
-    */
-    bool Load(const std::string &name, int size);
+	/**
+	* Loads a font.
+	* @param name The file to load.
+	* @param size The size of the font.
+	*/
+	bool Load(const std::string &name, int size);
 
 private:
-    bool AddChar(char c);
-    std::vector<Glyph> glyph;
-    std::shared_ptr<FontPage> page;
-    FontImpl *fontImpl;
-    int size;
+	bool AddChar(char c);
+	std::vector<Glyph> glyph;
+	std::shared_ptr<FontPage> page;
+	FontImpl *fontImpl;
+	int size;
 };
 
 /**
@@ -92,19 +92,19 @@ private:
 */
 class FIRECUBE_API FontPool : public ResourcePool<Font>
 {
-    friend class Font;
-    friend void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const std::string &str);
+	friend class Font;
+	friend void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const std::string &str);
 public:
-    FontPool();
-    /**
-    * Creates and loads a font from the specified file.
-    * @param filename The file to load.
-    * @param size The size of the font.
-    */
-    FontPtr Create(const std::string &filename, int size);
+	FontPool();
+	/**
+	* Creates and loads a font from the specified file.
+	* @param filename The file to load.
+	* @param size The size of the font.
+	*/
+	FontPtr Create(const std::string &filename, int size);
 private:
-    std::vector<std::weak_ptr<FontPage>> page;
-    std::shared_ptr<FontPage> CreateNewPage();
+	std::vector<std::weak_ptr<FontPage>> page;
+	std::shared_ptr<FontPage> CreateNewPage();
 };
 }
 #pragma warning(pop)

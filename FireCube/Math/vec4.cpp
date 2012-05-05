@@ -14,22 +14,27 @@ vec4 FireCube::operator+(const vec4 &a, const vec4 &b)
 {
 	return vec4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
 }
+
 vec4 FireCube::operator-(const vec4 &a, const vec4 &b)
 {
 	return vec4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 }
+
 vec4 FireCube::operator*(const vec4 &a, float b)
 {
 	return vec4(a.x * b, a.y * b, a.z * b, a.w * b);
 }
+
 vec4 FireCube::operator*(float a, const vec4 &b)
 {
 	return vec4(b.x * a, b.y * a, b.z * a, b.w * a);
 }
+
 vec4 FireCube::operator/(const vec4 &a, float b)
 {
 	return vec4(a.x / b, a.y / b, a.z / b, a.w / b);
 }
+
 vec4 FireCube::operator/(float a, const vec4 &b)
 {
 	return vec4(b.x / a, b.y / a, b.z / a, b.w / a);
@@ -39,11 +44,11 @@ vec4 FireCube::Cross(const vec4 &a, const vec4 &b)
 {
 	return vec4(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x, a.w);
 }
+
 float FireCube::Dot(const vec4 &a, const vec4 &b)
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
-
 
 void vec4::operator+=(const vec4 &src)
 {
@@ -52,6 +57,7 @@ void vec4::operator+=(const vec4 &src)
 	z += src.z;
 	w += src.w;
 }
+
 void vec4::operator-=(const vec4 &src)
 {
 	x -= src.x;
@@ -59,6 +65,7 @@ void vec4::operator-=(const vec4 &src)
 	z -= src.z;
 	w -= src.w;
 }
+
 void vec4::operator*=(const vec4 &src)
 {
 	x *= src.x;
@@ -66,6 +73,7 @@ void vec4::operator*=(const vec4 &src)
 	z *= src.z;
 	w *= src.w;
 }
+
 void vec4::operator*=(float val)
 {
 	x *= val;
@@ -73,6 +81,7 @@ void vec4::operator*=(float val)
 	z *= val;
 	w *= val;
 }
+
 void vec4::operator/=(const vec4 &src)
 {
 	x /= src.x;
@@ -88,6 +97,7 @@ void vec4::operator/=(float val)
 	z /= val;
 	w /= val;
 }
+
 vec4 vec4::Normalize()
 {
 	const float m2 = Length2();
@@ -101,22 +111,22 @@ vec4 vec4::Normalize()
 	}
 	else
 	{
-
 		x = 1.0f;
 		y = z = w = 0.0f;
 	}
 	return *this;
 }
+
 float vec4::Length() const
 {
-	float length;
-	length = (float)sqrt(x * x + y * y + z * z + w * w);
-	return length;
+	return (float) sqrt(x * x + y * y + z * z + w * w);
 }
+
 float vec4::Length2() const
 {
 	return x * x + y * y + z * z + w * w;
 }
+
 void vec4::Cross(const vec4 &p, const vec4 &q)
 {
 	x = p.y * q.z - p.z * q.y;
@@ -124,6 +134,7 @@ void vec4::Cross(const vec4 &p, const vec4 &q)
 	z = p.x * q.y - p.y * q.x;
 	w = p.w;
 }
+
 void vec4::SetLength(float l)
 {
 	float len = Length();
@@ -133,6 +144,7 @@ void vec4::SetLength(float l)
 	z *= l / len;
 	w *= l / len;
 }
+
 void vec4::RotateX(float ang)
 {
 	float cs = (float)cos(ang), sn = (float)sin(ang);
@@ -141,6 +153,7 @@ void vec4::RotateX(float ang)
 	y = ny;
 	z = nz;
 }
+
 void vec4::RotateY(float ang)
 {
 	float cs = (float)cos(ang), sn = (float)sin(ang);
@@ -149,6 +162,7 @@ void vec4::RotateY(float ang)
 	x = nx;
 	z = nz;
 }
+
 void vec4::RotateZ(float ang)
 {
 	float cs = (float)cos(ang), sn = (float)sin(ang);
@@ -157,10 +171,12 @@ void vec4::RotateZ(float ang)
 	x = nx;
 	y = ny;
 }
+
 vec4 vec4::operator*(const mat4 &src) const
 {
 	return vec4(x * src.m[0] + y * src.m[4] + z * src.m[8] + w * src.m[12], x * src.m[1] + y * src.m[5] + z * src.m[9] + w * src.m[13], x * src.m[2] + y * src.m[6] + z * src.m[10] + w * src.m[14], x * src.m[3] + y * src.m[7] + z * src.m[11] + w * src.m[15]);
 }
+
 void vec4::FromAngles(float angx, float angy)
 {
 	float cosx;
@@ -170,6 +186,7 @@ void vec4::FromAngles(float angx, float angy)
 	y = (float)sin(angx);
 	z = -cosx * (float)cos(angy);
 }
+
 vec3 vec4::TransformCoordinate(const mat4 &m) const
 {
 	float tw = x * m.m[3] + y * m.m[7] + z * m.m[11] + w * m.m[15];
@@ -177,6 +194,7 @@ vec3 vec4::TransformCoordinate(const mat4 &m) const
 	ret /= tw;
 	return ret;
 }
+
 inline bool vec4::Sensible() const
 {
 	if (!IsFinite(x))
@@ -190,26 +208,32 @@ inline bool vec4::Sensible() const
 
 	return true;
 }
+
 vec2 vec4::ToVec2() const
 {
 	return vec2(x, y);
 }
+
 vec3 vec4::ToVec3() const
 {
 	return vec3(x, y, z);
 }
+
 float & vec4::operator[](unsigned int i)
 {
 	return *(&x + i);
 }
+
 const float & vec4::operator[](unsigned int i) const
 {
 	return *(&x + i);
 }
+
 float & vec4::operator()(unsigned int i)
 {
 	return *(&x + i);
 }
+
 const float & vec4::operator()(unsigned int i) const
 {
 	return *(&x + i);

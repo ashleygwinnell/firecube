@@ -54,13 +54,13 @@ void Geometry::CalculateNormals()
 	
 	for (unsigned int f = 0; f < face.size(); f++)
 	{
-		// Calculate face normals.
+		// Calculate face normals
 		vec3 v1 = vertex[face[f].v[1]] - vertex[face[f].v[0]];
 		vec3 v2 = vertex[face[f].v[2]] - vertex[face[f].v[0]];
 		vec3 n = Cross(v1, v2);
 		face[f].normal = n;
 		face[f].normal.Normalize();
-		// Add this normal to the three vertex normals forming this face.
+		// Add this normal to the three vertex normals forming this face
 		normal[face[f].v[0]] += n;
 		normal[face[f].v[1]] += n;
 		normal[face[f].v[2]] += n;
@@ -69,7 +69,7 @@ void Geometry::CalculateNormals()
 	{
 		normal[n].Normalize();
 	}
-	// Load the normals to the normal buffer.
+	// Load the normals to the normal buffer
 	normalBuffer = BufferPtr(new Buffer);
 	normalBuffer->Create();
 	normalBuffer->LoadData(&normal[0], sizeof(vec3)*normal.size(), STATIC);
@@ -165,11 +165,11 @@ void Geometry::CreateHardNormals()
 		vec3 v1 = originalVertices[originalFaces[i].v[1]];
 		vec3 v2 = originalVertices[originalFaces[i].v[2]];
 		vec3 n = Cross(v1 - v0, v2 - v0).Normalize();
-		// Add three vertices for each face.
+		// Add three vertices for each face
 		vertex.push_back(v0);
 		vertex.push_back(v1);
 		vertex.push_back(v2);
-		// Duplicate the face normal three times.
+		// Duplicate the face normal three times
 		normal.push_back(n);
 		normal.push_back(n);
 		normal.push_back(n);
@@ -344,7 +344,7 @@ GeometryPtr Geometry::Reduce() const
 			vec3 v = vertex[geometry->face[i].v[j]];
 			bool found = false;
 			unsigned int k;
-			// Find another vertex which is equal to v.
+			// Find another vertex which is equal to v
 			for (k = 0; k < geometry->vertex.size(); k++)
 			{
 				if ((vertex[k] - v).Length2() == 0.0f)
@@ -355,13 +355,13 @@ GeometryPtr Geometry::Reduce() const
 			}			
 			if (found == false)
 			{
-				// If none found, add v to the vertices list.
+				// If none found, add v to the vertices list
 				geometry->vertex.push_back(v);
 				geometry->face[i].v[j] = geometry->vertex.size() - 1;
 			}
 			else
 			{
-				// Otherwise use the previously added vertex.
+				// Otherwise use the previously added vertex
 				geometry->face[i].v[j] = k;
 			}
 		}
