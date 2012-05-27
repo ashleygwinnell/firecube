@@ -332,6 +332,27 @@ void Geometry::UpdateBuffers()
 	}
 }
 
+void Geometry::UpdateIndexBuffer()
+{	
+	glBindVertexArray(vao);
+	if (!indices.empty())
+	{
+		if (!indexBuffer)
+		{
+			indexBuffer = BufferPtr(new Buffer);
+			indexBuffer->Create();
+		}
+		if (!indexBuffer->LoadIndexData(&indices[0], indices.size(), STATIC))
+		{
+			ostringstream oss;
+			oss << "buffer id:" << indexBuffer->GetId() << " Couldn't upload vertex data";
+			Logger::Write(Logger::LOG_ERROR, oss.str());
+		}
+		else
+			indexBuffer->SetIndexStream();
+	}
+}
+
 GeometryPtr Geometry::Reduce() const
 {
 	GeometryPtr geometry(new Geometry);

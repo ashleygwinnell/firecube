@@ -20,6 +20,7 @@ using namespace std;
 #include "Dependencies/tinyxml.h"
 #include "Scene/Light.h"
 #include "Scene/Node.h"
+#include "Scene/GeometryNode.h"
 #include "Geometry/m3dsLoader.h"
 
 using namespace FireCube;
@@ -119,7 +120,7 @@ NodePtr M3dsLoader::GenerateSceneGraph()
 			ostringstream oss;
 			oss << object[i].name << "-surface-" << j;
 			// Create a node for the sub mesh
-			NodePtr node(new Node(oss.str()));
+			GeometryNodePtr node(new GeometryNode(oss.str()));
 			node->SetGeometry(geom);
 			objectNode->AddChild(node);
 		}        

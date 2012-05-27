@@ -3,8 +3,10 @@
 #include <map>
 #include <queue>
 #include <sstream>
+#include <fstream>
 using namespace std;
 
+#include <Windows.h>
 #include "Utils/utils.h"
 #include "Utils/Filesystem.h"
 
@@ -42,4 +44,24 @@ string Filesystem::SearchForFileName(const string &filename)
 		return filename;
 
 	return "";
+}
+
+string Filesystem::GetFullPath(const std::string &filename)
+{
+	char pFullPathName[1024];
+	if (GetFullPathNameA(filename.c_str(), 1024, pFullPathName, nullptr) == 0)
+		return string();
+	
+	return string(pFullPathName);
+}
+
+bool Filesystem::FileExists(const string &filename)
+{
+	ifstream f(filename.c_str(), ios::binary);
+	if (f.is_open())
+	{
+		f.close();
+		return true;
+	}
+	return false;
 }

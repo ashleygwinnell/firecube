@@ -108,7 +108,7 @@ void InputManager::RemoveMapping(AnalogInput analogInput, const std::string &nam
 
 void InputManager::SetRawKeyState(Key key, bool pressed, bool previouslyPressed, KeyModifier modifier)
 {
-	if (!pressed && (key == KEY_LEFT_CTRL || key == KEY_RIGHT_CTRL || key == KEY_LEFT_ALT || key == KEY_RIGHT_ALT || key == KEY_LEFT_SHIFT || key == KEY_RIGHT_SHIFT))
+	if (key == KEY_LEFT_CTRL || key == KEY_RIGHT_CTRL || key == KEY_LEFT_ALT || key == KEY_RIGHT_ALT || key == KEY_LEFT_SHIFT || key == KEY_RIGHT_SHIFT)
 	{
 		KeyModifier modifier = MODIFIER_NONE;							
 		if (key == KEY_LEFT_CTRL)
@@ -123,18 +123,42 @@ void InputManager::SetRawKeyState(Key key, bool pressed, bool previouslyPressed,
 			modifier = MODIFIER_LEFT_SHIFT;
 		else if (key == KEY_RIGHT_SHIFT)
 			modifier = MODIFIER_RIGHT_SHIFT;
-		
-		map<Key, vector<InputMapping>>::iterator i;
-		for (i = mappedKeys.begin(); i != mappedKeys.end(); i++)
+
+		// Iterate over all pressed keys
+		for (auto i = pressedKeys.begin(); i != pressedKeys.end(); ++i)
 		{
-			for (unsigned int j = 0; j < i->second.size(); j++)
+			map<Key, vector<InputMapping>>::iterator inputMapping = mappedKeys.find(*i);			
+			if (inputMapping != mappedKeys.end())
 			{
-				InputMapping &keyMapping = i->second[j];
-				if (keyMapping.inputMappingType == STATE && ((keyMapping.modifier == MODIFIER_ANY) || (keyMapping.modifier == MODIFIER_NONE && modifier == MODIFIER_NONE) || ((keyMapping.modifier & modifier) != 0)))
-					mappedInput.states.erase(keyMapping.actionName);
+				for (unsigned int j = 0; j < inputMapping->second.size(); j++)
+				{
+					InputMapping &keyMapping = inputMapping->second[j];
+					// If a modifier key which is required to an active state is released remove this state
+					if (!pressed)
+					{			
+						if (keyMapping.inputMappingType == STATE && ((keyMapping.modifier == MODIFIER_NONE && modifier != MODIFIER_NONE) || ((keyMapping.modifier & modifier) != 0)))
+							mappedInput.states.erase(keyMapping.actionName);
+					}
+					else
+					{
+						// If a modifier key which is required to an active state is pressed while the main key is already down, add this state
+						if (keyMapping.inputMappingType == STATE && (keyMapping.modifier != MODIFIER_NONE) && (keyMapping.modifier != MODIFIER_ANY) && ((keyMapping.modifier & modifier) != 0))
+							mappedInput.states.insert(keyMapping.actionName);
+					}
+				}
 			}
 		}
-	}	
+	}
+
+	if (pressed && !previouslyPressed)
+		pressedKeys.push_back(key);
+	else if (!pressed && previouslyPressed)
+	{
+		vector<Key>::iterator i = find(pressedKeys.begin(), pressedKeys.end(), key);
+		if (i != pressedKeys.end())
+			pressedKeys.erase(i);
+	}
+		
 
 	map<Key, vector<InputMapping>>::iterator i = mappedKeys.find(key);
 	if (i == mappedKeys.end())

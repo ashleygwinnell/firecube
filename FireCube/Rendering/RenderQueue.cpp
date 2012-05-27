@@ -32,61 +32,9 @@ void RenderQueue::Clear()
 	activeLights.clear();
 }
 
-void RenderQueue::AddNode(NodePtr node)
-{
-	if (node->GetGeometry())
-	{
-		RenderJob *job;
-		if (node->GetRenderParameters().lighting)
-		{
-			renderJobs[NORMAL].push_back(RenderJob());
-			job = &renderJobs[NORMAL].back();
-		}
-		else if (!node->GetRenderParameters().lighting)
-		{
-			renderJobs[NON_LIGHTED].push_back(RenderJob());
-			job = &renderJobs[NON_LIGHTED].back();
-		}
-		
-		job->geometry = node->GetGeometry();		
-		job->renderParameters = node->GetRenderParameters();
-		job->transformation = node->GetWorldTransformation();		
-	}	    
-	for (vector<Light>::iterator i = node->GetLights().begin(); i != node->GetLights().end(); i++)
-	{
-		activeLights.push_back(make_pair(node->GetWorldTransformation(), *i));
-	}
-	for (vector<NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
-		AddNode(*i);
-}
-
 void RenderQueue::AddNode(NodePtr node, CameraPtr camera)
 {    
-	BoundingBox boundingBox = node->GetWorldBoundingBox();
-	for (vector<Light>::iterator i = node->GetLights().begin(); i != node->GetLights().end(); i++)
-	{
-		activeLights.push_back(make_pair(node->GetWorldTransformation(), *i));
-	}
-	if (node->GetGeometry() && camera->GetFrustum().Contains(boundingBox))
-	{
-		RenderJob *job;
-		if (node->GetRenderParameters().lighting)
-		{
-			renderJobs[NORMAL].push_back(RenderJob());
-			job = &renderJobs[NORMAL].back();
-		}
-		else if (!node->GetRenderParameters().lighting)
-		{
-			renderJobs[NON_LIGHTED].push_back(RenderJob());
-			job = &renderJobs[NON_LIGHTED].back();
-		}
-
-		job->geometry = node->GetGeometry();		
-		job->renderParameters = node->GetRenderParameters();
-		job->transformation = node->GetWorldTransformation();					
-	}
-	for (vector<NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
-		AddNode(*i, camera);
+	node->PopulateRenderQueue(*this, camera);	
 }
 
 bool RenderJobCompare(const RenderJob &job1, const RenderJob &job2)
@@ -114,4 +62,23 @@ bool RenderJobCompare(const RenderJob &job1, const RenderJob &job2)
 void RenderQueue::Sort(QueueType type)
 {	
 	sort(renderJobs[type].begin(), renderJobs[type].end(), RenderJobCompare);
+}
+
+void RenderQueue::AddLight(const mat4 &transformation, const Light &light)
+{
+	activeLights.push_back(make_pair(transformation, light));
+}
+
+RenderJob &RenderQueue::AddRenderJob(QueueType queueType)
+{
+	if (queueType == NORMAL)
+	{
+		renderJobs[NORMAL].push_back(RenderJob());
+		return renderJobs[NORMAL].back();
+	}
+	else
+	{
+		renderJobs[NON_LIGHTED].push_back(RenderJob());
+		return renderJobs[NON_LIGHTED].back();
+	}
 }

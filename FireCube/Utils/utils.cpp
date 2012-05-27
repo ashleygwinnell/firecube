@@ -54,14 +54,3 @@ string FireCube::GetFileName(const string &file)
 
     return file.substr(maxi);
 }
-
-bool FireCube::FileExists(const string &file)
-{
-    ifstream f(file.c_str(), ios::binary);
-    if (f.is_open())
-    {
-        f.close();
-        return true;
-    }
-    return false;
-}

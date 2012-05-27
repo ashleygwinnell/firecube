@@ -5,13 +5,12 @@ using namespace std;
 bool Document::Load(const string &filename)
 {
 	root = FireCube::LoadMesh(filename);
-	FireCube::NodePtr l = root->AddChild(FireCube::NodePtr(new FireCube::Node("LightNode")));
-	FireCube::Light light;
-	light.SetAmbientColor(FireCube::vec4(0.3f, 0.3f, 0.3f, 1.0f));
-	light.SetDiffuseColor(FireCube::vec4(0.7f, 0.7f, 0.7f, 1.0f));
-	light.SetSpecularColor(FireCube::vec4(0.3f, 0.3f, 0.3f, 1.0f));
-	light.SetType(FireCube::DIRECTIONAL);
-	l->AddLight(light);
+	FireCube::LightNodePtr l(new FireCube::LightNode("LightNode"));
+	root->AddChild(l);	
+	l->GetLight().SetAmbientColor(FireCube::vec4(0.3f, 0.3f, 0.3f, 1.0f));
+	l->GetLight().SetDiffuseColor(FireCube::vec4(0.7f, 0.7f, 0.7f, 1.0f));
+	l->GetLight().SetSpecularColor(FireCube::vec4(0.3f, 0.3f, 0.3f, 1.0f));
+	l->GetLight().SetType(FireCube::DIRECTIONAL);	
 	l->Rotate(FireCube::vec3((float)PI / 4.0f, (float)PI / 4.0f, 0));
 
 	verticesCount = 0;

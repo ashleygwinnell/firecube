@@ -21,6 +21,7 @@ using namespace std;
 #include "Dependencies/tinyxml.h"
 #include "Scene/Light.h"
 #include "Scene/Node.h"
+#include "Scene/GeometryNode.h"
 #include "Geometry/ColladaLoader.h"
 using namespace FireCube;
 
@@ -578,7 +579,7 @@ void ColladaLoader::ReadInputChannel(TiXmlNode *parent, vector<InputChannel> &in
 
 void ColladaLoader::ReadTriangles(TiXmlNode *parent, Mesh &mesh)
 {
-	// Each triangle element is a list of trianlges sharing a single material
+	// Each triangle element is a list of triangles sharing a single material
 	TiXmlNode *node;
 	TiXmlElement *element = parent->ToElement();
 
@@ -1309,28 +1310,13 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 				bitangents[j].z *= -1;
 			}
 			bitangents[j].Normalize();
-		}
-
-		// Compact the texcoord list. Isn't this harmful? what if a sampler referenced 
-		// texture coordinates set number 2 but since 1 didn't exist set number two became one
-		/*
-		unsigned int writePos = 0;
-		for (unsigned int j = 0; j < 4; j++)
-		{
-			if (mesh.texcoords[j].size() > 0)
-			{
-				if (writePos != j)
-					mesh.texcoords[writePos] = mesh.texcoords[j];
-				writePos++;
-			}
-		}
-		*/
+		}		
 
 		// Iterate over every sub mesh and create a Geometry and a Node for it
 		unsigned int vertexIndex = 0;
 		for (unsigned int j = 0; j < mesh.subMeshes.size(); j++)
 		{
-			FireCube::NodePtr surfaceNode(new FireCube::Node());
+			FireCube::GeometryNodePtr surfaceNode(new FireCube::GeometryNode());
 			ostringstream surfaceNodeName;
 			surfaceNodeName << geomNode->GetName() << "-surface-" << j;
 			surfaceNode->SetName(surfaceNodeName.str());

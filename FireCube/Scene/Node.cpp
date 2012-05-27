@@ -45,6 +45,7 @@ Node::Node() : parent(nullptr)
 	localTransformationChanged = true;
 	worldTransformationChanged = true;
 	worldBoundingBoxChanged = true;
+	type = NODE;
 }
 
 Node::Node(const string &name) : parent(nullptr)
@@ -59,7 +60,13 @@ Node::Node(const string &name) : parent(nullptr)
 	localTransformationChanged = true;
 	worldTransformationChanged = true;
 	worldBoundingBoxChanged = true;
+	type = NODE;
 	SetName(name);
+}
+
+Node::NodeType Node::GetType() const
+{
+	return type;
 }
 
 void Node::SetName(const string &name)
@@ -92,8 +99,16 @@ mat4 Node::GetLocalTransformation()
 
 mat4 Node::GetWorldTransformation()
 {
-	UpdateWorldTransformation();
-	return worldTransformation;
+	if (!worldTransformationChanged)
+		return worldTransformation;
+
+	worldTransformationChanged = false;
+	if (parent)
+		worldTransformation = parent->GetWorldTransformation() * GetLocalTransformation();			
+	else
+		worldTransformation = GetLocalTransformation();
+	
+	return worldTransformation;	
 }
 
 void Node::SetTranslation(const vec3 &t)
@@ -171,24 +186,6 @@ void Node::LookAt(vec3 position, vec3 at, vec3 up)
 	SetTransformationChanged();
 }
 
-void Node::SetGeometry(GeometryPtr geometry)
-{
-	this->geometry = geometry;
-	SetBoundingBoxChanged();
-}
-
-void Node::AddLight(const Light &light)
-{
-	lights.push_back(light);
-}
-
-void Node::RemoveLight(const Light &light)
-{
-	vector<Light>::iterator i = std::find(lights.begin(), lights.end(), light);
-	if (i != lights.end())
-		lights.erase(i);
-}
-
 void Node::RenderBoundingBox(vec3 color, bool onlyWithGeometry)
 {
 	MaterialPtr mat(new Material);
@@ -200,16 +197,6 @@ void Node::RenderBoundingBox(vec3 color, bool onlyWithGeometry)
 	//Renderer::SetModelViewMatrix(Renderer::GetCamera()->GetViewMatrix());
 	RenderBoundingBox(mat, p, onlyWithGeometry);
 	//Renderer::RestoreModelViewMatrix();
-}
-
-GeometryPtr Node::GetGeometry()
-{
-	return geometry;
-}
-
-vector<Light> &Node::GetLights()
-{
-	return lights;
 }
 
 void Node::Render()
@@ -244,7 +231,10 @@ void Node::SetParent(NodePtr parent)
 	
 	this->parent = parent.get();
 	if (parent)
+	{
 		parent->children.push_back(shared_from_this());
+		parent->SetBoundingBoxChanged();
+	}
 }
 
 NodePtr Node::GetChild(const string &name)
@@ -307,9 +297,7 @@ vector<NodePtr> &Node::GetChildren()
 
 void Node::CreateHardNormals()
 {
-	if (geometry)
-		geometry->CreateHardNormals();
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (auto i = children.begin(); i != children.end(); ++i)
 	{
 		(*i)->CreateHardNormals();
 	}
@@ -407,8 +395,6 @@ float Node::GetFogDensity() const
 NodePtr Node::Clone() const
 {
 	NodePtr ret(new Node);
-	ret->geometry = geometry;
-	ret->lights = lights;
 	ret->matTransform = matTransform;
 	ret->name = name;
 	ret->renderParameters = renderParameters;
@@ -431,6 +417,9 @@ NodePtr Node::Clone() const
 
 void Node::SetTransformationChanged()
 {
+	if (localTransformationChanged)
+		return;
+
 	worldTransformationChanged = true;
 	localTransformationChanged = true;
 	SetBoundingBoxChanged();
@@ -440,25 +429,10 @@ void Node::SetTransformationChanged()
 	}
 }
 
-void Node::UpdateWorldTransformation()
-{
-	if (!worldTransformationChanged)
-		return;
-
-	if (parent)
-	{
-		worldTransformation = parent->GetWorldTransformation() * GetLocalTransformation();
-		worldTransformationChanged = false;
-	}
-	else
-	{
-		worldTransformation = GetLocalTransformation();
-		worldTransformationChanged = false;
-	}
-}
-
 void Node::SetBoundingBoxChanged()
 {
+	if (worldBoundingBoxChanged)
+		return;
 	worldBoundingBoxChanged = true;
 	worldBoundingBoxRenderingChanged = true;
 	Node *p = parent;
@@ -473,17 +447,13 @@ void Node::SetBoundingBoxChanged()
 }
 
 void Node::UpdateWorldBoundingBox()
-{
+{	
 	if (!worldBoundingBoxChanged)
 		return;
 
-	worldBoundingBox = BoundingBox();
-	if (geometry)
-	{
-		worldBoundingBox = geometry->GetBoundingBox();
-		worldBoundingBox.Transform(GetWorldTransformation());
-	}
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	worldBoundingBox = GetLocalBoundingBox();	
+	worldBoundingBox.Transform(GetWorldTransformation());	
+	for (auto i = children.begin(); i != children.end(); ++i)
 	{
 		worldBoundingBox.Expand((*i)->GetWorldBoundingBox());
 	}    
@@ -498,7 +468,7 @@ BoundingBox Node::GetWorldBoundingBox()
 
 void Node::RenderBoundingBox(MaterialPtr material, ProgramPtr program, bool onlyWithGeometry)
 {
-	if (!onlyWithGeometry || (onlyWithGeometry && geometry))
+	/*if (!onlyWithGeometry || (onlyWithGeometry && geometry))
 	{
 		PrepareRenderBoundingBox();
 		bboxVBuffer->SetVertexAttribute(0, 3, 0, 0);
@@ -509,7 +479,7 @@ void Node::RenderBoundingBox(MaterialPtr material, ProgramPtr program, bool only
 	}
 
 	for (unsigned int i = 0; i < children.size(); i++)
-		children[i]->RenderBoundingBox(material, program, onlyWithGeometry);
+		children[i]->RenderBoundingBox(material, program, onlyWithGeometry);*/
 }
 
 void Node::PrepareRenderBoundingBox()
@@ -554,8 +524,7 @@ NodePtr FIRECUBE_API FireCube::LoadMesh(const string &filename, ModelLoadingOpti
 	if (file.empty())
 		return NodePtr();
 	string::size_type d;
-	d = filename.find_last_of(".");
-	//name=filename;
+	d = filename.find_last_of(".");	
 	ostringstream ss;
 	ss << "Created model with name:" << filename;
 	Logger::Write(Logger::LOG_INFO, ss.str());
@@ -598,4 +567,15 @@ NodePtr FIRECUBE_API FireCube::LoadMesh(const string &filename, ModelLoadingOpti
 vec3 Node::GetWorldPosition()
 {
 	return GetWorldTransformation() * vec3(0.0f, 0.0f, 0.0f);
+}
+
+void Node::PopulateRenderQueue(RenderQueue &renderQueue, CameraPtr camera)
+{
+	for (auto i = children.begin(); i != children.end(); ++i)
+		(*i)->PopulateRenderQueue(renderQueue, camera);
+}
+
+BoundingBox Node::GetLocalBoundingBox() const
+{
+	return BoundingBox();
 }

@@ -138,6 +138,8 @@ public:
 	* to the appropriate vertex buffers in this geometry.
 	*/
 	void UpdateBuffers();
+
+	void UpdateIndexBuffer();
 	
 	/**
 	* Returns the vertices of this geometry.

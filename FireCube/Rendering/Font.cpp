@@ -48,20 +48,16 @@ std::shared_ptr<FontPage> FontPool::CreateNewPage()
 }
 
 FontPtr FontPool::Create(const string &filename, int size)
-{
-	char pFullPathName[1024];
+{	
 	ostringstream fullPathName;
 	std::string loadfile = Filesystem::SearchForFileName(filename);
 	if (loadfile.empty())
 		return FontPtr();
-	
-	// Get the full path name of the file
-	if (GetFullPathNameA(loadfile.c_str(), 1024, pFullPathName, nullptr) == 0)
-		return FontPtr();
+		
 	// Add the size of the font to the full path name.
 	// Used to differentiate between the same font with different sizes when
 	// searching it in the font pool to see if it is already loaded.
-	fullPathName << pFullPathName << ":" << size;
+	fullPathName << Filesystem::GetFullPath(loadfile) << ":" << size;
 
 	map<std::string, std::weak_ptr<Font>>::iterator i = pool.find(fullPathName.str());
 	if (i != pool.end())

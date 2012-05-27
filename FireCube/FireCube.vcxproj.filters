@@ -13,6 +13,8 @@
     </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{807f528e-5064-41ab-ba4b-80ae47348a9e}</UniqueIdentifier>
+      <Extensions>
+      </Extensions>
     </Filter>
     <Filter Include="Application">
       <UniqueIdentifier>{76917075-7079-4b73-a31e-30d41fbc4013}</UniqueIdentifier>
@@ -140,6 +142,18 @@
     <ClCompile Include="Scene\Light.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\GeometryNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\LightNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\TerrainNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\Terrain.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Buffer.h">
@@ -223,9 +237,6 @@
     <ClInclude Include="Scene\Camera.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\Light.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\Node.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -249,6 +260,21 @@
       <Filter>Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Geometry\ObjLoader.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GeometryNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\LightNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Light.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\TerrainNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Terrain.h">
       <Filter>Geometry</Filter>
     </ClInclude>
   </ItemGroup>

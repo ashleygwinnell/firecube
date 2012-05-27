@@ -25,6 +25,7 @@
     <ClCompile Include="Geometry\m3dsLoader.cpp" />
     <ClCompile Include="Geometry\Material.cpp" />
     <ClCompile Include="Geometry\ObjLoader.cpp" />
+    <ClCompile Include="Geometry\Terrain.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\BoundingBox.cpp" />
     <ClCompile Include="Math\Frustum.cpp" />
@@ -42,9 +43,12 @@
     <ClCompile Include="Rendering\Shaders.cpp" />
     <ClCompile Include="Rendering\Texture.cpp" />
     <ClCompile Include="Scene\Camera.cpp" />
+    <ClCompile Include="Scene\GeometryNode.cpp" />
     <ClCompile Include="Scene\Light.cpp" />
+    <ClCompile Include="Scene\LightNode.cpp" />
     <ClCompile Include="Scene\Node.cpp" />
     <ClCompile Include="Scene\NodeObserverCamera.cpp" />
+    <ClCompile Include="Scene\TerrainNode.cpp" />
     <ClCompile Include="Utils\Filesystem.cpp" />
     <ClCompile Include="Utils\Image.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
@@ -62,6 +66,7 @@
     <ClInclude Include="Geometry\m3dsLoader.h" />
     <ClInclude Include="Geometry\Material.h" />
     <ClInclude Include="Geometry\ObjLoader.h" />
+    <ClInclude Include="Geometry\Terrain.h" />
     <ClInclude Include="Math\BoundingBox.h" />
     <ClInclude Include="Math\Frustum.h" />
     <ClInclude Include="Math\mat3.h" />
@@ -80,9 +85,12 @@
     <ClInclude Include="Rendering\Shaders.h" />
     <ClInclude Include="Rendering\Texture.h" />
     <ClInclude Include="Scene\Camera.h" />
+    <ClInclude Include="Scene\GeometryNode.h" />
     <ClInclude Include="Scene\Light.h" />
+    <ClInclude Include="Scene\LightNode.h" />
     <ClInclude Include="Scene\Node.h" />
     <ClInclude Include="Scene\NodeObserverCamera.h" />
+    <ClInclude Include="Scene\TerrainNode.h" />
     <ClInclude Include="Utils\Filesystem.h" />
     <ClInclude Include="Utils\Image.h" />
     <ClInclude Include="Utils\Logger.h" />
@@ -166,7 +174,7 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;FIRECUBE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;GLEW_BUILD;FIRECUBE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -174,7 +182,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>C:\Dev\SDL-1.2.14\include;C:\Dev\SDL_image-1.2.10\include;C:\Dev\boost_1_46_0;.\Dependencies\FreeType\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\SDL-1.3.0\include;C:\Dev\SDL_image-1.2.10-SDL-1.3.0;.\Dependencies\FreeType\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;sdl.lib;sdl_image.lib;freetype242MT_D.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -183,7 +191,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>C:\Dev\SDL-1.2.14\lib;C:\Dev\SDL_image-1.2.10\lib;.\Dependencies\FreeType\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Dev\SDL-1.3.0\VisualC\SDL\Win32\Release;C:\Dev\SDL_image-1.2.10-SDL-1.3.0\VisualC\Release;.\Dependencies\FreeType\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>

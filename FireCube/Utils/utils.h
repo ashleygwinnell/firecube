@@ -38,11 +38,6 @@ std::string FIRECUBE_API ToUpper(const std::string &str);
 std::string FIRECUBE_API GetFileName(const std::string &file);
 
 /**
-* Tests whether a file exists.
-*/
-bool FIRECUBE_API FileExists(const std::string &file);
-
-/**
 * Specifies the maximum number of textures in various locations.
 */
 const unsigned int MAX_TEXTURES = 6;

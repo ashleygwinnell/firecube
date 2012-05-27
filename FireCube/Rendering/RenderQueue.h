@@ -64,7 +64,7 @@ public:
 	*/
 	enum QueueType
 	{
-		NORMAL,NON_LIGHTED
+		NORMAL, NON_LIGHTED
 	};
 
 
@@ -72,12 +72,6 @@ public:
 	* Clears the rendering queue.
 	*/
 	void Clear();
-
-	/**
-	* Adds a node to the rendering queue.
-	* @param node The node to enqueue.
-	*/
-	void AddNode(NodePtr node);
 
 	/**
 	* Adds a node to the rendering queue.
@@ -92,6 +86,9 @@ public:
 	*/
 	void Sort(QueueType type);
 
+	void AddLight(const mat4 &transformation, const Light &light);
+
+	RenderJob &AddRenderJob(QueueType queueType);
 private:	
 	std::map<QueueType, std::vector<RenderJob>> renderJobs;
 	std::vector<std::pair<mat4, Light>> activeLights;

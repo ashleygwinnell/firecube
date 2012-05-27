@@ -20,6 +20,7 @@ using namespace std;
 #include "Dependencies/tinyxml.h"
 #include "Scene/Light.h"
 #include "Scene/Node.h"
+#include "Scene/GeometryNode.h"
 #include "Geometry/ObjLoader.h"
 
 using namespace FireCube;
@@ -320,7 +321,7 @@ NodePtr ObjLoader::GenerateSceneGraph()
 			ostringstream oss;
 			oss << "surface-" << surfaceNum;
 			// Create a node and a geometry for each surface
-			NodePtr surfaceNode(new Node(oss.str()));
+			GeometryNodePtr surfaceNode(new GeometryNode(oss.str()));
 			GeometryPtr geometry(new Geometry);
 			surfaceNode->SetGeometry(geometry);
 			surfaceNode->SetParent(node);

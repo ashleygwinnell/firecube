@@ -42,7 +42,7 @@ void GLCanvas::Init()
 	renderingParameters.renderTangents = false;    
 
 	renderingParameters.grid = GeometryPtr(new Geometry);    
-	renderingParameters.gridNode = NodePtr(new Node);
+	renderingParameters.gridNode = GeometryNodePtr(new GeometryNode);
 	MaterialPtr material(new Material);
 	renderingParameters.grid->SetMaterial(material);
 	material->SetDiffuseColor(vec3(1, 1, 1));

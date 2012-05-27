@@ -42,6 +42,7 @@ map<string, TechniquePtr> techniques;
 CameraPtr camera;
 unsigned int numberOfTrianglesRendered = 0;
 GLuint textureSampler[16];
+GLuint customVao;
 
 /** \cond */
 struct FontVertex
@@ -77,6 +78,11 @@ void ShaderProperties::SetPointLighting(bool enable)
 void ShaderProperties::SetFog(bool enable)
 {
 	fog = enable;
+}
+
+void ShaderProperties::SetDiffuseTexture(bool enable)
+{
+	diffuseTexture = enable;
 }
 
 unsigned int ShaderProperties::ToInt() const
@@ -348,6 +354,7 @@ void InitializeRenderer()
 	}
 	
 	
+	glGenVertexArrays(1, &customVao);
 	// Create a vertex buffer for text rendering	
 	glGenVertexArrays(1, &textVao);
 	glBindVertexArray(textVao);
@@ -877,4 +884,9 @@ unsigned int FIRECUBE_API Renderer::GetNumberOfTrianglesRendered()
 void FIRECUBE_API Renderer::DisableVertexAttribute(int index)
 {
 	glDisableVertexAttribArray(index);
+}
+
+void FIRECUBE_API Renderer::UseCustomVAO()
+{
+	glBindVertexArray(customVao);
 }

@@ -77,6 +77,12 @@ public:
 	void SetFog(bool enable);
 
 	/**
+	* Sets whether diffuse texture should be used.
+	* @param enable True to enable, false to disable.
+	*/
+	void SetDiffuseTexture(bool enable);
+
+	/**
 	* Hashes the rendering state.
 	* @return An integer representing this rendering state.
 	*/
@@ -280,6 +286,7 @@ unsigned int FIRECUBE_API GetNumberOfTrianglesRendered();
 */
 void FIRECUBE_API DisableVertexAttribute(int index);
 
+void FIRECUBE_API UseCustomVAO();
 
 /**
 * Sets the current texture pool.

@@ -8,6 +8,8 @@ namespace FireCube
 {
 
 // Forward declarations.
+class Node;
+class RenderQueue;
 
 /**
 * A shared pointer to a Node.
@@ -24,7 +26,6 @@ typedef std::shared_ptr<Program> ProgramPtr;
 /**
 * A class describing various parameters to apply to models when loaded from a file
 */
-
 class FIRECUBE_API ModelLoadingOptions
 {
 public:
@@ -46,7 +47,12 @@ public:
 */
 class FIRECUBE_API Node : public std::enable_shared_from_this<Node>
 {
+	friend class RenderQueue;
 public:
+	enum NodeType
+	{
+		NODE, GEOMETRY
+	};
 	Node();
 
 	/**
@@ -54,6 +60,12 @@ public:
 	* @param name The name of this node.
 	*/
 	Node(const std::string &name);
+
+	/**
+	* Gets the type of this node.
+	* @returns The type of this node.
+	*/
+	NodeType GetType() const;
 
 	/**
 	* Sets the name of this node.
@@ -169,37 +181,7 @@ public:
 	* @return A list of children.
 	*/
 	std::vector<NodePtr> &GetChildren();
-
-	/**
-	* Sets the geometry of this node.
-	* @param geometry The geometry to set.
-	*/
-	void SetGeometry(GeometryPtr geometry);
-
-	/**
-	* Gets the geometry of this node.
-	* @return The geometry of this node.
-	*/
-	GeometryPtr GetGeometry();
-
-	/**
-	* Adds a light to this node.
-	* @param light The light to add.
-	*/
-	void AddLight(const Light &light);
-
-	/**
-	* Removes a light from this node.
-	* @param light The light to remove.
-	*/
-	void RemoveLight(const Light &light);
-
-	/**
-	* Gets the lights of this node.
-	* @return A list of lights.
-	*/
-	std::vector<Light> &GetLights();
-
+	
 	/**
 	* Adds a child node.
 	* @param node The node to add as a child.
@@ -233,7 +215,7 @@ public:
 	/**
 	* Creates hard normals for all geometries of the sub tree under this node.
 	*/
-	void CreateHardNormals();
+	virtual void CreateHardNormals();
 
 	/**
 	* Returns the local bounding box of this node;
@@ -329,24 +311,26 @@ public:
 	* Clones the node.
 	* The cloned node has no parent and points to the same geometries as the original.
 	*/
-	NodePtr Clone() const;
+	virtual NodePtr Clone() const;
+	
+
 
 	/**
 	* @return The world space position of this node.
 	*/
 	vec3 GetWorldPosition();
-
-private:
-	void SetTransformationChanged();
-	void SetBoundingBoxChanged();
-	void UpdateWorldTransformation();	
+		
+protected:
+	virtual BoundingBox GetLocalBoundingBox() const;
+	virtual void PopulateRenderQueue(RenderQueue &renderQueue, CameraPtr camera);		
 	void UpdateWorldBoundingBox();
+	void SetTransformationChanged();
+	void SetBoundingBoxChanged();		
 	void RenderBoundingBox(MaterialPtr material, ProgramPtr program, bool onlyWithGeometry);
 	void PrepareRenderBoundingBox();
-	std::vector<NodePtr> children;
-	GeometryPtr geometry;
-	std::vector<Light> lights;
-	
+
+	std::vector<NodePtr> children;	
+
 	vec3 translation;
 	mat4 rotation;
 	vec3 scale;
@@ -363,10 +347,10 @@ private:
 	Node *parent;
 	std::string name;
 	RenderParameters renderParameters;
+	NodeType type;
 
 	BufferPtr bboxVBuffer;
-	BufferPtr bboxIBuffer;
-	
+	BufferPtr bboxIBuffer;	
 };
 
 /**

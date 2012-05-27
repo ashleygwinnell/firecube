@@ -195,6 +195,7 @@ private:
 	std::map<Key, std::vector<InputMapping>> mappedKeys;
 	std::map<AnalogInput, std::vector<std::string>> mappedAnalogs;
 	std::vector<InputListener *> inputListeners;
+	std::vector<Key> pressedKeys;
 	MappedInput mappedInput;
 };
 

@@ -8,6 +8,7 @@ namespace FireCube
 namespace Filesystem
 {
    std::string FIRECUBE_API SearchForFileName(const std::string &filename);
+   std::string FIRECUBE_API GetFullPath(const std::string &filename);
 }
 
 /**
@@ -28,8 +29,8 @@ public:
 	}
 
 	/**
-	* Constructs the resource manager from another.
-	* @param r The resource manager to copy.
+	* Constructs the resource pool from another.
+	* @param r The resource pool to copy.
 	*/
 	ResourcePool<T>(const ResourcePool<T> &r)
 	{
@@ -41,16 +42,13 @@ public:
 	* @param filename The file to load.
 	*/
 	std::shared_ptr<T> Create(const std::string &filename)
-	{
-		char pFullPathName[1024];
+	{		
 		string fullPathName;
 		std::string loadfile = Filesystem::SearchForFileName(filename);
 		if (loadfile.empty())
 			return std::shared_ptr<T>();
-		// Get the full path name of the given file
-		if (GetFullPathNameA(loadfile.c_str(), 1024, pFullPathName, nullptr) == 0)
-			return std::shared_ptr<T>();
-		fullPathName = pFullPathName;
+		// Get the full path of the given file
+		fullPathName = Filesystem::GetFullPath(loadfile);		
 		map<std::string, std::weak_ptr<T>>::iterator i = pool.find(fullPathName);
 		if (i != pool.end())
 			if (!i->second.expired())

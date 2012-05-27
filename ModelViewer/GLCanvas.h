@@ -14,7 +14,7 @@ public:
 		bool cullFaceEnabled;
 		bool renderNormals;
 		bool renderTangents;		
-		FireCube::NodePtr gridNode;
+		FireCube::GeometryNodePtr gridNode;
 		FireCube::GeometryPtr grid;
 		DWORD gridCount;
 		FireCube::ProgramPtr plainColorProgram;
