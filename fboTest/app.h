@@ -7,7 +7,7 @@ class App : public Application, public InputListener
 
     FontPtr font;
     NodePtr root, node, node2;
-	NodePtr mainRoot;
+	GeometryNodePtr mainRoot;
     FrameBufferPtr fbo;
     CameraPtr camera;
 	CameraPtr orthographicCamera;

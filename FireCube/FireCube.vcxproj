@@ -99,12 +99,12 @@
     <ClInclude Include="Utils\utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Assets\Shaders\debugNormals.frag" />
-    <None Include="..\Assets\Shaders\debugNormals.vert" />
-    <None Include="..\Assets\Shaders\default.frag" />
-    <None Include="..\Assets\Shaders\default.vert" />
-    <None Include="..\Assets\Shaders\font.frag" />
-    <None Include="..\Assets\Shaders\font.vert" />
+    <None Include="Shaders\debugNormals.frag" />
+    <None Include="Shaders\debugNormals.vert" />
+    <None Include="Shaders\default.frag" />
+    <None Include="Shaders\default.vert" />
+    <None Include="Shaders\font.frag" />
+    <None Include="Shaders\font.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{66AD911D-22A7-415E-A8E1-C746E779E0F7}</ProjectGuid>
@@ -116,10 +116,12 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -163,6 +165,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>

@@ -1,7 +1,8 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <queue>
+#include <algorithm>
+#include <memory>
 using namespace std;
 #include <SDL.h>
 #include <windows.h>

@@ -8,7 +8,7 @@ class FIRECUBE_API Terrain
 public:
 	Terrain();
 	bool GenerateTerrain(const std::string &heightmap, vec3 sizeVertices, vec2 sizeUv, bool smoothNormals);
-	unsigned int Render(CameraPtr camera);
+	void Render(CameraPtr camera);
 	float GetHeight(vec2 pos);
 	int GetWidth();
 	int GetLength();
@@ -31,8 +31,7 @@ private:
 			std::vector<unsigned int> indices;
 			NodePtr child[4];
 		};
-		QuadTree();
-		void Initialize();
+		QuadTree();		
 		void Init(vec2 size, vec2 verticesSize);
 		void Build(float minSize, unsigned int maxNumberOfFaces);
 		unsigned int Render(CameraPtr camera, std::vector<unsigned int> &indicesToRender);

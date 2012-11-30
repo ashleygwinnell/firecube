@@ -1,10 +1,8 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include <iostream>
-#include <sstream>
 #include <map>
-#include <queue>
+#include <memory>
 using namespace std;
 #include <SDL.h>
 #include <SDL_image.h>
@@ -12,8 +10,6 @@ using namespace std;
 #include "Dependencies/glew.h"
 
 #include "Utils/utils.h"
-//#include "Utils/Logger.h"
-//#include "Utils/Filesystem.h"
 #include "Math/MyMath.h"
 #include "Math/BoundingBox.h"
 #include "Geometry/Geometry.h"
@@ -22,12 +18,7 @@ using namespace std;
 #include "Scene/Light.h"
 #include "Scene/Node.h"
 #include "Rendering/RenderQueue.h"
-//#include "Dependencies/tinyxml.h"
-//#include "Geometry/m3dsLoader.h"
-//#include "Geometry/ObjLoader.h"
-//#include "Geometry/ColladaLoader.h"
 #include "Rendering/Buffer.h"
-//#include "Rendering/Shaders.h"
 #include "Math/Plane.h"
 #include "Math/Frustum.h"
 #include "Scene/Camera.h"
@@ -143,7 +134,6 @@ bool Terrain::GenerateTerrain(const string &heightmap, vec3 sizeVertices, vec2 s
 	}
 	geometry->UpdateBuffers();
 		
-	quadtree.Initialize();
 	string::size_type d;
 	d = heightmap.find_last_of("/");
 	if (d == string::npos)
@@ -175,13 +165,12 @@ bool Terrain::GenerateTerrain(const string &heightmap, vec3 sizeVertices, vec2 s
 
 	return true;
 }
-unsigned int Terrain::Render(CameraPtr camera)
+void Terrain::Render(CameraPtr camera)
 {
 	unsigned int count = quadtree.Render(camera, geometry->GetIndices());
 	geometry->UpdateIndexBuffer();
 	geometry->SetVertexCount(count);
-	geometry->SetPrimitiveCount(count / 3);
-	return count;
+	geometry->SetPrimitiveCount(count / 3);	
 }
 float Terrain::GetHeight(vec2 pos)
 {
@@ -266,10 +255,7 @@ BoundingBox Terrain::GetBoundingBox() const
 Terrain::QuadTree::QuadTree()
 {
 }
-void Terrain::QuadTree::Initialize()
-{
-	
-}
+
 void Terrain::QuadTree::Init(vec2 size, vec2 verticesSize)
 {
 

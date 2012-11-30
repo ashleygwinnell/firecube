@@ -1,11 +1,8 @@
 #include <string>
 #include <vector>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <map>
-#include <queue>
+#include <memory>
 using namespace std;
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <windows.h>

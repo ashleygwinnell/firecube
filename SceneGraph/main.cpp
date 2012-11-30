@@ -48,7 +48,6 @@ bool App::Init()
 
 	NodePtr n2 = root->AddChild(LoadMesh("../Assets/Models/teapot.3ds"));
 	n2->SetName("Teapot");
-	n2->CreateHardNormals();
 	n2->Move(vec3(8, -2, 0));
 
 	n2 = root->AddChild(LoadMesh("../Assets/Models/duck.dae"));

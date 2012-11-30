@@ -42,8 +42,7 @@ bool App::Init()
 	font = Renderer::GetFontPool().Create("c:\\windows\\fonts\\arial.ttf", 18);		
 	root = NodePtr(new Node("root"));
 	node = LoadMesh("../Assets/Models/teapot.3ds");
-	node->Move(vec3(5, 5, 5));
-	node->CreateHardNormals();	
+	node->Move(vec3(5, 5, 5));	
 	root->AddChild(node);
 	terrainNode = TerrainNodePtr(new TerrainNode);
 	if (!terrainNode->GetTerrain().GenerateTerrain("../Assets/Textures/heightmap.bmp", vec3(512.0f, 50.0f, 512.0f), vec2(1.0f, 1.0f), false))
@@ -102,7 +101,7 @@ void App::Render(float time)
 	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);
 	orthographicCamera->SetProjectionMatrix(ortho);
 	ostringstream oss;
-	oss << "FPS:" << app.GetFps() << endl << "Rendered primitives: " << Renderer::GetNumberOfTrianglesRendered();
+	oss << "FPS:" << app.GetFps() << endl << "Rendered primitives: " << Renderer::GetNumberOfPrimitivesRendered();
 	Renderer::RenderText(font, vec3(0, 0, 0), vec4(1.0f, 1.0f, 1.0f, 1.0f), oss.str());    
 }
 

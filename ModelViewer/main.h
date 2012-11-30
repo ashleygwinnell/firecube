@@ -1,7 +1,6 @@
 class FireCubeApp : public FireCube::Application
 {
-public:
-    void HandleInput(float t);
+public:    
     void Render(float t);
     void Update(float t);
     

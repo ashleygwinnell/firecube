@@ -7,6 +7,7 @@ public:
 	void Update(float time);
 	void Render(float time);
 
+private:
 	NodePtr root, node;	
 	TerrainNodePtr terrainNode;
 	FontPtr font;	
@@ -15,5 +16,4 @@ public:
 	vec3 speed;
 	vec3 angSpeed;
 	vec3 ang;
-
 };

@@ -9,6 +9,7 @@
 #include <queue>
 #include <set>
 #include <windows.h>
+#include <memory>
 #include <gl/gl.h>
 
 #include "Utils/utils.h"

@@ -4,6 +4,7 @@
 #include <queue>
 #include <fstream>
 #include <sstream>
+#include <memory>
 using namespace std;
 #include <SDL.h>
 #include <windows.h>

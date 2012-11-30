@@ -1,12 +1,8 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <queue>
-#include <iostream>
-#include <streambuf>
 #include <set>
-#include <io.h>
-#include <fcntl.h>
+#include <memory>
 using namespace std;
 #include <Windows.h>
 #include <SDL.h>
@@ -30,7 +26,7 @@ using namespace FireCube;
 
 extern void InitializeRenderer();
 extern void DestroyRenderer();
-extern void ResetNumberOfTrianglesRendered();
+extern void ResetNumberOfPrimitivesRendered();
 
 extern FT_Library freeTypeLibrary;
 
@@ -77,7 +73,7 @@ bool Application::Initialize(int width, int height, int bpp, int multisample, bo
 		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, multisample);
 	}
 	mainWindow = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
+		width, height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
 	
 	if (!mainWindow)
 		return false;
@@ -226,17 +222,17 @@ void Application::Run()
 				// Set the corresponding analog values of the input manager (mouse wheel)
 				inputManager.SetRawAnalogValue(MOUSE_WHEEL_Y_RELATIVE, ((float) event.wheel.y) / 60.0f);
 			}
-			else if (event.type == SDL_VIDEORESIZE)
+			else if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED)
 			{
 				// Update the renderer's viewport with the new window size
-				width = event.resize.w;
-				height = event.resize.h;
-				Renderer::SetViewport(0, 0, event.resize.w, event.resize.h);
+				width = event.window.data1;
+				height = event.window.data2;
+				Renderer::SetViewport(0, 0, width, height);
 			}
 			else if (event.type == SDL_QUIT)
 				running = false;
 		}		
-		ResetNumberOfTrianglesRendered();
+		ResetNumberOfPrimitivesRendered();
 		// Dispatch input to all input listeners
 		inputManager.DispatchInput(deltaTime);
 		// Update the scene

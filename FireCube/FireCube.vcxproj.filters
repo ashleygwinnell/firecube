@@ -279,22 +279,22 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Assets\Shaders\debugNormals.frag">
+    <None Include="Shaders\debugNormals.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\Assets\Shaders\debugNormals.vert">
+    <None Include="Shaders\debugNormals.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\Assets\Shaders\default.frag">
+    <None Include="Shaders\default.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\Assets\Shaders\default.vert">
+    <None Include="Shaders\default.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\Assets\Shaders\font.frag">
+    <None Include="Shaders\font.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\Assets\Shaders\font.vert">
+    <None Include="Shaders\font.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

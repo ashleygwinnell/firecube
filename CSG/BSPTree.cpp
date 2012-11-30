@@ -395,8 +395,8 @@ GeometryPtr BSPTree::GetGeometry()
 void BSPTree::Update()
 {
 	geometry->GetFaces().clear();
-	CopyFacesToGeometry(root);
-	geometry->CopyFacesToIndexBuffer();	
+	CopyFacesToGeometry(root);	
+	geometry->CopyFacesToIndices();
 	geometry->SetVertexCount(geometry->GetIndices().size());
 	geometry->SetPrimitiveCount(geometry->GetIndices().size() / 3);
 	geometry->CalculateBoundingBox();

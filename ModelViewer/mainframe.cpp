@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep  8 2010)
+// C++ code generated with wxFormBuilder (version Apr 10 2012)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -52,6 +52,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	fgSizer4->Add( textCtrl2, 0, wxALL|wxEXPAND, 1 );
 	
+	
 	panel1->SetSizer( fgSizer4 );
 	panel1->Layout();
 	fgSizer4->Fit( panel1 );
@@ -70,7 +71,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer8 = new wxBoxSizer( wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer8;
-	fgSizer8 = new wxFlexGridSizer( 1, 2, 0, 0 );
+	fgSizer8 = new wxFlexGridSizer( 2, 2, 0, 0 );
 	fgSizer8->SetFlexibleDirection( wxBOTH );
 	fgSizer8->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -83,6 +84,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	checkBox4 = new wxCheckBox( panel9, wxID_ANY, wxT("Tangents"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer8->Add( checkBox4, 0, wxALL, 5 );
+	
 	
 	bSizer8->Add( fgSizer8, 0, wxEXPAND, 5 );
 	
@@ -99,7 +101,9 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	textCtrl3 = new wxTextCtrl( panel9, wxID_ANY, wxT("0.1"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	fgSizer51->Add( textCtrl3, 0, wxALL|wxEXPAND, 5 );
 	
+	
 	bSizer8->Add( fgSizer51, 0, wxEXPAND, 5 );
+	
 	
 	panel9->SetSizer( bSizer8 );
 	panel9->Layout();
@@ -124,6 +128,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	colourPicker1 = new wxColourPickerCtrl( panel7, wxID_ANY, wxColour( 63, 132, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer6->Add( colourPicker1, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
 	
 	panel7->SetSizer( fgSizer6 );
 	panel7->Layout();
@@ -151,6 +156,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	textCtrl5 = new wxTextCtrl( panel8, wxID_ANY, wxT("20"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	fgSizer7->Add( textCtrl5, 0, wxALL|wxEXPAND, 5 );
 	
+	
 	panel8->SetSizer( fgSizer7 );
 	panel8->Layout();
 	fgSizer7->Fit( panel8 );
@@ -158,6 +164,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	button1 = new wxButton( panel3, wxID_ANY, wxT("Reset camera"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer5->Add( button1, 0, wxALL, 5 );
+	
 	
 	panel3->SetSizer( bSizer5 );
 	panel3->Layout();
@@ -170,11 +177,13 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	button2 = new wxButton( panel4, wxID_ANY, wxT("Add search path"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer51->Add( button2, 0, wxALL, 5 );
 	
+	
 	panel4->SetSizer( bSizer51 );
 	panel4->Layout();
 	bSizer51->Fit( panel4 );
 	m_choicebook1->AddPage( panel4, wxT("Environment"), false );
 	bSizer3->Add( m_choicebook1, 1, wxEXPAND | wxALL, 5 );
+	
 	
 	panel2->SetSizer( bSizer3 );
 	panel2->Layout();
@@ -191,6 +200,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	propertyGrid1=new wxPropertyGrid(panel5,wxID_ANY);
 	fgSizer5->Add( propertyGrid1, 0, wxALL|wxEXPAND, 1 );
 	
+	
 	panel5->SetSizer( fgSizer5 );
 	panel5->Layout();
 	fgSizer5->Fit( panel5 );
@@ -202,6 +212,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	treeCtrl2 = new wxTreeCtrl( panel10, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), wxTR_DEFAULT_STYLE|wxTR_HIDE_ROOT );
 	bSizer6->Add( treeCtrl2, 1, wxALL|wxEXPAND, 5 );
 	
+	
 	panel10->SetSizer( bSizer6 );
 	panel10->Layout();
 	bSizer6->Fit( panel10 );
@@ -209,7 +220,9 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	bSizer2->Add( notebook1, 1, wxEXPAND | wxALL, 5 );
 	
+	
 	fgSizer1->Add( bSizer2, 1, wxEXPAND, 5 );
+	
 	
 	this->SetSizer( fgSizer1 );
 	this->Layout();
@@ -221,6 +234,11 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	wxMenuItem* menuItem1;
 	menuItem1 = new wxMenuItem( menu1, wxID_ANY, wxString( wxT("E&xit") ) , wxT("Close the application."), wxITEM_NORMAL );
+	#ifdef __WXMSW__
+	menuItem1->SetBitmaps( wxNullBitmap );
+	#elif defined( __WXGTK__ )
+	menuItem1->SetBitmap( wxNullBitmap );
+	#endif
 	menu1->Append( menuItem1 );
 	
 	menuBar->Append( menu1, wxT("&File") ); 

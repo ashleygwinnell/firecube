@@ -277,7 +277,7 @@ CameraPtr FIRECUBE_API GetCamera();
 /**
 * Returns the number of triangles that were rendered in the current frame.
 */
-unsigned int FIRECUBE_API GetNumberOfTrianglesRendered();
+unsigned int FIRECUBE_API GetNumberOfPrimitivesRendered();
 
 
 /**
@@ -285,8 +285,6 @@ unsigned int FIRECUBE_API GetNumberOfTrianglesRendered();
 * @param index The index of the attribute.
 */
 void FIRECUBE_API DisableVertexAttribute(int index);
-
-void FIRECUBE_API UseCustomVAO();
 
 /**
 * Sets the current texture pool.

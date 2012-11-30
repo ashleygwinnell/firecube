@@ -1,13 +1,15 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep  8 2010)
+// C++ code generated with wxFormBuilder (version Apr 10 2012)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __mainframe__
-#define __mainframe__
+#ifndef __MAINFRAME_H__
+#define __MAINFRAME_H__
 
+#include <wx/artprov.h>
+#include <wx/xrc/xmlres.h>
 #include <string>
 #include <vector>
 #include <sstream>
@@ -116,8 +118,9 @@ class MainFrame : public wxFrame
 	public:
 		
 		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("ModelViewer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 918,764 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		
 		~MainFrame();
 	
 };
 
-#endif //__mainframe__
+#endif //__MAINFRAME_H__

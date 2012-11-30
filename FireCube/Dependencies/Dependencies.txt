@@ -1,5 +1,5 @@
 Download from firecube.googlecode.com and place the dependecies files here.
-You should also have SDL,SDL_Image and boost preinstalled.
+You should also have SDL and SDL_Image preinstalled.
 
 This folder should have the following structure:
 ------------------------------------------------

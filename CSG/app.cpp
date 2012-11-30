@@ -36,21 +36,21 @@ bool App::Init()
 	camera->SetTarget(root);
 	NodePtr scene(new Node("csgScene"));
 	root->AddChild(scene);
-	NodePtr node = NodePtr(new Node("out1"));
-	scene->AddChild(node)->SetGeometry(out1.GetGeometry());
-	node = NodePtr(new Node("out2"));
-	scene->AddChild(node)->SetGeometry(out2.GetGeometry());
+	GeometryNodePtr node = GeometryNodePtr(new GeometryNode("out1"));
+	scene->AddChild(node);
+	node->SetGeometry(out1.GetGeometry());
+	node = GeometryNodePtr(new GeometryNode("out2"));
+	scene->AddChild(node);
+	node->SetGeometry(out2.GetGeometry());
 	
-	root->SetTechnique("default");
-	Light light;
-	light.SetAmbientColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	light.SetDiffuseColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	light.SetSpecularColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	light.SetType(DIRECTIONAL);
-	node = NodePtr(new Node("LightNode"));
-	node->AddLight(light);
-	node->Rotate(vec3(0.7f, 0.7f, 0));
-	root->AddChild(node);
+	root->SetTechnique("default");	
+	LightNodePtr lightNode = LightNodePtr(new LightNode("LightNode"));
+	lightNode->GetLight().SetAmbientColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	lightNode->GetLight().SetDiffuseColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	lightNode->GetLight().SetSpecularColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	lightNode->GetLight().SetType(DIRECTIONAL);	
+	lightNode->Rotate(vec3(0.7f, 0.7f, 0));
+	root->AddChild(lightNode);
 	return true;
 }
 
@@ -72,7 +72,7 @@ void App::Render(float time)
 	Renderer::UseCamera(orthographicCamera);
 	ostringstream oss;
 	oss << "FPS: " << GetFps() << endl 
-		<< "Rendered triangles:" << Renderer::GetNumberOfTrianglesRendered();
+		<< "Rendered triangles:" << Renderer::GetNumberOfPrimitivesRendered();
 	Renderer::RenderText(font, vec3(0, 0, 0), vec4(1, 1, 1, 1), oss.str());
 }
 

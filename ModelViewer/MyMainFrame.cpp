@@ -3,6 +3,7 @@ using namespace std;
 
 #include "wx/wx.h"
 #include "wx/colordlg.h"
+#include "wx/filedlg.h"
 #include <wx/glcanvas.h>
 #include "Document.h"
 #include "GLCanvas.h"
@@ -10,30 +11,29 @@ using namespace std;
 #include "main.h"
 
 
-MyMainFrame::MyMainFrame( wxWindow* parent )
-	:
-	MainFrame( parent ), theApp((MyApp*)wxTheApp)
+MyMainFrame::MyMainFrame( wxWindow* parent ) : MainFrame( parent ), theApp((MyApp*)wxTheApp)
 {
 	this->Connect(propertyGrid1->GetId(), wxEVT_PG_CHANGED, wxCommandEventHandler(MyMainFrame::PropertyGrid1Changed));
-
-
 }
+
 void MyMainFrame::MenuItem1Clicked( wxCommandEvent& event )
 {
 	Close();
 }
+
 void MyMainFrame::MenuItem2Clicked( wxCommandEvent& event )
 {
-	wxString file = wxFileSelector(wxT("Open"), 0, 0, wxT("3ds,dae,obj"), wxT("*.3ds;*.dae;*.obj"));    
+	wxString file = wxFileSelector(wxT("Open"), "", "", wxT("3ds,dae,obj"), wxT("*.3ds;*.dae;*.obj"));    
 	std::string sfile = file;
 	if (sfile == "")
 		return;
 	string::size_type d = sfile.find_last_of("\\");
 	theApp->LoadDocument(sfile);
 }
+
 void MyMainFrame::MenuItem3Clicked( wxCommandEvent& event )
 {    
-	wxString file = wxFileSelector(wxT("Open"), 0, 0, wxT("vert"), wxT("*.vert"));
+	wxString file = wxFileSelector(wxT("Open"), "", "", wxT("vert"), wxT("*.vert"));
 	std::string sfile = file;
 	if (sfile == "")
 		return;
@@ -42,9 +42,10 @@ void MyMainFrame::MenuItem3Clicked( wxCommandEvent& event )
 	theApp->GetApplicationParameters().customProgram = true;
 	theApp->GetDocument().GetRoot()->SetProgram(theApp->GetApplicationParameters().program);    
 }
+
 void MyMainFrame::MenuItem4Clicked( wxCommandEvent& event )
 {    
-	wxString file = wxFileSelector(wxT("Open"), 0, 0, wxT("frag"), wxT("*.frag"));
+	wxString file = wxFileSelector(wxT("Open"), "", "", wxT("frag"), wxT("*.frag"));
 	std::string sfile = file;
 	if (sfile == "")
 		return;
@@ -53,21 +54,25 @@ void MyMainFrame::MenuItem4Clicked( wxCommandEvent& event )
 	theApp->GetApplicationParameters().customProgram = true;
 	theApp->GetDocument().GetRoot()->SetProgram(theApp->GetApplicationParameters().program);    
 }
+
 void MyMainFrame::MenuItem7Clicked( wxCommandEvent& event )
 {
 	theApp->GetApplicationParameters().customProgram = false;
 	theApp->GetDocument().GetRoot()->SetProgram(FireCube::ProgramPtr());
 }
+
 void MyMainFrame::CheckBox2Clicked( wxCommandEvent& event )
 {
 	glCanvas->SetRenderingNormals(!glCanvas->GetRenderingNormals());
 	glCanvas->Refresh();
 }
+
 void MyMainFrame::CheckBox4Clicked( wxCommandEvent& event )
 {
 	glCanvas->SetRenderingTangents(!glCanvas->GetRenderingTangents());
 	glCanvas->Refresh();
 }
+
 void MyMainFrame::RadioBox1Clicked( wxCommandEvent& event )
 {
 	int selected = radioBox1->GetSelection();
@@ -80,6 +85,7 @@ void MyMainFrame::RadioBox1Clicked( wxCommandEvent& event )
 
 	glCanvas->Refresh();
 }
+
 void MyMainFrame::TextCtrl3TextEnter( wxCommandEvent& event )
 {
 	double l;
@@ -92,23 +98,27 @@ void MyMainFrame::TextCtrl3TextEnter( wxCommandEvent& event )
 		glCanvas->Refresh();
 	}
 }
+
 void MyMainFrame::CheckBox3Clicked( wxCommandEvent& event )
 {
 	glCanvas->SetCullFace(!glCanvas->GetCullFace());
 	glCanvas->Refresh();
 }
+
 void MyMainFrame::ColourPicker1Changed( wxColourPickerEvent& event )
 {
 	wxColor color = colourPicker1->GetColour();
 	glCanvas->SetBackgroundColor(FireCube::vec4(color.Red() / 255.0f, color.Green() / 255.0f, color.Blue() / 255.0f, 1.0f));
 	glCanvas->Refresh();
 }
+
 void MyMainFrame::Button1Clicked( wxCommandEvent& event )
 {
 	glCanvas->SetRotation(FireCube::vec3(0, 0, 0.0f));
 	glCanvas->SetDistance(5.0f);
 	glCanvas->Refresh();
 }
+
 void MyMainFrame::Button2Clicked( wxCommandEvent& event )
 {
 	string dir = wxDirSelector();
@@ -117,6 +127,7 @@ void MyMainFrame::Button2Clicked( wxCommandEvent& event )
 		FireCube::Filesystem::AddSearchPath(dir);
 	}
 }
+
 void MyMainFrame::TextCtrl4TextEnter( wxCommandEvent& event )
 {
 	double size;
@@ -136,6 +147,7 @@ void MyMainFrame::TextCtrl4TextEnter( wxCommandEvent& event )
 		}
 	}
 }
+
 void MyMainFrame::TextCtrl5TextEnter( wxCommandEvent& event )
 {
 	double size;
@@ -155,6 +167,7 @@ void MyMainFrame::TextCtrl5TextEnter( wxCommandEvent& event )
 		}
 	}
 }
+
 void MyMainFrame::MenuItem5Clicked( wxCommandEvent& event )
 {
 	if (statusBar1->IsShown())
@@ -164,6 +177,7 @@ void MyMainFrame::MenuItem5Clicked( wxCommandEvent& event )
 
 	Layout();
 }
+
 void MyMainFrame::MenuItem6Clicked( wxCommandEvent& event )
 {
 	if (notebook1->IsShown())
@@ -173,6 +187,7 @@ void MyMainFrame::MenuItem6Clicked( wxCommandEvent& event )
 
 	Layout();
 }
+
 bool MyMainFrame::AddMaterial(DWORD id, FireCube::MaterialPtr mat)
 {
 	for (map<DWORD, FireCube::MaterialPtr>::iterator i = materialMap.begin(); i != materialMap.end(); i++)
@@ -210,6 +225,7 @@ bool MyMainFrame::AddMaterial(DWORD id, FireCube::MaterialPtr mat)
 	propertyGrid1->Refresh();
 	return true;
 }
+
 void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 {
 	wxPropertyGridEvent *evt = (wxPropertyGridEvent *)&event;
@@ -220,7 +236,8 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		istringstream idss(properyName.substr(4));
 		idss >> id;
 		FireCube::MaterialPtr mat = materialMap[id];
-		mat->SetName(evt->GetPropertyValueAsString().c_str());
+		
+		mat->SetName(evt->GetPropertyValue().GetString().c_str().AsChar());
 	}
 	if (properyName.substr(0, 7) == "Ambient")
 	{
@@ -255,7 +272,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		istringstream idss(properyName.substr(9));
 		idss >> id;
 		FireCube::MaterialPtr mat = materialMap[id];
-		mat->SetShininess((float)evt->GetPropertyValueAsDouble());
+		mat->SetShininess((float)evt->GetPropertyValue().GetDouble());
 	}
 	if (properyName.substr(0, 14) == "TextureDiffuse")
 	{
@@ -263,7 +280,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		istringstream idss(properyName.substr(14));
 		idss >> id;
 		FireCube::MaterialPtr mat = materialMap[id];
-		mat->SetDiffuseTexture(FireCube::Renderer::GetTexturePool().Create(evt->GetPropertyValueAsString().ToAscii()));
+		mat->SetDiffuseTexture(FireCube::Renderer::GetTexturePool().Create(evt->GetPropertyValue().GetString().ToStdString()));
 	}
 	if (properyName.substr(0, 13) == "TextureNormal")
 	{
@@ -271,10 +288,11 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		istringstream idss(properyName.substr(13));
 		idss >> id;
 		FireCube::MaterialPtr mat = materialMap[id];
-		mat->SetNormalTexture(FireCube::Renderer::GetTexturePool().Create(evt->GetPropertyValueAsString().ToAscii()));
+		mat->SetNormalTexture(FireCube::Renderer::GetTexturePool().Create(evt->GetPropertyValue().GetString().ToStdString()));
 	}
 	glCanvas->Refresh();	
 }
+
 void MyMainFrame::PopulateTreeWithNode(FireCube::NodePtr node, wxTreeCtrl *tree)
 {
 	tree->DeleteAllItems();
@@ -283,6 +301,7 @@ void MyMainFrame::PopulateTreeWithNode(FireCube::NodePtr node, wxTreeCtrl *tree)
 	wxTreeItemId id = tree->AddRoot("root", -1, -1, data);
 	PopulateTreeWithNode(node, id, tree);
 }
+
 void MyMainFrame::PopulateTreeWithNode(FireCube::NodePtr node, wxTreeItemId treeNode, wxTreeCtrl *tree)
 {
 	for (unsigned int i = 0; i < node->GetChildren().size(); i++)
@@ -322,16 +341,22 @@ void MyMainFrame::SetStatusBarText(const string &text)
 {
 	statusBar1->SetStatusText(text);
 }
+
 GLCanvas *MyMainFrame::GetMainGLCanvas()
 {
 	return glCanvas;
 }
+
 void MyMainFrame::AddMaterials(unsigned int &id, FireCube::NodePtr node)
 {	
-	if (node->GetGeometry())
-	{        
-		if (AddMaterial(id, node->GetGeometry()->GetMaterial()))
-			id++;
+	if (node->GetType() == FireCube::Node::GEOMETRY)
+	{
+		FireCube::GeometryNodePtr geometryNode = dynamic_pointer_cast<FireCube::GeometryNode>(node);
+		if (geometryNode->GetGeometry())
+		{        
+			if (AddMaterial(id, geometryNode->GetGeometry()->GetMaterial()))
+				id++;
+		}
 	}
 	for (vector<FireCube::NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
 		AddMaterials(id, *i);

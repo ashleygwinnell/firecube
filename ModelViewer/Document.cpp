@@ -31,10 +31,14 @@ FireCube::NodePtr Document::GetRoot()
 }
 void Document::CountElements(FireCube::NodePtr node, unsigned int &verticesCount, unsigned int &facesCount)
 {
-	if (node->GetGeometry())
+	if (node->GetType() == FireCube::Node::GEOMETRY)
 	{
-		verticesCount += node->GetGeometry()->GetVertices().size();
-		facesCount += node->GetGeometry()->GetFaces().size();
+		FireCube::GeometryNodePtr geometryNode = dynamic_pointer_cast<FireCube::GeometryNode>(node);
+		if (geometryNode->GetGeometry())
+		{
+			verticesCount += geometryNode->GetGeometry()->GetVertices().size();
+			facesCount += geometryNode->GetGeometry()->GetFaces().size();
+		}
 	}
 	for (vector<FireCube::NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
 		CountElements(*i, verticesCount, facesCount);
@@ -48,12 +52,16 @@ void Document::GenerateNormals(float l)
 }
 void Document::GenerateNormals(FireCube::NodePtr node, float l, vector<FireCube::vec3> &normals)
 {
-	if (node->GetGeometry())
+	if (node->GetType() == FireCube::Node::GEOMETRY)
 	{
-		for (unsigned int i = 0; i < node->GetGeometry()->GetVertices().size(); i++)
+		FireCube::GeometryNodePtr geometryNode = dynamic_pointer_cast<FireCube::GeometryNode>(node);
+		if (geometryNode->GetGeometry())
 		{
-			normals.push_back(node->GetGeometry()->GetVertices()[i]);
-			normals.push_back(node->GetGeometry()->GetVertices()[i] + node->GetGeometry()->GetNormals()[i]*l);
+			for (unsigned int i = 0; i < geometryNode->GetGeometry()->GetVertices().size(); i++)
+			{
+				normals.push_back(geometryNode->GetGeometry()->GetVertices()[i]);
+				normals.push_back(geometryNode->GetGeometry()->GetVertices()[i] + geometryNode->GetGeometry()->GetNormals()[i]*l);
+			}
 		}
 	}
 	for (vector<FireCube::NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
@@ -73,12 +81,16 @@ void Document::GenerateTangents(float l)
 }
 void Document::GenerateTangents(FireCube::NodePtr node, float l, vector<FireCube::vec3> &tangents)
 {
-	if (node->GetGeometry() && !node->GetGeometry()->GetTangents().empty())
+	if (node->GetType() == FireCube::Node::GEOMETRY)
 	{
-		for (unsigned int i = 0; i < node->GetGeometry()->GetVertices().size(); i++)
+		FireCube::GeometryNodePtr geometryNode = dynamic_pointer_cast<FireCube::GeometryNode>(node);
+		if (geometryNode->GetGeometry() && !geometryNode->GetGeometry()->GetTangents().empty())
 		{
-			tangents.push_back(node->GetGeometry()->GetVertices()[i]);
-			tangents.push_back(node->GetGeometry()->GetVertices()[i] + node->GetGeometry()->GetTangents()[i]*l);
+			for (unsigned int i = 0; i < geometryNode->GetGeometry()->GetVertices().size(); i++)
+			{
+				tangents.push_back(geometryNode->GetGeometry()->GetVertices()[i]);
+				tangents.push_back(geometryNode->GetGeometry()->GetVertices()[i] + geometryNode->GetGeometry()->GetTangents()[i]*l);
+			}
 		}
 	}
 	for (vector<FireCube::NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
@@ -93,12 +105,16 @@ void Document::GenerateBitangents(float l)
 }
 void Document::GenerateBitangents(FireCube::NodePtr node, float l, vector<FireCube::vec3> &bitangents)
 {
-	if (node->GetGeometry() && !node->GetGeometry()->GetBitangents().empty())
+	if (node->GetType() == FireCube::Node::GEOMETRY)
 	{
-		for (unsigned int i = 0; i < node->GetGeometry()->GetVertices().size(); i++)
+		FireCube::GeometryNodePtr geometryNode = dynamic_pointer_cast<FireCube::GeometryNode>(node);
+		if (geometryNode->GetGeometry() && !geometryNode->GetGeometry()->GetBitangents().empty())
 		{
-			bitangents.push_back(node->GetGeometry()->GetVertices()[i]);
-			bitangents.push_back(node->GetGeometry()->GetVertices()[i] + node->GetGeometry()->GetBitangents()[i]*l);
+			for (unsigned int i = 0; i < geometryNode->GetGeometry()->GetVertices().size(); i++)
+			{
+				bitangents.push_back(geometryNode->GetGeometry()->GetVertices()[i]);
+				bitangents.push_back(geometryNode->GetGeometry()->GetVertices()[i] + geometryNode->GetGeometry()->GetBitangents()[i]*l);
+			}
 		}
 	}
 	for (vector<FireCube::NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)

@@ -4,6 +4,7 @@
 #include <queue>
 #include <fstream>
 #include <sstream>
+#include <memory>
 using namespace std;
 #include <SDL.h>
 #include <windows.h>
@@ -40,9 +41,8 @@ ShaderPool *currentShaderPool = nullptr;
 FontPool *currentFontPool = nullptr;
 map<string, TechniquePtr> techniques;
 CameraPtr camera;
-unsigned int numberOfTrianglesRendered = 0;
+unsigned int numberOfPrimitivesRendered = 0;
 GLuint textureSampler[16];
-GLuint customVao;
 
 /** \cond */
 struct FontVertex
@@ -311,9 +311,9 @@ void Renderer::UseMaterial(ProgramPtr program, MaterialPtr material)
 	}
 }
 
-void ResetNumberOfTrianglesRendered()
+void ResetNumberOfPrimitivesRendered()
 {
-	numberOfTrianglesRendered = 0;
+	numberOfPrimitivesRendered = 0;
 }
 
 void InitializeRenderer()
@@ -354,7 +354,6 @@ void InitializeRenderer()
 	}
 	
 	
-	glGenVertexArrays(1, &customVao);
 	// Create a vertex buffer for text rendering	
 	glGenVertexArrays(1, &textVao);
 	glBindVertexArray(textVao);
@@ -570,7 +569,7 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 				Renderer::RenderStream(j->geometry->GetPrimitiveType(), j->geometry->GetVertexCount());							
 			
 			lastProgram = p;
-			numberOfTrianglesRendered += j->geometry->GetPrimitiveCount();			
+			numberOfPrimitivesRendered += j->geometry->GetPrimitiveCount();			
 		}
 		passNum++;
 	}
@@ -643,12 +642,12 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 		if (j->geometry->indexBuffer && j->geometry->indexBuffer->IsValid())
 		{
 			Renderer::RenderIndexStream(j->geometry->GetPrimitiveType(), j->geometry->GetVertexCount());			
-			numberOfTrianglesRendered += j->geometry->GetPrimitiveCount();			
+			numberOfPrimitivesRendered += j->geometry->GetPrimitiveCount();			
 		}
 		else
 		{
 			Renderer::RenderStream(j->geometry->GetPrimitiveType(), j->geometry->GetVertexCount());			
-			numberOfTrianglesRendered += j->geometry->GetPrimitiveCount();			
+			numberOfPrimitivesRendered += j->geometry->GetPrimitiveCount();			
 		}
 	}		
 }
@@ -766,7 +765,7 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 				Renderer::RenderStream(j->geometry->GetPrimitiveType(), j->geometry->GetVertexCount());							
 
 			lastProgram = p;
-			numberOfTrianglesRendered += j->geometry->GetPrimitiveCount();			
+			numberOfPrimitivesRendered += j->geometry->GetPrimitiveCount();			
 		}
 		passNum++;
 	}
@@ -836,12 +835,12 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &
 		if (j->geometry->indexBuffer && j->geometry->indexBuffer->IsValid())
 		{
 			Renderer::RenderIndexStream(j->geometry->GetPrimitiveType(), j->geometry->GetVertexCount());			
-			numberOfTrianglesRendered += j->geometry->GetPrimitiveCount();			
+			numberOfPrimitivesRendered += j->geometry->GetPrimitiveCount();			
 		}
 		else
 		{
 			Renderer::RenderStream(j->geometry->GetPrimitiveType(), j->geometry->GetVertexCount());			
-			numberOfTrianglesRendered += j->geometry->GetPrimitiveCount();			
+			numberOfPrimitivesRendered += j->geometry->GetPrimitiveCount();			
 		}
 	}		
 }
@@ -876,17 +875,12 @@ CameraPtr FIRECUBE_API Renderer::GetCamera()
 	return camera;
 }
 
-unsigned int FIRECUBE_API Renderer::GetNumberOfTrianglesRendered()
+unsigned int FIRECUBE_API Renderer::GetNumberOfPrimitivesRendered()
 {
-	return numberOfTrianglesRendered;
+	return numberOfPrimitivesRendered;
 }
 
 void FIRECUBE_API Renderer::DisableVertexAttribute(int index)
 {
 	glDisableVertexAttribArray(index);
-}
-
-void FIRECUBE_API Renderer::UseCustomVAO()
-{
-	glBindVertexArray(customVao);
 }

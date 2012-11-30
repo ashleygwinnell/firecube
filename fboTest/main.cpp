@@ -13,12 +13,13 @@ bool App::Init()
     SetTitle("FBO Example");
     font = Renderer::GetFontPool().Create("c:\\windows\\fonts\\arial.ttf", 10);
     root = NodePtr(new Node("Root"));
-    Light light;
-    light.SetAmbientColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));
-    light.SetDiffuseColor(vec4(0.8f, 0.8f, 0.8f, 1.0f));
-    light.SetSpecularColor(vec4(0.2f, 0.2f, 0.2f, 1.0f));
-    light.SetType(DIRECTIONAL);
-    root->AddLight(light);
+	LightNodePtr lightNode = LightNodePtr(new LightNode("LightNode"));
+	root->AddChild(lightNode);
+    lightNode->GetLight().SetAmbientColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));
+    lightNode->GetLight().SetDiffuseColor(vec4(0.8f, 0.8f, 0.8f, 1.0f));
+    lightNode->GetLight().SetSpecularColor(vec4(0.2f, 0.2f, 0.2f, 1.0f));
+    lightNode->GetLight().SetType(DIRECTIONAL);
+    
     node = LoadMesh("../Assets/Models/1.3ds");
     root->AddChild(node);
     node->Move(vec3(1.3f, 0, -3));    	
@@ -26,7 +27,7 @@ bool App::Init()
     root->AddChild(node2);
     node2->Move(vec3(-1.3f, 0, -3));
 
-	mainRoot = NodePtr(new Node);
+	mainRoot = GeometryNodePtr(new GeometryNode);
 	mainRoot->SetGeometry(GeometryGenerator::GeneratePlane(vec2(2,2)));    
 	mainRoot->Rotate(vec3(-(float) PI / 2.0f, 0, 0));
 	mainRoot->SetLighting(false);	

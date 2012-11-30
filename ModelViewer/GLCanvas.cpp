@@ -11,8 +11,9 @@ using namespace FireCube;
 
 GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id,
 					   const wxPoint& pos, const wxSize& size, long style, const wxString& name)
-	: wxGLCanvas(parent, (wxGLCanvas*) nullptr, id, pos, size, style | wxFULL_REPAINT_ON_RESIZE , name ), init(false), theApp((MyApp*)wxTheApp)
-{
+	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE , name ), init(false), theApp((MyApp*)wxTheApp)
+{	
+	context = new wxGLContext(this);
 	Connect(wxEVT_SIZE, wxSizeEventHandler(GLCanvas::OnSize));
 	Connect(wxEVT_PAINT, wxPaintEventHandler(GLCanvas::OnPaint));
 	Connect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(GLCanvas::OnEraseBackground));
@@ -48,12 +49,7 @@ void GLCanvas::Init()
 	material->SetDiffuseColor(vec3(1, 1, 1));
 	renderingParameters.gridNode->SetGeometry(renderingParameters.grid);
 	renderingParameters.gridNode->SetLighting(false);
-
-	theApp->GetApplicationParameters().vshader = Renderer::GetShaderPool().Create("plainColor.vert");
-	theApp->GetApplicationParameters().fshader = Renderer::GetShaderPool().Create("plainColor.frag");
-	theApp->GetApplicationParameters().program = ProgramPtr(new Program);
-	theApp->GetApplicationParameters().program->Create(theApp->GetApplicationParameters().vshader, theApp->GetApplicationParameters().fshader);
-
+	
 	renderingParameters.gridMaterial = MaterialPtr(new Material);
 	renderingParameters.gridMaterial->SetAmbientColor(vec3(0,0,0));
 	renderingParameters.gridMaterial->SetDiffuseColor(vec3(1,1,1));
@@ -91,8 +87,8 @@ void GLCanvas::Init()
 void GLCanvas::Render()
 {    
 	wxPaintDC dc(this);
-	if (!GetContext()) return;
-	SetCurrent();
+	if (!SetCurrent(*context))
+		return;
 	if (!init)
 	{
 		init = true;
@@ -146,16 +142,16 @@ void GLCanvas::OnSize(wxSizeEvent& event)
 {
 	if (!IsShownOnScreen())
 		return;
-	// this is also necessary to update the context on some platforms
-	wxGLCanvas::OnSize(event);
-
-	// set GL viewport (not called by wxGLCanvas::OnSize on all platforms...)
+	
 	int w, h;
 	GetClientSize(&w, &h);
-	if (GetContext())
+	if (!SetCurrent(*context))
+		return;
+	glViewport(0, 0, (GLint) w, (GLint) h);
+	if (!init)
 	{
-		SetCurrent();
-		glViewport(0, 0, (GLint) w, (GLint) h);
+		init = true;
+		Init();
 	}
 	mat4 mat;
 	mat.GeneratePerspective(90.0f,(float) w / (float) h, 0.1f, 1000.0f);

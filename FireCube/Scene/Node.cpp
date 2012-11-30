@@ -5,6 +5,7 @@
 #include <sstream>
 #include <map>
 #include <queue>
+#include <memory>
 using namespace std;
 #include <SDL.h>
 #include <SDL_image.h>
@@ -293,14 +294,6 @@ NodePtr Node::RemoveChild(const string &name)
 vector<NodePtr> &Node::GetChildren()
 {
 	return children;
-}
-
-void Node::CreateHardNormals()
-{
-	for (auto i = children.begin(); i != children.end(); ++i)
-	{
-		(*i)->CreateHardNormals();
-	}
 }
 
 RenderParameters &Node::GetRenderParameters()

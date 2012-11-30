@@ -3,6 +3,7 @@
 #include <map>
 #include <queue>
 #include <sstream>
+#include <memory>
 using namespace std;
 
 #include "Utils/utils.h"

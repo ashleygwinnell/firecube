@@ -1,9 +1,5 @@
 #include <string>
-#include <vector>
-#include <map>
-#include <queue>
 using namespace std;
-#include <SDL.h>
 
 #include "Utils/utils.h"
 #include "Math/MyMath.h"

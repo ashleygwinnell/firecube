@@ -51,7 +51,7 @@ class FIRECUBE_API Node : public std::enable_shared_from_this<Node>
 public:
 	enum NodeType
 	{
-		NODE, GEOMETRY
+		NODE, GEOMETRY, LIGHT, TERRAIN
 	};
 	Node();
 
@@ -211,12 +211,7 @@ public:
 	* Renders the node.
 	*/
 	void Render();
-
-	/**
-	* Creates hard normals for all geometries of the sub tree under this node.
-	*/
-	virtual void CreateHardNormals();
-
+	
 	/**
 	* Returns the local bounding box of this node;
 	*/
@@ -313,8 +308,6 @@ public:
 	*/
 	virtual NodePtr Clone() const;
 	
-
-
 	/**
 	* @return The world space position of this node.
 	*/

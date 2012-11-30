@@ -1,13 +1,10 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include <iostream>
 #include <map>
-#include <queue>
+#include <memory>
 using namespace std;
 #include <windows.h>
-#include <SDL.h>
-#include <SDL_image.h>
 #include "Dependencies/glew.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H

@@ -29,7 +29,6 @@ public:
 	*/	
 	GeometryPtr GetGeometry();
 
-	virtual void CreateHardNormals();	
 	virtual NodePtr Clone() const;
 protected:
 	virtual BoundingBox GetLocalBoundingBox() const;

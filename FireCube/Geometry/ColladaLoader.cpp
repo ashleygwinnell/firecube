@@ -1,9 +1,7 @@
 #include <string>
 #include <map>
-#include <queue>
 #include <vector>
-#include <sstream>
-#include <iostream>
+#include <memory>
 using namespace std;
 #include <Windows.h>
 #include <gl/GL.h>
@@ -1408,6 +1406,8 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 					f.v[0] = subMesh.indices[p * 3 + 0];
 					f.v[1] = subMesh.indices[p * 3 + 1];
 					f.v[2] = subMesh.indices[p * 3 + 2];                    
+					f.normal = Cross(vertices[f.v[1]] - vertices[f.v[0]], vertices[f.v[2]] - vertices[f.v[0]]);
+					f.normal.Normalize();
 					geometry->GetFaces().push_back(f);
 				}
 			}
@@ -1420,7 +1420,9 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 					Face f;
 					f.v[0] = subMesh.indices[p * 3 + 0];
 					f.v[1] = subMesh.indices[p * 3 + 1];
-					f.v[2] = subMesh.indices[p * 3 + 2];                    
+					f.v[2] = subMesh.indices[p * 3 + 2];
+					f.normal = Cross(vertices[f.v[1]] - vertices[f.v[0]], vertices[f.v[2]] - vertices[f.v[0]]);
+					f.normal.Normalize();
 					geometry->GetFaces().push_back(f);
 				}
 			}

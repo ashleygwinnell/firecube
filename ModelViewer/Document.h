@@ -12,8 +12,7 @@ public:
 	FireCube::BufferPtr GetNormalRenderingBuffer();
 	FireCube::BufferPtr GetTangentRenderingBuffer();
 	FireCube::BufferPtr GetBitangentRenderingBuffer();
-	int GetNormalRenderingBufferSize();
-	//void AddMaterials(unsigned int &id, FireCube::Node node);
+	int GetNormalRenderingBufferSize();	
 	bool HasTangents() const;
 	unsigned int GetVertexCount() const;
 	unsigned int GetFaceCount() const;

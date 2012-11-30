@@ -17,12 +17,11 @@ bool MyApp::OnInit()
 	frame->Show(true);
 	return true;
 }
-void FireCubeApp::HandleInput(float t)
-{
-}
+
 void FireCubeApp::Render(float t)
 {
 }
+
 void FireCubeApp::Update(float t)
 {
 }
@@ -45,10 +44,12 @@ void MyApp::LoadDocument(const string &filename)
 	
 	frame->UpdateUI(document);
 }
+
 Document &MyApp::GetDocument()
 {
 	return document;
 }
+
 ApplicationParameters &MyApp::GetApplicationParameters()
 {
 	return applicationParameters;
