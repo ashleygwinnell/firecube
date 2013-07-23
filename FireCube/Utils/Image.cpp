@@ -4,14 +4,13 @@
 #include <queue>
 #include <sstream>
 using namespace std;
-#include <SDL.h>
-#include <SDL_image.h>
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
 #include "Utils/Filesystem.h"
 #include "Math/MyMath.h"
 #include "Utils/Image.h"
+#include "stb_image.h"
 
 using namespace FireCube;
 
@@ -22,6 +21,20 @@ Image::Image() : width(0), height(0), bytesPerPixel(0)
 
 bool Image::Load(const string &filename)
 {
+	string fname = Filesystem::SearchForFileName(filename);
+	if (fname.empty())
+		return false;
+
+	unsigned char *pixels = stbi_load(filename.c_str(), &width, &height, &bytesPerPixel, 0);
+	if (!pixels)
+		return false;
+
+	data.resize(width * height * bytesPerPixel);
+	for (unsigned int i = 0; i < data.size(); ++i)
+		data[i] = pixels[i];
+	stbi_image_free(pixels);
+	return true;	
+	/*
 	SDL_Surface *image;
 	string fname = Filesystem::SearchForFileName(filename);
 	if (fname.empty())
@@ -48,7 +61,7 @@ bool Image::Load(const string &filename)
 
 		return true;
 	}
-	return false;
+	return false;*/
 }
 
 int Image::GetWidth() const

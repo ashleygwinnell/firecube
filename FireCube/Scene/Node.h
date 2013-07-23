@@ -128,18 +128,6 @@ public:
 	vec3 GetScale() const;
 
 	/**
-	* Sets the matrix transformation of this node.
-	* @param t The matrix transformation to assign to this node.
-	*/
-	void SetMatrixTransformation(const mat4 &t);
-
-	/**
-	* Gets the matrix transformation of this node.
-	* @return The matrix transformation of this node.
-	*/
-	mat4 GetMatrixTransformation() const;
-
-	/**
 	* Translates the node.
 	* @param t The translation vector.
 	*/
@@ -326,8 +314,7 @@ protected:
 
 	vec3 translation;
 	mat4 rotation;
-	vec3 scale;
-	mat4 matTransform;
+	vec3 scale;	
 	mat4 localTransformation;
 	bool worldTransformationChanged;	    
 	bool localTransformationChanged;

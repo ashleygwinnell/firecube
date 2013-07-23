@@ -6,7 +6,7 @@
 using namespace std;
 #include <Windows.h>
 #include <SDL.h>
-#include "Dependencies/glew.h"
+#include "glew.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -39,13 +39,7 @@ Application::Application() : running(false), frameCount(0), fpsTime(0), fps(0), 
 
 Application::~Application()
 {
-	DestroyRenderer();
-	Logger::Write(Logger::LOG_INFO, string("Destroying application"));
-	if (context)
-		SDL_GL_DeleteContext(*context);
-	if (mainWindow)
-		SDL_DestroyWindow(mainWindow);
-	SDL_Quit();
+	
 }
 
 bool Application::Initialize()
@@ -88,7 +82,7 @@ bool Application::Initialize(int width, int height, int bpp, int multisample, bo
 }
 
 bool Application::InitializeNoWindow()
-{
+{	
 	glewExperimental = GL_TRUE;
 	glewInit();
 	Logger::Init("log.txt");
@@ -100,6 +94,17 @@ bool Application::InitializeNoWindow()
 	FT_Init_FreeType(&freeTypeLibrary);
 	InitializeRenderer();
 	return Init();
+}
+
+void Application::Destroy()
+{
+	DestroyRenderer();
+	Logger::Write(Logger::LOG_INFO, string("Destroying application"));
+	if (context)
+		SDL_GL_DeleteContext(*context);
+	if (mainWindow)
+		SDL_DestroyWindow(mainWindow);
+	SDL_Quit();
 }
 
 bool Application::Close()

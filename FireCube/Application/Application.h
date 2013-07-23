@@ -47,6 +47,11 @@ public:
 	bool InitializeNoWindow();
 
 	/**
+	* Destroys allocated resource by the application. Must be called after the application's main loop has returned.
+	*/
+	void Destroy();
+
+	/**
 	* Closes the application.
 	* @return true on success, false otherwise.
 	*/

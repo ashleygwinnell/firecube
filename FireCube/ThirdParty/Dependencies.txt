@@ -1,0 +1,15 @@
+Download from firecube.googlecode.com and place the dependecies files here.
+You should also have SDL and SDL_Image preinstalled.
+
+This folder should have the following structure:
+------------------------------------------------
+
+FreeType
+Dependencies.txt
+glew.c
+glew.h
+wglew.h
+tinyxml.cpp
+tinyxml.h
+tinyxmlerror.cpp
+tinyxmlparser.cpp

@@ -10,7 +10,7 @@ using namespace std;
 #include <windows.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "Dependencies/glew.h"
+#include "glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -51,7 +51,9 @@ bool Shader::Load(const string &filename)
 		else
 			return false;
 	}
-
+	else
+		return false;
+	
 	id = glCreateShader(shaderType);
 	ifstream f(filename.c_str(), ios::in | ios::binary | ios::ate);
 	if (!f.is_open())
@@ -407,6 +409,9 @@ bool Technique::LoadShader(const string &filename)
 		else
 			return false;
 	}
+	else
+		return false;
+
 	ifstream f(name.c_str());
 	if (!f.is_open())
 		return false;

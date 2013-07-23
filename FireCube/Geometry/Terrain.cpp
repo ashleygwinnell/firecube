@@ -4,10 +4,7 @@
 #include <map>
 #include <memory>
 using namespace std;
-#include <SDL.h>
-#include <SDL_image.h>
-#include <windows.h>
-#include "Dependencies/glew.h"
+#include "glew.h"
 
 #include "Utils/utils.h"
 #include "Math/MyMath.h"

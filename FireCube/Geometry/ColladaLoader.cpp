@@ -16,7 +16,7 @@ using namespace std;
 #include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
 #include "Rendering/Renderer.h"
-#include "Dependencies/tinyxml.h"
+#include "tinyxml.h"
 #include "Scene/Light.h"
 #include "Scene/Node.h"
 #include "Scene/GeometryNode.h"
@@ -1219,19 +1219,15 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 	// Allocate a new node.
 	FireCube::NodePtr ret(new FireCube::Node(node->name));
 
-	// Get the individual transformations of this node.
-	// Note that this is not correct. According to the Collada spec, the transformations should be applied
-	// one after the other in the order they appear in the file, while here we take all translations and sum them,
-	// all rotation and so forth. For example, a translation, rotation and again a translation does not equal
-	// to summing both translation and then rotating.
-	vec3 translation = GetTranslation(node->transformations);
-	mat4 rotation = GetRotation(node->transformations);
-	vec3 scale = GetScale(node->transformations);
+	// Calculate the node's transformation.
 	mat4 transformation = GetTransformMatrix(node->transformations);
+	vec3 translation;
+	mat3 rotation;
+	vec3 scale;
+	transformation.Decompose(scale, translation, rotation);
 	ret->SetTranslation(translation);
-	ret->SetRotation(rotation);
-	ret->SetScale(scale);
-	ret->SetMatrixTransformation(transformation);
+	ret->SetRotation(rotation.ToMat4());
+	ret->SetScale(scale);	
 
 	// Iterate over all geometry instances in this node
 	// In Collada terms, each mesh can have a group of triangles with different materials.

@@ -5,7 +5,7 @@
 #include <memory>
 using namespace std;
 #include <windows.h>
-#include "Dependencies/glew.h"
+#include "glew.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -35,9 +35,8 @@ std::shared_ptr<FontPage> FontPool::CreateNewPage()
 	p->tex = TexturePtr(new Texture);
 	p->tex->Create();
 	glBindTexture(GL_TEXTURE_2D, p->tex->GetId());
-	unsigned char empty[512 * 512];
-	ZeroMemory(empty, 512 * 512);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, empty);
+	vector<unsigned char> empty(512 * 512, 0);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, &empty[0]);
 	p->textureSize = 512;
 	p->curPos = vec2(0, 0);
 	page.push_back(p);

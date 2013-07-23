@@ -446,7 +446,7 @@ vec3 mat4::ExtractEulerAngles() const
 {
 	vec3 rotation;
 	rotation.y = asin(-m[8]);
-	if ((-m[8] < -0.99999f) || (-m[8] < -0.99999f))
+	if ((-m[8] < -0.99999f) || (m[8] > 0.99999f))
 	{
 		rotation.x = 0.0f;
 		rotation.z = atan2(-m[1], m[5]);
@@ -474,4 +474,63 @@ mat3 mat4::ToMat3() const
 	ret.m[8] = m[10];
 
 	return ret;
+}
+
+float mat4::Determinant() const
+{
+	return m[0] * m[5] * m[10] * m[15] - m[0] * m[5] * m[11] * m[14] + m[0] * m[6] * m[11] * m[13] - m[0] * m[6] * m[9] * m[15] 
+	   	 + m[0] * m[7] * m[9] * m[14] - m[0] * m[7] * m[10] * m[13] - m[1] * m[6] * m[11] * m[12] + m[1] * m[6] * m[8] * m[15] 
+		 - m[1] * m[7] * m[8] * m[14] + m[1] * m[7] * m[10] * m[12] - m[1] * m[4] * m[10] * m[15] + m[1] * m[4] * m[11] * m[14] 
+		 + m[2] * m[7] * m[8] * m[13] - m[2] * m[7] * m[9] * m[12] + m[2] * m[4] * m[9] * m[15] - m[2] * m[4] * m[11] * m[13] 
+		 + m[2] * m[5] * m[11] * m[12] - m[2] * m[5] * m[8] * m[15] - m[3] * m[4] * m[9] * m[14] + m[3] * m[4] * m[10] * m[13]
+		 - m[3] * m[5] * m[10] * m[12] + m[3] * m[5] * m[8] * m[14] - m[3] * m[6] * m[8] * m[13] + m[3] * m[6] * m[9] * m[12];
+}
+
+void mat4::Decompose(vec3 &scaling, vec3 &translation, mat3 &rotation) const
+{
+	const mat4& mat = *this;
+
+	// extract translation
+	translation.x = mat(0,3);
+	translation.y = mat(1,3);
+	translation.z = mat(2,3);
+
+	// extract the rows of the matrix
+	vec3 vRows[3] = {
+		vec3(mat(0,0), mat(1,0), mat(2,0)),
+		vec3(mat(0,1), mat(1,1), mat(2,1)),
+		vec3(mat(0,2), mat(1,2), mat(2,2))
+	};
+
+	// extract the scaling factors
+	scaling.x = vRows[0].Length();
+	scaling.y = vRows[1].Length();
+	scaling.z = vRows[2].Length();
+
+	// and the sign of the scaling
+	if (Determinant() < 0) 
+	{
+		scaling.x = -scaling.x;
+		scaling.y = -scaling.y;
+		scaling.z = -scaling.z;
+	}
+
+	// and remove all scaling from the matrix
+	if(scaling.x)
+	{
+		vRows[0] /= scaling.x;
+	}
+	if(scaling.y)
+	{
+		vRows[1] /= scaling.y;
+	}
+	if(scaling.z)
+	{
+		vRows[2] /= scaling.z;
+	}
+
+	// build a 3x3 rotation matrix
+	rotation = mat3(vRows[0].x,vRows[1].x,vRows[2].x,
+		vRows[0].y,vRows[1].y,vRows[2].y,
+		vRows[0].z,vRows[1].z,vRows[2].z);	
 }

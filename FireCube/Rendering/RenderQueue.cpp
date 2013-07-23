@@ -8,7 +8,7 @@ using namespace std;
 #include <windows.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "Dependencies/glew.h"
+#include "glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"

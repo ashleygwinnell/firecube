@@ -8,7 +8,7 @@
 using namespace std;
 #include <SDL.h>
 #include <windows.h>
-#include "Dependencies/glew.h"
+#include "glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"

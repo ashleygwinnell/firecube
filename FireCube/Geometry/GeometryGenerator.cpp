@@ -2,7 +2,7 @@
 #include <vector>
 #include <memory>
 using namespace std;
-#include "Dependencies/glew.h"
+#include "glew.h"
 
 #include "Utils/utils.h"
 #include "Math/MyMath.h"

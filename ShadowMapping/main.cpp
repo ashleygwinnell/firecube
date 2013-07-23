@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 	if (!app.Initialize())
 		return 0;
 	app.Run();
+	app.Destroy();
 	return 0;
 }
 bool App::Init()
@@ -78,7 +79,7 @@ void App::Update(float t)
 void App::SetupLight(ProgramUniformsList &uniforms)
 {
 	static float t = 0.0f;
-	vec3 lightPos = vec3(cos(t) * 3, 4, sin(t) * 3);
+	vec3 lightPos = vec3(cos(t) * 5, 4, sin(t) * 5);
 	lightProj.GeneratePerspective(45, (float)fb->GetWidth() / (float)fb->GetHeight(), 1.0f, 20.0f);
 	lightModelview.LookAt(lightPos, vec3(0, 0, 0), vec3(0, 1, 0));
 	lightCamera->SetProjectionMatrix(lightProj);

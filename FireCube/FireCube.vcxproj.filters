@@ -22,14 +22,23 @@
     <Filter Include="Geometry">
       <UniqueIdentifier>{a86ceddb-9ab9-4313-809f-c4fa963ef2fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Dependencies">
-      <UniqueIdentifier>{286a9a6a-ca76-4211-9cee-f4fbc298a0ea}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utils">
       <UniqueIdentifier>{4ebd6c78-ede8-408b-9ade-f9f143a99717}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{3ca4d186-9e01-453f-aa66-3ecd987df8f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{60323721-6c10-46fc-8c8f-c6441907260c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\GLEW">
+      <UniqueIdentifier>{97861cbf-9f49-4998-950b-9916d0ac55b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\TinyXML">
+      <UniqueIdentifier>{bf19c024-6c69-4ccf-9d0c-f5fac9d20e36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\STB">
+      <UniqueIdentifier>{20a1424f-5694-442a-9d8e-ee180d5114d2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -93,15 +102,6 @@
     <ClCompile Include="Geometry\m3dsLoader.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Dependencies\tinyxml.cpp">
-      <Filter>Dependencies</Filter>
-    </ClCompile>
-    <ClCompile Include="Dependencies\tinyxmlerror.cpp">
-      <Filter>Dependencies</Filter>
-    </ClCompile>
-    <ClCompile Include="Dependencies\tinyxmlparser.cpp">
-      <Filter>Dependencies</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\Filesystem.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -126,15 +126,11 @@
     <ClCompile Include="Scene\NodeObserverCamera.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Geometry\ObjLoader.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Application\Input.cpp">
       <Filter>Application</Filter>
-    </ClCompile>
-    <ClCompile Include="Dependencies\glew.c">
-      <Filter>Dependencies</Filter>
     </ClCompile>
     <ClCompile Include="Geometry\Material.cpp">
       <Filter>Geometry</Filter>
@@ -153,6 +149,21 @@
     </ClCompile>
     <ClCompile Include="Geometry\Terrain.cpp">
       <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\GLEW\glew.c">
+      <Filter>ThirdParty\GLEW</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\TinyXML\tinyxml.cpp">
+      <Filter>ThirdParty\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\TinyXML\tinyxmlerror.cpp">
+      <Filter>ThirdParty\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\TinyXML\tinyxmlparser.cpp">
+      <Filter>ThirdParty\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\STB\stb_image.c">
+      <Filter>ThirdParty\STB</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -216,9 +227,6 @@
     <ClInclude Include="Geometry\GeometryGenerator.h">
       <Filter>Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Dependencies\tinyxml.h">
-      <Filter>Dependencies</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\Filesystem.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -243,7 +251,6 @@
     <ClInclude Include="Scene\NodeObserverCamera.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="FireCube.h" />
     <ClInclude Include="Application\Input.h">
       <Filter>Application</Filter>
     </ClInclude>
@@ -276,6 +283,18 @@
     </ClInclude>
     <ClInclude Include="Geometry\Terrain.h">
       <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\GLEW\glew.h">
+      <Filter>ThirdParty\GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\GLEW\wglew.h">
+      <Filter>ThirdParty\GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\TinyXML\tinyxml.h">
+      <Filter>ThirdParty\TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\STB\stb_image.h">
+      <Filter>ThirdParty\STB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

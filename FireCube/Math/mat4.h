@@ -248,9 +248,19 @@ public:
 	vec3 ExtractEulerAngles() const;
 
 	/**
-	* Converts to a mat3 by stripping the translation part.
+	* Converts to a mat3 by taking the upper 3x3 part.
 	*/
 	mat3 ToMat3() const;
+
+	/**
+	* Returns the determinant of the matrix
+	*/
+	float Determinant() const;
+
+	/**
+	* Decomposes the matrix into a scaling vector, translation vector and rotation matrix
+	*/
+	void Decompose(vec3 &scaling, vec3 &translation, mat3 &rotation) const;
 
 	/**
 	* The elements of the matrix;

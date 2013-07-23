@@ -6,7 +6,7 @@
 using namespace std;
 #include <SDL.h>
 #include <windows.h>
-#include "Dependencies/glew.h"
+#include "glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -17,7 +17,7 @@ using namespace std;
 #include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
 #include "Rendering/Renderer.h"
-#include "Dependencies/tinyxml.h"
+#include "tinyxml.h"
 #include "Scene/Light.h"
 #include "Scene/Node.h"
 #include "Scene/GeometryNode.h"

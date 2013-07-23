@@ -14,6 +14,10 @@
     <ProjectGuid>{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}</ProjectGuid>
     <RootNamespace>wxTest</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <SccProjectName>Svn</SccProjectName>
+    <SccAuxPath>Svn</SccAuxPath>
+    <SccLocalPath>Svn</SccLocalPath>
+    <SccProvider>SubversionScc</SccProvider>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -61,7 +65,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>wxbase29ud.lib;wxmsw29ud_core.lib;wxmsw29ud_gl.lib;wxmsw29ud_adv.lib;wxpngd.lib;wxzlibd.lib;wxmsw29ud_propgrid.lib;opengl32.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;firecube.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Dev\wxpropgrid-1.4.7\lib\vc_lib_e;C:\Dev\wxMSW-2.8.10\lib\vc_lib_e;C:\Dev\wxWidgets-2.9.4\lib\vc_lib;$(VisualStudioDir)\Projects\FireCube\FireCube\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Dev\wxWidgets-2.9.4\lib\vc_lib;$(VisualStudioDir)\Projects\FireCube\FireCube\Debug Static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>

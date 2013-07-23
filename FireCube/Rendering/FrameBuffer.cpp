@@ -4,7 +4,7 @@
 #include <memory>
 using namespace std;
 #include <Windows.h>
-#include "Dependencies/glew.h"
+#include "glew.h"
 #include <gl/GL.h>
 
 #include "Utils/utils.h"

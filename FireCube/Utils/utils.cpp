@@ -9,12 +9,12 @@ using namespace std;
 
 using namespace FireCube;
 
-inline bool FireCube::IsFinite(float val)
+bool FireCube::IsFinite(float val)
 {
     return ((val < 1e8) && (val > -1e8));
 }
 
-inline float FireCube::RangedRandom(float v1, float v2)
+float FireCube::RangedRandom(float v1, float v2)
 {
     return v1 + (v2 - v1) * ((float)rand()) / ((float)RAND_MAX);
 }

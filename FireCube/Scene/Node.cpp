@@ -7,10 +7,7 @@
 #include <queue>
 #include <memory>
 using namespace std;
-#include <SDL.h>
-#include <SDL_image.h>
-#include <windows.h>
-#include "Dependencies/glew.h"
+#include "glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -22,7 +19,7 @@ using namespace std;
 #include "Rendering/Renderer.h"
 #include "Scene/Light.h"
 #include "Scene/Node.h"
-#include "Dependencies/tinyxml.h"
+#include "tinyxml.h"
 #include "Geometry/m3dsLoader.h"
 #include "Geometry/ObjLoader.h"
 #include "Geometry/ColladaLoader.h"
@@ -39,7 +36,6 @@ Node::Node() : parent(nullptr)
 	rotation = mat4::identity;
 	translation.Set(0, 0, 0);
 	scale.Set(1, 1, 1);
-	matTransform.Identity();
 	renderParameters.lighting = true;
 	renderParameters.fog = false;
 	renderParameters.technique = Renderer::GetTechnique("default");
@@ -53,8 +49,7 @@ Node::Node(const string &name) : parent(nullptr)
 {
 	rotation = mat4::identity;
 	translation.Set(0, 0, 0);
-	scale.Set(1, 1, 1);
-	matTransform.Identity();
+	scale.Set(1, 1, 1);	
 	renderParameters.lighting = true;
 	renderParameters.fog = false;
 	renderParameters.technique = Renderer::GetTechnique("default");
@@ -94,7 +89,6 @@ mat4 Node::GetLocalTransformation()
 	localTransformation.Translate(translation);
 	localTransformation.Scale(scale.x, scale.y, scale.z);
 	localTransformation *= rotation;
-	localTransformation *= matTransform;
 	return localTransformation;
 }
 
@@ -143,17 +137,6 @@ void Node::SetScale(const vec3 &s)
 vec3 Node::GetScale() const
 {
 	return scale;
-}
-
-void Node::SetMatrixTransformation(const mat4 &t)
-{
-	matTransform = t;
-	SetTransformationChanged();
-}
-
-mat4 Node::GetMatrixTransformation() const
-{
-	return matTransform;
 }
 
 void Node::Move(const vec3 &t)
@@ -388,7 +371,6 @@ float Node::GetFogDensity() const
 NodePtr Node::Clone() const
 {
 	NodePtr ret(new Node);
-	ret->matTransform = matTransform;
 	ret->name = name;
 	ret->renderParameters = renderParameters;
 	ret->translation = translation;

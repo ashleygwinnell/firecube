@@ -4,7 +4,7 @@
 #include <memory>
 using namespace std;
 
-#include "Dependencies/glew.h"
+#include "glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -43,6 +43,8 @@ bool Buffer::LoadIndexData(void *data, unsigned int count, BufferType bt)
 		e = GL_DYNAMIC_DRAW;
 	else if (bt == STATIC)
 		e = GL_STATIC_DRAW;
+	else
+		e = GL_STATIC_DRAW;
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, e);
@@ -59,6 +61,8 @@ bool Buffer::LoadData(void *data, unsigned int size, BufferType bt)
 	else if (bt == DYNAMIC)
 		e = GL_DYNAMIC_DRAW;
 	else if (bt == STATIC)
+		e = GL_STATIC_DRAW;
+	else
 		e = GL_STATIC_DRAW;
 
 	glBindBuffer(GL_ARRAY_BUFFER, id);

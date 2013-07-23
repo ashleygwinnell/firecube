@@ -7,10 +7,7 @@
 #include <queue>
 #include <memory>
 using namespace std;
-#include <SDL.h>
-#include <SDL_image.h>
-#include <windows.h>
-#include "Dependencies/glew.h"
+#include "glew.h"
 
 #include "Utils/utils.h"
 #include "Math/MyMath.h"
@@ -73,8 +70,7 @@ GeometryPtr GeometryNode::GetGeometry()
 
 NodePtr GeometryNode::Clone() const
 {
-	GeometryNodePtr ret(new GeometryNode);
-	ret->matTransform = matTransform;
+	GeometryNodePtr ret(new GeometryNode);	
 	ret->name = name;
 	ret->renderParameters = renderParameters;
 	ret->translation = translation;

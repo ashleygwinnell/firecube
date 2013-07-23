@@ -371,7 +371,7 @@ vec3 mat3::ExtractEulerAngles() const
 {
 	vec3 rotation;
 	rotation.y = asin(-m[6]);
-	if ((-m[6] < -0.999f) || (-m[6] < -0.999f))
+	if ((-m[6] < -0.999f) || (m[6] > 0.999f))
 	{
 		rotation.x = 0.0f;
 		rotation.z = atan2(-m[1], m[4]);

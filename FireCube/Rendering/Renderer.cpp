@@ -10,7 +10,7 @@ using namespace std;
 #include <windows.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "Dependencies/glew.h"
+#include "glew.h"
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -115,7 +115,7 @@ void Renderer::UseTexture(TexturePtr tex, unsigned int unit)
 	glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(GL_TEXTURE_2D, tex->id);
 	
-	GLint min, mag;
+	GLint min = GL_LINEAR_MIPMAP_LINEAR, mag = GL_LINEAR;
 
 	if (tex->minFilter == NEAREST)
 		min = GL_NEAREST;
@@ -243,6 +243,9 @@ void Renderer::RenderIndexStream(const PrimitiveType &primitiveType, unsigned in
 	case TRIANGLE_FAN:
 		glmode = GL_TRIANGLE_FAN;
 		break;
+	default:
+		//TODO: Add log of error.
+		return;
 	}
 	glDrawElements(glmode, count, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -277,6 +280,9 @@ void Renderer::RenderStream(const PrimitiveType &primitiveType, unsigned int cou
 	case TRIANGLE_FAN:
 		glmode = GL_TRIANGLE_FAN;
 		break;
+	default:
+		//TODO: Add log of error.
+		return;
 	}
 	glDrawArrays(glmode, 0, count);
 	glBindVertexArray(0);
@@ -320,11 +326,11 @@ void InitializeRenderer()
 {	
 	// Load the default technique
 	TechniquePtr technique(new Technique);
-	if (!technique->LoadShader("default.vert") && !technique->LoadShader("Shaders/default.vert") && !technique->LoadShader("../Assets/Shaders/default.vert") && !technique->LoadShader("./Assets/Shaders/default.vert"))
+	if (!technique->LoadShader("default.vert") && !technique->LoadShader("Shaders/default.vert") && !technique->LoadShader("../FireCube/Shaders/default.vert") && !technique->LoadShader("./Assets/Shaders/default.vert"))
 		Logger::Write(Logger::LOG_WARNING, "Could not load default technique's vertex shader");
 	else
 	{
-		if (!technique->LoadShader("default.frag") && !technique->LoadShader("Shaders/default.frag") && !technique->LoadShader("../Assets/Shaders/default.frag") && !technique->LoadShader("./Assets/Shaders/default.frag"))
+		if (!technique->LoadShader("default.frag") && !technique->LoadShader("Shaders/default.frag") && !technique->LoadShader("../FireCube/Shaders/default.frag") && !technique->LoadShader("./Assets/Shaders/default.frag"))
 			Logger::Write(Logger::LOG_WARNING, "Could not load default technique's fragment shader");
 		else
 			Renderer::AddTechnique("default", technique);
@@ -332,11 +338,11 @@ void InitializeRenderer()
 
 	// Load the font technique
 	technique = TechniquePtr(new Technique);
-	if (!technique->LoadShader("font.vert") && !technique->LoadShader("Shaders/font.vert") && !technique->LoadShader("../Assets/Shaders/font.vert") && !technique->LoadShader("./Assets/Shaders/font.vert"))
+	if (!technique->LoadShader("font.vert") && !technique->LoadShader("Shaders/font.vert") && !technique->LoadShader("../FireCube/Shaders/font.vert") && !technique->LoadShader("./Assets/Shaders/font.vert"))
 		Logger::Write(Logger::LOG_WARNING, "Could not load font technique's vertex shader");
 	else
 	{
-		if (!technique->LoadShader("font.frag") && !technique->LoadShader("Shaders/font.frag") && !technique->LoadShader("../Assets/Shaders/font.frag") && !technique->LoadShader("./Assets/Shaders/font.frag"))
+		if (!technique->LoadShader("font.frag") && !technique->LoadShader("Shaders/font.frag") && !technique->LoadShader("../FireCube/Shaders/font.frag") && !technique->LoadShader("./Assets/Shaders/font.frag"))
 			Logger::Write(Logger::LOG_WARNING, "Could not load font technique's fragment shader");
 		else
 			Renderer::AddTechnique("font", technique);
