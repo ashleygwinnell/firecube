@@ -270,8 +270,8 @@ Global
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Singlethreaded|Win32.Build.0 = Debug|Win32
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Singlethreaded|x64.ActiveCfg = Debug|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Singlethreaded|x64.Build.0 = Debug|x64
-		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Static|Win32.ActiveCfg = Debug Static|Win32
-		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Static|Win32.Build.0 = Debug Static|Win32
+		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Static|Win32.ActiveCfg = Debug|Win32
+		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Static|Win32.Build.0 = Debug|Win32
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Static|x64.ActiveCfg = Debug Static|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Static|x64.Build.0 = Debug Static|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug|Win32.ActiveCfg = Debug|Win32
