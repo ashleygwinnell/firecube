@@ -1,5 +1,7 @@
+#include <sstream>
+
 #include <FireCube.h>
-using namespace std;
+
 using namespace FireCube;
 #include "app.h"
 #include <cmath>
@@ -78,7 +80,7 @@ void App::Render(float t)
 	projection.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);
 	orthographicCamera->SetProjectionMatrix(projection);
 	Renderer::UseCamera(orthographicCamera);
-	ostringstream oss;
+	std::ostringstream oss;
 	oss << "FPS:" << app.GetFps();
 	Renderer::RenderText(app.font, vec3(0, (float)app.GetHeight() - 20.0f, 0.0f), vec4(1, 1, 1, 1), oss.str());
 }

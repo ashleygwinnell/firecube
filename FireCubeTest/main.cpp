@@ -1,5 +1,6 @@
+#include <sstream>
+
 #include <FireCube.h>
-using namespace std;
 using namespace FireCube;
 #include "app.h"
 App app;
@@ -14,7 +15,7 @@ void SetNormalMap(NodePtr node, TexturePtr texture)
 {	
 	if (node->GetType() == Node::GEOMETRY)
 	{
-		GeometryPtr geometry = dynamic_pointer_cast<GeometryNode>(node)->GetGeometry();
+		GeometryPtr geometry = std::dynamic_pointer_cast<GeometryNode>(node)->GetGeometry();
 		if (geometry)
 			geometry->GetMaterial()->SetNormalTexture(texture);	
 	}
@@ -25,7 +26,7 @@ void SetNormalMap(NodePtr node, TexturePtr texture)
 bool App::Init()
 {
 	Filesystem::AddSearchPath("../Assets/Textures");
-	SetTitle(string("FireCube Test Application"));
+	SetTitle(std::string("FireCube Test Application"));
 	GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
 	GetInputManager().AddMapping(MOUSE_AXIS_X_RELATIVE, "mouseX");
@@ -73,7 +74,7 @@ void App::Render(float t)
 	ortho.GenerateOrthographic(0, (float) app.GetWidth(), (float) app.GetHeight(), 0, 0, 1);	
 	orthographicCamera->SetProjectionMatrix(ortho);	
 	Renderer::UseCamera(orthographicCamera);
-	ostringstream oss;
+	std::ostringstream oss;
 	oss << "FPS:" << app.GetFps();
 	Renderer::RenderText(app.font, vec3(0, (float)app.GetHeight() - 20.0f, 0.0f), vec4(1, 1, 1, 1), oss.str());
 }

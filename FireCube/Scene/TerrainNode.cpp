@@ -1,30 +1,6 @@
-#include <string>
-#include <vector>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <map>
-#include <queue>
-#include <memory>
-using namespace std;
-#include "glew.h"
-
-#include "Utils/utils.h"
-#include "Math/MyMath.h"
-#include "Math/BoundingBox.h"
 #include "Geometry/Geometry.h"
-#include "Geometry/Material.h"
-#include "Rendering/Renderer.h"
-#include "Scene/Light.h"
-#include "Scene/Node.h"
 #include "Rendering/RenderQueue.h"
-#include "Rendering/Buffer.h"
-#include "Math/Plane.h"
-#include "Math/Frustum.h"
 #include "Scene/Camera.h"
-#include "GeometryNode.h"
-#include "Utils/Image.h"
-#include "Geometry/Terrain.h"
 #include "Scene/TerrainNode.h"
 
 using namespace FireCube;

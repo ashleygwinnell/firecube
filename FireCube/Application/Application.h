@@ -1,13 +1,17 @@
-#ifndef APPLICATION_H
-#define APPLICATION_H
+#pragma once
 
-#pragma warning(push)
-#pragma warning(disable:4251)
+//#pragma warning(push)
+//#pragma warning(disable:4251)
 
-#ifndef FIRECUBE_EXPORTS
-class SDL_Window;
-class SDL_GLContext;
-#endif
+#include <string>
+
+#include "Utils/ResourcePool.h"
+#include "Application/Input.h"
+#include "Utils/Timer.h"
+#include "Rendering/Font.h"
+
+struct SDL_Window;
+typedef void *SDL_GLContext;
 
 namespace FireCube
 {
@@ -127,5 +131,4 @@ private:
 	SDL_GLContext *context;
 };
 }
-#pragma warning(pop)
-#endif
+//#pragma warning(pop)

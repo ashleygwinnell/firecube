@@ -1,5 +1,4 @@
-#ifndef MAT3_H
-#define MAT3_H
+#pragma once
 
 namespace FireCube
 {
@@ -234,4 +233,3 @@ vec3 FIRECUBE_API operator*(const mat3 &a, const vec3 &b);
 */
 vec3 FIRECUBE_API operator*(const vec3 &a, const mat3 &b);
 }
-#endif

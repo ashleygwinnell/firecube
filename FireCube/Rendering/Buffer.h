@@ -1,8 +1,13 @@
-#ifndef BUFFER_H
-#define BUFFER_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <memory>
+
+#include "ThirdParty/GLEW/glew.h"
+#include "Utils/utils.h"
+
 
 namespace FireCube
 {
@@ -91,4 +96,3 @@ typedef std::shared_ptr<Buffer> BufferPtr;
 
 }
 #pragma warning(pop)
-#endif

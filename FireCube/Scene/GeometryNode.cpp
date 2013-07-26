@@ -1,25 +1,5 @@
-#include <string>
-#include <vector>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <map>
-#include <queue>
-#include <memory>
-using namespace std;
-#include "glew.h"
-
-#include "Utils/utils.h"
-#include "Math/MyMath.h"
-#include "Math/BoundingBox.h"
 #include "Geometry/Geometry.h"
-#include "Geometry/Material.h"
-#include "Rendering/Renderer.h"
-#include "Scene/Light.h"
-#include "Scene/Node.h"
 #include "Rendering/RenderQueue.h"
-#include "Math/Plane.h"
-#include "Math/Frustum.h"
 #include "Scene/Camera.h"
 #include "GeometryNode.h"
 
@@ -30,7 +10,7 @@ GeometryNode::GeometryNode() : Node()
 	type = Node::GEOMETRY;
 }
 
-GeometryNode::GeometryNode(const string &name) : Node(name)
+GeometryNode::GeometryNode(const std::string &name) : Node(name)
 {
 	type = Node::GEOMETRY;
 }
@@ -83,7 +63,7 @@ NodePtr GeometryNode::Clone() const
 	ret->worldBoundingBox = worldBoundingBox;
 	ret->worldBoundingBoxChanged = worldBoundingBoxChanged;
 	ret->geometry = geometry;
-	for (vector<NodePtr>::const_iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::const_iterator i = children.begin(); i != children.end(); i++)
 	{
 		NodePtr c = (*i)->Clone();
 		c->SetParent(ret);

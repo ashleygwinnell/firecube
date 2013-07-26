@@ -1,8 +1,16 @@
-#ifndef NODE_H
-#define NODE_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "Math/MyMath.h"
+#include "Math/BoundingBox.h"
+#include "Rendering/Renderer.h"
+#include "Rendering/Buffer.h"
 
 namespace FireCube
 {
@@ -344,5 +352,3 @@ NodePtr FIRECUBE_API LoadMesh(const std::string &filename, ModelLoadingOptions o
 }
 
 #pragma warning(push)
-
-#endif

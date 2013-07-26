@@ -1,10 +1,3 @@
-#include <string>
-#include <vector>
-#include <map>
-#include <queue>
-using namespace std;
-#include <windows.h>
-#include "Utils/utils.h"
 #include "Utils/Timer.h"
 
 using namespace FireCube;

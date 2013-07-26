@@ -1,8 +1,16 @@
-#ifndef SHADERS_H
-#define SHADERS_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <string>
+#include <memory>
+#include <vector>
+#include <map>
+
+#include "ThirdParty/GLEW/glew.h"
+#include "Utils/utils.h"
+#include "Math/MyMath.h"
 
 namespace FireCube
 {
@@ -178,7 +186,7 @@ public:
     * Sets vertex shader attribute.
     * @param name The name of the variable.
     * @param buffer The buffer from which data will be read.
-    * @param size The number of elements in each attribue.
+    * @param size The number of elements in each attribute.
     */
     void SetAttribute(const std::string &name, BufferPtr buffer, int size);
 
@@ -371,4 +379,3 @@ private:
 
 }
 #pragma warning(pop)
-#endif

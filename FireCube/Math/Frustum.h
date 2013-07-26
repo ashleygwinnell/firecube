@@ -1,8 +1,9 @@
-#ifndef FRUSTUM_H
-#define FRUSTUM_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include "Math/Plane.h"
 
 namespace FireCube
 {
@@ -40,4 +41,3 @@ private:
 
 }
 #pragma warning(pop)
-#endif

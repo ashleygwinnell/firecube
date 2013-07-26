@@ -1,8 +1,11 @@
-#ifndef IMAGE_H
-#define IMAGE_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <vector>
+
+#include "Math/MyMath.h"
 
 namespace FireCube
 {
@@ -31,9 +34,9 @@ public:
 	int GetHeight() const;
 	
 	/**
-	* Returns the number of bits per pixel of the image.
+	* Returns the number of bytes per pixel of the image.
 	*/
-	int GetBitsPerPixel() const;
+	int GetBytesPerPixel() const;
 	
 	/**
 	* Returns the image pixel data.
@@ -51,5 +54,3 @@ private:
 }
 
 #pragma warning(pop)
-
-#endif

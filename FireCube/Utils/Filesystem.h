@@ -1,5 +1,9 @@
-#ifndef FILESYSTEM_H
-#define FILESYSTEM_H
+#pragma once
+
+#include <vector>
+#include <string>
+
+#include "Utils/utils.h"
 
 namespace FireCube
 {
@@ -43,4 +47,3 @@ namespace Filesystem
 	bool FIRECUBE_API FileExists(const std::string &filename);
 }
 }
-#endif

@@ -1,30 +1,13 @@
-#include <string>
-#include <vector>
-#include <map>
 #include <algorithm>
-#include <memory>
-using namespace std;
-#include <SDL.h>
-#include <windows.h>
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include "glew.h"
 
-#include "Utils/utils.h"
-#include "Utils/Logger.h"
-#include "Math/MyMath.h"
-#include "Math/BoundingBox.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
-#include "Rendering/Renderer.h"
 #include "Rendering/RenderQueue.h"
 #include "Scene/Light.h"
 #include "Scene/Node.h"
-#include "Math/Plane.h"
-#include "Math/Frustum.h"
-#include "Scene/Camera.h"
-#include "Rendering/Shaders.h"
 #include "Rendering/Texture.h"
+#include "Rendering/Shaders.h"
+
 using namespace FireCube;
 
 void RenderQueue::Clear()
@@ -62,12 +45,12 @@ bool RenderJobCompare(const RenderJob &job1, const RenderJob &job2)
 
 void RenderQueue::Sort(QueueType type)
 {	
-	sort(renderJobs[type].begin(), renderJobs[type].end(), RenderJobCompare);
+	std::sort(renderJobs[type].begin(), renderJobs[type].end(), RenderJobCompare);
 }
 
 void RenderQueue::AddLight(const mat4 &transformation, const Light &light)
 {
-	activeLights.push_back(make_pair(transformation, light));
+	activeLights.push_back(std::make_pair(transformation, light));
 }
 
 RenderJob &RenderQueue::AddRenderJob(QueueType queueType)

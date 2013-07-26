@@ -1,5 +1,5 @@
-#ifndef MYMATH_H
-#define MYMATH_H
+#pragma once
+
 #define MATH_TYPE float
 
 namespace FireCube
@@ -16,4 +16,3 @@ class vec4;
 #include "vec2.h"
 #include "mat3.h"
 #include "mat4.h"
-#endif

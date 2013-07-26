@@ -1,28 +1,11 @@
-#include <string>
-#include <vector>
 #include <fstream>
-#include <map>
-#include <memory>
-using namespace std;
-#include "glew.h"
 
-#include "Utils/utils.h"
-#include "Math/MyMath.h"
-#include "Math/BoundingBox.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
 #include "Rendering/Renderer.h"
-#include "Scene/Light.h"
-#include "Scene/Node.h"
-#include "Rendering/RenderQueue.h"
 #include "Rendering/Buffer.h"
-#include "Math/Plane.h"
-#include "Math/Frustum.h"
 #include "Scene/Camera.h"
-#include "Scene/GeometryNode.h"
-#include "Utils/Image.h"
 #include "Geometry/Terrain.h"
-#include "Scene/TerrainNode.h"
 
 using namespace FireCube;
 
@@ -34,7 +17,7 @@ Terrain::Terrain()
 	geometry->GetMaterial()->SetDiffuseColor(vec3(0.5f, 0.5f, 0.5f));
 	geometry->SetPrimitiveType(TRIANGLES);
 }
-bool Terrain::GenerateTerrain(const string &heightmap, vec3 sizeVertices, vec2 sizeUv, bool smoothNormals)
+bool Terrain::GenerateTerrain(const std::string &heightmap, vec3 sizeVertices, vec2 sizeUv, bool smoothNormals)
 {
 	boundingBox.SetMin(vec3(0, 0, 0));
 	boundingBox.SetMax(sizeVertices);
@@ -44,9 +27,9 @@ bool Terrain::GenerateTerrain(const string &heightmap, vec3 sizeVertices, vec2 s
 	width = heightmapImage.GetWidth();
 	length = heightmapImage.GetHeight();
 	
-	vector<vec3> &vertex = geometry->GetVertices();
-	vector<vec3> &normal = geometry->GetNormals();
-	vector<vec2> &uv = geometry->GetDiffuseUV();
+	std::vector<vec3> &vertex = geometry->GetVertices();
+	std::vector<vec3> &normal = geometry->GetNormals();
+	std::vector<vec2> &uv = geometry->GetDiffuseUV();
 	vertex.resize((width - 1) * (length - 1) * 2 * 3);
 	normal.resize((width - 1) * (length - 1) * 2 * 3);
 	uv.resize((width - 1) * (length - 1) * 2 * 3);
@@ -131,20 +114,20 @@ bool Terrain::GenerateTerrain(const string &heightmap, vec3 sizeVertices, vec2 s
 	}
 	geometry->UpdateBuffers();
 		
-	string::size_type d;
+	std::string::size_type d;
 	d = heightmap.find_last_of("/");
-	if (d == string::npos)
+	if (d == std::string::npos)
 		d = heightmap.find_last_of("\\");
-	if (d == string::npos)
+	if (d == std::string::npos)
 		d = 0;
-	if (d != string::npos)
+	if (d != std::string::npos)
 	{
-		string quadfile = heightmap.substr(d + 1);
+		std::string quadfile = heightmap.substr(d + 1);
 		d = quadfile.find_last_of(".");
-		if (d != string::npos)
+		if (d != std::string::npos)
 			quadfile = quadfile.substr(0, d + 1);
 		quadfile.append("bin");
-		ifstream f(quadfile.c_str(), ios::binary);
+		std::ifstream f(quadfile.c_str(), std::ios::binary);
 		if (f.is_open())
 		{
 			f.close();
@@ -320,13 +303,13 @@ void Terrain::QuadTree::Build(NodePtr node, float minSize, unsigned int maxNumbe
 		if (node->child[i])
 			Build(node->child[i], minSize, maxNumberOfFaces);
 }
-unsigned int Terrain::QuadTree::Render(CameraPtr camera, vector<unsigned int> &indicesToRender)
+unsigned int Terrain::QuadTree::Render(CameraPtr camera, std::vector<unsigned int> &indicesToRender)
 {
 	currentIndex = 0;
 	Render(root, camera, indicesToRender);	
 	return currentIndex;
 }
-void Terrain::QuadTree::Render(NodePtr node, CameraPtr camera, vector<unsigned int> &indicesToRender)
+void Terrain::QuadTree::Render(NodePtr node, CameraPtr camera, std::vector<unsigned int> &indicesToRender)
 {
 	if (camera->GetFrustum().Contains(node->boundingBox))
 	{
@@ -383,7 +366,7 @@ void Terrain::QuadTree::RenderLines(NodePtr node)
 {
 	BufferPtr v(new Buffer);
 	v->Create();
-	vector<vec3> vv;
+	std::vector<vec3> vv;
 	vv.push_back(vec3(node->boundingBox.GetMin().x, 20.0f, node->boundingBox.GetMin().z));
 	vv.push_back(vec3(node->boundingBox.GetMax().x, 20.0f, node->boundingBox.GetMin().z));
 	vv.push_back(vec3(node->boundingBox.GetMax().x, 20.0f, node->boundingBox.GetMax().z));
@@ -395,14 +378,14 @@ void Terrain::QuadTree::RenderLines(NodePtr node)
 		if (node->child[j])
 			RenderLines(node->child[j]);
 }
-void Terrain::QuadTree::Save(const string &filename)
+void Terrain::QuadTree::Save(const std::string &filename)
 {
-	ofstream file(filename.c_str(), ios::binary);
+	std::ofstream file(filename.c_str(), std::ios::binary);
 	file.write((const char*)&size, sizeof(vec2));
 	file.write((const char*)&aspect, sizeof(vec2));
 	Save(root, file);
 }
-void Terrain::QuadTree::Save(NodePtr node, ofstream &file)
+void Terrain::QuadTree::Save(NodePtr node, std::ofstream &file)
 {
 	unsigned char children = 0;
 	unsigned int numIndices = node->indices.size();
@@ -450,14 +433,14 @@ void Terrain::QuadTree::Save(NodePtr node, ofstream &file)
 		if (node->child[i])
 			Save(node->child[i], file);
 }
-void Terrain::QuadTree::Load(const string &filename)
+void Terrain::QuadTree::Load(const std::string &filename)
 {
-	ifstream file(filename.c_str(), ios::binary);
-	file.seekg(0, ios_base::end);
+	std::ifstream file(filename.c_str(),std:: ios::binary);
+	file.seekg(0, std::ios_base::end);
 	unsigned int size = (unsigned int) file.tellg(), currentIndex = 0;
-	vector<unsigned char> buffer;
+	std::vector<unsigned char> buffer;
 	buffer.resize(size);
-	file.seekg(0, ios_base::beg);
+	file.seekg(0, std::ios_base::beg);
 	file.read((char*)&buffer[0], size);
 	this->size = *(vec2*)&buffer[currentIndex];
 	currentIndex += sizeof(vec2);
@@ -466,7 +449,7 @@ void Terrain::QuadTree::Load(const string &filename)
 	root = NodePtr(new Node);
 	Load(buffer, currentIndex, root);
 }
-void Terrain::QuadTree::Load(const vector<unsigned char> &buffer, unsigned int &currentIndex, NodePtr node)
+void Terrain::QuadTree::Load(const std::vector<unsigned char> &buffer, unsigned int &currentIndex, NodePtr node)
 {
 	unsigned char children;
 	unsigned int numIndices;

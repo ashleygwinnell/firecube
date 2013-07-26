@@ -1,8 +1,13 @@
-#ifndef M3DS_LOADER_H
-#define M3DS_LOADER_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <memory>
+#include <vector>
+
+#include "Geometry/Geometry.h"
+#include "Scene/Node.h"
 
 #define MAIN3DS       0x4D4D
 
@@ -54,6 +59,11 @@
 
 namespace FireCube
 {
+
+// Forward declarations.
+class Material;
+typedef std::shared_ptr<Material> MaterialPtr;
+
 	class M3dsLoader
 	{
 	public:
@@ -61,20 +71,20 @@ namespace FireCube
 		{
 		public:
 			MaterialPtr material;
-			vector<Face> face;
+			std::vector<Face> face;
 		};
 		class Object
 		{
 		public:
-			string name;
-			vector<vec3> vertex;
-			vector<Face> face;
-			vector<vec2> uv;
-			vector<Mesh> mesh;
+			std::string name;
+			std::vector<vec3> vertex;
+			std::vector<Face> face;
+			std::vector<vec2> uv;
+			std::vector<Mesh> mesh;
 		};
 
 		M3dsLoader();
-		bool Load(const string &filename, ModelLoadingOptions options);
+		bool Load(const std::string &filename, ModelLoadingOptions options);
 		NodePtr GenerateSceneGraph();
 	private:
 		void ReadMainChunk();
@@ -91,22 +101,21 @@ namespace FireCube
 		vec3 ReadMaterialColorChunk(unsigned int length);
 		TexturePtr ReadMaterialTexMapChunk(unsigned int length);
 		float ReadMaterialShininessChunk(unsigned int length);
-		string ReadMapNameChunk();
+		std::string ReadMapNameChunk();
 		vec3 ReadColorFChunk();
 		vec3 ReadColorBChunk();
 		float ReadPercentageBChunk();
 		float ReadPercentageFChunk();
-		MaterialPtr GetMaterialByName(const string &name);
-		vector<char> buffer;
+		MaterialPtr GetMaterialByName(const std::string &name);
+		std::vector<char> buffer;
 		MaterialPtr curMaterial;
-		vector<MaterialPtr> materials;
-		vector<pair<pair<unsigned int, unsigned int>, string>> meshMaterial;
-		vector<pair<unsigned int, mat4>> objectMatrix;
-		vector<Object> object;
+		std::vector<MaterialPtr> materials;
+		std::vector<std::pair<std::pair<unsigned int, unsigned int>, std::string>> meshMaterial;
+		std::vector<std::pair<unsigned int, mat4>> objectMatrix;
+		std::vector<Object> object;
 		char *curPos;
 		ModelLoadingOptions options;
 	};
 }
 
 #pragma warning(pop)
-#endif

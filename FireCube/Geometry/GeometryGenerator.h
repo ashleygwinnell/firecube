@@ -1,8 +1,9 @@
-#ifndef GEOMETRY_GENERATOR_H
-#define GEOMETRY_GENERATOR_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include "Geometry/Geometry.h"
 
 namespace FireCube
 {
@@ -62,5 +63,3 @@ GeometryPtr FIRECUBE_API GeneratePlane(const vec2 &size, MaterialPtr material);
 }
 }
 #pragma warning(pop)
-
-#endif

@@ -1,16 +1,11 @@
-#include <string>
-#include <vector>
-#include <map>
-#include <queue>
+#include <algorithm>
 #include <sstream>
-using namespace std;
 
-#include "Utils/utils.h"
 #include "Utils/Logger.h"
 #include "Utils/Filesystem.h"
-#include "Math/MyMath.h"
 #include "Utils/Image.h"
 #include "stb_image.h"
+#include "jpgd.h"
 
 using namespace FireCube;
 
@@ -19,49 +14,49 @@ Image::Image() : width(0), height(0), bytesPerPixel(0)
 
 }
 
-bool Image::Load(const string &filename)
+bool Image::Load(const std::string &filename)
 {
-	string fname = Filesystem::SearchForFileName(filename);
+	std::string fname = Filesystem::SearchForFileName(filename);
 	if (fname.empty())
 		return false;
 
-	unsigned char *pixels = stbi_load(filename.c_str(), &width, &height, &bytesPerPixel, 0);
-	if (!pixels)
-		return false;
-
+	unsigned int pos = filename.find_last_of('.');
+	std::string ext;
+	bool loadedUsingStb = false;
+	if (pos != std::string::npos)
+	{
+		ext = filename.substr(pos + 1);
+		std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+	}
+	unsigned char *pixels;
+	if (pos == std::string::npos || ext != "jpg")
+	{
+		loadedUsingStb = true;
+		pixels = stbi_load(filename.c_str(), &width, &height, &bytesPerPixel, 0);
+		if (!pixels)
+		{
+			std::ostringstream oss;
+			oss << "Failed loading image: " << filename << " reason: " << stbi_failure_reason();
+			Logger::Write(Logger::LOG_ERROR, oss.str());
+			return false;
+		}
+	}
+	else
+	{		
+		pixels = jpgd::decompress_jpeg_image_from_file(filename.c_str(), &width, &height, &bytesPerPixel, 3);
+		if (!pixels)
+			return false;
+	}
+	
 	data.resize(width * height * bytesPerPixel);
 	for (unsigned int i = 0; i < data.size(); ++i)
 		data[i] = pixels[i];
-	stbi_image_free(pixels);
-	return true;	
-	/*
-	SDL_Surface *image;
-	string fname = Filesystem::SearchForFileName(filename);
-	if (fname.empty())
-		return false;
-	image = IMG_Load(fname.c_str());
-	if (image)
-	{		
-		bytesPerPixel = image->format->BitsPerPixel / 8;
-		width = image->w;
-		height = image->h;
-		data.resize(width * height * bytesPerPixel);
-		for (int y = 0; y < height; y++)
-		{
-			for (int x = 0; x < width; x++)
-			{
-				for (int j = 0; j < bytesPerPixel; j++)
-				{
-					unsigned int i = y * height * bytesPerPixel + x * bytesPerPixel + j;
-					data[i] = ((unsigned char*)(image->pixels))[y * image->pitch + x * bytesPerPixel + j];
-				}
-			}
-		}
-		SDL_FreeSurface(image);
+	if (loadedUsingStb)
+		stbi_image_free(pixels);
+	else
+		free(pixels);
 
-		return true;
-	}
-	return false;*/
+	return true;		
 }
 
 int Image::GetWidth() const
@@ -74,12 +69,12 @@ int Image::GetHeight() const
 	return height;
 }
 
-int Image::GetBitsPerPixel() const
+int Image::GetBytesPerPixel() const
 {
-	return bytesPerPixel * 8;
+	return bytesPerPixel;
 }
 
-vector<unsigned char> &Image::GetPixels()
+std::vector<unsigned char> &Image::GetPixels()
 {
 	return data;
 }

@@ -1,8 +1,13 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <memory>
+#include <string>
+
+#include "Utils/utils.h"
+#include "Math/MyMath.h"
 
 namespace FireCube
 {
@@ -318,5 +323,3 @@ FontPool FIRECUBE_API &GetFontPool();
 };
 }
 #pragma warning(pop)
-
-#endif

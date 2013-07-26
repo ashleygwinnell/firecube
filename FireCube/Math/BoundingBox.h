@@ -1,5 +1,6 @@
-#ifndef BOUNDINGBOX_H
-#define BOUNDINGBOX_H
+#pragma once
+
+#include "Math/MyMath.h"
 
 namespace FireCube
 {
@@ -92,4 +93,3 @@ private:
 	vec3 bmin, bmax;
 };
 }
-#endif

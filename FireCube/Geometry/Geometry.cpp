@@ -1,14 +1,7 @@
-#include <string>
-#include <vector>
 #include <sstream>
-#include <memory>
-using namespace std;
-#include "glew.h"
 
-#include "Utils/utils.h"
+#include "ThirdParty/GLEW/glew.h"
 #include "Utils/Logger.h"
-#include "Math/MyMath.h"
-#include "Math/BoundingBox.h"
 #include "Rendering/Buffer.h"
 #include "Geometry/Geometry.h"
 
@@ -38,7 +31,7 @@ Geometry::Geometry() : vao(0), vertexCount(0), primitiveCount(0)
 
 Geometry::~Geometry()
 {
-	Logger::Write(Logger::LOG_INFO, string("Destroyed geometry"));
+	Logger::Write(Logger::LOG_INFO, std::string("Destroyed geometry"));
 }
 
 void Geometry::CalculateNormals()
@@ -73,7 +66,7 @@ void Geometry::CalculateTangents()
 {
 	if ((normal.size() == 0) || (diffuseUV.size() == 0))
 		return;
-	vector<vec3> tan(vertex.size() * 2);
+	std::vector<vec3> tan(vertex.size() * 2);
 	std::fill(tan.begin(), tan.end(), vec3(0, 0, 0));
 
 	for (unsigned int i = 0; i < face.size(); i++)
@@ -141,11 +134,11 @@ void Geometry::CreateHardNormals()
 	// be equal to the face normal it belongs to.
 	if (primitiveType != TRIANGLES)
 		return;
-	vector<vec3> originalVertices = vertex;
-	vector<vec2> originalDiffuseUV = diffuseUV;
-	vector<Face> originalFaces = face;
-	vector<vec3> originalTangents = tangent;
-	vector<vec3> originalBitangents = bitangent;
+	std::vector<vec3> originalVertices = vertex;
+	std::vector<vec2> originalDiffuseUV = diffuseUV;
+	std::vector<Face> originalFaces = face;
+	std::vector<vec3> originalTangents = tangent;
+	std::vector<vec3> originalBitangents = bitangent;
 	unsigned int currentIndex = 0;
 	face.clear();
 	vertex.clear();
@@ -225,7 +218,7 @@ void Geometry::UpdateBuffers()
 	}
 	if (!vertexBuffer->LoadData(&vertex[0], sizeof(vec3)*vertex.size(), STATIC))
 	{
-		ostringstream oss;
+		std::ostringstream oss;
 		oss << "buffer id:" << vertexBuffer->GetId() << " Couldn't upload vertex data";
 		Logger::Write(Logger::LOG_ERROR, oss.str());
 	}
@@ -241,7 +234,7 @@ void Geometry::UpdateBuffers()
 		}
 		if (!normalBuffer->LoadData(&normal[0], sizeof(vec3)*normal.size(), STATIC))
 		{
-			ostringstream oss;
+			std::ostringstream oss;
 			oss << "buffer id:" << normalBuffer->GetId() << " Couldn't upload vertex data";
 			Logger::Write(Logger::LOG_ERROR, oss.str());
 		}
@@ -260,7 +253,7 @@ void Geometry::UpdateBuffers()
 		}
 		if (!tangentBuffer->LoadData(&tangent[0], sizeof(vec3)*tangent.size(), STATIC))
 		{
-			ostringstream oss;
+			std::ostringstream oss;
 			oss << "buffer id:" << tangentBuffer->GetId() << " Couldn't upload vertex data";
 			Logger::Write(Logger::LOG_ERROR, oss.str());
 		}
@@ -279,7 +272,7 @@ void Geometry::UpdateBuffers()
 		}
 		if (!bitangentBuffer->LoadData(&bitangent[0], sizeof(vec3) * bitangent.size(), STATIC))
 		{
-			ostringstream oss;
+			std::ostringstream oss;
 			oss << "buffer id:" << bitangentBuffer->GetId() << " Couldn't upload vertex data";
 			Logger::Write(Logger::LOG_ERROR, oss.str());
 		}
@@ -298,7 +291,7 @@ void Geometry::UpdateBuffers()
 		}
 		if (!diffuseUVBuffer->LoadData(&diffuseUV[0], sizeof(vec2)*diffuseUV.size(), STATIC))
 		{
-			ostringstream oss;
+			std::ostringstream oss;
 			oss << "buffer id:" << diffuseUVBuffer->GetId() << " Couldn't upload vertex data";
 			Logger::Write(Logger::LOG_ERROR, oss.str());
 		}
@@ -317,7 +310,7 @@ void Geometry::UpdateBuffers()
 		}
 		if (!indexBuffer->LoadIndexData(&indices[0], indices.size(), STATIC))
 		{
-			ostringstream oss;
+			std::ostringstream oss;
 			oss << "buffer id:" << indexBuffer->GetId() << " Couldn't upload vertex data";
 			Logger::Write(Logger::LOG_ERROR, oss.str());
 		}
@@ -338,7 +331,7 @@ void Geometry::UpdateIndexBuffer()
 		}
 		if (!indexBuffer->LoadIndexData(&indices[0], indices.size(), STATIC))
 		{
-			ostringstream oss;
+			std::ostringstream oss;
 			oss << "buffer id:" << indexBuffer->GetId() << " Couldn't upload vertex data";
 			Logger::Write(Logger::LOG_ERROR, oss.str());
 		}
@@ -392,43 +385,43 @@ BoundingBox Geometry::GetBoundingBox() const
 void Geometry::CalculateBoundingBox()
 {
 	bbox = BoundingBox();
-	for (vector<vec3>::iterator j = vertex.begin(); j != vertex.end(); j++)
+	for (std::vector<vec3>::iterator j = vertex.begin(); j != vertex.end(); j++)
 	{
 		bbox.Expand(*j);
 	}
 }
 
-vector<vec3> &Geometry::GetVertices()
+std::vector<vec3> &Geometry::GetVertices()
 {
 	return vertex;
 }
 
-vector<vec3> &Geometry::GetNormals()
+std::vector<vec3> &Geometry::GetNormals()
 {
 	return normal;
 }
 
-vector<vec3> &Geometry::GetTangents()
+std::vector<vec3> &Geometry::GetTangents()
 {
 	return tangent;
 }
 
-vector<vec3> &Geometry::GetBitangents()
+std::vector<vec3> &Geometry::GetBitangents()
 {
 	return bitangent;
 }
 
-vector<Face> &Geometry::GetFaces()
+std::vector<Face> &Geometry::GetFaces()
 {
 	return face;
 }
 
-vector<vec2> &Geometry::GetDiffuseUV()
+std::vector<vec2> &Geometry::GetDiffuseUV()
 {
 	return diffuseUV;
 }
 
-vector<unsigned int> &Geometry::GetIndices()
+std::vector<unsigned int> &Geometry::GetIndices()
 {
 	return indices;
 }

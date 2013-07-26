@@ -1,8 +1,13 @@
-#ifndef NODE_OBSERVER_CAMERA_H
-#define NODE_OBSERVER_CAMERA_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <memory>
+
+#include "Utils/utils.h"
+#include "Camera.h"
+#include "Application/Input.h"
 
 namespace FireCube
 {
@@ -153,4 +158,3 @@ typedef std::shared_ptr<NodeObserverCamera> NodeObserverCameraPtr;
 
 }
 #pragma warning(pop)
-#endif

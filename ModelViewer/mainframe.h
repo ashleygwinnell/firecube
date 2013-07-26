@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 10 2012)
+// C++ code generated with wxFormBuilder (version Oct  8 2012)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -16,8 +16,6 @@
 #include <map>
 #include <queue>
 using namespace std;
-#include <windows.h>
-#include <gl/gl.h>
 #include <FireCube.h>
 #include <wx/glcanvas.h>
 #include "GlCanvas.h"

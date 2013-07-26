@@ -12,9 +12,9 @@ public:
     void FromNode(NodePtr node, int sizex, int sizey, int sizez, float extraSize);
     bool GetPointInfo(vec3 pos, vec3 &dir, float &dist, bool accurateOutsideDist);
     GeometryPtr GetFirstGeometry(NodePtr node);
-    vector<vec3> vertex;
-    vector<Face> face;
-    vector<Edge> edge;
+    std::vector<vec3> vertex;
+    std::vector<Face> face;
+    std::vector<Edge> edge;
     Grid3D<PointInfo> volume;
     vec3 min, max;
     float radius;

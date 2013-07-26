@@ -1,38 +1,32 @@
-#include <string>
-#include <vector>
-#include <map>
-#include <queue>
 #include <fstream>
 #include <iostream>
-using namespace std;
 
-#include "Utils/utils.h"
 #include "Utils/Logger.h"
 
 using namespace FireCube;
 
-ofstream file;
+std::ofstream file;
 Logger::LogLevel minLevel = Logger::LOG_DEBUG;
 bool outputToFile = true, outputToCout = true;
 
 char* levelNames[] = {"[DEBUG]", "[INFO]", "[TRACE]", "[WARNING]", "[ERROR]"};
 
-void Logger::Init(const string &filename)
+void Logger::Init(const std::string &filename)
 {
-    file.open(filename.c_str(), ios::out | ios::trunc);
+    file.open(filename.c_str(), std::ios::out | std::ios::trunc);
 }
 
-void Logger::Write(LogLevel level, const string &str)
+void Logger::Write(LogLevel level, const std::string &str)
 {
     if (level < minLevel)
         return;
     if (outputToFile)
     {
         if (file.is_open())
-            file << levelNames[level] << ": " << str << endl;
+            file << levelNames[level] << ": " << str << std::endl;
     }
     if (outputToCout)
-        cout << levelNames[level] << ": " << str << endl;
+        std::cout << levelNames[level] << ": " << str << std::endl;
 }
 
 void FIRECUBE_API Logger::SetLogLevel(Logger::LogLevel level)

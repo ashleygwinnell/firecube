@@ -1,27 +1,4 @@
-#include <string>
-#include <vector>
-#include <map>
-#include <queue>
-#include <sstream>
-#include <set>
-#include <memory>
-using namespace std;
-#include <SDL.h>
-#include <windows.h>
-#include "glew.h"
-
-#include "Utils/utils.h"
-#include "Utils/Logger.h"
-#include "Math/MyMath.h"
-#include "Math/Plane.h"
-#include "Math/Frustum.h"
-#include "Scene/Camera.h"
-#include "Application/Input.h"
 #include "Scene/NodeObserverCamera.h"
-#include "Math/BoundingBox.h"
-#include "Rendering/Renderer.h"
-#include "Rendering/Buffer.h"
-#include "Scene/Light.h"
 #include "Scene/Node.h"
 
 using namespace FireCube;

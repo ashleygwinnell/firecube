@@ -1,38 +1,31 @@
-#include <string>
-#include <vector>
-#include <map>
-#include <queue>
-#include <sstream>
 #include <fstream>
-using namespace std;
 
 #include <Windows.h>
-#include "Utils/utils.h"
 #include "Utils/Filesystem.h"
 
 using namespace FireCube;
 
-vector<string> searchPaths;
+std::vector<std::string> searchPaths;
 
-void Filesystem::AddSearchPath(const string &path)
+void Filesystem::AddSearchPath(const std::string &path)
 {
-	string npath = path;
+	std::string npath = path;
 	if ((npath[npath.size() - 1] == '\\') || (npath[npath.size() - 1] == '/'))
 		npath = npath.substr(0, npath.size() - 1);
 	searchPaths.push_back(npath);
 }
 
-const vector<string> &Filesystem::GetSearchPaths()
+const std::vector<std::string> &Filesystem::GetSearchPaths()
 {
 	return searchPaths;
 }
 
-string Filesystem::SearchForFileName(const string &filename)
+std::string Filesystem::SearchForFileName(const std::string &filename)
 {	
-	string ret;
+	std::string ret;
 	if (!FileExists(filename))
 	{
-		const vector<string> &searchPaths = Filesystem::GetSearchPaths();
+		const std::vector<std::string> &searchPaths = Filesystem::GetSearchPaths();
 		for (unsigned int i = 0; i < searchPaths.size(); i++)
 		{
 			ret = searchPaths[i] + "\\" + filename;
@@ -46,18 +39,18 @@ string Filesystem::SearchForFileName(const string &filename)
 	return "";
 }
 
-string Filesystem::GetFullPath(const std::string &filename)
+std::string Filesystem::GetFullPath(const std::string &filename)
 {
 	char pFullPathName[1024];
 	if (GetFullPathNameA(filename.c_str(), 1024, pFullPathName, nullptr) == 0)
-		return string();
+		return std::string();
 	
-	return string(pFullPathName);
+	return std::string(pFullPathName);
 }
 
-bool Filesystem::FileExists(const string &filename)
+bool Filesystem::FileExists(const std::string &filename)
 {
-	ifstream f(filename.c_str(), ios::binary);
+	std::ifstream f(filename.c_str(), std::ios::binary);
 	if (f.is_open())
 	{
 		f.close();

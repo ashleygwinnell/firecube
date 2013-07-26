@@ -1,5 +1,7 @@
+#include <sstream>
+
 #include <FireCube.h>
-using namespace std;
+
 using namespace FireCube;
 #include "app.h"
 
@@ -100,8 +102,8 @@ void App::Render(float time)
 	mat4 ortho;
 	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);
 	orthographicCamera->SetProjectionMatrix(ortho);
-	ostringstream oss;
-	oss << "FPS:" << app.GetFps() << endl << "Rendered primitives: " << Renderer::GetNumberOfPrimitivesRendered();
+	std::ostringstream oss;
+	oss << "FPS:" << app.GetFps() << std::endl << "Rendered primitives: " << Renderer::GetNumberOfPrimitivesRendered();
 	Renderer::RenderText(font, vec3(0, 0, 0), vec4(1.0f, 1.0f, 1.0f, 1.0f), oss.str());    
 }
 

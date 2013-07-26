@@ -1,5 +1,7 @@
+#include <sstream>
+
 #include <FireCube.h>
-using namespace std;
+
 using namespace FireCube;
 #include "app.h"
 #include "Grid3D.h"
@@ -13,7 +15,7 @@ vec3 lastPos;
 vec3 rot(0, 0, 0), camPos(0, 0, 3.0f);
 RigidBody body1;
 RigidBody body2;
-vector <CollisionInfo> collisions;
+std::vector<CollisionInfo> collisions;
 Simulator s;
 int main(int argc, char *argv[])
 {
@@ -27,7 +29,7 @@ int main(int argc, char *argv[])
 
 bool App::Init()
 {
-	SetTitle(string("Physics Test"));
+	SetTitle(std::string("Physics Test"));
 	GetInputManager().AddInputListener(&app);
 	GetInputManager().AddMapping(MOUSE_AXIS_X_RELATIVE, "mouseX");
 	GetInputManager().AddMapping(MOUSE_AXIS_Y_RELATIVE, "mouseY");
@@ -75,7 +77,7 @@ void App::Render(float t)
 	mat4 orthographicProjection;
 	orthographicProjection.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0 ,1);
 	orthographicCamera->SetProjectionMatrix(orthographicProjection);		
-	ostringstream oss;
+	std::ostringstream oss;
 	oss << "FPS:" << app.GetFps();
 	Renderer::RenderText(font, vec3(0, 0, 0), vec4(1, 1, 1, 1), oss.str());
 }

@@ -1,28 +1,12 @@
-#include <string>
-#include <vector>
-#include <map>
-#include <set>
-#include <memory>
-using namespace std;
-#include <Windows.h>
 #include <SDL.h>
-#include "glew.h"
+#include "ThirdParty/GLEW/glew.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
-#include "Utils/utils.h"
 #include "Utils/Logger.h"
-#include "Utils/Filesystem.h"
-#include "Utils/ResourcePool.h"
-#include "Utils/Timer.h"
-#include "Math/MyMath.h"
-#include "Rendering/Font.h"
 #include "Rendering/Renderer.h"
-#include "Application/Input.h"
 #include "Application/Application.h"
 
 using namespace FireCube;
-
 
 extern void InitializeRenderer();
 extern void DestroyRenderer();
@@ -86,7 +70,7 @@ bool Application::InitializeNoWindow()
 	glewExperimental = GL_TRUE;
 	glewInit();
 	Logger::Init("log.txt");
-	Logger::Write(Logger::LOG_INFO, string("Initializing application"));
+	Logger::Write(Logger::LOG_INFO, std::string("Initializing application"));
 	timer.Init();
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -99,7 +83,7 @@ bool Application::InitializeNoWindow()
 void Application::Destroy()
 {
 	DestroyRenderer();
-	Logger::Write(Logger::LOG_INFO, string("Destroying application"));
+	Logger::Write(Logger::LOG_INFO, std::string("Destroying application"));
 	if (context)
 		SDL_GL_DeleteContext(*context);
 	if (mainWindow)
@@ -117,7 +101,7 @@ void Application::Run()
 {
 	running = true;
 	SDL_Event event;
-	Logger::Write(Logger::LOG_INFO, string("Entering main loop..."));
+	Logger::Write(Logger::LOG_INFO, std::string("Entering main loop..."));
 	while (running)
 	{
 		// Get time passed since last frame
@@ -128,11 +112,11 @@ void Application::Run()
 			if (event.type == SDL_KEYDOWN)
 			{		
 				// Get the mapping between SDL key code and the engine's key enum
-				map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
+				std::map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
 				if (k != keyMap.end())
 				{					
 					// Check if previously pressed and update the key state
-					map<int, bool>::iterator i = keyState.find(event.key.keysym.sym);
+					std::map<int, bool>::iterator i = keyState.find(event.key.keysym.sym);
 					bool previouslyPressed = i != keyState.end() && i->second == true;
 					keyState[event.key.keysym.sym] = true;
 					SDL_Keymod keyMod = SDL_GetModState();
@@ -161,7 +145,7 @@ void Application::Run()
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
 				// Get the mapping between SDL key code and the engine's key enum
-				map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
+				std::map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
 				if (k != keyMap.end())
 				{
 					// Update the input manager's state
@@ -182,11 +166,11 @@ void Application::Run()
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
 				// Get the mapping between SDL key code and the engine's key enum
-				map<int, Key>::iterator k = mouseMap.find(event.button.button);
+				std::map<int, Key>::iterator k = mouseMap.find(event.button.button);
 				if (k != mouseMap.end())
 				{
 					// Check if previously pressed and update the key state
-					map<int, bool>::iterator i = mouseState.find(event.button.button);
+					std::map<int, bool>::iterator i = mouseState.find(event.button.button);
 					bool previouslyPressed = i != mouseState.end() && i->second == true;
 					// Update the input manager's state
 					inputManager.SetRawKeyState(k->second, true, previouslyPressed, modifier);
@@ -205,7 +189,7 @@ void Application::Run()
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
 				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
 				// Get the mapping between SDL key code and the engine's key enum
-				map<int, Key>::iterator k = mouseMap.find(event.button.button);
+				std::map<int, Key>::iterator k = mouseMap.find(event.button.button);
 				if (k != mouseMap.end())
 				{
 					// Update the input manager's state
@@ -254,10 +238,10 @@ void Application::Run()
 			frameCount = 0;
 		}
 	}
-	Logger::Write(Logger::LOG_INFO, string("Exiting main loop..."));
+	Logger::Write(Logger::LOG_INFO, std::string("Exiting main loop..."));
 }
 
-void Application::SetTitle(const string &title)
+void Application::SetTitle(const std::string &title)
 {
 	SDL_SetWindowTitle(mainWindow, title.c_str());
 }

@@ -40,6 +40,9 @@
     <Filter Include="ThirdParty\STB">
       <UniqueIdentifier>{20a1424f-5694-442a-9d8e-ee180d5114d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ThirdParty\jpgd">
+      <UniqueIdentifier>{4740ac9f-080a-457d-8b95-c62c912f7b56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Rendering\Buffer.cpp">
@@ -164,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="ThirdParty\STB\stb_image.c">
       <Filter>ThirdParty\STB</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\jpgd\jpgd.cpp">
+      <Filter>ThirdParty\jpgd</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -295,6 +301,13 @@
     </ClInclude>
     <ClInclude Include="ThirdParty\STB\stb_image.h">
       <Filter>ThirdParty\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\jpgd\jpgd.h">
+      <Filter>ThirdParty\jpgd</Filter>
+    </ClInclude>
+    <ClInclude Include="FireCube.h" />
+    <ClInclude Include="Rendering\GLHandle.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

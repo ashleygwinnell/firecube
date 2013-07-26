@@ -1,25 +1,10 @@
-#include <string>
-#include <vector>
-#include <map>
 #include <fstream>
-#include <memory>
-using namespace std;
-#include <SDL.h>
-#include <windows.h>
-#include "glew.h"
+#include <sstream>
 
-#include "Utils/utils.h"
 #include "Utils/Logger.h"
 #include "Utils/ResourcePool.h"
-#include "Math/MyMath.h"
-#include "Math/BoundingBox.h"
 #include "Rendering/Texture.h"
-#include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
-#include "Rendering/Renderer.h"
-#include "tinyxml.h"
-#include "Scene/Light.h"
-#include "Scene/Node.h"
 #include "Scene/GeometryNode.h"
 #include "Geometry/m3dsLoader.h"
 
@@ -30,16 +15,16 @@ M3dsLoader::M3dsLoader()
 
 }
 
-bool M3dsLoader::Load(const string &filename, ModelLoadingOptions options)
+bool M3dsLoader::Load(const std::string &filename, ModelLoadingOptions options)
 {
-	ifstream f(filename.c_str(), ios::in | ios::binary | ios::ate);
+	std::ifstream f(filename.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
 	if (!f.is_open())
 		return false;
 
 	// Allocate a buffer to hold the entire file
 	unsigned int l = (unsigned int)f.tellg();
 	buffer.resize(l);
-	f.seekg(0, ios_base::beg);
+	f.seekg(0, std::ios_base::beg);
 	f.read(&buffer[0], l);
 	curPos = &buffer[0];
 
@@ -47,10 +32,10 @@ bool M3dsLoader::Load(const string &filename, ModelLoadingOptions options)
 	ReadMainChunk();
 
 	// Link between material names of sub meshes and the actual read materials
-	vector<pair<pair<unsigned int, unsigned int>, string>>::iterator meshMat;
+	std::vector<std::pair<std::pair<unsigned int, unsigned int>, std::string>>::iterator meshMat;
 	for (meshMat = meshMaterial.begin(); meshMat != meshMaterial.end(); meshMat++)
 		object[meshMat->first.first].mesh[meshMat->first.second].material = GetMaterialByName(meshMat->second);
-	vector<pair<unsigned int, mat4>>::iterator objMatrix;
+	std::vector<std::pair<unsigned int, mat4>>::iterator objMatrix;
 
 	// Search for objects with out sub meshes, create a default material
 	// and assign all faces to it
@@ -117,7 +102,7 @@ NodePtr M3dsLoader::GenerateSceneGraph()
 			geom->CalculateTangents();
 			geom->UpdateBuffers();
 			geom->CalculateBoundingBox();
-			ostringstream oss;
+			std::ostringstream oss;
 			oss << object[i].name << "-surface-" << j;
 			// Create a node for the sub mesh
 			GeometryNodePtr node(new GeometryNode(oss.str()));
@@ -171,7 +156,7 @@ void M3dsLoader::ReadEdit3dsChunk(unsigned int length)
 void M3dsLoader::ReadObjectChunk(unsigned int length)
 {
 	char *startPos = curPos;
-	string name = curPos;
+	std::string name = curPos;
 	curPos += name.size() + 1;
 
 	while ((unsigned int)(curPos - startPos) < length)
@@ -282,13 +267,13 @@ void M3dsLoader::ReadMaterialFaceList()
 	// Create a new sub mesh of this object
 	Object &obj = object.back();
 	// Read the material name
-	string matName = curPos;
+	std::string matName = curPos;
 	curPos += matName.size() + 1;
 	obj.mesh.push_back(Mesh());
 	Mesh &mesh = obj.mesh.back();
 	// Create an association between (object id, sub mesh id) -> material name.
 	// Used because the actual definitions of the materials might appear only later in the file.
-	meshMaterial.push_back(make_pair(make_pair(object.size() - 1, obj.mesh.size() - 1), matName));
+	meshMaterial.push_back(std::make_pair(std::make_pair(object.size() - 1, obj.mesh.size() - 1), matName));
 	unsigned short int count = *(unsigned short int*)curPos;
 	curPos += 2;
 	// Copy the faces from the object to the faces of this sub mesh
@@ -317,7 +302,7 @@ void M3dsLoader::ReadObjectMatrixChunk()
 	mat.m[6] = arr[9];
 	mat.m[10] = arr[10];
 	mat.m[14] = arr[11];
-	objectMatrix.push_back(make_pair(object.size() - 1, mat));
+	objectMatrix.push_back(std::make_pair(object.size() - 1, mat));
 	curPos += 4 * 12;
 }
 
@@ -424,10 +409,10 @@ float M3dsLoader::ReadMaterialShininessChunk(unsigned int length)
 	return ret;
 }
 
-string M3dsLoader::ReadMapNameChunk()
+std::string M3dsLoader::ReadMapNameChunk()
 {
 	// Read the file name of a texture map
-	string ret = curPos;
+	std::string ret = curPos;
 	curPos += ret.size() + 1;
 	return ret;
 }
@@ -449,7 +434,7 @@ TexturePtr M3dsLoader::ReadMaterialTexMapChunk(unsigned int length)
 	return ret;
 }
 
-MaterialPtr M3dsLoader::GetMaterialByName(const string &name)
+MaterialPtr M3dsLoader::GetMaterialByName(const std::string &name)
 {	
 	// Search for a material with the given name
 	for (auto i = materials.begin(); i != materials.end(); ++i)

@@ -1,12 +1,3 @@
-#include <string>
-#include <vector>
-#include <memory>
-using namespace std;
-#include "glew.h"
-
-#include "Utils/utils.h"
-#include "Utils/Logger.h"
-#include "Math/MyMath.h"
 #include "Geometry/Material.h"
 
 using namespace FireCube;
@@ -20,12 +11,12 @@ Material::~Material()
 
 }
 
-string Material::GetName() const
+std::string Material::GetName() const
 {
 	return name;
 }
 
-void Material::SetName(const string &name)
+void Material::SetName(const std::string &name)
 {
 	this->name = name;
 }

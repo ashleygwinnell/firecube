@@ -1,22 +1,9 @@
-#include <string>
 #include <vector>
 #include <map>
-#include <queue>
-#include <fstream>
-#include <sstream>
-#include <memory>
-using namespace std;
-#include <SDL.h>
-#include <windows.h>
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "glew.h"
-
-#include "Utils/utils.h"
-#include "Utils/Logger.h"
-#include "Utils/ResourcePool.h"
-#include "Math/MyMath.h"
-#include "Math/BoundingBox.h"
+#include "ThirdParty/GLEW/glew.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Buffer.h"
 #include "Rendering/Shaders.h"
@@ -28,9 +15,6 @@ using namespace std;
 #include "Rendering/RenderQueue.h"
 #include "Rendering/privateFont.h"
 #include "Scene/Light.h"
-#include "Scene/Node.h"
-#include "Math/Plane.h"
-#include "Math/Frustum.h"
 #include "Scene/Camera.h"
 
 using namespace FireCube;
@@ -39,7 +23,7 @@ GLuint textVao = 0;
 TexturePool *currentTexturePool = nullptr;
 ShaderPool *currentShaderPool = nullptr;
 FontPool *currentFontPool = nullptr;
-map<string, TechniquePtr> techniques;
+std::map<std::string, TechniquePtr> techniques;
 CameraPtr camera;
 unsigned int numberOfPrimitivesRendered = 0;
 GLuint textureSampler[16];
@@ -135,11 +119,11 @@ void Renderer::UseTexture(TexturePtr tex, unsigned int unit)
 	glBindSampler(unit, textureSampler[unit]);
 }
 
-void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const string &str)
+void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, const std::string &str)
 {	
 	if (!font || str.empty())
 		return;
-	static vector<FontVertex> vBuffer;    
+	static std::vector<FontVertex> vBuffer;    
 	vBuffer.resize(str.size() * 6);    
 	ProgramPtr textProgram = Renderer::GetTechnique("font")->GenerateProgram(ShaderProperties());
 	if (textProgram->IsValid())
@@ -159,7 +143,7 @@ void Renderer::RenderText(FontPtr font, const vec3 &pos, const vec4 &color, cons
 	vec3 curPos = pos;
 	FT_Long useKerning = FT_HAS_KERNING(font->fontImpl->face);
 	FT_UInt previous = 0;
-	for (string::const_iterator i = str.begin(); i != str.end(); i++)
+	for (std::string::const_iterator i = str.begin(); i != str.end(); i++)
 	{
 		char c = *i;
 		if (c == 32)
@@ -453,7 +437,7 @@ void FIRECUBE_API Renderer::Render(NodePtr node)
 	Renderer::Render(renderQueue);
 }
 
-void FIRECUBE_API Renderer::Render(NodePtr node, const string &techniqueName, const ProgramUniformsList &programUniformsList)
+void FIRECUBE_API Renderer::Render(NodePtr node, const std::string &techniqueName, const ProgramUniformsList &programUniformsList)
 {
 	RenderQueue renderQueue;
 	renderQueue.AddNode(node, camera);
@@ -463,8 +447,8 @@ void FIRECUBE_API Renderer::Render(NodePtr node, const string &techniqueName, co
 void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 {
 	int passNum = 0;
-	vector<pair<mat4, Light>>::iterator i;
-	vector<RenderJob>::iterator j;
+	std::vector<std::pair<mat4, Light>>::iterator i;
+	std::vector<RenderJob>::iterator j;
 	ProgramPtr lastProgram;
 	GeometryPtr lastGeometry;
 	glEnable(GL_BLEND);
@@ -661,8 +645,8 @@ void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue)
 void FIRECUBE_API Renderer::Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList)
 {	
 	int passNum = 0;
-	vector<pair<mat4, Light>>::iterator i;
-	vector<RenderJob>::iterator j;
+	std::vector<std::pair<mat4, Light>>::iterator i;
+	std::vector<RenderJob>::iterator j;
 	ProgramPtr lastProgram;
 	GeometryPtr lastGeometry;
 	glEnable(GL_BLEND);
@@ -858,7 +842,7 @@ void FIRECUBE_API Renderer::AddTechnique(const std::string &name, TechniquePtr t
 
 TechniquePtr FIRECUBE_API Renderer::GetTechnique(const std::string &name)
 {
-	map<string, TechniquePtr>::iterator i = techniques.find(name);
+	std::map<std::string, TechniquePtr>::iterator i = techniques.find(name);
 	if (i != techniques.end())
 		return i->second;
 	return TechniquePtr();
@@ -866,7 +850,7 @@ TechniquePtr FIRECUBE_API Renderer::GetTechnique(const std::string &name)
 
 void FIRECUBE_API Renderer::RemoveTechnique(const std::string &name)
 {
-	map<string, TechniquePtr>::iterator i = techniques.find(name);
+	std::map<std::string, TechniquePtr>::iterator i = techniques.find(name);
 	if (i != techniques.end())
 		techniques.erase(i);
 }

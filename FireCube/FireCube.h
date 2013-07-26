@@ -1,16 +1,4 @@
-#ifndef FIRECUBE_H
-#define FIRECUBE_H
-
-#include <string>
-#include <vector>
-#include <sstream>
-#include <map>
-#include <iostream>
-#include <queue>
-#include <set>
-#include <windows.h>
-#include <memory>
-#include <gl/gl.h>
+#pragma once
 
 #include "Utils/utils.h"
 #include "Utils/Logger.h"
@@ -42,5 +30,3 @@
 #include "Math/Frustum.h"
 #include "Scene/Camera.h"
 #include "Scene/NodeObserverCamera.h"
-
-#endif

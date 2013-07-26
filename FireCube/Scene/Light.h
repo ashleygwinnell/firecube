@@ -1,3 +1,8 @@
+#pragma once
+
+#include "Utils/utils.h"
+#include "Math/MyMath.h"
+
 namespace FireCube
 {
 

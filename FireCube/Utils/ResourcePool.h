@@ -1,5 +1,11 @@
-#ifndef RESOURCE_MANAGER_H
-#define RESOURCE_MANAGER_H
+#pragma once
+
+#include <string>
+#include <memory>
+#include <map>
+
+#include "Utils/utils.h"
+#include "Utils/Logger.h"
 
 namespace FireCube
 {
@@ -43,13 +49,13 @@ public:
 	*/
 	std::shared_ptr<T> Create(const std::string &filename)
 	{		
-		string fullPathName;
+		std::string fullPathName;
 		std::string loadfile = Filesystem::SearchForFileName(filename);
 		if (loadfile.empty())
 			return std::shared_ptr<T>();
 		// Get the full path of the given file
 		fullPathName = Filesystem::GetFullPath(loadfile);		
-		map<std::string, std::weak_ptr<T>>::iterator i = pool.find(fullPathName);
+		std::map<std::string, std::weak_ptr<T>>::iterator i = pool.find(fullPathName);
 		if (i != pool.end())
 			if (!i->second.expired())
 				return i->second.lock();
@@ -97,4 +103,3 @@ protected:
 	std::map<std::string, std::weak_ptr<T>> pool;
 };
 }
-#endif

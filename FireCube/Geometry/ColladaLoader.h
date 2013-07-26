@@ -1,8 +1,15 @@
-#ifndef COLLADA_LOADER_H
-#define COLLADA_LOADER_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <string>
+#include <vector>
+#include <map>
+
+#include "Math/MyMath.h"
+#include "Scene/Node.h"
+#include "tinyxml.h"
 
 namespace FireCube
 {
@@ -42,30 +49,30 @@ namespace FireCube
 		class Sampler
 		{
 		public:
-			string name;
-			string uvCoords;
+			std::string name;
+			std::string uvCoords;
 			int uvId;
 		};
 		class Image
 		{
 		public:
-			string initFrom;
+			std::string initFrom;
 		};
 		class Material
 		{
 		public:
-			string effect;
+			std::string effect;
 		};
 		class EffectParam
 		{
 		public:
 			ParamType type;
-			string reference;
+			std::string reference;
 		};
 		class DataArray
 		{
 		public:
-			vector<float> floatData;
+			std::vector<float> floatData;
 		};
 		class Accessor
 		{
@@ -83,10 +90,10 @@ namespace FireCube
 		{
 		public:
 			PrimitiveType primitiveType;
-			string material;
+			std::string material;
 			int numPrimtives;
-			vector<unsigned int> indices;
-			vector<unsigned int> vcount;
+			std::vector<unsigned int> indices;
+			std::vector<unsigned int> vcount;
 		};
 		class InputChannel
 		{
@@ -96,7 +103,7 @@ namespace FireCube
 
 			}
 			InputType type;
-			string sourceName;
+			std::string sourceName;
 			Source *source;
 			int offset;
 			int index;
@@ -104,19 +111,19 @@ namespace FireCube
 		class Mesh
 		{
 		public:
-			vector<InputChannel> inputChannels;
-			vector <SubMesh> subMeshes;
-			string vertexId;
-			vector<vec3> vertices;
-			vector<vec3> normals;
-			vector<vec3> tangents;
-			vector<vec3> binormals;
-			vector<vec2> texcoords[4];
+			std::vector<InputChannel> inputChannels;
+			std::vector <SubMesh> subMeshes;
+			std::string vertexId;
+			std::vector<vec3> vertices;
+			std::vector<vec3> normals;
+			std::vector<vec3> tangents;
+			std::vector<vec3> binormals;
+			std::vector<vec2> texcoords[4];
 		};
 		class NodeInstance
 		{
 		public:
-			string url;
+			std::string url;
 		};
 		class InputSemanticEntry
 		{
@@ -127,29 +134,29 @@ namespace FireCube
 		class MaterialInstance
 		{
 		public:
-			string materialName;
-			map <string, InputSemanticEntry> inputMap;
+			std::string materialName;
+			std::map<std::string, InputSemanticEntry> inputMap;
 		};
 		class GeometryInstance
 		{
 		public:
-			string url;
-			map<string, MaterialInstance> materialInstance;
+			std::string url;
+			std::map<std::string, MaterialInstance> materialInstance;
 		};
 		class Node
 		{
 		public:
-			string name, id, sid;
-			vector<Node*> children;
-			vector<NodeInstance> nodeInstances;
-			vector<GeometryInstance> geometryInstances;
-			vector<Transform> transformations;
+			std::string name, id, sid;
+			std::vector<Node*> children;
+			std::vector<NodeInstance> nodeInstances;
+			std::vector<GeometryInstance> geometryInstances;
+			std::vector<Transform> transformations;
 			Node *parent;
 		};
 		class Geometry
 		{
 		public:
-			string name;
+			std::string name;
 			Mesh mesh;
 		};
 		class Effect
@@ -162,12 +169,12 @@ namespace FireCube
 			vec4 ambientColor, diffuseColor, specularColor;
 			Sampler ambientSampler, diffuseSampler, specularSampler;
 			float shininess;
-			map<string, EffectParam> effectParams;
+			std::map<std::string, EffectParam> effectParams;
 		};
-		ColladaLoader(const string &filename);
+		ColladaLoader(const std::string &filename);
 		~ColladaLoader();
 		bool Load(ModelLoadingOptions options);
-		TiXmlElement *GetChildElement(TiXmlNode *node, const string &elmName);
+		TiXmlElement *GetChildElement(TiXmlNode *node, const std::string &elmName);
 		void ReadLibraries(TiXmlNode *parent);
 		void ReadAsset(TiXmlNode *parent);
 		void ReadImageLibrary(TiXmlNode *parent);
@@ -187,11 +194,11 @@ namespace FireCube
 		void ReadDataArray(TiXmlNode *parent, DataArray &dataArray);
 		void ReadAccessor(TiXmlNode *parent, Accessor &accessor);
 		void ReadVertexData(TiXmlNode *parent, Mesh &mesh);
-		void ReadInputChannel(TiXmlNode *parent, vector<InputChannel> &inputChannels);
+		void ReadInputChannel(TiXmlNode *parent, std::vector<InputChannel> &inputChannels);
 		void ReadTriangles(TiXmlNode *parent, Mesh &mesh);
 		void ReadPolylist(TiXmlNode *parent, Mesh &mesh);
 		void ReadVCount(TiXmlNode *parent, SubMesh &subMesh);
-		void ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMesh, vector<InputChannel> primInputChannels, int count);
+		void ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMesh, std::vector<InputChannel> primInputChannels, int count);
 		void GetDataFromChannel(InputChannel &ic, int index, Mesh &mesh);
 		void ReadSceneLibrary(TiXmlNode *parent);
 		void ReadSceneNode(TiXmlNode *parent, Node *node);
@@ -199,35 +206,35 @@ namespace FireCube
 		void ReadMaterialVertexInputBinding(TiXmlNode *parent, MaterialInstance &materialInstance);
 		void ReadScene(TiXmlNode *parent);
 		void ReadTransformation(TiXmlNode *parent, Node *node);
-		mat4 CalculateTranformation(vector<Transform> &transformations);
-		vec3 GetTranslation(vector<Transform> &transformations);
-		mat4 GetRotation(vector<Transform> &transformations);
-		vec3 GetScale(vector<Transform> &transformations);
-		mat4 GetTransformMatrix(vector<Transform> &transformations);
+		mat4 CalculateTranformation(std::vector<Transform> &transformations);
+		vec3 GetTranslation(std::vector<Transform> &transformations);
+		mat4 GetRotation(std::vector<Transform> &transformations);
+		vec3 GetScale(std::vector<Transform> &transformations);
+		mat4 GetTransformMatrix(std::vector<Transform> &transformations);
 		void DeleteNodes(Node *node);
 		void ApplyMaterialInstanceSemanticMapping(Sampler &sampler, MaterialInstance &materialInstance);
 		FireCube::NodePtr GenerateSceneGraph(Node *node);
 		FireCube::NodePtr GenerateSceneGraph();
-		InputType SemanticToInputType(const string &semantic);
+		InputType SemanticToInputType(const std::string &semantic);
 		template <typename Type>
-		Type& ResolveLibraryReference( std::map<std::string, Type>& pLibrary, const std::string& pURL)
+		Type& ResolveLibraryReference(std::map<std::string, Type> &pLibrary, const std::string &pURL)
 		{
 			typename std::map<std::string, Type>::iterator it = pLibrary.find( pURL);
 			return it->second;
 		}
-		string GetTextureFileNameFromSampler(Effect &effect, Sampler &sampler);
-		string FixFileName(string &filename);
+		std::string GetTextureFileNameFromSampler(Effect &effect, Sampler &sampler);
+		std::string FixFileName(std::string &filename);
 	private:
 		TiXmlDocument xmlDocument;
 
-		map<string, Image> imageLibrary;
-		map<string, Material> materialLibrary;
-		map<string, Effect> effectLibrary;
-		map<string, Geometry> geometryLibrary;
-		map<string, Source> sources;
-		map<string, Node*> nodeLibrary;
-		map<unsigned int, unsigned int> tempMap;
-		map<string, FireCube::MaterialPtr> generatedMaterials;
+		std::map<std::string, Image> imageLibrary;
+		std::map<std::string, Material> materialLibrary;
+		std::map<std::string, Effect> effectLibrary;
+		std::map<std::string, Geometry> geometryLibrary;
+		std::map<std::string, Source> sources;
+		std::map<std::string, Node*> nodeLibrary;
+		std::map<unsigned int, unsigned int> tempMap;
+		std::map<std::string, FireCube::MaterialPtr> generatedMaterials;
 		Node *root;
 		float unit;
 		UpDirection upDirection;
@@ -236,4 +243,3 @@ namespace FireCube
 }
 
 #pragma warning(pop)
-#endif

@@ -1,5 +1,6 @@
-#ifndef VEC4_H
-#define VEC4_H
+#pragma once
+
+#include "Utils/utils.h"
 
 namespace FireCube
 {
@@ -325,4 +326,3 @@ vec4 FIRECUBE_API Cross(const vec4 &a, const vec4 &b);
 */
 float FIRECUBE_API Dot(const vec4 &a, const vec4 &b);
 }
-#endif

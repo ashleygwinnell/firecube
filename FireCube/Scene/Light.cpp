@@ -1,8 +1,3 @@
-#include <string>
-using namespace std;
-
-#include "Utils/utils.h"
-#include "Math/MyMath.h"
 #include "Scene/Light.h"
 
 using namespace FireCube;

@@ -1,8 +1,15 @@
-#ifndef GEOMETRY_H
-#define GEOMETRY_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "ThirdParty/GLEW/glew.h"
+#include "Math/MyMath.h"
+#include "Math/BoundingBox.h"
 
 namespace FireCube
 {
@@ -254,5 +261,3 @@ private:
 };
 }
 #pragma warning(pop)
-
-#endif

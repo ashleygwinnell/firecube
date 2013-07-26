@@ -1,17 +1,19 @@
-#include <string>
-#include <vector>
-#include <fstream>
-#include <iostream>
+//#include <string>
+//#include <vector>
+//#include <fstream>
+//#include <iostream>
 #include <sstream>
-#include <map>
-#include <memory>
-using namespace std;
-#include "glew.h"
+//#include <map>
+//#include <memory>
+//#include <algorithm>
+//using namespace std;
+#include "ThirdParty/GLEW/glew.h"
 
-#include "Utils/utils.h"
+//#include "Utils/utils.h"
 #include "Utils/Logger.h"
 #include "Rendering/Texture.h"
-#include "stb_image.h"
+//#include "Math/MyMath.h"
+#include "Utils/Image.h"
 
 using namespace FireCube;
 
@@ -21,7 +23,7 @@ Texture::Texture() : id(0), minFilter(LINEAR), magFilter(LINEAR)
 
 Texture::~Texture()
 {
-	ostringstream ss;
+	std::ostringstream ss;
 	ss << "Destroyed texture with id=" << id;
 	Logger::Write(Logger::LOG_INFO, ss.str());
 	glDeleteTextures(1, &id);
@@ -36,89 +38,44 @@ bool Texture::IsValid() const
 bool Texture::Create()
 {
 	glGenTextures(1, &id);
-	ostringstream ss;
+	std::ostringstream ss;
 	ss << "Created texture with id=" << id;
 	Logger::Write(Logger::LOG_INFO, ss.str());
 	return id != 0;
 }
 
 bool Texture::Load(const std::string &filename)
-{
-	
-	int width, height, channels;
-	unsigned char *data = stbi_load(filename.c_str(), &width, &height, &channels, 0);
-	if (!data)
+{	
+	Image img;
+	if (!img.Load(filename))
 		return false;
+
 	GLenum format;
 	GLenum internalFormat;		
 	this->filename = filename;
 
-	if (channels == 4)
+	if (img.GetBytesPerPixel() == 4)
 	{
 		internalFormat = GL_RGBA;
 		format = GL_RGBA;
 
 	}
-	else if (channels == 3)
+	else if (img.GetBytesPerPixel() == 3)
 	{
 		internalFormat = GL_RGB;
 		format = GL_RGB;
 	}
 	else
-	{
-		stbi_image_free(data);
+	{		
 		return false;
 	}
 
 	Create();
 	glBindTexture(GL_TEXTURE_2D, id);        		
-	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);		
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, img.GetWidth(), img.GetHeight(), 0, format, GL_UNSIGNED_BYTE, &img.GetPixels()[0]);		
 	GenerateMipMaps();
 	SetFiltering(MIPMAP, LINEAR);		
-
-	stbi_image_free(data);
 	return true;
-	/*SDL_Surface *image;
-	image = IMG_Load(filename.c_str());
-	if(image)
-	{
-		GLenum format;
-		GLenum internalFormat;		
-		this->filename = filename;
-
-		if (image->format->BytesPerPixel == 4)
-		{
-			internalFormat = GL_RGBA;
-			if (image->format->Rshift == 16)
-				format = GL_BGRA;
-			else
-				format = GL_RGBA;
-			
-		}
-		else if (image->format->BytesPerPixel == 3)
-		{
-			internalFormat = GL_RGB;
-			if (image->format->Rshift == 16)
-				format = GL_BGR;
-			else
-				format = GL_RGB;
-		}
-		else
-		{
-			SDL_FreeSurface(image);
-			return false;
-		}
-
-		Create();
-		glBindTexture(GL_TEXTURE_2D, id);        		
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, image->w, image->h, 0, format, GL_UNSIGNED_BYTE, image->pixels);		
-		GenerateMipMaps();
-		SetFiltering(MIPMAP, LINEAR);		
-		
-		SDL_FreeSurface(image);
-		return true;
-	}
-	return false;*/
 }
 
 void Texture::GenerateMipMaps()
@@ -133,7 +90,7 @@ void Texture::SetFiltering(TextureFilter minFilter, TextureFilter magFilter)
 	this->magFilter = magFilter;
 }
 
-string Texture::GetFileName() const
+std::string Texture::GetFileName() const
 {
 	return filename;
 }

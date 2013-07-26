@@ -1,5 +1,4 @@
-#ifndef MAT4_H
-#define MAT4_H
+#pragma once
 
 namespace FireCube
 {
@@ -273,4 +272,3 @@ public:
 	static const mat4 identity;
 };
 }
-#endif

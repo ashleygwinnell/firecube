@@ -1,13 +1,3 @@
-#include <string>
-#include <vector>
-#include <memory>
-using namespace std;
-#include "glew.h"
-
-#include "Utils/utils.h"
-#include "Math/MyMath.h"
-#include "Math/BoundingBox.h"
-#include "Geometry/Geometry.h"
 #include "Geometry/GeometryGenerator.h"
 #include "Geometry/Material.h"
 using namespace FireCube;
@@ -149,7 +139,7 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GenerateBox(const vec3 &size)
 GeometryPtr FIRECUBE_API GeometryGenerator::GenerateSphere (float radius, unsigned int rings, unsigned int columns, MaterialPtr material)
 {
 	GeometryPtr ret(new Geometry);
-	vector<unsigned int> indices;
+	std::vector<unsigned int> indices;
 
 	ret->GetVertices().reserve((rings + 1) * (columns + 1));
 	ret->GetNormals().reserve((rings + 1) * (columns + 1));

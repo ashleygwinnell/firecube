@@ -1,7 +1,3 @@
-#include <string>
-using namespace std;
-
-#include "Utils/utils.h"
 #include "Math/MyMath.h"
 
 using namespace FireCube;

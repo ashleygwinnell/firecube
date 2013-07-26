@@ -1,14 +1,19 @@
-#ifndef FRAMEBUFFER_H
-#define FRAMEBUFFER_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <memory>
+
+#include "Utils/utils.h"
 
 namespace FireCube
 {
 
 // Forward declarations.
 class FrameBuffer;
+class Texture;
+typedef std::shared_ptr<Texture> TexturePtr;
 
 /**
 * A shared pointer to a FrameBuffer.
@@ -89,5 +94,3 @@ private:
 }
 
 #pragma warning(pop)
-
-#endif

@@ -1,5 +1,6 @@
-#ifndef UTIL_H
-#define UTIL_H
+#pragma once
+
+#include <string>
 
 #ifdef FIRECUBE_DYNAMIC_LIBRARY
 	#ifdef FIRECUBE_EXPORTS
@@ -49,4 +50,3 @@ std::string FIRECUBE_API GetFileName(const std::string &file);
 */
 const unsigned int MAX_TEXTURES = 6;
 };
-#endif

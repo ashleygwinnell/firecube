@@ -1,10 +1,3 @@
-#include <string>
-using namespace std;
-
-#include "Utils/utils.h"
-#include "Utils/Logger.h"
-#include "Math/MyMath.h"
-#include "Math/Plane.h"
 #include "Math/BoundingBox.h"
 #include "Math/Frustum.h"
 

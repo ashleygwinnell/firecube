@@ -1,25 +1,10 @@
-#include <string>
-#include <vector>
-#include <map>
 #include <fstream>
-#include <memory>
-using namespace std;
-#include <SDL.h>
-#include <windows.h>
-#include "glew.h"
+#include <sstream>
 
-#include "Utils/utils.h"
-#include "Utils/Logger.h"
 #include "Utils/ResourcePool.h"
-#include "Math/MyMath.h"
-#include "Math/BoundingBox.h"
 #include "Rendering/Texture.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
-#include "Rendering/Renderer.h"
-#include "tinyxml.h"
-#include "Scene/Light.h"
-#include "Scene/Node.h"
 #include "Scene/GeometryNode.h"
 #include "Geometry/ObjLoader.h"
 
@@ -32,10 +17,10 @@ ObjLoader::ObjLoader()
 	currentFaces = &objects["default"].facesWithoutMaterial;
 }
 
-void ObjLoader::Load(const string &filename, ModelLoadingOptions options)
+void ObjLoader::Load(const std::string &filename, ModelLoadingOptions options)
 {	
-	ifstream ifs(filename);
-	string line;
+	std::ifstream ifs(filename);
+	std::string line;
 	baseDir = ExtractDirectory(filename);
 	// Parse the file one line at a time
 	while(getline(ifs, line))
@@ -64,9 +49,9 @@ void ObjLoader::Load(const string &filename, ModelLoadingOptions options)
 	this->options = options;
 }
 
-void ObjLoader::ParseVertexLine(const string &line)
+void ObjLoader::ParseVertexLine(const std::string &line)
 {	
-	istringstream iss(line.substr(2));
+	std::istringstream iss(line.substr(2));
 	vec3 vertex;
 	iss >> vertex.x;
 	iss >> vertex.y;
@@ -74,9 +59,9 @@ void ObjLoader::ParseVertexLine(const string &line)
 	vertices.push_back(vertex);
 }
 
-void ObjLoader::ParseTexCoordLine(const string &line)
+void ObjLoader::ParseTexCoordLine(const std::string &line)
 {
-	istringstream iss(line.substr(3));
+	std::istringstream iss(line.substr(3));
 	vec2 uv;
 	iss >> uv.x;
 	iss >> uv.y;
@@ -84,9 +69,9 @@ void ObjLoader::ParseTexCoordLine(const string &line)
 	texCoords.push_back(uv);
 }
 
-void ObjLoader::ParseNormalLine(const string &line)
+void ObjLoader::ParseNormalLine(const std::string &line)
 {
-	istringstream iss(line.substr(3));
+	std::istringstream iss(line.substr(3));
 	vec3 normal;
 	iss >> normal.x;
 	iss >> normal.y;
@@ -95,7 +80,7 @@ void ObjLoader::ParseNormalLine(const string &line)
 	normals.push_back(normal);
 }
 
-void ObjLoader::ParseFaceLine(const string &line)
+void ObjLoader::ParseFaceLine(const std::string &line)
 {	
 	Face f;
 	for (int i = 0; i < 3; i++)
@@ -111,12 +96,12 @@ void ObjLoader::ParseFaceLine(const string &line)
 	currentFaces->push_back(f);
 }
 
-void ObjLoader::ParseFaceEntry(const string &entry, unsigned int &v, unsigned int &t, unsigned int &n, bool &hasTextureCoordinates, bool &hasNormal)
+void ObjLoader::ParseFaceEntry(const std::string &entry, unsigned int &v, unsigned int &t, unsigned int &n, bool &hasTextureCoordinates, bool &hasNormal)
 {
 	int i1 = entry.find_first_of('/');
-	if (i1 == string::npos) // Only vertex index is specified
+	if (i1 == std::string::npos) // Only vertex index is specified
 	{
-		istringstream iss(entry);
+		std::istringstream iss(entry);
 		iss >> v;
 		hasTextureCoordinates = false;
 		hasNormal = false;
@@ -124,24 +109,24 @@ void ObjLoader::ParseFaceEntry(const string &entry, unsigned int &v, unsigned in
 	}
 
 	int i2 = entry.find_first_of('/', i1 + 1);
-	if (i2 == string::npos) // vertex and texture coordinate
+	if (i2 == std::string::npos) // vertex and texture coordinate
 	{
-		istringstream iss1(entry.substr(0, i1));
-		istringstream iss2(entry.substr(i1 + 1));
+		std::istringstream iss1(entry.substr(0, i1));
+		std::istringstream iss2(entry.substr(i1 + 1));
 		iss1 >> v;
 		iss2 >> t;
 		hasTextureCoordinates = true;
 		hasNormal = false;
 		return;
 	}
-	istringstream iss1(entry.substr(0, i1));	
-	istringstream iss2(entry.substr(i2 + 1));
+	std::istringstream iss1(entry.substr(0, i1));	
+	std::istringstream iss2(entry.substr(i2 + 1));
 	iss1 >> v;	
 	iss2 >> n;
 	hasNormal = true;
 	if (i2 - i1 - 1 > 0) // vertex texture coordinate and normal
 	{
-		istringstream iss(entry.substr(i1 + 1, i2 - i1 - 1));
+		std::istringstream iss(entry.substr(i1 + 1, i2 - i1 - 1));
 		iss >> t;
 		hasTextureCoordinates = true;
 	}
@@ -149,10 +134,10 @@ void ObjLoader::ParseFaceEntry(const string &entry, unsigned int &v, unsigned in
 		hasTextureCoordinates = false;
 }
 
-void ObjLoader::ParseObjectLine(const string &line)
+void ObjLoader::ParseObjectLine(const std::string &line)
 {
 	// Create a new object
-	string name = line.substr(2);
+	std::string name = line.substr(2);
 	objects[name] = Object();
 	currentObject = &objects[name];
 	if (lastMaterial.empty())
@@ -160,30 +145,30 @@ void ObjLoader::ParseObjectLine(const string &line)
 	else
 	{
 		// If a previous material was specified all faces from now on will use it
-		objects[name].materialFaces[lastMaterial] = vector<Face>();
+		objects[name].materialFaces[lastMaterial] = std::vector<Face>();
 		currentFaces = &objects[name].materialFaces[lastMaterial];
 	}
 
 }
 
-void ObjLoader::ParseUseMtlLine(const string &line)
+void ObjLoader::ParseUseMtlLine(const std::string &line)
 {	
 	// All faces of current object will now use this material
 	lastMaterial = line.substr(7);
 	if (currentObject->materialFaces.find(lastMaterial) == currentObject->materialFaces.end())
-		currentObject->materialFaces[lastMaterial] = vector<Face>();
+		currentObject->materialFaces[lastMaterial] = std::vector<Face>();
 	currentFaces = &currentObject->materialFaces[lastMaterial];
 }
 
-void ObjLoader::ParseMtlLibLine(const string &line)
+void ObjLoader::ParseMtlLibLine(const std::string &line)
 {
 	ParseMaterialFile(line.substr(7));	
 }
 
-void ObjLoader::ParseMaterialFile(const string &filename)
+void ObjLoader::ParseMaterialFile(const std::string &filename)
 {	
-	ifstream ifs(baseDir + "\\" + filename);
-	string line;
+	std::ifstream ifs(baseDir + "\\" + filename);
+	std::string line;
 
 	while(getline(ifs, line))
 	{		
@@ -206,43 +191,43 @@ void ObjLoader::ParseMaterialFile(const string &filename)
 	}
 }
 
-void ObjLoader::ParseNewMtlLine(const string &line)
+void ObjLoader::ParseNewMtlLine(const std::string &line)
 {
-	string name = line.substr(7);
+	std::string name = line.substr(7);
 	materials[name] = Material();
 	currentMaterial = &materials[name];
 }
 
-void ObjLoader::ParseAmbientColorLine(const string &line)
+void ObjLoader::ParseAmbientColorLine(const std::string &line)
 {
-	istringstream iss(line.substr(3));	
+	std::istringstream iss(line.substr(3));	
 	iss >> currentMaterial->ambientColor.x;
 	iss >> currentMaterial->ambientColor.y;
 	iss >> currentMaterial->ambientColor.z;	 
 }
 
-void ObjLoader::ParseDiffuseColorLine(const string &line)
+void ObjLoader::ParseDiffuseColorLine(const std::string &line)
 {
-	istringstream iss(line.substr(3));	
+	std::istringstream iss(line.substr(3));	
 	iss >> currentMaterial->diffuseColor.x;
 	iss >> currentMaterial->diffuseColor.y;
 	iss >> currentMaterial->diffuseColor.z;	 
 }
 
-void ObjLoader::ParseSpecularColorLine(const string &line)
+void ObjLoader::ParseSpecularColorLine(const std::string &line)
 {
-	istringstream iss(line.substr(3));	
+	std::istringstream iss(line.substr(3));	
 	iss >> currentMaterial->specularColor.x;
 	iss >> currentMaterial->specularColor.y;
 	iss >> currentMaterial->specularColor.z;	 
 }
 
-void ObjLoader::ParseDiffuseTextureMap(const string &line)
+void ObjLoader::ParseDiffuseTextureMap(const std::string &line)
 {
 	currentMaterial->diffuseTextureName = line.substr(7);
 }
 
-void ObjLoader::ParseNormalTextureMap(const string &line)
+void ObjLoader::ParseNormalTextureMap(const std::string &line)
 {
 	if (line.substr(0,4) == "bump")
 		currentMaterial->normalTextureName = line.substr(5);
@@ -250,16 +235,16 @@ void ObjLoader::ParseNormalTextureMap(const string &line)
 		currentMaterial->normalTextureName = line.substr(9);
 }
 
-void ObjLoader::ParseShininessLine(const string &line)
+void ObjLoader::ParseShininessLine(const std::string &line)
 {
-	istringstream iss(line.substr(3));
+	std::istringstream iss(line.substr(3));
 	iss >> currentMaterial->shininess;
 }
 
-string ObjLoader::ExtractDirectory(const string &filename)
+std::string ObjLoader::ExtractDirectory(const std::string &filename)
 {
 	int i = filename.find_last_of('\\');
-	if (i == string::npos)
+	if (i == std::string::npos)
 		return "";
 	return filename.substr(0, i);
 }
@@ -268,14 +253,14 @@ NodePtr ObjLoader::GenerateSceneGraph()
 {
 	// Create the root node
 	NodePtr root(new Node);
-	map<string, MaterialPtr> generatedMaterials;
-	vector<vec3> generatedVertices;
-	vector<vec2> generatedTexCoords;
-	vector<vec3> generatedNormals;
-	map<MapKey, unsigned int> indicesMap;
+	std::map<std::string, MaterialPtr> generatedMaterials;
+	std::vector<vec3> generatedVertices;
+	std::vector<vec2> generatedTexCoords;
+	std::vector<vec3> generatedNormals;
+	std::map<MapKey, unsigned int> indicesMap;
 
 	// Generate materials
-	for (map<string, Material>::iterator i = materials.begin(); i != materials.end(); i++)
+	for (std::map<std::string, Material>::iterator i = materials.begin(); i != materials.end(); i++)
 	{
 		MaterialPtr material(new FireCube::Material);
 		material->SetName(i->first);
@@ -285,7 +270,7 @@ NodePtr ObjLoader::GenerateSceneGraph()
 		material->SetShininess(i->second.shininess);
 		if (!i->second.diffuseTextureName.empty())
 		{
-			string textureName = i->second.diffuseTextureName;
+			std::string textureName = i->second.diffuseTextureName;
 			if (textureName[0] == '/' || textureName[0] == '\\')
 				textureName = textureName.substr(1);
 
@@ -296,7 +281,7 @@ NodePtr ObjLoader::GenerateSceneGraph()
 		}
 		if (!i->second.normalTextureName.empty())
 		{
-			string textureName = i->second.normalTextureName;
+			std::string textureName = i->second.normalTextureName;
 			if (textureName[0] == '/' || textureName[0] == '\\')
 				textureName = textureName.substr(1);
 
@@ -309,23 +294,23 @@ NodePtr ObjLoader::GenerateSceneGraph()
 	}
 
 	// Iterate over all objects
-	for (map<string, Object>::iterator i = objects.begin(); i != objects.end(); i++)
+	for (std::map<std::string, Object>::iterator i = objects.begin(); i != objects.end(); i++)
 	{
 		// Create a node for the object
 		NodePtr node(new Node(i->first));
 		node->SetParent(root);
 		int surfaceNum = 0;
 		// Iterate over faces for each material
-		for (map<string, vector<Face>>::iterator j = i->second.materialFaces.begin(); j != i->second.materialFaces.end(); j++, surfaceNum++)
+		for (std::map<std::string, std::vector<Face>>::iterator j = i->second.materialFaces.begin(); j != i->second.materialFaces.end(); j++, surfaceNum++)
 		{			
-			ostringstream oss;
+			std::ostringstream oss;
 			oss << "surface-" << surfaceNum;
 			// Create a node and a geometry for each surface
 			GeometryNodePtr surfaceNode(new GeometryNode(oss.str()));
 			GeometryPtr geometry(new Geometry);
 			surfaceNode->SetGeometry(geometry);
 			surfaceNode->SetParent(node);
-			for (vector<Face>::iterator k = j->second.begin(); k != j->second.end(); k++)
+			for (std::vector<Face>::iterator k = j->second.begin(); k != j->second.end(); k++)
 			{
 				Face &face = *k;
 				FireCube::Face generatedFace;
@@ -333,7 +318,7 @@ NodePtr ObjLoader::GenerateSceneGraph()
 				{
 					MapKey key(face.v[vertexIndex], face.t[vertexIndex], face.n[vertexIndex]);					
 					// Search this vertex (combination of v/n/t) in the list of vertices
-					map<MapKey, unsigned int>::iterator keyIter = indicesMap.find(key);
+					std::map<MapKey, unsigned int>::iterator keyIter = indicesMap.find(key);
 					if (keyIter == indicesMap.end())
 					{
 						// If not found add it and store it in the map of generated vertices

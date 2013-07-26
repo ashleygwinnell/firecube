@@ -1,9 +1,11 @@
+#include <sstream>
+
 #include <FireCube.h>
-using namespace std;
+
 using namespace FireCube;
 #include "app.h"
 App app;
-#include <fstream>
+
 #include <cmath>
 vec3 lastPos;
 int main(int argc, char *argv[])
@@ -17,7 +19,7 @@ int main(int argc, char *argv[])
 bool App::Init()
 {
 	Filesystem::AddSearchPath("../Assets/Textures");
-	SetTitle(string("Shadow Mapping Test Application"));
+	SetTitle(std::string("Shadow Mapping Test Application"));
 	GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
 	node = LoadMesh("../Assets/Models/scene.3ds");
@@ -124,7 +126,7 @@ void App::Render(float t)
 
 	Renderer::UseCamera(orthographicCamera);
 	//RenderDepth();
-	ostringstream oss;
+	std::ostringstream oss;
 	oss << "FPS:" << app.GetFps();
 	Renderer::RenderText(app.font, vec3(0, (float) app.GetHeight() - 20.0f, 0.0f), vec4(1, 1, 1, 1), oss.str());
 }

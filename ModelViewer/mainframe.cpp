@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 10 2012)
+// C++ code generated with wxFormBuilder (version Oct  8 2012)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -39,6 +39,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	fgSizer4->Add( staticText1, 0, wxALL, 5 );
 	
 	textCtrl1 = new wxTextCtrl( panel1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	textCtrl1->SetMaxLength( 0 ); 
 	textCtrl1->Enable( false );
 	
 	fgSizer4->Add( textCtrl1, 0, wxALL|wxEXPAND, 1 );
@@ -48,6 +49,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	fgSizer4->Add( staticText2, 0, wxALL, 5 );
 	
 	textCtrl2 = new wxTextCtrl( panel1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	textCtrl2->SetMaxLength( 0 ); 
 	textCtrl2->Enable( false );
 	
 	fgSizer4->Add( textCtrl2, 0, wxALL|wxEXPAND, 1 );
@@ -99,6 +101,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	fgSizer51->Add( staticText3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	textCtrl3 = new wxTextCtrl( panel9, wxID_ANY, wxT("0.1"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	textCtrl3->SetMaxLength( 0 ); 
 	fgSizer51->Add( textCtrl3, 0, wxALL|wxEXPAND, 5 );
 	
 	
@@ -147,6 +150,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	fgSizer7->Add( staticText6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	textCtrl4 = new wxTextCtrl( panel8, wxID_ANY, wxT("2"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	textCtrl4->SetMaxLength( 0 ); 
 	fgSizer7->Add( textCtrl4, 0, wxALL|wxEXPAND, 5 );
 	
 	staticText7 = new wxStaticText( panel8, wxID_ANY, wxT("Number of cells:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -154,6 +158,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	fgSizer7->Add( staticText7, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	textCtrl5 = new wxTextCtrl( panel8, wxID_ANY, wxT("20"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	textCtrl5->SetMaxLength( 0 ); 
 	fgSizer7->Add( textCtrl5, 0, wxALL|wxEXPAND, 5 );
 	
 	

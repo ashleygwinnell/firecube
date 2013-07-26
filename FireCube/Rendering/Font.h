@@ -1,8 +1,13 @@
-#ifndef FONT_H
-#define FONT_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <memory>
+#include <vector>
+
+#include "Math/MyMath.h"
+#include "Utils/ResourcePool.h"
 
 namespace FireCube
 {
@@ -108,4 +113,3 @@ private:
 };
 }
 #pragma warning(pop)
-#endif

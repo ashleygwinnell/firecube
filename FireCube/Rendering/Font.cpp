@@ -1,24 +1,13 @@
-#include <string>
-#include <vector>
 #include <sstream>
-#include <map>
-#include <memory>
-using namespace std;
-#include <windows.h>
-#include "glew.h"
+
+#include "ThirdParty/GLEW/glew.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
-#include "Utils/utils.h"
-#include "Utils/Logger.h"
-#include "Utils/Filesystem.h"
-#include "Utils/ResourcePool.h"
-#include "Math/MyMath.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Font.h"
 #include "Rendering/Renderer.h"
-
 #include "Rendering/privateFont.h"
+
 using namespace FireCube;
 
 FT_Library  freeTypeLibrary;
@@ -35,7 +24,7 @@ std::shared_ptr<FontPage> FontPool::CreateNewPage()
 	p->tex = TexturePtr(new Texture);
 	p->tex->Create();
 	glBindTexture(GL_TEXTURE_2D, p->tex->GetId());
-	vector<unsigned char> empty(512 * 512, 0);	
+	std::vector<unsigned char> empty(512 * 512, 0);	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, &empty[0]);
 	p->textureSize = 512;
 	p->curPos = vec2(0, 0);
@@ -43,9 +32,9 @@ std::shared_ptr<FontPage> FontPool::CreateNewPage()
 	return p;
 }
 
-FontPtr FontPool::Create(const string &filename, int size)
+FontPtr FontPool::Create(const std::string &filename, int size)
 {	
-	ostringstream fullPathName;
+	std::ostringstream fullPathName;
 	std::string loadfile = Filesystem::SearchForFileName(filename);
 	if (loadfile.empty())
 		return FontPtr();
@@ -55,7 +44,7 @@ FontPtr FontPool::Create(const string &filename, int size)
 	// searching it in the font pool to see if it is already loaded.
 	fullPathName << Filesystem::GetFullPath(loadfile) << ":" << size;
 
-	map<std::string, std::weak_ptr<Font>>::iterator i = pool.find(fullPathName.str());
+	std::map<std::string, std::weak_ptr<Font>>::iterator i = pool.find(fullPathName.str());
 	if (i != pool.end())
 		if (!i->second.expired())
 			return i->second.lock();
@@ -123,7 +112,7 @@ bool Font::AddChar(char c)
 	return true;
 }
 
-bool Font::Load(const string &name, int size)
+bool Font::Load(const std::string &name, int size)
 {
 	Logger::Write(Logger::LOG_INFO, "Loading font with name:" + name);
 	int error = 0;
@@ -138,7 +127,7 @@ bool Font::Load(const string &name, int size)
 	error = FT_Set_Pixel_Sizes(fontImpl->face, 0, size);
 	if (error)
 		return false;
-	vector<std::weak_ptr<FontPage>>::iterator p = Renderer::GetFontPool().page.begin();
+	std::vector<std::weak_ptr<FontPage>>::iterator p = Renderer::GetFontPool().page.begin();
 	bool found = false;
 	// Iterate over all font pages and find one with enough space to hold this font
 	for (; p != Renderer::GetFontPool().page.end(); p++)
@@ -177,7 +166,7 @@ bool Font::Load(const string &name, int size)
 	return true;
 }
 
-bool Font::Load(const string &name)
+bool Font::Load(const std::string &name)
 {
 	return Load(name, 18);
 }

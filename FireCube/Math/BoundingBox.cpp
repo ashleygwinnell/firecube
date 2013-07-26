@@ -1,11 +1,4 @@
-#include <string>
-#include <limits>
-using namespace std;
-
-#include "Utils/utils.h"
-#include "Math/MyMath.h"
 #include "Math/BoundingBox.h"
-
 
 using namespace FireCube;
 
@@ -21,24 +14,24 @@ BoundingBox::BoundingBox(const vec3 &min, const vec3 &max)
 
 void BoundingBox::Expand(const BoundingBox &bb)
 {
-	bmin.x = min(bmin.x, bb.bmin.x);
-	bmin.y = min(bmin.y, bb.bmin.y);
-	bmin.z = min(bmin.z, bb.bmin.z);
+	bmin.x = std::min(bmin.x, bb.bmin.x);
+	bmin.y = std::min(bmin.y, bb.bmin.y);
+	bmin.z = std::min(bmin.z, bb.bmin.z);
 
-	bmax.x = max(bmax.x, bb.bmax.x);
-	bmax.y = max(bmax.y, bb.bmax.y);
-	bmax.z = max(bmax.z, bb.bmax.z);
+	bmax.x = std::max(bmax.x, bb.bmax.x);
+	bmax.y = std::max(bmax.y, bb.bmax.y);
+	bmax.z = std::max(bmax.z, bb.bmax.z);
 }
 
 void BoundingBox::Expand(const vec3 &v)
 {
-	bmin.x = min(bmin.x, v.x);
-	bmin.y = min(bmin.y, v.y);
-	bmin.z = min(bmin.z, v.z);
+	bmin.x = std::min(bmin.x, v.x);
+	bmin.y = std::min(bmin.y, v.y);
+	bmin.z = std::min(bmin.z, v.z);
 
-	bmax.x = max(bmax.x, v.x);
-	bmax.y = max(bmax.y, v.y);
-	bmax.z = max(bmax.z, v.z);
+	bmax.x = std::max(bmax.x, v.x);
+	bmax.y = std::max(bmax.y, v.y);
+	bmax.z = std::max(bmax.z, v.z);
 }
 
 float BoundingBox::GetWidth() const

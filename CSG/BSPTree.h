@@ -13,13 +13,13 @@ private:
 	class Node
 	{
 	public:
-		vector<Face> faces;
+		std::vector<Face> faces;
 		Plane plane;
 		NodePtr front, back;
 	};
 
-	void BuildTree(NodePtr node, vector<Face> &faces);
-	vector<Face> ClipFaces(NodePtr node, GeometryPtr pGeometry, vector<Face> &faces);
+	void BuildTree(NodePtr node, std::vector<Face> &faces);
+	std::vector<Face> ClipFaces(NodePtr node, GeometryPtr pGeometry, std::vector<Face> &faces);
 	void ClipTo(NodePtr node, BSPTree &bsp);
 	void ClipTo(BSPTree &bsp);
 	void Invert();
@@ -28,9 +28,9 @@ private:
 	void Clone(BSPTree &clone);
 	void CopyFacesToGeometry(NodePtr node);
 	void Update();
-	unsigned int ChooseSplittingPlane(vector<Face> &faces);
+	unsigned int ChooseSplittingPlane(std::vector<Face> &faces);
 	NodePtr root;
-	vector<unsigned int> vertexUsage;
+	std::vector<unsigned int> vertexUsage;
 	GeometryPtr geometry;
 	bool updated;	
 };

@@ -1,26 +1,11 @@
-#include <string>
-#include <map>
-#include <vector>
-#include <memory>
-using namespace std;
-#include <Windows.h>
-#include <gl/GL.h>
-
-#include "Utils/utils.h"
 #include "Utils/Logger.h"
 #include "Utils/ResourcePool.h"
-#include "Math/MyMath.h"
-#include "Math/BoundingBox.h"
 #include "Rendering/Texture.h"
-#include "Rendering/Shaders.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
-#include "Rendering/Renderer.h"
-#include "tinyxml.h"
-#include "Scene/Light.h"
-#include "Scene/Node.h"
 #include "Scene/GeometryNode.h"
 #include "Geometry/ColladaLoader.h"
+
 using namespace FireCube;
 
 // The ColladaLoader class loads a Collada file by reading all the libraries and storing the scene graph
@@ -41,7 +26,7 @@ ColladaLoader::ColladaLoader(const std::string &filename) : xmlDocument(filename
 
 ColladaLoader::~ColladaLoader()
 {
-	map<string, Node *>::iterator i = nodeLibrary.begin();
+	std::map<std::string, Node *>::iterator i = nodeLibrary.begin();
 	for (; i != nodeLibrary.end(); i++)
 		DeleteNodes(i->second);
 }
@@ -55,7 +40,7 @@ bool ColladaLoader::Load(ModelLoadingOptions options)
 		return false;
 
 	// Only Collada version 1.4 is supported
-	string version = e->Attribute("version");
+	std::string version = e->Attribute("version");
 	if (version.substr(0, 3) == "1.4")
 		ReadLibraries(e);
 
@@ -109,7 +94,7 @@ void ColladaLoader::ReadAsset(TiXmlNode *parent)
 			}
 			else if (element->ValueStr() == "up_axis")
 			{
-				string v = element->FirstChild()->ToText()->ValueStr();
+				std::string v = element->FirstChild()->ToText()->ValueStr();
 				if (v == "X_UP")
 					upDirection = X_UP;
 				else if (v == "Y_UP")
@@ -134,7 +119,7 @@ void ColladaLoader::ReadImageLibrary(TiXmlNode *parent)
 			if (element->ValueStr() == "image")
 			{
 				// Read it's id
-				string id = element->Attribute("id");
+				std::string id = element->Attribute("id");
 				imageLibrary[id] = Image();
 				// Parse this image element
 				ReadImage(element, imageLibrary[id]);
@@ -174,7 +159,7 @@ void ColladaLoader::ReadMaterialLibrary(TiXmlNode *parent)
 			if (element->ValueStr() == "material")
 			{
 				// Read it's id
-				string id = element->Attribute("id");
+				std::string id = element->Attribute("id");
 				materialLibrary[id] = Material();
 				// Read the child elements describing this material
 				ReadMaterial(element, materialLibrary[id]);
@@ -195,7 +180,7 @@ void ColladaLoader::ReadMaterial(TiXmlNode *parent, Material &mat)
 			element = node->ToElement();
 			if (element->ValueStr() == "instance_effect")
 			{
-				string url = element->Attribute("url");
+				std::string url = element->Attribute("url");
 				mat.effect = url.substr(1);
 			}
 		}
@@ -215,7 +200,7 @@ void ColladaLoader::ReadEffectLibrary(TiXmlNode *parent)
 			if (element->ValueStr() == "effect")
 			{
 				// Read it's id
-				string id = element->Attribute("id");
+				std::string id = element->Attribute("id");
 				effectLibrary[id] = Effect();
 				// Parse this effect element
 				ReadEffect(element, effectLibrary[id]);
@@ -254,7 +239,7 @@ void ColladaLoader::ReadEffectProfileCommon(TiXmlNode *parent, Effect &effect)
 			else if (element->ValueStr() == "newparam")
 			{
 				// Read a param of this effect and associate it with it's sid
-				string sid = element->Attribute("sid");
+				std::string sid = element->Attribute("sid");
 				effect.effectParams[sid] = EffectParam();
 				ReadEffectParam(element, effect.effectParams[sid]);
 			}
@@ -336,8 +321,8 @@ void ColladaLoader::ReadEffectColor(TiXmlNode *parent, vec4 &color, Sampler &sam
 			// Parse child elements of type "color" which contains RGBA values
 			if (element->ValueStr() == "color")
 			{
-				string data = element->GetText();
-				istringstream iss(data);
+				std::string data = element->GetText();
+				std::istringstream iss(data);
 				iss >> color.x >> color.y >> color.z >> color.w;
 			}
 			// Parse child elements of type "texture"
@@ -362,8 +347,8 @@ void ColladaLoader::ReadEffectFloat(TiXmlNode *parent, float &value)
 			element = node->ToElement();
 			if (element->ValueStr() == "float")
 			{
-				string data = element->GetText();
-				istringstream iss(data);
+				std::string data = element->GetText();
+				std::istringstream iss(data);
 				iss >> value;
 			}
 		}
@@ -382,8 +367,8 @@ void ColladaLoader::ReadGeometryLibrary(TiXmlNode *parent)
 			// Read all geometries
 			if (element->ValueStr() == "geometry")
 			{
-				string id = element->Attribute("id");
-				string name = element->Attribute("name");
+				std::string id = element->Attribute("id");
+				std::string name = element->Attribute("name");
 				geometryLibrary[id] = Geometry();
 				geometryLibrary[id].name = name;
 				ReadGeometry(element, geometryLibrary[id]);
@@ -423,7 +408,7 @@ void ColladaLoader::ReadMesh(TiXmlNode *parent, Mesh &mesh)
 			// Read a source element which specifies a piece of data
 			if (element->ValueStr() == "source")
 			{
-				string id = element->Attribute("id");
+				std::string id = element->Attribute("id");
 				sources[id] = Source();
 				ReadSource(element, sources[id]);
 			}
@@ -478,7 +463,7 @@ void ColladaLoader::ReadDataArray(TiXmlNode *parent, DataArray &dataArray)
 	if (element->QueryIntAttribute("count", &count) != TIXML_SUCCESS)
 		return;
 
-	istringstream iss(element->GetText());
+	std::istringstream iss(element->GetText());
 	dataArray.floatData.reserve(count);
 	for (int i = 0; i < count; i++)
 	{
@@ -546,7 +531,7 @@ void ColladaLoader::ReadVertexData(TiXmlNode *parent, Mesh &mesh)
 	}
 }
 
-void ColladaLoader::ReadInputChannel(TiXmlNode *parent, vector<InputChannel> &inputChannels)
+void ColladaLoader::ReadInputChannel(TiXmlNode *parent, std::vector<InputChannel> &inputChannels)
 {
 	// An input channel maps streams of data to their logical meaning (normals, uv, ...)
 	TiXmlNode *node;
@@ -554,9 +539,9 @@ void ColladaLoader::ReadInputChannel(TiXmlNode *parent, vector<InputChannel> &in
 	inputChannels.push_back(InputChannel());
 	InputChannel &ic = inputChannels.back();
 
-	string semantic = element->Attribute("semantic");
+	std::string semantic = element->Attribute("semantic");
 	ic.type = SemanticToInputType(semantic);
-	string source = element->Attribute("source");
+	std::string source = element->Attribute("source");
 	ic.sourceName = source.substr(1);
 	if (element->QueryIntAttribute("offset", &ic.offset) != TIXML_SUCCESS)
 		ic.offset = 0;
@@ -581,7 +566,7 @@ void ColladaLoader::ReadTriangles(TiXmlNode *parent, Mesh &mesh)
 	TiXmlNode *node;
 	TiXmlElement *element = parent->ToElement();
 
-	vector<InputChannel> primInputChannels;
+	std::vector<InputChannel> primInputChannels;
 	int count;
 	mesh.subMeshes.push_back(SubMesh());
 	SubMesh &subMesh = mesh.subMeshes[mesh.subMeshes.size() - 1];
@@ -610,7 +595,7 @@ void ColladaLoader::ReadPolylist(TiXmlNode *parent, Mesh &mesh)
 	TiXmlNode *node;
 	TiXmlElement *element = parent->ToElement();
 
-	vector<InputChannel> primInputChannels;
+	std::vector<InputChannel> primInputChannels;
 	int count;
 	mesh.subMeshes.push_back(SubMesh());
 	SubMesh &subMesh = mesh.subMeshes[mesh.subMeshes.size() - 1];
@@ -640,7 +625,7 @@ void ColladaLoader::ReadVCount(TiXmlNode *parent, SubMesh &subMesh)
 	TiXmlElement *element = parent->ToElement();
 	subMesh.vcount.reserve(subMesh.numPrimtives);
 
-	istringstream iss(element->GetText());
+	std::istringstream iss(element->GetText());
 	while (!iss.eof())
 	{
 		int idx;
@@ -703,16 +688,16 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed )
 	return h;
 }
 
-void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMesh, vector<InputChannel> primInputChannels, int count)
+void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMesh, std::vector<InputChannel> primInputChannels, int count)
 {
 	TiXmlElement *element = parent->ToElement();
-	vector<int> indices;
+	std::vector<int> indices;
 	int offset = 1;
 	int vertexOffset = 0;
 	// Determine the number of indices which belong to a single vertex
 	for (unsigned int i = 0; i < primInputChannels.size(); i++)
 	{
-		offset = max(offset, primInputChannels[i].offset + 1);
+		offset = std::max(offset, primInputChannels[i].offset + 1);
 		if (primInputChannels[i].type == INPUT_VERTEX)
 			vertexOffset = primInputChannels[i].offset;
 	}
@@ -730,7 +715,7 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 	indices.reserve(expectedIndicesCount * offset);
 
 	// Read all the indices
-	istringstream iss(element->GetText());
+	std::istringstream iss(element->GetText());
 	while (!iss.eof())
 	{
 		int idx;
@@ -753,7 +738,7 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 				primInputChannels[i].source = &ResolveLibraryReference(sources, primInputChannels[i].sourceName);
 		}
 	}
-	vector<int>::iterator idx = indices.begin();
+	std::vector<int>::iterator idx = indices.begin();
 	// Iterate over all primitives
 	for (int i = 0; i < count; i++)
 	{
@@ -780,7 +765,7 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 			
 			// Hash the vertex
 			unsigned int h = MurmurHash2(ind, offset * 4, 0x1234);
-			map<unsigned int, unsigned int>::iterator iter = tempMap.find(h);
+			std::map<unsigned int, unsigned int>::iterator iter = tempMap.find(h);
 			if (iter == tempMap.end())
 			{
 				for (unsigned int k = 0; k < mesh.inputChannels.size(); k++)
@@ -886,12 +871,12 @@ void ColladaLoader::ReadSceneNode(TiXmlNode *parent, Node *node)
 			if (element->ValueStr() == "instance_node")
 			{				
 				node->nodeInstances.push_back(NodeInstance());
-				string url = element->Attribute("url"); // Read the id of the node this node instance is referring to
+				std::string url = element->Attribute("url"); // Read the id of the node this node instance is referring to
 				node->nodeInstances.back().url = url.substr(1);
 			}
 			else if (element->ValueStr() == "instance_geometry")
 			{
-				string url = element->Attribute("url"); // Read the id of the geometry this geometry instance is referring to
+				std::string url = element->Attribute("url"); // Read the id of the geometry this geometry instance is referring to
 				GeometryInstance gi;
 				gi.url = url.substr(1);
 				ReadNodeGeometryInstance(element, gi);
@@ -929,8 +914,8 @@ void ColladaLoader::ReadNodeGeometryInstance(TiXmlNode *parent, GeometryInstance
 				ReadNodeGeometryInstance(element, gi);
 			else if (element->ValueStr() == "instance_material")
 			{
-				string symbol = element->Attribute("symbol"); // The symbolic name of the material as referenced in the geometry element
-				string target = element->Attribute("target"); // The actual name of the material (as it appears in the material library)
+				std::string symbol = element->Attribute("symbol"); // The symbolic name of the material as referenced in the geometry element
+				std::string target = element->Attribute("target"); // The actual name of the material (as it appears in the material library)
 				gi.materialInstance[symbol] = MaterialInstance();
 				MaterialInstance &materialInstance = gi.materialInstance[symbol];
 				materialInstance.materialName = target.substr(1);
@@ -957,8 +942,8 @@ void ColladaLoader::ReadMaterialVertexInputBinding(TiXmlNode *parent, MaterialIn
 				// For example the effect might have input for normal texture coordinates which it calls "TEXCOORD_NORMAL"
 				// and the geometry might define it's normal texture coordinates in the TEXCOORD semantic with "set" equals to 2
 				InputSemanticEntry is;
-				string s = element->Attribute("semantic"); // Read the effect parameter to connect
-				string n = element->Attribute("input_semantic"); // Read the vertex input semantic
+				std::string s = element->Attribute("semantic"); // Read the effect parameter to connect
+				std::string n = element->Attribute("input_semantic"); // Read the vertex input semantic
 				is.type = SemanticToInputType(n);
 				if (element->QueryIntAttribute("input_set", &is.set) != TIXML_SUCCESS) // Read the vertex input semantic set
 					is.set = -1;
@@ -982,9 +967,9 @@ void ColladaLoader::ReadScene(TiXmlNode *parent)
 			// Read the root node of the scene graph
 			if (element->ValueStr() == "instance_visual_scene")
 			{
-				string url = element->Attribute("url");
+				std::string url = element->Attribute("url");
 				url = url.substr(1);
-				map<string, Node*>::iterator i = nodeLibrary.find(url);
+				std::map<std::string, Node*>::iterator i = nodeLibrary.find(url);
 				if (i != nodeLibrary.end())
 					root = i->second;
 			}
@@ -1007,7 +992,7 @@ void ColladaLoader::ReadTransformation(TiXmlNode *parent, Node *node)
 		t.type = TRANSFORM_SCALE;
 	else if (element->ValueStr() == "matrix")
 		t.type = TRANSFORM_MATRIX;
-	istringstream iss(parent->ToElement()->GetText());
+	std::istringstream iss(parent->ToElement()->GetText());
 	if (t.type == TRANSFORM_LOOKAT)
 	{
 		for (int i = 0; i < 9; i++)
@@ -1043,7 +1028,7 @@ void ColladaLoader::DeleteNodes(Node *node)
 	delete node;
 }
 
-mat4 ColladaLoader::CalculateTranformation(vector<Transform> &transformations)
+mat4 ColladaLoader::CalculateTranformation(std::vector<Transform> &transformations)
 {
 	mat4 ret = mat4::identity;
 	for (unsigned int i = 0; i < transformations.size(); i++)
@@ -1086,7 +1071,7 @@ mat4 ColladaLoader::CalculateTranformation(vector<Transform> &transformations)
 	return ret;
 }
 
-vec3 ColladaLoader::GetTranslation(vector<Transform> &transformations)
+vec3 ColladaLoader::GetTranslation(std::vector<Transform> &transformations)
 {
 	vec3 ret(0, 0, 0);
 	for (unsigned int i = 0; i < transformations.size(); i++)
@@ -1100,7 +1085,7 @@ vec3 ColladaLoader::GetTranslation(vector<Transform> &transformations)
 	return ret;
 }
 
-mat4 ColladaLoader::GetRotation(vector<Transform> &transformations)
+mat4 ColladaLoader::GetRotation(std::vector<Transform> &transformations)
 {
 	mat4 ret = mat4::identity;
 
@@ -1117,7 +1102,7 @@ mat4 ColladaLoader::GetRotation(vector<Transform> &transformations)
 	return ret;
 }
 
-vec3 ColladaLoader::GetScale(vector<Transform> &transformations)
+vec3 ColladaLoader::GetScale(std::vector<Transform> &transformations)
 {
 	vec3 ret(1, 1, 1);
 	for (unsigned int i = 0; i < transformations.size(); i++)
@@ -1133,7 +1118,7 @@ vec3 ColladaLoader::GetScale(vector<Transform> &transformations)
 	return ret;
 }
 
-mat4 ColladaLoader::GetTransformMatrix(vector<Transform> &transformations)
+mat4 ColladaLoader::GetTransformMatrix(std::vector<Transform> &transformations)
 {
 	mat4 ret = mat4::identity;
 	for (unsigned int i = 0; i < transformations.size(); i++)
@@ -1163,7 +1148,7 @@ void ColladaLoader::ApplyMaterialInstanceSemanticMapping(Sampler &sampler, Mater
 {
 	// Applies the semantic mapping between texture coordinates in an effect
 	// and texture coordinates defines in a geometry
-	map<string, InputSemanticEntry>::iterator iter = materialInstance.inputMap.find(sampler.uvCoords);
+	std::map<std::string, InputSemanticEntry>::iterator iter = materialInstance.inputMap.find(sampler.uvCoords);
 	sampler.uvId = -1;
 	if (iter != materialInstance.inputMap.end())
 	{
@@ -1172,16 +1157,16 @@ void ColladaLoader::ApplyMaterialInstanceSemanticMapping(Sampler &sampler, Mater
 	}
 }
 
-string ColladaLoader::GetTextureFileNameFromSampler(Effect &effect, Sampler &sampler)
+std::string ColladaLoader::GetTextureFileNameFromSampler(Effect &effect, Sampler &sampler)
 {
 	// A sampler points to a surface param in an effect which points to an image in the image library
-	string cur = sampler.name;
-	map<string, EffectParam>::iterator i;
+	std::string cur = sampler.name;
+	std::map<std::string, EffectParam>::iterator i;
 	while ((i = effect.effectParams.find(cur)) != effect.effectParams.end())
 	{
 		cur = i->second.reference;
 	}
-	map<string, ColladaLoader::Image>::iterator imgi = imageLibrary.find(cur);
+	std::map<std::string, ColladaLoader::Image>::iterator imgi = imageLibrary.find(cur);
 	if (imgi == imageLibrary.end())
 		return "";
 	else
@@ -1190,21 +1175,21 @@ string ColladaLoader::GetTextureFileNameFromSampler(Effect &effect, Sampler &sam
 	}
 }
 
-string ColladaLoader::FixFileName(string &filename)
+std::string ColladaLoader::FixFileName(std::string &filename)
 {
 	// Removes "file://" and replaces "%20" with spaces
-	string::size_type i = 0;
-	string file = filename;
+	std::string::size_type i = 0;
+	std::string file = filename;
 	while ((file[i] == '.') || (file[i] == '/'))
 		i++;
 	file = file.substr(i);
 	i = file.find("file://");
-	if (i != string::npos)
+	if (i != std::string::npos)
 	{
 		file.erase(i, i + 7);
 	}
 	i = file.find("%20");
-	while (i != string::npos)
+	while (i != std::string::npos)
 	{
 		file.replace(i, 3, " ");
 		i = file.find("%20");
@@ -1237,7 +1222,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 	{
 		FireCube::NodePtr geomNode(new FireCube::Node);
 		GeometryInstance &gi = node->geometryInstances[i];
-		map<string, Geometry>::iterator iter = geometryLibrary.find(gi.url);
+		std::map<std::string, Geometry>::iterator iter = geometryLibrary.find(gi.url);
 		if (iter == geometryLibrary.end())
 			continue;
 		Geometry &geom = iter->second;
@@ -1246,7 +1231,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 		Mesh &mesh = geom.mesh;               
 		
 		// Flip vertices, normals, tangents and bitangents if needed
-		vector<vec3> vertices = mesh.vertices;
+		std::vector<vec3> vertices = mesh.vertices;
 		for (unsigned int j = 0; j < vertices.size(); j++)
 		{
 			if (upDirection == X_UP)
@@ -1260,7 +1245,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 				vertices[j].z *= -1;
 			}
 		}        
-		vector<vec3> normals = mesh.normals;
+		std::vector<vec3> normals = mesh.normals;
 		for (unsigned int j = 0; j < normals.size(); j++)
 		{            
 			if (upDirection == X_UP)
@@ -1275,7 +1260,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 			}
 			normals[j].Normalize();
 		}        
-		vector<vec3> tangents = mesh.tangents;
+		std::vector<vec3> tangents = mesh.tangents;
 		for (unsigned int j = 0; j < tangents.size(); j++)
 		{            
 			if (upDirection == X_UP)
@@ -1290,7 +1275,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 			}
 			tangents[j].Normalize();
 		}        
-		vector<vec3> bitangents = mesh.binormals;
+		std::vector<vec3> bitangents = mesh.binormals;
 		for (unsigned int j = 0; j < bitangents.size(); j++)
 		{            
 			if (upDirection == X_UP)
@@ -1311,14 +1296,14 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 		for (unsigned int j = 0; j < mesh.subMeshes.size(); j++)
 		{
 			FireCube::GeometryNodePtr surfaceNode(new FireCube::GeometryNode());
-			ostringstream surfaceNodeName;
+			std::ostringstream surfaceNodeName;
 			surfaceNodeName << geomNode->GetName() << "-surface-" << j;
 			surfaceNode->SetName(surfaceNodeName.str());
 			FireCube::GeometryPtr geometry(new FireCube::Geometry);
 			SubMesh &subMesh = mesh.subMeshes[j];
 
 			// Use the material instance to resolve the material name of this sub mesh
-			map<string, MaterialInstance>::iterator iter = gi.materialInstance.find(subMesh.material);
+			std::map<std::string, MaterialInstance>::iterator iter = gi.materialInstance.find(subMesh.material);
 			MaterialInstance *materialInstance = nullptr;
 			if (iter != gi.materialInstance.end())
 				materialInstance = &iter->second;
@@ -1332,7 +1317,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 			geometry->GetTangents() = tangents;
 			geometry->GetBitangents() = bitangents;
 			FireCube::MaterialPtr fmat;
-			map<string, FireCube::MaterialPtr>:: iterator matIter = generatedMaterials.find(subMesh.material);
+			std::map<std::string, FireCube::MaterialPtr>:: iterator matIter = generatedMaterials.find(subMesh.material);
 			if (matIter != generatedMaterials.end())
 			{
 				fmat = matIter->second;
@@ -1370,7 +1355,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 				{
 					// If the set number was not specified by the material instance try to get it from the texture
 					// coordinates name of the sampler
-					string::iterator s = effect.diffuseSampler.uvCoords.begin();
+					std::string::iterator s = effect.diffuseSampler.uvCoords.begin();
 					while (s != effect.diffuseSampler.uvCoords.end() && (*s < '0' || *s > '9'))
 						s++;
 					map = 0;
@@ -1449,7 +1434,7 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph()
 	return ret;
 }
 
-TiXmlElement *ColladaLoader::GetChildElement(TiXmlNode *node, const string &elmName)
+TiXmlElement *ColladaLoader::GetChildElement(TiXmlNode *node, const std::string &elmName)
 {
 	TiXmlNode *n = node->FirstChild(elmName);
 	if (n && n->Type() == TiXmlNode::ELEMENT)
@@ -1457,7 +1442,7 @@ TiXmlElement *ColladaLoader::GetChildElement(TiXmlNode *node, const string &elmN
 	return nullptr;
 }
 
-ColladaLoader::InputType ColladaLoader::SemanticToInputType(const string &semantic)
+ColladaLoader::InputType ColladaLoader::SemanticToInputType(const std::string &semantic)
 {
 	if (semantic == "POSITION")
 		return INPUT_POSITION;

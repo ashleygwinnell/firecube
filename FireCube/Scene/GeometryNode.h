@@ -3,6 +3,8 @@
 #pragma warning(push)
 #pragma warning(disable:4251)
 
+#include "Scene/Node.h"
+
 namespace FireCube
 {
 

@@ -1,5 +1,6 @@
-#ifndef LOGGER_H
-#define LOGGER_H
+#pragma once
+
+#include "Utils/utils.h"
 
 namespace FireCube
 {
@@ -16,4 +17,3 @@ void FIRECUBE_API SetLogOutput(bool file, bool con);
 void FIRECUBE_API Close();
 }
 }
-#endif

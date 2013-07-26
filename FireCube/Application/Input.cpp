@@ -1,27 +1,20 @@
-#include <string>
-#include <map>
-#include <vector>
-#include <set>
-#include <algorithm>
-using namespace std;
-
-#include "Utils/utils.h"
 #include "Application/Input.h"
+
 using namespace FireCube;
 
-bool MappedInput::IsStateOn(const string &name) const
+bool MappedInput::IsStateOn(const std::string &name) const
 {
 	return states.find(name) != states.end();
 }
 
-bool MappedInput::IsActionTriggered(const string &name) const
+bool MappedInput::IsActionTriggered(const std::string &name) const
 {
 	return actions.find(name) != actions.end();
 }
 
-float MappedInput::GetValue(const string &name) const
+float MappedInput::GetValue(const std::string &name) const
 {
-	map<string, float>::const_iterator i = values.find(name);
+	std::map<std::string, float>::const_iterator i = values.find(name);
 	if (i == values.end())
 		return 0.0f;
 
@@ -30,7 +23,7 @@ float MappedInput::GetValue(const string &name) const
 
 bool MappedInput::HasValue(const std::string &name) const
 {
-	map<string, float>::const_iterator i = values.find(name);
+	std::map<std::string, float>::const_iterator i = values.find(name);
 	return i != values.end();
 }
 
@@ -41,7 +34,7 @@ void InputManager::AddInputListener(InputListener *inputListener)
 
 void InputManager::RemoveInputListener(InputListener *inputListener)
 {
-	vector<InputListener *>::iterator i = std::find(inputListeners.begin(), inputListeners.end(), inputListener);
+	std::vector<InputListener *>::iterator i = std::find(inputListeners.begin(), inputListeners.end(), inputListener);
 	if (i != inputListeners.end())
 		inputListeners.erase(i);
 }
@@ -67,12 +60,12 @@ void InputManager::AddMapping(Key key, InputMappingType inputMappingType, const 
 
 void InputManager::RemoveMapping(Key key, InputMappingType inputMappingType, const std::string &actionName, KeyModifier modifier)
 {
-	map<Key, vector<InputMapping>>::iterator i = mappedKeys.find(key);
+	std::map<Key, std::vector<InputMapping>>::iterator i = mappedKeys.find(key);
 	if (i == mappedKeys.end())
 		return;
 
 	// Search for this specific mapping in the list of mappings of the given key and remove it if found
-	vector<InputMapping>::iterator j = i->second.begin();
+	std::vector<InputMapping>::iterator j = i->second.begin();
 	for (; j != i->second.end(); j++)
 	{
 		if (j->inputMappingType == inputMappingType && j->actionName == actionName && j->modifier == modifier)
@@ -90,12 +83,12 @@ void InputManager::AddMapping(AnalogInput analogInput, const std::string &name)
 
 void InputManager::RemoveMapping(AnalogInput analogInput, const std::string &name)
 {
-	map<AnalogInput, vector<string>>::iterator i = mappedAnalogs.find(analogInput);
+	std::map<AnalogInput, std::vector<std::string>>::iterator i = mappedAnalogs.find(analogInput);
 	if (i == mappedAnalogs.end())
 		return;
 
 	// Search for the mapping name in the list of mappings for the given analog input and remove it if found
-	vector<string>::iterator j = i->second.begin();
+	std::vector<std::string>::iterator j = i->second.begin();
 	for (; j != i->second.end(); j++)
 	{
 		if (*j == name)
@@ -127,7 +120,7 @@ void InputManager::SetRawKeyState(Key key, bool pressed, bool previouslyPressed,
 		// Iterate over all pressed keys
 		for (auto i = pressedKeys.begin(); i != pressedKeys.end(); ++i)
 		{
-			map<Key, vector<InputMapping>>::iterator inputMapping = mappedKeys.find(*i);			
+			std::map<Key, std::vector<InputMapping>>::iterator inputMapping = mappedKeys.find(*i);			
 			if (inputMapping != mappedKeys.end())
 			{
 				for (unsigned int j = 0; j < inputMapping->second.size(); j++)
@@ -154,13 +147,13 @@ void InputManager::SetRawKeyState(Key key, bool pressed, bool previouslyPressed,
 		pressedKeys.push_back(key);
 	else if (!pressed && previouslyPressed)
 	{
-		vector<Key>::iterator i = find(pressedKeys.begin(), pressedKeys.end(), key);
+		std::vector<Key>::iterator i = find(pressedKeys.begin(), pressedKeys.end(), key);
 		if (i != pressedKeys.end())
 			pressedKeys.erase(i);
 	}
 		
 
-	map<Key, vector<InputMapping>>::iterator i = mappedKeys.find(key);
+	std::map<Key, std::vector<InputMapping>>::iterator i = mappedKeys.find(key);
 	if (i == mappedKeys.end())
 		return;
 	
@@ -178,7 +171,7 @@ void InputManager::SetRawKeyState(Key key, bool pressed, bool previouslyPressed,
 
 void InputManager::SetRawAnalogValue(AnalogInput analogInput, float value)
 {
-	map<AnalogInput, vector<string>>::iterator i = mappedAnalogs.find(analogInput);
+	std::map<AnalogInput, std::vector<std::string>>::iterator i = mappedAnalogs.find(analogInput);
 	if (i == mappedAnalogs.end())
 		return;
 

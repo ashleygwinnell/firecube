@@ -1,5 +1,7 @@
-#ifndef __TIMER_H
-#define __TIMER_H
+#pragma once
+
+#include <windows.h>
+#include "Utils/utils.h"
 
 namespace FireCube
 {
@@ -30,4 +32,3 @@ private:
     double res;
 };
 }
-#endif

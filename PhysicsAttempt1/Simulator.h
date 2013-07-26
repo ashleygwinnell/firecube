@@ -10,6 +10,6 @@ public:
     void Update(float t);
     void ResetForcesAndTorques();
 
-    vector<RigidBody *> rigidBodies;
+    std::vector<RigidBody *> rigidBodies;
 };
 #endif

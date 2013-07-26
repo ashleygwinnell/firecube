@@ -1,21 +1,3 @@
-#include <string>
-#include <vector>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <map>
-#include <queue>
-#include <memory>
-using namespace std;
-#include "glew.h"
-
-#include "Utils/utils.h"
-#include "Math/MyMath.h"
-#include "Math/BoundingBox.h"
-#include "Geometry/Geometry.h"
-#include "Rendering/Renderer.h"
-#include "Scene/Light.h"
-#include "Scene/Node.h"
 #include "Rendering/RenderQueue.h"
 #include "Scene/LightNode.h"
 
@@ -26,7 +8,7 @@ LightNode::LightNode() : Node()
 	type = Node::LIGHT;
 }
 
-LightNode::LightNode(const string &name) : Node(name)
+LightNode::LightNode(const std::string &name) : Node(name)
 {
 	type = Node::LIGHT;
 }

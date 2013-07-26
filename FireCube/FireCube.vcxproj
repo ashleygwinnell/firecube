@@ -47,6 +47,7 @@
     <ClCompile Include="Scene\NodeObserverCamera.cpp" />
     <ClCompile Include="Scene\TerrainNode.cpp" />
     <ClCompile Include="ThirdParty\GLEW\glew.c" />
+    <ClCompile Include="ThirdParty\jpgd\jpgd.cpp" />
     <ClCompile Include="ThirdParty\STB\stb_image.c" />
     <ClCompile Include="ThirdParty\TinyXML\tinyxml.cpp" />
     <ClCompile Include="ThirdParty\TinyXML\tinyxmlerror.cpp" />
@@ -60,6 +61,7 @@
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="Application\Input.h" />
+    <ClInclude Include="FireCube.h" />
     <ClInclude Include="Geometry\ColladaLoader.h" />
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\GeometryGenerator.h" />
@@ -79,6 +81,7 @@
     <ClInclude Include="Rendering\Buffer.h" />
     <ClInclude Include="Rendering\Font.h" />
     <ClInclude Include="Rendering\FrameBuffer.h" />
+    <ClInclude Include="Rendering\GLHandle.h" />
     <ClInclude Include="Rendering\privateFont.h" />
     <ClInclude Include="Rendering\Renderer.h" />
     <ClInclude Include="Rendering\RenderQueue.h" />
@@ -93,6 +96,7 @@
     <ClInclude Include="Scene\TerrainNode.h" />
     <ClInclude Include="ThirdParty\GLEW\glew.h" />
     <ClInclude Include="ThirdParty\GLEW\wglew.h" />
+    <ClInclude Include="ThirdParty\jpgd\jpgd.h" />
     <ClInclude Include="ThirdParty\STB\stb_image.h" />
     <ClInclude Include="ThirdParty\TinyXML\tinyxml.h" />
     <ClInclude Include="Utils\Filesystem.h" />
@@ -195,7 +199,7 @@
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\ThirdParty\FreeType\include;$(ProjectDir)\ThirdParty\TinyXML;$(ProjectDir)\ThirdParty\GLEW;$(ProjectDir)\ThirdParty\STB;$(ProjectDir);$(ProjectDir)\ThirdParty\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\ThirdParty\FreeType\include;$(ProjectDir)\ThirdParty\TinyXML;$(ProjectDir)\ThirdParty\GLEW;$(ProjectDir)\ThirdParty\STB;$(ProjectDir)\ThirdParty\jpgd;$(ProjectDir);$(ProjectDir)\ThirdParty\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;GLEW_BUILD;FIRECUBE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

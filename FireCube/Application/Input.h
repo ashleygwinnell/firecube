@@ -1,8 +1,14 @@
-#ifndef INPUT_H
-#define INPUT_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <set>
+#include <vector>
+#include <string>
+#include <map>
+
+#include "Utils/utils.h"
 
 namespace FireCube
 {
@@ -202,4 +208,3 @@ private:
 }
 
 #pragma warning(pop)
-#endif

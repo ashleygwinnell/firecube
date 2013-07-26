@@ -1,10 +1,3 @@
-#include <string>
-#include <vector>
-#include <map>
-#include <queue>
-#include <fstream>
-using namespace std;
-
 #include "Utils/utils.h"
 
 using namespace FireCube;
@@ -19,37 +12,37 @@ float FireCube::RangedRandom(float v1, float v2)
     return v1 + (v2 - v1) * ((float)rand()) / ((float)RAND_MAX);
 }
 
-string FireCube::ToLower(const string &str)
+std::string FireCube::ToLower(const std::string &str)
 {
-    string ret;
-    string::const_iterator i = str.begin();
+    std::string ret;
+    std::string::const_iterator i = str.begin();
     for (; i != str.end(); i++)
         ret += tolower(*i);
     return ret;
 }
 
-string FireCube::ToUpper(const string &str)
+std::string FireCube::ToUpper(const std::string &str)
 {
-    string ret;
-    string::const_iterator i = str.begin();
+    std::string ret;
+    std::string::const_iterator i = str.begin();
     for (; i != str.end(); i++)
         ret += toupper(*i);
     return ret;
 }
 
-string FireCube::GetFileName(const string &file)
+std::string FireCube::GetFileName(const std::string &file)
 {
-    string::size_type i = file.find_last_of("/");
-    string::size_type i2 = file.find_last_of("\\");
-    string::size_type maxi = 0;
+    std::string::size_type i = file.find_last_of("/");
+    std::string::size_type i2 = file.find_last_of("\\");
+    std::string::size_type maxi = 0;
 
-    if ((i != string::npos) && (i2 != string::npos))
+    if ((i != std::string::npos) && (i2 != std::string::npos))
     {
         maxi = i > i2 ? i + 1 : i2 + 1;
     }
-    else if (i != string::npos)
+    else if (i != std::string::npos)
         maxi = i + 1;
-    else if (i2 != string::npos)
+    else if (i2 != std::string::npos)
         maxi = i2 + 1;
 
     return file.substr(maxi);

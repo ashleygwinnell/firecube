@@ -1,33 +1,13 @@
-#include <string>
-#include <vector>
-#include <fstream>
-#include <iostream>
 #include <sstream>
-#include <map>
-#include <queue>
-#include <memory>
-using namespace std;
-#include "glew.h"
 
-#include "Utils/utils.h"
 #include "Utils/Logger.h"
 #include "Utils/Filesystem.h"
-#include "Math/MyMath.h"
-#include "Math/BoundingBox.h"
-#include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
-#include "Rendering/Renderer.h"
-#include "Scene/Light.h"
 #include "Scene/Node.h"
-#include "tinyxml.h"
 #include "Geometry/m3dsLoader.h"
 #include "Geometry/ObjLoader.h"
 #include "Geometry/ColladaLoader.h"
-#include "Rendering/Buffer.h"
 #include "Rendering/Shaders.h"
-#include "Math/Plane.h"
-#include "Math/Frustum.h"
-#include "Scene/Camera.h"
 
 using namespace FireCube;
 
@@ -45,7 +25,7 @@ Node::Node() : parent(nullptr)
 	type = NODE;
 }
 
-Node::Node(const string &name) : parent(nullptr)
+Node::Node(const std::string &name) : parent(nullptr)
 {
 	rotation = mat4::identity;
 	translation.Set(0, 0, 0);
@@ -65,12 +45,12 @@ Node::NodeType Node::GetType() const
 	return type;
 }
 
-void Node::SetName(const string &name)
+void Node::SetName(const std::string &name)
 {
 	this->name = name;
 }
 
-string Node::GetName() const
+std::string Node::GetName() const
 {
 	return name;
 }
@@ -193,7 +173,7 @@ void Node::Render()
 	{
 		sceneGraph->activeLights.push_back(make_pair(worldTransformation,*i));
 	}*/
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 		(*i)->Render();
 }
 
@@ -221,12 +201,12 @@ void Node::SetParent(NodePtr parent)
 	}
 }
 
-NodePtr Node::GetChild(const string &name)
+NodePtr Node::GetChild(const std::string &name)
 {
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 		if ((*i)->GetName() == name)
 			return *i;
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 	{
 		NodePtr ret = (*i)->GetChild(name);
 		if (ret)
@@ -237,7 +217,7 @@ NodePtr Node::GetChild(const string &name)
 
 NodePtr Node::RemoveChild(NodePtr node)
 {
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 	{
 		if ((*i) == node)
 		{
@@ -246,7 +226,7 @@ NodePtr Node::RemoveChild(NodePtr node)
 			return node;
 		}
 	}
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 	{
 		NodePtr ret = (*i)->RemoveChild(node);
 		if (ret)
@@ -255,9 +235,9 @@ NodePtr Node::RemoveChild(NodePtr node)
 	return NodePtr();
 }
 
-NodePtr Node::RemoveChild(const string &name)
+NodePtr Node::RemoveChild(const std::string &name)
 {
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 		if ((*i)->GetName() == name)
 		{
 			NodePtr ret = *i;
@@ -265,7 +245,7 @@ NodePtr Node::RemoveChild(const string &name)
 			children.erase(i);
 			return ret;
 		}
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 	{
 		NodePtr ret = (*i)->RemoveChild(name);
 		if (ret)
@@ -274,7 +254,7 @@ NodePtr Node::RemoveChild(const string &name)
 	return NodePtr();
 }
 
-vector<NodePtr> &Node::GetChildren()
+std::vector<NodePtr> &Node::GetChildren()
 {
 	return children;
 }
@@ -287,7 +267,7 @@ RenderParameters &Node::GetRenderParameters()
 void Node::SetProgram(ProgramPtr program)
 {
 	renderParameters.program = program;
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 	{
 		(*i)->SetProgram(program);
 	}
@@ -298,10 +278,10 @@ ProgramPtr Node::GetProgram() const
 	return renderParameters.program;
 }
 
-void Node::SetTechnique(const string &name)
+void Node::SetTechnique(const std::string &name)
 {
 	renderParameters.technique = Renderer::GetTechnique(name);
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 	{
 		(*i)->SetTechnique(name);
 	}
@@ -315,7 +295,7 @@ TechniquePtr Node::GetTechnique() const
 void Node::SetLighting(bool enabled)
 {
 	renderParameters.lighting = enabled;
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 	{
 		(*i)->SetLighting(enabled);
 	}
@@ -329,7 +309,7 @@ bool Node::GetLighting() const
 void Node::SetFog(bool enabled)
 {
 	renderParameters.fog = enabled;
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 	{
 		(*i)->SetFog(enabled);
 	}
@@ -343,7 +323,7 @@ bool Node::GetFog() const
 void Node::SetFogColor(const vec4 &color)
 {
 	renderParameters.fogColor = color;
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 	{
 		(*i)->SetFogColor(color);
 	}
@@ -357,7 +337,7 @@ vec4 Node::GetFogColor() const
 void Node::SetFogDensity(float density)
 {
 	renderParameters.fogDensity = density;
-	for (vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
 	{
 		(*i)->SetFogDensity(density);
 	}
@@ -382,7 +362,7 @@ NodePtr Node::Clone() const
 	ret->worldTransformationChanged = worldTransformationChanged;
 	ret->worldBoundingBox = worldBoundingBox;
 	ret->worldBoundingBoxChanged = worldBoundingBoxChanged;
-	for (vector<NodePtr>::const_iterator i = children.begin(); i != children.end(); i++)
+	for (std::vector<NodePtr>::const_iterator i = children.begin(); i != children.end(); i++)
 	{
 		NodePtr c = (*i)->Clone();
 		c->SetParent(ret);
@@ -493,19 +473,19 @@ void Node::PrepareRenderBoundingBox()
 	worldBoundingBoxRenderingChanged = false;
 }
 
-NodePtr FIRECUBE_API FireCube::LoadMesh(const string &filename, ModelLoadingOptions options)
+NodePtr FIRECUBE_API FireCube::LoadMesh(const std::string &filename, ModelLoadingOptions options)
 {
-	string file = Filesystem::SearchForFileName(filename);
+	std::string file = Filesystem::SearchForFileName(filename);
 	if (file.empty())
 		return NodePtr();
-	string::size_type d;
+	std::string::size_type d;
 	d = filename.find_last_of(".");	
-	ostringstream ss;
+	std::ostringstream ss;
 	ss << "Created model with name:" << filename;
 	Logger::Write(Logger::LOG_INFO, ss.str());
-	if (d != string::npos)
+	if (d != std::string::npos)
 	{
-		string ext = ToLower(filename.substr(d + 1));
+		std::string ext = ToLower(filename.substr(d + 1));
 		if (ext == "3ds")
 		{
 			M3dsLoader m3dsLoader;

@@ -31,8 +31,8 @@ public:
 
     CollisionShape *collisionShape;
     NodePtr model;
-    vector<vec3> worldVertices;
-    vector<int> collisions;
+    std::vector<vec3> worldVertices;
+    std::vector<int> collisions;
 };
 class CollisionInfo
 {
@@ -47,5 +47,5 @@ public:
     vec3 position;
     float penetrationDepth;
 };
-void DetectBodyCollisions(RigidBody *body0, RigidBody *body1, vector<CollisionInfo> &collisions);
+void DetectBodyCollisions(RigidBody *body0, RigidBody *body1, std::vector<CollisionInfo> &collisions);
 #endif

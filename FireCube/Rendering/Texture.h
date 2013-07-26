@@ -1,8 +1,12 @@
-#ifndef TEXTURE_MANAGER_H
-#define TEXTURE_MANAGER_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <memory>
+
+#include "ThirdParty/GLEW/glew.h"
+#include "Utils/utils.h"
 
 namespace FireCube
 {
@@ -92,4 +96,3 @@ private:
 typedef ResourcePool<Texture> TexturePool;
 }
 #pragma warning(pop)
-#endif

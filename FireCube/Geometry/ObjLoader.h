@@ -1,8 +1,14 @@
-#ifndef OBJ_LOADER_H
-#define OBJ_LOADER_H
+#pragma once
 
 #pragma warning(push)
 #pragma warning(disable:4251)
+
+#include <vector>
+#include <string>
+#include <map>
+
+#include "Math/MyMath.h"
+#include "Scene/Node.h"
 
 namespace FireCube
 {
@@ -21,8 +27,8 @@ namespace FireCube
 		class Object
 		{
 		public:
-			map<string, vector<Face>> materialFaces;
-			vector<Face> facesWithoutMaterial;
+			std::map<std::string, std::vector<Face>> materialFaces;
+			std::vector<Face> facesWithoutMaterial;
 		};
 		class Material
 		{
@@ -32,8 +38,8 @@ namespace FireCube
 			vec3 diffuseColor;
 			vec3 specularColor;
 			float shininess;
-			string diffuseTextureName;
-			string normalTextureName;
+			std::string diffuseTextureName;
+			std::string normalTextureName;
 		};
 		class MapKey
 		{
@@ -44,40 +50,39 @@ namespace FireCube
 			bool operator < (const MapKey &other) const;
 		};
 		ObjLoader();
-		void Load(const string &filename, ModelLoadingOptions options);
+		void Load(const std::string &filename, ModelLoadingOptions options);
 		NodePtr GenerateSceneGraph();
 	private:
-		string ExtractDirectory(const string &filename);
-		void ParseVertexLine(const string &line);
-		void ParseTexCoordLine(const string &line);
-		void ParseNormalLine(const string &line);
-		void ParseFaceLine(const string &line);
-		void ParseObjectLine(const string &line);
-		void ParseUseMtlLine(const string &line);
-		void ParseMtlLibLine(const string &line);	
-		void ParseFaceEntry(const string &entry, unsigned int &v, unsigned int &t, unsigned int &n, bool &hasTextureCoordinates, bool &hasNormal);
+		std::string ExtractDirectory(const std::string &filename);
+		void ParseVertexLine(const std::string &line);
+		void ParseTexCoordLine(const std::string &line);
+		void ParseNormalLine(const std::string &line);
+		void ParseFaceLine(const std::string &line);
+		void ParseObjectLine(const std::string &line);
+		void ParseUseMtlLine(const std::string &line);
+		void ParseMtlLibLine(const std::string &line);	
+		void ParseFaceEntry(const std::string &entry, unsigned int &v, unsigned int &t, unsigned int &n, bool &hasTextureCoordinates, bool &hasNormal);
 
-		void ParseMaterialFile(const string &filename);
-		void ParseNewMtlLine(const string &line);
-		void ParseAmbientColorLine(const string &line);
-		void ParseDiffuseColorLine(const string &line);
-		void ParseSpecularColorLine(const string &line);
-		void ParseDiffuseTextureMap(const string &line);
-		void ParseNormalTextureMap(const string &line);
-		void ParseShininessLine(const string &line);
-		vector<vec3> vertices;
-		vector<vec2> texCoords;
-		vector<vec3> normals;
-		map<string, Object> objects;
-		vector<Face> *currentFaces;
+		void ParseMaterialFile(const std::string &filename);
+		void ParseNewMtlLine(const std::string &line);
+		void ParseAmbientColorLine(const std::string &line);
+		void ParseDiffuseColorLine(const std::string &line);
+		void ParseSpecularColorLine(const std::string &line);
+		void ParseDiffuseTextureMap(const std::string &line);
+		void ParseNormalTextureMap(const std::string &line);
+		void ParseShininessLine(const std::string &line);
+		std::vector<vec3> vertices;
+		std::vector<vec2> texCoords;
+		std::vector<vec3> normals;
+		std::map<std::string, Object> objects;
+		std::vector<Face> *currentFaces;
 		Object *currentObject;
-		string lastMaterial;
-		map<string, Material> materials;
+		std::string lastMaterial;
+		std::map<std::string, Material> materials;
 		Material *currentMaterial;
-		string baseDir;
+		std::string baseDir;
 		ModelLoadingOptions options;
 	};
 }
 
 #pragma warning(pop)
-#endif

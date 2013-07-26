@@ -1,7 +1,21 @@
-#ifndef TERRAIN_H
-#define TERRAIN_H
+#pragma once
+
+#include <memory>
+#include <vector>
+#include <string>
+
+#include "Utils/utils.h"
+#include "Math/MyMath.h"
+#include "Math/BoundingBox.h"
+#include "Utils/Image.h"
+
 namespace FireCube
 {
+// Forward declarations.
+class Camera;
+typedef std::shared_ptr<Camera> CameraPtr;
+class Geometry;
+typedef std::shared_ptr<Geometry> GeometryPtr;
 
 class FIRECUBE_API Terrain
 {
@@ -60,4 +74,3 @@ private:
 };
 
 }
-#endif

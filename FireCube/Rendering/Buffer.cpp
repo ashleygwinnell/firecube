@@ -1,12 +1,6 @@
-#include <string>
-#include <vector>
 #include <sstream>
-#include <memory>
-using namespace std;
 
-#include "glew.h"
-
-#include "Utils/utils.h"
+#include "ThirdParty/GLEW/glew.h"
 #include "Utils/Logger.h"
 #include "Rendering/Buffer.h"
 
@@ -19,7 +13,7 @@ Buffer::Buffer() : id(0)
 
 Buffer::~Buffer()
 {
-	ostringstream ss;
+	std::ostringstream ss;
 	ss << "Destroyed buffer with id=" << id;
 	Logger::Write(Logger::LOG_INFO, ss.str());
 	glDeleteBuffers(1, &id);
@@ -29,7 +23,7 @@ Buffer::~Buffer()
 void Buffer::Create()
 {
 	glGenBuffers(1, &id);
-	ostringstream ss;
+	std::ostringstream ss;
 	ss << "Created buffer with id=" << id;
 	Logger::Write(Logger::LOG_INFO, ss.str());
 }
@@ -84,7 +78,7 @@ bool Buffer::IsValid() const
 
 void Buffer::Destroy()
 {
-	ostringstream ss;
+	std::ostringstream ss;
 	ss << "Destroyed buffer with id=" << id;
 	Logger::Write(Logger::LOG_INFO, ss.str());
 	glDeleteBuffers(1, &id);

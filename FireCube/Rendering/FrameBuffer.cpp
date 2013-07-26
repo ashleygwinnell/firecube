@@ -1,18 +1,6 @@
-#include <vector>
-#include <map>
-#include <string>
-#include <memory>
-using namespace std;
-#include <Windows.h>
-#include "glew.h"
-#include <gl/GL.h>
-
-#include "Utils/utils.h"
-#include "Utils/Logger.h"
-#include "Math/MyMath.h"
+#include "ThirdParty/GLEW/glew.h"
 #include "Rendering/Texture.h"
 #include "Rendering/FrameBuffer.h"
-#include "Rendering/Renderer.h"
 
 using namespace FireCube;
 
