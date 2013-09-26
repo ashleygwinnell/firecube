@@ -9,6 +9,10 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Static|Win32">
+      <Configuration>Release Static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -17,35 +21,47 @@
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="Application\Input.cpp" />
+    <ClCompile Include="Core\Component.cpp" />
+    <ClCompile Include="Core\Engine.cpp" />
+    <ClCompile Include="Core\Object.cpp" />
+    <ClCompile Include="Core\Resource.cpp" />
+    <ClCompile Include="Core\ResourcePool.cpp" />
     <ClCompile Include="Geometry\ColladaLoader.cpp" />
     <ClCompile Include="Geometry\Geometry.cpp" />
     <ClCompile Include="Geometry\GeometryGenerator.cpp" />
     <ClCompile Include="Geometry\m3dsLoader.cpp" />
     <ClCompile Include="Geometry\Material.cpp" />
+    <ClCompile Include="Geometry\ModelLoader.cpp" />
     <ClCompile Include="Geometry\ObjLoader.cpp" />
     <ClCompile Include="Geometry\Terrain.cpp" />
     <ClCompile Include="Math\BoundingBox.cpp" />
     <ClCompile Include="Math\Frustum.cpp" />
     <ClCompile Include="Math\mat3.cpp" />
     <ClCompile Include="Math\mat4.cpp" />
+    <ClCompile Include="Math\MathUtils.cpp" />
     <ClCompile Include="Math\Plane.cpp" />
     <ClCompile Include="Math\vec2.cpp" />
     <ClCompile Include="Math\vec3.cpp" />
     <ClCompile Include="Math\vec4.cpp" />
-    <ClCompile Include="Rendering\Buffer.cpp" />
+    <ClCompile Include="Rendering\IndexBuffer.cpp" />
+    <ClCompile Include="Rendering\RenderingTypes.cpp" />
+    <ClCompile Include="Rendering\ShaderTemplate.cpp" />
+    <ClCompile Include="Rendering\Technique.cpp" />
+    <ClCompile Include="Rendering\VertexBuffer.cpp" />
     <ClCompile Include="Rendering\Font.cpp" />
     <ClCompile Include="Rendering\FrameBuffer.cpp" />
+    <ClCompile Include="Rendering\GraphicsResource.cpp" />
+    <ClCompile Include="Rendering\Renderable.cpp" />
     <ClCompile Include="Rendering\Renderer.cpp" />
     <ClCompile Include="Rendering\RenderQueue.cpp" />
-    <ClCompile Include="Rendering\Shaders.cpp" />
+    <ClCompile Include="Rendering\Shader.cpp" />
+    <ClCompile Include="Rendering\StaticModel.cpp" />
     <ClCompile Include="Rendering\Texture.cpp" />
+    <ClCompile Include="Rendering\Viewport.cpp" />
     <ClCompile Include="Scene\Camera.cpp" />
-    <ClCompile Include="Scene\GeometryNode.cpp" />
     <ClCompile Include="Scene\Light.cpp" />
-    <ClCompile Include="Scene\LightNode.cpp" />
     <ClCompile Include="Scene\Node.cpp" />
     <ClCompile Include="Scene\NodeObserverCamera.cpp" />
-    <ClCompile Include="Scene\TerrainNode.cpp" />
     <ClCompile Include="ThirdParty\GLEW\glew.c" />
     <ClCompile Include="ThirdParty\jpgd\jpgd.cpp" />
     <ClCompile Include="ThirdParty\STB\stb_image.c" />
@@ -55,45 +71,57 @@
     <ClCompile Include="Utils\Filesystem.cpp" />
     <ClCompile Include="Utils\Image.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
+    <ClCompile Include="Utils\StringHash.cpp" />
     <ClCompile Include="Utils\Timer.cpp" />
     <ClCompile Include="Utils\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="Application\Input.h" />
+    <ClInclude Include="Core\Component.h" />
+    <ClInclude Include="Core\Engine.h" />
+    <ClInclude Include="Core\Object.h" />
+    <ClInclude Include="Core\Resource.h" />
+    <ClInclude Include="Core\ResourcePool.h" />
     <ClInclude Include="FireCube.h" />
     <ClInclude Include="Geometry\ColladaLoader.h" />
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\GeometryGenerator.h" />
     <ClInclude Include="Geometry\m3dsLoader.h" />
     <ClInclude Include="Geometry\Material.h" />
+    <ClInclude Include="Geometry\ModelLoader.h" />
     <ClInclude Include="Geometry\ObjLoader.h" />
     <ClInclude Include="Geometry\Terrain.h" />
     <ClInclude Include="Math\BoundingBox.h" />
     <ClInclude Include="Math\Frustum.h" />
     <ClInclude Include="Math\mat3.h" />
     <ClInclude Include="Math\mat4.h" />
+    <ClInclude Include="Math\MathUtils.h" />
     <ClInclude Include="Math\MyMath.h" />
     <ClInclude Include="Math\Plane.h" />
     <ClInclude Include="Math\vec2.h" />
     <ClInclude Include="Math\vec3.h" />
     <ClInclude Include="Math\vec4.h" />
-    <ClInclude Include="Rendering\Buffer.h" />
+    <ClInclude Include="Rendering\IndexBuffer.h" />
+    <ClInclude Include="Rendering\RenderingTypes.h" />
+    <ClInclude Include="Rendering\ShaderTemplate.h" />
+    <ClInclude Include="Rendering\Technique.h" />
+    <ClInclude Include="Rendering\VertexBuffer.h" />
     <ClInclude Include="Rendering\Font.h" />
     <ClInclude Include="Rendering\FrameBuffer.h" />
-    <ClInclude Include="Rendering\GLHandle.h" />
+    <ClInclude Include="Rendering\GraphicsResource.h" />
     <ClInclude Include="Rendering\privateFont.h" />
+    <ClInclude Include="Rendering\Renderable.h" />
     <ClInclude Include="Rendering\Renderer.h" />
     <ClInclude Include="Rendering\RenderQueue.h" />
-    <ClInclude Include="Rendering\Shaders.h" />
+    <ClInclude Include="Rendering\Shader.h" />
+    <ClInclude Include="Rendering\StaticModel.h" />
     <ClInclude Include="Rendering\Texture.h" />
+    <ClInclude Include="Rendering\Viewport.h" />
     <ClInclude Include="Scene\Camera.h" />
-    <ClInclude Include="Scene\GeometryNode.h" />
     <ClInclude Include="Scene\Light.h" />
-    <ClInclude Include="Scene\LightNode.h" />
     <ClInclude Include="Scene\Node.h" />
     <ClInclude Include="Scene\NodeObserverCamera.h" />
-    <ClInclude Include="Scene\TerrainNode.h" />
     <ClInclude Include="ThirdParty\GLEW\glew.h" />
     <ClInclude Include="ThirdParty\GLEW\wglew.h" />
     <ClInclude Include="ThirdParty\jpgd\jpgd.h" />
@@ -102,7 +130,7 @@
     <ClInclude Include="Utils\Filesystem.h" />
     <ClInclude Include="Utils\Image.h" />
     <ClInclude Include="Utils\Logger.h" />
-    <ClInclude Include="Utils\ResourcePool.h" />
+    <ClInclude Include="Utils\StringHash.h" />
     <ClInclude Include="Utils\Timer.h" />
     <ClInclude Include="Utils\utils.h" />
   </ItemGroup>
@@ -130,6 +158,12 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
@@ -144,6 +178,9 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
@@ -162,10 +199,15 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">$(ProjectDir)$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">false</LinkIncremental>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Dev\SDL-1.2.14\include;C:\Dev\SDL_image-1.2.10\include;C:\Dev\boost_1_42_0;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">C:\Dev\SDL-1.2.14\include;C:\Dev\SDL_image-1.2.10\include;C:\Dev\boost_1_42_0;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Dev\SDL-1.2.14\lib;C:\Dev\SDL_image-1.2.10\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">C:\Dev\SDL-1.2.14\lib;C:\Dev\SDL_image-1.2.10\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -199,8 +241,8 @@
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\ThirdParty\FreeType\include;$(ProjectDir)\ThirdParty\TinyXML;$(ProjectDir)\ThirdParty\GLEW;$(ProjectDir)\ThirdParty\STB;$(ProjectDir)\ThirdParty\jpgd;$(ProjectDir);$(ProjectDir)\ThirdParty\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;GLEW_BUILD;FIRECUBE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\ThirdParty\FreeType\include;$(ProjectDir)\ThirdParty\TinyXML;$(ProjectDir)\ThirdParty\GLEW;$(ProjectDir)\ThirdParty\STB;$(ProjectDir)\ThirdParty\jpgd;$(ProjectDir);$(ProjectDir)\ThirdParty\SDL\include;$(ProjectDir)\ThirdParty\Lua\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;GLEW_BUILD;FIRECUBE_EXPORTS;ENABLE_LOGGING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -223,8 +265,8 @@
       </Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL.lib;freetype250MT_D.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)\ThirdParty\FreeType\Debug;$(ProjectDir)\ThirdParty\SDL\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL.lib;freetype250MT_D.lib;Lua.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\ThirdParty\FreeType\Debug;$(ProjectDir)\ThirdParty\SDL\Debug;$(ProjectDir)\ThirdParty\Lua\Debug</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -255,6 +297,39 @@
       <Command>
       </Command>
     </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;GLEW_BUILD;ENABLE_LOGGING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)\ThirdParty\FreeType\include;$(ProjectDir)\ThirdParty\TinyXML;$(ProjectDir)\ThirdParty\GLEW;$(ProjectDir)\ThirdParty\STB;$(ProjectDir)\ThirdParty\jpgd;$(ProjectDir);$(ProjectDir)\ThirdParty\SDL\include;$(ProjectDir)\ThirdParty\Lua\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>opengl32.lib;sdl.lib;sdl_image.lib;freetype242MT_D.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>C:\Dev\SDL-1.3.0\VisualC\SDL\Win32\Release;C:\Dev\SDL_image-1.2.10-SDL-1.3.0\VisualC\Release;.\Dependencies\FreeType\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>SDL.lib;freetype250MT.lib;Lua.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\ThirdParty\FreeType\Release;$(ProjectDir)\ThirdParty\SDL\Release;$(ProjectDir)\ThirdParty\Lua\Release</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

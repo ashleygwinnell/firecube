@@ -85,7 +85,7 @@ void vec3::operator/=(float val)
 	z /= val;
 }
 
-vec3 vec3::Normalize()
+void vec3::Normalize()
 {
 	const float m2 = Length2();
 	if (m2 > 0.0f)
@@ -99,8 +99,14 @@ vec3 vec3::Normalize()
 	{
 		x = 1.0f;
 		y = z = 0.0f;
-	}
-	return *this;
+	}	
+}
+
+vec3 vec3::Normalized() const
+{
+	vec3 ret = *this;
+	ret.Normalize();
+	return ret;
 }
 
 float vec3::Length() const

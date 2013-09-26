@@ -9,8 +9,7 @@
 
 #include "Math/MyMath.h"
 #include "Math/BoundingBox.h"
-#include "Rendering/Renderer.h"
-#include "Rendering/Buffer.h"
+#include "Core/Component.h"
 
 namespace FireCube
 {
@@ -18,6 +17,7 @@ namespace FireCube
 // Forward declarations.
 class Node;
 class RenderQueue;
+class Viewport;
 
 /**
 * A shared pointer to a Node.
@@ -31,24 +31,6 @@ typedef std::shared_ptr<Material> MaterialPtr;
 class Program;
 typedef std::shared_ptr<Program> ProgramPtr;
 
-/**
-* A class describing various parameters to apply to models when loaded from a file
-*/
-class FIRECUBE_API ModelLoadingOptions
-{
-public:
-	ModelLoadingOptions();
-	
-	/**
-	* Boolean flag specifying whether to flip u texture coordinate.
-	*/
-	bool flipU;
-
-	/**
-	* Boolean flag specifying whether to flip v texture coordinate.
-	*/
-	bool flipV;
-};
 
 /**
 * A class representing a node in a scene graph.
@@ -56,24 +38,14 @@ public:
 class FIRECUBE_API Node : public std::enable_shared_from_this<Node>
 {
 	friend class RenderQueue;
-public:
-	enum NodeType
-	{
-		NODE, GEOMETRY, LIGHT, TERRAIN
-	};
+public:	
 	Node();
 
 	/**
 	* Constructs a node.
 	* @param name The name of this node.
 	*/
-	Node(const std::string &name);
-
-	/**
-	* Gets the type of this node.
-	* @returns The type of this node.
-	*/
-	NodeType GetType() const;
+	Node(const std::string &name);	
 
 	/**
 	* Sets the name of this node.
@@ -184,12 +156,14 @@ public:
 	*/
 	NodePtr AddChild(NodePtr node);
 
+	NodePtr CreateChild(const std::string &name = "");
+
 	/**
 	* Gets a child node by name.
 	* @param name The name of the node.
 	* @return The child node.
 	*/
-	NodePtr GetChild(const std::string &name);
+	NodePtr GetChild(const std::string &name, bool recursive = false);
 
 	/**
 	* Removes a child node.
@@ -201,103 +175,8 @@ public:
 	* Removes a child node.
 	* @param node The child node to remove.
 	*/
-	NodePtr RemoveChild(NodePtr node);
-
-	/**
-	* Renders the node.
-	*/
-	void Render();
-	
-	/**
-	* Returns the local bounding box of this node;
-	*/
-	BoundingBox GetWorldBoundingBox();
-
-	/**
-	* Renders the bounding boxes of the sub tree under this node.
-	* @param color The color to render the boxes with.
-	* @param onlyWithGeometry Specifies whether to render bounding boxes only for nodes that has a geometry associated with them, defaults to true. 
-	*/
-	void RenderBoundingBox(vec3 color, bool onlyWithGeometry = true);
-
-	/**
-	* Gets the render parameters of this node.
-	* @return The render parameters of this node.
-	*/
-	RenderParameters &GetRenderParameters();
-
-	/**
-	* Sets the program used for rendering of the sub tree under this node.
-	* @param program The program to set.
-	*/
-	void SetProgram(ProgramPtr program);
-
-	/**
-	* Gets the program of this node.
-	* @return The program used for rendering of this node.
-	*/
-	ProgramPtr GetProgram() const;
-
-	/**
-	* Sets the technique used for rendering of the sub tree under this node.
-	* @param name The name of the technique to set.
-	*/
-	void SetTechnique(const std::string &name);
-
-	/**
-	* Gets the technique of this node.
-	* @return The technique used for rendering of this node.
-	*/
-	TechniquePtr GetTechnique() const;
-
-	/**
-	* Sets whether dynamic lighting is enabled for the sub tree under this node.
-	* @param enabled True to enable, false to disable.
-	*/
-	void SetLighting(bool enabled = true);
-
-	/**
-	* Checks whether dynamic lighting is enabled for this node.
-	* @return True if enabled, false otherwise.
-	*/
-	bool GetLighting() const;
-
-	/**
-	* Sets whether fog is enabled for the sub tree under this node.
-	* @param enabled True to enable, false to disable.
-	*/
-	void SetFog(bool enabled = true);
-
-	/**
-	* Checks whether fog is enabled for this node.
-	* @return True if enabled, false otherwise.
-	*/
-	bool GetFog() const;
-
-	/**
-	* Sets the fog color for the sub tree under this node.
-	* @param color The fog color to set.
-	*/
-	void SetFogColor(const vec4 &color);
-
-	/**
-	* Gets the fog color of this node.
-	* @return The fog color.
-	*/
-	vec4 GetFogColor() const;
-
-	/**
-	* Sets the fog density for the sub tree under this node.
-	* @param density The fog density to set.
-	*/
-	void SetFogDensity(float density);
-
-	/**
-	* Gets the fog density of this node.
-	* @return The fog density.
-	*/
-	float GetFogDensity() const;
-	
+	NodePtr RemoveChild(NodePtr node);	
+		
 	/**
 	* Clones the node.
 	* The cloned node has no parent and points to the same geometries as the original.
@@ -308,47 +187,31 @@ public:
 	* @return The world space position of this node.
 	*/
 	vec3 GetWorldPosition();
-		
-protected:
-	virtual BoundingBox GetLocalBoundingBox() const;
-	virtual void PopulateRenderQueue(RenderQueue &renderQueue, CameraPtr camera);		
-	void UpdateWorldBoundingBox();
-	void SetTransformationChanged();
-	void SetBoundingBoxChanged();		
-	void RenderBoundingBox(MaterialPtr material, ProgramPtr program, bool onlyWithGeometry);
-	void PrepareRenderBoundingBox();
 
+	void AddComponent(Component *component);
+	
+	void SetViewport(Viewport *viewport);
+
+	Viewport *GetViewport();
+
+protected:		
+	void SetTransformationChanged();	
+	
 	std::vector<NodePtr> children;	
 
 	vec3 translation;
 	mat4 rotation;
 	vec3 scale;	
 	mat4 localTransformation;
-	bool worldTransformationChanged;	    
-	bool localTransformationChanged;
-	mat4 worldTransformation;
-	BoundingBox worldBoundingBox;
-	bool worldBoundingBoxChanged;
-	bool worldBoundingBoxRenderingChanged;
-
-
+	bool transformationChanged;	
+	mat4 worldTransformation;	
+	
 	Node *parent;
 	std::string name;
-	RenderParameters renderParameters;
-	NodeType type;
-
-	BufferPtr bboxVBuffer;
-	BufferPtr bboxIBuffer;	
+	std::vector<ComponentPtr> components;
+	Viewport *viewport;
 };
 
-/**
-* Loads a node from a file.
-* Supported file formats are 3ds, Collada and obj.
-* @param filename The file to load.
-* @param options Model loading options to apply to the loaded object.
-* @return The loaded node.
-*/
-NodePtr FIRECUBE_API LoadMesh(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());
 }
 
 #pragma warning(push)

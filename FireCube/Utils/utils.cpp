@@ -1,3 +1,9 @@
+#include <sstream>
+#include <algorithm> 
+#include <functional> 
+#include <cctype>
+#include <locale>
+
 #include "Utils/utils.h"
 
 using namespace FireCube;
@@ -46,4 +52,43 @@ std::string FireCube::GetFileName(const std::string &file)
         maxi = i2 + 1;
 
     return file.substr(maxi);
+}
+
+std::vector<std::string> &FireCube::Split(const std::string &s, char delim, std::vector<std::string> &elems) 
+{
+	std::stringstream ss(s);
+	std::string item;
+	while (std::getline(ss, item, delim)) 
+	{
+		elems.push_back(item);
+	}
+	return elems;
+}
+
+
+std::vector<std::string> FireCube::Split(const std::string &s, char delim) 
+{
+	std::vector<std::string> elems;
+	Split(s, delim, elems);
+	return elems;
+}
+
+
+// trim from start
+std::string &FireCube::LeftTrim(std::string &s) 
+{
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+	return s;
+}
+
+// trim from end
+std::string &FireCube::RightTrim(std::string &s) {
+	s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+	return s;
+}
+
+// trim from both ends
+std::string &FireCube::Trim(std::string &s) 
+{
+	return LeftTrim(RightTrim(s));
 }

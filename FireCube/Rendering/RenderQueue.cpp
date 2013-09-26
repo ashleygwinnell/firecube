@@ -6,23 +6,14 @@
 #include "Scene/Light.h"
 #include "Scene/Node.h"
 #include "Rendering/Texture.h"
-#include "Rendering/Shaders.h"
+#include "Rendering/Shader.h"
 
 using namespace FireCube;
 
-void RenderQueue::Clear()
-{
-	renderJobs.clear();
-	activeLights.clear();
-}
-
-void RenderQueue::AddNode(NodePtr node, CameraPtr camera)
-{    
-	node->PopulateRenderQueue(*this, camera);	
-}
-
 bool RenderJobCompare(const RenderJob &job1, const RenderJob &job2)
 {
+	return job1.sortKey < job2.sortKey;
+	/*
 	// Sort by program then by texture and lastly by geometry	
 	unsigned int id1, id2;
 	id1 = job1.program->GetId() * 256;
@@ -40,29 +31,30 @@ bool RenderJobCompare(const RenderJob &job1, const RenderJob &job2)
 	if (id1 != id2)
 		return id1 < id2;
 	else
-		return job1.geometry < job2.geometry;
+		return job1.geometry < job2.geometry;*/
 }
 
-void RenderQueue::Sort(QueueType type)
+
+void RenderQueue::Sort()
+{
+	std::sort(renderJobs.begin(), renderJobs.end(), &RenderJobCompare);
+}
+
+std::vector<RenderJob> &RenderQueue::GetRenderJobs()
+{
+	return renderJobs;
+}
+
+void RenderQueue::Clear()
+{
+	renderJobs.clear();
+}
+
+void RenderJob::CalculateSortKey()
 {	
-	std::sort(renderJobs[type].begin(), renderJobs[type].end(), RenderJobCompare);
-}
-
-void RenderQueue::AddLight(const mat4 &transformation, const Light &light)
-{
-	activeLights.push_back(std::make_pair(transformation, light));
-}
-
-RenderJob &RenderQueue::AddRenderJob(QueueType queueType)
-{
-	if (queueType == NORMAL)
-	{
-		renderJobs[NORMAL].push_back(RenderJob());
-		return renderJobs[NORMAL].back();
-	}
-	else
-	{
-		renderJobs[NON_LIGHTED].push_back(RenderJob());
-		return renderJobs[NON_LIGHTED].back();
-	}
+	unsigned int shaderKey = ((unsigned int) vertexShader + (unsigned int) fragmentShader) & 0xFFFF;
+	unsigned int materialKey = ((unsigned int) geometry->GetMaterial().get()) & 0xFFFF;
+	unsigned int geometryKey = ((unsigned int) geometry) & 0xFFFF;
+	sortKey = (((unsigned long long int) shaderKey) << 32) | (((unsigned long long int) materialKey) << 16) 
+		| ((unsigned long long int) geometryKey);
 }

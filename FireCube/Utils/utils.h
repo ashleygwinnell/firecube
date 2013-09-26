@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #ifdef FIRECUBE_DYNAMIC_LIBRARY
 	#ifdef FIRECUBE_EXPORTS
@@ -44,6 +45,16 @@ std::string FIRECUBE_API ToUpper(const std::string &str);
 * Gets the file name of a path.
 */
 std::string FIRECUBE_API GetFileName(const std::string &file);
+
+std::vector<std::string> &Split(const std::string &s, char delim, std::vector<std::string> &elems);
+
+std::vector<std::string> Split(const std::string &s, char delim);
+
+std::string &LeftTrim(std::string &s);
+
+std::string &RightTrim(std::string &s);
+
+std::string &Trim(std::string &s);
 
 /**
 * Specifies the maximum number of textures in various locations.

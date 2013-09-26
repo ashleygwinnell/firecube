@@ -7,13 +7,14 @@
 
 #include "ThirdParty/GLEW/glew.h"
 #include "Utils/utils.h"
+#include "Rendering/GraphicsResource.h"
+#include "Core/Resource.h"
 
 namespace FireCube
 {
 
 // Forward declarations.
-template<class T>
-class ResourcePool;
+class Renderer;
 
 /**
 * Specifies the type of texture filtering.
@@ -30,32 +31,21 @@ class Texture;
 */
 typedef std::shared_ptr<Texture> TexturePtr;
 
-namespace Renderer
-{
-void FIRECUBE_API UseTexture(TexturePtr tex, unsigned int unit);
-}
-
 /**
 * A 2d texture.
 */
-class FIRECUBE_API Texture
+class FIRECUBE_API Texture : public Resource, public GraphicsResource
 {
-	friend class ResourcePool<Texture>;
-	friend void Renderer::UseTexture(TexturePtr tex, unsigned int unit);
+	friend class Renderer;
 public:
-	Texture();
+	Texture(Engine *engine);
 	~Texture();
 
 	/**
 	* Loads a texture.
 	* @param filename The file to load.
 	*/
-	bool Load(const std::string &filename);
-
-	/**
-	* Returns whether the texture is valid.
-	*/
-	bool IsValid() const;
+	bool Load(const std::string &filename);	
 
 	/**
 	* Creates a new texture.
@@ -78,21 +68,11 @@ public:
 	* Returns the file name of the texture.
 	*/
 	std::string GetFileName() const;
-
-	/**
-	* Returns the resource id of the texture.
-	*/
-	unsigned int GetId() const;
-
-private:
-	GLuint id;
+	
+private:	
 	std::string filename;
 	TextureFilter minFilter, magFilter;
 };
 
-/**
-* A texture resource pool.
-*/
-typedef ResourcePool<Texture> TexturePool;
 }
 #pragma warning(pop)

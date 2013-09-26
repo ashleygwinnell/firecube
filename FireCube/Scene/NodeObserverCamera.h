@@ -19,7 +19,7 @@ typedef std::shared_ptr<Node> NodePtr;
 /**
 * A class representing a node observer camera.
 */
-class FIRECUBE_API NodeObserverCamera : public Camera
+class FIRECUBE_API NodeObserverCamera : public Camera, public InputListener
 {
 public:
 	/**
@@ -131,15 +131,12 @@ public:
 	*/
 	virtual vec3 GetPosition() const;
 
+	void SetZoomFactor(float factor);
+
+	void HandleInput(float time, const MappedInput &input);
+
 private:
-	class NodeObserverCameraInputListener : public InputListener
-	{		
-	public:
-		void SetCamera(NodeObserverCamera *cam);
-		void HandleInput(float time, const MappedInput &input);
-	private:
-		NodeObserverCamera *camera;
-	};
+	
 	void CheckRanges();
 	vec3 lastTargetPosition;
 	NodePtr target;
@@ -148,7 +145,7 @@ private:
 	float maxDistance;
 	float minAngX;
 	float maxAngX;
-	NodeObserverCameraInputListener inputListener;
+	float zoomFactor;	
 };
 
 /**

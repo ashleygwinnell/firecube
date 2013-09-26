@@ -5,20 +5,15 @@
 #include "Utils/Logger.h"
 #include "Rendering/Renderer.h"
 #include "Application/Application.h"
-
+#include "Core/ResourcePool.h"
+#include "Core/Engine.h"
 using namespace FireCube;
-
-extern void InitializeRenderer();
-extern void DestroyRenderer();
-extern void ResetNumberOfPrimitivesRendered();
 
 extern FT_Library freeTypeLibrary;
 
-Application::Application() : running(false), frameCount(0), fpsTime(0), fps(0), context(nullptr), mainWindow(nullptr)
+Application::Application() : engine(new Engine), running(false), frameCount(0), fpsTime(0), fps(0), context(nullptr), mainWindow(nullptr)
 {
-	Renderer::SetTexturePool(defaultTexturePool);
-	Renderer::SetShaderPool(defaultShaderPool);
-	Renderer::SetFontPool(defaultFontPool);
+	
 }
 
 Application::~Application()
@@ -58,7 +53,11 @@ bool Application::Initialize(int width, int height, int bpp, int multisample, bo
 	
 	context = new SDL_GLContext;
 	*context = SDL_GL_CreateContext(mainWindow);	
-	Renderer::SetViewport(0, 0, width, height);
+	renderer = new Renderer(engine);
+	engine->SetRenderer(renderer);
+	resourcePool = new ResourcePool(engine);
+	engine->SetResourcePool(resourcePool);
+	renderer->SetViewport(0, 0, width, height);
 	this->width = width;
 	this->height = height;
 	InitKeyMap();	
@@ -70,24 +69,26 @@ bool Application::InitializeNoWindow()
 	glewExperimental = GL_TRUE;
 	glewInit();
 	Logger::Init("log.txt");
-	Logger::Write(Logger::LOG_INFO, std::string("Initializing application"));
+	LOGINFO("Initializing application");	
 	timer.Init();
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	srand(GetTickCount());
 	FT_Init_FreeType(&freeTypeLibrary);
-	InitializeRenderer();
-	return Init();
+	renderer->Initialize();
+	return Prepare();
 }
 
 void Application::Destroy()
 {
-	DestroyRenderer();
-	Logger::Write(Logger::LOG_INFO, std::string("Destroying application"));
+	delete resourcePool;
+	renderer->Destroy();
+	delete renderer;
+	LOGINFO("Destroying application");
 	if (context)
 		SDL_GL_DeleteContext(*context);
 	if (mainWindow)
-		SDL_DestroyWindow(mainWindow);
+		SDL_DestroyWindow(mainWindow);	
 	SDL_Quit();
 }
 
@@ -101,7 +102,7 @@ void Application::Run()
 {
 	running = true;
 	SDL_Event event;
-	Logger::Write(Logger::LOG_INFO, std::string("Entering main loop..."));
+	LOGINFO("Entering main loop...");
 	while (running)
 	{
 		// Get time passed since last frame
@@ -216,12 +217,12 @@ void Application::Run()
 				// Update the renderer's viewport with the new window size
 				width = event.window.data1;
 				height = event.window.data2;
-				Renderer::SetViewport(0, 0, width, height);
+				renderer->SetViewport(0, 0, width, height);
 			}
 			else if (event.type == SDL_QUIT)
 				running = false;
 		}		
-		ResetNumberOfPrimitivesRendered();
+		renderer->ResetNumberOfPrimitivesRendered();
 		// Dispatch input to all input listeners
 		inputManager.DispatchInput(deltaTime);
 		// Update the scene
@@ -238,7 +239,8 @@ void Application::Run()
 			frameCount = 0;
 		}
 	}
-	Logger::Write(Logger::LOG_INFO, std::string("Exiting main loop..."));
+	LOGINFO("Exiting main loop...");
+	Destroy();
 }
 
 void Application::SetTitle(const std::string &title)
@@ -251,7 +253,7 @@ float Application::GetFps() const
 	return fps;
 }
 
-bool Application::Init()
+bool Application::Prepare()
 {
 	return true;
 }

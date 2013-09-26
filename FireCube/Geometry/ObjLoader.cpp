@@ -1,24 +1,25 @@
 #include <fstream>
 #include <sstream>
 
-#include "Utils/ResourcePool.h"
 #include "Rendering/Texture.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
-#include "Scene/GeometryNode.h"
 #include "Geometry/ObjLoader.h"
+#include "Rendering/IndexBuffer.h"
+#include "Core/Engine.h"
+#include "Core/ResourcePool.h"
 
 using namespace FireCube;
 
-ObjLoader::ObjLoader()
+ObjLoader::ObjLoader(Engine *engine) : ModelLoader(engine)
 {
 	objects["default"] = Object();
 	currentObject = &objects["default"];
 	currentFaces = &objects["default"].facesWithoutMaterial;
 }
 
-void ObjLoader::Load(const std::string &filename, ModelLoadingOptions options)
-{	
+bool ObjLoader::Load(const std::string &filename, ModelLoadingOptions options)
+{
 	std::ifstream ifs(filename);
 	std::string line;
 	baseDir = ExtractDirectory(filename);
@@ -47,7 +48,25 @@ void ObjLoader::Load(const std::string &filename, ModelLoadingOptions options)
 	if (objects["default"].facesWithoutMaterial.size() == 0 && objects["default"].materialFaces.size() == 0)
 		objects.erase("default");
 	this->options = options;
+	return true;
 }
+
+void ObjLoader::GenerateScene(Renderer *renderer)
+{
+	//TODO: Implement
+}
+
+NodePtr ObjLoader::GetGeneratedScene()
+{
+	//TODO: Implement
+	return NodePtr();
+}
+
+const std::vector<Material *> &ObjLoader::GetGeneratedMaterials()
+{
+	return generatedMaterials;
+}
+
 
 void ObjLoader::ParseVertexLine(const std::string &line)
 {	
@@ -98,11 +117,16 @@ void ObjLoader::ParseFaceLine(const std::string &line)
 
 void ObjLoader::ParseFaceEntry(const std::string &entry, unsigned int &v, unsigned int &t, unsigned int &n, bool &hasTextureCoordinates, bool &hasNormal)
 {
+	int rv, rt, rn;
 	int i1 = entry.find_first_of('/');
 	if (i1 == std::string::npos) // Only vertex index is specified
 	{
 		std::istringstream iss(entry);
-		iss >> v;
+		iss >> rv;
+		if (rv < 0)
+			v = vertices.size() + rv;
+		else
+			v = rv;
 		hasTextureCoordinates = false;
 		hasNormal = false;
 		return;
@@ -113,21 +137,41 @@ void ObjLoader::ParseFaceEntry(const std::string &entry, unsigned int &v, unsign
 	{
 		std::istringstream iss1(entry.substr(0, i1));
 		std::istringstream iss2(entry.substr(i1 + 1));
-		iss1 >> v;
-		iss2 >> t;
+		iss1 >> rv;
+		if (rv < 0)
+			v = vertices.size() + rv;
+		else
+			v = rv;
+		iss2 >> rt;
+		if (rt < 0)
+			t = texCoords.size() + rt;
+		else
+			t = rt;
 		hasTextureCoordinates = true;
 		hasNormal = false;
 		return;
 	}
 	std::istringstream iss1(entry.substr(0, i1));	
 	std::istringstream iss2(entry.substr(i2 + 1));
-	iss1 >> v;	
-	iss2 >> n;
+	iss1 >> rv;
+	if (rv < 0)
+		v = vertices.size() + rv;
+	else
+		v = rv;
+	iss2 >> rn;
+	if (rn < 0)
+		n = normals.size() + rn;
+	else
+		n = rn;
 	hasNormal = true;
 	if (i2 - i1 - 1 > 0) // vertex texture coordinate and normal
 	{
 		std::istringstream iss(entry.substr(i1 + 1, i2 - i1 - 1));
-		iss >> t;
+		iss >> rt;
+		if (rt < 0)
+			t = texCoords.size() + rt;
+		else
+			t = rt;
 		hasTextureCoordinates = true;
 	}
 	else
@@ -249,6 +293,8 @@ std::string ObjLoader::ExtractDirectory(const std::string &filename)
 	return filename.substr(0, i);
 }
 
+/*
+
 NodePtr ObjLoader::GenerateSceneGraph()
 {
 	// Create the root node
@@ -368,6 +414,158 @@ NodePtr ObjLoader::GenerateSceneGraph()
 		}
 	}
 	return root;
+}
+
+*/
+
+void ObjLoader::CalculateNormals(std::vector<vec3> &normals, std::vector<vec3> &vertices, std::vector<unsigned int> &indices)
+{
+	normals.resize(vertices.size(), vec3(0, 0, 0));	
+
+	for (unsigned int i = 0; i < indices.size(); i += 3)
+	{
+		// Calculate face normals
+		vec3 v1 = vertices[indices[i + 1]] - vertices[indices[i + 0]];
+		vec3 v2 = vertices[indices[i + 2]] - vertices[indices[i + 0]];
+		vec3 n = Cross(v1, v2);				
+		// Add this normal to the three vertex normals forming this face
+		normals[indices[i + 0]] += n;
+		normals[indices[i + 1]] += n;
+		normals[indices[i + 2]] += n;
+	}
+	for (unsigned int n = 0; n < normals.size(); n++)
+	{
+		normals[n].Normalize();
+	}	
+}
+
+void ObjLoader::GenerateGeometries(Renderer *renderer)
+{
+	generatedGeometries.clear();
+	
+	std::map<std::string, MaterialPtr> generatedMaterials;
+	std::vector<vec3> generatedVertices;
+	std::vector<vec2> generatedTexCoords;
+	std::vector<vec3> generatedNormals;
+	std::map<MapKey, unsigned int> indicesMap;
+
+	// Generate materials
+	for (std::map<std::string, Material>::iterator i = materials.begin(); i != materials.end(); i++)
+	{
+		MaterialPtr material(new FireCube::Material(engine));
+		material->SetName(i->first);
+		material->SetAmbientColor(vec3(i->second.ambientColor.x, i->second.ambientColor.y, i->second.ambientColor.z));
+		material->SetDiffuseColor(vec3(i->second.diffuseColor.x, i->second.diffuseColor.y, i->second.diffuseColor.z));
+		material->SetSpecularColor(vec3(i->second.specularColor.x, i->second.specularColor.y, i->second.specularColor.z));
+		material->SetShininess(i->second.shininess);
+		if (!i->second.diffuseTextureName.empty())
+		{
+			std::string textureName = i->second.diffuseTextureName;
+			if (textureName[0] == '/' || textureName[0] == '\\')
+				textureName = textureName.substr(1);
+			
+			TexturePtr texture = engine->GetResourcePool()->GetResource<Texture>(baseDir + "\\" + textureName);
+			if (!texture)
+				texture = engine->GetResourcePool()->GetResource<Texture>(textureName);
+			material->SetDiffuseTexture(texture);
+		}
+		if (!i->second.normalTextureName.empty())
+		{
+			std::string textureName = i->second.normalTextureName;
+			if (textureName[0] == '/' || textureName[0] == '\\')
+				textureName = textureName.substr(1);
+
+			TexturePtr texture = engine->GetResourcePool()->GetResource<Texture>(baseDir + "\\" + textureName);
+			if (!texture)
+				texture = engine->GetResourcePool()->GetResource<Texture>(textureName);
+			material->SetNormalTexture(texture);
+		}
+		generatedMaterials[i->first] = material;
+	}
+
+	// Iterate over all objects
+	for (std::map<std::string, Object>::iterator i = objects.begin(); i != objects.end(); i++)
+	{		
+		int surfaceNum = 0;
+		// Iterate over faces for each material
+		for (std::map<std::string, std::vector<Face>>::iterator j = i->second.materialFaces.begin(); j != i->second.materialFaces.end(); j++, surfaceNum++)
+		{			
+			Geometry *geometry = new Geometry(renderer);
+			VertexBufferPtr vertexBuffer(new VertexBuffer(renderer));
+			IndexBufferPtr indexBuffer(new IndexBuffer(renderer));
+			geometry->SetVertexBuffer(vertexBuffer);
+			geometry->SetIndexBuffer(indexBuffer);
+			generatedGeometries.push_back(geometry);
+			std::vector<unsigned int> indexData;
+			
+			for (std::vector<Face>::iterator k = j->second.begin(); k != j->second.end(); k++)
+			{
+				Face &face = *k;				
+				for (int vertexIndex = 0; vertexIndex < 3; vertexIndex++)
+				{
+					MapKey key(face.v[vertexIndex], face.t[vertexIndex], face.n[vertexIndex]);					
+					// Search this vertex (combination of v/n/t) in the list of vertices
+					std::map<MapKey, unsigned int>::iterator keyIter = indicesMap.find(key);
+					if (keyIter == indicesMap.end())
+					{
+						// If not found add it and store it in the map of generated vertices
+						generatedVertices.push_back(vertices[face.v[vertexIndex] - 1]);
+						if (face.hasTextureCoordinates)
+							generatedTexCoords.push_back(texCoords[face.t[vertexIndex] - 1]);
+						if (face.hasNormal)
+							generatedNormals.push_back(normals[face.n[vertexIndex] - 1]);
+
+						indexData.push_back(generatedVertices.size() - 1);						
+
+						indicesMap[key] = generatedVertices.size() - 1;
+					}
+					else
+					{
+						// If found simply add it's index to the index array
+						indexData.push_back(keyIter->second);						
+					}
+				}				
+			}
+			if (generatedNormals.empty())
+				CalculateNormals(generatedNormals, generatedVertices, indexData);
+
+			unsigned int vertexAttributes = VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_NORMAL;
+			unsigned int vertexSize = 6;
+			if (generatedTexCoords.empty() == false)
+			{
+				vertexAttributes |= VERTEX_ATTRIBUTE_TEXCOORD0;
+				vertexSize += 2;
+			}
+			std::vector<float> vertexData(vertexSize * generatedVertices.size());
+			for (unsigned int k = 0; k < generatedVertices.size(); ++k)
+			{
+				*((vec3 *) &vertexData[k * vertexSize + 0]) = generatedVertices[k];
+				*((vec3 *) &vertexData[k * vertexSize + 3]) = generatedNormals[k];
+				if (vertexAttributes & VERTEX_ATTRIBUTE_TEXCOORD0)
+					*((vec2 *) &vertexData[k * vertexSize + 6]) = generatedTexCoords[k];
+				boundingBox.Expand(generatedVertices[k]);
+			}
+			
+			vertexBuffer->LoadData(&vertexData[0], generatedVertices.size(), vertexAttributes, STATIC);			
+			indexBuffer->LoadData(&indexData[0], indexData.size(), STATIC);
+
+			geometry->SetMaterial(generatedMaterials[j->first]);
+			geometry->SetPrimitiveType(TRIANGLES);
+			geometry->SetPrimitiveCount(j->second.size());
+			geometry->SetVertexCount(indexData.size());						
+			geometry->Update();			
+		}
+	}	
+}
+
+const std::vector<Geometry *> &ObjLoader::GetGeneratedGeometries()
+{
+	return generatedGeometries;
+}
+
+BoundingBox ObjLoader::GetBoundingBox() const
+{
+	return boundingBox;
 }
 
 ObjLoader::Material::Material()

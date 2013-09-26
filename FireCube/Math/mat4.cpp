@@ -363,13 +363,9 @@ vec3 mat4::GetDirection() const
 	return dr;
 }
 
-vec3 mat4::GetPosition() const
-{
-	vec3 ps;
-	ps.x = (m[0] * m[12] + m[1] * m[13] + m[2] * m[14]);
-	ps.y = (m[4] * m[12] + m[5] * m[13] + m[6] * m[14]);
-	ps.z = (m[8] * m[12] + m[9] * m[13] + m[10] * m[14]);
-	return ps;
+vec3 mat4::GetTranslation() const
+{	
+	return vec3(m[12], m[13], m[14]);	
 }
 
 void mat4::GeneratePerspective(float fov, float aspect, float nearz, float farz)

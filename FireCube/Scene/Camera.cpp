@@ -73,22 +73,23 @@ mat4 Camera::GetViewMatrix()
 
 void Camera::UpdateFrustum()
 {
-	if (frustumChanged)
-	{
-		frustum.Extract(GetViewMatrix(), GetProjectionMatrix());
-		frustumChanged = false;
-	}	
+	frustum.Extract(GetViewMatrix(), GetProjectionMatrix());	
 }
 
 Frustum &Camera::GetFrustum()
 {	
-	UpdateFrustum();
+	if (frustumChanged)
+	{
+		UpdateFrustum();
+		frustumChanged = false;
+	}
 	return frustum;
 }
 
-void Camera::LookAt(const vec3 &target, const vec3 &up)
+void Camera::LookAt(const vec3 &position, const vec3 &target, const vec3 &up)
 {
 	mat4 t;
+	this->position = position;
 	t.LookAt(position, target, up);
 	rotation = t.ExtractEulerAngles() * -1.0f;
 	viewMatrixChanged = true;

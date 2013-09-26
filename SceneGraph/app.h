@@ -9,4 +9,5 @@ public:
     NodePtr root;
 	CameraPtr orthographicCamera;
 	CameraPtr camera;
+	Viewport viewport;
 };

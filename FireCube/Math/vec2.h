@@ -13,16 +13,27 @@ public:
     /**
     * Constructs a vector for the specified value.
     */
-    vec2(float nx, float ny) {
+    vec2(float nx, float ny) 
+	{
         x = nx;
         y = ny;
+    }
+
+	/**
+    * Constructs a vector for the specified value.
+    */
+    vec2(float v) 
+	{
+        x = v;
+        y = v;
     }
 
     /**
     * Constructs a vector from another.
     * @param v The vector to copy.
     */
-    vec2(const vec2 &v) {
+    vec2(const vec2 &v) 
+	{
         x = v.x;
         y = v.y;
     }

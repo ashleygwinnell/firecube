@@ -7,6 +7,7 @@
 
 #include "Utils/utils.h"
 #include "Math/MyMath.h"
+#include "Core/Resource.h"
 
 namespace FireCube
 {
@@ -15,7 +16,9 @@ namespace FireCube
 class Texture;
 typedef std::shared_ptr<Texture> TexturePtr;
 class Material;
-
+class Technique;
+typedef std::shared_ptr<Technique> TechniquePtr;
+class Renderer;
 
 /**
 * A shared pointer to a Material.
@@ -25,11 +28,13 @@ typedef std::shared_ptr<Material> MaterialPtr;
 /**
 * A class representing a material.
 */
-class FIRECUBE_API Material
+class FIRECUBE_API Material : public Resource
 {
 public:
-	Material();
+	Material(Engine *engine);
 	~Material();
+
+	bool Load(const std::string &filename);
 
 
 	/**
@@ -128,6 +133,10 @@ public:
 	*/
 	void SetOpacity(float value);
 
+	void SetTechnique(TechniquePtr technique);
+
+	TechniquePtr GetTechnique();
+
 	/**
 	* Clones this Material.
 	* @return A new cloned Material of this one.
@@ -136,6 +145,7 @@ public:
 
 private:
 
+	Renderer *renderer;
 	std::string name;
 	vec3 ambient;
 	vec3 diffuse;
@@ -144,6 +154,7 @@ private:
 	TexturePtr diffuseTexture;
 	TexturePtr normalTexture;
 	float opacity;
+	TechniquePtr technique;
 };
 
 }

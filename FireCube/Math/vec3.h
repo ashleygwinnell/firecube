@@ -13,17 +13,29 @@ public:
     /**
     * Constructs a vector for the specified value.
     */
-    vec3(float nx, float ny, float nz) {
+    vec3(float nx, float ny, float nz) 
+	{
         x = nx;
         y = ny;
         z = nz;
+    }
+
+	/**
+    * Constructs a vector for the specified value.
+    */
+    vec3(float v) 
+	{
+        x = v;
+        y = v;
+        z = v;
     }
 
     /**
     * Constructs a vector from another.
     * @param v The vector to copy.
     */
-    vec3(const vec3 &v) {
+    vec3(const vec3 &v) 
+	{
         x = v.x;
         y = v.y;
         z = v.z;
@@ -165,7 +177,12 @@ public:
     /**
     * Normalizes the vector.
     */
-    vec3 Normalize();
+    void Normalize();
+
+	/**
+    * Returns the vector normalized.
+    */
+    vec3 Normalized() const;
 
     /**
     * Returns the length of the vector

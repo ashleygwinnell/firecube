@@ -11,6 +11,7 @@ NodeObserverCamera::NodeObserverCamera()
 	maxDistance = 100.0f;
 	minAngX = -(float)PI / 2.0f + 0.001f;
 	maxAngX = (float)PI / 2.0f - 0.001f;
+	zoomFactor = 1.0f;
 }
 
 NodeObserverCamera::NodeObserverCamera(InputManager &inputManager)
@@ -21,9 +22,9 @@ NodeObserverCamera::NodeObserverCamera(InputManager &inputManager)
 	maxDistance = 100.0f;
 	minAngX = -(float)PI / 2.0f + 0.001f;
 	maxAngX = (float)PI / 2.0f - 0.001f;
+	zoomFactor = 1.0f;
 
-	inputListener.SetCamera(this);
-	inputManager.AddInputListener(&inputListener);
+	inputManager.AddInputListener(this);
 	inputManager.AddMapping(KEY_MOUSE_LEFT_BUTTON, STATE, "NodeObserverCamera_Rotate", MODIFIER_NONE);
 	inputManager.AddMapping(KEY_MOUSE_MIDDLE_BUTTON, STATE, "NodeObserverCamera_Zoom", MODIFIER_NONE);
 	inputManager.AddMapping(MOUSE_AXIS_X_RELATIVE, "NodeObserverCamera_MouseX");
@@ -189,24 +190,24 @@ vec3 NodeObserverCamera::GetPosition() const
 	return targetPos + dir;
 }
 
-void NodeObserverCamera::NodeObserverCameraInputListener::SetCamera(NodeObserverCamera *cam)
+void NodeObserverCamera::SetZoomFactor(float factor)
 {
-	camera = cam;
+	zoomFactor = factor;
 }
 
-void NodeObserverCamera::NodeObserverCameraInputListener::HandleInput(float time, const MappedInput &input)
+void NodeObserverCamera::HandleInput(float time, const MappedInput &input)
 {
 	if (input.HasValue("NodeObserverCamera_MouseWheelY"))
 	{
-		camera->Zoom(time * input.GetValue("NodeObserverCamera_MouseWheelY"));
+		Zoom(time * input.GetValue("NodeObserverCamera_MouseWheelY") * zoomFactor);
 	}
 	if (input.IsStateOn("NodeObserverCamera_Rotate"))
 	{
-		camera->RotateX(-input.GetValue("NodeObserverCamera_MouseY") * time);
-		camera->RotateY(-input.GetValue("NodeObserverCamera_MouseX") * time);
+		RotateX(-input.GetValue("NodeObserverCamera_MouseY") * time);
+		RotateY(-input.GetValue("NodeObserverCamera_MouseX") * time);
 	}
 	if (input.IsStateOn("NodeObserverCamera_Zoom"))
 	{
-		camera->Zoom(-input.GetValue("NodeObserverCamera_MouseY") * time);		
+		Zoom(-input.GetValue("NodeObserverCamera_MouseY") * time);		
 	}
 }

@@ -10,12 +10,23 @@
 #include "Math/MyMath.h"
 #include "Scene/Node.h"
 #include "tinyxml.h"
+#include "ModelLoader.h"
 
 namespace FireCube
 {
-	class ColladaLoader
+	class ColladaLoader : public ModelLoader
 	{
 	public:
+		ColladaLoader(Engine *engine);
+		~ColladaLoader();
+		virtual bool Load(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());		
+		virtual void GenerateGeometries(Renderer *renderer);
+		virtual void GenerateScene(Renderer *renderer);
+		virtual const std::vector<Geometry *> &GetGeneratedGeometries();
+		virtual NodePtr GetGeneratedScene();
+		virtual const std::vector<Material *> &GetGeneratedMaterials();
+		virtual BoundingBox GetBoundingBox() const;
+	private:
 		enum UpDirection
 		{
 			X_UP, Y_UP, Z_UP
@@ -170,10 +181,7 @@ namespace FireCube
 			Sampler ambientSampler, diffuseSampler, specularSampler;
 			float shininess;
 			std::map<std::string, EffectParam> effectParams;
-		};
-		ColladaLoader(const std::string &filename);
-		~ColladaLoader();
-		bool Load(ModelLoadingOptions options);
+		};		
 		TiXmlElement *GetChildElement(TiXmlNode *node, const std::string &elmName);
 		void ReadLibraries(TiXmlNode *parent);
 		void ReadAsset(TiXmlNode *parent);
@@ -213,8 +221,9 @@ namespace FireCube
 		mat4 GetTransformMatrix(std::vector<Transform> &transformations);
 		void DeleteNodes(Node *node);
 		void ApplyMaterialInstanceSemanticMapping(Sampler &sampler, MaterialInstance &materialInstance);
-		FireCube::NodePtr GenerateSceneGraph(Node *node);
-		FireCube::NodePtr GenerateSceneGraph();
+		//FireCube::NodePtr GenerateSceneGraph(Node *node);		
+		void GenerateGeometries(Renderer *renderer, Node *node, mat4 parentWorldTransform);		
+
 		InputType SemanticToInputType(const std::string &semantic);
 		template <typename Type>
 		Type& ResolveLibraryReference(std::map<std::string, Type> &pLibrary, const std::string &pURL)
@@ -224,7 +233,7 @@ namespace FireCube
 		}
 		std::string GetTextureFileNameFromSampler(Effect &effect, Sampler &sampler);
 		std::string FixFileName(std::string &filename);
-	private:
+	
 		TiXmlDocument xmlDocument;
 
 		std::map<std::string, Image> imageLibrary;
@@ -235,10 +244,13 @@ namespace FireCube
 		std::map<std::string, Node*> nodeLibrary;
 		std::map<unsigned int, unsigned int> tempMap;
 		std::map<std::string, FireCube::MaterialPtr> generatedMaterials;
+		std::vector<FireCube::Material *> generatedMaterialsList;
 		Node *root;
 		float unit;
 		UpDirection upDirection;
 		ModelLoadingOptions options;
+		std::vector<FireCube::Geometry *> generatedGeometries;
+		BoundingBox boundingBox;
 	};
 }
 

@@ -1,29 +1,25 @@
 #include <sstream>
-
+#include <fstream>
 #include "ThirdParty/GLEW/glew.h"
-#include <ft2build.h>
+#include "ft2build.h"
 #include FT_FREETYPE_H
 #include "Rendering/Texture.h"
 #include "Rendering/Font.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/privateFont.h"
+#include "Utils/Logger.h"
 
 using namespace FireCube;
 
 FT_Library  freeTypeLibrary;
 
-FontPool::FontPool()
-{
-
-}
-
+/*
 std::shared_ptr<FontPage> FontPool::CreateNewPage()
 {
 	// Create a new font page - a blank texture
 	std::shared_ptr<FontPage> p(new FontPage);
-	p->tex = TexturePtr(new Texture);
-	p->tex->Create();
-	glBindTexture(GL_TEXTURE_2D, p->tex->GetId());
+	p->tex = TexturePtr(new Texture(engine->GetRenderer()));	
+	glBindTexture(GL_TEXTURE_2D, p->tex->GetObjectId());
 	std::vector<unsigned char> empty(512 * 512, 0);	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, &empty[0]);
 	p->textureSize = 512;
@@ -32,45 +28,87 @@ std::shared_ptr<FontPage> FontPool::CreateNewPage()
 	return p;
 }
 
-FontPtr FontPool::Create(const std::string &filename, int size)
-{	
-	std::ostringstream fullPathName;
-	std::string loadfile = Filesystem::SearchForFileName(filename);
-	if (loadfile.empty())
-		return FontPtr();
-		
-	// Add the size of the font to the full path name.
-	// Used to differentiate between the same font with different sizes when
-	// searching it in the font pool to see if it is already loaded.
-	fullPathName << Filesystem::GetFullPath(loadfile) << ":" << size;
+*/
 
-	std::map<std::string, std::weak_ptr<Font>>::iterator i = pool.find(fullPathName.str());
-	if (i != pool.end())
-		if (!i->second.expired())
-			return i->second.lock();
-	FontPtr ret(new Font);
-	if (ret->Load(loadfile, size))
-	{
-		pool[fullPathName.str()] = ret;
-		return ret;
-	}
-	else
-		return FontPtr();
+Font::Font(Engine *engine) : Resource(engine)
+{
+	
 }
 
-Font::Font()
+Font::~Font()
+{
+	LOGINFO("Destroying font");	
+}
+
+bool Font::Load(const std::string &filename)
+{
+	LOGINFO("Loading font with name:" + filename);
+	std::ifstream file(filename, std::ios::binary);
+	if (!file)
+		return false;
+	// read the data
+	data = std::vector<char>((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	return true;
+	
+}
+
+FontFacePtr Font::GenerateFontFace(int pointSize)
+{
+	auto i = faces.find(pointSize);
+	if (i != faces.end())
+		return i->second;
+
+	FontFacePtr fontFace = FontFacePtr(new FontFace);
+	int error = 0;
+	// This string specifies the list of glyphs that will be rendered
+	char text[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-=_+[]{};:'\"\\|,./<>?/. ";
+	fontFace->pointSize = pointSize;
+	// Load the font face.		
+	error = FT_New_Memory_Face(freeTypeLibrary, (const FT_Byte *) &data[0], data.size(), 0, &(fontFace->fontImpl->face));
+	if (error)
+		return false;
+	// Set the pixel size
+	error = FT_Set_Pixel_Sizes(fontFace->fontImpl->face, 0, pointSize);
+	if (error)
+		return false;
+	
+	fontFace->page = std::shared_ptr<FontPage>(new FontPage);		
+	fontFace->page->tex = TexturePtr(new Texture(engine));	
+	glBindTexture(GL_TEXTURE_2D, fontFace->page->tex->GetObjectId());
+	std::vector<unsigned char> empty(512 * 512, 0);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, &empty[0]);
+	fontFace->page->textureSize = 512;
+	fontFace->page->curPos = vec2(0, 0);				
+
+	glBindTexture(GL_TEXTURE_2D, fontFace->page->tex->GetObjectId());
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	for (unsigned int i = 0; i < strlen(text); i++)
+	{
+		fontFace->AddChar(text[i]);
+	}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);	
+	faces[pointSize] = fontFace;
+	return fontFace;
+}
+
+FontFace::FontFace()
 {
 	glyph.resize(256);
 	fontImpl = new FontImpl;
 }
 
-Font::~Font()
+FontFace::~FontFace()
 {
-	Logger::Write(Logger::LOG_INFO, "Destroying font");
+	LOGINFO("Destroying font face");
 	delete fontImpl;
 }
 
-bool Font::AddChar(char c)
+bool FontFace::AddChar(char c)
 {
 	int error;
 	FT_UInt glyph_index;
@@ -93,7 +131,7 @@ bool Font::AddChar(char c)
 	if (page->textureSize - page->curPos.x < fontImpl->face->glyph->bitmap.width)
 	{
 		page->curPos.x = 0;
-		page->curPos.y += size;
+		page->curPos.y += pointSize;
 	}
 	// If no room left return false
 	if (page->textureSize - page->curPos.y < fontImpl->face->glyph->bitmap.rows)
@@ -103,70 +141,11 @@ bool Font::AddChar(char c)
 	// Store information about this glyph which is used when rendering it
 	glyph[c].uv = page->curPos / 512.0f;
 	glyph[c].size = vec2((float)fontImpl->face->glyph->bitmap.width, (float)fontImpl->face->glyph->bitmap.rows);
-	glyph[c].bitmapOffset = vec2((float)fontImpl->face->glyph->bitmap_left, size - (float)fontImpl->face->glyph->bitmap_top);
+	glyph[c].bitmapOffset = vec2((float)fontImpl->face->glyph->bitmap_left, pointSize - (float)fontImpl->face->glyph->bitmap_top);
 	glyph[c].advance = fontImpl->face->glyph->advance.x >> 6;
-	
+
 	// Update the current write position
 	page->curPos.x += glyph[c].size.x;
 
 	return true;
-}
-
-bool Font::Load(const std::string &name, int size)
-{
-	Logger::Write(Logger::LOG_INFO, "Loading font with name:" + name);
-	int error = 0;
-	// This string specifies the list of glyphs that will be rendered
-	char text[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-=_+[]{};:'\"\\|,./<>?/. ";
-	this->size = size;
-	// Load the font face.
-	error = FT_New_Face(freeTypeLibrary, name.c_str(), 0, &(fontImpl->face));
-	if (error)
-		return false;
-	// Set the pixel size
-	error = FT_Set_Pixel_Sizes(fontImpl->face, 0, size);
-	if (error)
-		return false;
-	std::vector<std::weak_ptr<FontPage>>::iterator p = Renderer::GetFontPool().page.begin();
-	bool found = false;
-	// Iterate over all font pages and find one with enough space to hold this font
-	for (; p != Renderer::GetFontPool().page.end(); p++)
-	{
-		if (!p->expired())
-		{
-			std::shared_ptr<FontPage> pg = p->lock();
-			int availSpace = (pg->textureSize - ((int)pg->curPos.y + size)) * pg->textureSize + (pg->textureSize - ((int)pg->curPos.x + size)) * size;
-			if (availSpace >= (int)strlen(text)*size * size)
-			{
-				found = true;
-				break;
-			}
-		}
-	}	
-	if (found)
-		page = (*p).lock();
-	else
-	{
-		// If none found create a new one
-		page = Renderer::GetFontPool().CreateNewPage();
-	}
-
-	glBindTexture(GL_TEXTURE_2D, page->tex->GetId());
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	for (unsigned int i = 0; i < strlen(text); i++)
-	{
-		AddChar(text[i]);
-	}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
-	return true;
-}
-
-bool Font::Load(const std::string &name)
-{
-	return Load(name, 18);
 }

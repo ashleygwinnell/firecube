@@ -1,14 +1,12 @@
 #pragma once
 
-//#pragma warning(push)
-//#pragma warning(disable:4251)
+#pragma warning(push)
+#pragma warning(disable:4251)
 
 #include <string>
 
-#include "Utils/ResourcePool.h"
 #include "Application/Input.h"
 #include "Utils/Timer.h"
-#include "Rendering/Font.h"
 
 struct SDL_Window;
 typedef void *SDL_GLContext;
@@ -18,10 +16,10 @@ namespace FireCube
 
 // Forward declarations.
 class Shader;
-typedef ResourcePool<Shader> ShaderPool;
 class Texture;
 typedef std::shared_ptr<Texture> TexturePtr;
-typedef ResourcePool<Texture> TexturePool;
+class Renderer;
+class ResourcePool;
 
 /**
 * This class is responsible for the initialization and running of the application.
@@ -101,14 +99,17 @@ public:
 	/**
 	* Called once initialization is complete to execute user specific initialization.
 	*/
-	virtual bool Init();
+	virtual bool Prepare();
 	
 	/**
 	* Returns the input manager.
 	*/
-
 	InputManager &GetInputManager();
 
+protected:
+	Renderer *renderer;
+	Engine *engine;
+	ResourcePool *resourcePool;
 private:
 	void InitKeyMap();
 	std::map<int, Key> keyMap;
@@ -122,13 +123,10 @@ private:
 	float fpsTime;
 	float frameCount;
 	int width, height;
-	TexturePool defaultTexturePool;
-	ShaderPool defaultShaderPool;
-	FontPool defaultFontPool;
 	InputManager inputManager;
 
 	SDL_Window *mainWindow;
 	SDL_GLContext *context;
 };
 }
-//#pragma warning(pop)
+#pragma warning(pop)

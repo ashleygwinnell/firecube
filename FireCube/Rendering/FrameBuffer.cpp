@@ -1,20 +1,22 @@
 #include "ThirdParty/GLEW/glew.h"
 #include "Rendering/Texture.h"
 #include "Rendering/FrameBuffer.h"
+#include "Rendering/Renderer.h"
+#include "Core/Engine.h"
 
 using namespace FireCube;
 
-FrameBuffer::FrameBuffer() : id(0), depthBuffer(0)
+FrameBuffer::FrameBuffer(Engine *engine) : Object(engine), GraphicsResource(engine->GetRenderer()), depthBuffer(0)
 {
 
 }
 
 FrameBuffer::~FrameBuffer()
 {
-    if (id)
+    if (objectId)
     {
-        glDeleteFramebuffers(1, &id);
-        id = 0;
+        glDeleteFramebuffers(1, &objectId);
+        objectId = 0;
     }
     if (depthBuffer)
     {
@@ -27,26 +29,26 @@ void FrameBuffer::Create(const int width, const int height)
 {
     this->width = width;
     this->height = height;
-    glGenFramebuffers(1, &id);
+    glGenFramebuffers(1, &objectId);
 }
 
 void FrameBuffer::SetRenderTarget(TexturePtr texture, const int attachmentPoint)
 {
     this->texture[attachmentPoint] = texture;
-    Renderer::UseTexture(texture, 0);
+    renderer->UseTexture(texture, 0);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachmentPoint, GL_TEXTURE_2D, texture->GetId(), 0);
-    glBindFramebuffer(GL_FRAMEBUFFER, id);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachmentPoint, GL_TEXTURE_2D, texture->GetObjectId(), 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, objectId);
 }
 
 void FrameBuffer::AddDepthBuffer()
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, id);
+    glBindFramebuffer(GL_FRAMEBUFFER, objectId);
     glGenRenderbuffers(1, &depthBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
@@ -55,10 +57,9 @@ void FrameBuffer::AddDepthBuffer()
 
 void FrameBuffer::AddDepthBufferTexture()
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, id);
-    depthTexture = TexturePtr(new Texture);
-    depthTexture->Create();
-    Renderer::UseTexture(depthTexture, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, objectId);
+    depthTexture = TexturePtr(new Texture(engine));    
+    renderer->UseTexture(depthTexture, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
@@ -68,22 +69,21 @@ void FrameBuffer::AddDepthBufferTexture()
     glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
 
-    glFramebufferTexture2D (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture->GetId(), 0);
+    glFramebufferTexture2D (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture->GetObjectId(), 0);
 }
 
 void FrameBuffer::AddRenderTarget(const int attachmentPoint)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, id);
+    glBindFramebuffer(GL_FRAMEBUFFER, objectId);
     glDrawBuffer(GL_FRONT_AND_BACK);
-    texture[attachmentPoint] = TexturePtr(new Texture);
-    texture[attachmentPoint]->Create();
-    Renderer::UseTexture(texture[attachmentPoint], 0);
+    texture[attachmentPoint] = TexturePtr(new Texture(engine));    
+    renderer->UseTexture(texture[attachmentPoint], 0);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachmentPoint, GL_TEXTURE_2D, texture[attachmentPoint]->GetId(), 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachmentPoint, GL_TEXTURE_2D, texture[attachmentPoint]->GetObjectId(), 0);
 }
 
 TexturePtr FrameBuffer::GetRenderTarget(const int attachmentPoint)
@@ -98,10 +98,10 @@ TexturePtr FrameBuffer::GetDepthBuffer()
 
 bool FrameBuffer::IsValid() const
 {
-    if (id == 0)
+    if (objectId == 0)
         return false;
 
-    glBindFramebuffer(GL_FRAMEBUFFER, id);
+    glBindFramebuffer(GL_FRAMEBUFFER, objectId);
     bool found = false;
     for (int i = 0; (i < MAX_TEXTURES) && (!found); i++)
         if ((texture[i]) && (texture[i]->IsValid()))
@@ -124,9 +124,4 @@ int FrameBuffer::GetWidth() const
 int FrameBuffer::GetHeight() const
 {
     return height;
-}
-
-unsigned int FrameBuffer::GetId() const
-{
-    return id;
 }

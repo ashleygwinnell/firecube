@@ -205,7 +205,7 @@ public:
 	/**
 	* Returns the translation in the matrix.
 	*/
-	vec3 GetPosition() const;
+	vec3 GetTranslation() const;
 
 	/**
 	* Returns the direction of the look at vector.

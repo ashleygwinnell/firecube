@@ -79,10 +79,11 @@ public:
 
 	/**
 	* Constructs a Look-at camera.
+	* @param position The position of the camera
 	* @param target The position the camera will be facing.
 	* @param up The up vector.
 	*/
-	void LookAt(const vec3 &target, const vec3 &up);
+	void LookAt(const vec3 &position, const vec3 &target, const vec3 &up);
 
 protected:
 	

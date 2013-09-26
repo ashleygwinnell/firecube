@@ -1,26 +1,67 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-#include <string>
-
-#include "Utils/utils.h"
-#include "Math/MyMath.h"
-#include "Math/BoundingBox.h"
-#include "Utils/Image.h"
+#include "Core/Component.h"
+#include "Rendering/Renderable.h"
 
 namespace FireCube
 {
-// Forward declarations.
-class Camera;
+
+class Engine;
+class Image;
+class Terrain;
+class IndexBuffer;
+typedef std::shared_ptr<IndexBuffer> IndexBufferPtr;
+
+class TerrainPatch : public Renderable
+{
+	friend class Terrain;
+public:
+	TerrainPatch(Engine *engine);
+	GeometryPtr GetGeometry();
+	void SetMaterial(MaterialPtr material);
+private:
+	void SetBoundingBox(BoundingBox boundingBox);
+	virtual void UpdateWorldBoundingBox();
+	GeometryPtr geometry;
+	BoundingBox boundingBox;
+};
+
+class Terrain : public Component
+{
+public:
+	Terrain(Engine *engine);
+	void CreateHeightMap(Image &image);	
+	void SetVerticesSpacing(vec3 spacing);
+	void SetPatchSize(int patchSize);
+	virtual void MarkedDirty() {}
+	void SetMaterial(MaterialPtr material);
+private:
+	virtual void NodeChanged() {};
+	void GeneratePatchGeometry(TerrainPatch *patch, int patchX, int patchY);
+	float GetHeightDiscrete(int x, int y);
+	vec3 GetNormalDiscrete(int x, int y);
+	void GenerateIndexBuffer();
+	std::vector<float> heightData;
+	int patchSize;
+	int numVerticesX, numVerticesY;
+	int numPatchesX, numPatchesY;
+	vec2 patchWorldSize;
+	vec3 verticesSpacing;
+	IndexBufferPtr indexBuffer;
+	MaterialPtr material;
+	std::vector<TerrainPatch *> patches;
+};
+
+/*class Camera;
 typedef std::shared_ptr<Camera> CameraPtr;
 class Geometry;
 typedef std::shared_ptr<Geometry> GeometryPtr;
+class Engine;
 
-class FIRECUBE_API Terrain
-{
+class FIRECUBE_API Terrain : public Object
+{	
 public:
-	Terrain();
+	Terrain(Engine *engine);
 	bool GenerateTerrain(const std::string &heightmap, vec3 sizeVertices, vec2 sizeUv, bool smoothNormals);
 	void Render(CameraPtr camera);
 	float GetHeight(vec2 pos);
@@ -71,6 +112,6 @@ private:
 	Image heightmapImage;
 	unsigned int width, length;
 	BoundingBox boundingBox;
-};
+};*/
 
 }

@@ -1,157 +1,202 @@
-#include <fstream>
+#include <sstream>
 
+#include "Geometry/Terrain.h"
+#include "Core/Engine.h"
+#include "Utils/Image.h"
+#include "Scene/Node.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
-#include "Rendering/Renderer.h"
-#include "Rendering/Buffer.h"
-#include "Scene/Camera.h"
-#include "Geometry/Terrain.h"
+#include "Rendering/IndexBuffer.h"
 
 using namespace FireCube;
 
-Terrain::Terrain()
+Terrain::Terrain(Engine *engine) : Component(engine), patchSize(32), verticesSpacing(1.0f, 64.0f, 1.0f)
 {
-	geometry = GeometryPtr(new Geometry);
-	geometry->SetMaterial(MaterialPtr(new Material));
-	geometry->GetMaterial()->SetAmbientColor(vec3(0.2f, 0.2f, 0.2f));
-	geometry->GetMaterial()->SetDiffuseColor(vec3(0.5f, 0.5f, 0.5f));
-	geometry->SetPrimitiveType(TRIANGLES);
+
 }
-bool Terrain::GenerateTerrain(const std::string &heightmap, vec3 sizeVertices, vec2 sizeUv, bool smoothNormals)
+
+void Terrain::CreateHeightMap(Image &image)
 {
-	boundingBox.SetMin(vec3(0, 0, 0));
-	boundingBox.SetMax(sizeVertices);
-	terrainScale = sizeVertices;
-	if (!heightmapImage.Load(heightmap))
-		return false;
-	width = heightmapImage.GetWidth();
-	length = heightmapImage.GetHeight();
-	
-	std::vector<vec3> &vertex = geometry->GetVertices();
-	std::vector<vec3> &normal = geometry->GetNormals();
-	std::vector<vec2> &uv = geometry->GetDiffuseUV();
-	vertex.resize((width - 1) * (length - 1) * 2 * 3);
-	normal.resize((width - 1) * (length - 1) * 2 * 3);
-	uv.resize((width - 1) * (length - 1) * 2 * 3);
-	unsigned int currentIndex = 0;
-	unsigned int normalCurrentIndex = 0;
-	unsigned int uvCurrentIndex = 0;
-	vec2 verticesDiff(1.0f / (float)(width - 1)*sizeVertices.x, 1.0f / (float)(length - 1)*sizeVertices.z);
-	vec2 uvDiff(1.0f / (float)(width - 1)*sizeUv.x, 1.0f / (float)(length - 1)*sizeUv.y);
-	for (unsigned int y = 0; y < length - 1; y++)
+	numPatchesX = (image.GetWidth() - 1) / patchSize;
+	numPatchesY = (image.GetHeight() - 1) / patchSize;
+	numVerticesX = numPatchesX * patchSize + 1;
+	numVerticesY = numPatchesY * patchSize + 1;
+	heightData.resize(numVerticesX * numVerticesY);
+	for (int y = 0; y < numVerticesY; ++y)
 	{
-		for (unsigned int x = 0; x < width - 1; x++)
+		for (int x = 0; x < numVerticesX; ++x)
 		{
-			vertex[currentIndex].x = (float)x * verticesDiff.x;
-			vertex[currentIndex].y = heightmapImage.GetPixel(x, y).x * sizeVertices.y;
-			vertex[currentIndex].z = (float)y * verticesDiff.y;
-			vec3 v0(vertex[currentIndex]);
-			++currentIndex;
-
-			vertex[currentIndex].x = (float)x * verticesDiff.x;
-			vertex[currentIndex].y = heightmapImage.GetPixel(x, y + 1).x * sizeVertices.y;
-			vertex[currentIndex].z = (float)(y + 1) * verticesDiff.y;
-			vec3 v1(vertex[currentIndex]);
-			++currentIndex;
-
-			vertex[currentIndex].x = (float)(x + 1) * verticesDiff.x;
-			vertex[currentIndex].y = heightmapImage.GetPixel(x + 1, y).x * sizeVertices.y;
-			vertex[currentIndex].z = (float)y * verticesDiff.y;
-			vec3 v2(vertex[currentIndex]);
-			++currentIndex;
-
-			vertex[currentIndex] = vertex[currentIndex - 1];
-			++currentIndex;
-
-			vertex[currentIndex] = vertex[currentIndex - 3];			
-			++currentIndex;
-
-			vertex[currentIndex].x = (float)(x + 1) * verticesDiff.x;
-			vertex[currentIndex].y = heightmapImage.GetPixel(x + 1, y + 1).x * sizeVertices.y;
-			vertex[currentIndex].z = (float)(y + 1) * verticesDiff.y;
-			vec3 v3(vertex[currentIndex]);
-			++currentIndex;
-
-			if (!smoothNormals)
-			{			
-				vec3 n1 = -Cross(v2 - v0, v1 - v0).Normalize();
-				normal[normalCurrentIndex] = n1;
-				++normalCurrentIndex;
-				normal[normalCurrentIndex] = n1;
-				++normalCurrentIndex;
-				normal[normalCurrentIndex] = n1;
-				++normalCurrentIndex;
-
-
-				vec3 n2 = -Cross(v3 - v2, v1 - v2).Normalize();
-				normal[normalCurrentIndex] = n2;
-				++normalCurrentIndex;
-				normal[normalCurrentIndex] = n2;
-				++normalCurrentIndex;
-				normal[normalCurrentIndex] = n2;
-				++normalCurrentIndex;			
+			heightData[y * numVerticesX + x] = image.GetPixel(x, y).y * verticesSpacing.y;
+		}
+	}
+	patchWorldSize = vec2(verticesSpacing.x, verticesSpacing.z) * (float) patchSize;
+	GenerateIndexBuffer();
+	material = MaterialPtr(new Material(engine));
+	material->SetAmbientColor(vec3(0, 0, 0));
+	material->SetDiffuseColor(vec3(1, 1, 1));
+	vec3 offset(patchWorldSize .x * numPatchesX * -0.5f, 0, patchWorldSize.y * numPatchesY * -0.5f);
+	for (int y = 0; y < numPatchesY; ++y)
+	{
+		for (int x = 0; x < numPatchesX; ++x)
+		{
+			std::ostringstream oss;
+			oss << "patch_" << x << "_" << y;
+			std::string nodeName = oss.str();
+			NodePtr patchNode = node->GetChild(nodeName, true);
+			if (!patchNode)
+			{
+				patchNode = NodePtr(new Node(nodeName));
+				node->AddChild(patchNode);
 			}
-
-			vec2 uvPos((float)x * uvDiff.x + uvDiff.x / 2.0f, (float)y * uvDiff.y + uvDiff.y / 2.0f);
-			uv[uvCurrentIndex] = uvPos;
-			++uvCurrentIndex;
-
-			uv[uvCurrentIndex] = uvPos;
-			++uvCurrentIndex;
-
-			uv[uvCurrentIndex] = uvPos;
-			++uvCurrentIndex;
-
-			uv[uvCurrentIndex] = uvPos;
-			++uvCurrentIndex;
-
-			uv[uvCurrentIndex] = uvPos;
-			++uvCurrentIndex;
-
-			uv[uvCurrentIndex] = uvPos;
-			++uvCurrentIndex;
+			TerrainPatch *patch = new TerrainPatch(engine);
+			patches.push_back(patch);
+			patchNode->AddComponent(patch);			
+			patchNode->SetTranslation(offset + vec3(x * patchWorldSize.x, 0, y * patchWorldSize.y));			
+			GeneratePatchGeometry(patch, x, y);						
 		}
 	}
-	geometry->UpdateBuffers();
-		
-	std::string::size_type d;
-	d = heightmap.find_last_of("/");
-	if (d == std::string::npos)
-		d = heightmap.find_last_of("\\");
-	if (d == std::string::npos)
-		d = 0;
-	if (d != std::string::npos)
-	{
-		std::string quadfile = heightmap.substr(d + 1);
-		d = quadfile.find_last_of(".");
-		if (d != std::string::npos)
-			quadfile = quadfile.substr(0, d + 1);
-		quadfile.append("bin");
-		std::ifstream f(quadfile.c_str(), std::ios::binary);
-		if (f.is_open())
-		{
-			f.close();
-			quadtree.Load(quadfile);
-		}
-		else
-		{
-			quadtree.Init(vec2((float)GetWidth(), (float)GetLength()), vec2(sizeVertices.x, sizeVertices.z));
-			quadtree.Build(sizeVertices.x / 32.0f, 1);
-			quadtree.Save(quadfile);
-		}
-	}
-	else
-		return false;
-
-	return true;
 }
-void Terrain::Render(CameraPtr camera)
+
+void Terrain::GenerateIndexBuffer()
 {
-	unsigned int count = quadtree.Render(camera, geometry->GetIndices());
-	geometry->UpdateIndexBuffer();
-	geometry->SetVertexCount(count);
-	geometry->SetPrimitiveCount(count / 3);	
+	indexBuffer = IndexBufferPtr(new IndexBuffer(engine->GetRenderer()));	
+	std::vector<unsigned int> indices(patchSize * patchSize * 6);
+	for (int y = 0; y < patchSize; ++y)
+	{
+		for (int x = 0; x < patchSize; ++x)
+		{
+			int i0 = y * (patchSize + 1) + x;
+			int i1 = i0 + 1;
+			int i2 = (y + 1) * (patchSize + 1) + x;
+			int i3 = i2 + 1;
+			indices[y * patchSize * 6 + x * 6 + 0] = i0;
+			indices[y * patchSize * 6 + x * 6 + 1] = i2;
+			indices[y * patchSize * 6 + x * 6 + 2] = i1;
+			indices[y * patchSize * 6 + x * 6 + 3] = i1;
+			indices[y * patchSize * 6 + x * 6 + 4] = i2;
+			indices[y * patchSize * 6 + x * 6 + 5] = i3;			
+		}
+	}
+	indexBuffer->LoadData(&indices[0], indices.size(), STATIC);
 }
+
+void Terrain::GeneratePatchGeometry(TerrainPatch *patch, int patchX, int patchY)
+{	
+	GeometryPtr geometry = patch->GetGeometry();
+	VertexBufferPtr vertexBuffer(new VertexBuffer(engine->GetRenderer()));
+	geometry->SetVertexBuffer(vertexBuffer);
+	geometry->SetIndexBuffer(indexBuffer);
+	geometry->SetMaterial(material);
+	BoundingBox boundingBox;	
+	unsigned int vertexSize = 3 + 3 + 2;
+	unsigned int vertexCount = (patchSize + 1) * (patchSize + 1);
+	std::vector<float> vertexData(vertexCount * vertexSize);	
+	for (int z = 0; z < patchSize + 1; ++z)
+	{
+		for (int x = 0; x < patchSize + 1; ++x)
+		{			
+			vec3 pos(x * verticesSpacing.x, GetHeightDiscrete(patchX * patchSize + x, patchY * patchSize + z), z * verticesSpacing.z);
+			*((vec3 *) &vertexData[(z * (patchSize + 1) + x) * vertexSize + 0]) = pos;
+			boundingBox.Expand(pos);
+			vec3 normal = GetNormalDiscrete(patchX * patchSize + x, patchY * patchSize + z);
+			*((vec3 *) &vertexData[(z * (patchSize + 1) + x) * vertexSize + 3]) = normal;
+			vec2 uv((float) (patchX *patchSize + x) / (float) (numVerticesX - 1), (float) (patchY *patchSize + z) / (float) (numVerticesY - 1));
+			*((vec2 *) &vertexData[(z * (patchSize + 1) + x) * vertexSize + 6]) = uv;
+		}	
+	}
+	
+	vertexBuffer->LoadData(&vertexData[0], vertexCount, VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_NORMAL | VERTEX_ATTRIBUTE_TEXCOORD0, STATIC);	
+	patch->SetBoundingBox(boundingBox);		
+	geometry->SetVertexCount(patchSize * patchSize * 6);
+	geometry->SetPrimitiveCount(patchSize * patchSize * 2);
+	geometry->Update();
+}
+
+float Terrain::GetHeightDiscrete(int x, int y)
+{
+	if (x < 0)
+		x = 0;
+	else if (x >= numVerticesX)
+		x = numVerticesX - 1;
+	if (y < 0)
+		y = 0;
+	else if (y >= numVerticesY)
+		y = numVerticesY - 1;
+	return heightData[y * numVerticesX + x];
+}
+
+vec3 Terrain::GetNormalDiscrete(int x, int y)
+{	
+	float baseHeight = GetHeightDiscrete(x, y);
+	float d0 = GetHeightDiscrete(x, y - 1) - baseHeight;
+	float d1 = GetHeightDiscrete(x + 1, y - 1) - baseHeight;
+	float d2 = GetHeightDiscrete(x + 1, y) - baseHeight;
+	float d3 = GetHeightDiscrete(x + 1, y + 1) - baseHeight;
+	float d4 = GetHeightDiscrete(x, y + 1) - baseHeight;
+	float d5 = GetHeightDiscrete(x - 1, y + 1) - baseHeight;
+	float d6 = GetHeightDiscrete(x - 1, y) - baseHeight;
+	float d7 = GetHeightDiscrete(x - 1, y - 1) - baseHeight;
+	vec3 n = vec3(0, verticesSpacing.z, d0) +
+			 vec3(-d1, verticesSpacing.x + verticesSpacing.z, d1) +
+			 vec3(-d2, verticesSpacing.x, 0) + 
+			 vec3(-d3, verticesSpacing.x + verticesSpacing.z, -d3) +
+			 vec3(0, verticesSpacing.z, -d4) +
+			 vec3(d5, verticesSpacing.x + verticesSpacing.z, -d5) +
+			 vec3(d6, verticesSpacing.x, 0) + 
+			 vec3(d7, verticesSpacing.x + verticesSpacing.z, d7);
+	n.Normalize();
+	return n;
+}
+
+void Terrain::SetVerticesSpacing(vec3 spacing)
+{
+	verticesSpacing = spacing;
+}
+
+void Terrain::SetPatchSize(int patchSize)
+{
+	this->patchSize = patchSize;
+}
+
+void Terrain::SetMaterial(MaterialPtr material)
+{
+	this->material = material;
+	for (auto terrainPatch : patches)
+		terrainPatch->SetMaterial(material);
+}
+
+TerrainPatch::TerrainPatch(Engine *engine) : Renderable(engine)
+{
+	renderableParts.resize(1);
+	geometry = GeometryPtr(new Geometry(engine->GetRenderer()));
+	geometry->SetPrimitiveType(TRIANGLES);
+	renderableParts[0].geometry = geometry.get();	
+}
+
+GeometryPtr TerrainPatch::GetGeometry()
+{
+	return geometry;
+}
+
+void TerrainPatch::UpdateWorldBoundingBox()
+{
+	worldBoundingBox = boundingBox;
+	worldBoundingBox.Transform(node->GetWorldTransformation());
+}
+
+void TerrainPatch::SetBoundingBox(BoundingBox boundingBox)
+{
+	this->boundingBox = boundingBox;
+}
+
+void TerrainPatch::SetMaterial(MaterialPtr material)
+{
+	geometry->SetMaterial(material);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+
 float Terrain::GetHeight(vec2 pos)
 {
 	if ((pos.x < 0) || (pos.x >= terrainScale.x) || (pos.y < 0) || (pos.y >= terrainScale.z))
@@ -182,14 +227,7 @@ float Terrain::GetHeight(vec2 pos)
 	d1 = i0 - i1;
 	return (i1 + d0 * (1.0f - fx) + d1 * (1.0f - fy)) * terrainScale.y;
 }
-int Terrain::GetWidth()
-{
-	return width;
-}
-int Terrain::GetLength()
-{
-	return length;
-}
+
 vec3 Terrain::GetNormal(vec2 pos)
 {
 	if ((pos.x < 0) || (pos.x >= terrainScale.x) || (pos.y < 0) || (pos.y >= terrainScale.z))
@@ -222,278 +260,4 @@ vec3 Terrain::GetNormal(vec2 pos)
 	return Cross(v1 - v0, v2 - v0).Normalize();
 }
 
-GeometryPtr Terrain::GetGeometry()
-{
-	return geometry;
-}
-
-BoundingBox Terrain::GetBoundingBox() const
-{
-	return boundingBox;
-}
-
-Terrain::QuadTree::QuadTree()
-{
-}
-
-void Terrain::QuadTree::Init(vec2 size, vec2 verticesSize)
-{
-
-	root = NodePtr(new Node);
-	root->face = Node::FaceListPtr(new Node::FaceList);
-	root->boundingBox.SetMin(vec3(0.0f, 0.0f, 0.0f));
-	root->boundingBox.SetMax(vec3(verticesSize.x, 50.0f, verticesSize.y));
-	aspect = (size - vec2(1.0f, 1.0f)) / verticesSize;
-	for (unsigned int y = 0; y < size.y - 1.0f; y++)
-	{
-		for (unsigned int x = 0; x < size.x - 1.0f; x++)
-		{
-			root->face->push_back(vec2((float)x / (size.x - 1.0f)*verticesSize.x, (float)y / (size.y - 1.0f)*verticesSize.y));
-		}
-	}
-	this->size = size - vec2(1.0f, 1.0f);
-}
-void Terrain::QuadTree::Build(float minSize, unsigned int maxNumberOfFaces)
-{
-	Build(root, minSize, maxNumberOfFaces);
-	BuildIndices(root);
-}
-void Terrain::QuadTree::Build(NodePtr node, float minSize, unsigned int maxNumberOfFaces)
-{
-	if ((node->boundingBox.GetWidth() <= minSize) || (node->face->size() < maxNumberOfFaces))
-		return;
-	vec3 midPoint = node->boundingBox.GetCenter();
-	NodePtr child[4];
-	child[0] = NodePtr(new Node);
-	child[0]->face = Node::FaceListPtr(new Node::FaceList);
-	child[1] = NodePtr(new Node);
-	child[1]->face = Node::FaceListPtr(new Node::FaceList);
-	child[2] = NodePtr(new Node);
-	child[2]->face = Node::FaceListPtr(new Node::FaceList);
-	child[3] = NodePtr(new Node);
-	child[3]->face = Node::FaceListPtr(new Node::FaceList);
-	child[0]->boundingBox.SetMin(node->boundingBox.GetMin());
-	child[0]->boundingBox.SetMax(vec3(midPoint.x, 50.0f, midPoint.z));
-	child[1]->boundingBox.SetMin(vec3(midPoint.x, 0.0f, node->boundingBox.GetMin().z));
-	child[1]->boundingBox.SetMax(vec3(node->boundingBox.GetMax().x, 50.0f, midPoint.z));
-	child[2]->boundingBox.SetMin(vec3(node->boundingBox.GetMin().x, 0.0f, midPoint.z));
-	child[2]->boundingBox.SetMax(vec3(midPoint.x, 50.0f, node->boundingBox.GetMax().z));
-	child[3]->boundingBox.SetMin(vec3(midPoint.x, 0.0f, midPoint.z));
-	child[3]->boundingBox.SetMax(node->boundingBox.GetMax());
-	for (unsigned int i = 0; i < node->face->size(); i++)
-	{
-		vec2 f = (*node->face)[i];
-		vec2 f2 = (*node->face)[i] + vec2(1.0f / aspect.x, 1.0f / aspect.y);
-		for (unsigned int j = 0; j < 4; j++)
-		{                       
-			if (((f.x >= child[j]->boundingBox.GetMin().x) && (f.y >= child[j]->boundingBox.GetMin().z) && (f.x <= child[j]->boundingBox.GetMax().x) && (f.y <= child[j]->boundingBox.GetMax().z) ) || ((f2.x >= child[j]->boundingBox.GetMin().x) && (f2.y >= child[j]->boundingBox.GetMin().z) && (f2.x <= child[j]->boundingBox.GetMax().x) && (f2.y <= child[j]->boundingBox.GetMax().z)))
-			{
-				child[j]->face->push_back(f);
-			}
-		}
-	}
-	node->face.reset();
-	for (unsigned int i = 0; i < 4; i++)
-	{
-		if (child[i]->face->size() == 0)
-			child[i].reset();
-		node->child[i] = child[i];
-	}
-	for (unsigned int i = 0; i < 4; i++)
-		if (node->child[i])
-			Build(node->child[i], minSize, maxNumberOfFaces);
-}
-unsigned int Terrain::QuadTree::Render(CameraPtr camera, std::vector<unsigned int> &indicesToRender)
-{
-	currentIndex = 0;
-	Render(root, camera, indicesToRender);	
-	return currentIndex;
-}
-void Terrain::QuadTree::Render(NodePtr node, CameraPtr camera, std::vector<unsigned int> &indicesToRender)
-{
-	if (camera->GetFrustum().Contains(node->boundingBox))
-	{
-		if (!node->indices.empty())
-		{
-			if (indicesToRender.size() - currentIndex < node->indices.size())
-				indicesToRender.resize(indicesToRender.size() + node->indices.size());
-			std::copy(node->indices.begin(), node->indices.end(), indicesToRender.begin() + currentIndex);
-			currentIndex += node->indices.size();
-		}
-		else
-		{
-			for (unsigned int i = 0; i < 4; i++)
-				if (node->child[i])
-					Render(node->child[i], camera, indicesToRender);
-		}
-	}
-}
-void Terrain::QuadTree::BuildIndices(NodePtr node)
-{
-	unsigned int sx = (unsigned int)this->size.x * 6;
-	if ((node->face) && (node->face->size() > 0))
-	{
-		node->indices.resize(node->face->size() * 6);
-		unsigned int cIndex = 0;
-		for (unsigned int i = 0; i < node->face->size(); i++)
-		{
-			vec2 f = (*node->face)[i] * aspect;
-			unsigned int x = (unsigned int)f.x;
-			unsigned int y = (unsigned int)f.y;
-			unsigned int index = y * sx + x * 6;            
-			node->indices[cIndex++] = index + 0;
-			node->indices[cIndex++] = index + 1;
-			node->indices[cIndex++] = index + 2;
-			node->indices[cIndex++] = index + 3;
-			node->indices[cIndex++] = index + 4;
-			node->indices[cIndex++] = index + 5;
-		}
-		node->face.reset();
-	}
-	else
-	{
-		for (unsigned int i = 0; i < 4; i++)
-			if (node->child[i])
-				BuildIndices(node->child[i]);
-	}
-}
-void Terrain::QuadTree::RenderLines()
-{
-	//Renderer::UseProgram(plainColor);
-	RenderLines(root);
-}
-void Terrain::QuadTree::RenderLines(NodePtr node)
-{
-	BufferPtr v(new Buffer);
-	v->Create();
-	std::vector<vec3> vv;
-	vv.push_back(vec3(node->boundingBox.GetMin().x, 20.0f, node->boundingBox.GetMin().z));
-	vv.push_back(vec3(node->boundingBox.GetMax().x, 20.0f, node->boundingBox.GetMin().z));
-	vv.push_back(vec3(node->boundingBox.GetMax().x, 20.0f, node->boundingBox.GetMax().z));
-	vv.push_back(vec3(node->boundingBox.GetMin().x, 20.0f, node->boundingBox.GetMax().z));
-	v->LoadData(&vv[0], sizeof(vec3)*vv.size(), DYNAMIC);
-	//v->SetVertexStream(3);
-	Renderer::RenderStream(LINE_LOOP, vv.size());
-	for (unsigned int j = 0; j < 4; j++)
-		if (node->child[j])
-			RenderLines(node->child[j]);
-}
-void Terrain::QuadTree::Save(const std::string &filename)
-{
-	std::ofstream file(filename.c_str(), std::ios::binary);
-	file.write((const char*)&size, sizeof(vec2));
-	file.write((const char*)&aspect, sizeof(vec2));
-	Save(root, file);
-}
-void Terrain::QuadTree::Save(NodePtr node, std::ofstream &file)
-{
-	unsigned char children = 0;
-	unsigned int numIndices = node->indices.size();
-	if (node->child[0])
-		children |= 1;
-	if (node->child[1])
-		children |= 2;
-	if (node->child[2])
-		children |= 4;
-	if (node->child[3])
-		children |= 8;
-	file.write((const char*)&node->boundingBox.GetMin(), sizeof(vec3));
-	file.write((const char*)&node->boundingBox.GetMax(), sizeof(vec3));
-	file.write((const char*)&children, 1);
-	file.write((const char*)&numIndices, sizeof(unsigned int));
-	if (numIndices > 0)
-	{
-		unsigned int lastIndex = node->indices[0];
-		for (unsigned int i = 1; i < node->indices.size(); i++)
-		{
-			if (node->indices[i] != node->indices[i - 1] + 1)
-			{
-				file.write((const char *)&lastIndex, sizeof(unsigned int));
-				unsigned int j = node->indices[i - 1];
-				file.write((const char *)&j, sizeof(unsigned int));
-				lastIndex = node->indices[i];
-				if (i == node->indices.size() - 1)
-				{
-					file.write((const char *)&lastIndex, sizeof(unsigned int));
-					file.write((const char *)&lastIndex, sizeof(unsigned int));
-				}
-			}
-			else
-			{
-				if (i == node->indices.size() - 1)
-				{
-					file.write((const char *)&lastIndex, sizeof(unsigned int));
-					unsigned int j = node->indices[i];
-					file.write((const char *)&j, sizeof(unsigned int));
-				}
-			}
-		}
-	}
-	for (unsigned int i = 0; i < 4; i++)
-		if (node->child[i])
-			Save(node->child[i], file);
-}
-void Terrain::QuadTree::Load(const std::string &filename)
-{
-	std::ifstream file(filename.c_str(),std:: ios::binary);
-	file.seekg(0, std::ios_base::end);
-	unsigned int size = (unsigned int) file.tellg(), currentIndex = 0;
-	std::vector<unsigned char> buffer;
-	buffer.resize(size);
-	file.seekg(0, std::ios_base::beg);
-	file.read((char*)&buffer[0], size);
-	this->size = *(vec2*)&buffer[currentIndex];
-	currentIndex += sizeof(vec2);
-	aspect = *(vec2*)&buffer[currentIndex];
-	currentIndex += sizeof(vec2);
-	root = NodePtr(new Node);
-	Load(buffer, currentIndex, root);
-}
-void Terrain::QuadTree::Load(const std::vector<unsigned char> &buffer, unsigned int &currentIndex, NodePtr node)
-{
-	unsigned char children;
-	unsigned int numIndices;
-	node->boundingBox.SetMin(*(vec3*)&buffer[currentIndex]);
-	currentIndex += sizeof(vec3);
-	node->boundingBox.SetMax(*(vec3*)&buffer[currentIndex]);
-	currentIndex += sizeof(vec3);
-	children = *(unsigned char*)&buffer[currentIndex];
-	currentIndex += 1;
-	numIndices = *(unsigned int*)&buffer[currentIndex];
-	currentIndex += sizeof(unsigned int);
-	if (numIndices > 0)
-	{
-		node->indices.resize(numIndices);
-		unsigned int startIndex, endIndex, nodeCurrentIndex = 0;
-		while (nodeCurrentIndex != numIndices)
-		{
-
-			startIndex = *(unsigned int*)&buffer[currentIndex];
-			currentIndex += sizeof(unsigned int);
-			endIndex = *(unsigned int*)&buffer[currentIndex];
-			currentIndex += sizeof(unsigned int);
-			for (unsigned int i = startIndex; i <= endIndex; i++)
-				node->indices[nodeCurrentIndex++] = i;
-		}
-	}
-	if (children & 1)
-	{
-		node->child[0] = NodePtr(new Node);
-		Load(buffer, currentIndex, node->child[0]);
-	}
-	if (children & 2)
-	{
-		node->child[1] = NodePtr(new Node);
-		Load(buffer, currentIndex, node->child[1]);
-	}
-	if (children & 4)
-	{
-		node->child[2] = NodePtr(new Node);
-		Load(buffer, currentIndex, node->child[2]);
-	}
-	if (children & 8)
-	{
-		node->child[3] = NodePtr(new Node);
-		Load(buffer, currentIndex, node->child[3]);
-	}
-}
+*/

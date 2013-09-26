@@ -9,6 +9,7 @@
 
 #include "Utils/utils.h"
 #include "Rendering/Renderer.h"
+#include "Scene/Light.h"
 
 namespace FireCube
 {
@@ -21,84 +22,58 @@ class Material;
 typedef std::shared_ptr<Material> MaterialPtr;
 class RenderParameters;
 class Light;
-class Node;
-typedef std::shared_ptr<Node> NodePtr;
 class Program;
 typedef std::shared_ptr<Program> ProgramPtr;
+class Renderer;
+class Pass;
+class Shader;
 
-namespace Renderer
-{
-void FIRECUBE_API Render(RenderQueue &renderQueue);
-void FIRECUBE_API Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
-}
-/**
-* A class storing information of a rendering job.
-*/
 class FIRECUBE_API RenderJob
 {
 public:
+	void CalculateSortKey();
+
 	/**
 	* The geometry of this job.
 	*/
-	GeometryPtr geometry;
-	
-	/**
-	* The rendering parameters of this job.
-	*/
-	RenderParameters renderParameters;
+	Geometry *geometry;
 
 	/**
 	* The transformation to apply to this job.
 	*/
 	mat4 transformation;
 
-	/**
-	* The program used to render this job.
-	*/
-	ProgramPtr program;
+	Pass *pass;
+
+	Shader *vertexShader;
+
+	Shader *fragmentShader;
+
+	unsigned long long int sortKey;
 };
-/**
-* A class storing a list of rendering jobs.
-*/
+
 class FIRECUBE_API RenderQueue
-{
-	friend void Renderer::Render(RenderQueue &renderQueue);
-	friend void Renderer::Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
+{	
 public:
-	/**
-	* An enumeration of possible queue types.
-	*/
-	enum QueueType
-	{
-		NORMAL, NON_LIGHTED
-	};
-
-
 	/**
 	* Clears the rendering queue.
 	*/
 	void Clear();
 
-	/**
-	* Adds a node to the rendering queue.
-	* @param node The node to enqueue.
-	* @param camera The camera used to cull this node.
-	*/
-	void AddNode(NodePtr node, CameraPtr camera);
+	std::vector<RenderJob> &GetRenderJobs();
 
-	/**
-	* Sorts the render queue to reduce state changes.
-	* @param type The queue type to sort.
-	*/
-	void Sort(QueueType type);
-
-	void AddLight(const mat4 &transformation, const Light &light);
-
-	RenderJob &AddRenderJob(QueueType queueType);
-private:	
-	std::map<QueueType, std::vector<RenderJob>> renderJobs;
-	std::vector<std::pair<mat4, Light>> activeLights;
+	void Sort();
+public:	
+	std::vector<RenderJob> renderJobs;
 };
+
+class LightQueue
+{
+public:
+	Light *light;
+	RenderQueue renderQueue;
+};
+
 }
 
 #pragma warning(pop)

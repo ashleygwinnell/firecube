@@ -1,47 +1,33 @@
-//#include <string>
-//#include <vector>
-//#include <fstream>
-//#include <iostream>
 #include <sstream>
-//#include <map>
-//#include <memory>
-//#include <algorithm>
-//using namespace std;
 #include "ThirdParty/GLEW/glew.h"
-
-//#include "Utils/utils.h"
 #include "Utils/Logger.h"
 #include "Rendering/Texture.h"
-//#include "Math/MyMath.h"
 #include "Utils/Image.h"
+#include "Core/Engine.h"
 
 using namespace FireCube;
 
-Texture::Texture() : id(0), minFilter(LINEAR), magFilter(LINEAR)
+Texture::Texture(Engine *engine) : Resource(engine), GraphicsResource(engine->GetRenderer()), minFilter(LINEAR), magFilter(LINEAR)
 {
+	Create();
 }
 
 Texture::~Texture()
 {
 	std::ostringstream ss;
-	ss << "Destroyed texture with id=" << id;
-	Logger::Write(Logger::LOG_INFO, ss.str());
-	glDeleteTextures(1, &id);
-	id = 0;
-}
-
-bool Texture::IsValid() const
-{
-	return id != 0;
+	ss << "Destroyed texture with id=" << objectId;
+	LOGINFO(ss.str());
+	glDeleteTextures(1, &objectId);
+	objectId = 0;
 }
 
 bool Texture::Create()
 {
-	glGenTextures(1, &id);
+	glGenTextures(1, &objectId);
 	std::ostringstream ss;
-	ss << "Created texture with id=" << id;
-	Logger::Write(Logger::LOG_INFO, ss.str());
-	return id != 0;
+	ss << "Created texture with id=" << objectId;
+	LOGINFO(ss.str());
+	return objectId != 0;
 }
 
 bool Texture::Load(const std::string &filename)
@@ -69,9 +55,8 @@ bool Texture::Load(const std::string &filename)
 	{		
 		return false;
 	}
-
-	Create();
-	glBindTexture(GL_TEXTURE_2D, id);        		
+	
+	glBindTexture(GL_TEXTURE_2D, objectId);        		
 	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, img.GetWidth(), img.GetHeight(), 0, format, GL_UNSIGNED_BYTE, &img.GetPixels()[0]);		
 	GenerateMipMaps();
 	SetFiltering(MIPMAP, LINEAR);		
@@ -80,7 +65,7 @@ bool Texture::Load(const std::string &filename)
 
 void Texture::GenerateMipMaps()
 {
-	glBindTexture(GL_TEXTURE_2D, id);
+	glBindTexture(GL_TEXTURE_2D, objectId);
 	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
@@ -93,9 +78,4 @@ void Texture::SetFiltering(TextureFilter minFilter, TextureFilter magFilter)
 std::string Texture::GetFileName() const
 {
 	return filename;
-}
-
-unsigned int Texture::GetId() const
-{
-	return id;
 }

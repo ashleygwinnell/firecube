@@ -2,17 +2,26 @@
 #include <sstream>
 
 #include "Utils/Logger.h"
-#include "Utils/ResourcePool.h"
 #include "Rendering/Texture.h"
 #include "Geometry/Material.h"
-#include "Scene/GeometryNode.h"
 #include "Geometry/m3dsLoader.h"
+#include "Rendering/IndexBuffer.h"
+#include "Rendering/Renderer.h"
+#include "Rendering/Technique.h"
+#include "Core/Engine.h"
+#include "Core/ResourcePool.h"
 
 using namespace FireCube;
 
-M3dsLoader::M3dsLoader()
+M3dsLoader::M3dsLoader(Engine *engine) : ModelLoader(engine)
 {
 
+}
+
+M3dsLoader::~M3dsLoader()
+{
+	for (auto material : materials)
+		delete material;
 }
 
 bool M3dsLoader::Load(const std::string &filename, ModelLoadingOptions options)
@@ -37,26 +46,46 @@ bool M3dsLoader::Load(const std::string &filename, ModelLoadingOptions options)
 		object[meshMat->first.first].mesh[meshMat->first.second].material = GetMaterialByName(meshMat->second);
 	std::vector<std::pair<unsigned int, mat4>>::iterator objMatrix;
 
-	// Search for objects with out sub meshes, create a default material
+	// Search for objects without sub meshes, create a default material
 	// and assign all faces to it
 	for (unsigned int k = 0; k < object.size(); k++)
 	{		 
 		if (object[k].mesh.size() == 0)
 		{
-			MaterialPtr mat(new Material);
-			mat->SetAmbientColor(vec3(0, 0, 0));
-			mat->SetDiffuseColor(vec3(1, 1, 1));
-			mat->SetSpecularColor(vec3(0, 0, 0));
+			Material *mat = new Material;
+			mat->ambientColor = vec3(0, 0, 0);
+			mat->diffuseColor = vec3(1, 1, 1);
+			mat->specularColor = vec3(0, 0, 0);			
 			materials.push_back(mat);
 			object[k].mesh.push_back(Mesh());
 			Mesh &mesh = object[k].mesh.back();
 			mesh.material = mat;
-			mesh.face = object[k].face;
+			mesh.indices = object[k].indices;
 		}
 	}
 	this->options = options;
 	return true;
 }
+
+
+void M3dsLoader::GenerateScene(Renderer *renderer)
+{
+	//TODO: Implement
+}
+
+
+NodePtr M3dsLoader::GetGeneratedScene()
+{
+	//TODO: Implement
+	return NodePtr();
+}
+
+const std::vector<FireCube::Material *> &M3dsLoader::GetGeneratedMaterials()
+{
+	return generatedMaterials;
+}
+
+/*
 
 NodePtr M3dsLoader::GenerateSceneGraph()
 {
@@ -111,6 +140,97 @@ NodePtr M3dsLoader::GenerateSceneGraph()
 		}        
 	}    
 	return ret;
+}
+
+*/
+
+void M3dsLoader::CalculateNormals(Object &object)
+{
+	object.normal.resize(object.vertex.size(), vec3(0, 0, 0));	
+
+	for (unsigned int i = 0; i < object.indices.size(); i += 3)
+	{
+		// Calculate face normals
+		vec3 v1 = object.vertex[object.indices[i + 1]] - object.vertex[object.indices[i + 0]];
+		vec3 v2 = object.vertex[object.indices[i + 2]] - object.vertex[object.indices[i + 0]];
+		vec3 n = Cross(v1, v2);				
+		// Add this normal to the three vertex normals forming this face
+		object.normal[object.indices[i + 0]] += n;
+		object.normal[object.indices[i + 1]] += n;
+		object.normal[object.indices[i + 2]] += n;
+	}
+	for (unsigned int n = 0; n < object.normal.size(); n++)
+	{
+		object.normal[n].Normalize();
+	}	
+}
+
+void M3dsLoader::GenerateGeometries(Renderer *renderer)
+{
+	generatedGeometries.clear();
+	for (unsigned int i = 0; i < object.size(); i++)
+	{   
+		CalculateNormals(object[i]);
+		VertexBufferPtr vertexBuffer(new VertexBuffer(renderer));
+		unsigned int vertexSize = 3 + 3 + 2;
+		std::vector<float> vertexData(vertexSize * object[i].vertex.size());			
+		for (unsigned int j = 0; j < object[i].vertex.size(); ++j)
+		{
+			*((vec3 *) &vertexData[j * vertexSize + 0]) = object[i].vertex[j];
+			*((vec3 *) &vertexData[j * vertexSize + 3]) = object[i].normal[j];
+			vec2 uv = object[i].uv[j];
+			if (options.flipU)
+				uv.x = 1.0f - uv.x;
+			if (options.flipV)
+				uv.y = 1.0f - uv.y;
+			*((vec2 *) &vertexData[j * vertexSize + 6]) = uv;
+
+			boundingBox.Expand(object[i].vertex[j]);
+		}		
+		vertexBuffer->LoadData(&vertexData[0], object[i].vertex.size(), VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_NORMAL | VERTEX_ATTRIBUTE_TEXCOORD0, STATIC);
+		//NodePtr objectNode(new Node(object[i].name));		
+		for (unsigned int j = 0; j < object[i].mesh.size(); j++)
+		{
+			// Create a geometry for each sub mesh
+			Geometry *geom = new Geometry(renderer);
+			IndexBufferPtr indexBuffer(new IndexBuffer(renderer));
+			generatedGeometries.push_back(geom);
+			geom->SetVertexBuffer(vertexBuffer);
+			geom->SetIndexBuffer(indexBuffer);
+			
+			Mesh &mesh = object[i].mesh[j];
+			MaterialPtr material(new FireCube::Material(engine));
+			generatedMaterials.push_back(material.get());
+			material->SetName(mesh.material->name);
+			material->SetAmbientColor(mesh.material->ambientColor);
+			material->SetDiffuseColor(mesh.material->diffuseColor);
+			material->SetSpecularColor(mesh.material->specularColor);
+			material->SetShininess(mesh.material->shininess);						
+			if (mesh.material->diffuseTextureMap.empty() == false)
+			{				
+				material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
+				material->SetDiffuseTexture(engine->GetResourcePool()->GetResource<Texture>(mesh.material->diffuseTextureMap));
+			}
+			else
+				material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
+			geom->SetMaterial(material);				
+			indexBuffer->LoadData(&mesh.indices[0], mesh.indices.size(), STATIC);
+			
+			geom->SetPrimitiveType(TRIANGLES);
+			geom->SetPrimitiveCount(mesh.indices.size() / 3);
+			geom->SetVertexCount(mesh.indices.size());						
+			geom->Update();			
+		}        
+	}    	
+}
+const std::vector<Geometry *> &M3dsLoader::GetGeneratedGeometries()
+{
+	return generatedGeometries;
+}
+
+BoundingBox M3dsLoader::GetBoundingBox() const
+{
+	return boundingBox;
 }
 
 void M3dsLoader::ReadMainChunk()
@@ -221,13 +341,13 @@ void M3dsLoader::ReadFacesListChunk(unsigned int length)
 	// Read the face list of the current object
 	Object &obj = object.back();
 	char *startPos = curPos;
-	obj.face.resize(*(unsigned short int*)curPos);
+	obj.indices.resize((*(unsigned short int*)curPos) * 3);
 	curPos += 2;
-	for (unsigned int i = 0; i < obj.face.size(); i++)
+	for (unsigned int i = 0; i < obj.indices.size(); i += 3)
 	{
 		for (unsigned int j = 0; j < 3; j++)
 		{
-			obj.face[i].v[j] = *(unsigned short int*)curPos;
+			obj.indices[i + j] = *(unsigned short int*)curPos;
 			curPos += 2;
 		}
 		curPos += 2;
@@ -280,7 +400,9 @@ void M3dsLoader::ReadMaterialFaceList()
 	// using the indices specified
 	for (unsigned int i = 0; i < count; i++)
 	{
-		mesh.face.push_back(obj.face[*(unsigned short int*)curPos]);
+		mesh.indices.push_back(obj.indices[(*(unsigned short int*)curPos) * 3 + 0]);
+		mesh.indices.push_back(obj.indices[(*(unsigned short int*)curPos) * 3 + 1]);
+		mesh.indices.push_back(obj.indices[(*(unsigned short int*)curPos) * 3 + 2]);
 		curPos += 2;
 	}
 }
@@ -319,15 +441,15 @@ void M3dsLoader::ReadMaterialListChunk(unsigned int length)
 		if (subId == MAT_NAME)
 			ReadMaterialNameChunk(); // Read an create a new material
 		else if (subId == MAT_AMBIENT)
-			curMaterial->SetAmbientColor(ReadMaterialColorChunk(subLen)); // Read ambient color of the current material
+			curMaterial->ambientColor = ReadMaterialColorChunk(subLen); // Read ambient color of the current material
 		else if (subId == MAT_DIFFUSE)
-			curMaterial->SetDiffuseColor(ReadMaterialColorChunk(subLen)); // Read diffuse color of the current material
+			curMaterial->diffuseColor = ReadMaterialColorChunk(subLen); // Read diffuse color of the current material
 		else if (subId == MAT_SPECULAR)
-			curMaterial->SetSpecularColor(ReadMaterialColorChunk(subLen)); // Read specular color of the current material
+			curMaterial->specularColor = ReadMaterialColorChunk(subLen); // Read specular color of the current material
 		else if (subId == MAT_TEXMAP)
-			curMaterial->SetDiffuseTexture(ReadMaterialTexMapChunk(subLen)); // Read diffuse texture of the current material
+			curMaterial->diffuseTextureMap = ReadMaterialTexMapChunk(subLen); // Read diffuse texture of the current material
 		else if (subId == MAT_SHININESS)
-			curMaterial->SetShininess(ReadMaterialShininessChunk(subLen)); // Read shininess of the current material
+			curMaterial->shininess = ReadMaterialShininessChunk(subLen); // Read shininess of the current material
 		else
 			curPos += subLen;
 	}
@@ -335,10 +457,10 @@ void M3dsLoader::ReadMaterialListChunk(unsigned int length)
 
 void M3dsLoader::ReadMaterialNameChunk()
 {
-	curMaterial = MaterialPtr(new Material);
+	curMaterial = new Material;
 	materials.push_back(curMaterial);
-	curMaterial->SetName(curPos);
-	curPos += curMaterial->GetName().size() + 1;
+	curMaterial->name = curPos;
+	curPos += curMaterial->name.size() + 1;
 }
 
 vec3 M3dsLoader::ReadColorFChunk()
@@ -417,9 +539,9 @@ std::string M3dsLoader::ReadMapNameChunk()
 	return ret;
 }
 
-TexturePtr M3dsLoader::ReadMaterialTexMapChunk(unsigned int length)
+std::string M3dsLoader::ReadMaterialTexMapChunk(unsigned int length)
 {
-	TexturePtr ret;
+	std::string ret;
 	char *startPos = curPos;
 	while ((unsigned int)(curPos - startPos) < length)
 	{
@@ -427,22 +549,22 @@ TexturePtr M3dsLoader::ReadMaterialTexMapChunk(unsigned int length)
 		unsigned int subLen = *(unsigned int*)(curPos + 2) - 6;
 		curPos += 6;
 		if (subId == MAT_MAPNAME)
-			ret = Renderer::GetTexturePool().Create(ReadMapNameChunk()); // Read an load the texture file name
+			ret = ReadMapNameChunk(); // Read an load the texture file name
 		else
 			curPos += subLen;
 	}
 	return ret;
 }
 
-MaterialPtr M3dsLoader::GetMaterialByName(const std::string &name)
+M3dsLoader::Material *M3dsLoader::GetMaterialByName(const std::string &name)
 {	
 	// Search for a material with the given name
 	for (auto i = materials.begin(); i != materials.end(); ++i)
 	{
-		if ((*i)->GetName() == name)
+		if ((*i)->name == name)
 			return *i;
 	}
-	return MaterialPtr();
+	return nullptr;
 }
 
 float M3dsLoader::ReadPercentageBChunk()

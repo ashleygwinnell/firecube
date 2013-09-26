@@ -15,7 +15,8 @@ public:
 	/**
 	* Constructs a vector for the specified value.
 	*/
-	vec4(float nx, float ny, float nz, float nw) {
+	vec4(float nx, float ny, float nz, float nw) 
+	{
 		x = nx;
 		y = ny;
 		z = nz;
@@ -23,10 +24,22 @@ public:
 	}
 
 	/**
+	* Constructs a vector for the specified value.
+	*/
+	vec4(float v) 
+	{
+		x = v;
+		y = v;
+		z = v;
+		w = v;
+	}
+
+	/**
 	* Constructs a vector from another.
 	* @param v The vector to copy.
 	*/
-	vec4(const vec4 &v) {
+	vec4(const vec4 &v) 
+	{
 		x = v.x;
 		y = v.y;
 		z = v.z;

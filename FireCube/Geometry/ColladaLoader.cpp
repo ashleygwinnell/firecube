@@ -1,27 +1,24 @@
 #include "Utils/Logger.h"
-#include "Utils/ResourcePool.h"
 #include "Rendering/Texture.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
-#include "Scene/GeometryNode.h"
 #include "Geometry/ColladaLoader.h"
+#include "Math/MathUtils.h"
+#include "Rendering/IndexBuffer.h"
+#include "Core/Engine.h"
+#include "Core/ResourcePool.h"
 
 using namespace FireCube;
 
 // The ColladaLoader class loads a Collada file by reading all the libraries and storing the scene graph
-// and geometries in an internal representation. Then GenerateSceneGraph is used to convert this internal
+// and geometries in an internal representation. Then GenerateGeometries is used to convert this internal
 // representation to the engine's classes. A Collada geometry consists of vertex attributes and a list
 // of faces with materials. Since the engine's Geometry class has only one matrial associated with it
-// every Collada geometry is converted to several engine geometries (each with a difference material)
-// and are grouped using a scene graph node.
+// every Collada geometry is converted to several engine geometries (each with a difference material).
 
-ModelLoadingOptions::ModelLoadingOptions() : flipU(false), flipV(false)
+ColladaLoader::ColladaLoader(Engine *engine) : ModelLoader(engine)
 {
 
-}
-
-ColladaLoader::ColladaLoader(const std::string &filename) : xmlDocument(filename)
-{
 }
 
 ColladaLoader::~ColladaLoader()
@@ -31,9 +28,10 @@ ColladaLoader::~ColladaLoader()
 		DeleteNodes(i->second);
 }
 
-bool ColladaLoader::Load(ModelLoadingOptions options)
+bool ColladaLoader::Load(const std::string &filename, ModelLoadingOptions options)
 {
-	xmlDocument.LoadFile();
+	if (xmlDocument.LoadFile(filename) == false)
+		return false;
 	// Get the root element
 	TiXmlElement *e = GetChildElement(&xmlDocument, "COLLADA");
 	if (e == nullptr)
@@ -44,8 +42,23 @@ bool ColladaLoader::Load(ModelLoadingOptions options)
 	if (version.substr(0, 3) == "1.4")
 		ReadLibraries(e);
 
-	this->options = options;
+	this->options = options;	
 	return true;
+}
+
+void ColladaLoader::GenerateScene(Renderer *renderer)
+{
+	// TODO: Implement
+}
+NodePtr ColladaLoader::GetGeneratedScene()
+{
+	// TODO: Implement
+	return NodePtr();
+}
+
+const std::vector<Material *> &ColladaLoader::GetGeneratedMaterials()
+{
+	return generatedMaterialsList;
 }
 
 void ColladaLoader::ReadLibraries(TiXmlNode *parent)
@@ -634,60 +647,6 @@ void ColladaLoader::ReadVCount(TiXmlNode *parent, SubMesh &subMesh)
 	}
 }
 
-unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed )
-{
-	// 'm' and 'r' are mixing constants generated offline.
-	// They're not really 'magic', they just happen to work well.
-
-	const unsigned int m = 0x5bd1e995;
-	const int r = 24;
-
-	// Initialize the hash to a 'random' value
-
-	unsigned int h = seed ^ len;
-
-	// Mix 4 bytes at a time into the hash
-
-	const unsigned char * data = (const unsigned char *)key;
-
-	while(len >= 4)
-	{
-		unsigned int k = *(unsigned int *)data;
-
-		k *= m;
-		k ^= k >> r;
-		k *= m;
-
-		h *= m;
-		h ^= k;
-
-		data += 4;
-		len -= 4;
-	}
-
-	// Handle the last few bytes of the input array
-
-	switch(len)
-	{
-	case 3:
-		h ^= data[2] << 16;
-	case 2:
-		h ^= data[1] << 8;
-	case 1:
-		h ^= data[0];
-		h *= m;
-	};
-
-	// Do a few final mixes of the hash to ensure the last few
-	// bytes are well-incorporated.
-
-	h ^= h >> 13;
-	h *= m;
-	h ^= h >> 15;
-
-	return h;
-}
-
 void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMesh, std::vector<InputChannel> primInputChannels, int count)
 {
 	TiXmlElement *element = parent->ToElement();
@@ -749,7 +708,7 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 			pointCount = subMesh.vcount[i];
 		if (pointCount != 3)
 		{
-			Logger::Write(Logger::LOG_ERROR, "Error in Collada loader, polygons with more than 3 vertices are not implemented yet");
+			LOGERROR( "Error in Collada loader, polygons with more than 3 vertices are not implemented yet");
 			continue;
 		}
 		// Iterate over each vertex in the primitive
@@ -1147,7 +1106,7 @@ mat4 ColladaLoader::GetTransformMatrix(std::vector<Transform> &transformations)
 void ColladaLoader::ApplyMaterialInstanceSemanticMapping(Sampler &sampler, MaterialInstance &materialInstance)
 {
 	// Applies the semantic mapping between texture coordinates in an effect
-	// and texture coordinates defines in a geometry
+	// and texture coordinates defined in a geometry
 	std::map<std::string, InputSemanticEntry>::iterator iter = materialInstance.inputMap.find(sampler.uvCoords);
 	sampler.uvId = -1;
 	if (iter != materialInstance.inputMap.end())
@@ -1197,6 +1156,7 @@ std::string ColladaLoader::FixFileName(std::string &filename)
 	return file;
 }
 
+/*
 FireCube::NodePtr ColladaLoader::GenerateSceneGraph(Node *node)
 {	
 	// This function converts a given Collada node to the engine's Node class
@@ -1432,6 +1392,276 @@ FireCube::NodePtr ColladaLoader::GenerateSceneGraph()
 {
 	FireCube::NodePtr ret = GenerateSceneGraph(root);    
 	return ret;
+}
+
+*/
+
+void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 parentWorldTransform)
+{
+	// This function walks the scene graph in the collada file and generates a list of geometries to be used by the engine
+
+	// Calculate the node's transformation.
+	mat4 transformation = CalculateTranformation(node->transformations);
+	vec3 translation;
+	mat3 rotation;
+	vec3 scale;
+	transformation.Decompose(scale, translation, rotation);
+	mat4 worldTransform = parentWorldTransform * transformation;
+	
+	// Iterate over all geometry instances in this node
+	// In Collada terms, each mesh can have a group of triangles with different materials.
+	// We translate it to the engine's world by creating a geometry for each group of triangles.
+	for (unsigned int i = 0; i < node->geometryInstances.size(); i++)
+	{		
+		GeometryInstance &gi = node->geometryInstances[i];
+		std::map<std::string, Geometry>::iterator iter = geometryLibrary.find(gi.url);
+		if (iter == geometryLibrary.end())
+			continue;
+		Geometry &geom = iter->second;
+		//geomNode->SetName(geom.name);		
+		Mesh &mesh = geom.mesh;               
+
+		// Flip vertices, normals, tangents and bitangents if needed
+		std::vector<vec3> vertices = mesh.vertices;
+		for (unsigned int j = 0; j < vertices.size(); j++)
+		{
+			if (upDirection == X_UP)
+			{
+				std::swap(vertices[j].x, vertices[j].y);
+				vertices[j].x *= -1;
+			}
+			else if (upDirection == Z_UP)
+			{
+				std::swap(vertices[j].y, vertices[j].z);
+				vertices[j].z *= -1;
+			}
+			vertices[j] = worldTransform * vertices[j];
+		}        
+		std::vector<vec3> normals = mesh.normals;
+		for (unsigned int j = 0; j < normals.size(); j++)
+		{            
+			if (upDirection == X_UP)
+			{
+				std::swap(normals[j].x, normals[j].y);
+				normals[j].x *= -1;
+			}
+			else if (upDirection == Z_UP)
+			{
+				std::swap(normals[j].y, normals[j].z);
+				normals[j].z *= -1;
+			}
+			normals[j].TransformNormal(worldTransform);
+			normals[j].Normalize();
+		}        
+		std::vector<vec3> tangents = mesh.tangents;
+		for (unsigned int j = 0; j < tangents.size(); j++)
+		{            
+			if (upDirection == X_UP)
+			{
+				std::swap(tangents[j].x, tangents[j].y);
+				tangents[j].x *= -1;
+			}
+			else if (upDirection == Z_UP)
+			{
+				std::swap(tangents[j].y, tangents[j].z);
+				tangents[j].z *= -1;
+			}
+			tangents[j].TransformNormal(worldTransform);
+			tangents[j].Normalize();
+		}        
+		std::vector<vec3> bitangents = mesh.binormals;
+		for (unsigned int j = 0; j < bitangents.size(); j++)
+		{            
+			if (upDirection == X_UP)
+			{
+				std::swap(bitangents[j].x, bitangents[j].y);
+				bitangents[j].x *= -1;
+			}
+			else if (upDirection == Z_UP)
+			{
+				std::swap(bitangents[j].y, bitangents[j].z);
+				bitangents[j].z *= -1;
+			}
+			bitangents[j].TransformNormal(worldTransform);
+			bitangents[j].Normalize();
+		}		
+
+		// Iterate over every sub mesh and create a Geometry for it
+		unsigned int vertexIndex = 0;
+		for (unsigned int j = 0; j < mesh.subMeshes.size(); j++)
+		{						
+			FireCube::Geometry *geometry = new FireCube::Geometry(renderer);
+			generatedGeometries.push_back(geometry);
+			SubMesh &subMesh = mesh.subMeshes[j];
+
+			// Use the material instance to resolve the material name of this sub mesh
+			std::map<std::string, MaterialInstance>::iterator iter = gi.materialInstance.find(subMesh.material);
+			MaterialInstance *materialInstance = nullptr;
+			if (iter != gi.materialInstance.end())
+				materialInstance = &iter->second;
+			Material &mat = materialLibrary[materialInstance->materialName];
+			Effect &effect = effectLibrary[mat.effect];
+			// Add the newly created node as a child of the geometry node			
+			
+			FireCube::MaterialPtr fmat;
+			std::map<std::string, FireCube::MaterialPtr>:: iterator matIter = generatedMaterials.find(subMesh.material);
+			if (matIter != generatedMaterials.end())
+			{
+				fmat = matIter->second;
+			}
+			else
+			{
+				fmat = FireCube::MaterialPtr(new FireCube::Material(engine));
+				generatedMaterials[subMesh.material] = fmat;
+				fmat->SetAmbientColor(vec3(effect.ambientColor.x, effect.ambientColor.y, effect.ambientColor.z));
+				fmat->SetDiffuseColor(vec3(effect.diffuseColor.x, effect.diffuseColor.y, effect.diffuseColor.z));
+				fmat->SetSpecularColor(vec3(effect.specularColor.x, effect.specularColor.y, effect.specularColor.z));
+				fmat->SetShininess(effect.shininess);
+				fmat->SetName(subMesh.material);            
+				if (effect.diffuseSampler.name != "")
+				{					
+					fmat->SetDiffuseTexture(engine->GetResourcePool()->GetResource<Texture>(GetTextureFileNameFromSampler(effect, effect.diffuseSampler)));
+				}
+			}
+			geometry->SetMaterial(fmat);
+
+			if (materialInstance)
+			{
+				// Resolve the set number of the texture coordinates associated with each sampler
+				ApplyMaterialInstanceSemanticMapping(effect.ambientSampler, *materialInstance);
+				ApplyMaterialInstanceSemanticMapping(effect.diffuseSampler, *materialInstance);
+				ApplyMaterialInstanceSemanticMapping(effect.specularSampler, *materialInstance);
+			}
+			std::vector<vec2> uv;
+			if (effect.diffuseSampler.name != "")
+			{				
+				unsigned int map = 0;                
+				if (effect.diffuseSampler.uvId != -1)
+					map = effect.diffuseSampler.uvId;
+				else
+				{
+					// If the set number was not specified by the material instance try to get it from the texture
+					// coordinates name of the sampler
+					std::string::iterator s = effect.diffuseSampler.uvCoords.begin();
+					while (s != effect.diffuseSampler.uvCoords.end() && (*s < '0' || *s > '9'))
+						s++;
+					map = 0;
+					while (s != effect.diffuseSampler.uvCoords.end() && (*s >= '0' && *s <= '9'))
+					{
+						map = map * 10 + (*s - '0');
+						s++;
+					}
+				}
+				uv = mesh.texcoords[map];
+				if (options.flipU || options.flipV)
+				{
+					for (unsigned int k = 0; k < uv.size(); k++)
+					{
+						if (options.flipU)
+							uv[k].x = 1 - uv[k].x;
+						if (options.flipV)
+							uv[k].y = 1 - uv[k].y;
+					}
+				}				
+			}
+
+			// Create the faces of this geometry
+			std::vector<unsigned int> indexData;
+			if (subMesh.primitiveType == PRIMITIVE_TRIANGLES)
+			{
+				for (int p = 0; p < subMesh.numPrimtives; p++)
+				{					
+					indexData.push_back(subMesh.indices[p * 3 + 0]);
+					indexData.push_back(subMesh.indices[p * 3 + 1]);
+					indexData.push_back(subMesh.indices[p * 3 + 2]);
+				}
+			}
+			else if (subMesh.primitiveType == PRIMITIVE_POLYLIST)
+			{
+				for (int p = 0; p < subMesh.numPrimtives; p++)
+				{
+					if (subMesh.vcount[p] != 3)
+						continue;					
+					indexData.push_back(subMesh.indices[p * 3 + 0]);
+					indexData.push_back(subMesh.indices[p * 3 + 1]);
+					indexData.push_back(subMesh.indices[p * 3 + 2]);
+				}
+			}
+
+			VertexBufferPtr vertexBuffer(new VertexBuffer(renderer));			
+			IndexBufferPtr indexBuffer(new IndexBuffer(renderer));			
+			geometry->SetVertexBuffer(vertexBuffer);
+			geometry->SetIndexBuffer(indexBuffer);
+
+			/*if (normals.empty())
+				CalculateNormals(normals, vertices, indexData);*/
+
+			/*if (geometry->GetTangents().size() == 0)
+				geometry->CalculateTangents();*/
+
+			unsigned int vertexAttributes = VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_NORMAL;
+			unsigned int vertexSize = 6;
+			if (uv.empty() == false)
+			{
+				vertexAttributes |= VERTEX_ATTRIBUTE_TEXCOORD0;
+				vertexSize += 2;
+			}
+			if (tangents.empty() == false)
+			{
+				vertexAttributes |= VERTEX_ATTRIBUTE_TANGENT;
+				vertexSize += 3;
+			}
+			
+			std::vector<float> vertexData(vertexSize * vertices.size());
+			for (unsigned int k = 0; k < vertices.size(); ++k)
+			{
+				*((vec3 *) &vertexData[k * vertexSize + 0]) = vertices[k];
+				*((vec3 *) &vertexData[k * vertexSize + 3]) = normals[k];
+				unsigned int currentOffset = 6;
+				if (vertexAttributes & VERTEX_ATTRIBUTE_TEXCOORD0)
+				{
+					*((vec2 *) &vertexData[k * vertexSize + currentOffset]) = uv[k];
+					currentOffset += 2;
+				}
+				if (vertexAttributes & VERTEX_ATTRIBUTE_TANGENT)
+				{
+					*((vec3 *) &vertexData[k * vertexSize + currentOffset]) = tangents[k];
+					currentOffset += 3;
+				}				
+				boundingBox.Expand(vertices[k]);
+			}			
+
+			vertexBuffer->LoadData(&vertexData[0], vertices.size(), vertexAttributes, STATIC);			
+			indexBuffer->LoadData(&indexData[0], indexData.size(), STATIC);
+			
+			geometry->SetPrimitiveType(TRIANGLES);
+			geometry->SetPrimitiveCount(indexData.size() / 3);
+			geometry->SetVertexCount(indexData.size());			
+			geometry->Update();
+		}    
+	}
+
+	// Recursively generate geometries for this node's children
+	for (unsigned int i = 0; i < node->children.size(); i++)
+	{
+		GenerateGeometries(renderer, node->children[i], worldTransform);		
+	}	
+}
+
+BoundingBox ColladaLoader::GetBoundingBox() const
+{
+	return boundingBox;
+}
+
+void ColladaLoader::GenerateGeometries(Renderer *renderer)
+{
+	generatedGeometries.clear();
+	GenerateGeometries(renderer, root, mat4::identity);	
+}
+
+const std::vector<FireCube::Geometry *> &ColladaLoader::GetGeneratedGeometries()
+{
+	return generatedGeometries;
 }
 
 TiXmlElement *ColladaLoader::GetChildElement(TiXmlNode *node, const std::string &elmName)

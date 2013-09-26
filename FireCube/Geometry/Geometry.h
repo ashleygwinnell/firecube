@@ -10,6 +10,7 @@
 #include "ThirdParty/GLEW/glew.h"
 #include "Math/MyMath.h"
 #include "Math/BoundingBox.h"
+#include "Rendering/GraphicsResource.h"
 
 namespace FireCube
 {
@@ -18,13 +19,16 @@ namespace FireCube
 class Node;
 typedef std::shared_ptr<Node> NodePtr;
 class RenderQueue;
-class Buffer;
-typedef std::shared_ptr<Buffer> BufferPtr;
+class VertexBuffer;
+typedef std::shared_ptr<VertexBuffer> VertexBufferPtr;
+class IndexBuffer;
+typedef std::shared_ptr<IndexBuffer> IndexBufferPtr;
 class Geometry;
 class ProgramUniformsList;
 class Texture;
 typedef std::shared_ptr<Texture> TexturePtr;
 class Material;
+class Renderer;
 
 /**
 * Specifies the kind of primitives to render.
@@ -45,14 +49,6 @@ typedef std::shared_ptr<Geometry> GeometryPtr;
 */
 typedef std::shared_ptr<Material> MaterialPtr;
 
-namespace Renderer
-{
-void FIRECUBE_API Render(NodePtr node);
-void FIRECUBE_API Render(NodePtr node, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
-void FIRECUBE_API Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
-void FIRECUBE_API Render(RenderQueue &renderQueue);
-}
-
 /**
 * Defines an edge in a geometry.
 */
@@ -65,129 +61,26 @@ public:
 	*/
 	unsigned int v[2];
 };
-/**
-* Defines a face in a geometry.
-*/
-class FIRECUBE_API Face
-{
-public:
-	Face();
-
-	/**
-	* Constructs a face from three indices.
-	* @param v0 The first index.
-	* @param v1 The second index.
-	* @param v2 The third index.
-	*/
-	Face(unsigned int v0, unsigned int v1, unsigned int v2);
-	~Face();
-
-	/**
-	* The three indices of the face.
-	*/
-	unsigned int v[3];
-
-	/**
-	* The face's normal vector.
-	*/
-	vec3 normal;
-};
 
 /**
 * A class representing a geometry.
 * Geometries consists of vertices(position, normal, etc..), faces and a material.
 */
-class FIRECUBE_API Geometry
+class FIRECUBE_API Geometry : public GraphicsResource
 {    
-	friend void Renderer::Render(NodePtr node);
-	friend void Renderer::Render(NodePtr node, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
-	friend void Renderer::Render(RenderQueue &renderQueue, const std::string &techniqueName, const ProgramUniformsList &programUniformsList);
-	friend void Renderer::Render(RenderQueue &renderQueue);
+	friend class Renderer;	
 public:
-	Geometry();
+	Geometry(Renderer *renderer);
 
 	~Geometry();
 
-	/**
-	* Calculates the bounding box of this model.
-	*/
-	void CalculateBoundingBox();
-	
-	/**
-	* Returns the bounding box of this model.
-	*/
-	BoundingBox GetBoundingBox() const;
-		
-	/**
-	* Reduces the geometry by removing duplicated vertices.
-	* @return The reduced geometry.
-	*/
-	GeometryPtr Reduce() const;
-	
-	/**
-	* Calculates face and vertex normals.
-	*/
-	void CalculateNormals();
-	
-	/**
-	* Calculates tangents and bitangents.
-	*/
-	void CalculateTangents();
-	
-	/**
-	* Creates hard normals for the mesh.
-	*/
-	void CreateHardNormals();
-	
 	/**
 	* Updates the vertex buffers.
 	* Copies the local copies of the vertices attributes (position, normals, etc) and indices
 	* to the appropriate vertex buffers in this geometry.
 	*/
-	void UpdateBuffers();
-
-	void UpdateIndexBuffer();
-	
-	/**
-	* Returns the vertices of this geometry.
-	*/
-	std::vector<vec3> &GetVertices();
-	
-	/**
-	* Returns the normals of this geometry.
-	*/
-	std::vector<vec3> &GetNormals();
-	
-	/**
-	* Returns the normals of this geometry.
-	*/
-	std::vector<vec3> &GetTangents();
-	
-	/**
-	* Returns the normals of this geometry.
-	*/
-	std::vector<vec3> &GetBitangents();
-	
-	/**
-	* Returns the faces of this geometry.
-	*/
-	std::vector<Face> &GetFaces();
-	
-	/**
-	* Returns the diffuse uv of this geometry.
-	*/
-	std::vector<vec2> &GetDiffuseUV();
-	
-	/**
-	* Returns the indices of this geometry.
-	*/
-	std::vector<unsigned int> &GetIndices();
-	
-	/**
-	* Copies the triangles defined in the faces of this geometry to the indices array.
-	*/
-	void CopyFacesToIndices();
-
+	void Update();	
+		
 	/**
 	* Returns the material of this geometry.
 	*/
@@ -238,26 +131,19 @@ public:
 	*/
 	GeometryPtr Clone();
 
-private:
-	std::vector<vec3> vertex;
-	std::vector<vec3> normal;
-	std::vector<vec3> tangent;
-	std::vector<vec3> bitangent;    
-	std::vector<Face> face;
-	std::vector<unsigned int> indices;
-	std::vector<vec2> diffuseUV;
-	BufferPtr vertexBuffer;
-	BufferPtr diffuseUVBuffer;
-	BufferPtr normalBuffer;
-	BufferPtr tangentBuffer;
-	BufferPtr bitangentBuffer;
-	BufferPtr indexBuffer;
+	void SetVertexBuffer(VertexBufferPtr vertexBuffer);
+
+	void SetIndexBuffer(IndexBufferPtr indexBuffer);
+
+	void Render();
+
+private:	
+	VertexBufferPtr vertexBuffer;	
+	IndexBufferPtr indexBuffer;
 	MaterialPtr material;
 	PrimitiveType primitiveType;
 	unsigned int primitiveCount;
-	unsigned int vertexCount;
-	BoundingBox bbox;
-	GLuint vao;
+	unsigned int vertexCount;	
 };
 }
 #pragma warning(pop)

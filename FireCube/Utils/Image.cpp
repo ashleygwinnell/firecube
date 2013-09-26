@@ -20,30 +20,30 @@ bool Image::Load(const std::string &filename)
 	if (fname.empty())
 		return false;
 
-	unsigned int pos = filename.find_last_of('.');
+	unsigned int pos = fname.find_last_of('.');
 	std::string ext;
 	bool loadedUsingStb = false;
 	if (pos != std::string::npos)
 	{
-		ext = filename.substr(pos + 1);
+		ext = fname.substr(pos + 1);
 		std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 	}
 	unsigned char *pixels;
 	if (pos == std::string::npos || ext != "jpg")
 	{
 		loadedUsingStb = true;
-		pixels = stbi_load(filename.c_str(), &width, &height, &bytesPerPixel, 0);
+		pixels = stbi_load(fname.c_str(), &width, &height, &bytesPerPixel, 0);
 		if (!pixels)
 		{
 			std::ostringstream oss;
 			oss << "Failed loading image: " << filename << " reason: " << stbi_failure_reason();
-			Logger::Write(Logger::LOG_ERROR, oss.str());
+			LOGERROR(oss.str());
 			return false;
 		}
 	}
 	else
 	{		
-		pixels = jpgd::decompress_jpeg_image_from_file(filename.c_str(), &width, &height, &bytesPerPixel, 3);
+		pixels = jpgd::decompress_jpeg_image_from_file(fname.c_str(), &width, &height, &bytesPerPixel, 3);
 		if (!pixels)
 			return false;
 	}

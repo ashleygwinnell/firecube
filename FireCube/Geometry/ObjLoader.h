@@ -9,10 +9,11 @@
 
 #include "Math/MyMath.h"
 #include "Scene/Node.h"
+#include "ModelLoader.h"
 
 namespace FireCube
 {
-	class ObjLoader
+	class ObjLoader : public ModelLoader
 	{
 	public:
 		class Face
@@ -49,10 +50,17 @@ namespace FireCube
 			unsigned int v, t, n;
 			bool operator < (const MapKey &other) const;
 		};
-		ObjLoader();
-		void Load(const std::string &filename, ModelLoadingOptions options);
-		NodePtr GenerateSceneGraph();
+		ObjLoader(Engine *engine);
+		virtual bool Load(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());		
+		virtual void GenerateGeometries(Renderer *renderer);
+		virtual void GenerateScene(Renderer *renderer);
+		virtual const std::vector<Geometry *> &GetGeneratedGeometries();
+		virtual NodePtr GetGeneratedScene();
+		virtual const std::vector<FireCube::Material *> &GetGeneratedMaterials();
+		virtual BoundingBox GetBoundingBox() const;
+
 	private:
+		void CalculateNormals(std::vector<vec3> &normals, std::vector<vec3> &vertices, std::vector<unsigned int> &indices);
 		std::string ExtractDirectory(const std::string &filename);
 		void ParseVertexLine(const std::string &line);
 		void ParseTexCoordLine(const std::string &line);
@@ -82,6 +90,9 @@ namespace FireCube
 		Material *currentMaterial;
 		std::string baseDir;
 		ModelLoadingOptions options;
+		std::vector<Geometry *> generatedGeometries;
+		std::vector<FireCube::Material *> generatedMaterials;
+		BoundingBox boundingBox;
 	};
 }
 

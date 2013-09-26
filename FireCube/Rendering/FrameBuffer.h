@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "Utils/utils.h"
+#include "Rendering/GraphicsResource.h"
 
 namespace FireCube
 {
@@ -14,25 +15,21 @@ namespace FireCube
 class FrameBuffer;
 class Texture;
 typedef std::shared_ptr<Texture> TexturePtr;
+class Renderer;
 
 /**
 * A shared pointer to a FrameBuffer.
 */
 typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
 
-namespace Renderer
-{
-void FIRECUBE_API UseFrameBuffer(FrameBufferPtr frameBuffer);
-}
-
 /**
 * A class representing a frame buffer.
 */
-class FIRECUBE_API FrameBuffer
+class FIRECUBE_API FrameBuffer : public Object, public GraphicsResource
 {
-    friend void Renderer::UseFrameBuffer(FrameBufferPtr frameBuffer);
+    friend class Renderer;
 public:
-    FrameBuffer();
+    FrameBuffer(Engine *engine);
     ~FrameBuffer();
     /**
     * Creates a frame buffer.
@@ -78,15 +75,11 @@ public:
     /**
     * Returns the height of the frame buffer.
     */
-    int GetHeight() const;
-    /**
-    * Returns the resource id of the frame buffer.
-    */
-    unsigned int GetId() const;
+    int GetHeight() const;  
 
 private:
     int width, height;
-    GLuint id;
+    
     GLuint depthBuffer;
     TexturePtr texture[MAX_TEXTURES];
     TexturePtr depthTexture;

@@ -1,25 +1,22 @@
 #include "Scene/Light.h"
+#include "Scene/Node.h"
+#include "Rendering/Viewport.h"
 
 using namespace FireCube;
 
-void Light::SetType(LightType type)
+Light::Light(Engine *engine) : Component(engine)
+{
+
+}
+
+void Light::SetLightType(LightType type)
 {
 	this->type = type;
 }
 
-LightType Light::GetType() const
+LightType Light::GetLightType() const
 {
 	return type;
-}
-
-void Light::SetAmbientColor(const vec4 &color)
-{
-	ambientColor = color;
-}
-
-vec4 Light::GetAmbientColor() const
-{
-	return ambientColor;
 }
 
 void Light::SetDiffuseColor(const vec4 &color)
@@ -44,5 +41,11 @@ vec4 Light::GetSpecularColor() const
 
 bool Light::operator == (const Light &other) const
 {
-	return ambientColor == other.ambientColor && diffuseColor == other.diffuseColor && specularColor == other.specularColor && type == other.type;
+	return diffuseColor == other.diffuseColor && specularColor == other.specularColor && type == other.type;
+}
+
+void Light::NodeChanged()
+{
+	if (node && node->GetViewport())
+		node->GetViewport()->AddLight(this);
 }

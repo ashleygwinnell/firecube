@@ -2,64 +2,45 @@
 
 #include "ThirdParty/GLEW/glew.h"
 #include "Utils/Logger.h"
-#include "Rendering/Buffer.h"
+#include "Rendering/VertexBuffer.h"
+#include "Rendering/IndexBuffer.h"
 #include "Geometry/Geometry.h"
+#include "Rendering/Renderer.h"
 
 using namespace FireCube;
 
-Face::Face()
-{
-
-}
-
-Face::Face(unsigned int v0, unsigned int v1, unsigned int v2)
-{
-	v[0] = v0;
-	v[1] = v1;
-	v[2] = v2;
-}
-
-Face::~Face()
-{
-
-}
-
-Geometry::Geometry() : vao(0), vertexCount(0), primitiveCount(0)
+Geometry::Geometry(Renderer *renderer) : GraphicsResource(renderer), vertexCount(0), primitiveCount(0)
 {
 
 }
 
 Geometry::~Geometry()
 {
-	Logger::Write(Logger::LOG_INFO, std::string("Destroyed geometry"));
+	if (objectId)
+		glDeleteVertexArrays(1, &objectId);
+	LOGINFO("Destroyed geometry");
 }
-
+/*
 void Geometry::CalculateNormals()
 {
 	normal.resize(vertex.size());
 	std::fill(normal.begin(), normal.end(), vec3(0, 0, 0));
 	
-	for (unsigned int f = 0; f < face.size(); f++)
+	for (unsigned int i = 0; i < indices.size(); i += 3)
 	{
 		// Calculate face normals
-		vec3 v1 = vertex[face[f].v[1]] - vertex[face[f].v[0]];
-		vec3 v2 = vertex[face[f].v[2]] - vertex[face[f].v[0]];
-		vec3 n = Cross(v1, v2);
-		face[f].normal = n;
-		face[f].normal.Normalize();
+		vec3 v1 = vertex[indices[i + 1]] - vertex[indices[i + 0]];
+		vec3 v2 = vertex[indices[i + 2]] - vertex[indices[i + 0]];
+		vec3 n = Cross(v1, v2);				
 		// Add this normal to the three vertex normals forming this face
-		normal[face[f].v[0]] += n;
-		normal[face[f].v[1]] += n;
-		normal[face[f].v[2]] += n;
+		normal[indices[i + 0]] += n;
+		normal[indices[i + 1]] += n;
+		normal[indices[i + 2]] += n;
 	}
 	for (unsigned int n = 0; n < normal.size(); n++)
 	{
 		normal[n].Normalize();
-	}
-	// Load the normals to the normal buffer
-	normalBuffer = BufferPtr(new Buffer);
-	normalBuffer->Create();
-	normalBuffer->LoadData(&normal[0], sizeof(vec3)*normal.size(), STATIC);
+	}	
 }
 
 void Geometry::CalculateTangents()
@@ -69,17 +50,15 @@ void Geometry::CalculateTangents()
 	std::vector<vec3> tan(vertex.size() * 2);
 	std::fill(tan.begin(), tan.end(), vec3(0, 0, 0));
 
-	for (unsigned int i = 0; i < face.size(); i++)
-	{
-		Face &face = this->face[i];
+	for (unsigned int i = 0; i < indices.size(); i += 3)
+	{		
+		const vec3 &v0 = vertex[indices[i + 0]];
+		const vec3 &v1 = vertex[indices[i + 1]];
+		const vec3 &v2 = vertex[indices[i + 2]];
 
-		const vec3 &v0 = vertex[face.v[0]];
-		const vec3 &v1 = vertex[face.v[1]];
-		const vec3 &v2 = vertex[face.v[2]];
-
-		const vec2 &uv0 = diffuseUV[face.v[0]];
-		const vec2 &uv1 = diffuseUV[face.v[1]];
-		const vec2 &uv2 = diffuseUV[face.v[2]];
+		const vec2 &uv0 = diffuseUV[indices[i + 0]];
+		const vec2 &uv1 = diffuseUV[indices[i + 1]];
+		const vec2 &uv2 = diffuseUV[indices[i + 2]];
 
 		float x1 = v1.x - v0.x;
 		float x2 = v2.x - v0.x;
@@ -99,13 +78,13 @@ void Geometry::CalculateTangents()
 		vec3 tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r,
 				  (s1 * z2 - s2 * z1) * r);
 
-		tan[face.v[0]] += sdir;
-		tan[face.v[1]] += sdir;
-		tan[face.v[2]] += sdir;
+		tan[indices[i + 0]] += sdir;
+		tan[indices[i + 1]] += sdir;
+		tan[indices[i + 2]] += sdir;
 
-		tan[vertex.size() + face.v[0]] += tdir;
-		tan[vertex.size() + face.v[1]] += tdir;
-		tan[vertex.size() + face.v[2]] += tdir;
+		tan[vertex.size() + indices[i + 0]] += tdir;
+		tan[vertex.size() + indices[i + 1]] += tdir;
+		tan[vertex.size() + indices[i + 2]] += tdir;
 	}
 	tangent.resize(vertex.size());
 	bitangent.resize(vertex.size());
@@ -118,13 +97,7 @@ void Geometry::CalculateTangents()
 		tangent[i] = (t1 - n * Dot(n, t1)).Normalize();
 		float w = (Dot(Cross(n, t1), t2) < 0.0f) ? -1.0f : 1.0f;
 		bitangent[i] = (Cross(n, tangent[i]) * w).Normalize();
-	}
-	tangentBuffer = BufferPtr(new Buffer);
-	tangentBuffer->Create();
-	tangentBuffer->LoadData(&tangent[0], sizeof(vec3)*tangent.size(), STATIC);
-	bitangentBuffer = BufferPtr(new Buffer);
-	bitangentBuffer->Create();
-	bitangentBuffer->LoadData(&bitangent[0], sizeof(vec3)*bitangent.size(), STATIC);
+	}	
 }
 
 void Geometry::CreateHardNormals()
@@ -135,22 +108,22 @@ void Geometry::CreateHardNormals()
 	if (primitiveType != TRIANGLES)
 		return;
 	std::vector<vec3> originalVertices = vertex;
-	std::vector<vec2> originalDiffuseUV = diffuseUV;
-	std::vector<Face> originalFaces = face;
+	std::vector<unsigned int> originalIndices = indices;
+	std::vector<vec2> originalDiffuseUV = diffuseUV;	
 	std::vector<vec3> originalTangents = tangent;
 	std::vector<vec3> originalBitangents = bitangent;
-	unsigned int currentIndex = 0;
-	face.clear();
+	unsigned int currentIndex = 0;	
 	vertex.clear();
 	normal.clear();
 	diffuseUV.clear();
 	tangent.clear();
 	bitangent.clear();
-	for (unsigned int i = 0; i < originalFaces.size(); i++)
+	indices.clear();
+	for (unsigned int i = 0; i < originalIndices.size(); i += 3)
 	{
-		vec3 v0 = originalVertices[originalFaces[i].v[0]];
-		vec3 v1 = originalVertices[originalFaces[i].v[1]];
-		vec3 v2 = originalVertices[originalFaces[i].v[2]];
+		vec3 v0 = originalVertices[originalIndices[i + 0]];
+		vec3 v1 = originalVertices[originalIndices[i + 1]];
+		vec3 v2 = originalVertices[originalIndices[i + 2]];
 		vec3 n = Cross(v1 - v0, v2 - v0).Normalize();
 		// Add three vertices for each face
 		vertex.push_back(v0);
@@ -163,9 +136,9 @@ void Geometry::CreateHardNormals()
 		if (originalDiffuseUV.size() > 0)
 		{
 			vec2 uv0, uv1, uv2;
-			uv0 = originalDiffuseUV[originalFaces[i].v[0]];
-			uv1 = originalDiffuseUV[originalFaces[i].v[1]];
-			uv2 = originalDiffuseUV[originalFaces[i].v[2]];
+			uv0 = originalDiffuseUV[originalIndices[i + 0]];
+			uv1 = originalDiffuseUV[originalIndices[i + 1]];
+			uv2 = originalDiffuseUV[originalIndices[i + 2]];
 
 			diffuseUV.push_back(uv0);
 			diffuseUV.push_back(uv1);
@@ -174,9 +147,9 @@ void Geometry::CreateHardNormals()
 		if (originalTangents.size() > 0)
 		{
 			vec3 t0, t1, t2;
-			t0 = originalTangents[originalFaces[i].v[0]];
-			t1 = originalTangents[originalFaces[i].v[1]];
-			t2 = originalTangents[originalFaces[i].v[2]];
+			t0 = originalTangents[originalIndices[i + 0]];
+			t1 = originalTangents[originalIndices[i + 1]];
+			t2 = originalTangents[originalIndices[i + 2]];
 
 			tangent.push_back(t0);
 			tangent.push_back(t1);
@@ -185,245 +158,85 @@ void Geometry::CreateHardNormals()
 		if (originalBitangents.size() > 0)
 		{
 			vec3 t0, t1, t2;
-			t0 = originalBitangents[originalFaces[i].v[0]];
-			t1 = originalBitangents[originalFaces[i].v[1]];
-			t2 = originalBitangents[originalFaces[i].v[2]];
+			t0 = originalBitangents[originalIndices[i + 0]];
+			t1 = originalBitangents[originalIndices[i + 1]];
+			t2 = originalBitangents[originalIndices[i + 2]];
 
 			bitangent.push_back(t0);
 			bitangent.push_back(t1);
 			bitangent.push_back(t2);
 		}
-		Face f(currentIndex, currentIndex + 1, currentIndex + 2);
-		f.normal = n;
-		currentIndex += 3;
-		face.push_back(f);
-	}
-	CopyFacesToIndices();
+		indices.push_back(currentIndex + 0);
+		indices.push_back(currentIndex + 1);
+		indices.push_back(currentIndex + 2);
+		currentIndex += 3;		
+	}	
 	SetVertexCount(indices.size());
 	SetPrimitiveCount(indices.size() / 3);
 	CalculateBoundingBox();
 	UpdateBuffers();
 }
-
-void Geometry::UpdateBuffers()
+*/
+void Geometry::Update()
 {
-	if (vao == 0)
-		glGenVertexArrays(1, &vao);
+	if (objectId == 0)
+		glGenVertexArrays(1, &objectId);
 
-	glBindVertexArray(vao);
-	if (!vertexBuffer)
+	glBindVertexArray(objectId);
+	/*if (!vertexBuffer)
 	{
-		vertexBuffer = BufferPtr(new Buffer);
+		vertexBuffer = VertexBufferPtr(new VertexBuffer(renderer));
 		vertexBuffer->Create();
 	}
-	if (!vertexBuffer->LoadData(&vertex[0], sizeof(vec3)*vertex.size(), STATIC))
+	
+	unsigned int vertexSize = 3;	
+	unsigned int attributes = VERTEX_ATTRIBUTE_POSITION;
+	if (normal.empty() == false)
 	{
-		std::ostringstream oss;
-		oss << "buffer id:" << vertexBuffer->GetId() << " Couldn't upload vertex data";
-		Logger::Write(Logger::LOG_ERROR, oss.str());
+		attributes |= VERTEX_ATTRIBUTE_NORMAL;		
+		vertexSize += 3;
 	}
-	else
-		vertexBuffer->SetVertexAttribute(0, 3, 0, 0);
-
-	if (normal.size() != 0)
+	if (tangent.empty() == false)
 	{
-		if (!normalBuffer)
-		{
-			normalBuffer = BufferPtr(new Buffer);
-			normalBuffer->Create();
-		}
-		if (!normalBuffer->LoadData(&normal[0], sizeof(vec3)*normal.size(), STATIC))
-		{
-			std::ostringstream oss;
-			oss << "buffer id:" << normalBuffer->GetId() << " Couldn't upload vertex data";
-			Logger::Write(Logger::LOG_ERROR, oss.str());
-		}
-		else
-			normalBuffer->SetVertexAttribute(1, 3, 0, 0);
+		attributes |= VERTEX_ATTRIBUTE_TANGENT;		
+		vertexSize += 3;
 	}
-	else
-		normalBuffer = BufferPtr();
-
-	if (tangent.size() != 0)
+	if (bitangent.empty() == false)
 	{
-		if (!tangentBuffer)
-		{
-			tangentBuffer = BufferPtr(new Buffer);
-			tangentBuffer->Create();
-		}
-		if (!tangentBuffer->LoadData(&tangent[0], sizeof(vec3)*tangent.size(), STATIC))
-		{
-			std::ostringstream oss;
-			oss << "buffer id:" << tangentBuffer->GetId() << " Couldn't upload vertex data";
-			Logger::Write(Logger::LOG_ERROR, oss.str());
-		}
-		else
-			tangentBuffer->SetVertexAttribute(2, 3, 0, 0);
+		attributes |= VERTEX_ATTRIBUTE_BITANGENT;		
+		vertexSize += 3;
 	}
-	else
-		tangentBuffer = BufferPtr();
-
-	if (bitangent.size() != 0)
+	std::vector<float> data(vertex.size() * vertexSize * sizeof(float));
+	for (unsigned int i = 0; i < vertex.size(); ++i)
 	{
-		if (!bitangentBuffer)
+		data[i * vertexSize + 0] = vertex[i].x;
+		data[i * vertexSize + 1] = vertex[i].y;
+		data[i * vertexSize + 2] = vertex[i].z;
+		int offset = 3;
+		if (attributes & VERTEX_ATTRIBUTE_NORMAL)
 		{
-			bitangentBuffer = BufferPtr(new Buffer);
-			bitangentBuffer->Create();
+			data[i * vertexSize + offset++] = normal[i].x;
+			data[i * vertexSize + offset++] = normal[i].y;
+			data[i * vertexSize + offset++] = normal[i].z;
 		}
-		if (!bitangentBuffer->LoadData(&bitangent[0], sizeof(vec3) * bitangent.size(), STATIC))
+		if (attributes & VERTEX_ATTRIBUTE_TANGENT)
 		{
-			std::ostringstream oss;
-			oss << "buffer id:" << bitangentBuffer->GetId() << " Couldn't upload vertex data";
-			Logger::Write(Logger::LOG_ERROR, oss.str());
+			data[i * vertexSize + offset++] = tangent[i].x;
+			data[i * vertexSize + offset++] = tangent[i].y;
+			data[i * vertexSize + offset++] = tangent[i].z;
 		}
-		else
-			bitangentBuffer->SetVertexAttribute(3, 3, 0, 0);
-	}
-	else
-		bitangentBuffer = BufferPtr();
-
-	if (diffuseUV.size() != 0)
-	{
-		if (!diffuseUVBuffer)
+		if (attributes & VERTEX_ATTRIBUTE_BITANGENT)
 		{
-			diffuseUVBuffer = BufferPtr(new Buffer);
-			diffuseUVBuffer->Create();
-		}
-		if (!diffuseUVBuffer->LoadData(&diffuseUV[0], sizeof(vec2)*diffuseUV.size(), STATIC))
-		{
-			std::ostringstream oss;
-			oss << "buffer id:" << diffuseUVBuffer->GetId() << " Couldn't upload vertex data";
-			Logger::Write(Logger::LOG_ERROR, oss.str());
-		}
-		else
-			diffuseUVBuffer->SetVertexAttribute(4, 2, 0, 0);
-	}
-	else
-		diffuseUVBuffer = BufferPtr();
-
-	if (!indices.empty())
-	{
-		if (!indexBuffer)
-		{
-			indexBuffer = BufferPtr(new Buffer);
-			indexBuffer->Create();
-		}
-		if (!indexBuffer->LoadIndexData(&indices[0], indices.size(), STATIC))
-		{
-			std::ostringstream oss;
-			oss << "buffer id:" << indexBuffer->GetId() << " Couldn't upload vertex data";
-			Logger::Write(Logger::LOG_ERROR, oss.str());
-		}
-		else
-			indexBuffer->SetIndexStream();
-	}
-}
-
-void Geometry::UpdateIndexBuffer()
-{	
-	glBindVertexArray(vao);
-	if (!indices.empty())
-	{
-		if (!indexBuffer)
-		{
-			indexBuffer = BufferPtr(new Buffer);
-			indexBuffer->Create();
-		}
-		if (!indexBuffer->LoadIndexData(&indices[0], indices.size(), STATIC))
-		{
-			std::ostringstream oss;
-			oss << "buffer id:" << indexBuffer->GetId() << " Couldn't upload vertex data";
-			Logger::Write(Logger::LOG_ERROR, oss.str());
-		}
-		else
-			indexBuffer->SetIndexStream();
-	}
-}
-
-GeometryPtr Geometry::Reduce() const
-{
-	GeometryPtr geometry(new Geometry);
-	geometry->face = face;
-
-	for (unsigned int i = 0; i < geometry->face.size(); i++)
-	{
-		for (unsigned int j = 0; j < 3; j++)
-		{
-			vec3 v = vertex[geometry->face[i].v[j]];
-			bool found = false;
-			unsigned int k;
-			// Find another vertex which is equal to v
-			for (k = 0; k < geometry->vertex.size(); k++)
-			{
-				if ((vertex[k] - v).Length2() == 0.0f)
-				{
-					found = true;
-					break;
-				}
-			}			
-			if (found == false)
-			{
-				// If none found, add v to the vertices list
-				geometry->vertex.push_back(v);
-				geometry->face[i].v[j] = geometry->vertex.size() - 1;
-			}
-			else
-			{
-				// Otherwise use the previously added vertex
-				geometry->face[i].v[j] = k;
-			}
+			data[i * vertexSize + offset++] = bitangent[i].x;
+			data[i * vertexSize + offset++] = bitangent[i].y;
+			data[i * vertexSize + offset++] = bitangent[i].z;
 		}
 	}
-	return geometry;
-}
-
-BoundingBox Geometry::GetBoundingBox() const
-{
-	return bbox;
-}
-
-void Geometry::CalculateBoundingBox()
-{
-	bbox = BoundingBox();
-	for (std::vector<vec3>::iterator j = vertex.begin(); j != vertex.end(); j++)
-	{
-		bbox.Expand(*j);
-	}
-}
-
-std::vector<vec3> &Geometry::GetVertices()
-{
-	return vertex;
-}
-
-std::vector<vec3> &Geometry::GetNormals()
-{
-	return normal;
-}
-
-std::vector<vec3> &Geometry::GetTangents()
-{
-	return tangent;
-}
-
-std::vector<vec3> &Geometry::GetBitangents()
-{
-	return bitangent;
-}
-
-std::vector<Face> &Geometry::GetFaces()
-{
-	return face;
-}
-
-std::vector<vec2> &Geometry::GetDiffuseUV()
-{
-	return diffuseUV;
-}
-
-std::vector<unsigned int> &Geometry::GetIndices()
-{
-	return indices;
+	vertexBuffer->LoadData(&data[0], vertex.size(), attributes, STATIC);*/
+	vertexBuffer->ApplyAttributes();	
+	if (indexBuffer)
+		indexBuffer->SetIndexStream();
+	glBindVertexArray(0);
 }
 
 MaterialPtr Geometry::GetMaterial()
@@ -466,32 +279,34 @@ unsigned int Geometry::GetVertexCount() const
 	return vertexCount;
 }
 
-void Geometry::CopyFacesToIndices()
-{
-	indices.resize(face.size() * 3);
-	for (unsigned int i = 0; i < face.size(); i++)
-	{
-		indices[i * 3 + 0] = face[i].v[0];
-		indices[i * 3 + 1] = face[i].v[1];
-		indices[i * 3 + 2] = face[i].v[2];
-	}
-}
-
 GeometryPtr Geometry::Clone()
 {
-	GeometryPtr ret(new Geometry);
-	ret->bbox = this->bbox;
-	ret->bitangent = this->bitangent;
-	ret->diffuseUV = this->diffuseUV;
-	ret->face = this->face;
-	ret->indices = this->indices;
+	GeometryPtr ret(new Geometry(renderer));
 	ret->material = this->material;
-	ret->normal = this->normal;
 	ret->primitiveCount = this->primitiveCount;
 	ret->primitiveType = this->primitiveType;
-	ret->tangent = this->tangent;
-	ret->vertex = this->vertex;
 	ret->vertexCount = this->vertexCount;
 	
 	return ret;
+}
+
+void Geometry::SetVertexBuffer(VertexBufferPtr vertexBuffer)
+{
+	this->vertexBuffer = vertexBuffer;
+}
+
+void Geometry::SetIndexBuffer(IndexBufferPtr indexBuffer)
+{
+	this->indexBuffer = indexBuffer;	
+}
+
+void Geometry::Render()
+{
+	glBindVertexArray(objectId);
+
+	if (indexBuffer && indexBuffer->IsValid())			
+		renderer->RenderIndexStream(primitiveType, vertexCount);											
+	else
+		renderer->RenderStream(primitiveType, vertexCount);				
+	renderer->IncreamentNumboerOfPrimitivesRendered(primitiveCount);
 }
