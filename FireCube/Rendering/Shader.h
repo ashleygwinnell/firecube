@@ -12,8 +12,9 @@
 #include "Rendering/GraphicsResource.h"
 #include "ThirdParty/GLEW/glew.h"
 #include "Utils/utils.h"
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 #include "Utils/StringHash.h"
+#include "Core/Variant.h"
 
 namespace FireCube
 {
@@ -161,6 +162,8 @@ public:
 	*/
 	void SetUniform(const StringHash &nameHash, const std::vector<int> &value);
 
+	void SetUniform(const StringHash &nameHash, const Variant &value);
+
 	/**
 	* Sets vertex shader attribute.
 	* @param name The name of the variable.
@@ -176,135 +179,6 @@ public:
 
 private:    
 	std::map<StringHash, GLint> variables;
-};
-
-class ShaderProperties;
-
-/**
-* A class storing a list of uniforms to be fed into a gpu program.
-*/
-class FIRECUBE_API ProgramUniformsList
-{
-public:
-
-	/**
-	* Assigns an integer value to a named uniform variable.
-	* @param name The name of the uniform variable.
-	* @param value The value to assign.
-	*/
-	void SetIntValue(const std::string &name, int value);
-
-	/**
-	* Gets the value of an integer uniform variable.
-	* @param name The name of the uniform variable.
-	* @return The value of the uniform variable.
-	*/
-	int GetIntValue(const std::string &name) const;
-
-	/**
-	* Assigns a float value to a named uniform variable.
-	* @param name The name of the uniform variable.
-	* @param value The value to assign.
-	*/
-	void SetFloatValue(const std::string &name, float value);
-
-	/**
-	* Gets the value of a float uniform variable.
-	* @param name The name of the uniform variable.
-	* @return The value of the uniform variable.
-	*/
-	float GetFloatValue(const std::string &name) const;
-
-	/**
-	* Assigns a 2d vector value to a named uniform variable.
-	* @param name The name of the uniform variable.
-	* @param value The value to assign.
-	*/
-	void SetVec2Value(const std::string &name, const vec2 &value);
-
-	/**
-	* Gets the value of a 2d vector uniform variable.
-	* @param name The name of the uniform variable.
-	* @return The value of the uniform variable.
-	*/
-	vec2 GetVec2Value(const std::string &name) const;
-
-	/**
-	* Assigns a 3d vector value to a named uniform variable.
-	* @param name The name of the uniform variable.
-	* @param value The value to assign.
-	*/
-	void SetVec3Value(const std::string &name, const vec3 &value);
-
-	/**
-	* Gets the value of a 3d vector uniform variable.
-	* @param name The name of the uniform variable.
-	* @return The value of the uniform variable.
-	*/
-	vec3 GetVec3Value(const std::string &name) const;
-
-	/**
-	* Assigns a 4d vector value to a named uniform variable.
-	* @param name The name of the uniform variable.
-	* @param value The value to assign.
-	*/
-	void SetVec4Value(const std::string &name, const vec4 &value);
-
-	/**
-	* Gets the value of a 4d vector uniform variable.
-	* @param name The name of the uniform variable.
-	* @return The value of the uniform variable.
-	*/
-	vec4 GetVec4Value(const std::string &name) const;
-
-	/**
-	* Assigns a 3x3 matrix value to a named uniform variable.
-	* @param name The name of the uniform variable.
-	* @param value The value to assign.
-	*/
-	void SetMat3Value(const std::string &name, const mat3 &value);
-
-	/**
-	* Gets the value of a 3x3 matrix uniform variable.
-	* @param name The name of the uniform variable.
-	* @return The value of the uniform variable.
-	*/
-	mat3 GetMat3Value(const std::string &name) const;
-
-	/**
-	* Assigns a 4x4 matrix value to a named uniform variable.
-	* @param name The name of the uniform variable.
-	* @param value The value to assign.
-	*/
-	void SetMat4Value(const std::string &name, const mat4 &value);
-
-	/**
-	* Gets the value of a 4x4 matrix uniform variable.
-	* @param name The name of the uniform variable.
-	* @return The value of the uniform variable.
-	*/
-	mat4 GetMat4Value(const std::string &name) const;
-
-	/**
-	* Removes a variable from the list.
-	* @param name The name of the variable to remove.
-	*/
-	void RemoveValue(const std::string &name);
-
-	/**
-	* Applies the list to a gpu program.
-	* @param program The program to apply the list to.
-	*/
-	void ApplyForProgram(ProgramPtr program) const;
-
-private:
-	std::map<std::string, int> intMap;
-	std::map<std::string, float> floatMap;
-	std::map<std::string, vec2> vec2Map;
-	std::map<std::string, vec3> vec3Map;
-	std::map<std::string, vec4> vec4Map;
-	std::map<std::string, mat3> mat3Map;
-	std::map<std::string, mat4> mat4Map;
 };
 
 }

@@ -15,7 +15,6 @@
 #include <sstream>
 #include <map>
 #include <queue>
-using namespace std;
 #include <FireCube.h>
 #include <wx/glcanvas.h>
 #include "GlCanvas.h"
@@ -89,7 +88,6 @@ class MainFrame : public wxFrame
 		wxTreeCtrl* treeCtrl2;
 		wxMenuBar* menuBar;
 		wxMenu* menu1;
-		wxMenu* menu2;
 		wxMenu* menu3;
 		wxStatusBar* statusBar1;
 		
@@ -106,9 +104,6 @@ class MainFrame : public wxFrame
 		virtual void Button2Clicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MenuItem2Clicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MenuItem1Clicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void MenuItem3Clicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void MenuItem4Clicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void MenuItem7Clicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MenuItem6Clicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MenuItem5Clicked( wxCommandEvent& event ) { event.Skip(); }
 		

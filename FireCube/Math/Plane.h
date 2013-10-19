@@ -4,7 +4,7 @@
 #pragma warning(disable:4251)
 
 #include "Utils/utils.h"
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 
 namespace FireCube
 {

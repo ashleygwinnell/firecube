@@ -21,36 +21,32 @@ bool App::Prepare()
 	GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
 	
-	root = NodePtr(new Node("Root"));		
+	root = NodePtr(new Node(engine, "Root"));		
 	camera = NodeObserverCameraPtr(new NodeObserverCamera(GetInputManager()));	
 	camera->SetTarget(root);
 	camera->SetMaxAngX(0);
 	camera->SetZoomFactor(1000.0f);
-	viewport.SetRootNodeAndCamera(root, camera);	
+	scene.SetRootNodeAndCamera(root, camera);	
 
 	NodePtr childNode = root->CreateChild("Model");	
-	StaticModel *staticModel = new StaticModel(engine);
-	staticModel->LoadMesh("scene.3ds");	
-	childNode->AddComponent(staticModel);	
-	Terrain *terrain = new Terrain(engine);
-	childNode->AddComponent(terrain);
+	StaticModel *staticModel = childNode->CreateComponent<StaticModel>();
+	staticModel->CreateFromMesh(resourcePool->GetResource<Mesh>("scene.3ds"));
 	childNode->Scale(vec3(0.05f));
-	Image image;
-	image.Load("heightmap3.bmp");
+	childNode->Move(vec3(0, 0.0251f, 0));
+	childNode = root->CreateChild("Terrain");	
+	Terrain *terrain = childNode->CreateComponent<Terrain>();
+	childNode->Scale(vec3(0.05f));
+	ImagePtr image = resourcePool->GetResource<Image>("heightmap3.bmp");	
 	terrain->SetPatchSize(64);
-	terrain->CreateHeightMap(image);
-	MaterialPtr material(new Material(engine));
-	material->Load("Materials/TerrainNoTexture.xml");
-	material->SetAmbientColor(vec3(0));
-	material->SetDiffuseColor(vec3(0.7f));
-	terrain->SetMaterial(material);
+	terrain->CreateFromHeightMap(image.get());
+	terrain->SetMaterial(resourcePool->GetResource<Material>("Materials/TerrainNoTexture.xml"));	
+	//terrain->SetMaterial(resourcePool->GetResource<Material>("Materials/DebugNormals.xml"));	
 
-	Light *light = new Light(engine);
+	childNode = root->CreateChild("LightNode");	
+	Light *light = childNode->CreateComponent<Light>();
 	light->SetLightType(FireCube::POINT);
 	light->SetDiffuseColor(vec4(1, 1, 1, 1));
-	light->SetSpecularColor(vec4(0, 0, 0, 0));
-	childNode = root->CreateChild("LightNode");	
-	childNode->AddComponent(light);					
+	light->SetSpecularColor(vec4(0, 0, 0, 0));	
 	childNode->Move(vec3(0, 1, 0));
 
 	orthographicCamera = CameraPtr(new Camera);	
@@ -68,7 +64,7 @@ void App::Render(float t)
 	mat4 projection;
 	projection.GeneratePerspective(60.0f, (float)GetWidth() / (float)GetHeight(), 0.1f, 500.0f);	
 	camera->SetProjectionMatrix(projection);	
-	viewport.Render(renderer);
+	scene.Render(renderer);
 
 	mat4 ortho;
 	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);

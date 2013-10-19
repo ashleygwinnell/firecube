@@ -269,6 +269,6 @@ public:
 	/**
 	* A 4x4 identity matrix.
 	*/
-	static const mat4 identity;
+	static const mat4 IDENTITY;
 };
 }

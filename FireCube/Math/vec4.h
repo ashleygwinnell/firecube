@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Utils/utils.h"
+#include "Math/vec3.h"
 
 namespace FireCube
 {
@@ -44,6 +45,14 @@ public:
 		y = v.y;
 		z = v.z;
 		w = v.w;
+	}
+
+	vec4(const vec3 &v, float nw) 
+	{
+		x = v.x;
+		y = v.y;
+		z = v.z;
+		w = nw;
 	}
 
 	/**
@@ -297,6 +306,8 @@ public:
 	* W coordinate.
 	*/
 	float w;
+
+	static const vec4 ZERO;
 };
 
 /**

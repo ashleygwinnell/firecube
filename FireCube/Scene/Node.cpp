@@ -1,25 +1,37 @@
 #include <sstream>
 #include "Scene/Node.h"
+#include "Utils/Logger.h"
+
+#include "Utils/Filesystem.h"
+#include "Geometry/ColladaLoader.h"
+#include "Geometry/m3dsLoader.h"
+#include "Geometry/ObjLoader.h"
+#include "Core/Engine.h"
 
 using namespace FireCube;
 
-Node::Node() : parent(nullptr)
+Node::Node(Engine *engine) : Object(engine), parent(nullptr)
 {
-	rotation = mat4::identity;
+	rotation = mat4::IDENTITY;
 	translation.Set(0, 0, 0);
 	scale.Set(1, 1, 1);
 	worldTransformation.Identity();
 	transformationChanged = false;	
 }
 
-Node::Node(const std::string &name) : parent(nullptr)
+Node::Node(Engine *engine, const std::string &name) : Object(engine), parent(nullptr)
 {
-	rotation = mat4::identity;
+	rotation = mat4::IDENTITY;
 	translation.Set(0, 0, 0);
 	scale.Set(1, 1, 1);		
 	worldTransformation.Identity();
 	transformationChanged = false;	
 	SetName(name);
+}
+
+Node::~Node()
+{
+	RemoveAllComponents();
 }
 
 void Node::SetName(const std::string &name)
@@ -41,8 +53,10 @@ mat4 Node::GetLocalTransformation()
 {	
 	localTransformation.Identity();
 	localTransformation.Translate(translation);
-	localTransformation.Scale(scale.x, scale.y, scale.z);
 	localTransformation *= rotation;
+	localTransformation.Scale(scale.x, scale.y, scale.z);
+	
+
 	return localTransformation;
 }
 
@@ -130,13 +144,13 @@ NodePtr Node::AddChild(NodePtr node)
 	if (node->GetParent())
 		node->GetParent()->RemoveChild(node);
 	node->parent = this;
-	node->viewport = viewport;	
+	node->scene = scene;	
 	return node;
 }
 
 NodePtr Node::CreateChild(const std::string &name)
 {
-	NodePtr child(new Node(name));
+	NodePtr child(new Node(engine, name));
 	AddChild(child);
 	return child;
 }
@@ -149,7 +163,7 @@ void Node::SetParent(NodePtr parent)
 	this->parent = parent.get();
 	if (parent)
 	{
-		viewport = parent->viewport;
+		scene = parent->scene;
 		parent->children.push_back(shared_from_this());		
 	}
 }
@@ -200,6 +214,11 @@ NodePtr Node::RemoveChild(const std::string &name)
 	return NodePtr();
 }
 
+void Node::RemoveAllChildren()
+{
+	children.clear();
+}
+
 std::vector<NodePtr> &Node::GetChildren()
 {
 	return children;
@@ -208,7 +227,8 @@ std::vector<NodePtr> &Node::GetChildren()
 
 NodePtr Node::Clone() const
 {
-	NodePtr ret(new Node);
+	NodePtr ret(new Node(engine));
+	//TODO: Implement
 	ret->name = name;
 	ret->translation = translation;
 	ret->rotation = rotation;
@@ -247,16 +267,64 @@ vec3 Node::GetWorldPosition()
 
 void Node::AddComponent(Component *component)
 {
-	components.push_back(ComponentPtr(component));
-	component->SetNode(this);
+	if (component->node != nullptr)
+	{
+		LOGERROR("Attemp to add a component which already has a parent node.");
+	}
+	else
+	{
+		components.push_back(ComponentPtr(component));
+		component->SetNode(this);
+	}
 }
 
-void Node::SetViewport(Viewport *viewport)
+void Node::SetScene(Scene *scene)
 {
-	this->viewport = viewport;
+	this->scene = scene;
 }
 
-Viewport *Node::GetViewport()
+Scene *Node::GetScene()
 {
-	return viewport;
+	return scene;
+}
+
+void Node::RemoveAllComponents()
+{
+	for (auto component : components)
+	{
+		component->SetNode(nullptr);
+	}
+
+	components.clear();
+}
+
+void Node::Load(const std::string &filename, ModelLoadingOptions options)
+{
+	std::string file = Filesystem::SearchForFileName(filename);
+	if (file.empty())
+		return;
+	std::string::size_type d;
+	d = filename.find_last_of(".");	
+	std::ostringstream ss;
+	ss << "Created model with name:" << filename;
+	LOGINFO(ss.str());	
+	if (d != std::string::npos)
+	{
+		std::string ext = ToLower(filename.substr(d + 1));
+		ModelLoader *modelLoader = nullptr;
+		if (ext == "3ds")
+			modelLoader = new M3dsLoader(engine);		
+		else if (ext == "dae")		
+			modelLoader = new ColladaLoader(engine);
+		else if (ext == "obj")
+			modelLoader = new ObjLoader(engine);
+
+		if (modelLoader->Load(file, options))
+		{
+			modelLoader->GenerateScene(engine->GetRenderer(), this);
+			
+		}		
+
+		delete modelLoader;
+	}	
 }

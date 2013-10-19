@@ -17,6 +17,8 @@ StringHash PARAM_LIGHT_DIR("directionalLightDir");
 StringHash PARAM_LIGHT_POS("lightPosition");
 StringHash PARAM_LIGHT_DIFFUSE("lightDiffuse");
 StringHash PARAM_LIGHT_SPECULAR("lightSpecular");
+StringHash PARAM_LIGHT_SPOT_DIR("spotLightDir");
+StringHash PARAM_CAMERA_POS("cameraPos");
 
 StringHash BASE_PASS("base");
 StringHash LIGHT_PASS("light");

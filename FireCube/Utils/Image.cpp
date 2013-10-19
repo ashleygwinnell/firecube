@@ -9,7 +9,7 @@
 
 using namespace FireCube;
 
-Image::Image() : width(0), height(0), bytesPerPixel(0)
+Image::Image(Engine *engine) : Resource(engine), width(0), height(0), bytesPerPixel(0)
 {
 
 }

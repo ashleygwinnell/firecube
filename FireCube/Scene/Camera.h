@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "Math/Frustum.h"
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 
 namespace FireCube
 {

@@ -14,7 +14,7 @@ class Geometry;
 class Material;
 class Node;
 typedef std::shared_ptr<Node> NodePtr;
-
+class Viewport;
 
 /**
 * A class describing various parameters to apply to models when loaded from a file
@@ -41,7 +41,7 @@ public:
 	ModelLoader(Engine *engine);
 	virtual bool Load(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions()) = 0;	
 	virtual void GenerateGeometries(Renderer *renderer) = 0;
-	virtual void GenerateScene(Renderer *renderer) = 0;
+	virtual void GenerateScene(Renderer *renderer, Node *root) = 0;
 	virtual const std::vector<Geometry *> &GetGeneratedGeometries() = 0;
 	virtual NodePtr GetGeneratedScene() = 0;
 	virtual const std::vector<Material *> &GetGeneratedMaterials() = 0;

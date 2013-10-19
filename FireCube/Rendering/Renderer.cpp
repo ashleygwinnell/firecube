@@ -241,23 +241,19 @@ void Renderer::UseMaterial(Material *material)
 	if (currentMaterial == material)
 		return;
 
-	currentMaterial = material;
-
-	vec4 ambientColor = vec4(material->GetAmbientColor().x, material->GetAmbientColor().y, material->GetAmbientColor().z, 1.0f);
-	vec4 diffuseColor = vec4(material->GetDiffuseColor().x, material->GetDiffuseColor().y, material->GetDiffuseColor().z, 1.0f);
-	vec4 specularColor = vec4(material->GetSpecularColor().x, material->GetSpecularColor().y, material->GetSpecularColor().z, 1.0f);
-	currentProgram->SetUniform(PARAM_MATERIAL_AMBIENT, ambientColor);
-	currentProgram->SetUniform(PARAM_MATERIAL_DIFFUSE, diffuseColor);
-	currentProgram->SetUniform(PARAM_MATERIAL_SPECULAR, specularColor);
-	currentProgram->SetUniform(PARAM_MATERIAL_SHININESS, material->GetShininess());
-	
-	if ((material->GetDiffuseTexture()) && (material->GetDiffuseTexture()->IsValid()))
+	currentMaterial = material;	
+	const std::map<StringHash, Variant> &parameters = material->GetParameters();
+	for (auto i = parameters.begin(); i != parameters.end(); ++i)
 	{
-		UseTexture(material->GetDiffuseTexture(), 0);
+		currentProgram->SetUniform(i->first, i->second);
 	}
-	if ((material->GetNormalTexture()) && (material->GetNormalTexture()->IsValid()))
+
+	const TexturePtr *textures = material->GetTextures();
+	for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
 	{
-		UseTexture(material->GetNormalTexture(), 1);
+		TextureUnit textureUnit = (TextureUnit)i;
+		if (textures[i])
+			UseTexture(textures[i], i);
 	}
 }
 
@@ -340,9 +336,7 @@ ProgramPtr Renderer::SetShaders(Shader *vertexShader, Shader *fragmentShader)
 	currentVertexShader = vertexShader;
 	currentFragmentShader = fragmentShader;
 	
-	currentMaterial = nullptr;
-	currentCamera = nullptr;
-	currentLight = nullptr;
+	ResetCachedShadersParameters();
 
 	std::pair<Shader *, Shader *> key = std::make_pair(vertexShader, fragmentShader);
 	auto i = programs.find(key);
@@ -386,6 +380,7 @@ void Renderer::UseCamera(Camera *camera)
 	currentCamera = camera;	
 	// Projection transformation
 	currentProgram->SetUniform(PARAM_VIEW_PROJECTION_MATRIX, camera->GetProjectionMatrix() * camera->GetViewMatrix());
+	currentProgram->SetUniform(PARAM_CAMERA_POS, camera->GetPosition());
 }
 
 void Renderer::UseLight(Light *light)
@@ -402,8 +397,20 @@ void Renderer::UseLight(Light *light)
 	}
 	else if (light->GetLightType() == POINT)
 	{
-		currentProgram->SetUniform(PARAM_LIGHT_POS, light->GetNode()->GetWorldTransformation().GetTranslation());					
-	}													
+		currentProgram->SetUniform(PARAM_LIGHT_POS, vec4(light->GetNode()->GetWorldTransformation().GetTranslation(), light->GetRange()));
+	}	
+	else if (light->GetLightType() == SPOT)
+	{
+		currentProgram->SetUniform(PARAM_LIGHT_POS, vec4(light->GetNode()->GetWorldTransformation().GetTranslation(), light->GetRange()));
+		currentProgram->SetUniform(PARAM_LIGHT_SPOT_DIR, vec4(vec3(0, 0, 1).TransformNormal(light->GetNode()->GetWorldTransformation()), light->GetSpotCutOff()));		
+	}
 	currentProgram->SetUniform(PARAM_LIGHT_DIFFUSE, light->GetDiffuseColor());
 	currentProgram->SetUniform(PARAM_LIGHT_SPECULAR, light->GetSpecularColor());
+}
+
+void Renderer::ResetCachedShadersParameters()
+{
+	currentMaterial = nullptr;
+	currentCamera = nullptr;
+	currentLight = nullptr;
 }

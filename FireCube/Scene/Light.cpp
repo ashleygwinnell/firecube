@@ -1,10 +1,10 @@
 #include "Scene/Light.h"
 #include "Scene/Node.h"
-#include "Rendering/Viewport.h"
+#include "Rendering/Scene.h"
 
 using namespace FireCube;
 
-Light::Light(Engine *engine) : Component(engine)
+Light::Light(Engine *engine) : Component(engine), range(50.0f), spotCutOff(0.8f)
 {
 
 }
@@ -39,6 +39,26 @@ vec4 Light::GetSpecularColor() const
 	return specularColor;
 }
 
+void Light::SetRange(float range)
+{
+	this->range = range;
+}
+
+float Light::GetRange() const
+{
+	return range;
+}
+
+void Light::SetSpotCutOff(float cutOff)
+{
+	spotCutOff = cutOff;
+}
+
+float Light::GetSpotCutOff() const
+{
+	return spotCutOff;
+}
+
 bool Light::operator == (const Light &other) const
 {
 	return diffuseColor == other.diffuseColor && specularColor == other.specularColor && type == other.type;
@@ -46,6 +66,6 @@ bool Light::operator == (const Light &other) const
 
 void Light::NodeChanged()
 {
-	if (node && node->GetViewport())
-		node->GetViewport()->AddLight(this);
+	if (node && node->GetScene())
+		node->GetScene()->AddLight(this);
 }

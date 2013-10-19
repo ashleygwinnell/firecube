@@ -10,6 +10,9 @@
 #include "Rendering/Technique.h"
 #include "Core/Engine.h"
 #include "Core/ResourcePool.h"
+#include "Math/MathUtils.h"
+#include "Scene/Node.h"
+#include "Rendering/StaticModel.h"
 
 using namespace FireCube;
 
@@ -65,12 +68,6 @@ bool M3dsLoader::Load(const std::string &filename, ModelLoadingOptions options)
 	}
 	this->options = options;
 	return true;
-}
-
-
-void M3dsLoader::GenerateScene(Renderer *renderer)
-{
-	//TODO: Implement
 }
 
 
@@ -144,85 +141,123 @@ NodePtr M3dsLoader::GenerateSceneGraph()
 
 */
 
-void M3dsLoader::CalculateNormals(Object &object)
+VertexBufferPtr M3dsLoader::CreateVertexBufferAndBoundingBoxOfObject(Object &object, BoundingBox &boundingBox)
 {
-	object.normal.resize(object.vertex.size(), vec3(0, 0, 0));	
-
-	for (unsigned int i = 0; i < object.indices.size(); i += 3)
+	MathUtils::CalculateNormals(object.normal, object.vertex, object.indices);		
+	if (!object.uv.empty())
+		MathUtils::CalculateTangents(object.vertex, object.normal, object.uv, object.indices, object.tangents);		
+	VertexBufferPtr vertexBuffer(new VertexBuffer(engine->GetRenderer()));
+	vertexBuffer->SetShadowed(true);
+	unsigned int vertexSize = 3 + 3;
+	unsigned int vertexAttributes = VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_NORMAL;		
+	if (!object.uv.empty())
 	{
-		// Calculate face normals
-		vec3 v1 = object.vertex[object.indices[i + 1]] - object.vertex[object.indices[i + 0]];
-		vec3 v2 = object.vertex[object.indices[i + 2]] - object.vertex[object.indices[i + 0]];
-		vec3 n = Cross(v1, v2);				
-		// Add this normal to the three vertex normals forming this face
-		object.normal[object.indices[i + 0]] += n;
-		object.normal[object.indices[i + 1]] += n;
-		object.normal[object.indices[i + 2]] += n;
+		vertexAttributes |= VERTEX_ATTRIBUTE_TEXCOORD0 | VERTEX_ATTRIBUTE_TANGENT;
+		vertexSize += 2 + 3;
 	}
-	for (unsigned int n = 0; n < object.normal.size(); n++)
+	std::vector<float> vertexData(vertexSize * object.vertex.size());		
+	for (unsigned int j = 0; j < object.vertex.size(); ++j)
 	{
-		object.normal[n].Normalize();
-	}	
-}
-
-void M3dsLoader::GenerateGeometries(Renderer *renderer)
-{
-	generatedGeometries.clear();
-	for (unsigned int i = 0; i < object.size(); i++)
-	{   
-		CalculateNormals(object[i]);
-		VertexBufferPtr vertexBuffer(new VertexBuffer(renderer));
-		unsigned int vertexSize = 3 + 3 + 2;
-		std::vector<float> vertexData(vertexSize * object[i].vertex.size());			
-		for (unsigned int j = 0; j < object[i].vertex.size(); ++j)
+		*((vec3 *) &vertexData[j * vertexSize + 0]) = object.vertex[j];
+		*((vec3 *) &vertexData[j * vertexSize + 3]) = object.normal[j];
+		if (vertexAttributes & VERTEX_ATTRIBUTE_TEXCOORD0)
 		{
-			*((vec3 *) &vertexData[j * vertexSize + 0]) = object[i].vertex[j];
-			*((vec3 *) &vertexData[j * vertexSize + 3]) = object[i].normal[j];
-			vec2 uv = object[i].uv[j];
+
+			vec2 uv = object.uv[j];
 			if (options.flipU)
 				uv.x = 1.0f - uv.x;
 			if (options.flipV)
 				uv.y = 1.0f - uv.y;
 			*((vec2 *) &vertexData[j * vertexSize + 6]) = uv;
+		}
+		if (vertexAttributes & VERTEX_ATTRIBUTE_TANGENT)
+		{				
+			*((vec3 *) &vertexData[j * vertexSize + 8]) = object.tangents[j];
+		}
 
-			boundingBox.Expand(object[i].vertex[j]);
-		}		
-		vertexBuffer->LoadData(&vertexData[0], object[i].vertex.size(), VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_NORMAL | VERTEX_ATTRIBUTE_TEXCOORD0, STATIC);
+		boundingBox.Expand(object.vertex[j]);
+	}		
+	vertexBuffer->LoadData(&vertexData[0], object.vertex.size(), vertexAttributes, STATIC);
+	return vertexBuffer;
+}
+Geometry *M3dsLoader::CreateGeometryOfMesh(Mesh &mesh, VertexBufferPtr vertexBuffer)
+{
+	Geometry *geom = new Geometry(engine->GetRenderer());
+	IndexBufferPtr indexBuffer(new IndexBuffer(engine->GetRenderer()));	
+	indexBuffer->SetShadowed(true);
+	geom->SetVertexBuffer(vertexBuffer);
+	geom->SetIndexBuffer(indexBuffer);
+	
+	MaterialPtr material;
+	if (materialsMap.find(mesh.material) != materialsMap.end())
+	{
+		material = materialsMap[mesh.material];
+	}
+	else
+	{
+		material = MaterialPtr(new FireCube::Material(engine));
+		generatedMaterials.push_back(material.get());
+		material->SetName(mesh.material->name);
+		material->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(mesh.material->ambientColor, 1.0f));
+		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(mesh.material->diffuseColor, 1.0f));
+		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(mesh.material->specularColor, 1.0f));
+		material->SetParameter(PARAM_MATERIAL_SHININESS, mesh.material->shininess);
+
+		if (mesh.material->diffuseTextureMap.empty() == false)
+		{				
+			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
+			material->SetTexture(TEXTURE_UNIT_DIFFUSE, engine->GetResourcePool()->GetResource<Texture>(mesh.material->diffuseTextureMap));
+		}
+		else
+			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
+		materialsMap[mesh.material] = material;
+	}
+	geom->SetMaterial(material);				
+	indexBuffer->LoadData(&mesh.indices[0], mesh.indices.size(), STATIC);
+
+	geom->SetPrimitiveType(TRIANGLES);
+	geom->SetPrimitiveCount(mesh.indices.size() / 3);
+	geom->Update();		
+	return geom;
+}
+void M3dsLoader::GenerateGeometries(Renderer *renderer)
+{
+	generatedGeometries.clear();
+	for (unsigned int i = 0; i < object.size(); i++)
+	{   
+		if (object[i].vertex.empty())
+			continue;
+		VertexBufferPtr vertexBuffer = CreateVertexBufferAndBoundingBoxOfObject(object[i], boundingBox);
 		//NodePtr objectNode(new Node(object[i].name));		
 		for (unsigned int j = 0; j < object[i].mesh.size(); j++)
 		{
 			// Create a geometry for each sub mesh
-			Geometry *geom = new Geometry(renderer);
-			IndexBufferPtr indexBuffer(new IndexBuffer(renderer));
+			Geometry *geom = CreateGeometryOfMesh(object[i].mesh[j], vertexBuffer);
 			generatedGeometries.push_back(geom);
-			geom->SetVertexBuffer(vertexBuffer);
-			geom->SetIndexBuffer(indexBuffer);
-			
-			Mesh &mesh = object[i].mesh[j];
-			MaterialPtr material(new FireCube::Material(engine));
-			generatedMaterials.push_back(material.get());
-			material->SetName(mesh.material->name);
-			material->SetAmbientColor(mesh.material->ambientColor);
-			material->SetDiffuseColor(mesh.material->diffuseColor);
-			material->SetSpecularColor(mesh.material->specularColor);
-			material->SetShininess(mesh.material->shininess);						
-			if (mesh.material->diffuseTextureMap.empty() == false)
-			{				
-				material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
-				material->SetDiffuseTexture(engine->GetResourcePool()->GetResource<Texture>(mesh.material->diffuseTextureMap));
-			}
-			else
-				material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
-			geom->SetMaterial(material);				
-			indexBuffer->LoadData(&mesh.indices[0], mesh.indices.size(), STATIC);
-			
-			geom->SetPrimitiveType(TRIANGLES);
-			geom->SetPrimitiveCount(mesh.indices.size() / 3);
-			geom->SetVertexCount(mesh.indices.size());						
-			geom->Update();			
 		}        
 	}    	
 }
+
+void M3dsLoader::GenerateScene(Renderer *renderer, Node *root)
+{	
+	for (unsigned int i = 0; i < object.size(); i++)
+	{   
+		if (object[i].vertex.empty())
+			continue;
+		NodePtr objectNode = root->CreateChild(object[i].name);
+		VertexBufferPtr vertexBuffer = CreateVertexBufferAndBoundingBoxOfObject(object[i], boundingBox);		
+		for (unsigned int j = 0; j < object[i].mesh.size(); j++)
+		{
+			// Create a geometry for each sub mesh
+			StaticModel *staticModel = objectNode->CreateComponent<StaticModel>();			
+			Geometry *geom = CreateGeometryOfMesh(object[i].mesh[j], vertexBuffer);
+			staticModel->AddRenderablePart(geom);
+			staticModel->SetBoundingBox(boundingBox); // TODO: Calculate boundingbox for each mesh
+			generatedGeometries.push_back(geom);
+		}        
+	}    	
+}
+
 const std::vector<Geometry *> &M3dsLoader::GetGeneratedGeometries()
 {
 	return generatedGeometries;
@@ -411,7 +446,7 @@ void M3dsLoader::ReadObjectMatrixChunk()
 {
 	// Read the transformation of the current object
 	float *arr = (float*)curPos;
-	mat4 mat = mat4::identity;
+	mat4 mat = mat4::IDENTITY;
 	mat.m[0] = arr[0];
 	mat.m[4] = arr[1];
 	mat.m[8] = arr[2];

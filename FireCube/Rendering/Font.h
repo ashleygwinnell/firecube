@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 #include <map>
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 #include "Core/Resource.h"
 
 namespace FireCube
@@ -61,9 +61,7 @@ public:
 * This class holds the data needed to draw text with a specific font and size.
 */
 class FIRECUBE_API Font : public Resource
-{
-	friend class Renderer;
-	friend class FontManager;	
+{	
 public:
 	Font(Engine *engine);
 	~Font();

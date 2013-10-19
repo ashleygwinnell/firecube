@@ -27,7 +27,8 @@ static const unsigned int VERTEX_ATTRIBUTE_POSITION = 1;
 static const unsigned int VERTEX_ATTRIBUTE_NORMAL = 2;
 static const unsigned int VERTEX_ATTRIBUTE_TEXCOORD0 = 4;
 static const unsigned int VERTEX_ATTRIBUTE_TANGENT = 8;
-static const unsigned int MAX_VERTEX_ATTRIBUTE = 4;
+static const unsigned int VERTEX_ATTRIBUTE_COLOR = 16;
+static const unsigned int MAX_VERTEX_ATTRIBUTE = 5;
 
 /**
 * A buffer of data used for rendering.
@@ -68,14 +69,26 @@ public:
 	*/
 	void Destroy();
 	
+	unsigned int GetVertexCount() const;
+	unsigned int GetVertexSize() const;
+
+	const std::vector<char> &GetShadowData() const;
+	void SetShadowed(bool isShadowed);
+	const bool Shadowed() const;
+
+	static unsigned int GetVertexSize(unsigned int vertexAttributes);
+	static unsigned int GetAttributeSize(unsigned int vertexAttribute);
+
 private:
 	static const unsigned int attributeSize[MAX_VERTEX_ATTRIBUTE];
 	void UpdateAttributesOffsets();
-
+	
 	unsigned int vertexAttributes;
 	unsigned int vertexAttributesOffset[MAX_VERTEX_ATTRIBUTE];
 	unsigned int vertexSize;
 	unsigned int vertexCount;
+	bool isShadowed;
+	std::vector<char> shadowData;
 };
 
 /**

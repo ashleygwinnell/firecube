@@ -7,13 +7,13 @@
 #include <vector>
 #include <map>
 
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 #include "Scene/Node.h"
 #include "tinyxml.h"
 #include "ModelLoader.h"
 
 namespace FireCube
-{
+{	
 	class ColladaLoader : public ModelLoader
 	{
 	public:
@@ -21,7 +21,7 @@ namespace FireCube
 		~ColladaLoader();
 		virtual bool Load(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());		
 		virtual void GenerateGeometries(Renderer *renderer);
-		virtual void GenerateScene(Renderer *renderer);
+		virtual void GenerateScene(Renderer *renderer, Node *root);
 		virtual const std::vector<Geometry *> &GetGeneratedGeometries();
 		virtual NodePtr GetGeneratedScene();
 		virtual const std::vector<Material *> &GetGeneratedMaterials();

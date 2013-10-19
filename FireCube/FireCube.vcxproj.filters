@@ -168,9 +168,6 @@
     <ClCompile Include="Core\Component.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\Viewport.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="Rendering\Renderable.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
@@ -213,6 +210,27 @@
     <ClCompile Include="Core\Resource.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Variant.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\CustomGeometry.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\Mesh.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Ray.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\CollisionQuery.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\DebugRenderer.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Scene.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -243,9 +261,6 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\mat4.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\MyMath.h">
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\Plane.h">
@@ -345,9 +360,6 @@
     <ClInclude Include="Rendering\Renderable.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\Viewport.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Rendering\StaticModel.h">
       <Filter>Rendering</Filter>
     </ClInclude>
@@ -383,6 +395,30 @@
     </ClInclude>
     <ClInclude Include="Core\Resource.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Variant.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\CustomGeometry.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Mesh.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Ray.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Math.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\CollisionQuery.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\DebugRenderer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Scene.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

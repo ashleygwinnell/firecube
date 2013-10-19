@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Utils/utils.h"
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 #include "Core/Component.h"
 
 namespace FireCube
@@ -12,7 +12,7 @@ namespace FireCube
 */
 enum LightType
 {
-	DIRECTIONAL, POINT
+	DIRECTIONAL, POINT, SPOT
 };
 /**
 * A class storing various properties of a light source.
@@ -58,6 +58,13 @@ public:
 	*/
 	vec4 GetSpecularColor() const;
 
+	void SetRange(float range);
+
+	float GetRange() const;
+	
+	void SetSpotCutOff(float cutOff);
+	float GetSpotCutOff() const;
+
 	/**
 	* Checks whether two lights are equal.
 	* @return True if the two lights are equal, false otherwise.
@@ -70,5 +77,7 @@ private:
 	LightType type;	
 	vec4 diffuseColor;
 	vec4 specularColor;
+	float range;
+	float spotCutOff;
 };
 }

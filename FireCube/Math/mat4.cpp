@@ -1,9 +1,9 @@
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 
 using namespace FireCube;
 #include <cmath>
 
-const mat4 mat4::identity(1.0f, 0.0f, 0.0f, 0.0f, 
+const mat4 mat4::IDENTITY(1.0f, 0.0f, 0.0f, 0.0f, 
 						  0.0f, 1.0f, 0.0f, 0.0f, 
 						  0.0f, 0.0f, 1.0f, 0.0f, 
 						  0.0f, 0.0f, 0.0f, 1.0f);
@@ -216,7 +216,7 @@ void mat4::operator*=(const mat4 &src)
 
 void mat4::Translate(float x, float y, float z)
 {
-	mat4 trans = mat4::identity;
+	mat4 trans = mat4::IDENTITY;
 	trans.m[12] = x;
 	trans.m[13] = y;
 	trans.m[14] = z;
@@ -230,7 +230,7 @@ void mat4::Translate(const vec3 &t)
 
 void mat4::Scale(float x, float y, float z)
 {
-	mat4 scale = mat4::identity;
+	mat4 scale = mat4::IDENTITY;
 	scale.m[0] = x;
 	scale.m[5] = y;
 	scale.m[10] = z;
@@ -239,7 +239,7 @@ void mat4::Scale(float x, float y, float z)
 
 void mat4::RotateX(float ang)
 {
-	mat4 rot = mat4::identity;
+	mat4 rot = mat4::IDENTITY;
 	float cs = (float)cos(ang);
 	float sn = (float)sin(ang);
 
@@ -253,7 +253,7 @@ void mat4::RotateX(float ang)
 
 void mat4::RotateY(float ang)
 {
-	mat4 rot = mat4::identity;
+	mat4 rot = mat4::IDENTITY;
 	float cs = (float)cos(ang);
 	float sn = (float)sin(ang);
 
@@ -266,7 +266,7 @@ void mat4::RotateY(float ang)
 
 void mat4::RotateZ(float ang)
 {
-	mat4 rot = mat4::identity;
+	mat4 rot = mat4::IDENTITY;
 	float cs = (float)cos(ang);
 	float sn = (float)sin(ang);
 
@@ -279,7 +279,7 @@ void mat4::RotateZ(float ang)
 
 void mat4::Rotate(const vec3 &axis, float angle)
 {
-	mat4 rotm = mat4::identity;
+	mat4 rotm = mat4::IDENTITY;
 	float c = cos(angle);
 	float s = sin(angle);
 	float t = 1.0f - c;
@@ -359,8 +359,7 @@ void mat4::Inverse()
 
 vec3 mat4::GetDirection() const
 {
-	vec3 dr(-m[2], -m[6], -m[10]);
-	return dr;
+	return vec3(-m[8], -m[9], -m[10]);	 
 }
 
 vec3 mat4::GetTranslation() const
@@ -397,7 +396,7 @@ void mat4::GenerateOrthographic(float left, float right, float bottom, float top
 
 void mat4::LookAt(vec3 pos, vec3 at, vec3 up)
 {
-	mat4 trans = mat4::identity;
+	mat4 trans = mat4::IDENTITY;
 	vec3 f = at - pos;
 
 	up.Normalize();

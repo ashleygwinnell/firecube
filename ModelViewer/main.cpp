@@ -1,5 +1,5 @@
 #include <FireCube.h>
-using namespace std;
+using namespace FireCube;
 #include <wx/wx.h>
 #include <wx/glcanvas.h>
 #include "Document.h"
@@ -26,17 +26,17 @@ void FireCubeApp::Update(float t)
 {
 }
 
-void MyApp::LoadDocument(const string &filename)
+void MyApp::LoadDocument(const std::string &filename)
 {
-	FireCube::Timer t;
+	Timer t;
 	t.Init();
-	if (!document.Load(filename))
+	if (!document.Load(filename, fcApp.GetEngine()))
 		return;
-	ostringstream oss3;
+	std::ostringstream oss3;
 	oss3 << "Loading completed in " << t.Passed() << " seconds.";
 	frame->SetStatusBarText(oss3.str());
-	if (applicationParameters.customProgram)
-		document.GetRoot()->SetProgram(applicationParameters.program);
+	//if (applicationParameters.customProgram)
+	//	document.GetRoot()->SetProgram(applicationParameters.program);
 
 	document.GenerateNormals(applicationParameters.normalsLength);
 	document.GenerateTangents(applicationParameters.normalsLength);

@@ -16,6 +16,13 @@ enum ShaderType
 	VERTEX_SHADER, FRAGMENT_SHADER
 };
 
+enum TextureUnit
+{
+	TEXTURE_UNIT_DIFFUSE,
+	TEXTURE_UNIT_NORMAL,
+	MAX_TEXTURE_UNITS
+};
+
 extern StringHash PARAM_MATERIAL_AMBIENT;
 extern StringHash PARAM_MATERIAL_DIFFUSE;
 extern StringHash PARAM_MATERIAL_SPECULAR;
@@ -28,6 +35,8 @@ extern StringHash PARAM_LIGHT_DIR;
 extern StringHash PARAM_LIGHT_POS;
 extern StringHash PARAM_LIGHT_DIFFUSE;
 extern StringHash PARAM_LIGHT_SPECULAR;
+extern StringHash PARAM_LIGHT_SPOT_DIR;
+extern StringHash PARAM_CAMERA_POS;
 
 extern StringHash BASE_PASS;
 extern StringHash LIGHT_PASS;

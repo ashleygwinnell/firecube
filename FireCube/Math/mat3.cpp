@@ -1,9 +1,9 @@
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 
 using namespace FireCube;
 #include <cmath>
 
-const mat3 mat3::identity(1.0f, 0.0f, 0.0f, 
+const mat3 mat3::IDENTITY(1.0f, 0.0f, 0.0f, 
 						  0.0f, 1.0f, 0.0f, 
 						  0.0f, 0.0f, 1.0f);
 
@@ -274,15 +274,14 @@ void mat3::Inverse()
 	*this = ret;
 }
 
-vec3 mat3::GetDir() const
+vec3 mat3::GetDirection() const
 {
-	vec3 dr(-m[2], -m[5], -m[8]);
-	return dr;
+	return vec3(-m[6], -m[7], -m[8]);	 
 }
 
 mat4 mat3::ToMat4() const
 {
-	mat4 ret = mat4::identity;
+	mat4 ret = mat4::IDENTITY;
 
 	ret.m[0] = m[0];
 	ret.m[1] = m[1];

@@ -9,7 +9,7 @@
 
 using namespace FireCube;
 
-Geometry::Geometry(Renderer *renderer) : GraphicsResource(renderer), vertexCount(0), primitiveCount(0)
+Geometry::Geometry(Renderer *renderer) : GraphicsResource(renderer), primitiveCount(0)
 {
 
 }
@@ -269,23 +269,12 @@ unsigned int Geometry::GetPrimitiveCount() const
 	return primitiveCount;
 }
 
-void Geometry::SetVertexCount(unsigned int vertexCount)
-{
-	this->vertexCount = vertexCount;
-}
-
-unsigned int Geometry::GetVertexCount() const
-{
-	return vertexCount;
-}
-
 GeometryPtr Geometry::Clone()
 {
 	GeometryPtr ret(new Geometry(renderer));
 	ret->material = this->material;
 	ret->primitiveCount = this->primitiveCount;
 	ret->primitiveType = this->primitiveType;
-	ret->vertexCount = this->vertexCount;
 	
 	return ret;
 }
@@ -295,9 +284,19 @@ void Geometry::SetVertexBuffer(VertexBufferPtr vertexBuffer)
 	this->vertexBuffer = vertexBuffer;
 }
 
+VertexBufferPtr Geometry::GetVertexBuffer()
+{
+	return vertexBuffer;
+}
+
 void Geometry::SetIndexBuffer(IndexBufferPtr indexBuffer)
 {
 	this->indexBuffer = indexBuffer;	
+}
+
+IndexBufferPtr Geometry::GetIndexBuffer()
+{
+	return indexBuffer;
 }
 
 void Geometry::Render()
@@ -305,8 +304,25 @@ void Geometry::Render()
 	glBindVertexArray(objectId);
 
 	if (indexBuffer && indexBuffer->IsValid())			
-		renderer->RenderIndexStream(primitiveType, vertexCount);											
+		renderer->RenderIndexStream(primitiveType, indexBuffer->GetIndicesCount());											
 	else
-		renderer->RenderStream(primitiveType, vertexCount);				
+		renderer->RenderStream(primitiveType, vertexBuffer->GetVertexCount());				
 	renderer->IncreamentNumboerOfPrimitivesRendered(primitiveCount);
+
+	glBindVertexArray(0);
+}
+
+bool Geometry::IntersectRay(const Ray &ray, float &distance, vec3 &normal) const
+{
+	bool found = false;
+	if (vertexBuffer->GetShadowData().empty() == false && indexBuffer->GetShadowData().empty() == false)
+	{
+		const char *vertexData = &vertexBuffer->GetShadowData()[0];
+		const char *indexData = &indexBuffer->GetShadowData()[0];		
+		if (ray.IntersectMesh(vertexData, vertexBuffer->GetVertexSize(), indexData, indexBuffer->GetIndicesCount(), distance, normal))
+		{
+			found = true;
+		}
+	}
+	return found;
 }

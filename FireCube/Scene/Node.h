@@ -7,9 +7,11 @@
 #include <string>
 #include <vector>
 
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 #include "Math/BoundingBox.h"
 #include "Core/Component.h"
+
+#include "Geometry/ModelLoader.h"
 
 namespace FireCube
 {
@@ -17,7 +19,7 @@ namespace FireCube
 // Forward declarations.
 class Node;
 class RenderQueue;
-class Viewport;
+class Scene;
 
 /**
 * A shared pointer to a Node.
@@ -35,17 +37,19 @@ typedef std::shared_ptr<Program> ProgramPtr;
 /**
 * A class representing a node in a scene graph.
 */
-class FIRECUBE_API Node : public std::enable_shared_from_this<Node>
+class FIRECUBE_API Node : public Object, public std::enable_shared_from_this<Node>
 {
 	friend class RenderQueue;
 public:	
-	Node();
+	Node(Engine *engine);
 
 	/**
 	* Constructs a node.
 	* @param name The name of this node.
 	*/
-	Node(const std::string &name);	
+	Node(Engine *engine, const std::string &name);	
+
+	~Node();
 
 	/**
 	* Sets the name of this node.
@@ -176,6 +180,8 @@ public:
 	* @param node The child node to remove.
 	*/
 	NodePtr RemoveChild(NodePtr node);	
+
+	void RemoveAllChildren();
 		
 	/**
 	* Clones the node.
@@ -190,9 +196,20 @@ public:
 
 	void AddComponent(Component *component);
 	
-	void SetViewport(Viewport *viewport);
+	void SetScene(Scene *scene);
 
-	Viewport *GetViewport();
+	Scene *GetScene();
+
+	void RemoveAllComponents();
+
+	template <class T> T* CreateComponent()
+	{
+		T *component = new T(engine);
+		AddComponent(component);
+		return component;
+	}
+
+	void Load(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());
 
 protected:		
 	void SetTransformationChanged();	
@@ -209,7 +226,7 @@ protected:
 	Node *parent;
 	std::string name;
 	std::vector<ComponentPtr> components;
-	Viewport *viewport;
+	Scene *scene;
 };
 
 }

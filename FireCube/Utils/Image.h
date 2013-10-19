@@ -5,17 +5,18 @@
 
 #include <vector>
 
-#include "Math/MyMath.h"
+#include "Math/Math.h"
+#include "Core/Resource.h"
 
 namespace FireCube
 {
 /**
 * A class representing an image.
 */
-class FIRECUBE_API Image
+class FIRECUBE_API Image : public Resource
 {
 public:
-	Image();
+	Image(Engine *engine);
 	
 	/**
 	* Loads an image.
@@ -51,6 +52,8 @@ private:
 	int width, height, bytesPerPixel;
 	std::vector<unsigned char> data;
 };
+
+typedef std::shared_ptr<Image> ImagePtr;
 }
 
 #pragma warning(pop)

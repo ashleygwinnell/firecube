@@ -1,5 +1,4 @@
 #include <FireCube.h>
-using namespace std;
 using namespace FireCube;
 #include <wx/wx.h>
 #include <wx/glcanvas.h>
@@ -20,6 +19,7 @@ GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id,
 	Connect(wxEVT_ENTER_WINDOW, wxMouseEventHandler(GLCanvas::OnEnterWindow));
 	Connect(wxEVT_MOTION, wxMouseEventHandler(GLCanvas::OnMotion));
 	Connect(wxEVT_MOUSEWHEEL, wxMouseEventHandler(GLCanvas::OnMouseWheel));
+	crap = false;
 }
 
 GLCanvas::~GLCanvas()
@@ -30,27 +30,28 @@ GLCanvas::~GLCanvas()
 	Disconnect(wxEVT_ENTER_WINDOW, wxMouseEventHandler(GLCanvas::OnEnterWindow), nullptr, this);
 	Disconnect(wxEVT_MOTION, wxMouseEventHandler(GLCanvas::OnMotion), nullptr, this);
 	Disconnect(wxEVT_MOUSEWHEEL, wxMouseEventHandler(GLCanvas::OnMouseWheel), nullptr, this);
+	crap = true;
 }
 void GLCanvas::Init()
 {
 	Filesystem::AddSearchPath("../Assets/Textures");
 	theApp->fcApp.InitializeNoWindow();
-
+	engine = theApp->fcApp.GetEngine();
 	renderingParameters.bgColor = vec4(0.249f, 0.521f, 1.0f, 1.0f);
 	renderingParameters.renderingMode = GL_FILL;
 	renderingParameters.cullFaceEnabled = true;
 	renderingParameters.renderNormals = false;
 	renderingParameters.renderTangents = false;    
 
-	renderingParameters.grid = GeometryPtr(new Geometry);    
-	renderingParameters.gridNode = GeometryNodePtr(new GeometryNode);
-	MaterialPtr material(new Material);
-	renderingParameters.grid->SetMaterial(material);
-	material->SetDiffuseColor(vec3(1, 1, 1));
-	renderingParameters.gridNode->SetGeometry(renderingParameters.grid);
-	renderingParameters.gridNode->SetLighting(false);
+//	renderingParameters.grid = GeometryPtr(new Geometry);    
+//	renderingParameters.gridNode = GeometryNodePtr(new GeometryNode);
+//	MaterialPtr material(new Material);
+//	renderingParameters.grid->SetMaterial(material);
+//	material->SetDiffuseColor(vec3(1, 1, 1));
+//	renderingParameters.gridNode->SetGeometry(renderingParameters.grid);
+//	renderingParameters.gridNode->SetLighting(false);
 	
-	renderingParameters.gridMaterial = MaterialPtr(new Material);
+/*	renderingParameters.gridMaterial = MaterialPtr(new Material);
 	renderingParameters.gridMaterial->SetAmbientColor(vec3(0,0,0));
 	renderingParameters.gridMaterial->SetDiffuseColor(vec3(1,1,1));
 	renderingParameters.gridMaterial->SetSpecularColor(vec3(0,0,0));
@@ -68,21 +69,33 @@ void GLCanvas::Init()
 	renderingParameters.bitangentsMaterial = MaterialPtr(new Material);
 	renderingParameters.bitangentsMaterial->SetAmbientColor(vec3(0,0,0));
 	renderingParameters.bitangentsMaterial->SetDiffuseColor(vec3(0,1,0));
-	renderingParameters.bitangentsMaterial->SetSpecularColor(vec3(0,0,0));
+	renderingParameters.bitangentsMaterial->SetSpecularColor(vec3(0,0,0));*/
    
-	ShaderProperties shaderProperties;	
-	renderingParameters.plainColorProgram = Renderer::GetTechnique("default")->GenerateProgram(shaderProperties);    
 	
-	theApp->LoadDocument("../Assets/Models/teapot2.3ds");
-	CreateGrid(2, 20);
 	mat4 mat;
 	int w, h;
 	GetClientSize(&w, &h);
 	mat.GeneratePerspective(90.0f,(float) w / (float) h, 0.1f, 1000.0f);
-	renderingParameters.camera = NodeObserverCameraPtr(new NodeObserverCamera);
+	renderingParameters.camera = NodeObserverCameraPtr(new NodeObserverCamera());
 	renderingParameters.camera->SetDistance(5.0f);
 	renderingParameters.camera->SetMaxDistance(10000.0f);
 	renderingParameters.camera->SetProjectionMatrix(mat);
+
+	theApp->GetDocument().CreateRootNode(engine);
+	NodePtr root = theApp->GetDocument().GetRoot();	
+	scene.SetRootNodeAndCamera(root, renderingParameters.camera);
+	
+	theApp->GetDocument().CreateGrid(2, 20);
+
+	renderingParameters.camera->SetTarget(root);
+	theApp->LoadDocument("../Assets/Models/teapot2.3ds");
+
+	NodePtr lightNode = root->CreateChild("Light");
+	Light *l = lightNode->CreateComponent<Light>();
+	l->SetLightType(DIRECTIONAL);
+	l->SetDiffuseColor(vec4(0.7f, 0.7f, 0.7f, 1.0f));
+	l->SetSpecularColor(vec4(0.3f, 0.3f, 0.3f, 1.0f));	
+	lightNode->Rotate(vec3((float)PI / 4.0f, (float)PI / 4.0f, 0));
 }
 void GLCanvas::Render()
 {    
@@ -94,21 +107,19 @@ void GLCanvas::Render()
 		init = true;
 		Init();
 	}
-	Renderer::Clear(renderingParameters.bgColor, 1.0f);
 	
-	Renderer::UseCamera(renderingParameters.camera);
-	renderingParameters.camera->SetTarget(theApp->GetDocument().GetRoot());
-	
-	RenderGrid();
+	engine->GetRenderer()->Clear(renderingParameters.bgColor, 1.0f);
+		
 	if (renderingParameters.cullFaceEnabled)
 		glEnable(GL_CULL_FACE);
 	else
 		glDisable(GL_CULL_FACE);
 
 	glPolygonMode(GL_FRONT_AND_BACK, renderingParameters.renderingMode);
-	
-	Renderer::Render(theApp->GetDocument().GetRoot());
-	if (renderingParameters.renderNormals)
+		
+	scene.Render(engine->GetRenderer());
+	//Renderer::Render(theApp->GetDocument().GetRoot());
+	/*if (renderingParameters.renderNormals)
 	{
 		Renderer::UseProgram(renderingParameters.plainColorProgram);
 		Renderer::UseMaterial(renderingParameters.plainColorProgram, renderingParameters.normalsMaterial);
@@ -125,7 +136,7 @@ void GLCanvas::Render()
 		Renderer::UseMaterial(renderingParameters.plainColorProgram, renderingParameters.bitangentsMaterial);
 		theApp->GetDocument().GetBitangentRenderingBuffer()->SetVertexAttribute(0, 3, 0, 0);
 		Renderer::RenderStream(LINES, theApp->GetDocument().GetNormalRenderingBufferSize());
-	}
+	}*/
 	SwapBuffers();
 }
 
@@ -189,29 +200,6 @@ void GLCanvas::OnMouseWheel(wxMouseEvent& event)
 	else
 		renderingParameters.camera->Zoom((float)r / 150.0f);
 	this->Refresh(false);
-}
-void GLCanvas::CreateGrid(float size, DWORD numberOfCells)
-{	 
-	renderingParameters.grid->GetVertices().clear();
-	for (DWORD i = 0; i < numberOfCells + 1; i++)
-	{
-		vec3 pos1((float)i * size - size * (float)numberOfCells / 2.0f, 0, -size * (float)numberOfCells / 2.0f);
-		vec3 pos2((float)i * size - size * (float)numberOfCells / 2.0f, 0, size * (float)numberOfCells / 2.0f);
-		vec3 pos3(-size * (float)numberOfCells / 2.0f, 0, (float)i * size - size * (float)numberOfCells / 2.0f);
-		vec3 pos4(size * (float)numberOfCells / 2.0f, 0, (float)i * size - size * (float)numberOfCells / 2.0f);
-		renderingParameters.grid->GetVertices().push_back(pos1);
-		renderingParameters.grid->GetVertices().push_back(pos2);
-		renderingParameters.grid->GetVertices().push_back(pos3);
-		renderingParameters.grid->GetVertices().push_back(pos4);
-	}
-	renderingParameters.grid->SetPrimitiveType(LINES);
-	renderingParameters.grid->SetPrimitiveCount(renderingParameters.grid->GetVertices().size() / 2);    
-	renderingParameters.grid->SetVertexCount(renderingParameters.grid->GetVertices().size());    
-	renderingParameters.grid->UpdateBuffers();	
-}
-void GLCanvas::RenderGrid()
-{            
-	Renderer::Render(renderingParameters.gridNode);
 }
 
 void GLCanvas::SetBackgroundColor(vec4 color)

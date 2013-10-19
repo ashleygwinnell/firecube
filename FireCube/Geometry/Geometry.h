@@ -8,9 +8,10 @@
 #include <vector>
 
 #include "ThirdParty/GLEW/glew.h"
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 #include "Math/BoundingBox.h"
 #include "Rendering/GraphicsResource.h"
+#include "Math/Ray.h"
 
 namespace FireCube
 {
@@ -112,18 +113,7 @@ public:
 	/**
 	* @return The amount of primitives rendered by this geometry.
 	*/
-	unsigned int GetPrimitiveCount() const;
-
-	/**
-	* Sets the number of vertices to be rendered by this geometry.<br>	
-	* @param vertexCount The number of vertices.
-	*/
-	void SetVertexCount(unsigned int vertexCount);
-
-	/**
-	* @return The number of vertices to be rendered by this geometry.	
-	*/
-	unsigned int GetVertexCount() const;
+	unsigned int GetPrimitiveCount() const;	
 
 	/**
 	* Clones this Geometry.
@@ -132,18 +122,20 @@ public:
 	GeometryPtr Clone();
 
 	void SetVertexBuffer(VertexBufferPtr vertexBuffer);
-
+	VertexBufferPtr GetVertexBuffer();
 	void SetIndexBuffer(IndexBufferPtr indexBuffer);
+	IndexBufferPtr GetIndexBuffer();
 
 	void Render();
+
+	bool IntersectRay(const Ray &ray, float &distance, vec3 &normal) const;
 
 private:	
 	VertexBufferPtr vertexBuffer;	
 	IndexBufferPtr indexBuffer;
 	MaterialPtr material;
 	PrimitiveType primitiveType;
-	unsigned int primitiveCount;
-	unsigned int vertexCount;	
+	unsigned int primitiveCount;	
 };
 }
 #pragma warning(pop)

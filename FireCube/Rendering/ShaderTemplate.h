@@ -21,7 +21,8 @@ enum ShaderTemplateProperty
 	STP_DIFFUSE_MAPPING = 16,
 	STP_FOG = 32,
 	STP_NORMAL_MAPPING = 64,
-	STP_MAX_PROPERTIES = 7
+	STP_SPOT_LIGHT = 128,
+	STP_MAX_PROPERTIES = 8
 };
 
 class FIRECUBE_API ShaderTemplate : public Resource

@@ -45,9 +45,15 @@ public:
 	* Destroys the buffer.
 	*/
 	void Destroy();
-	
+
+	const std::vector<char> &GetShadowData() const;
+	void SetShadowed(bool isShadowed);
+	const bool Shadowed() const;
+	unsigned int GetIndicesCount() const;
 private:
-	
+	bool isShadowed;
+	std::vector<char> shadowData;	
+	unsigned int indicesCount;
 };
 
 /**

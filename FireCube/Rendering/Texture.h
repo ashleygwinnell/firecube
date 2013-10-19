@@ -63,14 +63,8 @@ public:
 	* @param magFilter The magnification filter.
 	*/
 	void SetFiltering(TextureFilter minFilter, TextureFilter magFilter);
-
-	/**
-	* Returns the file name of the texture.
-	*/
-	std::string GetFileName() const;
 	
-private:	
-	std::string filename;
+private:		
 	TextureFilter minFilter, magFilter;
 };
 

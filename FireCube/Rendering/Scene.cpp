@@ -1,4 +1,6 @@
-#include "Viewport.h"
+#include <algorithm>
+
+#include "Scene.h"
 #include "Rendering/Renderable.h"
 #include "Geometry/Geometry.h"
 #include "Rendering/Shader.h"
@@ -8,31 +10,52 @@
 #include "Rendering/IndexBuffer.h"
 #include "Rendering/Technique.h"
 #include "Rendering/ShaderTemplate.h"
+#include "Rendering/DebugRenderer.h"
 
 using namespace FireCube;
 
-Viewport::Viewport() : ambientColor(0.1f)
+Scene::Scene() : ambientColor(0.1f)
 {
 
 }
 
-void Viewport::AddRenderable(Renderable *renderable)
+Scene::~Scene()
+{
+	for (auto renderable : renderables)
+	{
+		renderable->SetScene(nullptr);
+	}
+}
+
+void Scene::AddRenderable(Renderable *renderable)
 {
 	renderables.push_back(renderable);
 }
 
-void Viewport::UpdateRenderables()
+void Scene::RemoveRenderable(Renderable *renderable)
+{
+	for (auto i = renderables.begin(); i != renderables.end(); ++i)
+	{
+		if (*i == renderable)
+		{
+			renderables.erase(i);
+			break;
+		}
+	}
+}
+
+void Scene::UpdateRenderables()
 {
 	for (auto renderable : renderables)
 		renderable->UpdateRenderableParts();
 }
 
-void Viewport::AddLight(Light *light)
+void Scene::AddLight(Light *light)
 {
 	lights.push_back(light);
 }
 
-void Viewport::UpdateBaseQueue()
+void Scene::UpdateBaseQueue()
 {
 	baseQueue.Clear();
 	for (auto renderable : renderables)
@@ -41,15 +64,20 @@ void Viewport::UpdateBaseQueue()
 		{
 			for (auto &renderablePart : renderable->GetRenderableParts())
 			{
-				RenderJob newRenderJob;
+				if (!renderablePart.geometry->GetMaterial())
+					continue;
 				TechniquePtr technique = renderablePart.geometry->GetMaterial()->GetTechnique();
 				if (!technique)
 					continue;
+				RenderJob newRenderJob;				
 				newRenderJob.pass = technique->GetPass(BASE_PASS);
+				if (newRenderJob.pass == nullptr)
+					continue;
 				newRenderJob.vertexShader = newRenderJob.pass->GenerateVertexShader(0).get();
 				newRenderJob.fragmentShader = newRenderJob.pass->GenerateFragmentShader(0).get();
 				newRenderJob.geometry = renderablePart.geometry;
 				newRenderJob.transformation = renderablePart.transformation;
+				newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetPosition()).Length();
 				newRenderJob.CalculateSortKey();
 				baseQueue.renderJobs.push_back(newRenderJob);
 			}			
@@ -57,7 +85,7 @@ void Viewport::UpdateBaseQueue()
 	}
 }
 
-void Viewport::UpdateLightQueues()
+void Scene::UpdateLightQueues()
 {
 	lightQueues.resize(lights.size());
 	for (unsigned int i = 0; i < lightQueues.size(); ++i)
@@ -68,6 +96,9 @@ void Viewport::UpdateLightQueues()
 			shaderProperties |= STP_DIRECTIONAL_LIGHT;
 		else if (lights[i]->GetLightType() == POINT)
 			shaderProperties |= STP_POINT_LIGHT;
+		else if (lights[i]->GetLightType() == SPOT)
+			shaderProperties |= STP_SPOT_LIGHT;
+
 
 		lightQueues[i].light = lights[i];
 		lightQueues[i].renderQueue.Clear();
@@ -77,15 +108,28 @@ void Viewport::UpdateLightQueues()
 			{
 				for (auto &renderablePart : renderable->GetRenderableParts())
 				{
-					RenderJob newRenderJob;
+					// TODO: Need to cull spot lights using frustum
+					if (lights[i]->GetLightType() == POINT || lights[i]->GetLightType() == SPOT)
+					{ 
+						BoundingBox bbox = renderable->GetWorldBoundingBox();
+						float l = bbox.GetSize().Length();
+						if ((bbox.GetCenter() - lights[i]->GetNode()->GetWorldPosition()).Length() - l> lights[i]->GetRange())
+							continue;
+					}
+					if (!renderablePart.geometry->GetMaterial())
+						continue;
 					TechniquePtr technique = renderablePart.geometry->GetMaterial()->GetTechnique();
 					if (!technique)
 						continue;
+					RenderJob newRenderJob;
 					newRenderJob.pass = technique->GetPass(LIGHT_PASS);
+					if (newRenderJob.pass == nullptr)
+						continue;
 					newRenderJob.vertexShader = newRenderJob.pass->GenerateVertexShader(shaderProperties).get();
 					newRenderJob.fragmentShader = newRenderJob.pass->GenerateFragmentShader(shaderProperties).get();
 					newRenderJob.geometry = renderablePart.geometry;
 					newRenderJob.transformation = renderablePart.transformation;
+					newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetPosition()).Length();
 					newRenderJob.CalculateSortKey();
 					lightQueues[i].renderQueue.renderJobs.push_back(newRenderJob);
 				}			
@@ -94,8 +138,10 @@ void Viewport::UpdateLightQueues()
 	}	
 }
 
-void Viewport::Render(Renderer *renderer)
+void Scene::Render(Renderer *renderer)
 {
+	renderer->ResetCachedShadersParameters();
+
 	UpdateRenderables();
 	UpdateBaseQueue();
 	UpdateLightQueues();		
@@ -157,14 +203,36 @@ void Viewport::Render(Renderer *renderer)
 	glDepthMask(true);
 }
 
-void Viewport::SetRootNodeAndCamera(NodePtr rootNode, CameraPtr camera)
+void Scene::SetRootNodeAndCamera(NodePtr rootNode, CameraPtr camera)
 {
 	this->rootNode = rootNode;
-	rootNode->SetViewport(this);
+	rootNode->SetScene(this);
 	this->camera = camera;
 }
 
-void Viewport::SetAmbientColor(vec3 color)
+void Scene::SetAmbientColor(vec3 color)
 {
 	ambientColor = color;
+}
+
+void Scene::IntersectRay(RayQuery &rayQuery)
+{
+	for (auto renderable : renderables)
+	{
+		if (renderable->GetQueryIntersection())
+			renderable->IntersectRay(rayQuery);
+	}
+
+	std::sort(rayQuery.results.begin(), rayQuery.results.end(),
+		[](const RayQueryResult &a, const RayQueryResult &b)
+	{ 
+		return a.distance < b.distance; 
+	});
+}
+
+void Scene::RenderDebugGeometry(DebugRenderer *debugRenderer)
+{
+	for (auto renderable : renderables)
+		renderable->RenderDebugGeometry(debugRenderer);
+	debugRenderer->Render(camera.get());
 }

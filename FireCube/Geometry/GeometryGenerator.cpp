@@ -3,6 +3,7 @@
 #include "Rendering/VertexBuffer.h"
 #include "Rendering/IndexBuffer.h"
 #include "Core/Engine.h"
+#include "Rendering/RenderingTypes.h"
 
 using namespace FireCube;
 
@@ -10,10 +11,10 @@ MaterialPtr CreateDefaultMaterial(Engine *engine)
 {
 	MaterialPtr material(new Material(engine));
 	material->SetName("Default");
-	material->SetAmbientColor(vec3(0.3f, 0.3f, 0.3f));
-	material->SetDiffuseColor(vec3(0.7f, 0.7f, 0.7f));
-	material->SetSpecularColor(vec3(0.2f, 0.2f, 0.2f));
-	material->SetShininess(50.0f);
+	material->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(0.3f, 0.3f, 0.3f, 1.0f));
+	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(0.7f, 0.7f, 0.7f, 1.0f));
+	material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0.2f, 0.2f, 0.2f, 1.0f));
+	material->SetParameter(PARAM_MATERIAL_SHININESS, 50.0f);	
 	return material;
 }
 
@@ -178,7 +179,6 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const ve
 
 	ret->SetPrimitiveType(TRIANGLES);
 	ret->SetPrimitiveCount(indices.size() / 3);
-	ret->SetVertexCount(indices.size());
 
 	ret->SetMaterial(material);	
 	ret->Update();
@@ -254,7 +254,6 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GenerateSphere(Engine *engine, float
 
 	ret->SetPrimitiveType(TRIANGLES);
 	ret->SetPrimitiveCount(indexData.size() / 3);
-	ret->SetVertexCount(indexData.size());	
 
 	ret->SetMaterial(material);	
 	ret->Update();
@@ -310,7 +309,6 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GeneratePlane(Engine *engine, const 
 	
 	ret->SetPrimitiveType(TRIANGLES);
 	ret->SetPrimitiveCount(indexData.size() / 3);
-	ret->SetVertexCount(indexData.size());
 
 	ret->SetMaterial(material);	
 	ret->Update();

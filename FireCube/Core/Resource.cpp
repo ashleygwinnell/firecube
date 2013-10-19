@@ -5,3 +5,8 @@ Resource::Resource(Engine *engine) : Object(engine)
 {
 
 }
+
+std::string Resource::GetFileName() const
+{
+	return filename;
+}

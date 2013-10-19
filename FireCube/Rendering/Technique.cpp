@@ -57,6 +57,7 @@ bool Technique::Load(const std::string &filename)
 	TiXmlElement *e = xmlDocument.FirstChildElement("technique");
 	if (e == nullptr)
 		return false;
+	this->filename = filename;
 
 	for (TiXmlElement *element = e->FirstChildElement(); element != nullptr; element = element->NextSiblingElement())
 	{

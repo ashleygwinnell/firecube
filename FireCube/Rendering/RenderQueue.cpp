@@ -12,26 +12,10 @@ using namespace FireCube;
 
 bool RenderJobCompare(const RenderJob &job1, const RenderJob &job2)
 {
-	return job1.sortKey < job2.sortKey;
-	/*
-	// Sort by program then by texture and lastly by geometry	
-	unsigned int id1, id2;
-	id1 = job1.program->GetId() * 256;
-	id2 = job2.program->GetId() * 256;
-	if (job1.geometry->GetMaterial()->GetDiffuseTexture() && job1.geometry->GetMaterial()->GetDiffuseTexture()->IsValid())
-		id1 += job1.geometry->GetMaterial()->GetDiffuseTexture()->GetId() % 255;
-	if (job1.geometry->GetMaterial()->GetNormalTexture() && job1.geometry->GetMaterial()->GetNormalTexture()->IsValid())
-		id1 += job1.geometry->GetMaterial()->GetNormalTexture()->GetId() % 255;
-	
-	if (job2.geometry->GetMaterial()->GetDiffuseTexture() && job2.geometry->GetMaterial()->GetDiffuseTexture()->IsValid())
-		id2 += job2.geometry->GetMaterial()->GetDiffuseTexture()->GetId() % 255;
-	if (job2.geometry->GetMaterial()->GetNormalTexture() && job2.geometry->GetMaterial()->GetNormalTexture()->IsValid())
-		id2 += job2.geometry->GetMaterial()->GetNormalTexture()->GetId() % 255;
-
-	if (id1 != id2)
-		return id1 < id2;
+	if (job1.sortKey != job2.sortKey)
+		return job1.sortKey < job2.sortKey;
 	else
-		return job1.geometry < job2.geometry;*/
+		return job1.distance < job2.distance;	
 }
 
 

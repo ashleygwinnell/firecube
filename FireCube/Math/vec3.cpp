@@ -1,7 +1,9 @@
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 
 using namespace FireCube;
 #include <cmath>
+
+const vec3 vec3::ZERO(0.0f);
 
 vec3 FireCube::operator+(const vec3 &a, const vec3 &b)
 {

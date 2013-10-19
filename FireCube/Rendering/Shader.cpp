@@ -262,6 +262,36 @@ void Program::SetUniform(const StringHash &nameHash, const std::vector<int> &val
 		glUniform1iv(i->second, value.size(), &value[0]);
 }
 
+void Program::SetUniform(const StringHash &nameHash, const Variant &value)
+{
+	std::map<StringHash, GLint>::iterator i = variables.find(nameHash);
+	if (i == variables.end())
+		return;
+	switch (value.GetType())
+	{
+	case VariantType::INT:
+		glUniform1i(i->second, value.GetInt());
+		break;
+	case VariantType::FLOAT:
+		glUniform1f(i->second, value.GetFloat());
+		break;		
+	case VariantType::BOOL:
+		glUniform1i(i->second, value.GetBool());
+		break;
+	case VariantType::VEC2:
+		glUniform2fv(i->second, 1, &value.GetVec2().x);
+		break;
+	case VariantType::VEC3:
+		glUniform3fv(i->second, 1, &value.GetVec3().x);
+		break;
+	case VariantType::VEC4:
+		glUniform4fv(i->second, 1, &value.GetVec4().x);
+		break;
+	default:
+		break;
+	}
+}
+
 void Program::SetAttribute(const std::string &name, VertexBufferPtr buffer, int size)
 {
 	GLint location = -1;
@@ -296,160 +326,4 @@ std::string Program::GetInfoLog() const
 	}
 	return ret;
 
-}
-
-void ProgramUniformsList::SetIntValue(const std::string &name, int value)
-{
-	intMap[name] = value;
-}
-
-int ProgramUniformsList::GetIntValue(const std::string &name) const
-{
-	std::map<std::string, int>::const_iterator i = intMap.find(name);
-	if (i == intMap.end())
-		return 0;
-	return i->second;
-}
-
-void ProgramUniformsList::SetFloatValue(const std::string &name, float value)
-{
-	floatMap[name] = value;
-}
-
-float ProgramUniformsList::GetFloatValue(const std::string &name) const
-{
-	std::map<std::string, float>::const_iterator i = floatMap.find(name);
-	if (i == floatMap.end())
-		return 0.0f;
-	return i->second;
-}
-
-void ProgramUniformsList::SetVec2Value(const std::string &name, const vec2 &value)
-{
-	vec2Map[name] = value;
-}
-
-vec2 ProgramUniformsList::GetVec2Value(const std::string &name) const
-{
-	std::map<std::string, vec2>::const_iterator i = vec2Map.find(name);
-	if (i == vec2Map.end())
-		return vec2();
-	return i->second;
-}
-
-void ProgramUniformsList::SetVec3Value(const std::string &name, const vec3 &value)
-{
-	vec3Map[name] = value;
-}
-
-vec3 ProgramUniformsList::GetVec3Value(const std::string &name) const
-{
-	std::map<std::string, vec3>::const_iterator i = vec3Map.find(name);
-	if (i == vec3Map.end())
-		return vec3();
-	return i->second;
-}
-
-void ProgramUniformsList::SetVec4Value(const std::string &name, const vec4 &value)
-{
-	vec4Map[name] = value;
-}
-
-vec4 ProgramUniformsList::GetVec4Value(const std::string &name) const
-{
-	std::map<std::string, vec4>::const_iterator i = vec4Map.find(name);
-	if (i == vec4Map.end())
-		return vec4();
-	return i->second;
-}
-
-void ProgramUniformsList::SetMat3Value(const std::string &name, const mat3 &value)
-{
-	mat3Map[name] = value;
-}
-
-mat3 ProgramUniformsList::GetMat3Value(const std::string &name) const
-{
-	std::map<std::string, mat3>::const_iterator i = mat3Map.find(name);
-	if (i == mat3Map.end())
-		return mat3();
-	return i->second;
-}
-
-void ProgramUniformsList::SetMat4Value(const std::string &name, const mat4 &value)
-{
-	mat4Map[name] = value;
-}
-
-mat4 ProgramUniformsList::GetMat4Value(const std::string &name) const
-{
-	std::map<std::string, mat4>::const_iterator i = mat4Map.find(name);
-	if (i == mat4Map.end())
-		return mat4();
-	return i->second;
-}
-
-void ProgramUniformsList::RemoveValue(const std::string &name)
-{
-	std::map<std::string, int>::iterator i0 = intMap.find(name);
-	if (i0 != intMap.end())
-	{
-		intMap.erase(i0);
-		return;
-	}
-	std::map<std::string, float>::iterator i1 = floatMap.find(name);
-	if (i1 != floatMap.end())
-	{
-		floatMap.erase(i1);
-		return;
-	}
-	std::map<std::string, vec2>::iterator i2 = vec2Map.find(name);
-	if (i2 != vec2Map.end())
-	{
-		vec2Map.erase(i2);
-		return;
-	}
-	std::map<std::string, vec3>::iterator i3 = vec3Map.find(name);
-	if (i3 != vec3Map.end())
-	{
-		vec3Map.erase(i3);
-		return;
-	}
-	std::map<std::string, vec4>::iterator i4 = vec4Map.find(name);
-	if (i4 != vec4Map.end())
-	{
-		vec4Map.erase(i4);
-		return;
-	}
-	std::map<std::string, mat3>::iterator i5 = mat3Map.find(name);
-	if (i5 != mat3Map.end())
-	{
-		mat3Map.erase(i5);
-		return;
-	}
-	std::map<std::string, mat4>::iterator i6 = mat4Map.find(name);
-	if (i6 != mat4Map.end())
-	{
-		mat4Map.erase(i6);
-		return;
-	}
-}
-
-void ProgramUniformsList::ApplyForProgram(ProgramPtr program) const
-{
-/*	Renderer::UseProgram(program);
-	for (std::map<std::string, int>::const_iterator i = intMap.begin(); i != intMap.end(); i++)
-		program->SetUniform(i->first, i->second);
-	for (std::map<std::string, float>::const_iterator i = floatMap.begin(); i != floatMap.end(); i++)
-		program->SetUniform(i->first, i->second);
-	for (std::map<std::string, vec2>::const_iterator i = vec2Map.begin(); i != vec2Map.end(); i++)
-		program->SetUniform(i->first, i->second);
-	for (std::map<std::string, vec3>::const_iterator i = vec3Map.begin(); i != vec3Map.end(); i++)
-		program->SetUniform(i->first, i->second);
-	for (std::map<std::string, vec4>::const_iterator i = vec4Map.begin(); i != vec4Map.end(); i++)
-		program->SetUniform(i->first, i->second);
-	for (std::map<std::string, mat3>::const_iterator i = mat3Map.begin(); i != mat3Map.end(); i++)
-		program->SetUniform(i->first, i->second);
-	for (std::map<std::string, mat4>::const_iterator i = mat4Map.begin(); i != mat4Map.end(); i++)
-		program->SetUniform(i->first, i->second);*/
 }

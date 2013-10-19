@@ -8,7 +8,7 @@ public:
 	NodePtr root;
 	NodeObserverCameraPtr camera;
 	CameraPtr orthographicCamera;
-	Viewport viewport;
+	Scene scene;
 	FontPtr font;
 	FontFacePtr fontFace;
 };

@@ -14,8 +14,8 @@ public:
 		bool cullFaceEnabled;
 		bool renderNormals;
 		bool renderTangents;		
-		FireCube::GeometryNodePtr gridNode;
-		FireCube::GeometryPtr grid;
+		//FireCube::GeometryNodePtr gridNode;
+		//FireCube::GeometryPtr grid;
 		DWORD gridCount;
 		FireCube::ProgramPtr plainColorProgram;
 		FireCube::NodeObserverCameraPtr camera;
@@ -38,8 +38,6 @@ public:
 	void OnMotion(wxMouseEvent& event);
 	void OnMouseWheel(wxMouseEvent& event);
 	void Render();
-	void CreateGrid(float size, DWORD numberOfCells);
-	void RenderGrid();
 	void Init();
 	void SetBackgroundColor(FireCube::vec4 color);
 	FireCube::vec4 GetBackgroundColor();
@@ -61,6 +59,9 @@ private:
 	RenderingParameters renderingParameters;
 	MyApp *theApp;
 	wxGLContext *context;
+	FireCube::Engine *engine;
+	FireCube::Scene scene;	
+	bool crap;
 };
 
 #endif

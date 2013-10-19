@@ -21,7 +21,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	glCanvas = new GLCanvas(this, wxID_ANY,wxDefaultPosition,wxSize(1,1));
-	fgSizer1->Add( glCanvas, 0, wxALL|wxEXPAND, 5 );
+	fgSizer1->Add( glCanvas, 0, wxALL|wxEXPAND, 0 );
 	
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -223,10 +223,10 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer6->Fit( panel10 );
 	notebook1->AddPage( panel10, wxT("Scene"), false );
 	
-	bSizer2->Add( notebook1, 1, wxEXPAND | wxALL, 5 );
+	bSizer2->Add( notebook1, 1, wxEXPAND | wxALL, 0 );
 	
 	
-	fgSizer1->Add( bSizer2, 1, wxEXPAND, 5 );
+	fgSizer1->Add( bSizer2, 1, wxEXPAND, 0 );
 	
 	
 	this->SetSizer( fgSizer1 );
@@ -247,21 +247,6 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	menu1->Append( menuItem1 );
 	
 	menuBar->Append( menu1, wxT("&File") ); 
-	
-	menu2 = new wxMenu();
-	wxMenuItem* menuItem3;
-	menuItem3 = new wxMenuItem( menu2, wxID_ANY, wxString( wxT("Open vertex shader") ) , wxEmptyString, wxITEM_NORMAL );
-	menu2->Append( menuItem3 );
-	
-	wxMenuItem* menuItem4;
-	menuItem4 = new wxMenuItem( menu2, wxID_ANY, wxString( wxT("Open pixel shader") ) , wxEmptyString, wxITEM_NORMAL );
-	menu2->Append( menuItem4 );
-	
-	wxMenuItem* menuItem7;
-	menuItem7 = new wxMenuItem( menu2, wxID_ANY, wxString( wxT("None") ) , wxEmptyString, wxITEM_NORMAL );
-	menu2->Append( menuItem7 );
-	
-	menuBar->Append( menu2, wxT("Shader") ); 
 	
 	menu3 = new wxMenu();
 	wxMenuItem* menuItem6;
@@ -293,9 +278,6 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	button2->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::Button2Clicked ), NULL, this );
 	this->Connect( menuItem2->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem2Clicked ) );
 	this->Connect( menuItem1->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem1Clicked ) );
-	this->Connect( menuItem3->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem3Clicked ) );
-	this->Connect( menuItem4->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem4Clicked ) );
-	this->Connect( menuItem7->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem7Clicked ) );
 	this->Connect( menuItem6->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem6Clicked ) );
 	this->Connect( menuItem5->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem5Clicked ) );
 }
@@ -315,9 +297,6 @@ MainFrame::~MainFrame()
 	button2->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::Button2Clicked ), NULL, this );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem2Clicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem1Clicked ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem3Clicked ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem4Clicked ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem7Clicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem6Clicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::MenuItem5Clicked ) );
 	

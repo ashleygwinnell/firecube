@@ -1,23 +1,28 @@
+#version 330
+
+out vec4 outputColor;
+smooth in vec2 texcoord;
+
 #if !defined(NORMAL_MAPPING)
-	varying vec3 normal;
+	smooth in vec3 normal;
+#else
+	smooth in mat3 tbn;
 #endif
 
 #ifdef NORMAL_MAPPING
 	uniform sampler2D normalMap;
-	varying mat3 tbn;
 #endif	
-void main()
-{
-	vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
-	#ifdef NORMAL_MAPPING
-		vec3 n = tbn * normalize(texture2D(normalMap, gl_TexCoord[0].xy).xyz * 2.0 - 1.0);
-		n = gl_NormalMatrix * n ;
 
+uniform mat3 normalMatrix;
+
+void main()
+{		
+	#ifdef NORMAL_MAPPING
+		vec3 n = tbn * normalize(texture(normalMap, texcoord.xy).xyz * 2.0 - 1.0);
+		n = normalize(normalMatrix * n);
 	#else
 		vec3 n = normalize(normal);
-	#endif
-	n = (normalize(n) + 1.0) / 2.0;
-	color = vec4(n, 1.0);
-
-	gl_FragColor = color;
+	#endif	
+	
+	outputColor = vec4(n, 1.0);
 }

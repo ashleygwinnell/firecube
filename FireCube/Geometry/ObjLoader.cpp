@@ -8,6 +8,9 @@
 #include "Rendering/IndexBuffer.h"
 #include "Core/Engine.h"
 #include "Core/ResourcePool.h"
+#include "Rendering/RenderingTypes.h"
+#include "Math/MathUtils.h"
+#include "Rendering/Technique.h"
 
 using namespace FireCube;
 
@@ -51,7 +54,7 @@ bool ObjLoader::Load(const std::string &filename, ModelLoadingOptions options)
 	return true;
 }
 
-void ObjLoader::GenerateScene(Renderer *renderer)
+void ObjLoader::GenerateScene(Renderer *renderer, Node *root)
 {
 	//TODO: Implement
 }
@@ -216,6 +219,7 @@ void ObjLoader::ParseMaterialFile(const std::string &filename)
 
 	while(getline(ifs, line))
 	{		
+		line = Trim(line);
 		if (line.empty())
 			continue;
 		else if (line.size() >= 6 && line.substr(0,6) == "newmtl")
@@ -289,7 +293,13 @@ std::string ObjLoader::ExtractDirectory(const std::string &filename)
 {
 	int i = filename.find_last_of('\\');
 	if (i == std::string::npos)
-		return "";
+	{
+		i = filename.find_last_of('/');
+		if (i == std::string::npos)
+		{
+			return "";
+		}
+	}
 	return filename.substr(0, i);
 }
 
@@ -418,27 +428,6 @@ NodePtr ObjLoader::GenerateSceneGraph()
 
 */
 
-void ObjLoader::CalculateNormals(std::vector<vec3> &normals, std::vector<vec3> &vertices, std::vector<unsigned int> &indices)
-{
-	normals.resize(vertices.size(), vec3(0, 0, 0));	
-
-	for (unsigned int i = 0; i < indices.size(); i += 3)
-	{
-		// Calculate face normals
-		vec3 v1 = vertices[indices[i + 1]] - vertices[indices[i + 0]];
-		vec3 v2 = vertices[indices[i + 2]] - vertices[indices[i + 0]];
-		vec3 n = Cross(v1, v2);				
-		// Add this normal to the three vertex normals forming this face
-		normals[indices[i + 0]] += n;
-		normals[indices[i + 1]] += n;
-		normals[indices[i + 2]] += n;
-	}
-	for (unsigned int n = 0; n < normals.size(); n++)
-	{
-		normals[n].Normalize();
-	}	
-}
-
 void ObjLoader::GenerateGeometries(Renderer *renderer)
 {
 	generatedGeometries.clear();
@@ -454,10 +443,10 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 	{
 		MaterialPtr material(new FireCube::Material(engine));
 		material->SetName(i->first);
-		material->SetAmbientColor(vec3(i->second.ambientColor.x, i->second.ambientColor.y, i->second.ambientColor.z));
-		material->SetDiffuseColor(vec3(i->second.diffuseColor.x, i->second.diffuseColor.y, i->second.diffuseColor.z));
-		material->SetSpecularColor(vec3(i->second.specularColor.x, i->second.specularColor.y, i->second.specularColor.z));
-		material->SetShininess(i->second.shininess);
+		material->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(i->second.ambientColor.x, i->second.ambientColor.y, i->second.ambientColor.z, 1.0f));
+		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(i->second.diffuseColor.x, i->second.diffuseColor.y, i->second.diffuseColor.z, 1.0f));
+		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(i->second.specularColor.x, i->second.specularColor.y, i->second.specularColor.z, 1.0f));
+		material->SetParameter(PARAM_MATERIAL_SHININESS, i->second.shininess);
 		if (!i->second.diffuseTextureName.empty())
 		{
 			std::string textureName = i->second.diffuseTextureName;
@@ -467,8 +456,12 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			TexturePtr texture = engine->GetResourcePool()->GetResource<Texture>(baseDir + "\\" + textureName);
 			if (!texture)
 				texture = engine->GetResourcePool()->GetResource<Texture>(textureName);
-			material->SetDiffuseTexture(texture);
+			material->SetTexture(TEXTURE_UNIT_DIFFUSE, texture);
+			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
 		}
+		else
+			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
+
 		if (!i->second.normalTextureName.empty())
 		{
 			std::string textureName = i->second.normalTextureName;
@@ -478,7 +471,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			TexturePtr texture = engine->GetResourcePool()->GetResource<Texture>(baseDir + "\\" + textureName);
 			if (!texture)
 				texture = engine->GetResourcePool()->GetResource<Texture>(textureName);
-			material->SetNormalTexture(texture);
+			material->SetTexture(TEXTURE_UNIT_NORMAL, texture);
 		}
 		generatedMaterials[i->first] = material;
 	}
@@ -491,8 +484,10 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 		for (std::map<std::string, std::vector<Face>>::iterator j = i->second.materialFaces.begin(); j != i->second.materialFaces.end(); j++, surfaceNum++)
 		{			
 			Geometry *geometry = new Geometry(renderer);
-			VertexBufferPtr vertexBuffer(new VertexBuffer(renderer));
+			VertexBufferPtr vertexBuffer(new VertexBuffer(renderer));			
 			IndexBufferPtr indexBuffer(new IndexBuffer(renderer));
+			vertexBuffer->SetShadowed(true);
+			indexBuffer->SetShadowed(true);
 			geometry->SetVertexBuffer(vertexBuffer);
 			geometry->SetIndexBuffer(indexBuffer);
 			generatedGeometries.push_back(geometry);
@@ -527,7 +522,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 				}				
 			}
 			if (generatedNormals.empty())
-				CalculateNormals(generatedNormals, generatedVertices, indexData);
+				MathUtils::CalculateNormals(generatedNormals, generatedVertices, indexData);
 
 			unsigned int vertexAttributes = VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_NORMAL;
 			unsigned int vertexSize = 6;
@@ -552,7 +547,6 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			geometry->SetMaterial(generatedMaterials[j->first]);
 			geometry->SetPrimitiveType(TRIANGLES);
 			geometry->SetPrimitiveCount(j->second.size());
-			geometry->SetVertexCount(indexData.size());						
 			geometry->Update();			
 		}
 	}	

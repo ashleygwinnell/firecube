@@ -9,7 +9,7 @@
 
 #include "ThirdParty/GLEW/glew.h"
 #include "Utils/utils.h"
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 #include "Core/Object.h"
 
 namespace FireCube
@@ -159,6 +159,8 @@ public:
 	void UseCamera(Camera *camera);
 
 	void UseLight(Light *light);
+
+	void ResetCachedShadersParameters();
 private:
 	VertexBufferPtr textVertexBuffer;
 	GLuint textVao;

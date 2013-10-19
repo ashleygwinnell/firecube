@@ -12,7 +12,8 @@ static const char *shaderTemplateDefines[STP_MAX_PROPERTIES] = {"AMBIENT",
 																"DIRECTIONAL_LIGHT",
 																"DIFFUSE_MAPPING", 
 																"FOG", 
-																"NORMAL_MAPPING"};
+																"NORMAL_MAPPING",
+																"SPOT_LIGHT"};
 
 std::map<std::string, unsigned int> ShaderTemplate::strToShaderProperty;
 bool ShaderTemplate::strToShaderPropertyInit = false;
@@ -93,6 +94,7 @@ unsigned int ShaderTemplate::stringToShaderProperty(const std::string &property)
 		strToShaderProperty["DIFFUSE_MAPPING"] = STP_DIFFUSE_MAPPING;
 		strToShaderProperty["FOG"] = STP_FOG;
 		strToShaderProperty["NORMAL_MAPPING"] = STP_NORMAL_MAPPING;
+		strToShaderProperty["SPOT_LIGHT"] = STP_SPOT_LIGHT;
 	}
 	auto i = strToShaderProperty.find(property);
 	if (i == strToShaderProperty.end())

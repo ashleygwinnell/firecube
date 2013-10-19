@@ -5,10 +5,10 @@ using namespace FireCube;
 
 StringHash::StringHash(const std::string &str)
 {
-	hash = MurmurHash2(str.c_str(), str.size(), 0x1234);
+	hash = MathUtils::MurmurHash2(str.c_str(), str.size(), 0x1234);
 }
 
 StringHash::StringHash(const char *str)
 {
-	hash = MurmurHash2(str, strlen(str), 0x1234);
+	hash = MathUtils::MurmurHash2(str, strlen(str), 0x1234);
 }

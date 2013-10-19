@@ -7,6 +7,8 @@
 #include "Rendering/IndexBuffer.h"
 #include "Core/Engine.h"
 #include "Core/ResourcePool.h"
+#include "Rendering/RenderingTypes.h"
+#include "Rendering/Technique.h"
 
 using namespace FireCube;
 
@@ -46,7 +48,7 @@ bool ColladaLoader::Load(const std::string &filename, ModelLoadingOptions option
 	return true;
 }
 
-void ColladaLoader::GenerateScene(Renderer *renderer)
+void ColladaLoader::GenerateScene(Renderer *renderer, FireCube::Node *root)
 {
 	// TODO: Implement
 }
@@ -723,7 +725,7 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 			}
 			
 			// Hash the vertex
-			unsigned int h = MurmurHash2(ind, offset * 4, 0x1234);
+			unsigned int h = MathUtils::MurmurHash2(ind, offset * 4, 0x1234);
 			std::map<unsigned int, unsigned int>::iterator iter = tempMap.find(h);
 			if (iter == tempMap.end())
 			{
@@ -989,11 +991,11 @@ void ColladaLoader::DeleteNodes(Node *node)
 
 mat4 ColladaLoader::CalculateTranformation(std::vector<Transform> &transformations)
 {
-	mat4 ret = mat4::identity;
+	mat4 ret = mat4::IDENTITY;
 	for (unsigned int i = 0; i < transformations.size(); i++)
 	{
 		Transform &t = transformations[i];
-		mat4 temp = mat4::identity;
+		mat4 temp = mat4::IDENTITY;
 		if (t.type == TRANSFORM_TRANSLATE)
 		{
 			temp.Translate(t.v[0], t.v[1], t.v[2]);
@@ -1046,7 +1048,7 @@ vec3 ColladaLoader::GetTranslation(std::vector<Transform> &transformations)
 
 mat4 ColladaLoader::GetRotation(std::vector<Transform> &transformations)
 {
-	mat4 ret = mat4::identity;
+	mat4 ret = mat4::IDENTITY;
 
 	for (unsigned int i = 0; i < transformations.size(); i++)
 	{
@@ -1079,11 +1081,11 @@ vec3 ColladaLoader::GetScale(std::vector<Transform> &transformations)
 
 mat4 ColladaLoader::GetTransformMatrix(std::vector<Transform> &transformations)
 {
-	mat4 ret = mat4::identity;
+	mat4 ret = mat4::IDENTITY;
 	for (unsigned int i = 0; i < transformations.size(); i++)
 	{
 		Transform &t = transformations[i];
-		mat4 temp = mat4::identity;
+		mat4 temp = mat4::IDENTITY;
 		if (t.type == TRANSFORM_MATRIX)
 		{
 			for (unsigned int j = 0; j < 16; j++)
@@ -1512,16 +1514,19 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 			else
 			{
 				fmat = FireCube::MaterialPtr(new FireCube::Material(engine));
-				generatedMaterials[subMesh.material] = fmat;
-				fmat->SetAmbientColor(vec3(effect.ambientColor.x, effect.ambientColor.y, effect.ambientColor.z));
-				fmat->SetDiffuseColor(vec3(effect.diffuseColor.x, effect.diffuseColor.y, effect.diffuseColor.z));
-				fmat->SetSpecularColor(vec3(effect.specularColor.x, effect.specularColor.y, effect.specularColor.z));
-				fmat->SetShininess(effect.shininess);
+				generatedMaterials[subMesh.material] = fmat;				
+				fmat->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(effect.ambientColor.x, effect.ambientColor.y, effect.ambientColor.z, 1.0f));
+				fmat->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(effect.diffuseColor.x, effect.diffuseColor.y, effect.diffuseColor.z, 1.0f));
+				fmat->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(effect.specularColor.x, effect.specularColor.y, effect.specularColor.z, 1.0f));
+				fmat->SetParameter(PARAM_MATERIAL_SHININESS, effect.shininess);
 				fmat->SetName(subMesh.material);            
 				if (effect.diffuseSampler.name != "")
-				{					
-					fmat->SetDiffuseTexture(engine->GetResourcePool()->GetResource<Texture>(GetTextureFileNameFromSampler(effect, effect.diffuseSampler)));
+				{		
+					fmat->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
+					fmat->SetTexture(TEXTURE_UNIT_DIFFUSE, engine->GetResourcePool()->GetResource<Texture>(GetTextureFileNameFromSampler(effect, effect.diffuseSampler)));
 				}
+				else
+					fmat->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
 			}
 			geometry->SetMaterial(fmat);
 
@@ -1588,8 +1593,10 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 				}
 			}
 
-			VertexBufferPtr vertexBuffer(new VertexBuffer(renderer));			
+			VertexBufferPtr vertexBuffer(new VertexBuffer(renderer));						
 			IndexBufferPtr indexBuffer(new IndexBuffer(renderer));			
+			vertexBuffer->SetShadowed(true);
+			indexBuffer->SetShadowed(true);
 			geometry->SetVertexBuffer(vertexBuffer);
 			geometry->SetIndexBuffer(indexBuffer);
 
@@ -1636,7 +1643,6 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 			
 			geometry->SetPrimitiveType(TRIANGLES);
 			geometry->SetPrimitiveCount(indexData.size() / 3);
-			geometry->SetVertexCount(indexData.size());			
 			geometry->Update();
 		}    
 	}
@@ -1656,7 +1662,7 @@ BoundingBox ColladaLoader::GetBoundingBox() const
 void ColladaLoader::GenerateGeometries(Renderer *renderer)
 {
 	generatedGeometries.clear();
-	GenerateGeometries(renderer, root, mat4::identity);	
+	GenerateGeometries(renderer, root, mat4::IDENTITY);	
 }
 
 const std::vector<FireCube::Geometry *> &ColladaLoader::GetGeneratedGeometries()

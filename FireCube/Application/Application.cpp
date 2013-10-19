@@ -7,6 +7,8 @@
 #include "Application/Application.h"
 #include "Core/ResourcePool.h"
 #include "Core/Engine.h"
+#include "Rendering/DebugRenderer.h"
+
 using namespace FireCube;
 
 extern FT_Library freeTypeLibrary;
@@ -52,20 +54,23 @@ bool Application::Initialize(int width, int height, int bpp, int multisample, bo
 		return false;
 	
 	context = new SDL_GLContext;
-	*context = SDL_GL_CreateContext(mainWindow);	
-	renderer = new Renderer(engine);
-	engine->SetRenderer(renderer);
-	resourcePool = new ResourcePool(engine);
-	engine->SetResourcePool(resourcePool);
-	renderer->SetViewport(0, 0, width, height);
+	*context = SDL_GL_CreateContext(mainWindow);		
 	this->width = width;
-	this->height = height;
-	InitKeyMap();	
+	this->height = height;	
 	return InitializeNoWindow();
 }
 
 bool Application::InitializeNoWindow()
 {	
+	renderer = new Renderer(engine);
+	engine->SetRenderer(renderer);
+	resourcePool = new ResourcePool(engine);
+	engine->SetResourcePool(resourcePool);
+	engine->SetInputManager(&inputManager);
+	debugRenderer = new DebugRenderer(engine);
+	engine->SetDebugRenderer(debugRenderer);
+	renderer->SetViewport(0, 0, width, height);
+	InitKeyMap();	
 	glewExperimental = GL_TRUE;
 	glewInit();
 	Logger::Init("log.txt");
@@ -76,6 +81,7 @@ bool Application::InitializeNoWindow()
 	srand(GetTickCount());
 	FT_Init_FreeType(&freeTypeLibrary);
 	renderer->Initialize();
+	debugRenderer->Initialize();
 	return Prepare();
 }
 
@@ -84,6 +90,7 @@ void Application::Destroy()
 	delete resourcePool;
 	renderer->Destroy();
 	delete renderer;
+	delete debugRenderer;
 	LOGINFO("Destroying application");
 	if (context)
 		SDL_GL_DeleteContext(*context);
@@ -222,6 +229,10 @@ void Application::Run()
 			else if (event.type == SDL_QUIT)
 				running = false;
 		}		
+		int x,y;
+		SDL_GetMouseState(&x, &y);
+		inputManager.SetRawAnalogValue(MOUSE_AXIS_X_ABSOLUTE, (float) x);
+		inputManager.SetRawAnalogValue(MOUSE_AXIS_Y_ABSOLUTE, (float) y);
 		renderer->ResetNumberOfPrimitivesRendered();
 		// Dispatch input to all input listeners
 		inputManager.DispatchInput(deltaTime);
@@ -327,4 +338,9 @@ void Application::InitKeyMap()
 	mouseMap[1] = KEY_MOUSE_LEFT_BUTTON;
 	mouseMap[2] = KEY_MOUSE_MIDDLE_BUTTON;
 	mouseMap[3] = KEY_MOUSE_RIGHT_BUTTON;
+}
+
+Engine *Application::GetEngine()
+{
+	return engine;
 }

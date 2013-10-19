@@ -1,0 +1,3 @@
+<material>
+	<technique name = "Techniques/DebugNormals.xml" />
+</material>

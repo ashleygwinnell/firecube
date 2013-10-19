@@ -18,7 +18,7 @@ class MyApp : public wxApp
 {
 public:
     virtual bool OnInit();
-	void LoadDocument(const string &filename);
+	void LoadDocument(const std::string &filename);
 	Document &GetDocument();
 	ApplicationParameters &GetApplicationParameters();	
 	FireCubeApp fcApp;

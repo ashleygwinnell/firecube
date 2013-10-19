@@ -7,7 +7,7 @@
 #include <string>
 #include <map>
 
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 #include "Scene/Node.h"
 #include "ModelLoader.h"
 
@@ -53,14 +53,13 @@ namespace FireCube
 		ObjLoader(Engine *engine);
 		virtual bool Load(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());		
 		virtual void GenerateGeometries(Renderer *renderer);
-		virtual void GenerateScene(Renderer *renderer);
+		virtual void GenerateScene(Renderer *renderer, Node *root);
 		virtual const std::vector<Geometry *> &GetGeneratedGeometries();
 		virtual NodePtr GetGeneratedScene();
 		virtual const std::vector<FireCube::Material *> &GetGeneratedMaterials();
 		virtual BoundingBox GetBoundingBox() const;
 
-	private:
-		void CalculateNormals(std::vector<vec3> &normals, std::vector<vec3> &vertices, std::vector<unsigned int> &indices);
+	private:		
 		std::string ExtractDirectory(const std::string &filename);
 		void ParseVertexLine(const std::string &line);
 		void ParseTexCoordLine(const std::string &line);

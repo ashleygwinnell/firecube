@@ -32,7 +32,7 @@ bool Texture::Create()
 
 bool Texture::Load(const std::string &filename)
 {	
-	Image img;
+	Image img(engine);
 	if (!img.Load(filename))
 		return false;
 
@@ -73,9 +73,4 @@ void Texture::SetFiltering(TextureFilter minFilter, TextureFilter magFilter)
 {
 	this->minFilter = minFilter;
 	this->magFilter = magFilter;
-}
-
-std::string Texture::GetFileName() const
-{
-	return filename;
 }

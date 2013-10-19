@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "Utils/utils.h"
 #include "Core/Object.h"
 
 namespace FireCube
@@ -8,16 +9,16 @@ namespace FireCube
 
 class Node;
 
-class Component : public Object
+class FIRECUBE_API Component : public Object
 {	
 	friend class Node;
 public:
 	Component(Engine *engine);
 	virtual ~Component();
-	
-	void SetNode(Node *node);
+		
 	Node *GetNode();	
 protected:	
+	void SetNode(Node *node);
 	virtual void MarkedDirty() = 0;
 	virtual void NodeChanged() = 0;
 	

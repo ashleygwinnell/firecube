@@ -20,6 +20,7 @@ class Texture;
 typedef std::shared_ptr<Texture> TexturePtr;
 class Renderer;
 class ResourcePool;
+class DebugRenderer;
 
 /**
 * This class is responsible for the initialization and running of the application.
@@ -106,10 +107,13 @@ public:
 	*/
 	InputManager &GetInputManager();
 
+	Engine *GetEngine();
+
 protected:
 	Renderer *renderer;
 	Engine *engine;
 	ResourcePool *resourcePool;
+	DebugRenderer *debugRenderer;
 private:
 	void InitKeyMap();
 	std::map<int, Key> keyMap;

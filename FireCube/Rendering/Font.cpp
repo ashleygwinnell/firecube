@@ -13,23 +13,6 @@ using namespace FireCube;
 
 FT_Library  freeTypeLibrary;
 
-/*
-std::shared_ptr<FontPage> FontPool::CreateNewPage()
-{
-	// Create a new font page - a blank texture
-	std::shared_ptr<FontPage> p(new FontPage);
-	p->tex = TexturePtr(new Texture(engine->GetRenderer()));	
-	glBindTexture(GL_TEXTURE_2D, p->tex->GetObjectId());
-	std::vector<unsigned char> empty(512 * 512, 0);	
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, &empty[0]);
-	p->textureSize = 512;
-	p->curPos = vec2(0, 0);
-	page.push_back(p);
-	return p;
-}
-
-*/
-
 Font::Font(Engine *engine) : Resource(engine)
 {
 	
@@ -46,6 +29,7 @@ bool Font::Load(const std::string &filename)
 	std::ifstream file(filename, std::ios::binary);
 	if (!file)
 		return false;
+	this->filename = filename;
 	// read the data
 	data = std::vector<char>((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 	return true;
@@ -74,13 +58,11 @@ FontFacePtr Font::GenerateFontFace(int pointSize)
 	
 	fontFace->page = std::shared_ptr<FontPage>(new FontPage);		
 	fontFace->page->tex = TexturePtr(new Texture(engine));	
-	glBindTexture(GL_TEXTURE_2D, fontFace->page->tex->GetObjectId());
-	std::vector<unsigned char> empty(512 * 512, 0);	
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, &empty[0]);
 	fontFace->page->textureSize = 512;
-	fontFace->page->curPos = vec2(0, 0);				
-
+	fontFace->page->curPos = vec2::ZERO;
 	glBindTexture(GL_TEXTURE_2D, fontFace->page->tex->GetObjectId());
+	std::vector<unsigned char> empty(fontFace->page->textureSize * fontFace->page->textureSize, 0);	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, fontFace->page->textureSize, fontFace->page->textureSize, 0, GL_RED, GL_UNSIGNED_BYTE, &empty[0]);		
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	for (unsigned int i = 0; i < strlen(text); i++)
 	{
@@ -139,7 +121,7 @@ bool FontFace::AddChar(char c)
 	// Update the font texture
 	glTexSubImage2D(GL_TEXTURE_2D, 0, (int)page->curPos.x, (int)page->curPos.y, fontImpl->face->glyph->bitmap.width, fontImpl->face->glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, fontImpl->face->glyph->bitmap.buffer);
 	// Store information about this glyph which is used when rendering it
-	glyph[c].uv = page->curPos / 512.0f;
+	glyph[c].uv = page->curPos / (float) page->textureSize;
 	glyph[c].size = vec2((float)fontImpl->face->glyph->bitmap.width, (float)fontImpl->face->glyph->bitmap.rows);
 	glyph[c].bitmapOffset = vec2((float)fontImpl->face->glyph->bitmap_left, pointSize - (float)fontImpl->face->glyph->bitmap_top);
 	glyph[c].advance = fontImpl->face->glyph->advance.x >> 6;

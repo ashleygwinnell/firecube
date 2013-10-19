@@ -15,10 +15,10 @@ Terrain::Terrain(Engine *engine) : Component(engine), patchSize(32), verticesSpa
 
 }
 
-void Terrain::CreateHeightMap(Image &image)
+void Terrain::CreateFromHeightMap(Image *image)
 {
-	numPatchesX = (image.GetWidth() - 1) / patchSize;
-	numPatchesY = (image.GetHeight() - 1) / patchSize;
+	numPatchesX = (image->GetWidth() - 1) / patchSize;
+	numPatchesY = (image->GetHeight() - 1) / patchSize;
 	numVerticesX = numPatchesX * patchSize + 1;
 	numVerticesY = numPatchesY * patchSize + 1;
 	heightData.resize(numVerticesX * numVerticesY);
@@ -26,14 +26,11 @@ void Terrain::CreateHeightMap(Image &image)
 	{
 		for (int x = 0; x < numVerticesX; ++x)
 		{
-			heightData[y * numVerticesX + x] = image.GetPixel(x, y).y * verticesSpacing.y;
+			heightData[y * numVerticesX + x] = image->GetPixel(x, y).y * verticesSpacing.y;
 		}
 	}
 	patchWorldSize = vec2(verticesSpacing.x, verticesSpacing.z) * (float) patchSize;
-	GenerateIndexBuffer();
-	material = MaterialPtr(new Material(engine));
-	material->SetAmbientColor(vec3(0, 0, 0));
-	material->SetDiffuseColor(vec3(1, 1, 1));
+	GenerateIndexBuffer();	
 	vec3 offset(patchWorldSize .x * numPatchesX * -0.5f, 0, patchWorldSize.y * numPatchesY * -0.5f);
 	for (int y = 0; y < numPatchesY; ++y)
 	{
@@ -45,7 +42,7 @@ void Terrain::CreateHeightMap(Image &image)
 			NodePtr patchNode = node->GetChild(nodeName, true);
 			if (!patchNode)
 			{
-				patchNode = NodePtr(new Node(nodeName));
+				patchNode = NodePtr(new Node(engine, nodeName));
 				node->AddChild(patchNode);
 			}
 			TerrainPatch *patch = new TerrainPatch(engine);
@@ -59,7 +56,8 @@ void Terrain::CreateHeightMap(Image &image)
 
 void Terrain::GenerateIndexBuffer()
 {
-	indexBuffer = IndexBufferPtr(new IndexBuffer(engine->GetRenderer()));	
+	indexBuffer = IndexBufferPtr(new IndexBuffer(engine->GetRenderer()));
+	indexBuffer->SetShadowed(true);
 	std::vector<unsigned int> indices(patchSize * patchSize * 6);
 	for (int y = 0; y < patchSize; ++y)
 	{
@@ -84,6 +82,7 @@ void Terrain::GeneratePatchGeometry(TerrainPatch *patch, int patchX, int patchY)
 {	
 	GeometryPtr geometry = patch->GetGeometry();
 	VertexBufferPtr vertexBuffer(new VertexBuffer(engine->GetRenderer()));
+	vertexBuffer->SetShadowed(true);
 	geometry->SetVertexBuffer(vertexBuffer);
 	geometry->SetIndexBuffer(indexBuffer);
 	geometry->SetMaterial(material);
@@ -107,7 +106,6 @@ void Terrain::GeneratePatchGeometry(TerrainPatch *patch, int patchX, int patchY)
 	
 	vertexBuffer->LoadData(&vertexData[0], vertexCount, VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_NORMAL | VERTEX_ATTRIBUTE_TEXCOORD0, STATIC);	
 	patch->SetBoundingBox(boundingBox);		
-	geometry->SetVertexCount(patchSize * patchSize * 6);
 	geometry->SetPrimitiveCount(patchSize * patchSize * 2);
 	geometry->Update();
 }
@@ -136,14 +134,14 @@ vec3 Terrain::GetNormalDiscrete(int x, int y)
 	float d5 = GetHeightDiscrete(x - 1, y + 1) - baseHeight;
 	float d6 = GetHeightDiscrete(x - 1, y) - baseHeight;
 	float d7 = GetHeightDiscrete(x - 1, y - 1) - baseHeight;
-	vec3 n = vec3(0, verticesSpacing.z, d0) +
-			 vec3(-d1, verticesSpacing.x + verticesSpacing.z, d1) +
-			 vec3(-d2, verticesSpacing.x, 0) + 
-			 vec3(-d3, verticesSpacing.x + verticesSpacing.z, -d3) +
-			 vec3(0, verticesSpacing.z, -d4) +
-			 vec3(d5, verticesSpacing.x + verticesSpacing.z, -d5) +
-			 vec3(d6, verticesSpacing.x, 0) + 
-			 vec3(d7, verticesSpacing.x + verticesSpacing.z, d7);
+	vec3 n = vec3(0, verticesSpacing.z, d0).Normalized() +
+			 vec3(-d1, verticesSpacing.x + verticesSpacing.z, d1).Normalized() +
+			 vec3(-d2, verticesSpacing.x, 0).Normalized() + 
+			 vec3(-d3, verticesSpacing.x + verticesSpacing.z, -d3).Normalized() +
+			 vec3(0, verticesSpacing.z, -d4).Normalized() +
+			 vec3(d5, verticesSpacing.x + verticesSpacing.z, -d5).Normalized() +
+			 vec3(d6, verticesSpacing.x, 0).Normalized() + 
+			 vec3(d7, verticesSpacing.x + verticesSpacing.z, d7).Normalized();
 	n.Normalize();
 	return n;
 }
@@ -192,6 +190,26 @@ void TerrainPatch::SetBoundingBox(BoundingBox boundingBox)
 void TerrainPatch::SetMaterial(MaterialPtr material)
 {
 	geometry->SetMaterial(material);
+}
+
+void TerrainPatch::IntersectRay(RayQuery &rayQuery)
+{
+	float distance;
+	if (rayQuery.ray.IntersectBoundingBox(GetWorldBoundingBox(), distance) && distance <= rayQuery.maxDistance)
+	{
+		mat4 worldTransform = node->GetWorldTransformation();
+		worldTransform.Inverse();
+		Ray localRay = rayQuery.ray.Transformed(worldTransform);
+		vec3 normal;
+		if (geometry->IntersectRay(localRay, distance, normal) && distance <= rayQuery.maxDistance)
+		{
+			RayQueryResult result;
+			result.distance = distance;
+			result.renderable = this;
+			result.normal = normal;
+			rayQuery.results.push_back(result);
+		}		
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -50,6 +50,8 @@ public:
 	Shader *fragmentShader;
 
 	unsigned long long int sortKey;
+
+	float distance;
 };
 
 class FIRECUBE_API RenderQueue

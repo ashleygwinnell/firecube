@@ -35,7 +35,7 @@ NodeObserverCamera::NodeObserverCamera(InputManager &inputManager)
 mat4 NodeObserverCamera::GetViewMatrix()
 {		
 	if (!target)			
-		return mat4::identity;
+		return mat4::IDENTITY;
 	vec3 targetPos = target->GetWorldPosition();
 
 	if (lastTargetPosition == targetPos && !viewMatrixChanged)

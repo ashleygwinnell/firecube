@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 
 namespace FireCube
 {

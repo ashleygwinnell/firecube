@@ -10,9 +10,10 @@ const unsigned int VertexBuffer::attributeSize[MAX_VERTEX_ATTRIBUTE] = {
 	3 * sizeof(float), // position
 	3 * sizeof(float), // normal
 	2 * sizeof(float), // texture coordinate 0
-	3 * sizeof(float)}; // tangent	
+	3 * sizeof(float), // tangent	
+	3 * sizeof(float)}; // color
 
-VertexBuffer::VertexBuffer(Renderer *renderer) : GraphicsResource(renderer)
+VertexBuffer::VertexBuffer(Renderer *renderer) : GraphicsResource(renderer), isShadowed(false)
 {
 	Create();
 }
@@ -45,6 +46,12 @@ bool VertexBuffer::LoadData(void *data, unsigned int vertexCount, unsigned int v
 	this->vertexAttributes = vertexAttributes;
 	this->vertexCount = vertexCount;
 	UpdateAttributesOffsets();
+
+	if (isShadowed)
+	{
+		shadowData.resize(vertexCount * vertexSize);
+		memcpy(&shadowData[0], data, vertexCount * vertexSize);
+	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, objectId);
 	glBufferData(GL_ARRAY_BUFFER, vertexCount * vertexSize, data, e);
@@ -106,4 +113,47 @@ void *VertexBuffer::Lock()
 void VertexBuffer::Unlock()
 {
 	glUnmapBuffer(GL_ARRAY_BUFFER);
+}
+
+unsigned int VertexBuffer::GetVertexCount() const
+{
+	return vertexCount;
+}
+
+unsigned int VertexBuffer::GetVertexSize() const
+{
+	return vertexSize;
+}
+
+const std::vector<char> &VertexBuffer::GetShadowData() const
+{
+	return shadowData;
+}
+
+void VertexBuffer::SetShadowed(bool isShadowed)
+{
+	this->isShadowed = isShadowed;
+}
+
+const bool VertexBuffer::Shadowed() const
+{
+	return isShadowed;
+}
+
+unsigned int VertexBuffer::GetVertexSize(unsigned int vertexAttributes)
+{
+	unsigned int currentOffset = 0;
+	for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBUTE; ++i)
+	{
+		if (vertexAttributes & (1 << i))
+		{			
+			currentOffset += attributeSize[i];
+		}
+	}
+	return currentOffset;
+}
+
+unsigned int VertexBuffer::GetAttributeSize(unsigned int vertexAttribute)
+{
+	return attributeSize[vertexAttribute];
 }

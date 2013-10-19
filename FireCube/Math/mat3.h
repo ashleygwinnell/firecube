@@ -167,7 +167,7 @@ public:
 	/**
 	* Returns the direction of the look at vector.
 	*/
-	vec3 GetDir() const;
+	vec3 GetDirection() const;
 
 	/**
 	* Converts to a mat4 by complementing to a 4x4 identity matrix.
@@ -210,7 +210,7 @@ public:
 	/**
 	* A 3x3 identity matrix.
 	*/
-	static const mat3 identity;
+	static const mat3 IDENTITY;
 };
 
 /**

@@ -64,80 +64,82 @@ namespace FireCube
 class Material;
 typedef std::shared_ptr<Material> MaterialPtr;
 
-	class M3dsLoader : public ModelLoader
+class M3dsLoader : public ModelLoader
+{
+public:
+	class Material
 	{
 	public:
-		class Material
-		{
-		public:
-			std::string name;
-			vec3 ambientColor;
-			vec3 diffuseColor;
-			vec3 specularColor;
-			float shininess;
-			std::string diffuseTextureMap;
-		};
-		class Mesh
-		{
-		public:
-			Material *material;
-			std::vector<unsigned int> indices;
-		};
-		class Object
-		{
-		public:
-			std::string name;
-			std::vector<vec3> vertex;
-			std::vector<vec3> normal;
-			std::vector<unsigned int> indices;
-			std::vector<vec2> uv;
-			std::vector<Mesh> mesh;
-		};
-		M3dsLoader(Engine *engine);
-		~M3dsLoader();
-		virtual bool Load(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());		
-		virtual void GenerateGeometries(Renderer *renderer);
-		virtual void GenerateScene(Renderer *renderer);
-		virtual const std::vector<Geometry *> &GetGeneratedGeometries();
-		virtual NodePtr GetGeneratedScene();
-		virtual const std::vector<FireCube::Material *> &GetGeneratedMaterials();
-		virtual BoundingBox GetBoundingBox() const;
-
-	private:		
-		void CalculateNormals(Object &object);
-		void ReadMainChunk();
-		void ReadEdit3dsChunk(unsigned int length);
-		void ReadObjectChunk(unsigned int length);
-		void ReadTriMeshChunk(unsigned int length);
-		void ReadVerticesListChunk();
-		void ReadFacesListChunk(unsigned int length);
-		void ReadMaterialFaceList();
-		void ReadTexCoordListChunk();
-		void ReadObjectMatrixChunk();
-		void ReadMaterialListChunk(unsigned int length);
-		void ReadMaterialNameChunk();
-		vec3 ReadMaterialColorChunk(unsigned int length);
-		std::string ReadMaterialTexMapChunk(unsigned int length);
-		float ReadMaterialShininessChunk(unsigned int length);
-		std::string ReadMapNameChunk();
-		vec3 ReadColorFChunk();
-		vec3 ReadColorBChunk();
-		float ReadPercentageBChunk();
-		float ReadPercentageFChunk();
-		Material *GetMaterialByName(const std::string &name);
-		std::vector<char> buffer;
-		Material *curMaterial;
-		std::vector<Material *> materials;
-		std::vector<std::pair<std::pair<unsigned int, unsigned int>, std::string>> meshMaterial;
-		std::vector<std::pair<unsigned int, mat4>> objectMatrix;
-		std::vector<Object> object;
-		char *curPos;
-		ModelLoadingOptions options;
-		std::vector<Geometry *> generatedGeometries;
-		std::vector<FireCube::Material *> generatedMaterials;
-		Renderer *renderer;
-		BoundingBox boundingBox;
+		std::string name;
+		vec3 ambientColor;
+		vec3 diffuseColor;
+		vec3 specularColor;
+		float shininess;
+		std::string diffuseTextureMap;
 	};
+	class Mesh
+	{
+	public:
+		Material *material;
+		std::vector<unsigned int> indices;
+	};
+	class Object
+	{
+	public:
+		std::string name;
+		std::vector<vec3> vertex;
+		std::vector<vec3> normal;
+		std::vector<vec3> tangents;
+		std::vector<unsigned int> indices;
+		std::vector<vec2> uv;
+		std::vector<Mesh> mesh;
+	};
+	M3dsLoader(Engine *engine);
+	~M3dsLoader();
+	virtual bool Load(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());		
+	virtual void GenerateGeometries(Renderer *renderer);
+	virtual void GenerateScene(Renderer *renderer, Node *root);
+	virtual const std::vector<Geometry *> &GetGeneratedGeometries();
+	virtual NodePtr GetGeneratedScene();
+	virtual const std::vector<FireCube::Material *> &GetGeneratedMaterials();
+	virtual BoundingBox GetBoundingBox() const;
+private:				
+	void ReadMainChunk();
+	void ReadEdit3dsChunk(unsigned int length);
+	void ReadObjectChunk(unsigned int length);
+	void ReadTriMeshChunk(unsigned int length);
+	void ReadVerticesListChunk();
+	void ReadFacesListChunk(unsigned int length);
+	void ReadMaterialFaceList();
+	void ReadTexCoordListChunk();
+	void ReadObjectMatrixChunk();
+	void ReadMaterialListChunk(unsigned int length);
+	void ReadMaterialNameChunk();
+	vec3 ReadMaterialColorChunk(unsigned int length);
+	std::string ReadMaterialTexMapChunk(unsigned int length);
+	float ReadMaterialShininessChunk(unsigned int length);
+	std::string ReadMapNameChunk();
+	vec3 ReadColorFChunk();
+	vec3 ReadColorBChunk();
+	float ReadPercentageBChunk();
+	float ReadPercentageFChunk();
+	Material *GetMaterialByName(const std::string &name);
+	VertexBufferPtr CreateVertexBufferAndBoundingBoxOfObject(Object &object, BoundingBox &boundingBox);
+	Geometry *CreateGeometryOfMesh(Mesh &mesh, VertexBufferPtr vertexBuffer);
+	std::vector<char> buffer;
+	Material *curMaterial;
+	std::vector<Material *> materials;
+	std::vector<std::pair<std::pair<unsigned int, unsigned int>, std::string>> meshMaterial;
+	std::vector<std::pair<unsigned int, mat4>> objectMatrix;
+	std::vector<Object> object;
+	char *curPos;
+	ModelLoadingOptions options;
+	std::vector<Geometry *> generatedGeometries;
+	std::vector<FireCube::Material *> generatedMaterials;
+	std::map<Material *, FireCube::MaterialPtr >materialsMap;		
+	BoundingBox boundingBox;
+	NodePtr root;
+};
 }
 
 #pragma warning(pop)

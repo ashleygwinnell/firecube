@@ -2,6 +2,7 @@
 
 #include "Core/Component.h"
 #include "Rendering/Renderable.h"
+#include "Geometry/CollisionQuery.h"
 
 namespace FireCube
 {
@@ -19,6 +20,7 @@ public:
 	TerrainPatch(Engine *engine);
 	GeometryPtr GetGeometry();
 	void SetMaterial(MaterialPtr material);
+	virtual void IntersectRay(RayQuery &rayQuery);
 private:
 	void SetBoundingBox(BoundingBox boundingBox);
 	virtual void UpdateWorldBoundingBox();
@@ -30,7 +32,7 @@ class Terrain : public Component
 {
 public:
 	Terrain(Engine *engine);
-	void CreateHeightMap(Image &image);	
+	void CreateFromHeightMap(Image *image);	
 	void SetVerticesSpacing(vec3 spacing);
 	void SetPatchSize(int patchSize);
 	virtual void MarkedDirty() {}
