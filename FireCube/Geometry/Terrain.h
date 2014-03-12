@@ -25,6 +25,7 @@ private:
 	void SetBoundingBox(BoundingBox boundingBox);
 	virtual void UpdateWorldBoundingBox();
 	GeometryPtr geometry;
+	MaterialPtr material;
 	BoundingBox boundingBox;
 };
 
@@ -37,12 +38,18 @@ public:
 	void SetPatchSize(int patchSize);
 	virtual void MarkedDirty() {}
 	void SetMaterial(MaterialPtr material);
+	void SetSmoothHeightMap(bool smoothHeightMap);
+	void SetGenerateHardNormals(bool generateHardNormals);
+	float GetHeight(vec2 pos);
+	vec3 GetNormal(vec2 pos);
+	vec2 GetWorldSize() const;
 private:
 	virtual void NodeChanged() {};
 	void GeneratePatchGeometry(TerrainPatch *patch, int patchX, int patchY);
 	float GetHeightDiscrete(int x, int y);
 	vec3 GetNormalDiscrete(int x, int y);
 	void GenerateIndexBuffer();
+	void SmoothHeightMap();
 	std::vector<float> heightData;
 	int patchSize;
 	int numVerticesX, numVerticesY;
@@ -52,6 +59,8 @@ private:
 	IndexBufferPtr indexBuffer;
 	MaterialPtr material;
 	std::vector<TerrainPatch *> patches;
+	bool smoothHeightMap;
+	bool generateHardNormals;
 };
 
 /*class Camera;

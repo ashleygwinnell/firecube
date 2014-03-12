@@ -39,8 +39,12 @@ bool Mesh::Load(const std::string &filename)
 		if (modelLoader && modelLoader->Load(file))
 		{
 			modelLoader->GenerateGeometries(engine->GetRenderer());			
-			for (auto &geometry : modelLoader->GetGeneratedGeometries())							
-				geometries.push_back(GeometryPtr(geometry));			
+			for (unsigned int i = 0; i < modelLoader->GetGeneratedGeometries().size(); ++i)
+			{
+				geometries.push_back(GeometryPtr(modelLoader->GetGeneratedGeometries()[i]));
+				materials.push_back(MaterialPtr(modelLoader->GetGeneratedMaterials()[i]));
+			}
+				
 			boundingBox = modelLoader->GetBoundingBox();
 
 			delete modelLoader;
@@ -53,6 +57,11 @@ bool Mesh::Load(const std::string &filename)
 const std::vector<GeometryPtr> &Mesh::GetGeometries() const
 {
 	return geometries;
+}
+
+const std::vector<MaterialPtr> &Mesh::GetMaterials() const
+{
+	return materials;
 }
 
 const BoundingBox &Mesh::GetBoundingBox() const

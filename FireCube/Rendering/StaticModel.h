@@ -15,12 +15,14 @@ public:
 	void CreateFromMesh(MeshPtr mesh);
 	void SetBoundingBox(BoundingBox boundingBox);
 	std::vector<GeometryPtr> &GetGeometries();
-	void AddRenderablePart(Geometry *geometry);
+	std::vector<MaterialPtr> &GetMaterials();
+	void AddRenderablePart(GeometryPtr geometry, MaterialPtr material);
 	virtual void IntersectRay(RayQuery &rayQuery);
 protected:
 	virtual void UpdateWorldBoundingBox();
 	BoundingBox boundingBox;
 	std::vector<GeometryPtr> geometries;
+	std::vector<MaterialPtr> materials;
 };
 
 }

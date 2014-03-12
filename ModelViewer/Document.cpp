@@ -168,17 +168,11 @@ int Document::GetNormalRenderingBufferSize()
 }
 
 std::vector<FireCube::MaterialPtr> Document::GetAllMaterials()
-{	
-	std::vector<MaterialPtr> ret;
+{		
 	if (model)
-	{	
-		std::vector<GeometryPtr> &geometries = model->GetGeometries();
-		for (auto i : geometries)
-		{
-			ret.push_back(i->GetMaterial());
-		}
-	}
-	return ret;
+		return model->GetMaterials();
+	else
+		return std::vector<MaterialPtr>();
 }
 
 void Document::CreateGrid(float size, DWORD numberOfCells)

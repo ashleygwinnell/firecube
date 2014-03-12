@@ -23,6 +23,10 @@ public:
 	void SetRootNodeAndCamera(NodePtr rootNode, CameraPtr camera);
 	void SetAmbientColor(vec3 color);
 	void IntersectRay(RayQuery &rayQuery);
+	void SetFogEnabled(bool fogEnabled);
+	void SetFogParameters(vec3 fogParameters);
+	void SetFogColor(vec3 fogColor);
+	vec3 GetFogColor() const;
 private:	
 	void UpdateRenderables();
 	void UpdateBaseQueue();
@@ -35,7 +39,11 @@ private:
 	std::vector<LightQueue> lightQueues;
 	std::vector<std::string> scenePasses;
 	RenderQueue baseQueue;
-	vec3 ambientColor;	
+	vec3 ambientColor;
+	bool fogEnabled;
+	vec3 fogParameters;
+	vec3 fogColor;
+
 };
 
 }

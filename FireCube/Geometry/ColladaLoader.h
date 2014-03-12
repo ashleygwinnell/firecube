@@ -243,8 +243,8 @@ namespace FireCube
 		std::map<std::string, Source> sources;
 		std::map<std::string, Node*> nodeLibrary;
 		std::map<unsigned int, unsigned int> tempMap;
-		std::map<std::string, FireCube::MaterialPtr> generatedMaterials;
-		std::vector<FireCube::Material *> generatedMaterialsList;
+		std::map<std::string, FireCube::Material *> allMaterials;
+		std::vector<FireCube::Material *> generatedMaterials;
 		Node *root;
 		float unit;
 		UpDirection upDirection;

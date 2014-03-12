@@ -109,6 +109,8 @@ public:
 
 	Engine *GetEngine();
 
+	float GetPassedTime() const;
+
 protected:
 	Renderer *renderer;
 	Engine *engine;
@@ -126,6 +128,7 @@ private:
 	float fps;
 	float fpsTime;
 	float frameCount;
+	float passedTime;
 	int width, height;
 	InputManager inputManager;
 

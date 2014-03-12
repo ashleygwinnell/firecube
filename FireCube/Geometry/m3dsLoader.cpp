@@ -187,32 +187,7 @@ Geometry *M3dsLoader::CreateGeometryOfMesh(Mesh &mesh, VertexBufferPtr vertexBuf
 	indexBuffer->SetShadowed(true);
 	geom->SetVertexBuffer(vertexBuffer);
 	geom->SetIndexBuffer(indexBuffer);
-	
-	MaterialPtr material;
-	if (materialsMap.find(mesh.material) != materialsMap.end())
-	{
-		material = materialsMap[mesh.material];
-	}
-	else
-	{
-		material = MaterialPtr(new FireCube::Material(engine));
-		generatedMaterials.push_back(material.get());
-		material->SetName(mesh.material->name);
-		material->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(mesh.material->ambientColor, 1.0f));
-		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(mesh.material->diffuseColor, 1.0f));
-		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(mesh.material->specularColor, 1.0f));
-		material->SetParameter(PARAM_MATERIAL_SHININESS, mesh.material->shininess);
-
-		if (mesh.material->diffuseTextureMap.empty() == false)
-		{				
-			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
-			material->SetTexture(TEXTURE_UNIT_DIFFUSE, engine->GetResourcePool()->GetResource<Texture>(mesh.material->diffuseTextureMap));
-		}
-		else
-			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
-		materialsMap[mesh.material] = material;
-	}
-	geom->SetMaterial(material);				
+						
 	indexBuffer->LoadData(&mesh.indices[0], mesh.indices.size(), STATIC);
 
 	geom->SetPrimitiveType(TRIANGLES);
@@ -220,6 +195,36 @@ Geometry *M3dsLoader::CreateGeometryOfMesh(Mesh &mesh, VertexBufferPtr vertexBuf
 	geom->Update();		
 	return geom;
 }
+
+FireCube::Material *M3dsLoader::CreateMaterialOfMesh(Mesh &mesh)
+{	
+	FireCube::Material *material;
+	if (materialsMap.find(mesh.material) != materialsMap.end())
+	{
+		material = materialsMap[mesh.material];
+	}
+	else
+	{
+		material = new FireCube::Material(engine);		
+		material->SetName(mesh.material->name);
+		material->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(mesh.material->ambientColor, 1.0f));
+		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(mesh.material->diffuseColor, 1.0f));
+		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(mesh.material->specularColor, 1.0f));
+		material->SetParameter(PARAM_MATERIAL_SHININESS, mesh.material->shininess);
+
+		if (mesh.material->diffuseTextureMap.empty() == false)
+		{
+			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
+			material->SetTexture(TEXTURE_UNIT_DIFFUSE, engine->GetResourcePool()->GetResource<Texture>(mesh.material->diffuseTextureMap));
+		}
+		else
+			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
+		materialsMap[mesh.material] = material;
+	}
+	
+	return material;
+}
+
 void M3dsLoader::GenerateGeometries(Renderer *renderer)
 {
 	generatedGeometries.clear();
@@ -234,6 +239,7 @@ void M3dsLoader::GenerateGeometries(Renderer *renderer)
 			// Create a geometry for each sub mesh
 			Geometry *geom = CreateGeometryOfMesh(object[i].mesh[j], vertexBuffer);
 			generatedGeometries.push_back(geom);
+			generatedMaterials.push_back(CreateMaterialOfMesh(object[i].mesh[j]));
 		}        
 	}    	
 }
@@ -251,7 +257,8 @@ void M3dsLoader::GenerateScene(Renderer *renderer, Node *root)
 			// Create a geometry for each sub mesh
 			StaticModel *staticModel = objectNode->CreateComponent<StaticModel>();			
 			Geometry *geom = CreateGeometryOfMesh(object[i].mesh[j], vertexBuffer);
-			staticModel->AddRenderablePart(geom);
+			FireCube::Material *material = CreateMaterialOfMesh(object[i].mesh[j]);
+			staticModel->AddRenderablePart(GeometryPtr(geom), MaterialPtr(material));
 			staticModel->SetBoundingBox(boundingBox); // TODO: Calculate boundingbox for each mesh
 			generatedGeometries.push_back(geom);
 		}        

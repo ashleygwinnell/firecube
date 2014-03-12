@@ -150,6 +150,34 @@ bool Ray::IntersectMesh(const char *vertexData, unsigned int vertexSize, const c
 	return found;
 }
 
+bool Ray::IntersectMesh(const char *vertexData, unsigned int vertexCount, unsigned int vertexSize, float &distance, vec3 &normal) const
+{
+	bool found = false;
+	if (vertexCount % 3 != 0)
+		return false;
+	for (unsigned int i = 0; i < vertexCount; i += 3)
+	{
+		const vec3 &v0 = *((const vec3 *)&vertexData[(i + 0) * vertexSize]);
+		const vec3 &v1 = *((const vec3 *)&vertexData[(i + 1) * vertexSize]);
+		const vec3 &v2 = *((const vec3 *)&vertexData[(i + 2) * vertexSize]);
+		float u, v, t;
+		vec3 n = Cross(v1 - v0, v2 - v0);
+		if (n.Dot(direction) < 0)
+		{
+			bool intersect = IntersectTriangle(v0, v1, v2, u, v, t);
+			if (intersect && (t > 0) && (!found || t < distance))
+			{
+				found = true;
+				distance = t;
+				normal = n;
+			}
+		}
+	}
+	if (found)
+		normal.Normalize();
+	return found;
+}
+
 Ray Ray::Transformed(const mat4 &transformation) const
 {
 	Ray result;

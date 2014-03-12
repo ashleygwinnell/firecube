@@ -114,8 +114,34 @@ void ObjLoader::ParseFaceLine(const std::string &line)
 	i2 = line.find_first_of(' ', i1);	
 	ParseFaceEntry(line.substr(i1, i2 - i1), f.v[1], f.t[1], f.n[1], f.hasTextureCoordinates, f.hasNormal);
 	i1 = line.find_first_not_of(' ', i2);
-	ParseFaceEntry(line.substr(i1), f.v[2], f.t[2], f.n[2], f.hasTextureCoordinates, f.hasNormal);
-	currentFaces->push_back(f);
+	i2 = line.find_first_of(' ', i1);
+	if (i2 == std::string::npos)
+	{
+		ParseFaceEntry(line.substr(i1), f.v[2], f.t[2], f.n[2], f.hasTextureCoordinates, f.hasNormal);
+		currentFaces->push_back(f);
+	}
+	else
+	{
+		ParseFaceEntry(line.substr(i1, i2 - i1), f.v[2], f.t[2], f.n[2], f.hasTextureCoordinates, f.hasNormal);
+		currentFaces->push_back(f);
+
+		int i3 = line.find_first_not_of(' ', i2);
+		if (i3 != std::string::npos)
+		{
+			Face f2;
+			ParseFaceEntry(line.substr(i3), f2.v[2], f2.t[2], f2.n[2], f2.hasTextureCoordinates, f2.hasNormal);
+			f2.v[0] = f.v[0];
+			f2.t[0] = f.t[0];
+			f2.n[0] = f.n[0];
+
+			f2.v[1] = f.v[2];
+			f2.t[1] = f.t[2];
+			f2.n[1] = f.n[2];
+
+			currentFaces->push_back(f2);
+		}
+		
+	}
 }
 
 void ObjLoader::ParseFaceEntry(const std::string &entry, unsigned int &v, unsigned int &t, unsigned int &n, bool &hasTextureCoordinates, bool &hasNormal)
@@ -432,7 +458,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 {
 	generatedGeometries.clear();
 	
-	std::map<std::string, MaterialPtr> generatedMaterials;
+	std::map<std::string, FireCube::Material *> allMaterials;
 	std::vector<vec3> generatedVertices;
 	std::vector<vec2> generatedTexCoords;
 	std::vector<vec3> generatedNormals;
@@ -441,7 +467,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 	// Generate materials
 	for (std::map<std::string, Material>::iterator i = materials.begin(); i != materials.end(); i++)
 	{
-		MaterialPtr material(new FireCube::Material(engine));
+		FireCube::Material *material = new FireCube::Material(engine);
 		material->SetName(i->first);
 		material->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(i->second.ambientColor.x, i->second.ambientColor.y, i->second.ambientColor.z, 1.0f));
 		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(i->second.diffuseColor.x, i->second.diffuseColor.y, i->second.diffuseColor.z, 1.0f));
@@ -473,7 +499,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 				texture = engine->GetResourcePool()->GetResource<Texture>(textureName);
 			material->SetTexture(TEXTURE_UNIT_NORMAL, texture);
 		}
-		generatedMaterials[i->first] = material;
+		allMaterials[i->first] = material;
 	}
 
 	// Iterate over all objects
@@ -491,6 +517,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			geometry->SetVertexBuffer(vertexBuffer);
 			geometry->SetIndexBuffer(indexBuffer);
 			generatedGeometries.push_back(geometry);
+			generatedMaterials.push_back(allMaterials[j->first]);
 			std::vector<unsigned int> indexData;
 			
 			for (std::vector<Face>::iterator k = j->second.begin(); k != j->second.end(); k++)
@@ -544,12 +571,96 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			vertexBuffer->LoadData(&vertexData[0], generatedVertices.size(), vertexAttributes, STATIC);			
 			indexBuffer->LoadData(&indexData[0], indexData.size(), STATIC);
 
-			geometry->SetMaterial(generatedMaterials[j->first]);
 			geometry->SetPrimitiveType(TRIANGLES);
 			geometry->SetPrimitiveCount(j->second.size());
 			geometry->Update();			
 		}
-	}	
+
+		if (i->second.facesWithoutMaterial.empty() == false)
+		{
+			Geometry *geometry = new Geometry(renderer);
+			VertexBufferPtr vertexBuffer(new VertexBuffer(renderer));
+			IndexBufferPtr indexBuffer(new IndexBuffer(renderer));
+			vertexBuffer->SetShadowed(true);
+			indexBuffer->SetShadowed(true);
+			geometry->SetVertexBuffer(vertexBuffer);
+			geometry->SetIndexBuffer(indexBuffer);
+			generatedGeometries.push_back(geometry);
+			std::vector<unsigned int> indexData;
+			// Iterate over faces which does not have a material
+			for (std::vector<Face>::iterator j = i->second.facesWithoutMaterial.begin(); j != i->second.facesWithoutMaterial.end(); j++, surfaceNum++)
+			{
+				Face &face = *j;
+				for (int vertexIndex = 0; vertexIndex < 3; vertexIndex++)
+				{
+					MapKey key(face.v[vertexIndex], face.t[vertexIndex], face.n[vertexIndex]);
+					// Search this vertex (combination of v/n/t) in the list of vertices
+					std::map<MapKey, unsigned int>::iterator keyIter = indicesMap.find(key);
+					if (keyIter == indicesMap.end())
+					{
+						// If not found add it and store it in the map of generated vertices
+						generatedVertices.push_back(vertices[face.v[vertexIndex] - 1]);
+						if (face.hasTextureCoordinates)
+							generatedTexCoords.push_back(texCoords[face.t[vertexIndex] - 1]);
+						if (face.hasNormal)
+							generatedNormals.push_back(normals[face.n[vertexIndex] - 1]);
+
+						indexData.push_back(generatedVertices.size() - 1);
+
+						indicesMap[key] = generatedVertices.size() - 1;
+					}
+					else
+					{
+						// If found simply add it's index to the index array
+						indexData.push_back(keyIter->second);
+					}
+				}
+			}
+
+			if (generatedNormals.empty())
+				MathUtils::CalculateNormals(generatedNormals, generatedVertices, indexData);
+
+			unsigned int vertexAttributes = VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_NORMAL;
+			unsigned int vertexSize = 6;
+			if (generatedTexCoords.empty() == false)
+			{
+				vertexAttributes |= VERTEX_ATTRIBUTE_TEXCOORD0;
+				vertexSize += 2;
+			}
+			std::vector<float> vertexData(vertexSize * generatedVertices.size());
+			for (unsigned int k = 0; k < generatedVertices.size(); ++k)
+			{
+				*((vec3 *)&vertexData[k * vertexSize + 0]) = generatedVertices[k];
+				*((vec3 *)&vertexData[k * vertexSize + 3]) = generatedNormals[k];
+				if (vertexAttributes & VERTEX_ATTRIBUTE_TEXCOORD0)
+					*((vec2 *)&vertexData[k * vertexSize + 6]) = generatedTexCoords[k];
+				boundingBox.Expand(generatedVertices[k]);
+			}
+
+			vertexBuffer->LoadData(&vertexData[0], generatedVertices.size(), vertexAttributes, STATIC);
+			indexBuffer->LoadData(&indexData[0], indexData.size(), STATIC);
+
+			FireCube::Material *material;
+			if (allMaterials.find("generatedMaterial") != allMaterials.end())
+			{
+				material = allMaterials["generatedMaterial"];
+			}
+			else
+			{
+				material = new FireCube::Material(engine);
+				allMaterials["generatedMaterial"] = material;
+			}
+			material->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(0.0f, 0.0f, 0.0f, 1.0f));
+			material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 1.0f, 1.0f, 1.0f));
+			material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0.0f, 0.0f, 0.0f, 1.0f));
+			material->SetParameter(PARAM_MATERIAL_SHININESS, 0);
+			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
+			generatedMaterials.push_back(material);
+			geometry->SetPrimitiveType(TRIANGLES);
+			geometry->SetPrimitiveCount(i->second.facesWithoutMaterial.size());
+			geometry->Update();
+		}
+	}
 }
 
 const std::vector<Geometry *> &ObjLoader::GetGeneratedGeometries()

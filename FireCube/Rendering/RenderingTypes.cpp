@@ -19,6 +19,8 @@ StringHash PARAM_LIGHT_DIFFUSE("lightDiffuse");
 StringHash PARAM_LIGHT_SPECULAR("lightSpecular");
 StringHash PARAM_LIGHT_SPOT_DIR("spotLightDir");
 StringHash PARAM_CAMERA_POS("cameraPos");
+StringHash PARAM_FOG_PARAMETERS("fogParameters");
+StringHash PARAM_FOG_COLOR("fogColor");
 
 StringHash BASE_PASS("base");
 StringHash LIGHT_PASS("light");

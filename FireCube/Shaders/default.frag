@@ -26,8 +26,8 @@ smooth in vec2 texcoord;
 	uniform sampler2D normalMap;
 #endif	
 #ifdef FOG
-	uniform float fogDensity;
-	uniform vec4 fogColor;
+	uniform vec3 fogParameters;
+	uniform vec3 fogColor;
 #endif
 uniform vec3 ambientColor;
 uniform vec4 materialAmbient;
@@ -36,8 +36,11 @@ uniform vec4 materialSpecular;
 uniform float materialShininess;
 void main()
 {
+	float alpha = 1.0;
 	#ifdef DIFFUSE_MAPPING
-		vec3 diffColor = materialDiffuse.rgb * texture(diffuseMap, texcoord.xy).rgb;
+		vec4 textureColor = texture(diffuseMap, texcoord.xy);
+		vec3 diffColor = materialDiffuse.rgb * textureColor.rgb;
+		alpha = textureColor.a;
 	#else			
 		vec3 diffColor = materialDiffuse.rgb;			
 	#endif
@@ -69,17 +72,32 @@ void main()
 		#else
 			color = lightDiffuse.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * lightSpecular.rgb * specular);
 		#endif
+		#ifdef FOG
+			/*const float LOG2 = 1.442695;
+			float z = gl_FragCoord.z / gl_FragCoord.w;
+			float fogFactor = exp2(-fogParameters.y * fogParameters.y * z * z * LOG2);
+			fogFactor = clamp(fogFactor, 0.0, 1.0);
+			color = mix(vec3(0), color, fogFactor );*/
+			float z = gl_FragCoord.z / gl_FragCoord.w;
+			float fogFactor = (z - fogParameters.x) * fogParameters.y;
+			fogFactor = clamp(fogFactor, 0.0, 1.0);
+			color = mix(color, vec3(0) , fogFactor);
+		#endif
 	#else
 		vec3 color;
 		color = diffColor * ambientColor;
-	#endif
-	#ifdef FOG
-		const float LOG2 = 1.442695;
-		float z = gl_FragCoord.z / gl_FragCoord.w;
-		float fogFactor = exp2(-fogDensity * fogDensity * z * z * LOG2);
-		fogFactor = clamp(fogFactor, 0.0, 1.0);
-		color = mix(fogColor, color, fogFactor );
-	#endif
+		#ifdef FOG
+			/*const float LOG2 = 1.442695;
+			float z = gl_FragCoord.z / gl_FragCoord.w;
+			float fogFactor = exp2(-fogParameters.y * fogParameters.y * z * z * LOG2);
+			fogFactor = clamp(fogFactor, 0.0, 1.0);
+			color = mix(fogColor, color, fogFactor );*/
+			float z = gl_FragCoord.z / gl_FragCoord.w;
+			float fogFactor = (z - fogParameters.x) * fogParameters.y;
+			fogFactor = clamp(fogFactor, 0.0, 1.0);
+			color = mix(color, fogColor, fogFactor );
+		#endif
+	#endif	
 	
-	outputColor = vec4(color, 1.0);
+	outputColor = vec4(color, alpha);
 }

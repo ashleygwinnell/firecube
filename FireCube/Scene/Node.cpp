@@ -134,6 +134,7 @@ void Node::LookAt(vec3 position, vec3 at, vec3 up)
 	mat4 temp;
 	temp.LookAt(vec3(0, 0, 0), at - position, up);
 	rotation = temp;
+	rotation.Transpose();
 	SetTransformationChanged();
 }
 

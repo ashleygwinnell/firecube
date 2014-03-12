@@ -239,7 +239,7 @@ void Geometry::Update()
 	glBindVertexArray(0);
 }
 
-MaterialPtr Geometry::GetMaterial()
+/*MaterialPtr Geometry::GetMaterial()
 {
 	return material;
 }
@@ -247,7 +247,7 @@ MaterialPtr Geometry::GetMaterial()
 void Geometry::SetMaterial(MaterialPtr material)
 {
 	this->material = material;
-}
+}*/
 
 void Geometry::SetPrimitiveType(PrimitiveType primitiveType)
 {
@@ -272,7 +272,6 @@ unsigned int Geometry::GetPrimitiveCount() const
 GeometryPtr Geometry::Clone()
 {
 	GeometryPtr ret(new Geometry(renderer));
-	ret->material = this->material;
 	ret->primitiveCount = this->primitiveCount;
 	ret->primitiveType = this->primitiveType;
 	
@@ -315,13 +314,23 @@ void Geometry::Render()
 bool Geometry::IntersectRay(const Ray &ray, float &distance, vec3 &normal) const
 {
 	bool found = false;
-	if (vertexBuffer->GetShadowData().empty() == false && indexBuffer->GetShadowData().empty() == false)
+	if (vertexBuffer && vertexBuffer->GetShadowData().empty() == false)
 	{
 		const char *vertexData = &vertexBuffer->GetShadowData()[0];
-		const char *indexData = &indexBuffer->GetShadowData()[0];		
-		if (ray.IntersectMesh(vertexData, vertexBuffer->GetVertexSize(), indexData, indexBuffer->GetIndicesCount(), distance, normal))
+		if (indexBuffer && indexBuffer->GetShadowData().empty() == false)
 		{
-			found = true;
+			const char *indexData = &indexBuffer->GetShadowData()[0];
+			if (ray.IntersectMesh(vertexData, vertexBuffer->GetVertexSize(), indexData, indexBuffer->GetIndicesCount(), distance, normal))
+			{
+				found = true;
+			}
+		}
+		else
+		{
+			if (ray.IntersectMesh(vertexData, vertexBuffer->GetVertexCount(), vertexBuffer->GetVertexSize(), distance, normal))
+			{
+				found = true;
+			}
 		}
 	}
 	return found;

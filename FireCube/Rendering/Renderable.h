@@ -19,12 +19,17 @@ class RenderablePart
 {
 public:
 	/**
-	* The geometry of this job.
+	* The geometry of this part.
 	*/
-	Geometry *geometry;		
+	Geometry *geometry;
 
 	/**
-	* The transformation to apply to this job.
+	* The material of this part
+	*/
+	Material *material;
+
+	/**
+	* The transformation to apply to this part.
 	*/
 	mat4 transformation;	
 };

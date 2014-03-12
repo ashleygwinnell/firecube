@@ -8,6 +8,12 @@
 
 using namespace FireCube;
 
+static std::string shaderPermutationsDefines[] = { " SPOT_LIGHT",
+									   " POINT_LIGHT",
+									   " DIRECTIONAL_LIGHT"};
+static std::string fogPermutationsDefines[] = { "",
+									" FOG" };
+
 void Pass::SetName(const std::string &name)
 {
 	this->name = name;
@@ -18,9 +24,9 @@ std::string Pass::GetName() const
 	return name;
 }
 
-void Pass::SetShaderProperties(unsigned int shaderProperties)
+void Pass::SetShaderDefines(const std::string &shaderDefines)
 {
-	this->shaderProperties = shaderProperties;
+	this->shaderDefines = shaderDefines;
 }
 
 void Pass::SetVertexShaderTemplate(ShaderTemplatePtr vertexShaderTemplate)
@@ -33,14 +39,56 @@ void Pass::SetFragmentShaderTemplate(ShaderTemplatePtr fragmentShaderTemplate)
 	this->fragmentShaderTemplate = fragmentShaderTemplate;
 }
 
-ShaderPtr Pass::GenerateVertexShader(unsigned int shaderProperties)
+ShaderPtr Pass::GenerateVertexShader(const std::string &shaderDefines)
 {
-	return vertexShaderTemplate->GenerateShader(this->shaderProperties | shaderProperties);
+	return vertexShaderTemplate->GenerateShader(this->shaderDefines + " " + shaderDefines);
 }
 
-ShaderPtr Pass::GenerateFragmentShader(unsigned int shaderProperties)
+ShaderPtr Pass::GenerateFragmentShader(const std::string &shaderDefines)
 {
-	return fragmentShaderTemplate->GenerateShader(this->shaderProperties | shaderProperties);
+	return fragmentShaderTemplate->GenerateShader(this->shaderDefines + " " + shaderDefines);
+}
+
+void Pass::GenerateAllShaderPermutations()
+{
+	if (generatedVertexShaders.empty() == false && generatedFragmentShaders.empty() == false)
+		return;
+
+	if (name == "base")
+	{
+		generatedVertexShaders.resize(2);
+		generatedFragmentShaders.resize(2);
+
+		for (unsigned int i = 0; i < 2; ++i)
+		{			
+			unsigned int fp = i;
+			generatedVertexShaders[i] = vertexShaderTemplate->GenerateShader(shaderDefines + fogPermutationsDefines[fp]);
+			generatedFragmentShaders[i] = fragmentShaderTemplate->GenerateShader(shaderDefines + fogPermutationsDefines[fp]);
+		}
+	}
+	else
+	{
+		generatedVertexShaders.resize(MAX_SHADER_PERMUTATIONS * 2);
+		generatedFragmentShaders.resize(MAX_SHADER_PERMUTATIONS * 2);
+
+		for (unsigned int i = 0; i < MAX_SHADER_PERMUTATIONS * 2; ++i)
+		{
+			unsigned int sp = i % MAX_SHADER_PERMUTATIONS;
+			unsigned int fp = i / MAX_SHADER_PERMUTATIONS;
+			generatedVertexShaders[i] = vertexShaderTemplate->GenerateShader(shaderDefines + shaderPermutationsDefines[sp] + fogPermutationsDefines[fp]);
+			generatedFragmentShaders[i] = fragmentShaderTemplate->GenerateShader(shaderDefines + shaderPermutationsDefines[sp] + fogPermutationsDefines[fp]);
+		}
+	}	
+}
+
+ShaderPtr Pass::GetGeneratedVertexShader(unsigned int index)
+{
+	return generatedVertexShaders[index];
+}
+
+ShaderPtr Pass::GetGeneratedFragmentShader(unsigned int index)
+{
+	return generatedFragmentShaders[index];
 }
 
 Technique::Technique(Engine *engine) : Resource(engine)
@@ -66,22 +114,14 @@ bool Technique::Load(const std::string &filename)
 			std::string passName = element->Attribute("name");
 			std::string vertexShaderTemplate = element->Attribute("vs");
 			std::string fragmentShaderTemplate = element->Attribute("fs");
-			std::string shaderPropertiesStr = element->Attribute("properties");
+			std::string shaderDefines = element->Attribute("defines");
 			if (passName.empty() || vertexShaderTemplate.empty() || fragmentShaderTemplate.empty())
 				continue;			
-			PassPtr pass(new Pass);
-			unsigned int shaderProperties = 0;
-			std::vector<std::string> properties = Split(shaderPropertiesStr, ' ');
-			for (auto &propertyStr : properties)
-			{
-				propertyStr = Trim(propertyStr);
-				unsigned int property = ShaderTemplate::stringToShaderProperty(propertyStr);
-				shaderProperties |= property;
-			}
+			PassPtr pass(new Pass);			
 			pass->SetName(passName);
 			pass->SetVertexShaderTemplate(engine->GetResourcePool()->GetResource<ShaderTemplate>(vertexShaderTemplate));
 			pass->SetFragmentShaderTemplate(engine->GetResourcePool()->GetResource<ShaderTemplate>(fragmentShaderTemplate));
-			pass->SetShaderProperties(shaderProperties);
+			pass->SetShaderDefines(shaderDefines);
 			passes[StringHash(passName)] = pass;
 		}
 	}

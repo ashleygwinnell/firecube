@@ -13,12 +13,17 @@ StaticModel::StaticModel(Engine *engine) : Renderable(engine)
 
 void StaticModel::CreateFromMesh(MeshPtr mesh)
 {
-	for (auto &geometry : mesh->GetGeometries())
+	for (unsigned int i = 0; i < mesh->GetGeometries().size(); ++i)
 	{					
 		RenderablePart part;
+		GeometryPtr geometry = mesh->GetGeometries()[i];
+		MaterialPtr material = mesh->GetMaterials()[i];
 		part.geometry = geometry.get();
+		part.material = material.get();
+
 		renderableParts.push_back(part);
 		geometries.push_back(geometry);
+		materials.push_back(material);
 	}
 	SetBoundingBox(mesh->GetBoundingBox());
 }
@@ -29,17 +34,24 @@ void StaticModel::SetBoundingBox(BoundingBox boundingBox)
 	MarkedDirty();
 }
 
-void StaticModel::AddRenderablePart(Geometry *geometry)
+void StaticModel::AddRenderablePart(GeometryPtr geometry, MaterialPtr material)
 {
 	RenderablePart part;
-	part.geometry = geometry;
+	part.geometry = geometry.get();
+	part.material = material.get();
 	renderableParts.push_back(part);
-	geometries.push_back(GeometryPtr(geometry));
+	geometries.push_back(geometry);
+	materials.push_back(material);
 }
 
 std::vector<GeometryPtr> &StaticModel::GetGeometries()
 {
 	return geometries;
+}
+
+std::vector<MaterialPtr> &StaticModel::GetMaterials()
+{
+	return materials;
 }
 
 void StaticModel::UpdateWorldBoundingBox()

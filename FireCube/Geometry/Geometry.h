@@ -28,7 +28,6 @@ class Geometry;
 class ProgramUniformsList;
 class Texture;
 typedef std::shared_ptr<Texture> TexturePtr;
-class Material;
 class Renderer;
 
 /**
@@ -44,11 +43,6 @@ enum PrimitiveType
 * A shared pointer to a Geometry.
 */
 typedef std::shared_ptr<Geometry> GeometryPtr;
-
-/**
-* A shared pointer to a Material.
-*/
-typedef std::shared_ptr<Material> MaterialPtr;
 
 /**
 * Defines an edge in a geometry.
@@ -85,13 +79,13 @@ public:
 	/**
 	* Returns the material of this geometry.
 	*/
-	MaterialPtr GetMaterial();
+	//MaterialPtr GetMaterial();
 
 	/**
 	* Sets the material of this geometry.
 	* @param material The material to assign to this geometry.
 	*/
-	void SetMaterial(MaterialPtr material);
+	//void SetMaterial(MaterialPtr material);
 
 	/**
 	* Sets the primitive type to be rendered by this geometry.
@@ -133,7 +127,7 @@ public:
 private:	
 	VertexBufferPtr vertexBuffer;	
 	IndexBufferPtr indexBuffer;
-	MaterialPtr material;
+	//MaterialPtr material;
 	PrimitiveType primitiveType;
 	unsigned int primitiveCount;	
 };

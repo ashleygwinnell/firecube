@@ -9,6 +9,7 @@
 #include "Core/ResourcePool.h"
 #include "Rendering/RenderingTypes.h"
 #include "Rendering/Technique.h"
+#include <algorithm>
 
 using namespace FireCube;
 
@@ -60,7 +61,7 @@ NodePtr ColladaLoader::GetGeneratedScene()
 
 const std::vector<Material *> &ColladaLoader::GetGeneratedMaterials()
 {
-	return generatedMaterialsList;
+	return generatedMaterials;
 }
 
 void ColladaLoader::ReadLibraries(TiXmlNode *parent)
@@ -1505,16 +1506,16 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 			Effect &effect = effectLibrary[mat.effect];
 			// Add the newly created node as a child of the geometry node			
 			
-			FireCube::MaterialPtr fmat;
-			std::map<std::string, FireCube::MaterialPtr>:: iterator matIter = generatedMaterials.find(subMesh.material);
-			if (matIter != generatedMaterials.end())
+			FireCube::Material *fmat;
+			std::map<std::string, FireCube::Material *>:: iterator matIter = allMaterials.find(subMesh.material);
+			if (matIter != allMaterials.end())
 			{
 				fmat = matIter->second;
 			}
 			else
 			{
-				fmat = FireCube::MaterialPtr(new FireCube::Material(engine));
-				generatedMaterials[subMesh.material] = fmat;				
+				fmat = new FireCube::Material(engine);
+				allMaterials[subMesh.material] = fmat;
 				fmat->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(effect.ambientColor.x, effect.ambientColor.y, effect.ambientColor.z, 1.0f));
 				fmat->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(effect.diffuseColor.x, effect.diffuseColor.y, effect.diffuseColor.z, 1.0f));
 				fmat->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(effect.specularColor.x, effect.specularColor.y, effect.specularColor.z, 1.0f));
@@ -1528,7 +1529,7 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 				else
 					fmat->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
 			}
-			geometry->SetMaterial(fmat);
+			generatedMaterials.push_back(fmat);			
 
 			if (materialInstance)
 			{

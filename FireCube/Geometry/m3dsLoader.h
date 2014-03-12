@@ -126,6 +126,7 @@ private:
 	Material *GetMaterialByName(const std::string &name);
 	VertexBufferPtr CreateVertexBufferAndBoundingBoxOfObject(Object &object, BoundingBox &boundingBox);
 	Geometry *CreateGeometryOfMesh(Mesh &mesh, VertexBufferPtr vertexBuffer);
+	FireCube::Material *CreateMaterialOfMesh(Mesh &mesh);
 	std::vector<char> buffer;
 	Material *curMaterial;
 	std::vector<Material *> materials;
@@ -136,7 +137,7 @@ private:
 	ModelLoadingOptions options;
 	std::vector<Geometry *> generatedGeometries;
 	std::vector<FireCube::Material *> generatedMaterials;
-	std::map<Material *, FireCube::MaterialPtr >materialsMap;		
+	std::map<Material *, FireCube::Material *>materialsMap;		
 	BoundingBox boundingBox;
 	NodePtr root;
 };

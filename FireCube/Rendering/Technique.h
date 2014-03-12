@@ -21,16 +21,21 @@ class FIRECUBE_API Pass
 public:
 	void SetName(const std::string &name);
 	std::string GetName() const;
-	void SetShaderProperties(unsigned int shaderProperties);
+	void SetShaderDefines(const std::string &shaderDefines);
 	void SetVertexShaderTemplate(ShaderTemplatePtr vertexShaderTemplate);
 	void SetFragmentShaderTemplate(ShaderTemplatePtr fragmentShaderTemplate);
-	ShaderPtr GenerateVertexShader(unsigned int shaderProperties);
-	ShaderPtr GenerateFragmentShader(unsigned int shaderProperties);
+	ShaderPtr GenerateVertexShader(const std::string &shaderDefines);
+	ShaderPtr GenerateFragmentShader(const std::string &shaderDefines);
+	ShaderPtr GetGeneratedVertexShader(unsigned int index);
+	ShaderPtr GetGeneratedFragmentShader(unsigned int index);
+	void GenerateAllShaderPermutations();
 private:
 	std::string name;
 	ShaderTemplatePtr vertexShaderTemplate;
 	ShaderTemplatePtr fragmentShaderTemplate;
-	unsigned int shaderProperties;
+	std::string shaderDefines;
+	std::vector<ShaderPtr> generatedVertexShaders;
+	std::vector<ShaderPtr> generatedFragmentShaders;
 };
 
 typedef std::shared_ptr<Pass> PassPtr;

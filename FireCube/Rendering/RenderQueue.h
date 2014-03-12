@@ -39,6 +39,11 @@ public:
 	Geometry *geometry;
 
 	/**
+	* The material of this job.
+	*/
+	Material *material;
+
+	/**
 	* The transformation to apply to this job.
 	*/
 	mat4 transformation;

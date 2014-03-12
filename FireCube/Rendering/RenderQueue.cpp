@@ -37,7 +37,7 @@ void RenderQueue::Clear()
 void RenderJob::CalculateSortKey()
 {	
 	unsigned int shaderKey = ((unsigned int) vertexShader + (unsigned int) fragmentShader) & 0xFFFF;
-	unsigned int materialKey = ((unsigned int) geometry->GetMaterial().get()) & 0xFFFF;
+	unsigned int materialKey = ((unsigned int) material) & 0xFFFF;
 	unsigned int geometryKey = ((unsigned int) geometry) & 0xFFFF;
 	sortKey = (((unsigned long long int) shaderKey) << 32) | (((unsigned long long int) materialKey) << 16) 
 		| ((unsigned long long int) geometryKey);

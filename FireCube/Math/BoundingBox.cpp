@@ -1,4 +1,5 @@
 #include "Math/BoundingBox.h"
+#include <algorithm>
 
 using namespace FireCube;
 

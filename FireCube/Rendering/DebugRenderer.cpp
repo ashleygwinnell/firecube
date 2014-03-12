@@ -23,8 +23,8 @@ void DebugRenderer::Initialize()
 void DebugRenderer::Render(Camera *camera)
 {
 	Renderer *renderer = engine->GetRenderer();
-	ShaderPtr vs = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/solidColor.vert")->GenerateShader(0);
-	ShaderPtr fs = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/solidColor.frag")->GenerateShader(0);	
+	ShaderPtr vs = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/solidColor.vert")->GenerateShader("");
+	ShaderPtr fs = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/solidColor.frag")->GenerateShader("");	
 	renderer->SetShaders(vs.get(), fs.get());
 	renderer->UseCamera(camera);
 	linesVertexBuffer->LoadData(&lines[0], lines.size() / 2, VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_COLOR, DYNAMIC);

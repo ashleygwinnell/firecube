@@ -84,5 +84,6 @@ void CustomGeometry::UpdateGeometry()
 
 void CustomGeometry::SetMaterial(MaterialPtr material)
 {
-	geometry->SetMaterial(material);
+	this->material = material;
+	renderableParts[0].material = material.get();
 }

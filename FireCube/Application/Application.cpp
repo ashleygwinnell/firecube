@@ -114,6 +114,7 @@ void Application::Run()
 	{
 		// Get time passed since last frame
 		deltaTime = (float) timer.Passed();
+		passedTime += deltaTime;
 		timer.Update();
 		while(SDL_PollEvent(&event))
 		{
@@ -343,4 +344,9 @@ void Application::InitKeyMap()
 Engine *Application::GetEngine()
 {
 	return engine;
+}
+
+float Application::GetPassedTime() const
+{
+	return passedTime;
 }

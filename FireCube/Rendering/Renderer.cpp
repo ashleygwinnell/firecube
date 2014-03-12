@@ -283,8 +283,8 @@ void Renderer::Initialize()
 	ShaderTemplatePtr textFragmentShaderTemplate(new ShaderTemplate(engine));
 	textVertexShaderTemplate->Load("Shaders/font.vert");
 	textFragmentShaderTemplate->Load("Shaders/font.frag");
-	textVertexShader = textVertexShaderTemplate->GenerateShader(0);
-	textFragmentShader = textFragmentShaderTemplate->GenerateShader(0);
+	textVertexShader = textVertexShaderTemplate->GenerateShader("");
+	textFragmentShader = textFragmentShaderTemplate->GenerateShader("");
 }
 
 void Renderer::Destroy()

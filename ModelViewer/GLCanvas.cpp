@@ -153,7 +153,7 @@ void GLCanvas::OnSize(wxSizeEvent& event)
 {
 	if (!IsShownOnScreen())
 		return;
-	
+		
 	int w, h;
 	GetClientSize(&w, &h);
 	if (!SetCurrent(*context))

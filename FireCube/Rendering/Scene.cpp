@@ -14,7 +14,7 @@
 
 using namespace FireCube;
 
-Scene::Scene() : ambientColor(0.1f)
+Scene::Scene() : ambientColor(0.1f), fogEnabled(false)
 {
 
 }
@@ -64,18 +64,23 @@ void Scene::UpdateBaseQueue()
 		{
 			for (auto &renderablePart : renderable->GetRenderableParts())
 			{
-				if (!renderablePart.geometry->GetMaterial())
+				if (!renderablePart.material)
 					continue;
-				TechniquePtr technique = renderablePart.geometry->GetMaterial()->GetTechnique();
+				TechniquePtr technique = renderablePart.material->GetTechnique();
 				if (!technique)
 					continue;
 				RenderJob newRenderJob;				
 				newRenderJob.pass = technique->GetPass(BASE_PASS);
 				if (newRenderJob.pass == nullptr)
 					continue;
-				newRenderJob.vertexShader = newRenderJob.pass->GenerateVertexShader(0).get();
-				newRenderJob.fragmentShader = newRenderJob.pass->GenerateFragmentShader(0).get();
+				newRenderJob.pass->GenerateAllShaderPermutations();
+				unsigned int shaderPermutation = 0;
+				if (fogEnabled)
+					shaderPermutation += MAX_SHADER_PERMUTATIONS;
+				newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(shaderPermutation).get();
+				newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(shaderPermutation).get();
 				newRenderJob.geometry = renderablePart.geometry;
+				newRenderJob.material = renderablePart.material;
 				newRenderJob.transformation = renderablePart.transformation;
 				newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetPosition()).Length();
 				newRenderJob.CalculateSortKey();
@@ -90,15 +95,16 @@ void Scene::UpdateLightQueues()
 	lightQueues.resize(lights.size());
 	for (unsigned int i = 0; i < lightQueues.size(); ++i)
 	{
-		unsigned int shaderProperties = 0;
+		unsigned int shaderPermutation = 0;
 
 		if (lights[i]->GetLightType() == DIRECTIONAL)
-			shaderProperties |= STP_DIRECTIONAL_LIGHT;
+			shaderPermutation = SP_DIRECTIONAL_LIGHT;
 		else if (lights[i]->GetLightType() == POINT)
-			shaderProperties |= STP_POINT_LIGHT;
+			shaderPermutation = SP_POINT_LIGHT;
 		else if (lights[i]->GetLightType() == SPOT)
-			shaderProperties |= STP_SPOT_LIGHT;
-
+			shaderPermutation = SP_SPOT_LIGHT;
+		if (fogEnabled)
+			shaderPermutation += MAX_SHADER_PERMUTATIONS;
 
 		lightQueues[i].light = lights[i];
 		lightQueues[i].renderQueue.Clear();
@@ -116,18 +122,20 @@ void Scene::UpdateLightQueues()
 						if ((bbox.GetCenter() - lights[i]->GetNode()->GetWorldPosition()).Length() - l> lights[i]->GetRange())
 							continue;
 					}
-					if (!renderablePart.geometry->GetMaterial())
+					if (!renderablePart.material)
 						continue;
-					TechniquePtr technique = renderablePart.geometry->GetMaterial()->GetTechnique();
+					TechniquePtr technique = renderablePart.material->GetTechnique();
 					if (!technique)
 						continue;
 					RenderJob newRenderJob;
 					newRenderJob.pass = technique->GetPass(LIGHT_PASS);
 					if (newRenderJob.pass == nullptr)
 						continue;
-					newRenderJob.vertexShader = newRenderJob.pass->GenerateVertexShader(shaderProperties).get();
-					newRenderJob.fragmentShader = newRenderJob.pass->GenerateFragmentShader(shaderProperties).get();
+					newRenderJob.pass->GenerateAllShaderPermutations();
+					newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(shaderPermutation).get();
+					newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(shaderPermutation).get();
 					newRenderJob.geometry = renderablePart.geometry;
+					newRenderJob.material = renderablePart.material;
 					newRenderJob.transformation = renderablePart.transformation;
 					newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetPosition()).Length();
 					newRenderJob.CalculateSortKey();
@@ -155,6 +163,11 @@ void Scene::Render(Renderer *renderer)
 	{			
 		ProgramPtr program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
 		program->SetUniform(PARAM_AMBIENT_COLOR, ambientColor);		
+		if (fogEnabled)
+		{
+			program->SetUniform(PARAM_FOG_PARAMETERS, fogParameters);
+			program->SetUniform(PARAM_FOG_COLOR, fogColor);
+		}
 		renderer->UseCamera(camera.get());
 		// View transformation
 		program->SetUniform(PARAM_MODEL_MATRIX, renderJob.transformation);		
@@ -166,7 +179,7 @@ void Scene::Render(Renderer *renderer)
 
 		// Set material properties if this geometry is different from the last one 
 
-		renderer->UseMaterial(renderJob.geometry->GetMaterial().get());
+		renderer->UseMaterial(renderJob.material);
 		renderJob.geometry->Render();
 	}
 
@@ -183,6 +196,11 @@ void Scene::Render(Renderer *renderer)
 		{
 			ProgramPtr program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
 			program->SetUniform(PARAM_AMBIENT_COLOR, ambientColor);
+			if (fogEnabled)
+			{
+				program->SetUniform(PARAM_FOG_PARAMETERS, fogParameters);
+				program->SetUniform(PARAM_FOG_COLOR, fogColor);
+			}
 			renderer->UseCamera(camera.get());			
 			// View transformation
 			program->SetUniform(PARAM_MODEL_MATRIX, renderJob.transformation);			
@@ -192,7 +210,7 @@ void Scene::Render(Renderer *renderer)
 			normalMatrix.Transpose();				
 			program->SetUniform(PARAM_NORMAL_MATRIX, normalMatrix);
 			// Set material properties if this geometry is different from the last one 
-			renderer->UseMaterial(renderJob.geometry->GetMaterial().get());
+			renderer->UseMaterial(renderJob.material);
 			renderer->UseLight(light);
 			renderJob.geometry->Render();
 		}
@@ -235,4 +253,24 @@ void Scene::RenderDebugGeometry(DebugRenderer *debugRenderer)
 	for (auto renderable : renderables)
 		renderable->RenderDebugGeometry(debugRenderer);
 	debugRenderer->Render(camera.get());
+}
+
+void Scene::SetFogEnabled(bool fogEnabled)
+{
+	this->fogEnabled = fogEnabled;
+}
+
+void Scene::SetFogParameters(vec3 fogParameters)
+{
+	this->fogParameters = fogParameters;
+}
+
+void Scene::SetFogColor(vec3 fogColor)
+{
+	this->fogColor = fogColor;
+}
+
+vec3 Scene::GetFogColor() const
+{
+	return fogColor;
 }

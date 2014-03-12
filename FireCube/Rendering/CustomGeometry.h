@@ -29,6 +29,7 @@ private:
 	virtual void UpdateWorldBoundingBox();
 	BoundingBox boundingBox;
 	GeometryPtr geometry;
+	MaterialPtr material;
 	std::vector<CustomVertex> vertices;
 };
 

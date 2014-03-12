@@ -7,20 +7,9 @@
 
 using namespace FireCube;
 
-MaterialPtr CreateDefaultMaterial(Engine *engine)
+Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3 &size)
 {
-	MaterialPtr material(new Material(engine));
-	material->SetName("Default");
-	material->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(0.3f, 0.3f, 0.3f, 1.0f));
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(0.7f, 0.7f, 0.7f, 1.0f));
-	material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0.2f, 0.2f, 0.2f, 1.0f));
-	material->SetParameter(PARAM_MATERIAL_SHININESS, 50.0f);	
-	return material;
-}
-
-GeometryPtr FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3 &size, MaterialPtr material)
-{
-	GeometryPtr ret(new Geometry(engine->GetRenderer()));
+	Geometry *ret = new Geometry(engine->GetRenderer());
 	VertexBufferPtr vertexBuffer(new VertexBuffer(engine->GetRenderer()));
 	IndexBufferPtr indexBuffer(new IndexBuffer(engine->GetRenderer()));
 	ret->SetVertexBuffer(vertexBuffer);
@@ -179,19 +168,14 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const ve
 
 	ret->SetPrimitiveType(TRIANGLES);
 	ret->SetPrimitiveCount(indices.size() / 3);
-
-	ret->SetMaterial(material);	
+	
 	ret->Update();
 	return ret;
 }
-GeometryPtr FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3 &size)
-{
-	return GenerateBox(engine, size, CreateDefaultMaterial(engine));
-}
 
-GeometryPtr FIRECUBE_API GeometryGenerator::GenerateSphere(Engine *engine, float radius, unsigned int rings, unsigned int columns, MaterialPtr material)
+Geometry *FIRECUBE_API GeometryGenerator::GenerateSphere(Engine *engine, float radius, unsigned int rings, unsigned int columns)
 {
-	GeometryPtr ret(new Geometry(engine->GetRenderer()));
+	Geometry *ret = new Geometry(engine->GetRenderer());
 	VertexBufferPtr vertexBuffer(new VertexBuffer(engine->GetRenderer()));
 	IndexBufferPtr indexBuffer(new IndexBuffer(engine->GetRenderer()));
 	ret->SetVertexBuffer(vertexBuffer);
@@ -255,21 +239,13 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GenerateSphere(Engine *engine, float
 	ret->SetPrimitiveType(TRIANGLES);
 	ret->SetPrimitiveCount(indexData.size() / 3);
 
-	ret->SetMaterial(material);	
 	ret->Update();
 	return ret;
 }
-GeometryPtr FIRECUBE_API GeometryGenerator::GenerateSphere (Engine *engine, float radius, unsigned int rings, unsigned int columns)
+
+Geometry *FIRECUBE_API GeometryGenerator::GeneratePlane(Engine *engine, const vec2 &size)
 {
-	return GenerateSphere(engine, radius, rings, columns, CreateDefaultMaterial(engine));
-}
-GeometryPtr FIRECUBE_API GeometryGenerator::GeneratePlane(Engine *engine, const vec2 &size)
-{
-	return GeneratePlane(engine, size, CreateDefaultMaterial(engine));
-}
-GeometryPtr FIRECUBE_API GeometryGenerator::GeneratePlane(Engine *engine, const vec2 &size, MaterialPtr material)
-{
-	GeometryPtr ret(new Geometry(engine->GetRenderer()));
+	Geometry *ret = new Geometry(engine->GetRenderer());
 	VertexBufferPtr vertexBuffer(new VertexBuffer(engine->GetRenderer()));
 	IndexBufferPtr indexBuffer(new IndexBuffer(engine->GetRenderer()));
 	ret->SetVertexBuffer(vertexBuffer);
@@ -309,8 +285,7 @@ GeometryPtr FIRECUBE_API GeometryGenerator::GeneratePlane(Engine *engine, const 
 	
 	ret->SetPrimitiveType(TRIANGLES);
 	ret->SetPrimitiveCount(indexData.size() / 3);
-
-	ret->SetMaterial(material);	
+	
 	ret->Update();
 	return ret;
 }
