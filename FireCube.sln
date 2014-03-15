@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fboTest", "fboTest\fboTest.vcxproj", "{97AF73CA-DF0C-445A-8451-4C54108C059D}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -170,6 +170,7 @@ Global
 		{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}.Release Singlethreaded|Win32.Build.0 = Release|Win32
 		{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}.Release Singlethreaded|x64.ActiveCfg = Release|Win32
 		{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}.Release Static|Win32.ActiveCfg = Release|Win32
+		{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}.Release Static|Win32.Build.0 = Release|Win32
 		{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}.Release Static|x64.ActiveCfg = Release|Win32
 		{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}.Release|Win32.ActiveCfg = Release|Win32
 		{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}.Release|Win32.Build.0 = Release|Win32
@@ -314,6 +315,7 @@ Global
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Singlethreaded|x64.ActiveCfg = Release|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Singlethreaded|x64.Build.0 = Release|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|Win32.ActiveCfg = Release|Win32
+		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|Win32.Build.0 = Release|Win32
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|x64.ActiveCfg = Release|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release|Win32.ActiveCfg = Release|Win32
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release|Win32.Build.0 = Release|Win32
@@ -338,6 +340,7 @@ Global
 		{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}.Release Singlethreaded|Win32.Build.0 = Release Singlethreaded|Win32
 		{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}.Release Singlethreaded|x64.ActiveCfg = Release Singlethreaded|Win32
 		{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}.Release Static|Win32.ActiveCfg = Release Multithreaded|Win32
+		{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}.Release Static|Win32.Build.0 = Release Multithreaded|Win32
 		{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}.Release Static|x64.ActiveCfg = Release Singlethreaded|Win32
 		{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}.Release|Win32.ActiveCfg = Release|Win32
 		{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}.Release|Win32.Build.0 = Release|Win32
@@ -361,6 +364,7 @@ Global
 		{F539D871-FBBB-41BC-A827-90AD1A860D60}.Release Singlethreaded|Win32.Build.0 = Release|Win32
 		{F539D871-FBBB-41BC-A827-90AD1A860D60}.Release Singlethreaded|x64.ActiveCfg = Release|Win32
 		{F539D871-FBBB-41BC-A827-90AD1A860D60}.Release Static|Win32.ActiveCfg = Release|Win32
+		{F539D871-FBBB-41BC-A827-90AD1A860D60}.Release Static|Win32.Build.0 = Release|Win32
 		{F539D871-FBBB-41BC-A827-90AD1A860D60}.Release Static|x64.ActiveCfg = Release|Win32
 		{F539D871-FBBB-41BC-A827-90AD1A860D60}.Release|Win32.ActiveCfg = Release|Win32
 		{F539D871-FBBB-41BC-A827-90AD1A860D60}.Release|Win32.Build.0 = Release|Win32

@@ -13,3 +13,12 @@ ShadowMapping/Debug/
 Terrain/Debug/
 fboTest/Debug/
 FireCube.v12.suo
+FireCube/Release Static/
+FireCube/ThirdParty/FreeType/Release/
+FireCube/ThirdParty/Lua/Release/
+FireCube/ThirdParty/SDL/Release/
+FireCube/ThirdParty/SDL/SDL.vcxproj.user
+FireCubeTest/Release/
+ModelViewer/Release/
+ModelViewer/log.txt
+Release/
