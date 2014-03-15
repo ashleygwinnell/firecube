@@ -18,11 +18,12 @@ public:
 	void AddRenderable(Renderable *renderable);
 	void RemoveRenderable(Renderable *renderable);
 	void AddLight(Light *light);
+	void RemoveLight(Light *light);
 	void Render(Renderer *renderer);
 	void RenderDebugGeometry(DebugRenderer *debugRenderer);
 	void SetRootNodeAndCamera(NodePtr rootNode, CameraPtr camera);
 	void SetAmbientColor(vec3 color);
-	void IntersectRay(RayQuery &rayQuery);
+	void IntersectRay(RayQuery &rayQuery, unsigned int collisionQueryMask = 0xFFFFFFFF);
 	void SetFogEnabled(bool fogEnabled);
 	void SetFogParameters(vec3 fogParameters);
 	void SetFogColor(vec3 fogColor);

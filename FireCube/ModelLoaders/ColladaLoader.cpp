@@ -2,7 +2,7 @@
 #include "Rendering/Texture.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
-#include "Geometry/ColladaLoader.h"
+#include "ModelLoaders/ColladaLoader.h"
 #include "Math/MathUtils.h"
 #include "Rendering/IndexBuffer.h"
 #include "Core/Engine.h"

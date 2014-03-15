@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "Geometry/Geometry.h"
-#include "ModelLoader.h"
+#include "Geometry/ModelLoader.h"
 
 #define MAIN3DS       0x4D4D
 

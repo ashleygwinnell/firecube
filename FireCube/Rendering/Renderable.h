@@ -42,8 +42,8 @@ public:
 	const std::vector<RenderablePart> &GetRenderableParts() const;
 	BoundingBox GetWorldBoundingBox();
 	void SetScene(Scene *scene);
-	void SetQueryIntersection(bool queryIntersection);
-	bool GetQueryIntersection() const;
+	void SetCollisionQueryMask(unsigned int collisionQueryMask);
+	unsigned int GetCollisionQueryMask() const;
 
 	virtual void IntersectRay(RayQuery &rayQuery);
 	virtual void UpdateRenderableParts();
@@ -57,7 +57,7 @@ protected:
 	BoundingBox worldBoundingBox;
 	bool worldBoundingBoxChanged;
 	Scene *scene;
-	bool queryIntersection;
+	unsigned int collisionQueryMask;
 private:
 
 };

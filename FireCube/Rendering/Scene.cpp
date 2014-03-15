@@ -55,6 +55,18 @@ void Scene::AddLight(Light *light)
 	lights.push_back(light);
 }
 
+void Scene::RemoveLight(Light *light)
+{
+	for (auto i = lights.begin(); i != lights.end(); ++i)
+	{
+		if (*i == light)
+		{
+			lights.erase(i);
+			break;
+		}
+	}
+}
+
 void Scene::UpdateBaseQueue()
 {
 	baseQueue.Clear();
@@ -233,11 +245,11 @@ void Scene::SetAmbientColor(vec3 color)
 	ambientColor = color;
 }
 
-void Scene::IntersectRay(RayQuery &rayQuery)
+void Scene::IntersectRay(RayQuery &rayQuery, unsigned int collisionQueryMask)
 {
 	for (auto renderable : renderables)
 	{
-		if (renderable->GetQueryIntersection())
+		if (renderable->GetCollisionQueryMask() & collisionQueryMask)
 			renderable->IntersectRay(rayQuery);
 	}
 

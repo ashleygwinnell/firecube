@@ -10,7 +10,7 @@
 #include "Math/Math.h"
 #include "Scene/Node.h"
 #include "tinyxml.h"
-#include "ModelLoader.h"
+#include "Geometry/ModelLoader.h"
 
 namespace FireCube
 {	

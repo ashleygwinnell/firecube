@@ -7,6 +7,8 @@
 namespace FireCube
 {
 
+class Scene;
+
 /**
 * Specifies the type of a light.
 */
@@ -79,5 +81,6 @@ private:
 	vec4 specularColor;
 	float range;
 	float spotCutOff;
+	Scene *scene;
 };
 }

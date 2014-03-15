@@ -5,7 +5,7 @@
 
 using namespace FireCube;
 
-Renderable::Renderable(Engine *engine) : Component(engine), worldBoundingBoxChanged(false), queryIntersection(true)
+Renderable::Renderable(Engine *engine) : Component(engine), worldBoundingBoxChanged(false), collisionQueryMask(1)
 {
 }
 
@@ -23,14 +23,14 @@ void Renderable::SetScene(Scene *scene)
 	this->scene = scene;
 }
 
-void Renderable::SetQueryIntersection(bool queryIntersection)
+void Renderable::SetCollisionQueryMask(unsigned int collisionQueryMask)
 {
-	this->queryIntersection = queryIntersection;
+	this->collisionQueryMask = collisionQueryMask;
 }
 
-bool Renderable::GetQueryIntersection() const
+unsigned int Renderable::GetCollisionQueryMask() const
 {
-	return queryIntersection;
+	return collisionQueryMask;
 }
 
 void Renderable::NodeChanged()

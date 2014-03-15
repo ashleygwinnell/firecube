@@ -4,7 +4,7 @@
 #include "Utils/Logger.h"
 #include "Rendering/Texture.h"
 #include "Geometry/Material.h"
-#include "Geometry/m3dsLoader.h"
+#include "ModelLoaders/m3dsLoader.h"
 #include "Rendering/IndexBuffer.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Technique.h"

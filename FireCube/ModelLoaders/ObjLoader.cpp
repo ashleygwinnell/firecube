@@ -4,7 +4,7 @@
 #include "Rendering/Texture.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
-#include "Geometry/ObjLoader.h"
+#include "ModelLoaders/ObjLoader.h"
 #include "Rendering/IndexBuffer.h"
 #include "Core/Engine.h"
 #include "Core/ResourcePool.h"

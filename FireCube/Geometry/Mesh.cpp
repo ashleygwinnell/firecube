@@ -4,9 +4,9 @@
 #include "Utils/Logger.h"
 #include "Utils/Filesystem.h"
 #include "Geometry/ModelLoader.h"
-#include "Geometry/ColladaLoader.h"
-#include "Geometry/m3dsLoader.h"
-#include "Geometry/ObjLoader.h"
+#include "ModelLoaders/ColladaLoader.h"
+#include "ModelLoaders/m3dsLoader.h"
+#include "ModelLoaders/ObjLoader.h"
 #include "Core/Engine.h"
 using namespace FireCube;
 
