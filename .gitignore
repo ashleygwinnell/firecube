@@ -22,3 +22,6 @@ FireCubeTest/Release/
 ModelViewer/Release/
 ModelViewer/log.txt
 Release/
+FireCube/log.txt
+FireCubeTest/FireCubeTest.vcxproj.user
+ModelViewer/ModelViewer.vcxproj.user

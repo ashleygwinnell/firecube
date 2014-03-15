@@ -1,3 +1,3 @@
 <technique>
-	<pass name = "base" vs= "Shaders/debugNormals.vert" fs = "Shaders/debugNormals.frag" properties= "NORMAL_MAPPING"/>
+	<pass name = "base" vs= "Shaders/debugNormals.vert" fs = "Shaders/debugNormals.frag" defines = "NORMAL_MAPPING"/>
 </technique>

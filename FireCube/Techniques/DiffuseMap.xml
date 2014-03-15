@@ -1,4 +1,4 @@
 <technique>
-	<pass name = "base" vs= "Shaders/default.vert" fs = "Shaders/default.frag" properties= "DIFFUSE_MAPPING" />
-	<pass name = "light" vs= "Shaders/default.vert" fs = "Shaders/default.frag" properties= "PER_PIXEL_LIGHTING DIFFUSE_MAPPING" />
+	<pass name = "base" vs= "Shaders/default.vert" fs = "Shaders/default.frag" defines = "DIFFUSE_MAPPING" />
+	<pass name = "light" vs= "Shaders/default.vert" fs = "Shaders/default.frag" defines = "PER_PIXEL_LIGHTING DIFFUSE_MAPPING" />
 </technique>
