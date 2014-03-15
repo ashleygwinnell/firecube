@@ -1,0 +1,15 @@
+FireCube.opensdf
+FireCube.sdf
+FireCube/Debug Static/
+CSG/Debug/
+FireCube/ThirdParty/FreeType/Debug/
+FireCube/ThirdParty/Lua/Debug/
+FireCube/ThirdParty/SDL/Debug/
+FireCubeTest/Debug/
+ModelViewer/Debug/
+PhysicsAttempt1/Debug/
+SceneGraph/Debug/
+ShadowMapping/Debug/
+Terrain/Debug/
+fboTest/Debug/
+FireCube.v12.suo
