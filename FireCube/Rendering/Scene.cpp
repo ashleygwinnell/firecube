@@ -88,7 +88,7 @@ void Scene::UpdateBaseQueue()
 				newRenderJob.pass->GenerateAllShaderPermutations();
 				unsigned int shaderPermutation = 0;
 				if (fogEnabled)
-					shaderPermutation += MAX_SHADER_PERMUTATIONS;
+					shaderPermutation += 1;
 				newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(shaderPermutation).get();
 				newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(shaderPermutation).get();
 				newRenderJob.geometry = renderablePart.geometry;
