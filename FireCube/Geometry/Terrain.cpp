@@ -314,8 +314,8 @@ vec3 Terrain::GetNormal(vec2 pos)
 		i1 = GetHeightDiscrete(ix + 1, iy);
 		i2 = GetHeightDiscrete(ix, iy + 1);
 		vec3 v0(0, i0, 0);
-		vec3 v1(1.0f / (float)(numVerticesX - 1)*verticesSpacing.x, i1, 0);
-		vec3 v2(1.0f / (float)(numVerticesX - 1)*verticesSpacing.x, i2, 1.0f / (float)(numVerticesY - 1)*verticesSpacing.z);
+		vec3 v1(verticesSpacing.x, i1, 0);
+		vec3 v2(verticesSpacing.x, i2, verticesSpacing.z);
 		return Cross(v2 - v0, v1 - v0).Normalized();
 	}
 	else
@@ -323,9 +323,9 @@ vec3 Terrain::GetNormal(vec2 pos)
 		i0 = GetHeightDiscrete(ix + 1, iy);
 		i2 = GetHeightDiscrete(ix, iy + 1);
 		i1 = GetHeightDiscrete(ix + 1, iy + 1);
-		vec3 v0(1.0f / (float)(numVerticesX - 1) * verticesSpacing.x, i0, 0);
-		vec3 v1(0, i2, 1.0f / (float)(numVerticesY - 1) * verticesSpacing.z);
-		vec3 v2(1.0f / (float)(numVerticesX - 1) * verticesSpacing.x, i1, 1.0f / (float) (numVerticesY - 1) * verticesSpacing.z);
+		vec3 v0(verticesSpacing.x, i0, 0);
+		vec3 v1(0, i2, verticesSpacing.z);
+		vec3 v2(verticesSpacing.x, i1, verticesSpacing.z);
 		return Cross(v1 - v0, v2 - v0).Normalized();
 	}
 }
