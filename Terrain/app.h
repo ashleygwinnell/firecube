@@ -2,15 +2,17 @@ class App : public Application, public InputListener
 {
 public:
 	App();
-	bool Init();
+	bool Prepare();
 	void HandleInput(float time, const MappedInput &input);
 	void Update(float time);
 	void Render(float time);
 
 private:
+	Terrain *terrain;
 	NodePtr root, node;	
-	TerrainNodePtr terrainNode;
-	FontPtr font;	
+	Scene scene;
+	NodePtr terrainNode;
+	FontFacePtr fontFace;	
 	CameraPtr orthographicCamera;
 	CameraPtr camera;
 	vec3 speed;

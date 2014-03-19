@@ -19,7 +19,7 @@ App::App() : ang(0, (float)PI, 0)
 
 }
 
-bool App::Init()
+bool App::Prepare()
 {
 	Filesystem::AddSearchPath("../Assets/Textures");
 	SetTitle("Terrain");
@@ -41,31 +41,37 @@ bool App::Init()
 	GetInputManager().AddMapping(KEY_DOWN, STATE, "RotateDown");
 	GetInputManager().AddMapping(KEY_MOUSE_LEFT_BUTTON, STATE, "RotateBoth");
 
-	font = Renderer::GetFontPool().Create("c:\\windows\\fonts\\arial.ttf", 18);		
-	root = NodePtr(new Node("root"));
-	node = LoadMesh("../Assets/Models/teapot.3ds");
-	node->Move(vec3(5, 5, 5));	
-	root->AddChild(node);
-	terrainNode = TerrainNodePtr(new TerrainNode);
-	if (!terrainNode->GetTerrain().GenerateTerrain("../Assets/Textures/heightmap.bmp", vec3(512.0f, 50.0f, 512.0f), vec2(1.0f, 1.0f), false))
-		return false;
-	TexturePtr diffuseTexture = Renderer::GetTexturePool().Create("../Assets/Textures/diffuse.bmp");
-	terrainNode->GetMaterial()->SetDiffuseTexture(diffuseTexture);
-	
-	root->AddChild(terrainNode);
-	LightNodePtr lightNode(new LightNode);
-	lightNode->GetLight().SetType(DIRECTIONAL);
-	lightNode->GetLight().SetAmbientColor(vec4(0, 0, 0, 1));
-	lightNode->GetLight().SetDiffuseColor(vec4(1, 1, 1, 1));
-	lightNode->GetLight().SetSpecularColor(vec4(0, 0, 0, 1));
-	lightNode->Rotate(vec3(1, 1, 0));
-	root->AddChild(lightNode);
-	root->SetFog(true);
-	root->SetFogDensity(0.01f);
-	root->SetFogColor(vec4(0.30f, 0.42f, 0.95f, 1.0f));	
-
+	fontFace = resourcePool->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18);
+	root = NodePtr(new Node(engine, "root"));
 	camera = CameraPtr(new Camera);
 	camera->SetPosition(vec3(0, 2, 0));
+	scene.SetRootNodeAndCamera(root, camera);
+
+	node = root->CreateChild();
+	node->Move(vec3(5, 5, 5));	
+	node->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourcePool()->GetResource<Mesh>("../Assets/Models/teapot.3ds"));
+
+	terrainNode = root->CreateChild("Terrain");
+	terrain = terrainNode->CreateComponent<Terrain>();
+	terrain->SetPatchSize(64);
+	terrain->SetVerticesSpacing(vec3(1.0f, 50.0f, 1.0f));
+	terrain->SetGenerateHardNormals(true);
+	terrain->CreateFromHeightMap(engine->GetResourcePool()->GetResource<Image>("../Assets/Textures/heightmap.bmp").get());	
+	terrain->SetMaterial(engine->GetResourcePool()->GetResource<Material>("Materials/TerrainNoTexture.xml"));
+	//TexturePtr diffuseTexture = Renderer::GetTexturePool().Create("../Assets/Textures/diffuse.bmp");
+	//terrainNode->GetMaterial()->SetDiffuseTexture(diffuseTexture);
+		
+	NodePtr lightNode = root->CreateChild("Light");
+	Light *light = lightNode->CreateComponent<Light>();
+	light->SetLightType(FireCube::DIRECTIONAL);
+	light->SetDiffuseColor(vec4(1.0f, 1.0f, 1.0f, 1));
+	light->SetSpecularColor(vec4(0, 0, 0, 0));
+	lightNode->Rotate(vec3(1, 1, 0));
+
+	scene.SetFogEnabled(true);
+	scene.SetFogParameters(vec3(0, 0.01f, 0));
+	scene.SetFogColor(vec3(0.30f, 0.42f, 0.95f));
+	
 	orthographicCamera = CameraPtr(new Camera);
 	return true;
 }
@@ -76,11 +82,11 @@ void App::Update(float time)
 	ang += angSpeed;
 	angSpeed *= 0.9f;
 	vec3 pos = camera->GetPosition();
-	float height = terrainNode->GetTerrain().GetHeight(vec2(pos.x, pos.z));	
+	float height = terrain->GetHeight(vec2(pos.x, pos.z));	
 	if (pos.y - height < 0.75f)
 	{
 		pos.y = height + 0.75f;
-		vec3 n = terrainNode->GetTerrain().GetNormal(vec2(pos.x, pos.z));
+		vec3 n = terrain->GetNormal(vec2(pos.x, pos.z));
 		speed = speed - speed.Dot(n) * n * 2;
 		camera->SetPosition(pos);
 	}
@@ -89,22 +95,20 @@ void App::Update(float time)
 
 void App::Render(float time)
 {
-	mat4 projection;
-	Renderer::UseCamera(camera);
+	mat4 projection;	
 	projection.GeneratePerspective(60.0f, (float) GetWidth() / (float) GetHeight(), 0.1f, 200.0f);
-	Renderer::GetCamera()->SetProjectionMatrix(projection);
-	Renderer::Clear(vec4(0.30f, 0.42f, 0.95f, 1.0f), 1.0f);	
-	Renderer::GetCamera()->SetRotation(vec3(ang.x, ang.y, angSpeed.z));
+	camera->SetProjectionMatrix(projection);
+	renderer->Clear(vec4(0.30f, 0.42f, 0.95f, 1.0f), 1.0f);	
+	camera->SetRotation(vec3(ang.x, ang.y, angSpeed.z));
 	
-	Renderer::Render(root);
-	
-	Renderer::UseCamera(orthographicCamera);
+	scene.Render(renderer);
+		
 	mat4 ortho;
 	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);
 	orthographicCamera->SetProjectionMatrix(ortho);
 	std::ostringstream oss;
-	oss << "FPS:" << app.GetFps() << std::endl << "Rendered primitives: " << Renderer::GetNumberOfPrimitivesRendered();
-	Renderer::RenderText(font, vec3(0, 0, 0), vec4(1.0f, 1.0f, 1.0f, 1.0f), oss.str());    
+	oss << "FPS:" << app.GetFps() << std::endl << "Rendered primitives: " << renderer->GetNumberOfPrimitivesRendered();
+	renderer->RenderText(fontFace, orthographicCamera, vec3(0, 0, 0), vec4(1), oss.str());	
 }
 
 void App::HandleInput(float time, const MappedInput &input)
@@ -131,8 +135,12 @@ void App::HandleInput(float time, const MappedInput &input)
 	if (input.IsStateOn("RotateUp"))
 		angSpeed.x += time * 0.3f;
 	
-	vec3 dir = camera->GetViewMatrix().GetDirection();			
-	vec3 strafe = Cross(dir, vec3(0, 1, 0)).Normalize();
+	mat4 inverseView = camera->GetViewMatrix();
+	inverseView.Inverse();
+	vec3 dir = inverseView.GetDirection().Normalized();
+	//dir.x *= -1.0f;
+	//dir.y *= -1.0f;
+	vec3 strafe = Cross(dir, vec3(0, 1, 0)).Normalized();
 
 	if (input.IsStateOn("Forward"))
 		speed += dir * time * 0.4f;
