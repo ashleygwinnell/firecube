@@ -25,6 +25,11 @@ Scene::~Scene()
 	{
 		renderable->SetScene(nullptr);
 	}
+
+	for (auto light : lights)
+	{
+		light->SetScene(nullptr);
+	}
 }
 
 void Scene::AddRenderable(Renderable *renderable)

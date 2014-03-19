@@ -76,3 +76,8 @@ void Light::NodeChanged()
 		scene->RemoveLight(this);
 	}
 }
+
+void Light::SetScene(Scene *scene)
+{
+	this->scene = scene;
+}

@@ -66,6 +66,7 @@ public:
 	
 	void SetSpotCutOff(float cutOff);
 	float GetSpotCutOff() const;
+	void SetScene(Scene *scene);
 
 	/**
 	* Checks whether two lights are equal.
