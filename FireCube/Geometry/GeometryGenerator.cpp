@@ -205,6 +205,7 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateSphere(Engine *engine, float r
 			*((vec3 *) &vertexData[currentVertex * vertexSize + 0]) = pos * radius;
 			*((vec3 *) &vertexData[currentVertex * vertexSize + 3]) = pos.Normalized();
 			*((vec2 *) &vertexData[currentVertex * vertexSize + 6]) = uv;			
+			currentVertex++;
 			if(ring < rings)
 			{
 				indices.push_back(vertexIndex);
