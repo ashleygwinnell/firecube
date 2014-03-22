@@ -5,47 +5,58 @@ using namespace FireCube;
 
 #include "app.h"
 App app;
-bool App::Init()
+bool App::Prepare()
 {
     Filesystem::AddSearchPath("../Assets/Textures");
     Filesystem::AddSearchPath("../Assets/Models");
 	GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
     SetTitle("FBO Example");
-    font = Renderer::GetFontPool().Create("c:\\windows\\fonts\\arial.ttf", 10);
-    root = NodePtr(new Node("Root"));
-	LightNodePtr lightNode = LightNodePtr(new LightNode("LightNode"));
-	root->AddChild(lightNode);
-    lightNode->GetLight().SetAmbientColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));
-    lightNode->GetLight().SetDiffuseColor(vec4(0.8f, 0.8f, 0.8f, 1.0f));
-    lightNode->GetLight().SetSpecularColor(vec4(0.2f, 0.2f, 0.2f, 1.0f));
-    lightNode->GetLight().SetType(DIRECTIONAL);
+    fontFace = engine->GetResourcePool()->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(10);
+    root = NodePtr(new Node(engine, "Root"));
+	camera = CameraPtr(new Camera);
+	scene2.SetRootNodeAndCamera(root, camera);
+	NodePtr lightNode = root->CreateChild("LightNode");
+	Light *light = lightNode->CreateComponent<Light>();   
+    light->SetDiffuseColor(vec4(0.8f, 0.8f, 0.8f, 1.0f));
+    light->SetSpecularColor(vec4(0.2f, 0.2f, 0.2f, 1.0f));	
+    light->SetLightType(DIRECTIONAL);
     
-    node = LoadMesh("../Assets/Models/1.3ds");
-    root->AddChild(node);
-    node->Move(vec3(1.3f, 0, -3));    	
-    node2 = LoadMesh("../Assets/Models/teapot2.3ds");
-    root->AddChild(node2);
+	node = root->CreateChild("Mesh");
+	node->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourcePool()->GetResource<Mesh>("../Assets/Models/1.3ds"));
+	node->Move(vec3(1.3f, 0, -3));    	
+	node2 = root->CreateChild("Mesh2");
+	node2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourcePool()->GetResource<Mesh>("../Assets/Models/teapot2.3ds"));	    
     node2->Move(vec3(-1.3f, 0, -3));
 
-	mainRoot = GeometryNodePtr(new GeometryNode);
-	mainRoot->SetGeometry(GeometryGenerator::GeneratePlane(vec2(2,2)));    
+	mainRoot = NodePtr(new Node(engine, "Root"));
+	scene.SetRootNodeAndCamera(mainRoot, camera);
+	NodePtr node3 = mainRoot->CreateChild("Plane");
+	StaticModel *staticModel = node3->CreateComponent<StaticModel>();
+	MaterialPtr material = MaterialPtr(new Material(engine));
+	material->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0));
+	material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("./Techniques/DiffuseMap.xml"));
+	staticModel->AddRenderablePart(GeometryPtr(GeometryGenerator::GeneratePlane(engine, vec2(2, 2))), material);	
+	staticModel->SetBoundingBox(BoundingBox(vec3(-2, -2, -2), vec3(2, 2, 2)));	
 	mainRoot->Rotate(vec3(-(float) PI / 2.0f, 0, 0));
-	mainRoot->SetLighting(false);	
+	scene.SetAmbientColor(vec3(1, 1, 1));
+	//mainRoot->SetLighting(false);	
 
-    fbo = FrameBufferPtr(new FrameBuffer);
+    fbo = FrameBufferPtr(new FrameBuffer(engine));
     fbo->Create(128, 128);
     fbo->AddDepthBuffer();
     fbo->AddRenderTarget(0);
-    fbo->GetRenderTarget(0)->GenerateMipMaps();
-	mainRoot->GetGeometry()->GetMaterial()->SetDiffuseTexture(fbo->GetRenderTarget(0));
+    fbo->GetRenderTarget(0)->GenerateMipMaps();	
+	material->SetTexture(TEXTURE_UNIT_DIFFUSE, fbo->GetRenderTarget(0));
 
     if (fbo->IsValid() == false)
     {
         Logger::Write(Logger::LOG_ERROR, "Error: couldn't create FBO.\n");
         return false;
     }
-	camera = CameraPtr(new Camera);
+	
 	orthographicCamera = CameraPtr(new Camera);
     return true;
 }
@@ -61,30 +72,28 @@ void App::Render(float time)
 	camera->SetProjectionMatrix(projection);    
 	camera->SetPosition(vec3(0 ,0 ,0));
 	camera->SetRotation(vec3(0, 0, 0));	
-	Renderer::UseCamera(camera);
-    Renderer::UseFrameBuffer(fbo);	
-    Renderer::Clear(vec4(0.2f, 0.4f, 0.4f, 1.0f), 1.0f);    
-    Renderer::Render(root);
+	
+    renderer->UseFrameBuffer(fbo);	
+    renderer->Clear(vec4(0.2f, 0.4f, 0.4f, 1.0f), 1.0f);    
+	scene2.Render(renderer);
     projection.GenerateOrthographic(0, (float) fbo->GetWidth(), (float) fbo->GetHeight(), 0, 0, 1);
-	orthographicCamera->SetProjectionMatrix(projection);
-	Renderer::UseCamera(orthographicCamera);
-    Renderer::RenderText(font, vec3(0, 0, 0), vec4(1, 1, 1, 1), "FBO Test.");
+	orthographicCamera->SetProjectionMatrix(projection);	
+    renderer->RenderText(fontFace, orthographicCamera, vec3(0, 0, 0), vec4(1, 1, 1, 1), "FBO Test.");
 
 	
-    Renderer::RestoreFrameBuffer();
-    Renderer::SetViewport(0, 0, GetWidth(), GetHeight());    
+    renderer->RestoreFrameBuffer();
+    renderer->SetViewport(0, 0, GetWidth(), GetHeight());    
     camera->SetPosition(vec3(0, 0, 1.5f));    
-    Renderer::Clear(vec4(0.4f, 0.4f, 0.4f, 1.0f), 1.0f);
-    Renderer::UseCamera(camera);
+    renderer->Clear(vec4(0.4f, 0.4f, 0.4f, 1.0f), 1.0f);    
     fbo->GetRenderTarget(0)->GenerateMipMaps();
-    Renderer::Render(mainRoot);
+	scene.Render(renderer);
 
 	projection.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);
 	orthographicCamera->SetProjectionMatrix(projection);
-    Renderer::UseCamera(orthographicCamera);
+    
     std::ostringstream oss;
     oss << "FPS:" << GetFps();
-    Renderer::RenderText(font, vec3(0, 0, 0), vec4(1, 1, 1, 1), oss.str());
+    renderer->RenderText(fontFace, orthographicCamera, vec3(0, 0, 0), vec4(1, 1, 1, 1), oss.str());
 }
 void App::HandleInput(float time, const MappedInput &input)
 {

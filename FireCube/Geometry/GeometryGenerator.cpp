@@ -258,19 +258,19 @@ Geometry *FIRECUBE_API GeometryGenerator::GeneratePlane(Engine *engine, const ve
 	unsigned int currentVertex = 0;
 	*((vec3 *) &vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, 0, halfSize.y);
 	*((vec3 *) &vertexData[currentVertex * vertexSize + 3]) = vec3(0, 1, 0);
-	*((vec2 *) &vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
+	*((vec2 *) &vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *) &vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, 0, halfSize.y);
 	*((vec3 *) &vertexData[currentVertex * vertexSize + 3]) = vec3(0, 1, 0);
-	*((vec2 *) &vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
+	*((vec2 *) &vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *) &vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, 0, -halfSize.y);
 	*((vec3 *) &vertexData[currentVertex * vertexSize + 3]) = vec3(0, 1, 0);
-	*((vec2 *) &vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
+	*((vec2 *) &vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
 	currentVertex++;
 	*((vec3 *) &vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, 0, -halfSize.y);
 	*((vec3 *) &vertexData[currentVertex * vertexSize + 3]) = vec3(0, 1, 0);
-	*((vec2 *) &vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
+	*((vec2 *) &vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
 	currentVertex++;
 
 	indexData[0] = 0;

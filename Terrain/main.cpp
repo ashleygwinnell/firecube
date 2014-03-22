@@ -58,8 +58,6 @@ bool App::Prepare()
 	terrain->SetGenerateHardNormals(true);
 	terrain->CreateFromHeightMap(engine->GetResourcePool()->GetResource<Image>("../Assets/Textures/heightmap.bmp").get());	
 	terrain->SetMaterial(engine->GetResourcePool()->GetResource<Material>("Materials/TerrainNoTexture.xml"));
-	//TexturePtr diffuseTexture = Renderer::GetTexturePool().Create("../Assets/Textures/diffuse.bmp");
-	//terrainNode->GetMaterial()->SetDiffuseTexture(diffuseTexture);
 		
 	NodePtr lightNode = root->CreateChild("Light");
 	Light *light = lightNode->CreateComponent<Light>();
@@ -137,9 +135,7 @@ void App::HandleInput(float time, const MappedInput &input)
 	
 	mat4 inverseView = camera->GetViewMatrix();
 	inverseView.Inverse();
-	vec3 dir = inverseView.GetDirection().Normalized();
-	//dir.x *= -1.0f;
-	//dir.y *= -1.0f;
+	vec3 dir = inverseView.GetDirection().Normalized();	
 	vec3 strafe = Cross(dir, vec3(0, 1, 0)).Normalized();
 
 	if (input.IsStateOn("Forward"))
