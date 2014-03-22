@@ -39,10 +39,22 @@ bool Mesh::Load(const std::string &filename)
 		if (modelLoader && modelLoader->Load(file))
 		{
 			modelLoader->GenerateGeometries(engine->GetRenderer());			
+			std::map<Material *, MaterialPtr> materialsMap;
 			for (unsigned int i = 0; i < modelLoader->GetGeneratedGeometries().size(); ++i)
 			{
 				geometries.push_back(GeometryPtr(modelLoader->GetGeneratedGeometries()[i]));
-				materials.push_back(MaterialPtr(modelLoader->GetGeneratedMaterials()[i]));
+				auto mapIter = materialsMap.find(modelLoader->GetGeneratedMaterials()[i]);
+				if (mapIter == materialsMap.end())
+				{
+					MaterialPtr mat(modelLoader->GetGeneratedMaterials()[i]);
+					materialsMap[modelLoader->GetGeneratedMaterials()[i]] = mat;
+					materials.push_back(mat);
+				}
+				else
+				{
+					materials.push_back(mapIter->second);
+				}
+				
 			}
 				
 			boundingBox = modelLoader->GetBoundingBox();
