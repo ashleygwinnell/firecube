@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 	app.Destroy();
 	return 0;
 }
-bool App::Init()
+bool App::Prepare()
 {
 	Filesystem::AddSearchPath("../Assets/Textures");
 	SetTitle(std::string("Shadow Mapping Test Application"));
@@ -33,33 +33,9 @@ bool App::Init()
 	Renderer::AddTechnique("shadowMap", t);
 	programUniformsList.SetIntValue("shadowMap", 1);
 	program = ProgramPtr(new Program);
-	program->Create(Renderer::GetShaderPool().Create("1.vert"), Renderer::GetShaderPool().Create("1.frag"));
-	quad = GeometryPtr(new Geometry);
-	quad->GetVertices().push_back(vec3(0,0,0));
-	quad->GetVertices().push_back(vec3(0,150,0));
-	quad->GetVertices().push_back(vec3(150,150,0));
-	quad->GetVertices().push_back(vec3(150,0,0));
-	quad->GetDiffuseUV().push_back(vec2(0,1));
-	quad->GetDiffuseUV().push_back(vec2(0,0));
-	quad->GetDiffuseUV().push_back(vec2(1,0));
-	quad->GetDiffuseUV().push_back(vec2(1,1));
-	quad->UpdateBuffers();
-	quad->SetVertexCount(4);
-	quad->SetPrimitiveCount(2);
-	quad->SetPrimitiveType(QUADS);
-	MaterialPtr mat(new Material);
-	mat->SetDiffuseColor(vec3(1,1,1));
-	quad->SetMaterial(mat);	
-	vec2 vb[4] = {vec2(0, 0), vec2(0, 150), vec2(150, 150), vec2(150, 0)};
-	vec2 uvb[4] = {vec2(0, 1), vec2(0, 0), vec2(1, 0), vec2(1, 1)};
-	vBuffer = BufferPtr(new Buffer);
-	uvBuffer = BufferPtr(new Buffer);
-	vBuffer->Create();
-	uvBuffer->Create();
-	vBuffer->LoadData(&vb[0], sizeof(vec2) * 4, STATIC);
-	uvBuffer->LoadData(&uvb[0], sizeof(vec2) * 4, STATIC);
+	program->Create(Renderer::GetShaderPool().Create("1.vert"), Renderer::GetShaderPool().Create("1.frag"));	
 
-	fb = FrameBufferPtr(new FrameBuffer);
+	fb = FrameBufferPtr(new FrameBuffer(engine));
 	fb->Create(1024, 1024);
 	fb->AddDepthBufferTexture();	
 
@@ -134,19 +110,4 @@ void App::HandleInput(float t, const MappedInput &input)
 {
 	if (input.IsActionTriggered("Close"))
 		Close();	
-}
-void App::RenderDepth()
-{
-	vBuffer->SetVertexAttribute(0, 2, 0, 0);
-	uvBuffer->SetVertexAttribute(4, 2, 0, 0);
-	Renderer::UseProgram(program);
-	ProgramUniformsList uniforms;
-	uniforms.SetIntValue("tex", 0);
-	uniforms.SetMat4Value("modelViewMatrix", orthographicCamera->GetViewMatrix());
-	uniforms.SetMat4Value("projectionMatrix", orthographicCamera->GetProjectionMatrix());
-	uniforms.ApplyForProgram(program);
-	Renderer::UseTexture(fb->GetDepthBuffer(), 0);
-	glTexParameteri(GL_TEXTURE_2D, 34892, GL_NONE);
-	Renderer::RenderStream(QUADS, 4);
-	glTexParameteri(GL_TEXTURE_2D, 34892, 34894);
 }

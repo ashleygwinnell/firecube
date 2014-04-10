@@ -336,7 +336,7 @@ ProgramPtr Renderer::SetShaders(Shader *vertexShader, Shader *fragmentShader)
 	currentVertexShader = vertexShader;
 	currentFragmentShader = fragmentShader;
 	
-	ResetCachedShadersParameters();
+	ResetCachedShaderParameters();
 
 	std::pair<Shader *, Shader *> key = std::make_pair(vertexShader, fragmentShader);
 	auto i = programs.find(key);
@@ -354,7 +354,7 @@ ProgramPtr Renderer::SetShaders(Shader *vertexShader, Shader *fragmentShader)
 	return currentProgram;
 }
 
-void Renderer::IncreamentNumboerOfPrimitivesRendered(unsigned int amount)
+void Renderer::IncreamentNumberOfPrimitivesRendered(unsigned int amount)
 {
 	numberOfPrimitivesRendered += amount;
 }
@@ -391,6 +391,7 @@ void Renderer::UseLight(Light *light)
 		return;
 
 	currentLight = light;
+	mat4 lightMatrix = mat4::IDENTITY;
 	if (light->GetLightType() == DIRECTIONAL)
 	{
 		currentProgram->SetUniform(PARAM_LIGHT_DIR, vec3(0, 0, 1).TransformNormal(light->GetNode()->GetWorldTransformation()));
@@ -404,13 +405,26 @@ void Renderer::UseLight(Light *light)
 		currentProgram->SetUniform(PARAM_LIGHT_POS, vec4(light->GetNode()->GetWorldTransformation().GetTranslation(), light->GetRange()));
 		currentProgram->SetUniform(PARAM_LIGHT_SPOT_DIR, vec4(vec3(0, 0, 1).TransformNormal(light->GetNode()->GetWorldTransformation()), light->GetSpotCutOff()));		
 	}
+	currentProgram->SetUniform(PARAM_LIGHT_MATRIX, lightMatrix);
 	currentProgram->SetUniform(PARAM_LIGHT_DIFFUSE, light->GetDiffuseColor());
 	currentProgram->SetUniform(PARAM_LIGHT_SPECULAR, light->GetSpecularColor());
 }
 
-void Renderer::ResetCachedShadersParameters()
+void Renderer::ResetCachedShaderParameters()
 {
 	currentMaterial = nullptr;
 	currentCamera = nullptr;
 	currentLight = nullptr;
+}
+
+FrameBuffer *Renderer::GetShadowMap()
+{
+	if (shadowMap && shadowMap->IsValid())
+		return shadowMap.get();
+
+	shadowMap = FrameBufferPtr(new FrameBuffer(engine));
+	shadowMap->Create(1024, 1024);
+	shadowMap->AddDepthBufferTexture();
+
+	return shadowMap.get();
 }

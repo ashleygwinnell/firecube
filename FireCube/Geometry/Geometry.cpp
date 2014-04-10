@@ -306,7 +306,7 @@ void Geometry::Render()
 		renderer->RenderIndexStream(primitiveType, indexBuffer->GetIndicesCount());											
 	else
 		renderer->RenderStream(primitiveType, vertexBuffer->GetVertexCount());				
-	renderer->IncreamentNumboerOfPrimitivesRendered(primitiveCount);
+	renderer->IncreamentNumberOfPrimitivesRendered(primitiveCount);
 
 	glBindVertexArray(0);
 }

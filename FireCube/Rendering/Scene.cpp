@@ -165,7 +165,7 @@ void Scene::UpdateLightQueues()
 
 void Scene::Render(Renderer *renderer)
 {
-	renderer->ResetCachedShadersParameters();
+	renderer->ResetCachedShaderParameters();
 
 	UpdateRenderables();
 	UpdateBaseQueue();

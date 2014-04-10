@@ -140,7 +140,7 @@ public:
 	*/
 	void SetViewport(int left, int right, int width, int height);
 
-	void IncreamentNumboerOfPrimitivesRendered(unsigned int amount);
+	void IncreamentNumberOfPrimitivesRendered(unsigned int amount);
 
 	/**
 	* Returns the number of triangles that were rendered in the current frame.
@@ -160,7 +160,9 @@ public:
 
 	void UseLight(Light *light);
 
-	void ResetCachedShadersParameters();
+	void ResetCachedShaderParameters();
+	
+	FrameBuffer *GetShadowMap();
 private:
 	VertexBufferPtr textVertexBuffer;
 	GLuint textVao;
@@ -176,6 +178,7 @@ private:
 	Light *currentLight;
 	unsigned int numberOfPrimitivesRendered;
 	GLuint textureSampler[16];
+	FrameBufferPtr shadowMap;
 };
 
 }

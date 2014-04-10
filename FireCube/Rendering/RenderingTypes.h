@@ -47,7 +47,7 @@ extern StringHash PARAM_LIGHT_SPOT_DIR;
 extern StringHash PARAM_CAMERA_POS;
 extern StringHash PARAM_FOG_PARAMETERS;
 extern StringHash PARAM_FOG_COLOR;
-
+extern StringHash PARAM_LIGHT_MATRIX;
 
 extern StringHash BASE_PASS;
 extern StringHash LIGHT_PASS;
