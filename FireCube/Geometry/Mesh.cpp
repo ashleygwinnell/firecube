@@ -20,9 +20,7 @@ Mesh::Mesh(Engine *engine) : Resource(engine)
 Mesh::~Mesh()
 {
 	for (auto i : geometries)
-	{
-		delete i->GetVertexBuffer();
-		delete i->GetIndexBuffer();
+	{		
 		delete i;
 	}
 	

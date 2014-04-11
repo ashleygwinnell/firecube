@@ -15,7 +15,9 @@ Geometry::Geometry(Renderer *renderer) : GraphicsResource(renderer), primitiveCo
 }
 
 Geometry::~Geometry()
-{	
+{
+	delete vertexBuffer;
+	delete indexBuffer;
 	if (objectId)
 		glDeleteVertexArrays(1, &objectId);
 	LOGINFO("Destroyed geometry");

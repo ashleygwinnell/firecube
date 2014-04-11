@@ -394,7 +394,7 @@ TerrainPatch::TerrainPatch(Engine *engine) : Renderable(engine)
 
 TerrainPatch::~TerrainPatch()
 {
-	delete geometry->GetVertexBuffer();
+	geometry->SetIndexBuffer(nullptr); // The index buffer is shared between the terrain patches and has been deleted in the destruction of Terrain
 	delete geometry;
 }
 
