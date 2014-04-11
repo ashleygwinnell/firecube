@@ -9,13 +9,13 @@
 
 using namespace FireCube;
 
-Geometry::Geometry(Renderer *renderer) : GraphicsResource(renderer), primitiveCount(0)
+Geometry::Geometry(Renderer *renderer) : GraphicsResource(renderer), primitiveCount(0), vertexBuffer(nullptr), indexBuffer(nullptr)
 {
 
 }
 
 Geometry::~Geometry()
-{
+{	
 	if (objectId)
 		glDeleteVertexArrays(1, &objectId);
 	LOGINFO("Destroyed geometry");
@@ -269,31 +269,31 @@ unsigned int Geometry::GetPrimitiveCount() const
 	return primitiveCount;
 }
 
-GeometryPtr Geometry::Clone()
+Geometry *Geometry::Clone()
 {
-	GeometryPtr ret(new Geometry(renderer));
+	Geometry *ret = new Geometry(renderer);
 	ret->primitiveCount = this->primitiveCount;
 	ret->primitiveType = this->primitiveType;
 	
 	return ret;
 }
 
-void Geometry::SetVertexBuffer(VertexBufferPtr vertexBuffer)
+void Geometry::SetVertexBuffer(VertexBuffer *vertexBuffer)
 {
 	this->vertexBuffer = vertexBuffer;
 }
 
-VertexBufferPtr Geometry::GetVertexBuffer()
+VertexBuffer *Geometry::GetVertexBuffer()
 {
 	return vertexBuffer;
 }
 
-void Geometry::SetIndexBuffer(IndexBufferPtr indexBuffer)
+void Geometry::SetIndexBuffer(IndexBuffer *indexBuffer)
 {
 	this->indexBuffer = indexBuffer;	
 }
 
-IndexBufferPtr Geometry::GetIndexBuffer()
+IndexBuffer *Geometry::GetIndexBuffer()
 {
 	return indexBuffer;
 }

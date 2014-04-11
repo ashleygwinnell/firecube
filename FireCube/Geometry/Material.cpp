@@ -9,7 +9,8 @@
 using namespace FireCube;
 Material::Material(Engine *engine) : Resource(engine)
 {
-
+	for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
+		textures[i] = nullptr;
 }
 
 bool Material::Load(const std::string &filename)
@@ -70,9 +71,9 @@ void Material::SetName(const std::string &name)
 	this->name = name;
 }
 
-MaterialPtr Material::Clone()
+Material *Material::Clone()
 {
-	MaterialPtr ret(new Material(engine));	
+	Material *ret = new Material(engine);	
 	ret->name = name;
 	for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
 		ret->textures[i] = textures[i];
@@ -81,12 +82,12 @@ MaterialPtr Material::Clone()
 	return ret;
 }
 
-void Material::SetTechnique(TechniquePtr technique)
+void Material::SetTechnique(Technique *technique)
 {
 	this->technique = technique;
 }
 
-TechniquePtr Material::GetTechnique()
+Technique *Material::GetTechnique()
 {
 	return technique;
 }
@@ -136,23 +137,23 @@ void Material::SetParameter(const StringHash &nameHash, const Variant &value)
 	parameters[nameHash] = value;
 }
 
-const TexturePtr *Material::GetTextures() const
+Texture **Material::GetTextures()
 {
 	return textures;
 }
 
-void Material::SetTexture(TextureUnit textureUnit, TexturePtr texture)
+void Material::SetTexture(TextureUnit textureUnit, Texture *texture)
 {
 	if (textureUnit < MAX_TEXTURE_UNITS)
 		textures[textureUnit] = texture;
 }
 
-TexturePtr Material::GetTexture(TextureUnit textureUnit) const
+Texture *Material::GetTexture(TextureUnit textureUnit) const
 {
 	if (textureUnit < MAX_TEXTURE_UNITS)
 		return textures[textureUnit];
 	else
-		return TexturePtr();
+		return nullptr;
 }
 
 TextureUnit Material::ParseTextureUnitName(const std::string &name)

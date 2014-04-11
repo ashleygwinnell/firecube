@@ -27,11 +27,6 @@ enum TextureFilter
 class Texture;
 
 /**
-* A shared pointer to a Texture.
-*/
-typedef std::shared_ptr<Texture> TexturePtr;
-
-/**
 * A 2d texture.
 */
 class FIRECUBE_API Texture : public Resource, public GraphicsResource

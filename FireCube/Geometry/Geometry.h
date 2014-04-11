@@ -18,16 +18,12 @@ namespace FireCube
 
 // Forward declarations.
 class Node;
-typedef std::shared_ptr<Node> NodePtr;
 class RenderQueue;
 class VertexBuffer;
-typedef std::shared_ptr<VertexBuffer> VertexBufferPtr;
 class IndexBuffer;
-typedef std::shared_ptr<IndexBuffer> IndexBufferPtr;
 class Geometry;
 class ProgramUniformsList;
 class Texture;
-typedef std::shared_ptr<Texture> TexturePtr;
 class Renderer;
 
 /**
@@ -37,12 +33,6 @@ enum PrimitiveType
 {
 	POINTS, LINES, TRIANGLES, TRIANGLE_STRIP, QUADS, LINE_LOOP, LINE_STRIP, TRIANGLE_FAN
 };
-
-
-/**
-* A shared pointer to a Geometry.
-*/
-typedef std::shared_ptr<Geometry> GeometryPtr;
 
 /**
 * Defines an edge in a geometry.
@@ -113,21 +103,20 @@ public:
 	* Clones this Geometry.
 	* @return A new cloned Geometry of this one.
 	*/
-	GeometryPtr Clone();
+	Geometry *Clone();
 
-	void SetVertexBuffer(VertexBufferPtr vertexBuffer);
-	VertexBufferPtr GetVertexBuffer();
-	void SetIndexBuffer(IndexBufferPtr indexBuffer);
-	IndexBufferPtr GetIndexBuffer();
+	void SetVertexBuffer(VertexBuffer *vertexBuffer);
+	VertexBuffer *GetVertexBuffer();
+	void SetIndexBuffer(IndexBuffer *indexBuffer);
+	IndexBuffer *GetIndexBuffer();
 
 	void Render();
 
 	bool IntersectRay(const Ray &ray, float &distance, vec3 &normal) const;
 
 private:	
-	VertexBufferPtr vertexBuffer;	
-	IndexBufferPtr indexBuffer;
-	//MaterialPtr material;
+	VertexBuffer *vertexBuffer;	
+	IndexBuffer *indexBuffer;	
 	PrimitiveType primitiveType;
 	unsigned int primitiveCount;	
 };

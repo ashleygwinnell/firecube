@@ -62,7 +62,6 @@ namespace FireCube
 
 // Forward declarations.
 class Material;
-typedef std::shared_ptr<Material> MaterialPtr;
 
 class M3dsLoader : public ModelLoader
 {
@@ -100,7 +99,7 @@ public:
 	virtual void GenerateGeometries(Renderer *renderer);
 	virtual void GenerateScene(Renderer *renderer, Node *root);
 	virtual const std::vector<Geometry *> &GetGeneratedGeometries();
-	virtual NodePtr GetGeneratedScene();
+	virtual Node *GetGeneratedScene();
 	virtual const std::vector<FireCube::Material *> &GetGeneratedMaterials();
 	virtual BoundingBox GetBoundingBox() const;
 private:				
@@ -124,8 +123,8 @@ private:
 	float ReadPercentageBChunk();
 	float ReadPercentageFChunk();
 	Material *GetMaterialByName(const std::string &name);
-	VertexBufferPtr CreateVertexBufferAndBoundingBoxOfObject(Object &object, BoundingBox &boundingBox);
-	Geometry *CreateGeometryOfMesh(Mesh &mesh, VertexBufferPtr vertexBuffer);
+	VertexBuffer *CreateVertexBufferAndBoundingBoxOfObject(Object &object, BoundingBox &boundingBox);
+	Geometry *CreateGeometryOfMesh(Mesh &mesh, VertexBuffer *vertexBuffer);
 	FireCube::Material *CreateMaterialOfMesh(Mesh &mesh);
 	std::vector<char> buffer;
 	Material *curMaterial;
@@ -139,7 +138,7 @@ private:
 	std::vector<FireCube::Material *> generatedMaterials;
 	std::map<Material *, FireCube::Material *>materialsMap;		
 	BoundingBox boundingBox;
-	NodePtr root;
+	Node *root;
 };
 }
 

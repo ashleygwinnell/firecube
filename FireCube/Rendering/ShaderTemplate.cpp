@@ -14,6 +14,11 @@ ShaderTemplate::ShaderTemplate(Engine *engine) : Resource(engine)
 
 }
 
+ShaderTemplate::~ShaderTemplate()
+{
+	for (auto i : shaders)
+		delete i.second;
+}
 
 bool ShaderTemplate::Load(const std::string &filename)
 {
@@ -51,7 +56,7 @@ bool ShaderTemplate::Load(ShaderType type, const std::string &source)
 	return true;
 }
 
-ShaderPtr ShaderTemplate::GenerateShader(const std::string &defines)
+Shader *ShaderTemplate::GenerateShader(const std::string &defines)
 {	
 	std::stringstream ss(defines);
 	std::istream_iterator<std::string> begin(ss);
@@ -61,7 +66,7 @@ ShaderPtr ShaderTemplate::GenerateShader(const std::string &defines)
 	std::string sortedDefines = std::accumulate(definesList.begin(), definesList.end(), std::string(""));
 	StringHash hash(sortedDefines);
 
-	std::map<StringHash, ShaderPtr>::iterator i = shaders.find(hash);
+	std::map<StringHash, Shader *>::iterator i = shaders.find(hash);
 	if (i != shaders.end())
 		return i->second;
 
@@ -72,7 +77,7 @@ ShaderPtr ShaderTemplate::GenerateShader(const std::string &defines)
 		definesPrefix << "#define " << definesList[i] << std::endl;
 	}
 	std::ostringstream shaderSource;
-	ShaderPtr shader(new Shader(engine->GetRenderer()));
+	Shader *shader = new Shader(engine->GetRenderer());
 	shaderSource << definesPrefix.str() << shaderCode;
 	shader->Create(type, shaderSource.str());
 	shaders[hash] = shader;

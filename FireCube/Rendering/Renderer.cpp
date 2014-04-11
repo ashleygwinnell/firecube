@@ -34,7 +34,8 @@ struct FontVertex
 
 Renderer::Renderer(Engine *engine) : Object(engine), textVao(0), numberOfPrimitivesRendered(0), 
 	currentVertexShader(nullptr), currentFragmentShader(nullptr), currentMaterial(nullptr), currentCamera(nullptr),
-	currentLight(nullptr)
+	currentLight(nullptr), shadowMap(nullptr), textVertexBuffer(nullptr), textVertexShader(nullptr), textFragmentShader(nullptr),
+	textVertexShaderTemplate(nullptr), textFragmentShaderTemplate(nullptr)
 {
 
 }
@@ -46,7 +47,7 @@ void Renderer::Clear(const vec4 &color, float depth)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::UseTexture(TexturePtr tex, unsigned int unit)
+void Renderer::UseTexture(const Texture *tex, unsigned int unit)
 {
 	if (!tex)
 		return;
@@ -73,13 +74,13 @@ void Renderer::UseTexture(TexturePtr tex, unsigned int unit)
 	glBindSampler(unit, textureSampler[unit]);
 }
 
-void Renderer::RenderText(FontFacePtr fontFace, CameraPtr camera, const vec3 &pos, const vec4 &color, const std::string &str)
+void Renderer::RenderText(FontFace *fontFace, Camera *camera, const vec3 &pos, const vec4 &color, const std::string &str)
 {	
 	if (!fontFace || str.empty())
 		return;
 	static std::vector<FontVertex> vBuffer;    
 	vBuffer.resize(str.size() * 6);    
-	ProgramPtr textProgram = SetShaders(textVertexShader.get(), textFragmentShader.get());
+	Program *textProgram = SetShaders(textVertexShader, textFragmentShader);
 	if (textProgram->IsValid())
 	{
 		UseProgram(textProgram);
@@ -228,7 +229,7 @@ void Renderer::RenderStream(const PrimitiveType &primitiveType, unsigned int cou
 	glBindVertexArray(0);
 }
 
-void Renderer::UseProgram(ProgramPtr program)
+void Renderer::UseProgram(Program *program)
 {
 	if (program)
 		glUseProgram(program->GetObjectId());
@@ -248,7 +249,7 @@ void Renderer::UseMaterial(Material *material)
 		currentProgram->SetUniform(i->first, i->second);
 	}
 
-	const TexturePtr *textures = material->GetTextures();
+	Texture **textures = material->GetTextures();
 	for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
 	{
 		TextureUnit textureUnit = (TextureUnit)i;
@@ -275,12 +276,12 @@ void Renderer::Initialize()
 	// Create a vertex buffer for text rendering	
 	glGenVertexArrays(1, &textVao);
 	glBindVertexArray(textVao);
-	textVertexBuffer = VertexBufferPtr(new VertexBuffer(this));	
+	textVertexBuffer = new VertexBuffer(this);	
 	glBindVertexArray(0);
 
 	// Create shaders for text rendering
-	ShaderTemplatePtr textVertexShaderTemplate(new ShaderTemplate(engine));
-	ShaderTemplatePtr textFragmentShaderTemplate(new ShaderTemplate(engine));
+	textVertexShaderTemplate = new ShaderTemplate(engine);
+	textFragmentShaderTemplate = new ShaderTemplate(engine);
 	textVertexShaderTemplate->Load("Shaders/font.vert");
 	textFragmentShaderTemplate->Load("Shaders/font.frag");
 	textVertexShader = textVertexShaderTemplate->GenerateShader("");
@@ -289,12 +290,15 @@ void Renderer::Initialize()
 
 void Renderer::Destroy()
 {
-	textVertexBuffer = VertexBufferPtr();	
+	delete textVertexBuffer;
+	delete shadowMap;
+	delete textVertexShaderTemplate;
+	delete textFragmentShaderTemplate;
 	glDeleteVertexArrays(1, &textVao);
 	glDeleteSamplers(16, textureSampler);
 }
 
-void Renderer::UseFrameBuffer(FrameBufferPtr frameBuffer)
+void Renderer::UseFrameBuffer(FrameBuffer *frameBuffer)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->GetObjectId());
 	glViewport(0, 0, frameBuffer->width, frameBuffer->height);
@@ -328,7 +332,7 @@ void Renderer::DisableNormalStream()
 	Renderer::DisableVertexAttribute(1);
 }
 
-ProgramPtr Renderer::SetShaders(Shader *vertexShader, Shader *fragmentShader)
+Program *Renderer::SetShaders(Shader *vertexShader, Shader *fragmentShader)
 {
 	if (currentVertexShader == vertexShader && currentFragmentShader == fragmentShader)
 		return currentProgram;
@@ -346,7 +350,7 @@ ProgramPtr Renderer::SetShaders(Shader *vertexShader, Shader *fragmentShader)
 	}
 	else
 	{
-		currentProgram = ProgramPtr(new Program(this));
+		currentProgram = new Program(this);
 		currentProgram->Create(vertexShader, fragmentShader);
 		programs[key] = currentProgram;
 	}
@@ -420,11 +424,11 @@ void Renderer::ResetCachedShaderParameters()
 FrameBuffer *Renderer::GetShadowMap()
 {
 	if (shadowMap && shadowMap->IsValid())
-		return shadowMap.get();
+		return shadowMap;
 
-	shadowMap = FrameBufferPtr(new FrameBuffer(engine));
+	shadowMap = new FrameBuffer(engine);
 	shadowMap->Create(1024, 1024);
 	shadowMap->AddDepthBufferTexture();
 
-	return shadowMap.get();
+	return shadowMap;
 }

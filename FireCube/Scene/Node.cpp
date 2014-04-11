@@ -32,6 +32,8 @@ Node::Node(Engine *engine, const std::string &name) : Object(engine), parent(nul
 Node::~Node()
 {
 	RemoveAllComponents();
+	for (auto i : children)
+		delete i;
 }
 
 void Node::SetName(const std::string &name)
@@ -138,7 +140,7 @@ void Node::LookAt(vec3 position, vec3 at, vec3 up)
 	SetTransformationChanged();
 }
 
-NodePtr Node::AddChild(NodePtr node)
+Node *Node::AddChild(Node *node)
 {
 	children.push_back(node);
 	// If the node has a parent, remove it from the parent's children list
@@ -149,46 +151,46 @@ NodePtr Node::AddChild(NodePtr node)
 	return node;
 }
 
-NodePtr Node::CreateChild(const std::string &name)
+Node *Node::CreateChild(const std::string &name)
 {
-	NodePtr child(new Node(engine, name));
+	Node *child = new Node(engine, name);
 	AddChild(child);
 	return child;
 }
 
-void Node::SetParent(NodePtr parent)
+void Node::SetParent(Node *parent)
 {
 	if (GetParent())	
-		GetParent()->RemoveChild(shared_from_this());		
+		GetParent()->RemoveChild(this);
 	
-	this->parent = parent.get();
+	this->parent = parent;
 	if (parent)
 	{
 		scene = parent->scene;
-		parent->children.push_back(shared_from_this());		
+		parent->children.push_back(this);
 	}
 }
 
-NodePtr Node::GetChild(const std::string &name, bool recursive)
+Node *Node::GetChild(const std::string &name, bool recursive)
 {
-	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (auto i : children)
 	{
-		if ((*i)->GetName() == name)
-			return *i;
+		if (i->GetName() == name)
+			return i;
 		if (recursive)
 		{
-			NodePtr node = (*i)->GetChild(name, true);
+			Node *node = i->GetChild(name, true);
 			if (node)
 				return node;
 		}
 	}
 	
-	return NodePtr();
+	return nullptr;
 }
 
-NodePtr Node::RemoveChild(NodePtr node)
+Node *Node::RemoveChild(Node *node)
 {
-	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (auto i = children.begin(); i != children.end(); i++)
 	{
 		if ((*i) == node)
 		{
@@ -197,22 +199,22 @@ NodePtr Node::RemoveChild(NodePtr node)
 		}
 	}
 	
-	return NodePtr();
+	return nullptr;
 }
 
-NodePtr Node::RemoveChild(const std::string &name)
+Node *Node::RemoveChild(const std::string &name)
 {
-	for (std::vector<NodePtr>::iterator i = children.begin(); i != children.end(); i++)
+	for (auto i = children.begin(); i != children.end(); i++)
 	{
 		if ((*i)->GetName() == name)
 		{
-			NodePtr ret = *i;			
+			Node *ret = *i;			
 			children.erase(i);
 			return ret;
 		}
 	}
 	
-	return NodePtr();
+	return nullptr;
 }
 
 void Node::RemoveAllChildren()
@@ -220,15 +222,15 @@ void Node::RemoveAllChildren()
 	children.clear();
 }
 
-std::vector<NodePtr> &Node::GetChildren()
+std::vector<Node *> &Node::GetChildren()
 {
 	return children;
 }
 
 
-NodePtr Node::Clone() const
+Node *Node::Clone() const
 {
-	NodePtr ret(new Node(engine));
+	Node *ret = new Node(engine);
 	//TODO: Implement
 	ret->name = name;
 	ret->translation = translation;
@@ -237,9 +239,9 @@ NodePtr Node::Clone() const
 	ret->localTransformation = localTransformation;
 	ret->transformationChanged = transformationChanged;
 	ret->worldTransformation = worldTransformation;	
-	for (std::vector<NodePtr>::const_iterator i = children.begin(); i != children.end(); i++)
+	for (auto i = children.begin(); i != children.end(); i++)
 	{
-		NodePtr c = (*i)->Clone();
+		Node *c = (*i)->Clone();
 		c->SetParent(ret);
 	}
 	return ret;
@@ -274,7 +276,7 @@ void Node::AddComponent(Component *component)
 	}
 	else
 	{
-		components.push_back(ComponentPtr(component));
+		components.push_back(component);
 		component->SetNode(this);
 	}
 }
@@ -294,6 +296,7 @@ void Node::RemoveAllComponents()
 	for (auto component : components)
 	{
 		component->SetNode(nullptr);
+		delete component;
 	}
 
 	components.clear();

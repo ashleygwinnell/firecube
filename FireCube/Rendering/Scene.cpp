@@ -14,9 +14,9 @@
 
 using namespace FireCube;
 
-Scene::Scene() : ambientColor(0.1f), fogEnabled(false)
+Scene::Scene(Engine *engine) : Object(engine), ambientColor(0.1f), fogEnabled(false), rootNode(engine)
 {
-
+	rootNode.SetScene(this);
 }
 
 Scene::~Scene()
@@ -83,7 +83,7 @@ void Scene::UpdateBaseQueue()
 			{
 				if (!renderablePart.material)
 					continue;
-				TechniquePtr technique = renderablePart.material->GetTechnique();
+				Technique *technique = renderablePart.material->GetTechnique();
 				if (!technique)
 					continue;
 				RenderJob newRenderJob;				
@@ -94,8 +94,8 @@ void Scene::UpdateBaseQueue()
 				unsigned int shaderPermutation = 0;
 				if (fogEnabled)
 					shaderPermutation += 1;
-				newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(shaderPermutation).get();
-				newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(shaderPermutation).get();
+				newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(shaderPermutation);
+				newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(shaderPermutation);
 				newRenderJob.geometry = renderablePart.geometry;
 				newRenderJob.material = renderablePart.material;
 				newRenderJob.transformation = renderablePart.transformation;
@@ -141,7 +141,7 @@ void Scene::UpdateLightQueues()
 					}
 					if (!renderablePart.material)
 						continue;
-					TechniquePtr technique = renderablePart.material->GetTechnique();
+					Technique *technique = renderablePart.material->GetTechnique();
 					if (!technique)
 						continue;
 					RenderJob newRenderJob;
@@ -149,8 +149,8 @@ void Scene::UpdateLightQueues()
 					if (newRenderJob.pass == nullptr)
 						continue;
 					newRenderJob.pass->GenerateAllShaderPermutations();
-					newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(shaderPermutation).get();
-					newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(shaderPermutation).get();
+					newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(shaderPermutation);
+					newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(shaderPermutation);
 					newRenderJob.geometry = renderablePart.geometry;
 					newRenderJob.material = renderablePart.material;
 					newRenderJob.transformation = renderablePart.transformation;
@@ -178,14 +178,14 @@ void Scene::Render(Renderer *renderer)
 	baseQueue.Sort();
 	for (auto &renderJob : baseQueue.GetRenderJobs())
 	{			
-		ProgramPtr program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
+		Program *program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
 		program->SetUniform(PARAM_AMBIENT_COLOR, ambientColor);		
 		if (fogEnabled)
 		{
 			program->SetUniform(PARAM_FOG_PARAMETERS, fogParameters);
 			program->SetUniform(PARAM_FOG_COLOR, fogColor);
 		}
-		renderer->UseCamera(camera.get());
+		renderer->UseCamera(camera);
 		// View transformation
 		program->SetUniform(PARAM_MODEL_MATRIX, renderJob.transformation);		
 		// Normal matrix which equals the inverse transpose of the model matrix
@@ -211,14 +211,14 @@ void Scene::Render(Renderer *renderer)
 		Light *light = lightQueue.light;
 		for (auto &renderJob : lightQueue.renderQueue.GetRenderJobs())
 		{
-			ProgramPtr program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
+			Program *program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
 			program->SetUniform(PARAM_AMBIENT_COLOR, ambientColor);
 			if (fogEnabled)
 			{
 				program->SetUniform(PARAM_FOG_PARAMETERS, fogParameters);
 				program->SetUniform(PARAM_FOG_COLOR, fogColor);
 			}
-			renderer->UseCamera(camera.get());			
+			renderer->UseCamera(camera);
 			// View transformation
 			program->SetUniform(PARAM_MODEL_MATRIX, renderJob.transformation);			
 			// Normal matrix which equals the inverse transpose of the model matrix
@@ -238,10 +238,8 @@ void Scene::Render(Renderer *renderer)
 	glDepthMask(true);
 }
 
-void Scene::SetRootNodeAndCamera(NodePtr rootNode, CameraPtr camera)
-{
-	this->rootNode = rootNode;
-	rootNode->SetScene(this);
+void Scene::SetCamera(Camera *camera)
+{	
 	this->camera = camera;
 }
 
@@ -269,7 +267,7 @@ void Scene::RenderDebugGeometry(DebugRenderer *debugRenderer)
 {
 	for (auto renderable : renderables)
 		renderable->RenderDebugGeometry(debugRenderer);
-	debugRenderer->Render(camera.get());
+	debugRenderer->Render(camera);
 }
 
 void Scene::SetFogEnabled(bool fogEnabled)
@@ -290,4 +288,9 @@ void Scene::SetFogColor(vec3 fogColor)
 vec3 Scene::GetFogColor() const
 {
 	return fogColor;
+}
+
+Node *Scene::GetRootNode()
+{
+	return &rootNode;
 }

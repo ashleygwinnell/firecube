@@ -24,20 +24,16 @@ class Scene;
 /**
 * A shared pointer to a Node.
 */
-typedef std::shared_ptr<Node> NodePtr;
 class Geometry;
-typedef std::shared_ptr<Geometry> GeometryPtr;
 class Light;
 class Material;
-typedef std::shared_ptr<Material> MaterialPtr;
 class Program;
-typedef std::shared_ptr<Program> ProgramPtr;
 
 
 /**
 * A class representing a node in a scene graph.
 */
-class FIRECUBE_API Node : public Object, public std::enable_shared_from_this<Node>
+class FIRECUBE_API Node : public Object
 {
 	friend class RenderQueue;
 public:	
@@ -146,40 +142,40 @@ public:
 	* Sets the parent of this node.
 	* @param parent The new parent to assign to this node
 	*/
-	void SetParent(NodePtr parent);
+	void SetParent(Node *parent);
 
 	/**
 	* Gets the children of this node.
 	* @return A list of children.
 	*/
-	std::vector<NodePtr> &GetChildren();
+	std::vector<Node *> &GetChildren();
 	
 	/**
 	* Adds a child node.
 	* @param node The node to add as a child.
 	*/
-	NodePtr AddChild(NodePtr node);
+	Node *AddChild(Node *node);
 
-	NodePtr CreateChild(const std::string &name = "");
+	Node *CreateChild(const std::string &name = "");
 
 	/**
 	* Gets a child node by name.
 	* @param name The name of the node.
 	* @return The child node.
 	*/
-	NodePtr GetChild(const std::string &name, bool recursive = false);
+	Node *GetChild(const std::string &name, bool recursive = false);
 
 	/**
 	* Removes a child node.
 	* @param name The name of the child node to remove.
 	*/
-	NodePtr RemoveChild(const std::string &name);
+	Node *RemoveChild(const std::string &name);
 
 	/**
 	* Removes a child node.
 	* @param node The child node to remove.
 	*/
-	NodePtr RemoveChild(NodePtr node);	
+	Node *RemoveChild(Node *node);	
 
 	void RemoveAllChildren();
 		
@@ -187,7 +183,7 @@ public:
 	* Clones the node.
 	* The cloned node has no parent and points to the same geometries as the original.
 	*/
-	virtual NodePtr Clone() const;
+	virtual Node *Clone() const;
 	
 	/**
 	* @return The world space position of this node.
@@ -214,7 +210,7 @@ public:
 protected:		
 	void SetTransformationChanged();	
 	
-	std::vector<NodePtr> children;	
+	std::vector<Node *> children;	
 
 	vec3 translation;
 	mat4 rotation;
@@ -225,7 +221,7 @@ protected:
 	
 	Node *parent;
 	std::string name;
-	std::vector<ComponentPtr> components;
+	std::vector<Component *> components;
 	Scene *scene;
 };
 

@@ -8,9 +8,15 @@ using namespace FireCube;
 CustomGeometry::CustomGeometry(Engine *engine) : Renderable(engine), geometry(new Geometry(engine->GetRenderer())), vertexAttributes(VERTEX_ATTRIBUTE_POSITION), currentVertex(0)
 {
 	renderableParts.resize(1);
-	renderableParts[0].geometry = geometry.get();
-	VertexBufferPtr vertexBuffer(new VertexBuffer(engine->GetRenderer()));
+	renderableParts[0].geometry = geometry;
+	VertexBuffer *vertexBuffer = new VertexBuffer(engine->GetRenderer());
 	geometry->SetVertexBuffer(vertexBuffer);
+}
+
+CustomGeometry::~CustomGeometry()
+{
+	delete geometry->GetVertexBuffer();
+	delete geometry;
 }
 
 void CustomGeometry::UpdateWorldBoundingBox()
@@ -44,7 +50,7 @@ void CustomGeometry::SetTexCoord(vec2 texcoord)
 
 void CustomGeometry::UpdateGeometry()
 {
-	VertexBufferPtr vertexBuffer = geometry->GetVertexBuffer();
+	VertexBuffer *vertexBuffer = geometry->GetVertexBuffer();
 	unsigned int vertexSize = VertexBuffer::GetVertexSize(vertexAttributes);
 	std::vector<char> vertexData(vertices.size() * vertexSize);
 	unsigned int currentOffset = 0;
@@ -82,8 +88,8 @@ void CustomGeometry::UpdateGeometry()
 	MarkedDirty();
 }
 
-void CustomGeometry::SetMaterial(MaterialPtr material)
+void CustomGeometry::SetMaterial(Material *material)
 {
 	this->material = material;
-	renderableParts[0].material = material.get();
+	renderableParts[0].material = material;
 }

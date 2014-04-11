@@ -10,8 +10,8 @@ using namespace FireCube;
 Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3 &size)
 {
 	Geometry *ret = new Geometry(engine->GetRenderer());
-	VertexBufferPtr vertexBuffer(new VertexBuffer(engine->GetRenderer()));
-	IndexBufferPtr indexBuffer(new IndexBuffer(engine->GetRenderer()));
+	VertexBuffer *vertexBuffer = new VertexBuffer(engine->GetRenderer());
+	IndexBuffer *indexBuffer = new IndexBuffer(engine->GetRenderer());
 	ret->SetVertexBuffer(vertexBuffer);
 	ret->SetIndexBuffer(indexBuffer);
 	vec3 halfSize = size * 0.5f;
@@ -176,8 +176,8 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3
 Geometry *FIRECUBE_API GeometryGenerator::GenerateSphere(Engine *engine, float radius, unsigned int rings, unsigned int columns)
 {
 	Geometry *ret = new Geometry(engine->GetRenderer());
-	VertexBufferPtr vertexBuffer(new VertexBuffer(engine->GetRenderer()));
-	IndexBufferPtr indexBuffer(new IndexBuffer(engine->GetRenderer()));
+	VertexBuffer *vertexBuffer = new VertexBuffer(engine->GetRenderer());
+	IndexBuffer *indexBuffer = new IndexBuffer(engine->GetRenderer());
 	ret->SetVertexBuffer(vertexBuffer);
 	ret->SetIndexBuffer(indexBuffer);
 	std::vector<unsigned int> indices;
@@ -247,8 +247,8 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateSphere(Engine *engine, float r
 Geometry *FIRECUBE_API GeometryGenerator::GeneratePlane(Engine *engine, const vec2 &size)
 {
 	Geometry *ret = new Geometry(engine->GetRenderer());
-	VertexBufferPtr vertexBuffer(new VertexBuffer(engine->GetRenderer()));
-	IndexBufferPtr indexBuffer(new IndexBuffer(engine->GetRenderer()));
+	VertexBuffer *vertexBuffer = new VertexBuffer(engine->GetRenderer());
+	IndexBuffer *indexBuffer = new IndexBuffer(engine->GetRenderer());
 	ret->SetVertexBuffer(vertexBuffer);
 	ret->SetIndexBuffer(indexBuffer);
 	vec2 halfSize = size * 0.5f;

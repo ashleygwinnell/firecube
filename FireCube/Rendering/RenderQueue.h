@@ -17,13 +17,10 @@ namespace FireCube
 // Forward declarations.
 class RenderQueue;
 class Geometry;
-typedef std::shared_ptr<Geometry> GeometryPtr;
 class Material;
-typedef std::shared_ptr<Material> MaterialPtr;
 class RenderParameters;
 class Light;
 class Program;
-typedef std::shared_ptr<Program> ProgramPtr;
 class Renderer;
 class Pass;
 class Shader;

@@ -55,7 +55,7 @@ namespace FireCube
 		virtual void GenerateGeometries(Renderer *renderer);
 		virtual void GenerateScene(Renderer *renderer, Node *root);
 		virtual const std::vector<Geometry *> &GetGeneratedGeometries();
-		virtual NodePtr GetGeneratedScene();
+		virtual Node *GetGeneratedScene();
 		virtual const std::vector<FireCube::Material *> &GetGeneratedMaterials();
 		virtual BoundingBox GetBoundingBox() const;
 

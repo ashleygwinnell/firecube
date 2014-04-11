@@ -52,14 +52,14 @@ mat4 NodeObserverCamera::GetViewMatrix()
 	return viewMatrix;
 }
 
-void NodeObserverCamera::SetTarget(NodePtr node)
+void NodeObserverCamera::SetTarget(Node *node)
 {
 	target = node;
 	viewMatrixChanged = true;
 	frustumChanged = true;
 }
 
-NodePtr NodeObserverCamera::GetTarget() const
+Node *NodeObserverCamera::GetTarget() const
 {
 	return target;
 }

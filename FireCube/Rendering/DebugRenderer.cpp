@@ -12,10 +12,15 @@ DebugRenderer::DebugRenderer(Engine *engine) : engine(engine)
 	
 }
 
+DebugRenderer::~DebugRenderer()
+{
+	delete linesGeometry;
+}
+
 void DebugRenderer::Initialize()
 {
-	linesGeometry = GeometryPtr(new Geometry(engine->GetRenderer()));
-	linesVertexBuffer = VertexBufferPtr(new VertexBuffer(engine->GetRenderer()));
+	linesGeometry = new Geometry(engine->GetRenderer());
+	linesVertexBuffer = new VertexBuffer(engine->GetRenderer());
 	linesGeometry->SetVertexBuffer(linesVertexBuffer);
 	linesGeometry->SetPrimitiveType(LINES);
 	linesGeometry->SetPrimitiveCount(0);
@@ -23,9 +28,9 @@ void DebugRenderer::Initialize()
 void DebugRenderer::Render(Camera *camera)
 {
 	Renderer *renderer = engine->GetRenderer();
-	ShaderPtr vs = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/solidColor.vert")->GenerateShader("");
-	ShaderPtr fs = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/solidColor.frag")->GenerateShader("");	
-	renderer->SetShaders(vs.get(), fs.get());
+	Shader *vs = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/solidColor.vert")->GenerateShader("");
+	Shader *fs = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/solidColor.frag")->GenerateShader("");	
+	renderer->SetShaders(vs, fs);
 	renderer->UseCamera(camera);
 	linesVertexBuffer->LoadData(&lines[0], lines.size() / 2, VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_COLOR, DYNAMIC);
 	linesGeometry->Update();

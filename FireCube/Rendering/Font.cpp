@@ -21,6 +21,8 @@ Font::Font(Engine *engine) : Resource(engine)
 Font::~Font()
 {
 	LOGINFO("Destroying font");	
+	for (auto i : faces)
+		delete i.second;
 }
 
 bool Font::Load(const std::string &filename)
@@ -36,13 +38,13 @@ bool Font::Load(const std::string &filename)
 	
 }
 
-FontFacePtr Font::GenerateFontFace(int pointSize)
+FontFace *Font::GenerateFontFace(int pointSize)
 {
 	auto i = faces.find(pointSize);
 	if (i != faces.end())
 		return i->second;
 
-	FontFacePtr fontFace = FontFacePtr(new FontFace);
+	FontFace *fontFace = new FontFace();
 	int error = 0;
 	// This string specifies the list of glyphs that will be rendered
 	char text[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-=_+[]{};:'\"\\|,./<>?/. ";
@@ -56,8 +58,8 @@ FontFacePtr Font::GenerateFontFace(int pointSize)
 	if (error)
 		return false;
 	
-	fontFace->page = std::shared_ptr<FontPage>(new FontPage);		
-	fontFace->page->tex = TexturePtr(new Texture(engine));	
+	fontFace->page = new FontPage();		
+	fontFace->page->tex = new Texture(engine);	
 	fontFace->page->textureSize = 512;
 	fontFace->page->curPos = vec2::ZERO;
 	glBindTexture(GL_TEXTURE_2D, fontFace->page->tex->GetObjectId());
@@ -87,6 +89,8 @@ FontFace::FontFace()
 FontFace::~FontFace()
 {
 	LOGINFO("Destroying font face");
+	delete page->tex;
+	delete page;
 	delete fontImpl;
 }
 

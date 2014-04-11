@@ -11,9 +11,7 @@ namespace FireCube
 {
 
 class ShaderTemplate;
-typedef std::shared_ptr<ShaderTemplate> ShaderTemplatePtr;
 class Shader;
-typedef std::shared_ptr<Shader> ShaderPtr;
 class Renderer;
 
 class FIRECUBE_API Pass
@@ -22,38 +20,33 @@ public:
 	void SetName(const std::string &name);
 	std::string GetName() const;
 	void SetShaderDefines(const std::string &shaderDefines);
-	void SetVertexShaderTemplate(ShaderTemplatePtr vertexShaderTemplate);
-	void SetFragmentShaderTemplate(ShaderTemplatePtr fragmentShaderTemplate);
-	ShaderPtr GenerateVertexShader(const std::string &shaderDefines);
-	ShaderPtr GenerateFragmentShader(const std::string &shaderDefines);
-	ShaderPtr GetGeneratedVertexShader(unsigned int index);
-	ShaderPtr GetGeneratedFragmentShader(unsigned int index);
+	void SetVertexShaderTemplate(ShaderTemplate *vertexShaderTemplate);
+	void SetFragmentShaderTemplate(ShaderTemplate *fragmentShaderTemplate);
+	Shader *GenerateVertexShader(const std::string &shaderDefines);
+	Shader *GenerateFragmentShader(const std::string &shaderDefines);
+	Shader *GetGeneratedVertexShader(unsigned int index);
+	Shader *GetGeneratedFragmentShader(unsigned int index);
 	void GenerateAllShaderPermutations();
 private:
 	std::string name;
-	ShaderTemplatePtr vertexShaderTemplate;
-	ShaderTemplatePtr fragmentShaderTemplate;
+	ShaderTemplate *vertexShaderTemplate;
+	ShaderTemplate *fragmentShaderTemplate;
 	std::string shaderDefines;
-	std::vector<ShaderPtr> generatedVertexShaders;
-	std::vector<ShaderPtr> generatedFragmentShaders;
+	std::vector<Shader *> generatedVertexShaders;
+	std::vector<Shader *> generatedFragmentShaders;
 };
-
-typedef std::shared_ptr<Pass> PassPtr;
 
 class FIRECUBE_API Technique : public Resource
 {
 public:
 	Technique(Engine *engine);
+	~Technique();
+
 	Pass *GetPass(const StringHash &nameHash);
 	bool Load(const std::string &filename);	
 private:
-	std::map<StringHash, PassPtr> passes;	
+	std::map<StringHash, Pass *> passes;	
 	Renderer *renderer;
 };
-
-/**
-* A shared pointer to a Technique.
-*/
-typedef std::shared_ptr<Technique> TechniquePtr;
 
 }

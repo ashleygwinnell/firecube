@@ -13,7 +13,6 @@ class Renderer;
 class Geometry;
 class Material;
 class Node;
-typedef std::shared_ptr<Node> NodePtr;
 class Viewport;
 
 /**
@@ -43,7 +42,7 @@ public:
 	virtual void GenerateGeometries(Renderer *renderer) = 0;
 	virtual void GenerateScene(Renderer *renderer, Node *root) = 0;
 	virtual const std::vector<Geometry *> &GetGeneratedGeometries() = 0;
-	virtual NodePtr GetGeneratedScene() = 0;
+	virtual Node *GetGeneratedScene() = 0;
 	virtual const std::vector<Material *> &GetGeneratedMaterials() = 0;
 	virtual BoundingBox GetBoundingBox() const = 0;
 };

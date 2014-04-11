@@ -8,3 +8,10 @@ ResourcePool::ResourcePool(Engine *engine) : Object(engine)
 {
 
 }
+
+ResourcePool::~ResourcePool()
+{
+	LOGINFO("Destroying resource pool");
+	for (auto i : resources)
+		delete i.second;
+}

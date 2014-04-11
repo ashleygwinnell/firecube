@@ -53,10 +53,10 @@ void ColladaLoader::GenerateScene(Renderer *renderer, FireCube::Node *root)
 {
 	// TODO: Implement
 }
-NodePtr ColladaLoader::GetGeneratedScene()
+Node *ColladaLoader::GetGeneratedScene()
 {
 	// TODO: Implement
-	return NodePtr();
+	return nullptr;
 }
 
 const std::vector<Material *> &ColladaLoader::GetGeneratedMaterials()
@@ -1594,8 +1594,8 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 				}
 			}
 
-			VertexBufferPtr vertexBuffer(new VertexBuffer(renderer));						
-			IndexBufferPtr indexBuffer(new IndexBuffer(renderer));			
+			VertexBuffer *vertexBuffer = new VertexBuffer(renderer);
+			IndexBuffer *indexBuffer = new IndexBuffer(renderer);
 			vertexBuffer->SetShadowed(true);
 			indexBuffer->SetShadowed(true);
 			geometry->SetVertexBuffer(vertexBuffer);

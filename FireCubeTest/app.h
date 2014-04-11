@@ -1,14 +1,16 @@
 class App : public Application, public InputListener
 {
 public:
+	App();
+	~App();
 	void HandleInput(float t, const MappedInput &input);
 	void Render(float t);
 	void Update(float t);
 	bool Prepare();    
-	NodePtr root;
-	NodeObserverCameraPtr camera;
-	CameraPtr orthographicCamera;
+	Node *root;
+	NodeObserverCamera *camera;
+	Camera *orthographicCamera;
 	Scene scene;
-	FontPtr font;
-	FontFacePtr fontFace;
+	Font *font;
+	FontFace *fontFace;
 };

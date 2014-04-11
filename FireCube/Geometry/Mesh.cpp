@@ -8,11 +8,33 @@
 #include "ModelLoaders/m3dsLoader.h"
 #include "ModelLoaders/ObjLoader.h"
 #include "Core/Engine.h"
+#include "Rendering/VertexBuffer.h"
+#include "Rendering/IndexBuffer.h"
 using namespace FireCube;
 
 Mesh::Mesh(Engine *engine) : Resource(engine)
 {
 
+}
+
+Mesh::~Mesh()
+{
+	for (auto i : geometries)
+	{
+		delete i->GetVertexBuffer();
+		delete i->GetIndexBuffer();
+		delete i;
+	}
+	
+	std::vector<Material *> deletedMaterials;
+	for (auto i : materials)
+	{
+		if (std::find(deletedMaterials.begin(), deletedMaterials.end(), i) == deletedMaterials.end())
+		{
+			deletedMaterials.push_back(i);
+			delete i;
+		}
+	}
 }
 
 bool Mesh::Load(const std::string &filename)
@@ -38,23 +60,11 @@ bool Mesh::Load(const std::string &filename)
 
 		if (modelLoader && modelLoader->Load(file))
 		{
-			modelLoader->GenerateGeometries(engine->GetRenderer());			
-			std::map<Material *, MaterialPtr> materialsMap;
+			modelLoader->GenerateGeometries(engine->GetRenderer());						
 			for (unsigned int i = 0; i < modelLoader->GetGeneratedGeometries().size(); ++i)
 			{
-				geometries.push_back(GeometryPtr(modelLoader->GetGeneratedGeometries()[i]));
-				auto mapIter = materialsMap.find(modelLoader->GetGeneratedMaterials()[i]);
-				if (mapIter == materialsMap.end())
-				{
-					MaterialPtr mat(modelLoader->GetGeneratedMaterials()[i]);
-					materialsMap[modelLoader->GetGeneratedMaterials()[i]] = mat;
-					materials.push_back(mat);
-				}
-				else
-				{
-					materials.push_back(mapIter->second);
-				}
-				
+				geometries.push_back(modelLoader->GetGeneratedGeometries()[i]);				
+				materials.push_back(modelLoader->GetGeneratedMaterials()[i]);				
 			}
 				
 			boundingBox = modelLoader->GetBoundingBox();
@@ -66,12 +76,12 @@ bool Mesh::Load(const std::string &filename)
 	return false;
 }
 
-const std::vector<GeometryPtr> &Mesh::GetGeometries() const
+const std::vector<Geometry *> &Mesh::GetGeometries() const
 {
 	return geometries;
 }
 
-const std::vector<MaterialPtr> &Mesh::GetMaterials() const
+const std::vector<Material *> &Mesh::GetMaterials() const
 {
 	return materials;
 }

@@ -10,9 +10,15 @@
 
 using namespace FireCube;
 
-Terrain::Terrain(Engine *engine) : Component(engine), patchSize(32), verticesSpacing(1.0f, 64.0f, 1.0f), smoothHeightMap(false), generateHardNormals(false)
+Terrain::Terrain(Engine *engine) : Component(engine), patchSize(32), verticesSpacing(1.0f, 64.0f, 1.0f), smoothHeightMap(false), generateHardNormals(false),
+								   indexBuffer(nullptr)
 {
 
+}
+
+Terrain::~Terrain()
+{
+	delete indexBuffer;	
 }
 
 void Terrain::CreateFromHeightMap(Image *image)
@@ -42,10 +48,10 @@ void Terrain::CreateFromHeightMap(Image *image)
 			std::ostringstream oss;
 			oss << "patch_" << x << "_" << y;
 			std::string nodeName = oss.str();
-			NodePtr patchNode = node->GetChild(nodeName, true);
+			Node *patchNode = node->GetChild(nodeName, true);
 			if (!patchNode)
 			{
-				patchNode = NodePtr(new Node(engine, nodeName));
+				patchNode = new Node(engine, nodeName);
 				node->AddChild(patchNode);
 			}
 			TerrainPatch *patch = new TerrainPatch(engine);
@@ -59,7 +65,7 @@ void Terrain::CreateFromHeightMap(Image *image)
 
 void Terrain::GenerateIndexBuffer()
 {
-	indexBuffer = IndexBufferPtr(new IndexBuffer(engine->GetRenderer()));
+	indexBuffer = new IndexBuffer(engine->GetRenderer());
 	indexBuffer->SetShadowed(true);
 	std::vector<unsigned int> indices(patchSize * patchSize * 6);
 	for (int y = 0; y < patchSize; ++y)
@@ -83,8 +89,8 @@ void Terrain::GenerateIndexBuffer()
 
 void Terrain::GeneratePatchGeometry(TerrainPatch *patch, int patchX, int patchY)
 {	
-	GeometryPtr geometry = patch->GetGeometry();
-	VertexBufferPtr vertexBuffer(new VertexBuffer(engine->GetRenderer()));
+	Geometry *geometry = patch->GetGeometry();
+	VertexBuffer *vertexBuffer = new VertexBuffer(engine->GetRenderer());
 	vertexBuffer->SetShadowed(true);
 	geometry->SetVertexBuffer(vertexBuffer);
 	if (!generateHardNormals)
@@ -340,7 +346,7 @@ void Terrain::SetPatchSize(int patchSize)
 	this->patchSize = patchSize;
 }
 
-void Terrain::SetMaterial(MaterialPtr material)
+void Terrain::SetMaterial(Material *material)
 {
 	this->material = material;
 	for (auto terrainPatch : patches)
@@ -381,12 +387,18 @@ vec2 Terrain::GetWorldSize() const
 TerrainPatch::TerrainPatch(Engine *engine) : Renderable(engine)
 {
 	renderableParts.resize(1);
-	geometry = GeometryPtr(new Geometry(engine->GetRenderer()));
+	geometry = new Geometry(engine->GetRenderer());
 	geometry->SetPrimitiveType(TRIANGLES);
-	renderableParts[0].geometry = geometry.get();	
+	renderableParts[0].geometry = geometry;
 }
 
-GeometryPtr TerrainPatch::GetGeometry()
+TerrainPatch::~TerrainPatch()
+{
+	delete geometry->GetVertexBuffer();
+	delete geometry;
+}
+
+Geometry *TerrainPatch::GetGeometry()
 {
 	return geometry;
 }
@@ -402,10 +414,10 @@ void TerrainPatch::SetBoundingBox(BoundingBox boundingBox)
 	this->boundingBox = boundingBox;
 }
 
-void TerrainPatch::SetMaterial(MaterialPtr material)
+void TerrainPatch::SetMaterial(Material *material)
 {
 	this->material = material;
-	renderableParts[0].material = material.get();
+	renderableParts[0].material = material;
 }
 
 void TerrainPatch::IntersectRay(RayQuery &rayQuery)

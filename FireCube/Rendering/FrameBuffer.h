@@ -14,13 +14,7 @@ namespace FireCube
 // Forward declarations.
 class FrameBuffer;
 class Texture;
-typedef std::shared_ptr<Texture> TexturePtr;
 class Renderer;
-
-/**
-* A shared pointer to a FrameBuffer.
-*/
-typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
 
 /**
 * A class representing a frame buffer.
@@ -55,15 +49,15 @@ public:
     * @param texture The texture.
     * @param attachmentPoint The attachment point to add to.
     */
-    void SetRenderTarget(TexturePtr texture, int attachmentPoint);
+    void SetRenderTarget(Texture *texture, int attachmentPoint);
     /**
     * Returns a texture from an attachment point.
     */
-    TexturePtr GetRenderTarget(int attachmentPoint);
+    Texture *GetRenderTarget(int attachmentPoint);
     /**
     * Returns a texture from the depth buffer.
     */
-    TexturePtr GetDepthBuffer();
+    Texture *GetDepthBuffer();
     /**
     * Checks whether the frame buffer is valid and can be rendered to.
     */
@@ -81,8 +75,8 @@ private:
     int width, height;
     
     GLuint depthBuffer;
-    TexturePtr texture[MAX_TEXTURES];
-    TexturePtr depthTexture;
+    Texture *texture[MAX_TEXTURES];
+    Texture *depthTexture;
 };
 }
 

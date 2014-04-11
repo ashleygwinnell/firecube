@@ -17,7 +17,6 @@ namespace FireCube
 // Forward declarations.
 class Shader;
 class Texture;
-typedef std::shared_ptr<Texture> TexturePtr;
 class Renderer;
 class ResourcePool;
 class DebugRenderer;

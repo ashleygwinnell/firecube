@@ -292,7 +292,7 @@ void Program::SetUniform(const StringHash &nameHash, const Variant &value)
 	}
 }
 
-void Program::SetAttribute(const std::string &name, VertexBufferPtr buffer, int size)
+void Program::SetAttribute(const std::string &name, VertexBuffer *buffer, int size)
 {
 	GLint location = -1;
 	std::map<StringHash, GLint>::iterator i = variables.find(StringHash(name));

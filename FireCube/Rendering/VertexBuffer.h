@@ -91,10 +91,5 @@ private:
 	std::vector<char> shadowData;
 };
 
-/**
-* A shared pointer to a Buffer.
-*/
-typedef std::shared_ptr<VertexBuffer> VertexBufferPtr;
-
 }
 #pragma warning(pop)

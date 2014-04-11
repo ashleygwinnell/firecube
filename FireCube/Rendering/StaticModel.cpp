@@ -11,15 +11,15 @@ StaticModel::StaticModel(Engine *engine) : Renderable(engine)
 	
 }
 
-void StaticModel::CreateFromMesh(MeshPtr mesh)
+void StaticModel::CreateFromMesh(Mesh *mesh)
 {
 	for (unsigned int i = 0; i < mesh->GetGeometries().size(); ++i)
 	{					
 		RenderablePart part;
-		GeometryPtr geometry = mesh->GetGeometries()[i];
-		MaterialPtr material = mesh->GetMaterials()[i];
-		part.geometry = geometry.get();
-		part.material = material.get();
+		Geometry *geometry = mesh->GetGeometries()[i];
+		Material *material = mesh->GetMaterials()[i];
+		part.geometry = geometry;
+		part.material = material;
 
 		renderableParts.push_back(part);
 		geometries.push_back(geometry);
@@ -34,22 +34,22 @@ void StaticModel::SetBoundingBox(BoundingBox boundingBox)
 	MarkedDirty();
 }
 
-void StaticModel::AddRenderablePart(GeometryPtr geometry, MaterialPtr material)
+void StaticModel::AddRenderablePart(Geometry *geometry, Material *material)
 {
 	RenderablePart part;
-	part.geometry = geometry.get();
-	part.material = material.get();
+	part.geometry = geometry;
+	part.material = material;
 	renderableParts.push_back(part);
 	geometries.push_back(geometry);
 	materials.push_back(material);
 }
 
-std::vector<GeometryPtr> &StaticModel::GetGeometries()
+std::vector<Geometry *> &StaticModel::GetGeometries()
 {
 	return geometries;
 }
 
-std::vector<MaterialPtr> &StaticModel::GetMaterials()
+std::vector<Material *> &StaticModel::GetMaterials()
 {
 	return materials;
 }

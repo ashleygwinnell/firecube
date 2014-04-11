@@ -25,7 +25,5 @@ protected:
 	Node *node;
 };
 
-typedef std::shared_ptr<Component> ComponentPtr;
-
 }
 

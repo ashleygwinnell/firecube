@@ -29,22 +29,22 @@ void Pass::SetShaderDefines(const std::string &shaderDefines)
 	this->shaderDefines = shaderDefines;
 }
 
-void Pass::SetVertexShaderTemplate(ShaderTemplatePtr vertexShaderTemplate)
+void Pass::SetVertexShaderTemplate(ShaderTemplate *vertexShaderTemplate)
 {
 	this->vertexShaderTemplate = vertexShaderTemplate;
 }
 
-void Pass::SetFragmentShaderTemplate(ShaderTemplatePtr fragmentShaderTemplate)
+void Pass::SetFragmentShaderTemplate(ShaderTemplate *fragmentShaderTemplate)
 {
 	this->fragmentShaderTemplate = fragmentShaderTemplate;
 }
 
-ShaderPtr Pass::GenerateVertexShader(const std::string &shaderDefines)
+Shader *Pass::GenerateVertexShader(const std::string &shaderDefines)
 {
 	return vertexShaderTemplate->GenerateShader(this->shaderDefines + " " + shaderDefines);
 }
 
-ShaderPtr Pass::GenerateFragmentShader(const std::string &shaderDefines)
+Shader *Pass::GenerateFragmentShader(const std::string &shaderDefines)
 {
 	return fragmentShaderTemplate->GenerateShader(this->shaderDefines + " " + shaderDefines);
 }
@@ -81,12 +81,12 @@ void Pass::GenerateAllShaderPermutations()
 	}	
 }
 
-ShaderPtr Pass::GetGeneratedVertexShader(unsigned int index)
+Shader *Pass::GetGeneratedVertexShader(unsigned int index)
 {
 	return generatedVertexShaders[index];
 }
 
-ShaderPtr Pass::GetGeneratedFragmentShader(unsigned int index)
+Shader *Pass::GetGeneratedFragmentShader(unsigned int index)
 {
 	return generatedFragmentShaders[index];
 }
@@ -94,6 +94,12 @@ ShaderPtr Pass::GetGeneratedFragmentShader(unsigned int index)
 Technique::Technique(Engine *engine) : Resource(engine)
 {
 	
+}
+
+Technique::~Technique()
+{
+	for (auto i : passes)
+		delete i.second;
 }
 
 bool Technique::Load(const std::string &filename)
@@ -117,7 +123,7 @@ bool Technique::Load(const std::string &filename)
 			std::string shaderDefines = element->Attribute("defines");
 			if (passName.empty() || vertexShaderTemplate.empty() || fragmentShaderTemplate.empty())
 				continue;			
-			PassPtr pass(new Pass);			
+			Pass *pass = new Pass();
 			pass->SetName(passName);
 			pass->SetVertexShaderTemplate(engine->GetResourcePool()->GetResource<ShaderTemplate>(vertexShaderTemplate));
 			pass->SetFragmentShaderTemplate(engine->GetResourcePool()->GetResource<ShaderTemplate>(fragmentShaderTemplate));
@@ -132,6 +138,6 @@ Pass *Technique::GetPass(const StringHash &nameHash)
 {
 	auto i = passes.find(nameHash);
 	if (i != passes.end())
-		return i->second.get();
+		return i->second;
 	return nullptr;
 }

@@ -59,10 +59,10 @@ void ObjLoader::GenerateScene(Renderer *renderer, Node *root)
 	//TODO: Implement
 }
 
-NodePtr ObjLoader::GetGeneratedScene()
+Node *ObjLoader::GetGeneratedScene()
 {
 	//TODO: Implement
-	return NodePtr();
+	return nullptr;
 }
 
 const std::vector<Material *> &ObjLoader::GetGeneratedMaterials()
@@ -479,7 +479,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			if (textureName[0] == '/' || textureName[0] == '\\')
 				textureName = textureName.substr(1);
 			
-			TexturePtr texture = engine->GetResourcePool()->GetResource<Texture>(baseDir + "\\" + textureName);
+			Texture *texture = engine->GetResourcePool()->GetResource<Texture>(baseDir + "\\" + textureName);
 			if (!texture)
 				texture = engine->GetResourcePool()->GetResource<Texture>(textureName);
 			material->SetTexture(TEXTURE_UNIT_DIFFUSE, texture);
@@ -494,7 +494,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			if (textureName[0] == '/' || textureName[0] == '\\')
 				textureName = textureName.substr(1);
 
-			TexturePtr texture = engine->GetResourcePool()->GetResource<Texture>(baseDir + "\\" + textureName);
+			Texture *texture = engine->GetResourcePool()->GetResource<Texture>(baseDir + "\\" + textureName);
 			if (!texture)
 				texture = engine->GetResourcePool()->GetResource<Texture>(textureName);
 			material->SetTexture(TEXTURE_UNIT_NORMAL, texture);
@@ -510,8 +510,8 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 		for (std::map<std::string, std::vector<Face>>::iterator j = i->second.materialFaces.begin(); j != i->second.materialFaces.end(); j++, surfaceNum++)
 		{			
 			Geometry *geometry = new Geometry(renderer);
-			VertexBufferPtr vertexBuffer(new VertexBuffer(renderer));			
-			IndexBufferPtr indexBuffer(new IndexBuffer(renderer));
+			VertexBuffer *vertexBuffer = new VertexBuffer(renderer);
+			IndexBuffer *indexBuffer = new IndexBuffer(renderer);
 			vertexBuffer->SetShadowed(true);
 			indexBuffer->SetShadowed(true);
 			geometry->SetVertexBuffer(vertexBuffer);
@@ -579,8 +579,8 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 		if (i->second.facesWithoutMaterial.empty() == false)
 		{
 			Geometry *geometry = new Geometry(renderer);
-			VertexBufferPtr vertexBuffer(new VertexBuffer(renderer));
-			IndexBufferPtr indexBuffer(new IndexBuffer(renderer));
+			VertexBuffer *vertexBuffer = new VertexBuffer(renderer);
+			IndexBuffer *indexBuffer = new IndexBuffer(renderer);
 			vertexBuffer->SetShadowed(true);
 			indexBuffer->SetShadowed(true);
 			geometry->SetVertexBuffer(vertexBuffer);

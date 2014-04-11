@@ -17,6 +17,4 @@ protected:
 	std::string filename;
 };
 
-typedef std::shared_ptr<Resource> ResourcePtr;
-
 }

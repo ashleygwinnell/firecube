@@ -71,10 +71,10 @@ bool M3dsLoader::Load(const std::string &filename, ModelLoadingOptions options)
 }
 
 
-NodePtr M3dsLoader::GetGeneratedScene()
+Node *M3dsLoader::GetGeneratedScene()
 {
 	//TODO: Implement
-	return NodePtr();
+	return nullptr;
 }
 
 const std::vector<FireCube::Material *> &M3dsLoader::GetGeneratedMaterials()
@@ -141,12 +141,12 @@ NodePtr M3dsLoader::GenerateSceneGraph()
 
 */
 
-VertexBufferPtr M3dsLoader::CreateVertexBufferAndBoundingBoxOfObject(Object &object, BoundingBox &boundingBox)
+VertexBuffer *M3dsLoader::CreateVertexBufferAndBoundingBoxOfObject(Object &object, BoundingBox &boundingBox)
 {
 	MathUtils::CalculateNormals(object.normal, object.vertex, object.indices);		
 	if (!object.uv.empty())
 		MathUtils::CalculateTangents(object.vertex, object.normal, object.uv, object.indices, object.tangents);		
-	VertexBufferPtr vertexBuffer(new VertexBuffer(engine->GetRenderer()));
+	VertexBuffer *vertexBuffer = new VertexBuffer(engine->GetRenderer());
 	vertexBuffer->SetShadowed(true);
 	unsigned int vertexSize = 3 + 3;
 	unsigned int vertexAttributes = VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_NORMAL;		
@@ -180,10 +180,10 @@ VertexBufferPtr M3dsLoader::CreateVertexBufferAndBoundingBoxOfObject(Object &obj
 	vertexBuffer->LoadData(&vertexData[0], object.vertex.size(), vertexAttributes, STATIC);
 	return vertexBuffer;
 }
-Geometry *M3dsLoader::CreateGeometryOfMesh(Mesh &mesh, VertexBufferPtr vertexBuffer)
+Geometry *M3dsLoader::CreateGeometryOfMesh(Mesh &mesh, VertexBuffer *vertexBuffer)
 {
 	Geometry *geom = new Geometry(engine->GetRenderer());
-	IndexBufferPtr indexBuffer(new IndexBuffer(engine->GetRenderer()));	
+	IndexBuffer *indexBuffer = new IndexBuffer(engine->GetRenderer());
 	indexBuffer->SetShadowed(true);
 	geom->SetVertexBuffer(vertexBuffer);
 	geom->SetIndexBuffer(indexBuffer);
@@ -232,7 +232,7 @@ void M3dsLoader::GenerateGeometries(Renderer *renderer)
 	{   
 		if (object[i].vertex.empty())
 			continue;
-		VertexBufferPtr vertexBuffer = CreateVertexBufferAndBoundingBoxOfObject(object[i], boundingBox);
+		VertexBuffer *vertexBuffer = CreateVertexBufferAndBoundingBoxOfObject(object[i], boundingBox);
 		//NodePtr objectNode(new Node(object[i].name));		
 		for (unsigned int j = 0; j < object[i].mesh.size(); j++)
 		{
@@ -250,16 +250,16 @@ void M3dsLoader::GenerateScene(Renderer *renderer, Node *root)
 	{   
 		if (object[i].vertex.empty())
 			continue;
-		NodePtr objectNode = root->CreateChild(object[i].name);
-		VertexBufferPtr vertexBuffer = CreateVertexBufferAndBoundingBoxOfObject(object[i], boundingBox);		
+		Node *objectNode = root->CreateChild(object[i].name);
+		VertexBuffer *vertexBuffer = CreateVertexBufferAndBoundingBoxOfObject(object[i], boundingBox);		
 		for (unsigned int j = 0; j < object[i].mesh.size(); j++)
 		{
 			// Create a geometry for each sub mesh
 			StaticModel *staticModel = objectNode->CreateComponent<StaticModel>();			
 			Geometry *geom = CreateGeometryOfMesh(object[i].mesh[j], vertexBuffer);
 			FireCube::Material *material = CreateMaterialOfMesh(object[i].mesh[j]);
-			staticModel->AddRenderablePart(GeometryPtr(geom), MaterialPtr(material));
-			staticModel->SetBoundingBox(boundingBox); // TODO: Calculate boundingbox for each mesh
+			staticModel->AddRenderablePart(geom, material);
+			staticModel->SetBoundingBox(boundingBox); // TODO: Calculate bounding box for each mesh
 			generatedGeometries.push_back(geom);
 		}        
 	}    	

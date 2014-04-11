@@ -6,23 +6,22 @@ namespace FireCube
 {
 
 class Mesh;
-typedef std::shared_ptr<Mesh> MeshPtr;
 
 class StaticModel : public Renderable
 {	
 public:
 	StaticModel(Engine *engine);	
-	void CreateFromMesh(MeshPtr mesh);
+	void CreateFromMesh(Mesh *mesh);
 	void SetBoundingBox(BoundingBox boundingBox);
-	std::vector<GeometryPtr> &GetGeometries();
-	std::vector<MaterialPtr> &GetMaterials();
-	void AddRenderablePart(GeometryPtr geometry, MaterialPtr material);
+	std::vector<Geometry *> &GetGeometries();
+	std::vector<Material *> &GetMaterials();
+	void AddRenderablePart(Geometry *geometry, Material *material);
 	virtual void IntersectRay(RayQuery &rayQuery);
 protected:
 	virtual void UpdateWorldBoundingBox();
 	BoundingBox boundingBox;
-	std::vector<GeometryPtr> geometries;
-	std::vector<MaterialPtr> materials;
+	std::vector<Geometry *> geometries;
+	std::vector<Material *> materials;
 };
 
 }

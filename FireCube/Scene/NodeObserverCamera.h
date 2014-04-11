@@ -14,7 +14,6 @@ namespace FireCube
 
 // Forward declarations.
 class Node;
-typedef std::shared_ptr<Node> NodePtr;
 
 /**
 * A class representing a node observer camera.
@@ -46,12 +45,12 @@ public:
 	* Sets the target node of this camera.
 	* @param node The target node.
 	*/
-	void SetTarget(NodePtr node);
+	void SetTarget(Node *node);
 
 	/**
 	* Returns the target node of this camera.
 	*/
-	NodePtr GetTarget() const;
+	Node *GetTarget() const;
 
 	/**
 	* Sets the minimum distance from the target.
@@ -139,7 +138,7 @@ private:
 	
 	void CheckRanges();
 	vec3 lastTargetPosition;
-	NodePtr target;
+	Node *target;
 	float distance;
 	float minDistance;
 	float maxDistance;
@@ -147,11 +146,6 @@ private:
 	float maxAngX;
 	float zoomFactor;	
 };
-
-/**
-* A shared pointer to a NodeObserverCamera.
-*/
-typedef std::shared_ptr<NodeObserverCamera> NodeObserverCameraPtr;
 
 }
 #pragma warning(pop)

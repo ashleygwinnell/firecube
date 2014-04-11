@@ -53,7 +53,6 @@ private:
 	std::vector<unsigned char> data;
 };
 
-typedef std::shared_ptr<Image> ImagePtr;
 }
 
 #pragma warning(pop)

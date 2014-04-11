@@ -21,14 +21,8 @@ namespace FireCube
 
 // Forward declarations.
 class VertexBuffer;
-typedef std::shared_ptr<VertexBuffer> VertexBufferPtr;
 class Program;
 class Renderer;
-
-/**
-* A shared pointer to a Program.
-*/
-typedef std::shared_ptr<Program> ProgramPtr;
 
 /**
 * A class representing a single shader.
@@ -55,11 +49,6 @@ public:
 private:
 	
 };
-
-/**
-* A shared pointer to a Shader.
-*/
-typedef std::shared_ptr<Shader> ShaderPtr;
 
 /**
 * A class representing a gpu program.
@@ -170,7 +159,7 @@ public:
 	* @param buffer The buffer from which data will be read.
 	* @param size The number of elements in each attribute.
 	*/
-	void SetAttribute(const std::string &name, VertexBufferPtr buffer, int size);
+	void SetAttribute(const std::string &name, VertexBuffer *buffer, int size);
 
 	/**
 	* @return Returns the compile log for this program.

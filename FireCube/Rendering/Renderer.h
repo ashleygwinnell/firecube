@@ -18,35 +18,24 @@ namespace FireCube
 // Forward declarations.
 class Application;
 class Node;
-typedef std::shared_ptr<Node> NodePtr;
 class Geometry;
-typedef std::shared_ptr<Geometry> GeometryPtr;
 class RenderQueue;
 class Material;
-typedef std::shared_ptr<Material> MaterialPtr;
 class FrameBuffer;
-typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
 class Shader;
-typedef std::shared_ptr<Shader> ShaderPtr;
 class Program;
-typedef std::shared_ptr<Program> ProgramPtr;
 class Technique;
-typedef std::shared_ptr<Technique> TechniquePtr;
 class ProgramUniformsList;
 class Texture;
-typedef std::shared_ptr<Texture> TexturePtr;
 class FontFace;
-typedef std::shared_ptr<FontFace> FontFacePtr;
 class vec2;
 class vec3;
 class vec4;
 class mat3;
 class mat4;
 class Camera;
-typedef std::shared_ptr<Camera> CameraPtr;
 enum PrimitiveType;
 class VertexBuffer;
-typedef std::shared_ptr<VertexBuffer> VertexBufferPtr;
 class ShaderTemplate;
 class Light;
 
@@ -75,7 +64,7 @@ public:
 	* @param tex The texture to bind
 	* @param unit Specifies the texture unit.
 	*/
-	void UseTexture(TexturePtr tex, unsigned int unit);
+	void UseTexture(const Texture *tex, unsigned int unit);
 
 	/**
 	* Renders text.
@@ -84,7 +73,7 @@ public:
 	* @param color The color of the text.
 	* @param str The string to output.
 	*/
-	void RenderText(FontFacePtr fontFace, CameraPtr camera, const vec3 &pos, const vec4 &color, const std::string &str);
+	void RenderText(FontFace *fontFace, Camera *camera, const vec3 &pos, const vec4 &color, const std::string &str);
 
 	/**
 	* Renders an index stream.
@@ -115,7 +104,7 @@ public:
 	* Uses a program.
 	* @param program The program to use.
 	*/
-	void UseProgram(ProgramPtr program);
+	void UseProgram(Program *program);
 
 	/**
 	* Uses a material.
@@ -128,7 +117,7 @@ public:
 	* Uses a frame buffer.
 	* @param frameBuffer The frame buffer to use.
 	*/
-	void UseFrameBuffer(FrameBufferPtr frameBuffer);
+	void UseFrameBuffer(FrameBuffer *frameBuffer);
 
 	/**
 	* Restores the default render buffer.
@@ -154,7 +143,7 @@ public:
 	*/
 	void DisableVertexAttribute(int index);
 
-	ProgramPtr SetShaders(Shader *vertexShader, Shader *fragmentShader); // TODO change to void
+	Program *SetShaders(Shader *vertexShader, Shader *fragmentShader); // TODO change to void
 
 	void UseCamera(Camera *camera);
 
@@ -164,13 +153,15 @@ public:
 	
 	FrameBuffer *GetShadowMap();
 private:
-	VertexBufferPtr textVertexBuffer;
+	VertexBuffer *textVertexBuffer;
 	GLuint textVao;
-	ShaderPtr textVertexShader;
-	ShaderPtr textFragmentShader;
+	Shader *textVertexShader;
+	Shader *textFragmentShader;
+	ShaderTemplate *textVertexShaderTemplate;
+	ShaderTemplate *textFragmentShaderTemplate;
 
-	std::map<std::pair<Shader *, Shader *>, ProgramPtr> programs;
-	ProgramPtr currentProgram;	
+	std::map<std::pair<Shader *, Shader *>, Program *> programs;
+	Program *currentProgram;	
 	Shader *currentVertexShader;
 	Shader *currentFragmentShader;
 	Material *currentMaterial;
@@ -178,7 +169,7 @@ private:
 	Light *currentLight;
 	unsigned int numberOfPrimitivesRendered;
 	GLuint textureSampler[16];
-	FrameBufferPtr shadowMap;
+	FrameBuffer *shadowMap;
 };
 
 }

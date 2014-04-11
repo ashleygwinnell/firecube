@@ -3,16 +3,36 @@
 #include <FireCube.h>
 using namespace FireCube;
 #include "app.h"
+
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
 App app;
 int main(int argc, char *argv[])
 {	
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	Filesystem::AddSearchPath("../Assets/Textures");
 	Filesystem::AddSearchPath("../Assets/Models");
 	
 	if (!app.Initialize())
 		return 0;
-	app.Run();
+	app.Run();	
+
+	_CrtDumpMemoryLeaks();
 	return 0;
+}
+
+App::App() : scene(engine)
+{
+
+}
+
+App::~App()
+{	
+	delete camera;
+	delete orthographicCamera;
 }
 
 bool App::Prepare()
@@ -21,14 +41,14 @@ bool App::Prepare()
 	GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
 	
-	root = NodePtr(new Node(engine, "Root"));		
-	camera = NodeObserverCameraPtr(new NodeObserverCamera(GetInputManager()));	
+	root = scene.GetRootNode();
+	camera = new NodeObserverCamera(GetInputManager());
 	camera->SetTarget(root);
 	camera->SetMaxAngX(0);
 	camera->SetZoomFactor(1000.0f);
-	scene.SetRootNodeAndCamera(root, camera);	
+	scene.SetCamera(camera);	
 
-	NodePtr childNode = root->CreateChild("Model");	
+	Node *childNode = root->CreateChild("Model");	
 	StaticModel *staticModel = childNode->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(resourcePool->GetResource<Mesh>("scene.3ds"));
 	childNode->Scale(vec3(0.05f));
@@ -36,9 +56,9 @@ bool App::Prepare()
 	childNode = root->CreateChild("Terrain");	
 	Terrain *terrain = childNode->CreateComponent<Terrain>();
 	childNode->Scale(vec3(0.05f));
-	ImagePtr image = resourcePool->GetResource<Image>("heightmap3.bmp");	
+	Image *image = resourcePool->GetResource<Image>("heightmap3.bmp");	
 	terrain->SetPatchSize(64);
-	terrain->CreateFromHeightMap(image.get());
+	terrain->CreateFromHeightMap(image);
 	terrain->SetMaterial(resourcePool->GetResource<Material>("Materials/TerrainNoTexture.xml"));	
 	//terrain->SetMaterial(resourcePool->GetResource<Material>("Materials/DebugNormals.xml"));	
 
@@ -49,7 +69,7 @@ bool App::Prepare()
 	light->SetSpecularColor(vec4(0, 0, 0, 0));	
 	childNode->Move(vec3(0, 1, 0));
 
-	orthographicCamera = CameraPtr(new Camera);	
+	orthographicCamera = new Camera;
 	font = resourcePool->GetResource<Font>("c:\\windows\\fonts\\arial.ttf");
 	fontFace = font->GenerateFontFace(18);
 	return true;

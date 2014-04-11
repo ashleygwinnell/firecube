@@ -11,21 +11,21 @@ class Engine;
 class Image;
 class Terrain;
 class IndexBuffer;
-typedef std::shared_ptr<IndexBuffer> IndexBufferPtr;
 
 class TerrainPatch : public Renderable
 {
 	friend class Terrain;
 public:
 	TerrainPatch(Engine *engine);
-	GeometryPtr GetGeometry();
-	void SetMaterial(MaterialPtr material);
+	~TerrainPatch();
+	Geometry *GetGeometry();
+	void SetMaterial(Material *material);
 	virtual void IntersectRay(RayQuery &rayQuery);
 private:
 	void SetBoundingBox(BoundingBox boundingBox);
 	virtual void UpdateWorldBoundingBox();
-	GeometryPtr geometry;
-	MaterialPtr material;
+	Geometry *geometry;
+	Material *material;
 	BoundingBox boundingBox;
 };
 
@@ -33,11 +33,12 @@ class Terrain : public Component
 {
 public:
 	Terrain(Engine *engine);
+	~Terrain();
 	void CreateFromHeightMap(Image *image);	
 	void SetVerticesSpacing(vec3 spacing);
 	void SetPatchSize(int patchSize);
 	virtual void MarkedDirty() {}
-	void SetMaterial(MaterialPtr material);
+	void SetMaterial(Material *material);
 	void SetSmoothHeightMap(bool smoothHeightMap);
 	void SetGenerateHardNormals(bool generateHardNormals);
 	float GetHeight(vec2 pos);
@@ -56,8 +57,8 @@ private:
 	int numPatchesX, numPatchesY;
 	vec2 patchWorldSize;
 	vec3 verticesSpacing;
-	IndexBufferPtr indexBuffer;
-	MaterialPtr material;
+	IndexBuffer *indexBuffer;
+	Material *material;
 	std::vector<TerrainPatch *> patches;
 	bool smoothHeightMap;
 	bool generateHardNormals;

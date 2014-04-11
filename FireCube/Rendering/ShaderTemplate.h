@@ -10,12 +10,12 @@ namespace FireCube
 
 class Renderer;
 class Shader;
-typedef std::shared_ptr<Shader> ShaderPtr;
 
 class FIRECUBE_API ShaderTemplate : public Resource
 {
 public:
 	ShaderTemplate(Engine *engine);
+	~ShaderTemplate();
 	
 	/**
 	* Loads the specified shader.
@@ -37,14 +37,12 @@ public:
 	* Generates a shader from a given shader properties.
 	* @param shaderProperties The shader properties to use to generate the shader.
 	*/	
-	ShaderPtr GenerateShader(const std::string &defines);	
+	Shader *GenerateShader(const std::string &defines);	
 
 private:	
-	std::map<StringHash, ShaderPtr> shaders;
+	std::map<StringHash, Shader *> shaders;
 	std::string shaderCode;		
 	ShaderType type;
 };
-
-typedef std::shared_ptr<ShaderTemplate> ShaderTemplatePtr;
 
 }

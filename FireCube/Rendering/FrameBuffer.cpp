@@ -6,13 +6,18 @@
 
 using namespace FireCube;
 
-FrameBuffer::FrameBuffer(Engine *engine) : Object(engine), GraphicsResource(engine->GetRenderer()), depthBuffer(0)
+FrameBuffer::FrameBuffer(Engine *engine) : Object(engine), GraphicsResource(engine->GetRenderer()), depthBuffer(0), depthTexture(nullptr)
 {
-
+	for (int i = 0; i < MAX_TEXTURES; ++i)
+		texture[i] = nullptr;
 }
 
 FrameBuffer::~FrameBuffer()
 {
+	delete depthTexture;
+	for (int i = 0; i < MAX_TEXTURES; ++i)
+		delete texture[i];
+
     if (objectId)
     {
         glDeleteFramebuffers(1, &objectId);
@@ -32,7 +37,7 @@ void FrameBuffer::Create(const int width, const int height)
     glGenFramebuffers(1, &objectId);
 }
 
-void FrameBuffer::SetRenderTarget(TexturePtr texture, const int attachmentPoint)
+void FrameBuffer::SetRenderTarget(Texture *texture, const int attachmentPoint)
 {
     this->texture[attachmentPoint] = texture;
     renderer->UseTexture(texture, 0);
@@ -58,7 +63,7 @@ void FrameBuffer::AddDepthBuffer()
 void FrameBuffer::AddDepthBufferTexture()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, objectId);
-    depthTexture = TexturePtr(new Texture(engine));    
+    depthTexture = new Texture(engine);
     renderer->UseTexture(depthTexture, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -76,7 +81,7 @@ void FrameBuffer::AddRenderTarget(const int attachmentPoint)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, objectId);
     glDrawBuffer(GL_FRONT_AND_BACK);
-    texture[attachmentPoint] = TexturePtr(new Texture(engine));    
+	texture[attachmentPoint] = new Texture(engine);
     renderer->UseTexture(texture[attachmentPoint], 0);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -86,12 +91,12 @@ void FrameBuffer::AddRenderTarget(const int attachmentPoint)
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachmentPoint, GL_TEXTURE_2D, texture[attachmentPoint]->GetObjectId(), 0);
 }
 
-TexturePtr FrameBuffer::GetRenderTarget(const int attachmentPoint)
+Texture *FrameBuffer::GetRenderTarget(const int attachmentPoint)
 {
     return texture[attachmentPoint];
 }
 
-TexturePtr FrameBuffer::GetDepthBuffer()
+Texture *FrameBuffer::GetDepthBuffer()
 {
     return depthTexture;
 }

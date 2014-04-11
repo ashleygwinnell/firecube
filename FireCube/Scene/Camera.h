@@ -114,10 +114,5 @@ protected:
 	bool frustumChanged;	
 };
 
-/**
-* A shared pointer to a Camera.
-*/
-typedef std::shared_ptr<Camera> CameraPtr;
-
 }
 #pragma warning(pop)

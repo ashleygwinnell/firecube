@@ -16,16 +16,9 @@ namespace FireCube
 
 // Forward declarations.
 class Texture;
-typedef std::shared_ptr<Texture> TexturePtr;
 class Material;
 class Technique;
-typedef std::shared_ptr<Technique> TechniquePtr;
 class Renderer;
-
-/**
-* A shared pointer to a Material.
-*/
-typedef std::shared_ptr<Material> MaterialPtr;
 
 /**
 * A class representing a material.
@@ -49,9 +42,9 @@ public:
 	*/
 	void SetName(const std::string &name);
 
-	void SetTechnique(TechniquePtr technique);
+	void SetTechnique(Technique *technique);
 
-	TechniquePtr GetTechnique();
+	Technique *GetTechnique();
 
 	const std::map<StringHash, Variant> &GetParameters() const;	
 	std::map<StringHash, Variant> &GetParameters();	
@@ -67,25 +60,25 @@ public:
 	void SetParameter(const StringHash &nameHash, const vec4 &value);
 	void SetParameter(const StringHash &nameHash, const Variant &value);
 
-	const TexturePtr *GetTextures() const;
+	Texture **GetTextures();
 
-	void SetTexture(TextureUnit textureUnit, TexturePtr texture);
+	void SetTexture(TextureUnit textureUnit, Texture *texture);
 
-	TexturePtr GetTexture(TextureUnit textureUnit) const;
+	Texture *GetTexture(TextureUnit textureUnit) const;
 
 	/**
 	* Clones this Material.
 	* @return A new cloned Material of this one.
 	*/
-	MaterialPtr Clone();
+	Material *Clone();
 
 private:
 
 	static TextureUnit ParseTextureUnitName(const std::string &name);
 	
 	std::string name;	
-	TexturePtr textures[MAX_TEXTURE_UNITS];	
-	TechniquePtr technique;
+	Texture *textures[MAX_TEXTURE_UNITS];	
+	Technique *technique;
 	std::map<StringHash, Variant> parameters;
 };
 

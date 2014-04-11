@@ -9,12 +9,13 @@ class CustomGeometry : public Renderable
 {
 public:
 	CustomGeometry(Engine *engine);
+	~CustomGeometry();
 	void SetPrimitiveType(PrimitiveType primitiveType);
 	void UpdateGeometry();
 	void AddVertex(vec3 position);
 	void SetNormal(vec3 normal);
 	void SetTexCoord(vec2 texcoord);
-	void SetMaterial(MaterialPtr material);
+	void SetMaterial(Material *material);
 private:
 	class CustomVertex
 	{
@@ -28,8 +29,8 @@ private:
 	unsigned int vertexAttributes;
 	virtual void UpdateWorldBoundingBox();
 	BoundingBox boundingBox;
-	GeometryPtr geometry;
-	MaterialPtr material;
+	Geometry *geometry;
+	Material *material;
 	std::vector<CustomVertex> vertices;
 };
 

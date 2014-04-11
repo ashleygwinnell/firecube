@@ -56,10 +56,5 @@ private:
 	unsigned int indicesCount;
 };
 
-/**
-* A shared pointer to a Buffer.
-*/
-typedef std::shared_ptr<IndexBuffer> IndexBufferPtr;
-
 }
 #pragma warning(pop)
