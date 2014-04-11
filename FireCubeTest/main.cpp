@@ -3,24 +3,15 @@
 #include <FireCube.h>
 using namespace FireCube;
 #include "app.h"
-
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-
 App app;
 int main(int argc, char *argv[])
 {	
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
 	Filesystem::AddSearchPath("../Assets/Textures");
 	Filesystem::AddSearchPath("../Assets/Models");
 	
 	if (!app.Initialize())
 		return 0;
 	app.Run();	
-
-	_CrtDumpMemoryLeaks();
 	return 0;
 }
 

@@ -18,6 +18,8 @@
 #include "Scene/Camera.h"
 #include "Rendering/ShaderTemplate.h"
 #include "Scene/Node.h"
+#include "Core/Engine.h"
+#include "Core/ResourcePool.h"
 
 using namespace FireCube;
 
@@ -280,10 +282,8 @@ void Renderer::Initialize()
 	glBindVertexArray(0);
 
 	// Create shaders for text rendering
-	textVertexShaderTemplate = new ShaderTemplate(engine);
-	textFragmentShaderTemplate = new ShaderTemplate(engine);
-	textVertexShaderTemplate->Load("Shaders/font.vert");
-	textFragmentShaderTemplate->Load("Shaders/font.frag");
+	textVertexShaderTemplate = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/font.vert");
+	textFragmentShaderTemplate = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/font.frag");	
 	textVertexShader = textVertexShaderTemplate->GenerateShader("");
 	textFragmentShader = textFragmentShaderTemplate->GenerateShader("");
 }
@@ -291,9 +291,7 @@ void Renderer::Initialize()
 void Renderer::Destroy()
 {
 	delete textVertexBuffer;
-	delete shadowMap;
-	delete textVertexShaderTemplate;
-	delete textFragmentShaderTemplate;
+	delete shadowMap;		
 	glDeleteVertexArrays(1, &textVao);
 	glDeleteSamplers(16, textureSampler);
 }
