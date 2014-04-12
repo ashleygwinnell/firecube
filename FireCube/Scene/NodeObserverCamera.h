@@ -24,12 +24,12 @@ public:
 	/**
 	* Constructs a NodeObserverCamera.
 	*/
-	NodeObserverCamera();
+	NodeObserverCamera(Engine *engine);
 
 	/**
 	* Constructs a NodeObserverCamera and add default key behavior.
 	*/
-	NodeObserverCamera(InputManager &inputManager);
+	NodeObserverCamera(Engine *engine, InputManager &inputManager);
 
 	/**
 	* Returns the view matrix of this camera.
@@ -134,11 +134,15 @@ public:
 
 	void HandleInput(float time, const MappedInput &input);
 
+	void RegisterWithInputManager(InputManager &inputManager);
+
 private:
 	
 	void CheckRanges();
 	vec3 lastTargetPosition;
 	Node *target;
+	vec3 rotation;
+	vec3 position;
 	float distance;
 	float minDistance;
 	float maxDistance;

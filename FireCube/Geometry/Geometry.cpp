@@ -185,56 +185,6 @@ void Geometry::Update()
 		glGenVertexArrays(1, &objectId);
 
 	glBindVertexArray(objectId);
-	/*if (!vertexBuffer)
-	{
-		vertexBuffer = VertexBufferPtr(new VertexBuffer(renderer));
-		vertexBuffer->Create();
-	}
-	
-	unsigned int vertexSize = 3;	
-	unsigned int attributes = VERTEX_ATTRIBUTE_POSITION;
-	if (normal.empty() == false)
-	{
-		attributes |= VERTEX_ATTRIBUTE_NORMAL;		
-		vertexSize += 3;
-	}
-	if (tangent.empty() == false)
-	{
-		attributes |= VERTEX_ATTRIBUTE_TANGENT;		
-		vertexSize += 3;
-	}
-	if (bitangent.empty() == false)
-	{
-		attributes |= VERTEX_ATTRIBUTE_BITANGENT;		
-		vertexSize += 3;
-	}
-	std::vector<float> data(vertex.size() * vertexSize * sizeof(float));
-	for (unsigned int i = 0; i < vertex.size(); ++i)
-	{
-		data[i * vertexSize + 0] = vertex[i].x;
-		data[i * vertexSize + 1] = vertex[i].y;
-		data[i * vertexSize + 2] = vertex[i].z;
-		int offset = 3;
-		if (attributes & VERTEX_ATTRIBUTE_NORMAL)
-		{
-			data[i * vertexSize + offset++] = normal[i].x;
-			data[i * vertexSize + offset++] = normal[i].y;
-			data[i * vertexSize + offset++] = normal[i].z;
-		}
-		if (attributes & VERTEX_ATTRIBUTE_TANGENT)
-		{
-			data[i * vertexSize + offset++] = tangent[i].x;
-			data[i * vertexSize + offset++] = tangent[i].y;
-			data[i * vertexSize + offset++] = tangent[i].z;
-		}
-		if (attributes & VERTEX_ATTRIBUTE_BITANGENT)
-		{
-			data[i * vertexSize + offset++] = bitangent[i].x;
-			data[i * vertexSize + offset++] = bitangent[i].y;
-			data[i * vertexSize + offset++] = bitangent[i].z;
-		}
-	}
-	vertexBuffer->LoadData(&data[0], vertex.size(), attributes, STATIC);*/
 	vertexBuffer->ApplyAttributes();	
 	if (indexBuffer)
 		indexBuffer->SetIndexStream();

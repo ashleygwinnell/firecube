@@ -7,6 +7,7 @@
 
 #include "Math/Frustum.h"
 #include "Math/Math.h"
+#include "Core/Component.h"
 
 namespace FireCube
 {
@@ -14,47 +15,13 @@ namespace FireCube
 /**
 * A class representing a camera.
 */
-class FIRECUBE_API Camera
+class FIRECUBE_API Camera : public Component
 {
 public:
 	/**
 	* Constructs a camera.    
 	*/
-	Camera();
-
-	/**
-	* Sets the positions of this camera.
-	* @param position The new position of the camera.
-	*/
-	void SetPosition(const vec3 &position);
-
-	/**
-	* Returns the position of this camera.
-	*/
-	virtual vec3 GetPosition() const;
-
-	/**
-	* Sets the rotation of this camera.
-	* @param rotation The new rotation(in Euler angles) of the camera.
-	*/
-	void SetRotation(const vec3 &rotation);
-
-	/**
-	* Returns the rotation of this camera.
-	*/
-	vec3 GetRotation() const;
-
-	/**
-	* Moves the camera.
-	* @param translation The translation vector.
-	*/
-	void Move(const vec3 &translation);
-
-	/**
-	* Rotates the camera.
-	* @param rotation The rotation vector(in Euler angles).
-	*/
-	void Rotate(const vec3 &rotation);
+	Camera(Engine *engine);
 
 	/**
 	* Sets the projection matrix of this camera.
@@ -79,24 +46,19 @@ public:
 
 	/**
 	* Constructs a Look-at camera.
-	* @param position The position of the camera
 	* @param target The position the camera will be facing.
 	* @param up The up vector.
 	*/
-	void LookAt(const vec3 &position, const vec3 &target, const vec3 &up);
+	void LookAt(const vec3 &target, const vec3 &up);
 
+	virtual void MarkedDirty();
+	virtual void NodeChanged();
 protected:
 	
 	/**
 	* Calculated the frustum of this camera.
 	*/
-	void UpdateFrustum();
-
-	/** The position of this camera.*/
-	vec3 position;
-
-	/** The rotation of this camera.*/
-	vec3 rotation;
+	void UpdateFrustum();	
 
 	/** a boolean indicating the view matrix has changed.*/
 	bool viewMatrixChanged;

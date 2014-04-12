@@ -3,7 +3,7 @@
 
 using namespace FireCube;
 
-NodeObserverCamera::NodeObserverCamera()
+NodeObserverCamera::NodeObserverCamera(Engine *engine) : Camera(engine)
 {
 	rotation.Set(0.0f, 0.0f, 0.0f);
 	distance = 10.0f;
@@ -14,7 +14,7 @@ NodeObserverCamera::NodeObserverCamera()
 	zoomFactor = 1.0f;
 }
 
-NodeObserverCamera::NodeObserverCamera(InputManager &inputManager)
+NodeObserverCamera::NodeObserverCamera(Engine *engine, InputManager &inputManager) : Camera(engine)
 {
 	rotation.Set(0.0f, 0.0f, 0.0f);
 	distance = 10.0f;
@@ -24,6 +24,11 @@ NodeObserverCamera::NodeObserverCamera(InputManager &inputManager)
 	maxAngX = (float)PI / 2.0f - 0.001f;
 	zoomFactor = 1.0f;
 
+	RegisterWithInputManager(inputManager);
+}
+
+void NodeObserverCamera::RegisterWithInputManager(InputManager &inputManager)
+{
 	inputManager.AddInputListener(this);
 	inputManager.AddMapping(KEY_MOUSE_LEFT_BUTTON, STATE, "NodeObserverCamera_Rotate", MODIFIER_NONE);
 	inputManager.AddMapping(KEY_MOUSE_MIDDLE_BUTTON, STATE, "NodeObserverCamera_Zoom", MODIFIER_NONE);
@@ -45,8 +50,7 @@ mat4 NodeObserverCamera::GetViewMatrix()
 	vec3 dir;
 	dir.FromAngles(rotation.x, rotation.y);
 	dir*=-distance;
-	position = targetPos + dir;
-	mat4 t;
+	position = targetPos + dir;	
 	viewMatrix.LookAt(position, target->GetWorldPosition(), vec3(0.0f, 1.0f, 0.0f));	
 	viewMatrixChanged = false;
 	return viewMatrix;

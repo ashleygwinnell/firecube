@@ -99,7 +99,7 @@ void Scene::UpdateBaseQueue()
 				newRenderJob.geometry = renderablePart.geometry;
 				newRenderJob.material = renderablePart.material;
 				newRenderJob.transformation = renderablePart.transformation;
-				newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetPosition()).Length();
+				newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetNode()->GetWorldPosition()).Length();
 				newRenderJob.CalculateSortKey();
 				baseQueue.renderJobs.push_back(newRenderJob);
 			}			
@@ -154,7 +154,7 @@ void Scene::UpdateLightQueues()
 					newRenderJob.geometry = renderablePart.geometry;
 					newRenderJob.material = renderablePart.material;
 					newRenderJob.transformation = renderablePart.transformation;
-					newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetPosition()).Length();
+					newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetNode()->GetWorldPosition()).Length();
 					newRenderJob.CalculateSortKey();
 					lightQueues[i].renderQueue.renderJobs.push_back(newRenderJob);
 				}			

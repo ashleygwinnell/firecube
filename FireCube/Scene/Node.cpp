@@ -272,7 +272,7 @@ void Node::AddComponent(Component *component)
 {
 	if (component->node != nullptr)
 	{
-		LOGERROR("Attemp to add a component which already has a parent node.");
+		LOGERROR("Attempt to add a component which already has a parent node.");
 	}
 	else
 	{

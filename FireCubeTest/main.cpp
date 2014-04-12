@@ -20,12 +20,6 @@ App::App() : scene(engine)
 
 }
 
-App::~App()
-{	
-	delete camera;
-	delete orthographicCamera;
-}
-
 bool App::Prepare()
 {	
 	SetTitle(std::string("FireCube Test Application"));
@@ -33,10 +27,11 @@ bool App::Prepare()
 	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
 	
 	root = scene.GetRootNode();
-	camera = new NodeObserverCamera(GetInputManager());
+	camera = root->CreateComponent<NodeObserverCamera>();
 	camera->SetTarget(root);
 	camera->SetMaxAngX(0);
 	camera->SetZoomFactor(1000.0f);
+	camera->RegisterWithInputManager(GetInputManager());
 	scene.SetCamera(camera);	
 
 	Node *childNode = root->CreateChild("Model");	
@@ -59,8 +54,7 @@ bool App::Prepare()
 	light->SetDiffuseColor(vec4(1, 1, 1, 1));
 	light->SetSpecularColor(vec4(0, 0, 0, 0));	
 	childNode->Move(vec3(0, 1, 0));
-
-	orthographicCamera = new Camera;
+	
 	font = resourcePool->GetResource<Font>("c:\\windows\\fonts\\arial.ttf");
 	fontFace = font->GenerateFontFace(18);
 	return true;
@@ -78,11 +72,10 @@ void App::Render(float t)
 	scene.Render(renderer);
 
 	mat4 ortho;
-	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);
-	orthographicCamera->SetProjectionMatrix(ortho);
+	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	
 	std::ostringstream oss;
 	oss << "Rendered triangles: " << renderer->GetNumberOfPrimitivesRendered() << std::endl << "FPS: " << GetFps();
-	renderer->RenderText(fontFace, orthographicCamera, vec3(0, 0, 0), vec4(1, 1, 1, 1), oss.str());
+	renderer->RenderText(fontFace, ortho, vec3(0, 0, 0), vec4(1, 1, 1, 1), oss.str());
 }
 void App::HandleInput(float t, const MappedInput &input)
 {

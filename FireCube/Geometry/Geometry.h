@@ -64,18 +64,7 @@ public:
 	* Copies the local copies of the vertices attributes (position, normals, etc) and indices
 	* to the appropriate vertex buffers in this geometry.
 	*/
-	void Update();	
-		
-	/**
-	* Returns the material of this geometry.
-	*/
-	//MaterialPtr GetMaterial();
-
-	/**
-	* Sets the material of this geometry.
-	* @param material The material to assign to this geometry.
-	*/
-	//void SetMaterial(MaterialPtr material);
+	void Update();				
 
 	/**
 	* Sets the primitive type to be rendered by this geometry.
