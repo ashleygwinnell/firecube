@@ -76,7 +76,7 @@ void Renderer::UseTexture(const Texture *tex, unsigned int unit)
 	glBindSampler(unit, textureSampler[unit]);
 }
 
-void Renderer::RenderText(FontFace *fontFace, Camera *camera, const vec3 &pos, const vec4 &color, const std::string &str)
+void Renderer::RenderText(FontFace *fontFace, mat4 projectionMatrix, const vec3 &pos, const vec4 &color, const std::string &str)
 {	
 	if (!fontFace || str.empty())
 		return;
@@ -88,8 +88,8 @@ void Renderer::RenderText(FontFace *fontFace, Camera *camera, const vec3 &pos, c
 		UseProgram(textProgram);
 		textProgram->SetUniform("tex0", 0);
 		textProgram->SetUniform("textColor", color);
-		textProgram->SetUniform("modelViewMatrix", camera->GetViewMatrix());
-		textProgram->SetUniform("projectionMatrix", camera->GetProjectionMatrix());
+		textProgram->SetUniform("modelViewMatrix", mat4::IDENTITY);
+		textProgram->SetUniform("projectionMatrix", projectionMatrix);
 	}
 	int numTris = 0;
 
@@ -382,7 +382,7 @@ void Renderer::UseCamera(Camera *camera)
 	currentCamera = camera;	
 	// Projection transformation
 	currentProgram->SetUniform(PARAM_VIEW_PROJECTION_MATRIX, camera->GetProjectionMatrix() * camera->GetViewMatrix());
-	currentProgram->SetUniform(PARAM_CAMERA_POS, camera->GetPosition());
+	currentProgram->SetUniform(PARAM_CAMERA_POS, camera->GetNode()->GetWorldPosition());
 }
 
 void Renderer::UseLight(Light *light)

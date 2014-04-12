@@ -73,7 +73,7 @@ public:
 	* @param color The color of the text.
 	* @param str The string to output.
 	*/
-	void RenderText(FontFace *fontFace, Camera *camera, const vec3 &pos, const vec4 &color, const std::string &str);
+	void RenderText(FontFace *fontFace, mat4 projectionMatrix, const vec3 &pos, const vec4 &color, const std::string &str);
 
 	/**
 	* Renders an index stream.
