@@ -443,6 +443,5 @@
     <None Include="Shaders\font.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

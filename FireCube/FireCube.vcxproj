@@ -147,7 +147,6 @@
     <ClInclude Include="Utils\utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
     <None Include="Shaders\debugNormals.frag" />
     <None Include="Shaders\debugNormals.vert" />
     <None Include="Shaders\default.frag" />
