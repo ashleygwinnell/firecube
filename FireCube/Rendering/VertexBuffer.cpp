@@ -25,10 +25,8 @@ VertexBuffer::~VertexBuffer()
 
 void VertexBuffer::Create()
 {
-	glGenBuffers(1, &objectId);
-	std::ostringstream ss;
-	ss << "Created buffer with id=" << objectId;
-	LOGINFO(ss.str());
+	glGenBuffers(1, &objectId);		
+	LOGINFO("Created buffer with id=", objectId);
 }
 
 bool VertexBuffer::LoadData(void *data, unsigned int vertexCount, unsigned int vertexAttributes, BufferType bt)

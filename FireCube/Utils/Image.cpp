@@ -34,10 +34,8 @@ bool Image::Load(const std::string &filename)
 		loadedUsingStb = true;
 		pixels = stbi_load(fname.c_str(), &width, &height, &bytesPerPixel, 0);
 		if (!pixels)
-		{
-			std::ostringstream oss;
-			oss << "Failed loading image: " << filename << " reason: " << stbi_failure_reason();
-			LOGERROR(oss.str());
+		{			
+			LOGERROR("Failed loading image: ", filename, " reason: ", stbi_failure_reason());
 			return false;
 		}
 	}

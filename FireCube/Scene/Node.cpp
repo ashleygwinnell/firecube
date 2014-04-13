@@ -308,10 +308,8 @@ void Node::Load(const std::string &filename, ModelLoadingOptions options)
 	if (file.empty())
 		return;
 	std::string::size_type d;
-	d = filename.find_last_of(".");	
-	std::ostringstream ss;
-	ss << "Created model with name:" << filename;
-	LOGINFO(ss.str());	
+	d = filename.find_last_of(".");		
+	LOGINFO("Created model with name:", filename);
 	if (d != std::string::npos)
 	{
 		std::string ext = ToLower(filename.substr(d + 1));

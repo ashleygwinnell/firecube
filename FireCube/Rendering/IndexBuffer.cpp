@@ -18,10 +18,8 @@ IndexBuffer::~IndexBuffer()
 
 void IndexBuffer::Create()
 {
-	glGenBuffers(1, &objectId);
-	std::ostringstream ss;
-	ss << "Created buffer with id=" << objectId;
-	LOGINFO(ss.str());
+	glGenBuffers(1, &objectId);	
+	LOGINFO("Created buffer with id=", objectId);	
 }
 
 bool IndexBuffer::LoadData(void *data, unsigned int count, BufferType bt)
@@ -55,10 +53,8 @@ void IndexBuffer::SetIndexStream()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, objectId);
 }
 void IndexBuffer::Destroy()
-{
-	std::ostringstream ss;
-	ss << "Destroyed buffer with id=" << objectId;
-	LOGINFO(ss.str());
+{	
+	LOGINFO("Destroyed buffer with id=", objectId;);
 	glDeleteBuffers(1, &objectId);
 	objectId = 0;
 }

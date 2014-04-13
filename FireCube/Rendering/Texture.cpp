@@ -14,19 +14,15 @@ Texture::Texture(Engine *engine) : Resource(engine), GraphicsResource(engine->Ge
 
 Texture::~Texture()
 {
-	std::ostringstream ss;
-	ss << "Destroyed texture with id=" << objectId;
-	LOGINFO(ss.str());
+	LOGINFO("Destroyed texture with id=", objectId;);
 	glDeleteTextures(1, &objectId);
 	objectId = 0;
 }
 
 bool Texture::Create()
 {
-	glGenTextures(1, &objectId);
-	std::ostringstream ss;
-	ss << "Created texture with id=" << objectId;
-	LOGINFO(ss.str());
+	glGenTextures(1, &objectId);		
+	LOGINFO("Created texture with id=", objectId);
 	return objectId != 0;
 }
 

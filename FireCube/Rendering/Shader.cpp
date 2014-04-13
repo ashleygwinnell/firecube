@@ -116,10 +116,8 @@ Program::Program(Renderer *renderer) : GraphicsResource(renderer)
 }
 
 Program::~Program()
-{
-	std::ostringstream ss;
-	ss << "Destroyed program with id=" << objectId;
-	LOGINFO(ss.str());
+{		
+	LOGINFO("Destroyed program with id=", objectId);
 	glDeleteProgram(objectId);
 	objectId = 0;
 }
@@ -127,10 +125,8 @@ Program::~Program()
 void Program::Create()
 {
 	objectId = glCreateProgram();
-	variables.clear();
-	std::ostringstream ss;
-	ss << "Created program with id=" << objectId;
-	LOGINFO(ss.str());
+	variables.clear();	
+	LOGINFO("Created program with id=", objectId);
 }
 
 void Program::Create(Shader *shader1, Shader *shader2)
