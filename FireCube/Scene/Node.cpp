@@ -188,37 +188,37 @@ Node *Node::GetChild(const std::string &name, bool recursive)
 	return nullptr;
 }
 
-Node *Node::RemoveChild(Node *node)
+void Node::RemoveChild(Node *node)
 {
 	for (auto i = children.begin(); i != children.end(); i++)
 	{
 		if ((*i) == node)
 		{
 			children.erase(i);			
-			return node;
+			delete node;
+			break;
 		}
-	}
-	
-	return nullptr;
+	}		
 }
 
-Node *Node::RemoveChild(const std::string &name)
+void Node::RemoveChild(const std::string &name)
 {
 	for (auto i = children.begin(); i != children.end(); i++)
 	{
 		if ((*i)->GetName() == name)
 		{
-			Node *ret = *i;			
+			Node *node = *i;			
 			children.erase(i);
-			return ret;
+			delete node;
+			break;
 		}
-	}
-	
-	return nullptr;
+	}		
 }
 
 void Node::RemoveAllChildren()
 {
+	for (auto i : children)
+		delete i;
 	children.clear();
 }
 

@@ -169,13 +169,13 @@ public:
 	* Removes a child node.
 	* @param name The name of the child node to remove.
 	*/
-	Node *RemoveChild(const std::string &name);
+	void RemoveChild(const std::string &name);
 
 	/**
 	* Removes a child node.
 	* @param node The child node to remove.
 	*/
-	Node *RemoveChild(Node *node);	
+	void RemoveChild(Node *node);	
 
 	void RemoveAllChildren();
 		
