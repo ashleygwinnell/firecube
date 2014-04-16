@@ -6,7 +6,7 @@
 
 using namespace FireCube;
 
-FrameBuffer::FrameBuffer(Engine *engine) : Object(engine), GraphicsResource(engine->GetRenderer()), depthBuffer(0), depthTexture(nullptr)
+FrameBuffer::FrameBuffer(Engine *engine) : Object(engine), GraphicsResource(engine->GetRenderer()), depthRenderBuffer(0), depthTexture(nullptr)
 {
 	for (int i = 0; i < MAX_TEXTURES; ++i)
 		texture[i] = nullptr;
@@ -14,19 +14,19 @@ FrameBuffer::FrameBuffer(Engine *engine) : Object(engine), GraphicsResource(engi
 
 FrameBuffer::~FrameBuffer()
 {
-	delete depthTexture;
+	/*delete depthTexture;
 	for (int i = 0; i < MAX_TEXTURES; ++i)
-		delete texture[i];
+		delete texture[i];*/
 
     if (objectId)
     {
         glDeleteFramebuffers(1, &objectId);
         objectId = 0;
     }
-    if (depthBuffer)
+	if (depthRenderBuffer)
     {
-        glDeleteRenderbuffers(1, &depthBuffer);
-        depthBuffer = 0;
+		glDeleteRenderbuffers(1, &depthRenderBuffer);
+		depthRenderBuffer = 0;
     }
 }
 
@@ -54,10 +54,10 @@ void FrameBuffer::SetRenderTarget(Texture *texture, const int attachmentPoint)
 void FrameBuffer::AddDepthBuffer()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, objectId);
-    glGenRenderbuffers(1, &depthBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+    glGenRenderbuffers(1, &depthRenderBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthRenderBuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderBuffer);
 }
 
 void FrameBuffer::AddDepthBufferTexture()
@@ -76,6 +76,24 @@ void FrameBuffer::AddDepthBufferTexture()
 
     glFramebufferTexture2D (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture->GetObjectId(), 0);
 }
+
+void FrameBuffer::SetDepthBufferTexture(Texture *depthTexture)
+{
+	this->depthTexture = depthTexture;
+	glBindFramebuffer(GL_FRAMEBUFFER, objectId);	
+	renderer->UseTexture(depthTexture, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture->GetObjectId(), 0);
+}
+
 
 void FrameBuffer::AddRenderTarget(const int attachmentPoint)
 {

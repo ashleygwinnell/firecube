@@ -4,22 +4,24 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include "ThirdParty/GLEW/glew.h"
+#include "Geometry/Geometry.h"
+#include "Geometry/Material.h"
 #include "Rendering/Texture.h"
 #include "Rendering/VertexBuffer.h"
 #include "Rendering/Shader.h"
-#include "Geometry/Geometry.h"
-#include "Geometry/Material.h"
 #include "Rendering/FrameBuffer.h"
 #include "Rendering/Font.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/RenderQueue.h"
 #include "Rendering/privateFont.h"
+#include "Rendering/RenderPath.h"
+#include "Rendering/ShaderTemplate.h"
 #include "Scene/Light.h"
 #include "Scene/Camera.h"
-#include "Rendering/ShaderTemplate.h"
 #include "Scene/Node.h"
 #include "Core/Engine.h"
 #include "Core/ResourcePool.h"
+#include "Utils/Logger.h"
 
 using namespace FireCube;
 
@@ -37,9 +39,10 @@ struct FontVertex
 Renderer::Renderer(Engine *engine) : Object(engine), textVao(0), numberOfPrimitivesRendered(0), 
 	currentVertexShader(nullptr), currentFragmentShader(nullptr), currentMaterial(nullptr), currentCamera(nullptr),
 	currentLight(nullptr), shadowMap(nullptr), textVertexBuffer(nullptr), textVertexShader(nullptr), textFragmentShader(nullptr),
-	textVertexShaderTemplate(nullptr), textFragmentShaderTemplate(nullptr)
+	textVertexShaderTemplate(nullptr), textFragmentShaderTemplate(nullptr), depthTexture(nullptr), currentFrameBuffer(nullptr), fboDirty(false)
 {
-
+	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
+		renderTargets[i] = nullptr;
 }
 
 void Renderer::Clear(const vec4 &color, float depth)
@@ -286,6 +289,8 @@ void Renderer::Initialize()
 	textFragmentShaderTemplate = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/font.frag");	
 	textVertexShader = textVertexShaderTemplate->GenerateShader("");
 	textFragmentShader = textFragmentShaderTemplate->GenerateShader("");
+
+	currentRenderPath = engine->GetResourcePool()->GetResource<RenderPath>("RenderPaths/Forward.xml");
 }
 
 void Renderer::Destroy()
@@ -429,4 +434,89 @@ FrameBuffer *Renderer::GetShadowMap()
 	shadowMap->AddDepthBufferTexture();
 
 	return shadowMap;
+}
+
+void Renderer::SetRenderTarget(unsigned int index, Texture *renderTarget)
+{
+	if (index >= MAX_RENDER_TARGETS)
+		return;
+
+	renderTargets[index] = renderTarget;
+	fboDirty = true;
+}
+
+void Renderer::SetDepthTexture(Texture *depthTexture)
+{
+	this->depthTexture = depthTexture;
+	fboDirty = true;
+}
+
+void Renderer::UpdateFrameBuffer()
+{
+	if (!fboDirty)
+		return;
+
+	fboDirty = false;
+	bool hasFbo = (depthTexture != nullptr);
+	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
+		hasFbo = hasFbo | (renderTargets[i] != nullptr);
+
+	if (!hasFbo)
+	{
+		RestoreFrameBuffer();
+		return;
+	}
+
+	int width, height;
+
+	if (renderTargets[0])
+	{
+		width = renderTargets[0]->GetWidth();
+		height = renderTargets[0]->GetHeight();
+	}
+	else if (depthTexture)
+	{
+		width = depthTexture->GetWidth();
+		height = depthTexture->GetHeight();
+	}
+	else
+	{
+		LOGERROR("Can't determine dimensions of render target");
+		return;
+	}
+
+	unsigned int key = width << 16 | height;
+	auto frameBufferIter = frameBuffers.find(key);
+	FrameBuffer *frameBuffer;
+	if (frameBufferIter != frameBuffers.end())
+	{
+		frameBuffer = frameBufferIter->second;
+	}
+	else
+	{
+		frameBuffer = new FrameBuffer(engine);
+		frameBuffer->Create(width, height);
+		frameBuffers[key] = frameBuffer;
+	}
+
+	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
+		frameBuffer->SetRenderTarget(renderTargets[i], i);
+
+	if (depthTexture)
+		frameBuffer->SetDepthBufferTexture(depthTexture);
+	
+	if (frameBuffer->IsValid() == false)
+	{
+		LOGERROR("Could not validate frame buffer.");
+		RestoreFrameBuffer();
+	}
+	else
+	{
+		UseFrameBuffer(frameBuffer);
+	}
+}
+
+RenderPath *Renderer::GetCurrentRenderPath()
+{
+	return currentRenderPath;
 }

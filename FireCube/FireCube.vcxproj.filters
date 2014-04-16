@@ -234,6 +234,9 @@
     <ClCompile Include="Geometry\ModelLoader.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\RenderPath.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -422,6 +425,9 @@
     </ClInclude>
     <ClInclude Include="Geometry\ModelLoader.h">
       <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderPath.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -44,22 +44,12 @@ void FIRECUBE_API Close();
 #define LOGERROR4(m0, m1, m2, m3) { std::ostringstream oss; oss << m0 << m1 << m2 << m3; Logger::Write(Logger::LOG_ERROR, oss.str());}
 
 
-/*
-* Count the number of arguments passed to ASSERT, very carefully
-* tiptoeing around an MSVC bug where it improperly expands __VA_ARGS__ as a
-* single token in argument lists.  See these URLs for details:
-*
-*   http://connect.microsoft.com/VisualStudio/feedback/details/380090/variadic-macro-replacement
-*   http://cplusplus.co.il/2010/07/17/variadic-macro-to-count-number-of-arguments/#comment-644
-*/
 #define COUNT_LOG_ARGS_IMPL2(_1, _2, _3, _4, count, ...) count
 #define COUNT_LOG_ARGS_IMPL(args) COUNT_LOG_ARGS_IMPL2 args
 #define COUNT_LOG_ARGS(...) COUNT_LOG_ARGS_IMPL((__VA_ARGS__, 4, 3, 2, 1, 0))
-/* Pick the right helper macro to invoke. */
 #define LOG_CHOOSE_HELPER2(name, count) name##count
 #define LOG_CHOOSE_HELPER1(name, count) LOG_CHOOSE_HELPER2(name, count)
 #define LOG_CHOOSE_HELPER(name, count) LOG_CHOOSE_HELPER1(name, count)
-/* The actual macro. */
 #define LOG_GLUE(x, y) x y
 
 #define LOGDEBUG(...) LOG_GLUE(LOG_CHOOSE_HELPER(LOGDEBUG, COUNT_LOG_ARGS(__VA_ARGS__)), (__VA_ARGS__))
@@ -67,7 +57,6 @@ void FIRECUBE_API Close();
 #define LOGTRACE(...) LOG_GLUE(LOG_CHOOSE_HELPER(LOGTRACE, COUNT_LOG_ARGS(__VA_ARGS__)), (__VA_ARGS__))
 #define LOGWARNING(...) LOG_GLUE(LOG_CHOOSE_HELPER(LOGWARNING, COUNT_LOG_ARGS(__VA_ARGS__)), (__VA_ARGS__))
 #define LOGERROR(...) LOG_GLUE(LOG_CHOOSE_HELPER(LOGERROR, COUNT_LOG_ARGS(__VA_ARGS__)), (__VA_ARGS__))
-
 
 #else
 #define LOGDEBUG(...)

@@ -38,6 +38,9 @@ enum PrimitiveType;
 class VertexBuffer;
 class ShaderTemplate;
 class Light;
+class RenderPath;
+
+#define MAX_RENDER_TARGETS 4
 
 /**
 * A class containing various functions responsible for the rendering pipeline.
@@ -152,7 +155,16 @@ public:
 	void ResetCachedShaderParameters();
 	
 	FrameBuffer *GetShadowMap();
+
+	void SetRenderTarget(unsigned int index, Texture *renderTarget);
+
+	void SetDepthTexture(Texture *depthTexture);
+
+	RenderPath *GetCurrentRenderPath();
 private:
+
+	void UpdateFrameBuffer();
+
 	VertexBuffer *textVertexBuffer;
 	GLuint textVao;
 	Shader *textVertexShader;
@@ -170,6 +182,12 @@ private:
 	unsigned int numberOfPrimitivesRendered;
 	GLuint textureSampler[16];
 	FrameBuffer *shadowMap;
+	Texture *renderTargets[MAX_RENDER_TARGETS];
+	Texture *depthTexture;
+	std::map<unsigned int, FrameBuffer *> frameBuffers;
+	FrameBuffer *currentFrameBuffer;
+	bool fboDirty;
+	RenderPath *currentRenderPath;
 };
 
 }

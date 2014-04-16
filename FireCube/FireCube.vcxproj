@@ -51,6 +51,7 @@
     <ClCompile Include="Rendering\DebugRenderer.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\RenderingTypes.cpp" />
+    <ClCompile Include="Rendering\RenderPath.cpp" />
     <ClCompile Include="Rendering\ShaderTemplate.cpp" />
     <ClCompile Include="Rendering\Technique.cpp" />
     <ClCompile Include="Rendering\VertexBuffer.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="Rendering\DebugRenderer.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />
     <ClInclude Include="Rendering\RenderingTypes.h" />
+    <ClInclude Include="Rendering\RenderPath.h" />
     <ClInclude Include="Rendering\ShaderTemplate.h" />
     <ClInclude Include="Rendering\Technique.h" />
     <ClInclude Include="Rendering\VertexBuffer.h" />

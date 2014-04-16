@@ -57,6 +57,8 @@ bool App::Prepare()
 	
 	font = resourcePool->GetResource<Font>("c:\\windows\\fonts\\arial.ttf");
 	fontFace = font->GenerateFontFace(18);
+
+	scene.SetFogColor(vec3(44, 80, 222) / 255.0f);
 	return true;
 }
 void App::Update(float t)
@@ -64,8 +66,7 @@ void App::Update(float t)
 	//root->GetChild("LightNode")->Move(vec3(0.2f, 0.0f, 0.2f) * t);
 }
 void App::Render(float t)
-{    
-	renderer->Clear(vec4(44, 80, 222, 255) / 255.0f, 1.0f);	
+{    	
 	mat4 projection;
 	projection.GeneratePerspective(60.0f, (float)GetWidth() / (float)GetHeight(), 0.1f, 500.0f);	
 	camera->SetProjectionMatrix(projection);	

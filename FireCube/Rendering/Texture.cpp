@@ -52,6 +52,9 @@ bool Texture::Load(const std::string &filename)
 		return false;
 	}
 	
+	width = img.GetWidth();
+	height = img.GetHeight();
+
 	glBindTexture(GL_TEXTURE_2D, objectId);        		
 	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, img.GetWidth(), img.GetHeight(), 0, format, GL_UNSIGNED_BYTE, &img.GetPixels()[0]);		
 	GenerateMipMaps();
@@ -69,4 +72,14 @@ void Texture::SetFiltering(TextureFilter minFilter, TextureFilter magFilter)
 {
 	this->minFilter = minFilter;
 	this->magFilter = magFilter;
+}
+
+int Texture::GetWidth() const
+{
+	return width;
+}
+
+int Texture::GetHeight() const
+{
+	return height;
 }

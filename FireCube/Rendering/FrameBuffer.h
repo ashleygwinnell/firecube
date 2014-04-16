@@ -39,6 +39,8 @@ public:
     * Adds a depth buffer as a texture.
     */
     void AddDepthBufferTexture();
+
+	void SetDepthBufferTexture(Texture *depthTexture);
     /**
     * Adds a new render target.
     * @param attachmentPoint The attachment point to add to.
@@ -74,7 +76,7 @@ public:
 private:
     int width, height;
     
-    GLuint depthBuffer;
+    GLuint depthRenderBuffer;
     Texture *texture[MAX_TEXTURES];
     Texture *depthTexture;
 };

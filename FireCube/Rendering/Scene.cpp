@@ -1,20 +1,21 @@
 #include <algorithm>
 
-#include "Scene.h"
 #include "Rendering/Renderable.h"
-#include "Geometry/Geometry.h"
 #include "Rendering/Shader.h"
-#include "Scene/Camera.h"
 #include "Rendering/Texture.h"
-#include "Geometry/Material.h"
 #include "Rendering/IndexBuffer.h"
 #include "Rendering/Technique.h"
 #include "Rendering/ShaderTemplate.h"
 #include "Rendering/DebugRenderer.h"
-
+#include "Rendering/RenderPath.h"
+#include "Geometry/Geometry.h"
+#include "Geometry/Material.h"
+#include "Scene/Camera.h"
+#include "Scene.h"
+#include "Utils/Logger.h"
 using namespace FireCube;
 
-Scene::Scene(Engine *engine) : Object(engine), ambientColor(0.1f), fogEnabled(false), rootNode(engine)
+Scene::Scene(Engine *engine) : Object(engine), ambientColor(0.1f), fogEnabled(false), rootNode(engine), fogColor(1.0f)
 {
 	rootNode.SetScene(this);
 }
@@ -171,71 +172,92 @@ void Scene::Render(Renderer *renderer)
 	UpdateBaseQueue();
 	UpdateLightQueues();		
 
-	glDisable(GL_BLEND);
-	glDepthFunc(GL_LESS);	
-	glDepthMask(true);
+	const std::vector<RenderPathCommand> commands = renderer->GetCurrentRenderPath()->GetCommands();
 
-	baseQueue.Sort();
-	for (auto &renderJob : baseQueue.GetRenderJobs())
-	{			
-		Program *program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
-		program->SetUniform(PARAM_AMBIENT_COLOR, ambientColor);		
-		if (fogEnabled)
-		{
-			program->SetUniform(PARAM_FOG_PARAMETERS, fogParameters);
-			program->SetUniform(PARAM_FOG_COLOR, fogColor);
-		}
-		renderer->UseCamera(camera);
-		// View transformation
-		program->SetUniform(PARAM_MODEL_MATRIX, renderJob.transformation);		
-		// Normal matrix which equals the inverse transpose of the model matrix
-		mat3 normalMatrix = renderJob.transformation.ToMat3();
-		normalMatrix.Inverse();
-		normalMatrix.Transpose();				
-		program->SetUniform(PARAM_NORMAL_MATRIX, normalMatrix);
-
-		// Set material properties if this geometry is different from the last one 
-
-		renderer->UseMaterial(renderJob.material);
-		renderJob.geometry->Render();
-	}
-
-	glEnable(GL_BLEND);
-	glDepthFunc(GL_EQUAL);	
-	glBlendFunc(GL_ONE, GL_ONE);
-	glDepthMask(false);
-
-	for (auto &lightQueue : lightQueues)
+	for (auto &command : commands)
 	{
-		lightQueue.renderQueue.Sort();
-		Light *light = lightQueue.light;
-		for (auto &renderJob : lightQueue.renderQueue.GetRenderJobs())
+		switch (command.type)
 		{
-			Program *program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
-			program->SetUniform(PARAM_AMBIENT_COLOR, ambientColor);
-			if (fogEnabled)
-			{
-				program->SetUniform(PARAM_FOG_PARAMETERS, fogParameters);
-				program->SetUniform(PARAM_FOG_COLOR, fogColor);
-			}
-			renderer->UseCamera(camera);
-			// View transformation
-			program->SetUniform(PARAM_MODEL_MATRIX, renderJob.transformation);			
-			// Normal matrix which equals the inverse transpose of the model matrix
-			mat3 normalMatrix = renderJob.transformation.ToMat3();
-			normalMatrix.Inverse();
-			normalMatrix.Transpose();				
-			program->SetUniform(PARAM_NORMAL_MATRIX, normalMatrix);
-			// Set material properties if this geometry is different from the last one 
-			renderer->UseMaterial(renderJob.material);
-			renderer->UseLight(light);
-			renderJob.geometry->Render();
-		}
-	}
+		case FireCube::COMMAND_CLEAR:
+			if (command.useFogColor)
+				renderer->Clear(vec4(fogColor, 1.0f), 1.0f);
+			else
+				renderer->Clear(vec4(command.clearColor, 1.0f), 1.0f);
+			break;
+		case FireCube::COMMAND_SCENEPASS:
 
-	glDisable(GL_BLEND);
-	glDepthFunc(GL_LESS);		
-	glDepthMask(true);
+			glDisable(GL_BLEND);
+			glDepthFunc(GL_LESS);
+			glDepthMask(true);
+
+			baseQueue.Sort();
+			for (auto &renderJob : baseQueue.GetRenderJobs())
+			{
+				Program *program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
+				program->SetUniform(PARAM_AMBIENT_COLOR, ambientColor);
+				if (fogEnabled)
+				{
+					program->SetUniform(PARAM_FOG_PARAMETERS, fogParameters);
+					program->SetUniform(PARAM_FOG_COLOR, fogColor);
+				}
+				renderer->UseCamera(camera);
+				// View transformation
+				program->SetUniform(PARAM_MODEL_MATRIX, renderJob.transformation);
+				// Normal matrix which equals the inverse transpose of the model matrix
+				mat3 normalMatrix = renderJob.transformation.ToMat3();
+				normalMatrix.Inverse();
+				normalMatrix.Transpose();
+				program->SetUniform(PARAM_NORMAL_MATRIX, normalMatrix);
+
+				// Set material properties if this geometry is different from the last one 
+
+				renderer->UseMaterial(renderJob.material);
+				renderJob.geometry->Render();
+			}
+			break;
+		case FireCube::COMMAND_LIGHTPASS:
+			glEnable(GL_BLEND);
+			glDepthFunc(GL_EQUAL);
+			glBlendFunc(GL_ONE, GL_ONE);
+			glDepthMask(false);
+
+			for (auto &lightQueue : lightQueues)
+			{
+				lightQueue.renderQueue.Sort();
+				Light *light = lightQueue.light;
+				for (auto &renderJob : lightQueue.renderQueue.GetRenderJobs())
+				{
+					Program *program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
+					program->SetUniform(PARAM_AMBIENT_COLOR, ambientColor);
+					if (fogEnabled)
+					{
+						program->SetUniform(PARAM_FOG_PARAMETERS, fogParameters);
+						program->SetUniform(PARAM_FOG_COLOR, fogColor);
+					}
+					renderer->UseCamera(camera);
+					// View transformation
+					program->SetUniform(PARAM_MODEL_MATRIX, renderJob.transformation);
+					// Normal matrix which equals the inverse transpose of the model matrix
+					mat3 normalMatrix = renderJob.transformation.ToMat3();
+					normalMatrix.Inverse();
+					normalMatrix.Transpose();
+					program->SetUniform(PARAM_NORMAL_MATRIX, normalMatrix);
+					// Set material properties if this geometry is different from the last one 
+					renderer->UseMaterial(renderJob.material);
+					renderer->UseLight(light);
+					renderJob.geometry->Render();
+				}
+			}
+
+			glDisable(GL_BLEND);
+			glDepthFunc(GL_LESS);
+			glDepthMask(true);
+			break;
+		default:
+			LOGERROR("Unkown command type: ", (int) command.type);
+			continue;
+		}
+	}		
 }
 
 void Scene::SetCamera(Camera *camera)

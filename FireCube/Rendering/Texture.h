@@ -59,8 +59,12 @@ public:
 	*/
 	void SetFiltering(TextureFilter minFilter, TextureFilter magFilter);
 	
+	int GetWidth() const;
+	int GetHeight() const;
 private:		
 	TextureFilter minFilter, magFilter;
+
+	int width, height;
 };
 
 }
