@@ -4,7 +4,7 @@
 #include "tinyxml.h"
 #include "Utils/Filesystem.h"
 #include "Core/Engine.h"
-#include "Core/ResourcePool.h"
+#include "Core/ResourceCache.h"
 
 using namespace FireCube;
 
@@ -125,8 +125,8 @@ bool Technique::Load(const std::string &filename)
 				continue;			
 			Pass *pass = new Pass();
 			pass->SetName(passName);
-			pass->SetVertexShaderTemplate(engine->GetResourcePool()->GetResource<ShaderTemplate>(vertexShaderTemplate));
-			pass->SetFragmentShaderTemplate(engine->GetResourcePool()->GetResource<ShaderTemplate>(fragmentShaderTemplate));
+			pass->SetVertexShaderTemplate(engine->GetResourceCache()->GetResource<ShaderTemplate>(vertexShaderTemplate));
+			pass->SetFragmentShaderTemplate(engine->GetResourceCache()->GetResource<ShaderTemplate>(fragmentShaderTemplate));
 			pass->SetShaderDefines(shaderDefines);
 			passes[StringHash(passName)] = pass;
 		}

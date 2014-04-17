@@ -1,5 +1,5 @@
 #include "Core/Engine.h"
-#include "Core/ResourcePool.h"
+#include "Core/ResourceCache.h"
 #include "Rendering/ShaderTemplate.h"
 #include "Rendering/DebugRenderer.h"
 #include "Rendering/Renderer.h"
@@ -28,8 +28,8 @@ void DebugRenderer::Initialize()
 void DebugRenderer::Render(Camera *camera)
 {
 	Renderer *renderer = engine->GetRenderer();
-	Shader *vs = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/solidColor.vert")->GenerateShader("");
-	Shader *fs = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/solidColor.frag")->GenerateShader("");	
+	Shader *vs = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/solidColor.vert")->GenerateShader("");
+	Shader *fs = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/solidColor.frag")->GenerateShader("");	
 	renderer->SetShaders(vs, fs);
 	renderer->UseCamera(camera);
 	linesVertexBuffer->LoadData(&lines[0], lines.size() / 2, VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_COLOR, DYNAMIC);

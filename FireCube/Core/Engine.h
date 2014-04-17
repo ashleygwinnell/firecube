@@ -6,7 +6,7 @@ namespace FireCube
 {
 
 class Renderer;
-class ResourcePool;
+class ResourceCache;
 class InputManager;
 class DebugRenderer;
 
@@ -16,15 +16,15 @@ public:
 	Engine();
 	void SetRenderer(Renderer *renderer);
 	Renderer *GetRenderer();
-	void SetResourcePool(ResourcePool *resourcePool);
-	ResourcePool *GetResourcePool();
+	void SetResourceCache(ResourceCache *resourceCache);
+	ResourceCache *GetResourceCache();
 	void SetInputManager(InputManager *inputManager);
 	InputManager *GetInputManager();
 	void SetDebugRenderer(DebugRenderer *debugRenderer);
 	DebugRenderer *GetDebugRenderer();
 private:
 	Renderer *renderer;
-	ResourcePool *resourcePool;
+	ResourceCache *resourceCache;
 	InputManager *inputManager;
 	DebugRenderer *debugRenderer;
 };

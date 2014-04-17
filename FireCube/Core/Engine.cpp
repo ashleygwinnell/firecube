@@ -1,7 +1,7 @@
 #include "Engine.h"
 using namespace FireCube;
 
-Engine::Engine() : renderer(nullptr), resourcePool(nullptr)
+Engine::Engine() : renderer(nullptr), resourceCache(nullptr)
 {
 
 }
@@ -15,14 +15,14 @@ Renderer *Engine::GetRenderer()
 	return renderer;
 }
 
-void Engine::SetResourcePool(ResourcePool *resourcePool)
+void Engine::SetResourceCache(ResourceCache *resourceCache)
 {
-	this->resourcePool = resourcePool;
+	this->resourceCache = resourceCache;
 }
 
-ResourcePool *Engine::GetResourcePool()
+ResourceCache *Engine::GetResourceCache()
 {
-	return resourcePool;
+	return resourceCache;
 }
 
 void Engine::SetInputManager(InputManager *inputManager)

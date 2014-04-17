@@ -6,7 +6,7 @@
 #include "Math/MathUtils.h"
 #include "Rendering/IndexBuffer.h"
 #include "Core/Engine.h"
-#include "Core/ResourcePool.h"
+#include "Core/ResourceCache.h"
 #include "Rendering/RenderingTypes.h"
 #include "Rendering/Technique.h"
 #include <algorithm>
@@ -1523,11 +1523,11 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 				fmat->SetName(subMesh.material);            
 				if (effect.diffuseSampler.name != "")
 				{		
-					fmat->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
-					fmat->SetTexture(TEXTURE_UNIT_DIFFUSE, engine->GetResourcePool()->GetResource<Texture>(GetTextureFileNameFromSampler(effect, effect.diffuseSampler)));
+					fmat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
+					fmat->SetTexture(TEXTURE_UNIT_DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(GetTextureFileNameFromSampler(effect, effect.diffuseSampler)));
 				}
 				else
-					fmat->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
+					fmat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
 			}
 			generatedMaterials.push_back(fmat);			
 

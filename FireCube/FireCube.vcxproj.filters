@@ -195,9 +195,6 @@
     <ClCompile Include="Rendering\Technique.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Core\ResourcePool.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Resource.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -236,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="Rendering\RenderPath.cpp">
       <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ResourceCache.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -384,9 +384,6 @@
     <ClInclude Include="Rendering\Technique.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Core\ResourcePool.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Resource.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -428,6 +425,9 @@
     </ClInclude>
     <ClInclude Include="Rendering\RenderPath.h">
       <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ResourceCache.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

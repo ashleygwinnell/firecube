@@ -6,7 +6,7 @@
 #include "Rendering/Renderer.h"
 #include "Geometry/Material.h"
 #include "Rendering/ShaderTemplate.h"
-#include "Core/ResourcePool.h"
+#include "Core/ResourceCache.h"
 
 using namespace FireCube;
 
@@ -45,8 +45,8 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 
 	case COMMAND_QUAD:
 		{
-			ShaderTemplate *vertexShaderTemplate = engine->GetResourcePool()->GetResource<ShaderTemplate>(element->Attribute("vs"));
-			ShaderTemplate *fragmentShaderTemplate = engine->GetResourcePool()->GetResource<ShaderTemplate>(element->Attribute("fs"));
+			ShaderTemplate *vertexShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>(element->Attribute("vs"));
+			ShaderTemplate *fragmentShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>(element->Attribute("fs"));
 			std::string shaderDefines = element->Attribute("defines");
 			if (vertexShaderTemplate == nullptr || fragmentShaderTemplate == nullptr)
 				return false;

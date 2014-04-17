@@ -18,7 +18,7 @@ namespace FireCube
 class Shader;
 class Texture;
 class Renderer;
-class ResourcePool;
+class ResourceCache;
 class DebugRenderer;
 
 /**
@@ -113,7 +113,7 @@ public:
 protected:
 	Renderer *renderer;
 	Engine *engine;
-	ResourcePool *resourcePool;
+	ResourceCache *resourceCache;
 	DebugRenderer *debugRenderer;
 private:
 	void InitKeyMap();

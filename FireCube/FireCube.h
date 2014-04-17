@@ -35,5 +35,5 @@
 #include "Scene/Node.h"
 #include "Scene/Camera.h"
 #include "Scene/NodeObserverCamera.h"
-#include "Core/ResourcePool.h"
+#include "Core/ResourceCache.h"
 #include "Core/Engine.h"

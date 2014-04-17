@@ -5,7 +5,7 @@
 #include "Utils/Logger.h"
 #include "Rendering/Renderer.h"
 #include "Application/Application.h"
-#include "Core/ResourcePool.h"
+#include "Core/ResourceCache.h"
 #include "Core/Engine.h"
 #include "Rendering/DebugRenderer.h"
 
@@ -64,8 +64,8 @@ bool Application::InitializeNoWindow()
 {	
 	renderer = new Renderer(engine);
 	engine->SetRenderer(renderer);
-	resourcePool = new ResourcePool(engine);
-	engine->SetResourcePool(resourcePool);
+	resourceCache = new ResourceCache(engine);
+	engine->SetResourceCache(resourceCache);
 	engine->SetInputManager(&inputManager);
 	debugRenderer = new DebugRenderer(engine);
 	engine->SetDebugRenderer(debugRenderer);
@@ -89,7 +89,7 @@ bool Application::InitializeNoWindow()
 
 void Application::Destroy()
 {
-	delete resourcePool;
+	delete resourceCache;
 	renderer->Destroy();
 	delete renderer;
 	delete debugRenderer;

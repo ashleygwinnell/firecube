@@ -9,7 +9,7 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/Technique.h"
 #include "Core/Engine.h"
-#include "Core/ResourcePool.h"
+#include "Core/ResourceCache.h"
 #include "Math/MathUtils.h"
 #include "Scene/Node.h"
 #include "Rendering/StaticModel.h"
@@ -214,11 +214,11 @@ FireCube::Material *M3dsLoader::CreateMaterialOfMesh(Mesh &mesh)
 
 		if (mesh.material->diffuseTextureMap.empty() == false)
 		{
-			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
-			material->SetTexture(TEXTURE_UNIT_DIFFUSE, engine->GetResourcePool()->GetResource<Texture>(mesh.material->diffuseTextureMap));
+			material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
+			material->SetTexture(TEXTURE_UNIT_DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(mesh.material->diffuseTextureMap));
 		}
 		else
-			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
+			material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
 		materialsMap[mesh.material] = material;
 	}
 	

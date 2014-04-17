@@ -3,7 +3,7 @@
 #include "Utils/Filesystem.h"
 #include "Rendering/Technique.h"
 #include "Core/Engine.h"
-#include "Core/ResourcePool.h"
+#include "Core/ResourceCache.h"
 #include "Rendering/Texture.h"
 
 using namespace FireCube;
@@ -32,7 +32,7 @@ bool Material::Load(const std::string &filename)
 			if (techniqueName.empty())
 				continue;			
 			
-			technique = engine->GetResourcePool()->GetResource<Technique>(techniqueName);			
+			technique = engine->GetResourceCache()->GetResource<Technique>(techniqueName);			
 		}
 		else if (element->ValueStr() == "parameter")
 		{			
@@ -55,7 +55,7 @@ bool Material::Load(const std::string &filename)
 				continue;		
 
 			TextureUnit textureUnit = ParseTextureUnitName(textureUnitName);
-			textures[textureUnit] = engine->GetResourcePool()->GetResource<Texture>(textureName);
+			textures[textureUnit] = engine->GetResourceCache()->GetResource<Texture>(textureName);
 		}
 	}
 	return true;

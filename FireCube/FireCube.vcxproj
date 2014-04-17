@@ -25,7 +25,7 @@
     <ClCompile Include="Core\Engine.cpp" />
     <ClCompile Include="Core\Object.cpp" />
     <ClCompile Include="Core\Resource.cpp" />
-    <ClCompile Include="Core\ResourcePool.cpp" />
+    <ClCompile Include="Core\ResourceCache.cpp" />
     <ClCompile Include="Core\Variant.cpp" />
     <ClCompile Include="Geometry\Geometry.cpp" />
     <ClCompile Include="Geometry\GeometryGenerator.cpp" />
@@ -89,7 +89,7 @@
     <ClInclude Include="Core\Engine.h" />
     <ClInclude Include="Core\Object.h" />
     <ClInclude Include="Core\Resource.h" />
-    <ClInclude Include="Core\ResourcePool.h" />
+    <ClInclude Include="Core\ResourceCache.h" />
     <ClInclude Include="Core\Variant.h" />
     <ClInclude Include="FireCube.h" />
     <ClInclude Include="Geometry\Geometry.h" />

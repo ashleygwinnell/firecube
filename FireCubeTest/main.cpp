@@ -36,16 +36,16 @@ bool App::Prepare()
 
 	Node *childNode = root->CreateChild("Model");	
 	StaticModel *staticModel = childNode->CreateComponent<StaticModel>();
-	staticModel->CreateFromMesh(resourcePool->GetResource<Mesh>("scene.3ds"));
+	staticModel->CreateFromMesh(resourceCache->GetResource<Mesh>("scene.3ds"));
 	childNode->Scale(vec3(0.05f));
 	childNode->Move(vec3(0, 0.0251f, 0));
 	childNode = root->CreateChild("Terrain");	
 	Terrain *terrain = childNode->CreateComponent<Terrain>();
 	childNode->Scale(vec3(0.05f));
-	Image *image = resourcePool->GetResource<Image>("heightmap3.bmp");	
+	Image *image = resourceCache->GetResource<Image>("heightmap3.bmp");
 	terrain->SetPatchSize(64);
 	terrain->CreateFromHeightMap(image);
-	terrain->SetMaterial(resourcePool->GetResource<Material>("Materials/TerrainNoTexture.xml"));	
+	terrain->SetMaterial(resourceCache->GetResource<Material>("Materials/TerrainNoTexture.xml"));
 	//terrain->SetMaterial(resourcePool->GetResource<Material>("Materials/DebugNormals.xml"));	
 
 	childNode = root->CreateChild("LightNode");	
@@ -55,11 +55,11 @@ bool App::Prepare()
 	light->SetSpecularColor(vec4(0, 0, 0, 0));	
 	childNode->Move(vec3(0, 1, 0));
 	
-	font = resourcePool->GetResource<Font>("c:\\windows\\fonts\\arial.ttf");
+	font = resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf");
 	fontFace = font->GenerateFontFace(18);
 
 	scene.SetFogColor(vec3(44, 80, 222) / 255.0f);
-	renderer->SetCurrentRenderPath(resourcePool->GetResource<RenderPath>("RenderPaths/ForwardGrayscale.xml"));
+	renderer->SetCurrentRenderPath(resourceCache->GetResource<RenderPath>("RenderPaths/ForwardGrayscale.xml"));
 	return true;
 }
 void App::Update(float t)

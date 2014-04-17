@@ -7,7 +7,7 @@
 #include "ModelLoaders/ObjLoader.h"
 #include "Rendering/IndexBuffer.h"
 #include "Core/Engine.h"
-#include "Core/ResourcePool.h"
+#include "Core/ResourceCache.h"
 #include "Rendering/RenderingTypes.h"
 #include "Math/MathUtils.h"
 #include "Rendering/Technique.h"
@@ -479,14 +479,14 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			if (textureName[0] == '/' || textureName[0] == '\\')
 				textureName = textureName.substr(1);
 			
-			Texture *texture = engine->GetResourcePool()->GetResource<Texture>(baseDir + "\\" + textureName);
+			Texture *texture = engine->GetResourceCache()->GetResource<Texture>(baseDir + "\\" + textureName);
 			if (!texture)
-				texture = engine->GetResourcePool()->GetResource<Texture>(textureName);
+				texture = engine->GetResourceCache()->GetResource<Texture>(textureName);
 			material->SetTexture(TEXTURE_UNIT_DIFFUSE, texture);
-			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
+			material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
 		}
 		else
-			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
+			material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
 
 		if (!i->second.normalTextureName.empty())
 		{
@@ -494,9 +494,9 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			if (textureName[0] == '/' || textureName[0] == '\\')
 				textureName = textureName.substr(1);
 
-			Texture *texture = engine->GetResourcePool()->GetResource<Texture>(baseDir + "\\" + textureName);
+			Texture *texture = engine->GetResourceCache()->GetResource<Texture>(baseDir + "\\" + textureName);
 			if (!texture)
-				texture = engine->GetResourcePool()->GetResource<Texture>(textureName);
+				texture = engine->GetResourceCache()->GetResource<Texture>(textureName);
 			material->SetTexture(TEXTURE_UNIT_NORMAL, texture);
 		}
 		allMaterials[i->first] = material;
@@ -654,7 +654,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 1.0f, 1.0f, 1.0f));
 			material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0.0f, 0.0f, 0.0f, 1.0f));
 			material->SetParameter(PARAM_MATERIAL_SHININESS, 0);
-			material->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
+			material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
 			generatedMaterials.push_back(material);
 			geometry->SetPrimitiveType(TRIANGLES);
 			geometry->SetPrimitiveCount(i->second.facesWithoutMaterial.size());
