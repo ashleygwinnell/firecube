@@ -1,0 +1,9 @@
+<renderpath>
+<rendersurface name = "temp" size = "1024 1024" />
+<command type = "clear" color = "fogcolor" output = "temp" />
+<command type = "scenepass" output = "temp" />
+<command type = "lightpass" output = "temp" />
+<command type = "quad" vs = "Shaders/grayscale.vert" fs = "Shaders/grayscale.frag" defines = "">
+	<texture unit = "diffuse" name = "temp" />
+</command>
+</renderpath>

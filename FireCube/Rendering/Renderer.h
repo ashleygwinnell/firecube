@@ -160,13 +160,20 @@ public:
 
 	void SetDepthTexture(Texture *depthTexture);
 
+	void SetCurrentRenderPath(RenderPath *renderPath);
 	RenderPath *GetCurrentRenderPath();
-private:
 
 	void UpdateFrameBuffer();
 
-	VertexBuffer *textVertexBuffer;
-	GLuint textVao;
+	void RenderFullscreenQuad();
+
+	void SetWidth(int width);
+	void SetHeight(int height);
+private:
+	
+
+	VertexBuffer *textVertexBuffer, *quadVertexBuffer;	
+	GLuint textVao, quadVao;
 	Shader *textVertexShader;
 	Shader *textFragmentShader;
 	ShaderTemplate *textVertexShaderTemplate;
@@ -188,6 +195,7 @@ private:
 	FrameBuffer *currentFrameBuffer;
 	bool fboDirty;
 	RenderPath *currentRenderPath;
+	int width, height;
 };
 
 }

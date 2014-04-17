@@ -164,6 +164,25 @@ void Scene::UpdateLightQueues()
 	}	
 }
 
+
+void Scene::SetRenderTargets(Renderer *renderer, const RenderPathCommand &command)
+{
+	Texture *renderTarget = command.renderPath->GetRenderTarget(command.output);
+	renderer->SetRenderTarget(0, renderTarget);		
+	for (int i = 1; i < MAX_RENDER_TARGETS; ++i)
+		renderer->SetRenderTarget(i, nullptr);
+	renderer->UpdateFrameBuffer();	
+}
+
+void Scene::SetTextures(Renderer *renderer, const RenderPathCommand &command)
+{
+	for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
+	{
+		Texture *texture = command.renderPath->GetRenderTarget(command.textures[i]);
+		if (texture)
+			renderer->UseTexture(texture, i);
+	}
+}
 void Scene::Render(Renderer *renderer)
 {
 	renderer->ResetCachedShaderParameters();
@@ -178,14 +197,16 @@ void Scene::Render(Renderer *renderer)
 	{
 		switch (command.type)
 		{
-		case FireCube::COMMAND_CLEAR:
+		case COMMAND_CLEAR:
+			SetRenderTargets(renderer, command);
 			if (command.useFogColor)
 				renderer->Clear(vec4(fogColor, 1.0f), 1.0f);
 			else
 				renderer->Clear(vec4(command.clearColor, 1.0f), 1.0f);
 			break;
-		case FireCube::COMMAND_SCENEPASS:
 
+		case COMMAND_SCENEPASS:
+			SetRenderTargets(renderer, command);
 			glDisable(GL_BLEND);
 			glDepthFunc(GL_LESS);
 			glDepthMask(true);
@@ -215,7 +236,9 @@ void Scene::Render(Renderer *renderer)
 				renderJob.geometry->Render();
 			}
 			break;
-		case FireCube::COMMAND_LIGHTPASS:
+
+		case COMMAND_LIGHTPASS:
+			SetRenderTargets(renderer, command);
 			glEnable(GL_BLEND);
 			glDepthFunc(GL_EQUAL);
 			glBlendFunc(GL_ONE, GL_ONE);
@@ -253,6 +276,14 @@ void Scene::Render(Renderer *renderer)
 			glDepthFunc(GL_LESS);
 			glDepthMask(true);
 			break;
+
+		case COMMAND_QUAD:
+			SetRenderTargets(renderer, command);
+			SetTextures(renderer, command);			
+			renderer->SetShaders(command.vertexShader, command.fragmentShader);
+			renderer->RenderFullscreenQuad();			
+			break;
+
 		default:
 			LOGERROR("Unkown command type: ", (int) command.type);
 			continue;

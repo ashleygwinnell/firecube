@@ -69,6 +69,8 @@ bool Application::InitializeNoWindow()
 	engine->SetInputManager(&inputManager);
 	debugRenderer = new DebugRenderer(engine);
 	engine->SetDebugRenderer(debugRenderer);
+	renderer->SetWidth(width);
+	renderer->SetHeight(height);
 	renderer->SetViewport(0, 0, width, height);
 	InitKeyMap();	
 	glewExperimental = GL_TRUE;
@@ -225,6 +227,8 @@ void Application::Run()
 				// Update the renderer's viewport with the new window size
 				width = event.window.data1;
 				height = event.window.data2;
+				renderer->SetWidth(width);
+				renderer->SetHeight(height);
 				renderer->SetViewport(0, 0, width, height);
 			}
 			else if (event.type == SDL_QUIT)

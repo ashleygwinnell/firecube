@@ -4,6 +4,8 @@
 #include "Rendering/RenderQueue.h"
 #include "Geometry/CollisionQuery.h"
 #include "Core/Object.h"
+#include "Rendering/RenderPath.h"
+
 namespace FireCube
 {
 
@@ -33,6 +35,8 @@ private:
 	void UpdateRenderables();
 	void UpdateBaseQueue();
 	void UpdateLightQueues();
+	void SetRenderTargets(Renderer *renderer, const RenderPathCommand &command);
+	void SetTextures(Renderer *renderer, const RenderPathCommand &command);
 
 	Node rootNode;
 	Camera *camera;

@@ -61,6 +61,9 @@ public:
 	
 	int GetWidth() const;
 	int GetHeight() const;
+
+	void SetWidth(int width);
+	void SetHeight(int height);
 private:		
 	TextureFilter minFilter, magFilter;
 

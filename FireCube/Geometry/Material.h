@@ -71,10 +71,10 @@ public:
 	* @return A new cloned Material of this one.
 	*/
 	Material *Clone();
-
-private:
-
+	
 	static TextureUnit ParseTextureUnitName(const std::string &name);
+private:
+	
 	
 	std::string name;	
 	Texture *textures[MAX_TEXTURE_UNITS];	

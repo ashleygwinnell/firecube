@@ -284,6 +284,20 @@ void Renderer::Initialize()
 	textVertexBuffer = new VertexBuffer(this);	
 	glBindVertexArray(0);
 
+	glGenVertexArrays(1, &quadVao);
+	glBindVertexArray(quadVao);
+	
+	quadVertexBuffer = new VertexBuffer(this);
+	std::vector<float> quadVertices = { -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+										 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+										 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+										-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+										 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+										-1.0f,  1.0f, 0.0f, 0.0f, 1.0f };
+	quadVertexBuffer->LoadData(&quadVertices[0], 6, VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_TEXCOORD0, STATIC);
+	quadVertexBuffer->ApplyAttributes();
+	glBindVertexArray(0);
+
 	// Create shaders for text rendering
 	textVertexShaderTemplate = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/font.vert");
 	textFragmentShaderTemplate = engine->GetResourcePool()->GetResource<ShaderTemplate>("Shaders/font.frag");	
@@ -296,8 +310,10 @@ void Renderer::Initialize()
 void Renderer::Destroy()
 {
 	delete textVertexBuffer;
+	delete quadVertexBuffer;
 	delete shadowMap;		
 	glDeleteVertexArrays(1, &textVao);
+	glDeleteVertexArrays(1, &quadVao);
 	glDeleteSamplers(16, textureSampler);
 }
 
@@ -317,7 +333,12 @@ void Renderer::UseFrameBuffer(FrameBuffer *frameBuffer)
 
 void Renderer::RestoreFrameBuffer()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
+		SetRenderTarget(i, nullptr);
+
+	depthTexture = nullptr;
+	UpdateFrameBuffer();	
+	SetViewport(0, 0, width, height);
 }
 
 void Renderer::SetViewport(int left, int right, int width, int height)
@@ -441,14 +462,20 @@ void Renderer::SetRenderTarget(unsigned int index, Texture *renderTarget)
 	if (index >= MAX_RENDER_TARGETS)
 		return;
 
-	renderTargets[index] = renderTarget;
-	fboDirty = true;
+	if (renderTargets[index] != renderTarget)
+	{
+		renderTargets[index] = renderTarget;
+		fboDirty = true;
+	}
 }
 
 void Renderer::SetDepthTexture(Texture *depthTexture)
 {
-	this->depthTexture = depthTexture;
-	fboDirty = true;
+	if (this->depthTexture != depthTexture)
+	{
+		this->depthTexture = depthTexture;
+		fboDirty = true;
+	}
 }
 
 void Renderer::UpdateFrameBuffer()
@@ -463,7 +490,7 @@ void Renderer::UpdateFrameBuffer()
 
 	if (!hasFbo)
 	{
-		RestoreFrameBuffer();
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		return;
 	}
 
@@ -496,6 +523,7 @@ void Renderer::UpdateFrameBuffer()
 	{
 		frameBuffer = new FrameBuffer(engine);
 		frameBuffer->Create(width, height);
+		frameBuffer->AddDepthBufferTexture();
 		frameBuffers[key] = frameBuffer;
 	}
 
@@ -516,7 +544,33 @@ void Renderer::UpdateFrameBuffer()
 	}
 }
 
+void Renderer::SetCurrentRenderPath(RenderPath *renderPath)
+{
+	currentRenderPath = renderPath;
+}
+
 RenderPath *Renderer::GetCurrentRenderPath()
 {
 	return currentRenderPath;
+}
+
+void Renderer::RenderFullscreenQuad()
+{
+	RestoreFrameBuffer();
+	currentProgram->SetUniform(PARAM_VIEW_PROJECTION_MATRIX, mat4::IDENTITY);
+	currentProgram->SetUniform(PARAM_CAMERA_POS, mat4::IDENTITY);	
+	glBindVertexArray(quadVao);
+	glDisable(GL_DEPTH_TEST);
+	RenderStream(TRIANGLES, 6);	
+	glEnable(GL_DEPTH_TEST);
+}
+
+void Renderer::SetWidth(int width)
+{
+	this->width = width;
+}
+
+void Renderer::SetHeight(int height)
+{
+	this->height = height;
 }

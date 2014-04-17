@@ -59,6 +59,7 @@ bool App::Prepare()
 	fontFace = font->GenerateFontFace(18);
 
 	scene.SetFogColor(vec3(44, 80, 222) / 255.0f);
+	renderer->SetCurrentRenderPath(resourcePool->GetResource<RenderPath>("RenderPaths/ForwardGrayscale.xml"));
 	return true;
 }
 void App::Update(float t)

@@ -83,3 +83,12 @@ int Texture::GetHeight() const
 {
 	return height;
 }
+
+void Texture::SetWidth(int width)
+{
+	this->width = width;
+}
+void Texture::SetHeight(int height)
+{
+	this->height = height;
+}
