@@ -246,7 +246,7 @@ void M3dsLoader::GenerateGeometries(Renderer *renderer)
 
 void M3dsLoader::GenerateScene(Renderer *renderer, Node *root)
 {	
-	for (unsigned int i = 0; i < object.size(); i++)
+	/*for (unsigned int i = 0; i < object.size(); i++)
 	{   
 		if (object[i].vertex.empty())
 			continue;
@@ -262,7 +262,7 @@ void M3dsLoader::GenerateScene(Renderer *renderer, Node *root)
 			staticModel->SetBoundingBox(boundingBox); // TODO: Calculate bounding box for each mesh
 			generatedGeometries.push_back(geom);
 		}        
-	}    	
+	}  */  	
 }
 
 const std::vector<Geometry *> &M3dsLoader::GetGeneratedGeometries()

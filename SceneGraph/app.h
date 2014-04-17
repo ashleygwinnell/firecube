@@ -10,7 +10,6 @@ public:
     FontFace *fontFace;
     Node *root;	
 	Camera *camera;
-	Geometry *lightMarker, *earthGeometry;
-	Material *earthMaterial;
+	Mesh *lightMarker, *earthMesh;	
 	Scene scene;
 };

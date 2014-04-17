@@ -82,7 +82,18 @@ const std::vector<Material *> &Mesh::GetMaterials() const
 	return materials;
 }
 
+void Mesh::AddGeometry(Geometry *geometry, Material *material)
+{
+	geometries.push_back(geometry);
+	materials.push_back(material);
+}
+
 const BoundingBox &Mesh::GetBoundingBox() const
 {
 	return boundingBox;
+}
+
+void Mesh::SetBoundingBox(BoundingBox boundingBox)
+{
+	this->boundingBox = boundingBox;
 }

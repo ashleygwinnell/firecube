@@ -34,16 +34,6 @@ void StaticModel::SetBoundingBox(BoundingBox boundingBox)
 	MarkedDirty();
 }
 
-void StaticModel::AddRenderablePart(Geometry *geometry, Material *material)
-{
-	RenderablePart part;
-	part.geometry = geometry;
-	part.material = material;
-	renderableParts.push_back(part);
-	geometries.push_back(geometry);
-	materials.push_back(material);
-}
-
 std::vector<Geometry *> &StaticModel::GetGeometries()
 {
 	return geometries;

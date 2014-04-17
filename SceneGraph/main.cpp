@@ -22,8 +22,7 @@ App::App() : scene(engine)
 App::~App()
 {		
 	delete lightMarker;
-	delete earthGeometry;
-	delete earthMaterial;	
+	delete earthMesh;	
 }
 bool App::Prepare()
 {
@@ -32,8 +31,7 @@ bool App::Prepare()
 	SetTitle("SceneGraph Test Application");
 	GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
-	fontFace = engine->GetResourcePool()->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18);
-	lightMarker = GeometryGenerator::GenerateSphere(engine, 0.1f, 10, 10);
+	fontFace = engine->GetResourceCache()->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18);	
 	
 	root = scene.GetRootNode();
 	Node *cameraNode = root->CreateChild("cameraNode");	
@@ -49,34 +47,38 @@ bool App::Prepare()
 	light->SetLightType(FireCube::POINT);
 	lightNode->Move(vec3(0, 0, 4.0f));	
 	StaticModel *staticModel = lightNode->CreateComponent<StaticModel>();
-	Material *mat = engine->GetResourcePool()->GetResource<Material>("./Materials/TerrainNoTexture.xml")->Clone();
-	mat->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("./Techniques/Unlit.xml"));
-	staticModel->AddRenderablePart(lightMarker, mat);
-	staticModel->SetBoundingBox(BoundingBox(vec3(-0.05f), vec3(0.05f)));	
+	lightMarker = new Mesh(engine);
+	Material *mat = engine->GetResourceCache()->GetResource<Material>("./Materials/TerrainNoTexture.xml")->Clone();
+	mat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("./Techniques/Unlit.xml"));
+	lightMarker->AddGeometry(GeometryGenerator::GenerateSphere(engine, 0.1f, 10, 10), mat);
+	lightMarker->SetBoundingBox(BoundingBox(vec3(-0.05f), vec3(0.05f)));
+	staticModel->CreateFromMesh(lightMarker);	
 
-	earthMaterial = new Material(engine);
-	earthMaterial->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(0.3f, 0.3f, 0.3f, 1.0f));
-	earthMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(0.7f, 0.7f, 0.7f, 1.0f));
-	earthMaterial->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0.3f, 0.3f, 0.3f, 1.0f));
-	earthMaterial->SetParameter(PARAM_MATERIAL_SHININESS, 20.0f);
-	earthMaterial->SetTexture(TEXTURE_UNIT_DIFFUSE, engine->GetResourcePool()->GetResource<Texture>("earthmap1k.jpg"));
-	earthMaterial->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("./Techniques/DiffuseMap.xml"));
+	earthMesh = new Mesh(engine);
+	mat = new Material(engine);
+	mat->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(0.3f, 0.3f, 0.3f, 1.0f));
+	mat->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(0.7f, 0.7f, 0.7f, 1.0f));
+	mat->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0.3f, 0.3f, 0.3f, 1.0f));
+	mat->SetParameter(PARAM_MATERIAL_SHININESS, 20.0f);
+	mat->SetTexture(TEXTURE_UNIT_DIFFUSE, engine->GetResourceCache()->GetResource<Texture>("earthmap1k.jpg"));
+	mat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("./Techniques/DiffuseMap.xml"));
 
 	Node *n = root->CreateChild("Earth");
-	staticModel = n->CreateComponent<StaticModel>();
-	earthGeometry = GeometryGenerator::GenerateSphere(engine, 2.0f, 32, 32);
-	staticModel->AddRenderablePart(earthGeometry, earthMaterial);
-	staticModel->SetBoundingBox(BoundingBox(vec3(-2.0f), vec3(2.0f)));
+	staticModel = n->CreateComponent<StaticModel>();	
+	earthMesh->AddGeometry(GeometryGenerator::GenerateSphere(engine, 2.0f, 32, 32), mat);
+	earthMesh->SetBoundingBox(BoundingBox(vec3(-2.0f), vec3(2.0f)));
+	staticModel->CreateFromMesh(earthMesh);		
 			
 	Node *n2 = root->CreateChild("Teapot");
-	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourcePool()->GetResource<Mesh>("../Assets/Models/teapot.3ds"));	
+	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>("../Assets/Models/teapot.3ds"));
 	n2->Move(vec3(8, -2, 0));
 
 	n2 = root->CreateChild("Duck");	
-	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourcePool()->GetResource<Mesh>("../Assets/Models/duck.dae"));			
+	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>("../Assets/Models/duck.dae"));
 	n2->Scale(vec3(0.03f, 0.03f, 0.03f));
 	n2->Move(vec3(-8, -4, 0));	
 	
+	scene.SetFogColor(vec3(0.2f, 0.2f, 0.6f));
 	return true;
 }
 
@@ -86,8 +88,7 @@ void App::Update(float t)
 	root->GetChild("Earth")->Rotate(vec3(0, 0.1f, 0) * t);	
 }
 void App::Render(float t)
-{
-	renderer->Clear(vec4(0.2f, 0.2f, 0.6f, 1.0f), 1.0f);
+{	
 	mat4 projection;
 	projection.GeneratePerspective(90.0f, (float) GetWidth() / (float) GetHeight(), 0.1f, 1000.0f);
 	camera->SetProjectionMatrix(projection);	
