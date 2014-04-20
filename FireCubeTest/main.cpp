@@ -67,16 +67,14 @@ void App::Update(float t)
 	//root->GetChild("LightNode")->Move(vec3(0.2f, 0.0f, 0.2f) * t);
 }
 void App::Render(float t)
-{    	
-	mat4 projection;
-	projection.GeneratePerspective(60.0f, (float)GetWidth() / (float)GetHeight(), 0.1f, 500.0f);	
-	camera->SetProjectionMatrix(projection);	
+{    		
 	scene.Render(renderer);
 
 	mat4 ortho;
 	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	
 	std::ostringstream oss;
 	oss << "Rendered triangles: " << renderer->GetNumberOfPrimitivesRendered() << std::endl << "FPS: " << GetFps();
+	renderer->RestoreFrameBuffer();
 	renderer->RenderText(fontFace, ortho, vec3(0, 0, 0), vec4(1, 1, 1, 1), oss.str());
 }
 void App::HandleInput(float t, const MappedInput &input)

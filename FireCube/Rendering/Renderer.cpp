@@ -574,3 +574,13 @@ void Renderer::SetHeight(int height)
 {
 	this->height = height;
 }
+
+int Renderer::GetWidth() const
+{
+	return width;
+}
+
+int Renderer::GetHeight() const
+{
+	return height;
+}

@@ -169,6 +169,9 @@ public:
 
 	void SetWidth(int width);
 	void SetHeight(int height);
+
+	int GetWidth() const;
+	int GetHeight() const;
 private:
 	
 

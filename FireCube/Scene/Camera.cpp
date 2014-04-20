@@ -3,19 +3,19 @@
 
 using namespace FireCube;
 
-Camera::Camera(Engine *engine) : Component(engine), viewMatrixChanged(true), frustumChanged(true)
+Camera::Camera(Engine *engine) : Component(engine), viewMatrixChanged(true), frustumChanged(true), projectionMatrixChanged(true), aspectRatio(1.0f), fov(60.0f), 
+								 nearPlane(0.1f), farPlane(500.0f)
 {
 
 }
 
-void Camera::SetProjectionMatrix(const mat4 &mat)
+mat4 Camera::GetProjectionMatrix()
 {
-	projectionMatrix = mat;
-	frustumChanged = true;
-}
-
-mat4 Camera::GetProjectionMatrix() const
-{
+	if (projectionMatrixChanged)
+	{
+		projectionMatrixChanged = false;
+		projectionMatrix.GeneratePerspective(fov, aspectRatio, nearPlane, farPlane);
+	}
 	return projectionMatrix;
 }
 
@@ -69,5 +69,43 @@ void Camera::MarkedDirty()
 void Camera::NodeChanged()
 {
 	viewMatrixChanged = true;
+	frustumChanged = true;
+}
+
+void Camera::SetFOV(float fov)
+{
+	this->fov = fov;
+	projectionMatrixChanged = true;
+	frustumChanged = true;
+}
+
+void Camera::SetNearPlane(float nearPlane)
+{
+	this->nearPlane = nearPlane;
+	projectionMatrixChanged = true;
+	frustumChanged = true;
+}
+
+void Camera::SetFarPlane(float farPlane)
+{
+	this->farPlane = farPlane;
+	projectionMatrixChanged = true;
+	frustumChanged = true;
+}
+
+void Camera::SetAspectRatio(float aspectRatio)
+{
+	this->aspectRatio = aspectRatio;
+	projectionMatrixChanged = true;
+	frustumChanged = true;
+}
+
+void Camera::SetPerspectiveProjectionParameters(float fov, float aspectRatio, float nearPlane, float farPlane)
+{
+	this->fov = fov;
+	this->aspectRatio = aspectRatio;
+	this->nearPlane = nearPlane;
+	this->farPlane = farPlane;	
+	projectionMatrixChanged = true;
 	frustumChanged = true;
 }
