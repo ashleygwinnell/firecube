@@ -93,17 +93,6 @@ public:
 	void RenderStream(const PrimitiveType &primitiveType, unsigned int count);
 
 	/**
-	* Disables a texture coordinates stream.
-	* @param unit The texture unit.
-	*/
-	void DisableTexCoordStream(unsigned int unit);
-
-	/**
-	* Disables the normal stream.
-	*/
-	void DisableNormalStream();
-
-	/**
 	* Uses a program.
 	* @param program The program to use.
 	*/
@@ -138,13 +127,6 @@ public:
 	* Returns the number of triangles that were rendered in the current frame.
 	*/
 	unsigned int GetNumberOfPrimitivesRendered();
-
-
-	/**
-	* Disabled a vertex attribute.
-	* @param index The index of the attribute.
-	*/
-	void DisableVertexAttribute(int index);
 
 	Program *SetShaders(Shader *vertexShader, Shader *fragmentShader); // TODO change to void
 

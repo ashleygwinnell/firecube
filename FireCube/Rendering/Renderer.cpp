@@ -346,16 +346,6 @@ void Renderer::SetViewport(int left, int right, int width, int height)
 	glViewport(left, right, width, height);
 }
 
-void Renderer::DisableTexCoordStream(unsigned int unit)
-{
-	Renderer::DisableVertexAttribute(4);
-}
-
-void Renderer::DisableNormalStream()
-{
-	Renderer::DisableVertexAttribute(1);
-}
-
 Program *Renderer::SetShaders(Shader *vertexShader, Shader *fragmentShader)
 {
 	if (currentVertexShader == vertexShader && currentFragmentShader == fragmentShader)
@@ -390,11 +380,6 @@ void Renderer::IncreamentNumberOfPrimitivesRendered(unsigned int amount)
 unsigned int Renderer::GetNumberOfPrimitivesRendered()
 {
 	return numberOfPrimitivesRendered;
-}
-
-void Renderer::DisableVertexAttribute(int index)
-{
-	glDisableVertexAttribArray(index);
 }
 
 void Renderer::UseCamera(Camera *camera)

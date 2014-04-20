@@ -140,20 +140,7 @@ bool RenderPath::Load(const std::string &filename)
 			{
 				commands.push_back(command);
 			}
-		}
-		/*
-		else if (element->ValueStr() == "texture")
-		{
-			std::string textureUnitName = element->Attribute("unit");
-			if (textureUnitName.empty())
-				continue;
-			std::string textureName = element->Attribute("name");
-			if (textureName.empty())
-				continue;
-
-			TextureUnit textureUnit = ParseTextureUnitName(textureUnitName);
-			textures[textureUnit] = engine->GetResourcePool()->GetResource<Texture>(textureName);
-		}*/
+		}		
 	}
 	return true;	
 }
