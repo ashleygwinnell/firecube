@@ -171,7 +171,7 @@ void Program::Link()
 	{
 		glGetProgramResourceiv(objectId, GL_UNIFORM, i, properties.size(), &properties[0], values.size(), NULL, &values[0]);
 
-		nameData.resize(values[0] + 1); //The length of the name.
+		nameData.resize(values[0]); //The length of the name.
 		glGetProgramResourceName(objectId, GL_UNIFORM, i, nameData.size(), NULL, &nameData[0]);
 		std::string name(nameData.begin(), nameData.end() - 1);		
 		variables[StringHash(name)] = values[1];
