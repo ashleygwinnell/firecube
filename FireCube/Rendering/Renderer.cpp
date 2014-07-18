@@ -45,6 +45,55 @@ Renderer::Renderer(Engine *engine) : Object(engine), textVao(0), numberOfPrimiti
 		renderTargets[i] = nullptr;
 }
 
+void Renderer::Initialize()
+{
+	// Create texture samplers for each texture unit (hard coded to 16)
+	glGenSamplers(16, textureSampler);
+	for (int i = 0; i < 16; i++)
+	{
+		glSamplerParameteri(textureSampler[i], GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glSamplerParameteri(textureSampler[i], GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
+
+	// Create a vertex buffer for text rendering	
+	glGenVertexArrays(1, &textVao);
+	glBindVertexArray(textVao);
+	textVertexBuffer = new VertexBuffer(this);
+	glBindVertexArray(0);
+
+	glGenVertexArrays(1, &quadVao);
+	glBindVertexArray(quadVao);
+
+	quadVertexBuffer = new VertexBuffer(this);
+	std::vector<float> quadVertices = { -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f };
+	quadVertexBuffer->LoadData(&quadVertices[0], 6, VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_TEXCOORD0, STATIC);
+	quadVertexBuffer->ApplyAttributes();
+	glBindVertexArray(0);
+
+	// Create shaders for text rendering
+	textVertexShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/font.vert");
+	textFragmentShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/font.frag");
+	textVertexShader = textVertexShaderTemplate->GenerateShader("");
+	textFragmentShader = textFragmentShaderTemplate->GenerateShader("");
+
+	currentRenderPath = engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/Forward.xml");
+}
+
+void Renderer::Destroy()
+{
+	delete textVertexBuffer;
+	delete quadVertexBuffer;
+	delete shadowMap;
+	glDeleteVertexArrays(1, &textVao);
+	glDeleteVertexArrays(1, &quadVao);
+	glDeleteSamplers(16, textureSampler);
+}
+
 void Renderer::Clear(const vec4 &color, float depth)
 {
 	glClearColor(color.x, color.y, color.z, color.w);
@@ -268,55 +317,6 @@ void Renderer::ResetNumberOfPrimitivesRendered()
 	numberOfPrimitivesRendered = 0;
 }
 
-void Renderer::Initialize()
-{		
-	// Create texture samplers for each texture unit (hard coded to 16)
-	glGenSamplers(16, textureSampler);	
-	for (int i = 0; i < 16; i++)
-	{
-		glSamplerParameteri(textureSampler[i], GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glSamplerParameteri(textureSampler[i], GL_TEXTURE_WRAP_T, GL_REPEAT);
-	}
-		
-	// Create a vertex buffer for text rendering	
-	glGenVertexArrays(1, &textVao);
-	glBindVertexArray(textVao);
-	textVertexBuffer = new VertexBuffer(this);	
-	glBindVertexArray(0);
-
-	glGenVertexArrays(1, &quadVao);
-	glBindVertexArray(quadVao);
-	
-	quadVertexBuffer = new VertexBuffer(this);
-	std::vector<float> quadVertices = { -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-										 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-										 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-										-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-										 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-										-1.0f,  1.0f, 0.0f, 0.0f, 1.0f };
-	quadVertexBuffer->LoadData(&quadVertices[0], 6, VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_TEXCOORD0, STATIC);
-	quadVertexBuffer->ApplyAttributes();
-	glBindVertexArray(0);
-
-	// Create shaders for text rendering
-	textVertexShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/font.vert");
-	textFragmentShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/font.frag");	
-	textVertexShader = textVertexShaderTemplate->GenerateShader("");
-	textFragmentShader = textFragmentShaderTemplate->GenerateShader("");
-
-	currentRenderPath = engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/Forward.xml");
-}
-
-void Renderer::Destroy()
-{
-	delete textVertexBuffer;
-	delete quadVertexBuffer;
-	delete shadowMap;		
-	glDeleteVertexArrays(1, &textVao);
-	glDeleteVertexArrays(1, &quadVao);
-	glDeleteSamplers(16, textureSampler);
-}
-
 void Renderer::UseFrameBuffer(FrameBuffer *frameBuffer)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->GetObjectId());
@@ -508,7 +508,7 @@ void Renderer::UpdateFrameBuffer()
 	{
 		frameBuffer = new FrameBuffer(engine);
 		frameBuffer->Create(width, height);
-		frameBuffer->AddDepthBufferTexture();
+		frameBuffer->AddDepthBuffer();
 		frameBuffers[key] = frameBuffer;
 	}
 

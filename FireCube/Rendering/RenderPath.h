@@ -19,7 +19,7 @@ enum RenderPathCommandType
 class RenderPath;
 class Shader;
 
-class RenderPathCommand
+class FIRECUBE_API RenderPathCommand
 {
 public:
 	RenderPathCommand(RenderPath *renderPath);
@@ -36,10 +36,11 @@ public:
 	Shader *fragmentShader;
 };
 
-class RenderPath : public Resource
+class FIRECUBE_API RenderPath : public Resource
 {
 public:
 	RenderPath(Engine *engine);
+	~RenderPath();
 	virtual bool Load(const std::string &filename);
 	const std::vector<RenderPathCommand> &GetCommands() const;
 	RenderPathCommand &GetCommand(int index);

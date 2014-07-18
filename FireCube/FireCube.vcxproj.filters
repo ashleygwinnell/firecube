@@ -237,6 +237,12 @@
     <ClCompile Include="Core\ResourceCache.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\RenderSurface.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Octree.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -428,6 +434,12 @@
     </ClInclude>
     <ClInclude Include="Core\ResourceCache.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderSurface.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Octree.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

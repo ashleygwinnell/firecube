@@ -17,6 +17,14 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Static|Win32">
+      <Configuration>Release Static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Static|x64">
+      <Configuration>Release Static</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -30,14 +38,15 @@
     <ProjectName>SDL</ProjectName>
     <ProjectGuid>{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}</ProjectGuid>
     <RootNamespace>SDL</RootNamespace>
-    <SccProjectName>Svn</SccProjectName>
-    <SccAuxPath>Svn</SccAuxPath>
-    <SccLocalPath>Svn</SccLocalPath>
-    <SccProvider>SubversionScc</SccProvider>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
@@ -53,6 +62,11 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Static|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <PlatformToolset>v120</PlatformToolset>
@@ -76,6 +90,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
@@ -85,6 +103,10 @@
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Static|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
   </ImportGroup>
@@ -107,10 +129,14 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug Static|x64'">$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug Static|x64'">$(Platform)\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">$(Configuration)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Static|x64'">$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Static|x64'">$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PreBuildEvent />
@@ -161,7 +187,7 @@
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories);"$(DXSDK_DIR)\Include";</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -169,6 +195,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
       <ExceptionHandling>false</ExceptionHandling>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -184,6 +211,8 @@
     </Link>
     <Lib>
       <AdditionalDependencies>winmm.lib;imm32.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <Lib>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
     </Lib>
   </ItemDefinitionGroup>
@@ -203,7 +232,7 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <ResourceCompile>
@@ -235,7 +264,7 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <ResourceCompile>
@@ -291,7 +320,89 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">
+    <PreBuildEvent />
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories);"$(DXSDK_DIR)\Include";</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+      <ExceptionHandling>false</ExceptionHandling>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>winmm.lib;imm32.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)\lib\x86</AdditionalLibraryDirectories>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>winmm.lib;imm32.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+    </Lib>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories);"$(DXSDK_DIR)\Include";</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <ExceptionHandling>false</ExceptionHandling>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>winmm.lib;imm32.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)\lib\x64</AdditionalLibraryDirectories>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Static|x64'">
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MkTypLibCompatible>true</MkTypLibCompatible>
@@ -339,9 +450,11 @@
     <ClInclude Include="include\SDL_config_windows.h" />
     <ClInclude Include="include\SDL_copying.h" />
     <ClInclude Include="include\SDL_cpuinfo.h" />
+    <ClInclude Include="include\SDL_egl.h" />
     <ClInclude Include="include\SDL_endian.h" />
     <ClInclude Include="include\SDL_error.h" />
     <ClInclude Include="include\SDL_events.h" />
+    <ClInclude Include="include\SDL_filesystem.h" />
     <ClInclude Include="include\SDL_gesture.h" />
     <ClInclude Include="include\SDL_haptic.h" />
     <ClInclude Include="include\SDL_hints.h" />
@@ -378,15 +491,20 @@
     <ClInclude Include="include\SDL_video.h" />
     <ClInclude Include="include\SDL_gamecontroller.h" />
     <ClInclude Include="src\core\windows\SDL_windows.h" />
+    <ClInclude Include="src\dynapi\SDL_dynapi.h" />
+    <ClInclude Include="src\dynapi\SDL_dynapi_overrides.h" />
+    <ClInclude Include="src\dynapi\SDL_dynapi_procs.h" />
     <ClInclude Include="src\events\blank_cursor.h" />
     <ClInclude Include="src\events\default_cursor.h" />
     <ClInclude Include="src\audio\directsound\directx.h" />
     <ClInclude Include="src\events\SDL_clipboardevents_c.h" />
     <ClInclude Include="src\events\SDL_gesture_c.h" />
     <ClInclude Include="src\events\SDL_touch_c.h" />
+    <ClInclude Include="src\libm\math.h" />
     <ClInclude Include="src\libm\math_private.h" />
     <ClInclude Include="src\render\mmx.h" />
     <ClInclude Include="src\render\opengl\SDL_shaders_gl.h" />
+    <ClInclude Include="src\render\SDL_d3dmath.h" />
     <ClInclude Include="src\render\SDL_sysrender.h" />
     <ClInclude Include="src\render\SDL_yuv_sw_c.h" />
     <ClInclude Include="src\audio\SDL_audio_c.h" />
@@ -406,6 +524,7 @@
     <ClInclude Include="src\video\SDL_blit_auto.h" />
     <ClInclude Include="src\video\SDL_blit_copy.h" />
     <ClInclude Include="src\video\SDL_blit_slow.h" />
+    <ClInclude Include="src\video\sdl_egl_c.h" />
     <ClInclude Include="src\video\SDL_shape_internals.h" />
     <ClInclude Include="src\audio\winmm\SDL_winmm.h" />
     <ClInclude Include="src\audio\disk\SDL_diskaudio.h" />
@@ -414,7 +533,8 @@
     <ClInclude Include="src\SDL_error_c.h" />
     <ClInclude Include="src\SDL_hints_c.h" />
     <ClInclude Include="src\events\SDL_events_c.h" />
-    <ClInclude Include="src\SDL_fatal.h" />
+    <ClInclude Include="src\video\SDL_glesfuncs.h" />
+    <ClInclude Include="src\video\SDL_glfuncs.h" />
     <ClInclude Include="src\joystick\SDL_joystick_c.h" />
     <ClInclude Include="src\events\SDL_keyboard_c.h" />
     <ClInclude Include="src\events\SDL_mouse_c.h" />
@@ -423,12 +543,14 @@
     <ClInclude Include="src\video\SDL_pixels_c.h" />
     <ClInclude Include="src\video\SDL_rect_c.h" />
     <ClInclude Include="src\video\SDL_RLEaccel_c.h" />
+    <ClInclude Include="src\video\SDL_stretch_c.h" />
     <ClInclude Include="src\audio\SDL_sysaudio.h" />
     <ClInclude Include="src\events\SDL_sysevents.h" />
     <ClInclude Include="src\haptic\SDL_syshaptic.h" />
     <ClInclude Include="src\joystick\SDL_sysjoystick.h" />
     <ClInclude Include="src\thread\SDL_systhread.h" />
     <ClInclude Include="src\thread\windows\SDL_systhread_c.h" />
+    <ClInclude Include="src\timer\SDL_systimer.h" />
     <ClInclude Include="src\video\SDL_sysvideo.h" />
     <ClInclude Include="src\thread\SDL_thread_c.h" />
     <ClInclude Include="src\timer\SDL_timer_c.h" />
@@ -442,14 +564,17 @@
     <ClInclude Include="src\video\windows\SDL_windowsmodes.h" />
     <ClInclude Include="src\video\windows\SDL_windowsmouse.h" />
     <ClInclude Include="src\video\windows\SDL_windowsopengl.h" />
+    <ClInclude Include="src\video\windows\SDL_windowsopengles.h" />
     <ClInclude Include="src\video\windows\SDL_windowsshape.h" />
     <ClInclude Include="src\video\windows\SDL_windowsvideo.h" />
     <ClInclude Include="src\video\windows\SDL_windowswindow.h" />
     <ClInclude Include="src\events\SDL_windowevents_c.h" />
     <ClInclude Include="src\video\windows\wmmsg.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\windows\SDL_windows.c" />
+    <ClCompile Include="src\dynapi\SDL_dynapi.c" />
     <ClCompile Include="src\events\SDL_clipboardevents.c" />
     <ClCompile Include="src\events\SDL_gesture.c" />
     <ClCompile Include="src\events\SDL_touch.c" />
@@ -468,9 +593,13 @@
     <ClCompile Include="src\libm\s_floor.c" />
     <ClCompile Include="src\libm\s_scalbn.c" />
     <ClCompile Include="src\libm\s_sin.c" />
+    <ClCompile Include="src\render\direct3d11\SDL_render_d3d11.c" />
     <ClCompile Include="src\render\direct3d\SDL_render_d3d.c" />
+    <ClCompile Include="src\render\opengles2\SDL_render_gles2.c" />
+    <ClCompile Include="src\render\opengles2\SDL_shaders_gles2.c" />
     <ClCompile Include="src\render\opengl\SDL_render_gl.c" />
     <ClCompile Include="src\render\opengl\SDL_shaders_gl.c" />
+    <ClCompile Include="src\render\SDL_d3dmath.c" />
     <ClCompile Include="src\render\SDL_render.c" />
     <ClCompile Include="src\render\SDL_yuv_mmx.c" />
     <ClCompile Include="src\render\SDL_yuv_sw.c" />
@@ -503,6 +632,7 @@
     <ClCompile Include="src\video\SDL_bmp.c" />
     <ClCompile Include="src\cpuinfo\SDL_cpuinfo.c" />
     <ClCompile Include="src\video\SDL_clipboard.c" />
+    <ClCompile Include="src\video\SDL_egl.c" />
     <ClCompile Include="src\video\SDL_shape.c" />
     <ClCompile Include="src\audio\winmm\SDL_winmm.c" />
     <ClCompile Include="src\audio\disk\SDL_diskaudio.c" />
@@ -513,7 +643,6 @@
     <ClCompile Include="src\joystick\windows\SDL_dxjoystick.c" />
     <ClCompile Include="src\SDL_error.c" />
     <ClCompile Include="src\events\SDL_events.c" />
-    <ClCompile Include="src\SDL_fatal.c" />
     <ClCompile Include="src\video\SDL_fillrect.c" />
     <ClCompile Include="src\stdlib\SDL_getenv.c" />
     <ClCompile Include="src\haptic\SDL_haptic.c" />
@@ -538,6 +667,7 @@
     <ClCompile Include="src\stdlib\SDL_string.c" />
     <ClCompile Include="src\video\SDL_surface.c" />
     <ClCompile Include="src\thread\generic\SDL_syscond.c" />
+    <ClCompile Include="src\filesystem\windows\SDL_sysfilesystem.c" />
     <ClCompile Include="src\haptic\windows\SDL_syshaptic.c" />
     <ClCompile Include="src\loadso\windows\SDL_sysloadso.c" />
     <ClCompile Include="src\thread\windows\SDL_sysmutex.c" />
@@ -558,11 +688,15 @@
     <ClCompile Include="src\video\windows\SDL_windowsmodes.c" />
     <ClCompile Include="src\video\windows\SDL_windowsmouse.c" />
     <ClCompile Include="src\video\windows\SDL_windowsopengl.c" />
+    <ClCompile Include="src\video\windows\SDL_windowsopengles.c" />
     <ClCompile Include="src\video\windows\SDL_windowsshape.c" />
     <ClCompile Include="src\video\windows\SDL_windowsvideo.c" />
     <ClCompile Include="src\video\windows\SDL_windowswindow.c" />
     <ClCompile Include="src\events\SDL_windowevents.c" />
     <ClCompile Include="src\joystick\SDL_gamecontroller.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\main\windows\version.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

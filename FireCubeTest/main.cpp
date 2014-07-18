@@ -46,7 +46,7 @@ bool App::Prepare()
 	terrain->SetPatchSize(64);
 	terrain->CreateFromHeightMap(image);
 	terrain->SetMaterial(resourceCache->GetResource<Material>("Materials/TerrainNoTexture.xml"));
-	//terrain->SetMaterial(resourcePool->GetResource<Material>("Materials/DebugNormals.xml"));	
+	//terrain->SetMaterial(resourceCache->GetResource<Material>("Materials/DebugNormals.xml"));
 
 	childNode = root->CreateChild("LightNode");	
 	Light *light = childNode->CreateComponent<Light>();

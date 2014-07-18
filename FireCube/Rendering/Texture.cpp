@@ -14,7 +14,7 @@ Texture::Texture(Engine *engine) : Resource(engine), GraphicsResource(engine->Ge
 
 Texture::~Texture()
 {
-	LOGINFO("Destroyed texture with id=", objectId;);
+	LOGINFO("Destroyed texture with id=", objectId);
 	glDeleteTextures(1, &objectId);
 	objectId = 0;
 }

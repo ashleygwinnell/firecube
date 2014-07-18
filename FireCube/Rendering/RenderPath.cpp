@@ -104,6 +104,13 @@ RenderPath::RenderPath(Engine *engine) : Resource(engine)
 {
 
 }
+
+RenderPath::~RenderPath()
+{
+	for (auto i : renderTargets)
+		delete i.second;
+}
+
 bool RenderPath::Load(const std::string &filename)
 {
 	TiXmlDocument xmlDocument;
