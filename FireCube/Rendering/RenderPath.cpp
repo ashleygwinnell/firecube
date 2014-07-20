@@ -37,7 +37,7 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 		}
 		break;
 
-	case COMMAND_SCENEPASS:
+	case COMMAND_BASEPASS:
 		break;
 
 	case COMMAND_LIGHTPASS:
@@ -90,8 +90,8 @@ RenderPathCommandType RenderPathCommand::stringToType(const std::string &type)
 {
 	if (type == "clear")
 		return COMMAND_CLEAR;
-	else if (type == "scenepass")
-		return COMMAND_SCENEPASS;
+	else if (type == "basepass")
+		return COMMAND_BASEPASS;
 	else if (type == "lightpass")
 		return COMMAND_LIGHTPASS;
 	else if (type == "quad")

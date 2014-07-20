@@ -207,7 +207,7 @@ void Scene::Render(Renderer *renderer)
 				renderer->Clear(vec4(command.clearColor, 1.0f), 1.0f);
 			break;
 
-		case COMMAND_SCENEPASS:
+		case COMMAND_BASEPASS:
 			SetRenderTargets(renderer, command);
 			glDisable(GL_BLEND);
 			glDepthFunc(GL_LESS);

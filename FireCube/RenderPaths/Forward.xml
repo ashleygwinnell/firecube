@@ -1,5 +1,5 @@
 <renderpath>
 <command type = "clear" color = "fogcolor" />
-<command type = "scenepass" />
+<command type = "basepass" />
 <command type = "lightpass" />
 </renderpath>
