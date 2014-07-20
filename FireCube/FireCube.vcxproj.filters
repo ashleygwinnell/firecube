@@ -243,6 +243,9 @@
     <ClCompile Include="Rendering\Octree.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Memory.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -440,6 +443,9 @@
     </ClInclude>
     <ClInclude Include="Rendering\Octree.h">
       <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

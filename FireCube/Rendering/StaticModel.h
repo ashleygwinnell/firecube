@@ -12,15 +12,15 @@ class StaticModel : public Renderable
 public:
 	StaticModel(Engine *engine);	
 	void CreateFromMesh(Mesh *mesh);	
-	std::vector<Geometry *> &GetGeometries();
-	std::vector<Material *> &GetMaterials();	
+	std::vector<SharedPtr<Geometry>> &GetGeometries();
+	std::vector<SharedPtr<Material>> &GetMaterials();	
 	virtual void IntersectRay(RayQuery &rayQuery);
 protected:
 	void SetBoundingBox(BoundingBox boundingBox);
 	virtual void UpdateWorldBoundingBox();
 	BoundingBox boundingBox;
-	std::vector<Geometry *> geometries;
-	std::vector<Material *> materials;
+	std::vector<SharedPtr<Geometry>> geometries;
+	std::vector<SharedPtr<Material>> materials;
 };
 
 }

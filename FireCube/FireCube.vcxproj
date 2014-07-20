@@ -23,6 +23,7 @@
     <ClCompile Include="Application\Input.cpp" />
     <ClCompile Include="Core\Component.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
+    <ClCompile Include="Core\Memory.cpp" />
     <ClCompile Include="Core\Object.cpp" />
     <ClCompile Include="Core\Resource.cpp" />
     <ClCompile Include="Core\ResourceCache.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="Application\Input.h" />
     <ClInclude Include="Core\Component.h" />
     <ClInclude Include="Core\Engine.h" />
+    <ClInclude Include="Core\Memory.h" />
     <ClInclude Include="Core\Object.h" />
     <ClInclude Include="Core\Resource.h" />
     <ClInclude Include="Core\ResourceCache.h" />

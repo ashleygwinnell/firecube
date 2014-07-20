@@ -17,24 +17,6 @@ Mesh::Mesh(Engine *engine) : Resource(engine)
 
 }
 
-Mesh::~Mesh()
-{
-	for (auto i : geometries)
-	{		
-		delete i;
-	}
-	
-	std::vector<Material *> deletedMaterials;
-	for (auto i : materials)
-	{
-		if (std::find(deletedMaterials.begin(), deletedMaterials.end(), i) == deletedMaterials.end())
-		{
-			deletedMaterials.push_back(i);
-			delete i;
-		}
-	}
-}
-
 bool Mesh::Load(const std::string &filename)
 {
 	std::string file = Filesystem::SearchForFileName(filename);
@@ -59,8 +41,8 @@ bool Mesh::Load(const std::string &filename)
 			modelLoader->GenerateGeometries(engine->GetRenderer());						
 			for (unsigned int i = 0; i < modelLoader->GetGeneratedGeometries().size(); ++i)
 			{
-				geometries.push_back(modelLoader->GetGeneratedGeometries()[i]);				
-				materials.push_back(modelLoader->GetGeneratedMaterials()[i]);				
+				geometries.push_back(SharedPtr<Geometry>(modelLoader->GetGeneratedGeometries()[i]));
+				materials.push_back(SharedPtr<Material>(modelLoader->GetGeneratedMaterials()[i]));
 			}
 				
 			boundingBox = modelLoader->GetBoundingBox();
@@ -72,12 +54,12 @@ bool Mesh::Load(const std::string &filename)
 	return false;
 }
 
-const std::vector<Geometry *> &Mesh::GetGeometries() const
+const std::vector<SharedPtr<Geometry>> &Mesh::GetGeometries() const
 {
 	return geometries;
 }
 
-const std::vector<Material *> &Mesh::GetMaterials() const
+const std::vector<SharedPtr<Material>> &Mesh::GetMaterials() const
 {
 	return materials;
 }

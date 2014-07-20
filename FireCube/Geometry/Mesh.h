@@ -14,17 +14,17 @@ class FIRECUBE_API Mesh : public Resource
 {
 public:
 	Mesh(Engine *engine);
-	~Mesh();
+	
 	virtual bool Load(const std::string &filename);
-	const std::vector<Geometry *> &GetGeometries() const;
-	const std::vector<Material *> &GetMaterials() const;
+	const std::vector<SharedPtr<Geometry>> &GetGeometries() const;
+	const std::vector<SharedPtr<Material>> &GetMaterials() const;
 	void AddGeometry(Geometry *geometry, Material *material);
 	const BoundingBox &GetBoundingBox() const;
 	void SetBoundingBox(BoundingBox boundingBox);
 private:
 	BoundingBox boundingBox;
-	std::vector<Geometry *> geometries;
-	std::vector<Material *> materials;
+	std::vector<SharedPtr<Geometry>> geometries;
+	std::vector<SharedPtr<Material>> materials;
 };
 
 }

@@ -1,13 +1,14 @@
 #pragma once
 
 #include "Utils/StringHash.h"
+#include "Core/Memory.h"
 
 namespace FireCube
 {
 
 class Engine;
 
-class Object
+class Object : public RefCounted
 {
 public:
 	Object(Engine *engine);

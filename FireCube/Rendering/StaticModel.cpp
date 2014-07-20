@@ -34,12 +34,12 @@ void StaticModel::SetBoundingBox(BoundingBox boundingBox)
 	MarkedDirty();
 }
 
-std::vector<Geometry *> &StaticModel::GetGeometries()
+std::vector<SharedPtr<Geometry>> &StaticModel::GetGeometries()
 {
 	return geometries;
 }
 
-std::vector<Material *> &StaticModel::GetMaterials()
+std::vector<SharedPtr<Material>> &StaticModel::GetMaterials()
 {
 	return materials;
 }

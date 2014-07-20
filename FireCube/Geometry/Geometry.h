@@ -12,6 +12,7 @@
 #include "Math/BoundingBox.h"
 #include "Rendering/GraphicsResource.h"
 #include "Math/Ray.h"
+#include "Core/Memory.h"
 
 namespace FireCube
 {
@@ -51,7 +52,7 @@ public:
 * A class representing a geometry.
 * Geometries consists of vertices(position, normal, etc..), faces and a material.
 */
-class FIRECUBE_API Geometry : public GraphicsResource
+class FIRECUBE_API Geometry : public GraphicsResource, public RefCounted
 {    
 	friend class Renderer;	
 public:
