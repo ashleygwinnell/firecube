@@ -69,20 +69,20 @@ public:
 
 	T* Get() const 
 	{ 
-		return ptr_; 
+		return ptr; 
 	}
 
 	template <class U> void StaticCast(const SharedPtr<U> &rhs)
 	{
 		ReleaseRef();
-		ptr_ = static_cast<T*>(rhs.Get());
+		ptr = static_cast<T*>(rhs.Get());
 		AddRef();
 	}
 	
 	template <class U> void DynamicCast(const SharedPtr<U> &rhs)
 	{
 		ReleaseRef();
-		ptr_ = dynamic_cast<T*>(rhs.Get());
+		ptr = dynamic_cast<T*>(rhs.Get());
 		AddRef();
 	}
 
@@ -93,7 +93,7 @@ public:
 	
 	T& operator * () const 
 	{ 
-		return *ptr_; 
+		return *ptr; 
 	}
 	
 	T& operator [] (const int index) 
@@ -183,7 +183,7 @@ public:
 	template <class U> void StaticCast(const WeakPtr<U> &rhs)
 	{
 		ReleaseRef();
-		ptr_ = static_cast<T*>(rhs.Get());
+		ptr = static_cast<T*>(rhs.Get());
 		refCount = rhs.refCount;
 		AddRef();
 	}
@@ -191,7 +191,7 @@ public:
 	template <class U> void DynamicCast(const WeakPtr<U> &rhs)
 	{
 		ReleaseRef();
-		ptr_ = dynamic_cast<T*>(rhs.Get());
+		ptr = dynamic_cast<T*>(rhs.Get());
 
 		if (ptr)
 		{
