@@ -179,7 +179,7 @@ private:
 	std::map<unsigned int, FrameBuffer *> frameBuffers;
 	FrameBuffer *currentFrameBuffer;
 	bool fboDirty;
-	RenderPath *currentRenderPath;
+	SharedPtr<RenderPath> currentRenderPath;
 	int width, height;
 };
 

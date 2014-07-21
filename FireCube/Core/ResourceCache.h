@@ -23,19 +23,22 @@ public:
 		if (name.empty())
 			return nullptr;
 
-		std::map<std::string, Resource*>::iterator i = resources.find(name);
+		auto i = resources.find(name);
 		if (i != resources.end())
-			return (T *) i->second;
+			return (T *) i->second.Get();
 
-		T *resource = new T(engine);
+		SharedPtr<T> resource = SharedPtr<T>(new T(engine));
 		if (!resource->Load(name))
 			return nullptr;
-		resources[name] = resource;
+
+		SharedPtr<Resource> resourcePtr;
+		resourcePtr.StaticCast(resource);
+		resources[name] = resourcePtr;
 		return resource;
 	}
 
 private:
-	std::map<std::string, Resource *> resources;
+	std::map<std::string, SharedPtr<Resource>> resources;
 };
 
 
