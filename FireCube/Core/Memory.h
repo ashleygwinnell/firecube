@@ -72,6 +72,11 @@ public:
 		return ptr; 
 	}
 
+	RefCount *GetRefCountObject() const
+	{
+		return ptr ? ptr->GetRefCountObject() : nullptr;
+	}
+
 	template <class U> void StaticCast(const SharedPtr<U> &rhs)
 	{
 		ReleaseRef();
@@ -200,6 +205,19 @@ public:
 		}
 		else
 			refCount = 0;
+	}
+
+	WeakPtr<T>& operator = (const SharedPtr<T> &rhs)
+	{
+		if (ptr == rhs.Get() && refCount == rhs.GetRefCountObject())
+			return *this;
+
+		ReleaseRef();
+		ptr = rhs.Get();
+		refCount = rhs.GetRefCountObject();
+		AddRef();
+
+		return *this;
 	}
 private:
 

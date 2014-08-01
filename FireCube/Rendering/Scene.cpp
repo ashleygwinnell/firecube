@@ -8,6 +8,7 @@
 #include "Rendering/ShaderTemplate.h"
 #include "Rendering/DebugRenderer.h"
 #include "Rendering/RenderPath.h"
+#include "Rendering/RenderSurface.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/Material.h"
 #include "Scene/Camera.h"
@@ -167,7 +168,7 @@ void Scene::UpdateLightQueues()
 
 void Scene::SetRenderTargets(Renderer *renderer, const RenderPathCommand &command)
 {
-	Texture *renderTarget = command.renderPath->GetRenderTarget(command.output);
+	RenderSurface *renderTarget = command.renderPath->GetRenderTarget(command.output);
 	renderer->SetRenderTarget(0, renderTarget);		
 	for (int i = 1; i < MAX_RENDER_TARGETS; ++i)
 		renderer->SetRenderTarget(i, nullptr);
@@ -178,9 +179,9 @@ void Scene::SetTextures(Renderer *renderer, const RenderPathCommand &command)
 {
 	for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
 	{
-		Texture *texture = command.renderPath->GetRenderTarget(command.textures[i]);
-		if (texture)
-			renderer->UseTexture(texture, i);
+		RenderSurface *renderTarget = command.renderPath->GetRenderTarget(command.textures[i]);
+		if (renderTarget)
+			renderer->UseTexture(renderTarget->GetLinkedTexture(), i);
 	}
 }
 void Scene::Render(Renderer *renderer)
@@ -193,6 +194,7 @@ void Scene::Render(Renderer *renderer)
 	UpdateBaseQueue();
 	UpdateLightQueues();		
 
+	renderer->GetCurrentRenderPath()->AllocateRenderSurfaces();
 	const std::vector<RenderPathCommand> commands = renderer->GetCurrentRenderPath()->GetCommands();
 
 	for (auto &command : commands)

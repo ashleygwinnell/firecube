@@ -1,5 +1,5 @@
 <renderpath>
-<rendersurface name = "temp" size = "1024 1024" />
+<rendersurface name = "temp" size_multiplier = "1 1" />
 <command type = "clear" color = "fogcolor" output = "temp" />
 <command type = "basepass" output = "temp" />
 <command type = "lightpass" output = "temp" />

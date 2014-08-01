@@ -11,6 +11,7 @@
 #include "Utils/utils.h"
 #include "Math/Math.h"
 #include "Core/Object.h"
+#include "Core/Memory.h"
 
 namespace FireCube
 {
@@ -39,6 +40,7 @@ class VertexBuffer;
 class ShaderTemplate;
 class Light;
 class RenderPath;
+class RenderSurface;
 
 #define MAX_RENDER_TARGETS 4
 
@@ -138,9 +140,9 @@ public:
 	
 	FrameBuffer *GetShadowMap();
 
-	void SetRenderTarget(unsigned int index, Texture *renderTarget);
+	void SetRenderTarget(unsigned int index, RenderSurface *renderTarget);
 
-	void SetDepthTexture(Texture *depthTexture);
+	void SetDepthTexture(Texture *depthTexture); // TODO: Change to SetDepthSurface(RenderSurface *depthSurface) which accept seither a rendr surface or texture
 
 	void SetCurrentRenderPath(RenderPath *renderPath);
 	RenderPath *GetCurrentRenderPath();
@@ -154,6 +156,8 @@ public:
 
 	int GetWidth() const;
 	int GetHeight() const;
+
+	SharedPtr<RenderSurface> GetRenderSurface(int width, int height);
 private:
 	
 
@@ -174,9 +178,10 @@ private:
 	unsigned int numberOfPrimitivesRendered;
 	GLuint textureSampler[16];
 	FrameBuffer *shadowMap;
-	Texture *renderTargets[MAX_RENDER_TARGETS];
+	RenderSurface *renderTargets[MAX_RENDER_TARGETS];
 	Texture *depthTexture;
 	std::map<unsigned int, FrameBuffer *> frameBuffers;
+	std::map<unsigned int, WeakPtr<RenderSurface>> renderSurfaces;
 	FrameBuffer *currentFrameBuffer;
 	bool fboDirty;
 	SharedPtr<RenderPath> currentRenderPath;

@@ -7,6 +7,7 @@
 #include "Geometry/Material.h"
 #include "Rendering/ShaderTemplate.h"
 #include "Core/ResourceCache.h"
+#include "Rendering/RenderSurface.h"
 
 using namespace FireCube;
 
@@ -105,12 +106,6 @@ RenderPath::RenderPath(Engine *engine) : Resource(engine)
 
 }
 
-RenderPath::~RenderPath()
-{
-	for (auto i : renderTargets)
-		delete i.second;
-}
-
 bool RenderPath::Load(const std::string &filename)
 {
 	TiXmlDocument xmlDocument;
@@ -126,19 +121,24 @@ bool RenderPath::Load(const std::string &filename)
 	{
 		if (element->ValueStr() == "rendersurface")
 		{
-			std::string name = element->Attribute("name");			
-			Variant sizeVariant = Variant::FromString(element->Attribute("size"));
-			vec2 size = sizeVariant.GetVec2();
-			Texture *texture = new Texture(engine);
-			texture->SetWidth((int) size.x);
-			texture->SetHeight((int) size.y);
-			engine->GetRenderer()->UseTexture(texture, 0);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (int) size.x, (int) size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			renderTargets[StringHash(name)] = texture;			
+			RenderSurfaceDescriptor desc;
+			desc.name = element->Attribute("name");			
+			if (element->Attribute("size"))
+			{
+				Variant sizeVariant = Variant::FromString(element->Attribute("size"));
+				vec2 size = sizeVariant.GetVec2();
+				desc.width = (int) size.x;
+				desc.height = (int) size.y;
+				desc.hasSizeMultiplier = false;
+			}
+			else if (element->Attribute("size_multiplier"))
+			{
+				Variant sizeVariant = Variant::FromString(element->Attribute("size_multiplier"));
+				 desc.sizeMultiplier = sizeVariant.GetVec2();
+				 desc.hasSizeMultiplier = true;
+			}
+			
+			renderSurfaceDescriptors.push_back(desc);			
 		}
 		else if (element->ValueStr() == "command")
 		{
@@ -162,11 +162,32 @@ RenderPathCommand &RenderPath::GetCommand(int index)
 	return commands[index];
 }
 
-Texture *RenderPath::GetRenderTarget(StringHash name)
+RenderSurface *RenderPath::GetRenderTarget(StringHash name)
 {
 	auto i = renderTargets.find(name);
 	if (i != renderTargets.end())
 		return i->second;
 
 	return nullptr;
+}
+
+void RenderPath::AllocateRenderSurfaces()
+{
+	for (const auto &desc : renderSurfaceDescriptors)
+	{
+		int width, height;
+		if (desc.hasSizeMultiplier)
+		{
+			width = (int) (desc.sizeMultiplier.x * (float) engine->GetRenderer()->GetWidth());
+			height = (int)(desc.sizeMultiplier.y * (float)engine->GetRenderer()->GetHeight());
+		}
+		else
+		{
+			width = desc.width;
+			height = desc.height;
+		}
+		SharedPtr<RenderSurface> renderSurface = engine->GetRenderer()->GetRenderSurface(width, height);
+		renderTargets[StringHash(desc.name)] = renderSurface;
+	}
+	
 }

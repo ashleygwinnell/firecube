@@ -39,3 +39,18 @@ int RenderSurface::GetHeight() const
 {
 	return height;
 }
+
+void RenderSurface::SetLinkedTexture(SharedPtr<Texture> linkedTexture)
+{
+	this->linkedTexture = linkedTexture;
+	if (linkedTexture)
+	{
+		width = linkedTexture->GetWidth();
+		height = linkedTexture->GetHeight();
+	}
+}
+
+SharedPtr<Texture> RenderSurface::GetLinkedTexture()
+{
+	return linkedTexture;
+}

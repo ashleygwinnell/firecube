@@ -18,6 +18,7 @@ enum RenderPathCommandType
 
 class RenderPath;
 class Shader;
+class RenderSurface;
 
 class FIRECUBE_API RenderPathCommand
 {
@@ -36,18 +37,29 @@ public:
 	Shader *fragmentShader;
 };
 
+class FIRECUBE_API RenderSurfaceDescriptor
+{
+public:
+	int width, height;
+	vec2 sizeMultiplier;
+	bool hasSizeMultiplier;
+	std::string name;
+};
+
 class FIRECUBE_API RenderPath : public Resource
 {
 public:
 	RenderPath(Engine *engine);
-	~RenderPath();
+	
 	virtual bool Load(const std::string &filename);
 	const std::vector<RenderPathCommand> &GetCommands() const;
 	RenderPathCommand &GetCommand(int index);
-	Texture *GetRenderTarget(StringHash name);
+	RenderSurface *GetRenderTarget(StringHash name);
+	void AllocateRenderSurfaces();
 private:
-	std::map<StringHash, Texture *> renderTargets;
+	std::map<StringHash, SharedPtr<RenderSurface>> renderTargets;
 	std::vector<RenderPathCommand> commands;
+	std::vector<RenderSurfaceDescriptor> renderSurfaceDescriptors;
 };
 
 }

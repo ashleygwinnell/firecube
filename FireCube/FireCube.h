@@ -37,3 +37,4 @@
 #include "Scene/NodeObserverCamera.h"
 #include "Core/ResourceCache.h"
 #include "Core/Engine.h"
+#include "Core/Memory.h"

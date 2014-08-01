@@ -22,19 +22,15 @@
 #include "Core/Engine.h"
 #include "Core/ResourceCache.h"
 #include "Utils/Logger.h"
+#include "Rendering/RenderSurface.h"
 
 using namespace FireCube;
 
-
-/** \cond */
 struct FontVertex
 {
 	vec3 position;
 	vec2 uv;
 };
-/** \endcond */
-
-
 
 Renderer::Renderer(Engine *engine) : Object(engine), textVao(0), numberOfPrimitivesRendered(0), 
 	currentVertexShader(nullptr), currentFragmentShader(nullptr), currentMaterial(nullptr), currentCamera(nullptr),
@@ -442,7 +438,7 @@ FrameBuffer *Renderer::GetShadowMap()
 	return shadowMap;
 }
 
-void Renderer::SetRenderTarget(unsigned int index, Texture *renderTarget)
+void Renderer::SetRenderTarget(unsigned int index, RenderSurface *renderTarget)
 {
 	if (index >= MAX_RENDER_TARGETS)
 		return;
@@ -513,7 +509,12 @@ void Renderer::UpdateFrameBuffer()
 	}
 
 	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
-		frameBuffer->SetRenderTarget(renderTargets[i], i);
+	{
+		if (renderTargets[i])
+			frameBuffer->SetRenderTarget(renderTargets[i]->GetLinkedTexture(), i);
+		else
+			frameBuffer->SetRenderTarget(nullptr, i);
+	}
 
 	if (depthTexture)
 		frameBuffer->SetDepthBufferTexture(depthTexture);
@@ -568,4 +569,27 @@ int Renderer::GetWidth() const
 int Renderer::GetHeight() const
 {
 	return height;
+}
+
+SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height)
+{	
+	unsigned int key = width << 16 | height;
+	auto i = renderSurfaces.find(key);
+	if (i != renderSurfaces.end() && i->second.Expired() == false)
+		return i->second.Lock();
+
+	SharedPtr<RenderSurface> renderSurface(new RenderSurface(this));
+
+	Texture *texture = new Texture(engine);
+	texture->SetWidth(width);
+	texture->SetHeight(height);
+	UseTexture(texture, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	renderSurface->SetLinkedTexture(texture);
+	renderSurfaces[key] = renderSurface;
+	return renderSurface;
 }
