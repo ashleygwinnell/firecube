@@ -34,8 +34,8 @@ struct FontVertex
 
 Renderer::Renderer(Engine *engine) : Object(engine), textVao(0), numberOfPrimitivesRendered(0), 
 	currentVertexShader(nullptr), currentFragmentShader(nullptr), currentMaterial(nullptr), currentCamera(nullptr),
-	currentLight(nullptr), shadowMap(nullptr), textVertexBuffer(nullptr), textVertexShader(nullptr), textFragmentShader(nullptr),
-	textVertexShaderTemplate(nullptr), textFragmentShaderTemplate(nullptr), depthTexture(nullptr), currentFrameBuffer(nullptr), fboDirty(false)
+	currentLight(nullptr), textVertexBuffer(nullptr), textVertexShader(nullptr), textFragmentShader(nullptr),
+	textVertexShaderTemplate(nullptr), textFragmentShaderTemplate(nullptr), depthSurface(nullptr), currentFrameBuffer(nullptr), fboDirty(false)
 {
 	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
 		renderTargets[i] = nullptr;
@@ -84,7 +84,7 @@ void Renderer::Destroy()
 {
 	delete textVertexBuffer;
 	delete quadVertexBuffer;
-	delete shadowMap;
+
 	glDeleteVertexArrays(1, &textVao);
 	glDeleteVertexArrays(1, &quadVao);
 	glDeleteSamplers(16, textureSampler);
@@ -332,7 +332,7 @@ void Renderer::RestoreFrameBuffer()
 	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
 		SetRenderTarget(i, nullptr);
 
-	depthTexture = nullptr;
+	depthSurface = nullptr;
 	UpdateFrameBuffer();	
 	SetViewport(0, 0, width, height);
 }
@@ -426,18 +426,6 @@ void Renderer::ResetCachedShaderParameters()
 	currentLight = nullptr;
 }
 
-FrameBuffer *Renderer::GetShadowMap()
-{
-	if (shadowMap && shadowMap->IsValid())
-		return shadowMap;
-
-	shadowMap = new FrameBuffer(engine);
-	shadowMap->Create(1024, 1024);
-	shadowMap->AddDepthBufferTexture();
-
-	return shadowMap;
-}
-
 void Renderer::SetRenderTarget(unsigned int index, RenderSurface *renderTarget)
 {
 	if (index >= MAX_RENDER_TARGETS)
@@ -450,11 +438,11 @@ void Renderer::SetRenderTarget(unsigned int index, RenderSurface *renderTarget)
 	}
 }
 
-void Renderer::SetDepthTexture(Texture *depthTexture)
+void Renderer::SetDepthSurface(RenderSurface *depthSurface)
 {
-	if (this->depthTexture != depthTexture)
+	if (this->depthSurface != depthSurface)
 	{
-		this->depthTexture = depthTexture;
+		this->depthSurface = depthSurface;
 		fboDirty = true;
 	}
 }
@@ -465,7 +453,7 @@ void Renderer::UpdateFrameBuffer()
 		return;
 
 	fboDirty = false;
-	bool hasFbo = (depthTexture != nullptr);
+	bool hasFbo = (depthSurface != nullptr);
 	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
 		hasFbo = hasFbo | (renderTargets[i] != nullptr);
 
@@ -482,10 +470,10 @@ void Renderer::UpdateFrameBuffer()
 		width = renderTargets[0]->GetWidth();
 		height = renderTargets[0]->GetHeight();
 	}
-	else if (depthTexture)
+	else if (depthSurface)
 	{
-		width = depthTexture->GetWidth();
-		height = depthTexture->GetHeight();
+		width = depthSurface->GetWidth();
+		height = depthSurface->GetHeight();
 	}
 	else
 	{
@@ -503,8 +491,7 @@ void Renderer::UpdateFrameBuffer()
 	else
 	{
 		frameBuffer = new FrameBuffer(engine);
-		frameBuffer->Create(width, height);
-		frameBuffer->AddDepthBuffer();
+		frameBuffer->Create(width, height);		
 		frameBuffers[key] = frameBuffer;
 	}
 
@@ -516,9 +503,15 @@ void Renderer::UpdateFrameBuffer()
 			frameBuffer->SetRenderTarget(nullptr, i);
 	}
 
-	if (depthTexture)
-		frameBuffer->SetDepthBufferTexture(depthTexture);
-	
+	if (depthSurface) // TODO: Move this check to framebuffer object
+	{		
+		frameBuffer->SetDepthBufferSurface(depthSurface);
+	}
+	else
+	{
+		frameBuffer->SetDepthBufferSurface(GetRenderSurface(width, height, DEPTH));
+	}
+
 	if (frameBuffer->IsValid() == false)
 	{
 		LOGERROR("Could not validate frame buffer.");
@@ -571,25 +564,31 @@ int Renderer::GetHeight() const
 	return height;
 }
 
-SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height)
+SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, RenderSurfaceType type)
 {	
-	unsigned int key = width << 16 | height;
+	long long int key = ((long long) type << 32) | width << 16 | height;
 	auto i = renderSurfaces.find(key);
-	if (i != renderSurfaces.end() && i->second.Expired() == false)
-		return i->second.Lock();
+	if (i != renderSurfaces.end())
+		return i->second;
 
 	SharedPtr<RenderSurface> renderSurface(new RenderSurface(this));
-
-	Texture *texture = new Texture(engine);
-	texture->SetWidth(width);
-	texture->SetHeight(height);
-	UseTexture(texture, 0);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	renderSurface->SetLinkedTexture(texture);
+	if (type == COLOR)
+	{
+		Texture *texture = new Texture(engine);
+		texture->SetWidth(width);
+		texture->SetHeight(height);
+		UseTexture(texture, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		renderSurface->SetLinkedTexture(texture);		
+	}
+	else if (type == DEPTH)
+	{
+		renderSurface->CreateDepth(width, height);
+	}
 	renderSurfaces[key] = renderSurface;
 	return renderSurface;
 }

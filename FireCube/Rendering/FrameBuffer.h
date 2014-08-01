@@ -15,6 +15,7 @@ namespace FireCube
 class FrameBuffer;
 class Texture;
 class Renderer;
+class RenderSurface;
 
 /**
 * A class representing a frame buffer.
@@ -30,23 +31,16 @@ public:
     * @param width The width of the frame buffer and it's sub-images(depth buffer, render targets).
     * @param height The height of the frame buffer and it's sub-images(depth buffer, render targets).
     */
-    void Create(int width, int height);
-    /**
-    * Adds a depth buffer as a renderbuffer.
-    */
-    void AddDepthBuffer();
-    /**
-    * Adds a depth buffer as a texture.
-    */
-    void AddDepthBufferTexture();
+    void Create(int width, int height);    		
 
-	void SetDepthBufferTexture(Texture *depthTexture);
-    /**
-    * Adds a new render target.
-    * @param attachmentPoint The attachment point to add to.
-    */
-    void AddRenderTarget(int attachmentPoint);
-    /**
+	void SetDepthBufferSurface(RenderSurface *depthSurface);
+
+	/**
+	* Returns a texture from the depth buffer.
+	*/
+	RenderSurface *GetDepthSurface();
+    
+	/**
     * Sets a render target from an already existing texture.
     * @param texture The texture.
     * @param attachmentPoint The attachment point to add to.
@@ -56,18 +50,17 @@ public:
     * Returns a texture from an attachment point.
     */
     Texture *GetRenderTarget(int attachmentPoint);
-    /**
-    * Returns a texture from the depth buffer.
-    */
-    Texture *GetDepthBuffer();
+    
     /**
     * Checks whether the frame buffer is valid and can be rendered to.
     */
     bool IsValid() const;
+
     /**
     * Returns the width of the frame buffer.
     */
     int GetWidth() const;
+
     /**
     * Returns the height of the frame buffer.
     */
@@ -76,9 +69,8 @@ public:
 private:
     int width, height;
     
-    GLuint depthRenderBuffer;
     Texture *texture[MAX_TEXTURES];
-    Texture *depthTexture;
+    RenderSurface *depthSurface;
 };
 }
 

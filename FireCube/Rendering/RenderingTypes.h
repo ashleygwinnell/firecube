@@ -31,6 +31,12 @@ enum ShaderPermutation
 	MAX_SHADER_PERMUTATIONS
 };
 
+enum RenderSurfaceType
+{
+	COLOR,
+	DEPTH
+};
+
 extern StringHash PARAM_MATERIAL_AMBIENT;
 extern StringHash PARAM_MATERIAL_DIFFUSE;
 extern StringHash PARAM_MATERIAL_SPECULAR;

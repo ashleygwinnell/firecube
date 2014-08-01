@@ -12,6 +12,7 @@
 #include "Math/Math.h"
 #include "Core/Object.h"
 #include "Core/Memory.h"
+#include "Rendering/RenderingTypes.h"
 
 namespace FireCube
 {
@@ -136,13 +137,11 @@ public:
 
 	void UseLight(Light *light);
 
-	void ResetCachedShaderParameters();
-	
-	FrameBuffer *GetShadowMap();
+	void ResetCachedShaderParameters();		
 
 	void SetRenderTarget(unsigned int index, RenderSurface *renderTarget);
 
-	void SetDepthTexture(Texture *depthTexture); // TODO: Change to SetDepthSurface(RenderSurface *depthSurface) which accept seither a rendr surface or texture
+	void SetDepthSurface(RenderSurface *depthSurface); // TODO: Change to SetDepthSurface(RenderSurface *depthSurface) which accept seither a rendr surface or texture
 
 	void SetCurrentRenderPath(RenderPath *renderPath);
 	RenderPath *GetCurrentRenderPath();
@@ -157,7 +156,7 @@ public:
 	int GetWidth() const;
 	int GetHeight() const;
 
-	SharedPtr<RenderSurface> GetRenderSurface(int width, int height);
+	SharedPtr<RenderSurface> GetRenderSurface(int width, int height, RenderSurfaceType type);
 private:
 	
 
@@ -176,12 +175,11 @@ private:
 	Camera *currentCamera;
 	Light *currentLight;
 	unsigned int numberOfPrimitivesRendered;
-	GLuint textureSampler[16];
-	FrameBuffer *shadowMap;
+	GLuint textureSampler[16];	
 	RenderSurface *renderTargets[MAX_RENDER_TARGETS];
-	Texture *depthTexture;
+	RenderSurface *depthSurface;
 	std::map<unsigned int, FrameBuffer *> frameBuffers;
-	std::map<unsigned int, WeakPtr<RenderSurface>> renderSurfaces;
+	std::map<long long int, SharedPtr<RenderSurface>> renderSurfaces;
 	FrameBuffer *currentFrameBuffer;
 	bool fboDirty;
 	SharedPtr<RenderPath> currentRenderPath;
