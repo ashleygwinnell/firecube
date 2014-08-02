@@ -5,7 +5,7 @@ using namespace FireCube;
 
 RenderSurface::RenderSurface(Renderer *renderer) : GraphicsResource(renderer)
 {
-
+	glGenRenderbuffers(1, &objectId);
 }
 
 RenderSurface::~RenderSurface()
@@ -22,8 +22,6 @@ void RenderSurface::Destroy()
 
 void RenderSurface::CreateDepth(int width, int height)
 {
-	Destroy();
-	glGenRenderbuffers(1, &objectId);
 	glBindRenderbuffer(GL_RENDERBUFFER, objectId);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 	this->width = width;
