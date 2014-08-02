@@ -8,22 +8,27 @@ Document::Document() : modelNode(nullptr), gridNode(nullptr), model(nullptr)
 
 }
 
+Document::~Document()
+{
+	delete scene;
+}
 void Document::CreateRootNode(Engine *engine)
 {
-	root = NodePtr(new Node(engine, "Root"));	
+	scene = new Scene(engine);
+	root = scene->GetRootNode();
 	
-	gridMaterial = MaterialPtr(new Material(engine));
+	gridMaterial = new Material(engine);
 	gridMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	gridMaterial->SetTechnique(engine->GetResourcePool()->GetResource<Technique>("Techniques/Unlit.xml"));
+	gridMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));
 }
 
 bool Document::Load(const std::string &filename, Engine *engine)
 {	
 	if (!modelNode)
-		modelNode = root->CreateChild("Model").get();
-	root->RemoveAllComponents();	
-	model = root->CreateComponent<StaticModel>();
-	model->CreateFromMesh(engine->GetResourcePool()->GetResource<Mesh>(filename));
+		modelNode = root->CreateChild("Model");
+	modelNode->RemoveAllComponents();
+	model = modelNode->CreateComponent<StaticModel>();
+	model->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>(filename));
 	
 	//modelNode->RemoveAllChildren();
 	//modelNode->Load(filename);
@@ -40,15 +45,20 @@ bool Document::Load(const std::string &filename, Engine *engine)
 	
 	return true;
 }
-NodePtr Document::GetRoot()
+Node *Document::GetRoot()
 {
 	return root;
+}
+
+FireCube::Scene *Document::GetScene()
+{
+	return scene;
 }
 void Document::CountElements(unsigned int &verticesCount, unsigned int &facesCount)
 {
 	if (model)
 	{	
-		std::set<VertexBufferPtr> buffers;
+		std::set<VertexBuffer *> buffers;
 		for (auto g : model->GetGeometries())
 		{
 			buffers.insert(g->GetVertexBuffer());
@@ -67,7 +77,7 @@ void Document::GenerateNormals(float l)
 	normalRenderingBuffer->LoadData(&normals[0], normals.size()*sizeof(FireCube::vec3), FireCube::STATIC);
 	normalRenderingBufferSize = normals.size();*/
 }
-void Document::GenerateNormals(NodePtr node, float l, std::vector<vec3> &normals)
+void Document::GenerateNormals(Node *node, float l, std::vector<vec3> &normals)
 {
 	/*if (node->GetType() == FireCube::Node::GEOMETRY)
 	{
@@ -96,7 +106,7 @@ void Document::GenerateTangents(float l)
 	else
 		hasTangents = false;*/
 }
-void Document::GenerateTangents(NodePtr node, float l,std::vector<vec3> &tangents)
+void Document::GenerateTangents(Node *node, float l,std::vector<vec3> &tangents)
 {
 	/*if (node->GetType() == FireCube::Node::GEOMETRY)
 	{
@@ -120,7 +130,7 @@ void Document::GenerateBitangents(float l)
 	if (!bitangents.empty())
 		bitangentRenderingBuffer->LoadData(&bitangents[0], bitangents.size()*sizeof(FireCube::vec3), FireCube::STATIC);*/
 }
-void Document::GenerateBitangents(NodePtr node, float l, std::vector<vec3> &bitangents)
+void Document::GenerateBitangents(Node *node, float l, std::vector<vec3> &bitangents)
 {
 	/*if (node->GetType() == FireCube::Node::GEOMETRY)
 	{
@@ -167,18 +177,18 @@ int Document::GetNormalRenderingBufferSize()
 	return normalRenderingBufferSize;
 }
 
-std::vector<FireCube::MaterialPtr> Document::GetAllMaterials()
+std::vector<FireCube::SharedPtr<FireCube::Material>> Document::GetAllMaterials()
 {		
 	if (model)
 		return model->GetMaterials();
 	else
-		return std::vector<MaterialPtr>();
+		return std::vector<FireCube::SharedPtr<FireCube::Material>>();
 }
 
 void Document::CreateGrid(float size, DWORD numberOfCells)
 {
 	if (!gridNode)
-		gridNode = root->CreateChild("GridNode").get();	
+		gridNode = root->CreateChild("GridNode");	
 	gridNode->RemoveAllComponents();
 	gridGeometry = gridNode->CreateComponent<CustomGeometry>();	
 	for (DWORD i = 0; i < numberOfCells + 1; i++)

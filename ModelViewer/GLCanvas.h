@@ -17,12 +17,12 @@ public:
 		//FireCube::GeometryNodePtr gridNode;
 		//FireCube::GeometryPtr grid;
 		DWORD gridCount;
-		FireCube::ProgramPtr plainColorProgram;
-		FireCube::NodeObserverCameraPtr camera;
-		FireCube::MaterialPtr gridMaterial;
-		FireCube::MaterialPtr normalsMaterial;
-		FireCube::MaterialPtr tangentsMaterial;
-		FireCube::MaterialPtr bitangentsMaterial;
+		FireCube::Program *plainColorProgram;
+		FireCube::NodeObserverCamera *camera;
+		FireCube::Material *gridMaterial;
+		FireCube::Material *normalsMaterial;
+		FireCube::Material *tangentsMaterial;
+		FireCube::Material *bitangentsMaterial;
 	};
 	GLCanvas( wxWindow *parent, wxWindowID id = wxID_ANY,
 				const wxPoint& pos = wxDefaultPosition,
@@ -60,7 +60,7 @@ private:
 	MyApp *theApp;
 	wxGLContext *context;
 	FireCube::Engine *engine;
-	FireCube::Scene scene;	
+	FireCube::Scene *scene;	
 	bool crap;
 };
 

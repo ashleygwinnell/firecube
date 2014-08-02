@@ -71,26 +71,29 @@ void GLCanvas::Init()
 	renderingParameters.bitangentsMaterial->SetDiffuseColor(vec3(0,1,0));
 	renderingParameters.bitangentsMaterial->SetSpecularColor(vec3(0,0,0));*/
    
-	
+	theApp->GetDocument().CreateRootNode(engine);
+	Node *root = theApp->GetDocument().GetRoot();
+	scene = theApp->GetDocument().GetScene();
+
 	mat4 mat;
 	int w, h;
 	GetClientSize(&w, &h);
 	mat.GeneratePerspective(90.0f,(float) w / (float) h, 0.1f, 1000.0f);
-	renderingParameters.camera = NodeObserverCameraPtr(new NodeObserverCamera());
+	renderingParameters.camera = root->CreateComponent<NodeObserverCamera>();
 	renderingParameters.camera->SetDistance(5.0f);
 	renderingParameters.camera->SetMaxDistance(10000.0f);
-	renderingParameters.camera->SetProjectionMatrix(mat);
+	//renderingParameters.camera->SetProjectionMatrix(mat);
 
-	theApp->GetDocument().CreateRootNode(engine);
-	NodePtr root = theApp->GetDocument().GetRoot();	
-	scene.SetRootNodeAndCamera(root, renderingParameters.camera);
+	
+	//scene.SetRootNodeAndCamera(root, renderingParameters.camera);
+	scene->SetCamera(renderingParameters.camera);
 	
 	theApp->GetDocument().CreateGrid(2, 20);
 
 	renderingParameters.camera->SetTarget(root);
 	theApp->LoadDocument("../Assets/Models/teapot2.3ds");
 
-	NodePtr lightNode = root->CreateChild("Light");
+	Node *lightNode = root->CreateChild("Light");
 	Light *l = lightNode->CreateComponent<Light>();
 	l->SetLightType(DIRECTIONAL);
 	l->SetDiffuseColor(vec4(0.7f, 0.7f, 0.7f, 1.0f));
@@ -108,7 +111,8 @@ void GLCanvas::Render()
 		Init();
 	}
 	
-	engine->GetRenderer()->Clear(renderingParameters.bgColor, 1.0f);
+	scene->SetFogColor(renderingParameters.bgColor.ToVec3()); // TODO change bgColor to vec3
+	//engine->GetRenderer()->Clear(renderingParameters.bgColor, 1.0f);
 		
 	if (renderingParameters.cullFaceEnabled)
 		glEnable(GL_CULL_FACE);
@@ -117,7 +121,7 @@ void GLCanvas::Render()
 
 	glPolygonMode(GL_FRONT_AND_BACK, renderingParameters.renderingMode);
 		
-	scene.Render(engine->GetRenderer());
+	scene->Render(engine->GetRenderer());
 	//Renderer::Render(theApp->GetDocument().GetRoot());
 	/*if (renderingParameters.renderNormals)
 	{
@@ -164,9 +168,10 @@ void GLCanvas::OnSize(wxSizeEvent& event)
 		init = true;
 		Init();
 	}
-	mat4 mat;
-	mat.GeneratePerspective(90.0f,(float) w / (float) h, 0.1f, 1000.0f);
-	renderingParameters.camera->SetProjectionMatrix(mat);
+	
+	engine->GetRenderer()->SetWidth(w);
+	engine->GetRenderer()->SetHeight(h);
+	renderingParameters.camera->SetPerspectiveProjectionParameters(90.0f, (float)w / (float)h, 0.1f, 1000.0f);
 
 }
 
@@ -249,12 +254,13 @@ bool GLCanvas::GetRenderingTangents()
 
 void GLCanvas::SetRotation(vec3 rotation)
 {
-	renderingParameters.camera->SetRotation(rotation);
+	//renderingParameters.camera->SetRotation(rotation);
 }
 
 vec3 GLCanvas::GetRotation()
 {
-	return renderingParameters.camera->GetRotation();
+	//return renderingParameters.camera->GetRotation();
+	return vec3();
 }
 void GLCanvas::SetDistance(float v)
 {

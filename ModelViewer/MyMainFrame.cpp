@@ -158,9 +158,9 @@ void MyMainFrame::MenuItem6Clicked( wxCommandEvent& event )
 	Layout();
 }
 
-bool MyMainFrame::AddMaterial(DWORD id, MaterialPtr mat)
+bool MyMainFrame::AddMaterial(DWORD id, Material *mat)
 {	
-	for (std::map<DWORD, FireCube::MaterialPtr>::iterator i = materialMap.begin(); i != materialMap.end(); i++)
+	for (auto i = materialMap.begin(); i != materialMap.end(); i++)
 	{
 		if (i->second == mat)					
 			return false;
@@ -221,7 +221,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 	bool  updateTechnique = false;
 	wxPropertyGridEvent *evt = (wxPropertyGridEvent *)&event;
 	std::string properyName = evt->GetPropertyName();
-	MaterialPtr mat;
+	Material *mat;
 	if (properyName.substr(0, 4) == "Name")
 	{
 		DWORD id;
@@ -280,7 +280,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		std::istringstream idss(properyName.substr(14));
 		idss >> id;
 		mat = materialMap[id];
-		mat->SetTexture(TEXTURE_UNIT_DIFFUSE, theApp->fcApp.GetEngine()->GetResourcePool()->GetResource<Texture>(evt->GetPropertyValue().GetString().ToStdString()));	
+		mat->SetTexture(TEXTURE_UNIT_DIFFUSE, theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Texture>(evt->GetPropertyValue().GetString().ToStdString()));	
 		updateTechnique = true;
 	}
 	if (properyName.substr(0, 13) == "TextureNormal")
@@ -289,7 +289,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		std::istringstream idss(properyName.substr(13));
 		idss >> id;
 		mat = materialMap[id];		
-		mat->SetTexture(TEXTURE_UNIT_NORMAL, theApp->fcApp.GetEngine()->GetResourcePool()->GetResource<Texture>(evt->GetPropertyValue().GetString().ToStdString()));	
+		mat->SetTexture(TEXTURE_UNIT_NORMAL, theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Texture>(evt->GetPropertyValue().GetString().ToStdString()));
 		updateTechnique = true;
 	}
 	if (properyName.substr(0, 9) == "Technique")
@@ -298,18 +298,18 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		std::istringstream idss(properyName.substr(9));
 		idss >> id;
 		mat = materialMap[id];		
-		mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourcePool()->GetResource<Technique>(evt->GetPropertyValue().GetString().ToStdString()));	
+		mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Technique>(evt->GetPropertyValue().GetString().ToStdString()));
 	}
 	if (updateTechnique && mat)
 	{
 		if (mat->GetTexture(TEXTURE_UNIT_DIFFUSE) && mat->GetTexture(TEXTURE_UNIT_NORMAL))
-			mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourcePool()->GetResource<Technique>("Techniques/DiffuseNormalMap.xml"));
+			mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseNormalMap.xml"));
 		else if (mat->GetTexture(TEXTURE_UNIT_DIFFUSE))
-			mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourcePool()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
+			mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
 		else if (mat->GetTexture(TEXTURE_UNIT_NORMAL))
-			mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourcePool()->GetResource<Technique>("Techniques/NormalMap.xml"));
+			mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Technique>("Techniques/NormalMap.xml"));
 		else
-			mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourcePool()->GetResource<Technique>("Techniques/NoTexture.xml"));
+			mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
 	}
 	
 	glCanvas->Refresh();	
@@ -328,7 +328,7 @@ void MyMainFrame::PopulateTreeWithNode(FireCube::Node *node, wxTreeItemId treeNo
 {
 	for (unsigned int i = 0; i < node->GetChildren().size(); i++)
 	{
-		Node *child = node->GetChildren()[i].get();
+		Node *child = node->GetChildren()[i];
 		TreeItemData *data = new TreeItemData;
 		data->node = child;
 		wxTreeItemId id = tree->AppendItem(treeNode, child->GetName(), -1, -1, data);
@@ -355,7 +355,7 @@ void MyMainFrame::UpdateUI(Document &document)
 	textCtrl2->SetValue(oss2.str());
 	propertyGrid1->Clear();	
 	AddMaterials(document.GetAllMaterials());
-	PopulateTreeWithNode(document.GetRoot().get(), treeCtrl2);
+	PopulateTreeWithNode(document.GetRoot(), treeCtrl2);
 }
 
 void MyMainFrame::SetStatusBarText(const std::string &text)
@@ -368,7 +368,7 @@ GLCanvas *MyMainFrame::GetMainGLCanvas()
 	return glCanvas;
 }
 
-void MyMainFrame::AddMaterials(const std::vector<MaterialPtr> &materials)
+void MyMainFrame::AddMaterials(const std::vector<FireCube::SharedPtr<FireCube::Material>> &materials)
 {	
 	unsigned int id = 1;
 	for (auto m : materials)

@@ -29,10 +29,10 @@ protected:
     void MenuItem5Clicked( wxCommandEvent& event );
     void MenuItem6Clicked( wxCommandEvent& event );    
     void PropertyGrid1Changed( wxCommandEvent& event );
-	bool AddMaterial(DWORD id, FireCube::MaterialPtr mat);
+	bool AddMaterial(DWORD id, FireCube::Material *mat);
 	void PopulateTreeWithNode(FireCube::Node *node, wxTreeCtrl *tree);
 	void PopulateTreeWithNode(FireCube::Node *node, wxTreeItemId treeNode, wxTreeCtrl *tree);
-	void AddMaterials(const std::vector<FireCube::MaterialPtr> &materials);
+	void AddMaterials(const std::vector<FireCube::SharedPtr<FireCube::Material>> &materials);
 	MyApp *theApp;
 
 public:
@@ -46,7 +46,7 @@ public:
 	public:
 		FireCube::Node *node;
 	};
-    std::map<DWORD, FireCube::MaterialPtr> materialMap;
+    std::map<DWORD, FireCube::Material *> materialMap;
 };
 
 #endif // __MyMainFrame__

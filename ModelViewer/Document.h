@@ -6,9 +6,11 @@ class Document
 public:
 	
 	Document();
+	~Document();
 	bool Load(const std::string &filename, FireCube::Engine *engine);
-	FireCube::NodePtr GetRoot();
-	std::vector<FireCube::MaterialPtr> GetAllMaterials();
+	FireCube::Node *GetRoot();
+	FireCube::Scene *GetScene();
+	std::vector<FireCube::SharedPtr<FireCube::Material>> GetAllMaterials();
 	void GenerateNormals(float l);
 	void GenerateTangents(float l);
 	void GenerateBitangents(float l);
@@ -22,17 +24,18 @@ public:
 	void CreateRootNode(FireCube::Engine *engine);
 	void CreateGrid(float size, DWORD numberOfCells);
 private:
-	void GenerateNormals(FireCube::NodePtr node, float l, std::vector<FireCube::vec3> &normals);
-	void GenerateTangents(FireCube::NodePtr node, float l, std::vector<FireCube::vec3> &tangents);
-	void GenerateBitangents(FireCube::NodePtr node, float l, std::vector<FireCube::vec3> &bitangents);
+	void GenerateNormals(FireCube::Node *node, float l, std::vector<FireCube::vec3> &normals);
+	void GenerateTangents(FireCube::Node *node, float l, std::vector<FireCube::vec3> &tangents);
+	void GenerateBitangents(FireCube::Node *node, float l, std::vector<FireCube::vec3> &bitangents);
 	void CountElements(unsigned int &verticesCount, unsigned int &facesCount);
 
-	FireCube::NodePtr root;
+	FireCube::Scene *scene;
+	FireCube::Node *root;
 	FireCube::Node *modelNode;
 	FireCube::StaticModel *model;
 	FireCube::Node *gridNode;
 	FireCube::CustomGeometry *gridGeometry;
-	FireCube::MaterialPtr gridMaterial;
+	FireCube::Material *gridMaterial;
 	//FireCube::BufferPtr normalRenderingBuffer;
 	//FireCube::BufferPtr tangentRenderingBuffer;
 	//FireCube::BufferPtr bitangentRenderingBuffer;

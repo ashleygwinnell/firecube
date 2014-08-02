@@ -10,8 +10,8 @@ class ApplicationParameters
 public:
 	bool customProgram;
 	float normalsLength;
-	FireCube::ShaderPtr vshader, fshader;
-	FireCube::ProgramPtr program;
+	FireCube::Shader *vshader, *fshader;
+	FireCube::Program *program;
 };
 
 class MyApp : public wxApp
