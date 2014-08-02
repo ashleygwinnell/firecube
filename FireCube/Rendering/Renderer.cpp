@@ -97,25 +97,25 @@ void Renderer::Clear(const vec4 &color, float depth)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::UseTexture(const Texture *tex, unsigned int unit)
+void Renderer::UseTexture(unsigned int unit, const Texture *texture)
 {
-	if (!tex)
+	if (!texture)
 		return;
 	glActiveTexture(GL_TEXTURE0 + unit);
-	glBindTexture(GL_TEXTURE_2D, tex->GetObjectId());
+	glBindTexture(GL_TEXTURE_2D, texture->GetObjectId());
 	
 	GLint min = GL_LINEAR_MIPMAP_LINEAR, mag = GL_LINEAR;
 
-	if (tex->minFilter == NEAREST)
+	if (texture->minFilter == NEAREST)
 		min = GL_NEAREST;
-	else if (tex->minFilter == LINEAR)
+	else if (texture->minFilter == LINEAR)
 		min = GL_LINEAR;
-	else if (tex->minFilter == MIPMAP)
+	else if (texture->minFilter == MIPMAP)
 		min = GL_LINEAR_MIPMAP_LINEAR;
 
-	if (tex->magFilter == NEAREST)
+	if (texture->magFilter == NEAREST)
 		mag = GL_NEAREST;
-	else if (tex->magFilter == LINEAR)
+	else if (texture->magFilter == LINEAR)
 		mag = GL_LINEAR;
 
 	glSamplerParameteri(textureSampler[unit], GL_TEXTURE_MAG_FILTER, mag);
@@ -144,7 +144,7 @@ void Renderer::RenderText(FontFace *fontFace, mat4 projectionMatrix, const vec3 
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	UseTexture(fontFace->page->tex, 0);
+	UseTexture(0, fontFace->page->tex);
 	vec3 curPos = pos;
 	FT_Long useKerning = FT_HAS_KERNING(fontFace->fontImpl->face);
 	FT_UInt previous = 0;
@@ -304,7 +304,7 @@ void Renderer::UseMaterial(Material *material)
 	{
 		TextureUnit textureUnit = (TextureUnit)i;
 		if (textures[i])
-			UseTexture(textures[i], i);
+			UseTexture(i, textures[i]);
 	}
 }
 
@@ -577,7 +577,7 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 		Texture *texture = new Texture(engine);
 		texture->SetWidth(width);
 		texture->SetHeight(height);
-		UseTexture(texture, 0);
+		UseTexture(0, texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

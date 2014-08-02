@@ -67,10 +67,10 @@ public:
 
 	/**
 	* Binds the specified texture.
-	* @param tex The texture to bind
 	* @param unit Specifies the texture unit.
+	* @param texture The texture to bind	
 	*/
-	void UseTexture(const Texture *tex, unsigned int unit);
+	void UseTexture(unsigned int unit, const Texture *texture);
 
 	/**
 	* Renders text.

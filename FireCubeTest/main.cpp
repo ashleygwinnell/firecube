@@ -54,9 +54,8 @@ bool App::Prepare()
 	light->SetDiffuseColor(vec4(1, 1, 1, 1));
 	light->SetSpecularColor(vec4(0, 0, 0, 0));	
 	childNode->Move(vec3(0, 1, 0));
-	
-	font = resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf");
-	fontFace = font->GenerateFontFace(18);
+		
+	fontFace = resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18);
 
 	scene.SetFogColor(vec3(44, 80, 222) / 255.0f);
 	renderer->SetCurrentRenderPath(resourceCache->GetResource<RenderPath>("RenderPaths/ForwardGrayscale.xml"));

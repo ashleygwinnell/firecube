@@ -8,7 +8,6 @@ public:
 	bool Prepare();    
 	Node *root;
 	NodeObserverCamera *camera;	
-	Scene scene;
-	Font *font;
+	Scene scene;	
 	FontFace *fontFace;
 };

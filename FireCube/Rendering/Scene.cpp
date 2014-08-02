@@ -181,7 +181,7 @@ void Scene::SetTextures(Renderer *renderer, const RenderPathCommand &command)
 	{
 		RenderSurface *renderTarget = command.renderPath->GetRenderTarget(command.textures[i]);
 		if (renderTarget)
-			renderer->UseTexture(renderTarget->GetLinkedTexture(), i);
+			renderer->UseTexture(i, renderTarget->GetLinkedTexture());
 	}
 }
 void Scene::Render(Renderer *renderer)
