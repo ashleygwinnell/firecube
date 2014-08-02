@@ -14,8 +14,7 @@ CustomGeometry::CustomGeometry(Engine *engine) : Renderable(engine), geometry(ne
 }
 
 CustomGeometry::~CustomGeometry()
-{
-	delete geometry->GetVertexBuffer();
+{	
 	delete geometry;
 }
 

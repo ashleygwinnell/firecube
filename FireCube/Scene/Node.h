@@ -191,6 +191,8 @@ public:
 	vec3 GetWorldPosition();
 
 	void AddComponent(Component *component);
+
+	void RemoveComponent(Component *component);
 	
 	void SetScene(Scene *scene);
 

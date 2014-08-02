@@ -281,6 +281,20 @@ void Node::AddComponent(Component *component)
 	}
 }
 
+void Node::RemoveComponent(Component *component)
+{
+	for (auto i = components.begin(); i != components.end(); ++i)
+	{
+		if (*i == component)
+		{
+			component->SetNode(nullptr);
+			components.erase(i);
+			delete component;
+			return;
+		}		
+	}
+}
+
 void Node::SetScene(Scene *scene)
 {
 	this->scene = scene;
