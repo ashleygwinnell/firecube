@@ -288,23 +288,6 @@ void Program::SetUniform(const StringHash &nameHash, const Variant &value)
 	}
 }
 
-void Program::SetAttribute(const std::string &name, VertexBuffer *buffer, int size)
-{
-	GLint location = -1;
-	std::map<StringHash, GLint>::iterator i = variables.find(StringHash(name));
-	if (i != variables.end())
-		location = i->second;
-	else
-	{
-		location = glGetAttribLocation(objectId, name.c_str());
-		if (location != -1)
-			variables[name] = location;
-	}
-	if (location != -1)    
-		buffer->SetVertexAttribute(location, size, 0, 0);        
-	
-}
-
 std::string Program::GetInfoLog() const
 {
 	int infologLength = 0;

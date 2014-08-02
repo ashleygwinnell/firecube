@@ -154,14 +154,6 @@ public:
 	void SetUniform(const StringHash &nameHash, const Variant &value);
 
 	/**
-	* Sets vertex shader attribute.
-	* @param name The name of the variable.
-	* @param buffer The buffer from which data will be read.
-	* @param size The number of elements in each attribute.
-	*/
-	void SetAttribute(const std::string &name, VertexBuffer *buffer, int size);
-
-	/**
 	* @return Returns the compile log for this program.
 	*/
 	std::string GetInfoLog() const;
