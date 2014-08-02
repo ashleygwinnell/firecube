@@ -48,6 +48,7 @@ public:
 	virtual void IntersectRay(RayQuery &rayQuery);
 	virtual void UpdateRenderableParts();
 	virtual void NodeChanged();	
+	virtual void EnabledChanged();
 	virtual void MarkedDirty();
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
 protected:

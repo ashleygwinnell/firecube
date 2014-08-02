@@ -46,6 +46,20 @@ void Renderable::NodeChanged()
 	}
 }
 
+void Renderable::EnabledChanged()
+{
+	if (IsEnabled() && scene == nullptr)
+	{
+		node->GetScene()->AddRenderable(this);
+		scene = node->GetScene();
+	}
+	else if (IsEnabled() == false && scene)
+	{
+		scene->RemoveRenderable(this);		
+		scene = nullptr;
+	}
+}
+
 void Renderable::UpdateRenderableParts()
 {
 	for (auto &i : renderableParts)

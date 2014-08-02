@@ -17,12 +17,16 @@ public:
 	virtual ~Component();
 		
 	Node *GetNode();	
+	void SetEnabled(bool enabled);
+	bool IsEnabled() const;
 protected:	
 	void SetNode(Node *node);
 	virtual void MarkedDirty() = 0;
 	virtual void NodeChanged() = 0;
+	virtual void EnabledChanged() {};
 	
 	Node *node;
+	bool enabled;
 };
 
 }
