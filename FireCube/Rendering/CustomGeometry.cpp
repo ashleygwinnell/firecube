@@ -73,7 +73,10 @@ void CustomGeometry::UpdateGeometry()
 			currentOffset += VertexBuffer::GetAttributeSize(VERTEX_ATTRIBUTE_TEXCOORD0);
 		}
 	}	
-	vertexBuffer->LoadData(&vertexData[0], vertices.size(), vertexAttributes, STATIC);
+	
+	if (vertexData.empty() == false)
+		vertexBuffer->LoadData(&vertexData[0], vertices.size(), vertexAttributes, STATIC);
+
 	switch (geometry->GetPrimitiveType())
 	{
 	case POINTS:

@@ -123,6 +123,16 @@ unsigned int VertexBuffer::GetVertexSize() const
 	return vertexSize;
 }
 
+unsigned int VertexBuffer::GetVertexAttributes() const
+{
+	return vertexAttributes;
+}
+
+unsigned int VertexBuffer::GetVertexAttributeOffset(unsigned int attributeIndex)
+{
+	return vertexAttributesOffset[attributeIndex];
+}
+
 const std::vector<char> &VertexBuffer::GetShadowData() const
 {
 	return shadowData;
