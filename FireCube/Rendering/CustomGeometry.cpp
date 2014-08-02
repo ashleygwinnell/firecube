@@ -40,11 +40,13 @@ void CustomGeometry::AddVertex(vec3 position)
 void CustomGeometry::SetNormal(vec3 normal)
 {
 	vertices[currentVertex].normal = normal;
+	vertexAttributes |= VERTEX_ATTRIBUTE_NORMAL;
 }
 
 void CustomGeometry::SetTexCoord(vec2 texcoord)
 {
 	vertices[currentVertex].texcoord = texcoord;
+	vertexAttributes |= VERTEX_ATTRIBUTE_TEXCOORD0;
 }
 
 void CustomGeometry::UpdateGeometry()
