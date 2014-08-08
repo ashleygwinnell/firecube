@@ -130,6 +130,8 @@ public:
 	*/
 	virtual vec3 GetPosition() const;
 
+	void SetRotation(vec3 rotation);
+
 	void SetZoomFactor(float factor);
 
 	void HandleInput(float time, const MappedInput &input);

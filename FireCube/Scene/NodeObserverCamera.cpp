@@ -199,6 +199,13 @@ void NodeObserverCamera::SetZoomFactor(float factor)
 	zoomFactor = factor;
 }
 
+void NodeObserverCamera::SetRotation(vec3 rotation)
+{
+	this->rotation = rotation;
+	viewMatrixChanged = true;
+	frustumChanged = true;
+}
+
 void NodeObserverCamera::HandleInput(float time, const MappedInput &input)
 {
 	if (input.HasValue("NodeObserverCamera_MouseWheelY"))
