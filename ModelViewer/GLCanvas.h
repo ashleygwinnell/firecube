@@ -9,20 +9,14 @@ public:
 	class RenderingParameters
 	{
 	public:
-		FireCube::vec4 bgColor;
+		FireCube::vec3 bgColor;
 		GLenum renderingMode;
 		bool cullFaceEnabled;
 		bool renderNormals;
 		bool renderTangents;		
-		//FireCube::GeometryNodePtr gridNode;
-		//FireCube::GeometryPtr grid;
-		DWORD gridCount;
-		FireCube::Program *plainColorProgram;
-		FireCube::NodeObserverCamera *camera;
-		FireCube::Material *gridMaterial;
-		FireCube::Material *normalsMaterial;
-		FireCube::Material *tangentsMaterial;
-		FireCube::Material *bitangentsMaterial;
+		
+		DWORD gridCount;		
+		FireCube::NodeObserverCamera *camera;		
 	};
 	GLCanvas( wxWindow *parent, wxWindowID id = wxID_ANY,
 				const wxPoint& pos = wxDefaultPosition,
@@ -39,8 +33,8 @@ public:
 	void OnMouseWheel(wxMouseEvent& event);
 	void Render();
 	void Init();
-	void SetBackgroundColor(FireCube::vec4 color);
-	FireCube::vec4 GetBackgroundColor();
+	void SetBackgroundColor(FireCube::vec3 color);
+	FireCube::vec3 GetBackgroundColor();
 	void SetRenderingMode(GLenum renderingMode);
 	void SetCullFace(bool enabled);
 	bool GetCullFace();
@@ -60,8 +54,7 @@ private:
 	MyApp *theApp;
 	wxGLContext *context;
 	FireCube::Engine *engine;
-	FireCube::Scene *scene;	
-	bool crap;
+	FireCube::Scene *scene;		
 };
 
 #endif

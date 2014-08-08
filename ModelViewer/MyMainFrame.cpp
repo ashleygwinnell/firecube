@@ -29,6 +29,7 @@ void MyMainFrame::MenuItem2Clicked( wxCommandEvent& event )
 		return;
 	std::string::size_type d = sfile.find_last_of("\\");
 	theApp->LoadDocument(sfile);
+	glCanvas->SetRenderingNormals(glCanvas->GetRenderingNormals());
 }
 
 void MyMainFrame::CheckBox2Clicked( wxCommandEvent& event )
@@ -63,8 +64,7 @@ void MyMainFrame::TextCtrl3TextEnter( wxCommandEvent& event )
 	{
 		theApp->GetApplicationParameters().normalsLength = (float)l;        
 		theApp->GetDocument().GenerateNormals(theApp->GetApplicationParameters().normalsLength);
-		theApp->GetDocument().GenerateTangents(theApp->GetApplicationParameters().normalsLength);
-		theApp->GetDocument().GenerateBitangents(theApp->GetApplicationParameters().normalsLength);
+		theApp->GetDocument().GenerateTangents(theApp->GetApplicationParameters().normalsLength);		
 		glCanvas->Refresh();
 	}
 }
@@ -78,7 +78,7 @@ void MyMainFrame::CheckBox3Clicked( wxCommandEvent& event )
 void MyMainFrame::ColourPicker1Changed( wxColourPickerEvent& event )
 {
 	wxColor color = colourPicker1->GetColour();
-	glCanvas->SetBackgroundColor(vec4(color.Red() / 255.0f, color.Green() / 255.0f, color.Blue() / 255.0f, 1.0f));
+	glCanvas->SetBackgroundColor(vec3(color.Red() / 255.0f, color.Green() / 255.0f, color.Blue() / 255.0f));
 	glCanvas->Refresh();
 }
 

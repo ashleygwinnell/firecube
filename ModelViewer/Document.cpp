@@ -3,7 +3,7 @@
 using namespace FireCube;
 #include "Document.h"
 
-Document::Document() : modelNode(nullptr), gridNode(nullptr), model(nullptr)
+Document::Document() : modelNode(nullptr), gridNode(nullptr), model(nullptr), normalsGeometry(nullptr), tangentsGeometry(nullptr)
 {
 
 }
@@ -17,9 +17,13 @@ void Document::CreateRootNode(Engine *engine)
 	scene = new Scene(engine);
 	root = scene->GetRootNode();
 	
-	gridMaterial = new Material(engine);
+	gridMaterial = FireCube::SharedPtr<FireCube::Material>(new Material(engine));
 	gridMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	gridMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));
+
+	tangentsMaterial = FireCube::SharedPtr<FireCube::Material>(new Material(engine));
+	tangentsMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 0.0f, 0.0f, 1.0f));
+	tangentsMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));
 }
 
 bool Document::Load(const std::string &filename, Engine *engine)
@@ -29,19 +33,10 @@ bool Document::Load(const std::string &filename, Engine *engine)
 	modelNode->RemoveAllComponents();
 	model = modelNode->CreateComponent<StaticModel>();
 	model->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>(filename));
-	
-	//modelNode->RemoveAllChildren();
-	//modelNode->Load(filename);
-		
+			
 	verticesCount = 0;
 	facesCount = 0;
 	CountElements(verticesCount, facesCount);
-	/*normalRenderingBuffer = FireCube::BufferPtr(new FireCube::Buffer);
-	tangentRenderingBuffer = FireCube::BufferPtr(new FireCube::Buffer);
-	bitangentRenderingBuffer = FireCube::BufferPtr(new FireCube::Buffer);
-	normalRenderingBuffer->Create();
-	tangentRenderingBuffer->Create();
-	bitangentRenderingBuffer->Create();	*/
 	
 	return true;
 }
@@ -72,81 +67,88 @@ void Document::CountElements(unsigned int &verticesCount, unsigned int &facesCou
 }
 void Document::GenerateNormals(float l)
 {
-	/*vector<FireCube::vec3> normals;
-	GenerateNormals(root, l, normals);
-	normalRenderingBuffer->LoadData(&normals[0], normals.size()*sizeof(FireCube::vec3), FireCube::STATIC);
-	normalRenderingBufferSize = normals.size();*/
-}
-void Document::GenerateNormals(Node *node, float l, std::vector<vec3> &normals)
-{
-	/*if (node->GetType() == FireCube::Node::GEOMETRY)
+	if (model)
 	{
-		FireCube::GeometryNodePtr geometryNode = dynamic_pointer_cast<FireCube::GeometryNode>(node);
-		if (geometryNode->GetGeometry())
+		bool enabled = false;
+		if (normalsGeometry)
 		{
-			for (unsigned int i = 0; i < geometryNode->GetGeometry()->GetVertices().size(); i++)
+			enabled = normalsGeometry->IsEnabled();
+			modelNode->RemoveComponent(normalsGeometry);
+		}
+
+		std::set<VertexBuffer *> buffers;
+		for (auto g : model->GetGeometries())
+		{
+			buffers.insert(g->GetVertexBuffer());
+			facesCount += g->GetPrimitiveCount();
+		}
+		normalsGeometry = modelNode->CreateComponent<CustomGeometry>();
+		normalsGeometry->SetPrimitiveType(LINES);
+		normalsGeometry->SetMaterial(gridMaterial);
+		for (auto buffer : buffers)
+		{
+			if (buffer->GetVertexAttributes() & VERTEX_ATTRIBUTE_NORMAL)
 			{
-				normals.push_back(geometryNode->GetGeometry()->GetVertices()[i]);
-				normals.push_back(geometryNode->GetGeometry()->GetVertices()[i] + geometryNode->GetGeometry()->GetNormals()[i]*l);
+				auto &vertexData = buffer->GetShadowData();
+				for (unsigned int i = 0; i < buffer->GetVertexCount(); ++i)
+				{
+					vec3 pos = *((vec3 *) &vertexData[i * buffer->GetVertexSize()]);
+					vec3 normal = *((vec3 *)&vertexData[i * buffer->GetVertexSize() + buffer->GetVertexAttributeOffset(VERTEX_ATTRIBUTE_NORMAL_INDEX)]);					
+					normalsGeometry->AddVertex(pos);
+					normalsGeometry->AddVertex(pos + normal * l);
+				}
 			}
 		}
-	}
-	for (vector<FireCube::NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
-		GenerateNormals(*i, l, normals);*/
+		normalsGeometry->UpdateGeometry();
+		normalsGeometry->SetEnabled(enabled);
+	}	
 }
+
 void Document::GenerateTangents(float l)
 {
-	/*vector<FireCube::vec3> tangents;
-	GenerateTangents(root, l, tangents);
-	if (!tangents.empty())
+	if (model)
 	{
-		tangentRenderingBuffer->LoadData(&tangents[0], tangents.size()*sizeof(FireCube::vec3), FireCube::STATIC);
-		hasTangents = true;
-	}
-	else
-		hasTangents = false;*/
-}
-void Document::GenerateTangents(Node *node, float l,std::vector<vec3> &tangents)
-{
-	/*if (node->GetType() == FireCube::Node::GEOMETRY)
-	{
-		FireCube::GeometryNodePtr geometryNode = dynamic_pointer_cast<FireCube::GeometryNode>(node);
-		if (geometryNode->GetGeometry() && !geometryNode->GetGeometry()->GetTangents().empty())
+		hasTangents = false;
+		bool enabled = false;
+		if (tangentsGeometry)
 		{
-			for (unsigned int i = 0; i < geometryNode->GetGeometry()->GetVertices().size(); i++)
+			enabled = tangentsGeometry->IsEnabled();
+			modelNode->RemoveComponent(tangentsGeometry);
+		}
+
+		std::set<VertexBuffer *> buffers;
+		for (auto g : model->GetGeometries())
+		{
+			buffers.insert(g->GetVertexBuffer());
+			facesCount += g->GetPrimitiveCount();
+		}
+		tangentsGeometry = modelNode->CreateComponent<CustomGeometry>();
+		tangentsGeometry->SetPrimitiveType(LINES);
+		tangentsGeometry->SetMaterial(tangentsMaterial);
+		for (auto buffer : buffers)
+		{
+			if (buffer->GetVertexAttributes() & VERTEX_ATTRIBUTE_TANGENT && buffer->GetVertexAttributes() & VERTEX_ATTRIBUTE_NORMAL)
 			{
-				tangents.push_back(geometryNode->GetGeometry()->GetVertices()[i]);
-				tangents.push_back(geometryNode->GetGeometry()->GetVertices()[i] + geometryNode->GetGeometry()->GetTangents()[i]*l);
+				hasTangents = true;
+				auto &vertexData = buffer->GetShadowData();
+				for (unsigned int i = 0; i < buffer->GetVertexCount(); ++i)
+				{
+					vec3 pos = *((vec3 *)&vertexData[i * buffer->GetVertexSize()]);
+					vec3 tangent = *((vec3 *)&vertexData[i * buffer->GetVertexSize() + buffer->GetVertexAttributeOffset(VERTEX_ATTRIBUTE_TANGENT_INDEX)]);
+					vec3 normal = *((vec3 *)&vertexData[i * buffer->GetVertexSize() + buffer->GetVertexAttributeOffset(VERTEX_ATTRIBUTE_NORMAL_INDEX)]);
+					vec3 bitangent = FireCube::Cross(normal, tangent);
+					tangentsGeometry->AddVertex(pos);
+					tangentsGeometry->AddVertex(pos + tangent * l);
+					tangentsGeometry->AddVertex(pos);
+					tangentsGeometry->AddVertex(pos + bitangent * l);
+				}
 			}
 		}
+		tangentsGeometry->UpdateGeometry();
+		tangentsGeometry->SetEnabled(enabled);
 	}
-	for (vector<FireCube::NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
-		GenerateTangents(*i, l, tangents);*/
 }
-void Document::GenerateBitangents(float l)
-{
-	/*vector<FireCube::vec3> bitangents;
-	GenerateBitangents(root, l, bitangents);
-	if (!bitangents.empty())
-		bitangentRenderingBuffer->LoadData(&bitangents[0], bitangents.size()*sizeof(FireCube::vec3), FireCube::STATIC);*/
-}
-void Document::GenerateBitangents(Node *node, float l, std::vector<vec3> &bitangents)
-{
-	/*if (node->GetType() == FireCube::Node::GEOMETRY)
-	{
-		FireCube::GeometryNodePtr geometryNode = dynamic_pointer_cast<FireCube::GeometryNode>(node);
-		if (geometryNode->GetGeometry() && !geometryNode->GetGeometry()->GetBitangents().empty())
-		{
-			for (unsigned int i = 0; i < geometryNode->GetGeometry()->GetVertices().size(); i++)
-			{
-				bitangents.push_back(geometryNode->GetGeometry()->GetVertices()[i]);
-				bitangents.push_back(geometryNode->GetGeometry()->GetVertices()[i] + geometryNode->GetGeometry()->GetBitangents()[i]*l);
-			}
-		}
-	}
-	for (vector<FireCube::NodePtr>::iterator i = node->GetChildren().begin(); i != node->GetChildren().end(); i++)
-		GenerateBitangents(*i, l, bitangents);*/
-}
+
 bool Document::HasTangents() const
 {
 	return hasTangents;
@@ -158,23 +160,6 @@ unsigned int Document::GetVertexCount() const
 unsigned int Document::GetFaceCount() const
 {
 	return facesCount;
-}
-/*FireCube::BufferPtr Document::GetNormalRenderingBuffer()
-{
-	return normalRenderingBuffer;
-}
-FireCube::BufferPtr Document::GetTangentRenderingBuffer()
-{
-	return tangentRenderingBuffer;
-}
-FireCube::BufferPtr Document::GetBitangentRenderingBuffer()
-{
-	return bitangentRenderingBuffer;
-}*/
-
-int Document::GetNormalRenderingBufferSize()
-{
-	return normalRenderingBufferSize;
 }
 
 std::vector<FireCube::SharedPtr<FireCube::Material>> Document::GetAllMaterials()
@@ -205,4 +190,14 @@ void Document::CreateGrid(float size, DWORD numberOfCells)
 	gridGeometry->SetPrimitiveType(LINES);
 	gridGeometry->SetMaterial(gridMaterial);
 	gridGeometry->UpdateGeometry();
+}
+
+FireCube::CustomGeometry *Document::GetNormalsGeometry()
+{
+	return normalsGeometry;
+}
+
+FireCube::CustomGeometry *Document::GetTangentsGeometry()
+{
+	return tangentsGeometry;
 }

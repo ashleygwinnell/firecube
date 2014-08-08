@@ -18,8 +18,7 @@ GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id,
 	Connect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(GLCanvas::OnEraseBackground));
 	Connect(wxEVT_ENTER_WINDOW, wxMouseEventHandler(GLCanvas::OnEnterWindow));
 	Connect(wxEVT_MOTION, wxMouseEventHandler(GLCanvas::OnMotion));
-	Connect(wxEVT_MOUSEWHEEL, wxMouseEventHandler(GLCanvas::OnMouseWheel));
-	crap = false;
+	Connect(wxEVT_MOUSEWHEEL, wxMouseEventHandler(GLCanvas::OnMouseWheel));	
 }
 
 GLCanvas::~GLCanvas()
@@ -29,63 +28,27 @@ GLCanvas::~GLCanvas()
 	Disconnect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(GLCanvas::OnEraseBackground), nullptr, this);
 	Disconnect(wxEVT_ENTER_WINDOW, wxMouseEventHandler(GLCanvas::OnEnterWindow), nullptr, this);
 	Disconnect(wxEVT_MOTION, wxMouseEventHandler(GLCanvas::OnMotion), nullptr, this);
-	Disconnect(wxEVT_MOUSEWHEEL, wxMouseEventHandler(GLCanvas::OnMouseWheel), nullptr, this);
-	crap = true;
+	Disconnect(wxEVT_MOUSEWHEEL, wxMouseEventHandler(GLCanvas::OnMouseWheel), nullptr, this);	
 }
 void GLCanvas::Init()
 {
 	Filesystem::AddSearchPath("../Assets/Textures");
 	theApp->fcApp.InitializeNoWindow();
 	engine = theApp->fcApp.GetEngine();
-	renderingParameters.bgColor = vec4(0.249f, 0.521f, 1.0f, 1.0f);
+	renderingParameters.bgColor = vec3(0.249f, 0.521f, 1.0f);
 	renderingParameters.renderingMode = GL_FILL;
 	renderingParameters.cullFaceEnabled = true;
 	renderingParameters.renderNormals = false;
 	renderingParameters.renderTangents = false;    
-
-//	renderingParameters.grid = GeometryPtr(new Geometry);    
-//	renderingParameters.gridNode = GeometryNodePtr(new GeometryNode);
-//	MaterialPtr material(new Material);
-//	renderingParameters.grid->SetMaterial(material);
-//	material->SetDiffuseColor(vec3(1, 1, 1));
-//	renderingParameters.gridNode->SetGeometry(renderingParameters.grid);
-//	renderingParameters.gridNode->SetLighting(false);
-	
-/*	renderingParameters.gridMaterial = MaterialPtr(new Material);
-	renderingParameters.gridMaterial->SetAmbientColor(vec3(0,0,0));
-	renderingParameters.gridMaterial->SetDiffuseColor(vec3(1,1,1));
-	renderingParameters.gridMaterial->SetSpecularColor(vec3(0,0,0));
-
-	renderingParameters.normalsMaterial = MaterialPtr(new Material);
-	renderingParameters.normalsMaterial->SetAmbientColor(vec3(0,0,0));
-	renderingParameters.normalsMaterial->SetDiffuseColor(vec3(0,0,1));
-	renderingParameters.normalsMaterial->SetSpecularColor(vec3(0,0,0));
-
-	renderingParameters.tangentsMaterial = MaterialPtr(new Material);
-	renderingParameters.tangentsMaterial->SetAmbientColor(vec3(0,0,0));
-	renderingParameters.tangentsMaterial->SetDiffuseColor(vec3(1,0,0));
-	renderingParameters.tangentsMaterial->SetSpecularColor(vec3(0,0,0));
-
-	renderingParameters.bitangentsMaterial = MaterialPtr(new Material);
-	renderingParameters.bitangentsMaterial->SetAmbientColor(vec3(0,0,0));
-	renderingParameters.bitangentsMaterial->SetDiffuseColor(vec3(0,1,0));
-	renderingParameters.bitangentsMaterial->SetSpecularColor(vec3(0,0,0));*/
    
 	theApp->GetDocument().CreateRootNode(engine);
 	Node *root = theApp->GetDocument().GetRoot();
 	scene = theApp->GetDocument().GetScene();
-
-	mat4 mat;
-	int w, h;
-	GetClientSize(&w, &h);
-	mat.GeneratePerspective(90.0f,(float) w / (float) h, 0.1f, 1000.0f);
+	
 	renderingParameters.camera = root->CreateComponent<NodeObserverCamera>();
 	renderingParameters.camera->SetDistance(5.0f);
 	renderingParameters.camera->SetMaxDistance(10000.0f);
-	//renderingParameters.camera->SetProjectionMatrix(mat);
-
 	
-	//scene.SetRootNodeAndCamera(root, renderingParameters.camera);
 	scene->SetCamera(renderingParameters.camera);
 	
 	theApp->GetDocument().CreateGrid(2, 20);
@@ -111,8 +74,7 @@ void GLCanvas::Render()
 		Init();
 	}
 	
-	scene->SetFogColor(renderingParameters.bgColor.ToVec3()); // TODO change bgColor to vec3
-	//engine->GetRenderer()->Clear(renderingParameters.bgColor, 1.0f);
+	scene->SetFogColor(renderingParameters.bgColor);	
 		
 	if (renderingParameters.cullFaceEnabled)
 		glEnable(GL_CULL_FACE);
@@ -122,25 +84,7 @@ void GLCanvas::Render()
 	glPolygonMode(GL_FRONT_AND_BACK, renderingParameters.renderingMode);
 		
 	scene->Render(engine->GetRenderer());
-	//Renderer::Render(theApp->GetDocument().GetRoot());
-	/*if (renderingParameters.renderNormals)
-	{
-		Renderer::UseProgram(renderingParameters.plainColorProgram);
-		Renderer::UseMaterial(renderingParameters.plainColorProgram, renderingParameters.normalsMaterial);
-		theApp->GetDocument().GetNormalRenderingBuffer()->SetVertexAttribute(0, 3, 0, 0);
-		Renderer::RenderStream(LINES, theApp->GetDocument().GetNormalRenderingBufferSize());
-	}
-	if (renderingParameters.renderTangents)
-	{
-		Renderer::UseProgram(renderingParameters.plainColorProgram);        
-		Renderer::UseMaterial(renderingParameters.plainColorProgram, renderingParameters.tangentsMaterial);
-		theApp->GetDocument().GetTangentRenderingBuffer()->SetVertexAttribute(0, 3, 0, 0);
-		Renderer::RenderStream(LINES, theApp->GetDocument().GetNormalRenderingBufferSize());
-				
-		Renderer::UseMaterial(renderingParameters.plainColorProgram, renderingParameters.bitangentsMaterial);
-		theApp->GetDocument().GetBitangentRenderingBuffer()->SetVertexAttribute(0, 3, 0, 0);
-		Renderer::RenderStream(LINES, theApp->GetDocument().GetNormalRenderingBufferSize());
-	}*/
+	
 	SwapBuffers();
 }
 
@@ -207,12 +151,12 @@ void GLCanvas::OnMouseWheel(wxMouseEvent& event)
 	this->Refresh(false);
 }
 
-void GLCanvas::SetBackgroundColor(vec4 color)
+void GLCanvas::SetBackgroundColor(vec3 color)
 {
 	renderingParameters.bgColor = color;
 }
 
-vec4 GLCanvas::GetBackgroundColor()
+vec3 GLCanvas::GetBackgroundColor()
 {
 	return renderingParameters.bgColor;
 }
@@ -235,6 +179,7 @@ bool GLCanvas::GetCullFace()
 void GLCanvas::SetRenderingNormals(bool enabled)
 {
 	renderingParameters.renderNormals = enabled;
+	theApp->GetDocument().GetNormalsGeometry()->SetEnabled(enabled);
 }
 
 bool GLCanvas::GetRenderingNormals()
@@ -245,6 +190,7 @@ bool GLCanvas::GetRenderingNormals()
 void GLCanvas::SetRenderingTangents(bool enabled)
 {
 	renderingParameters.renderTangents = enabled;
+	theApp->GetDocument().GetTangentsGeometry()->SetEnabled(enabled);
 }
 
 bool GLCanvas::GetRenderingTangents()
@@ -254,7 +200,7 @@ bool GLCanvas::GetRenderingTangents()
 
 void GLCanvas::SetRotation(vec3 rotation)
 {
-	//renderingParameters.camera->SetRotation(rotation);
+	renderingParameters.camera->SetRotation(rotation);
 }
 
 vec3 GLCanvas::GetRotation()

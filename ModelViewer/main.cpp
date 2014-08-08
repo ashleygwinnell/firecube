@@ -35,12 +35,9 @@ void MyApp::LoadDocument(const std::string &filename)
 	std::ostringstream oss3;
 	oss3 << "Loading completed in " << t.Passed() << " seconds.";
 	frame->SetStatusBarText(oss3.str());
-	//if (applicationParameters.customProgram)
-	//	document.GetRoot()->SetProgram(applicationParameters.program);
-
+	
 	document.GenerateNormals(applicationParameters.normalsLength);
 	document.GenerateTangents(applicationParameters.normalsLength);
-	document.GenerateBitangents(applicationParameters.normalsLength);
 	
 	frame->UpdateUI(document);
 }
