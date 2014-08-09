@@ -169,6 +169,9 @@ void Scene::UpdateLightQueues()
 void Scene::SetRenderTargets(Renderer *renderer, const RenderPathCommand &command)
 {
 	RenderSurface *renderTarget = command.renderPath->GetRenderTarget(command.output);
+	if (!renderTarget)
+		renderTarget = renderSurface;
+
 	renderer->SetRenderTarget(0, renderTarget);		
 	for (int i = 1; i < MAX_RENDER_TARGETS; ++i)
 		renderer->SetRenderTarget(i, nullptr);
@@ -350,4 +353,9 @@ vec3 Scene::GetFogColor() const
 Node *Scene::GetRootNode()
 {
 	return &rootNode;
+}
+
+void Scene::SetRenderTarget(SharedPtr<RenderSurface> renderSurface)
+{
+	this->renderSurface = renderSurface;
 }

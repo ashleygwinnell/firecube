@@ -31,6 +31,7 @@ public:
 	void SetFogColor(vec3 fogColor);
 	vec3 GetFogColor() const;
 	Node *GetRootNode();
+	void SetRenderTarget(SharedPtr<RenderSurface> renderSurface);
 private:	
 	void UpdateRenderables();
 	void UpdateBaseQueue();
@@ -49,6 +50,7 @@ private:
 	bool fogEnabled;
 	vec3 fogParameters;
 	vec3 fogColor;
+	SharedPtr<RenderSurface> renderSurface;
 
 };
 
