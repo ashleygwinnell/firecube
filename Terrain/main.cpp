@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-App::App() : ang(0, (float)PI, 0)
+App::App() : ang(0, (float)PI, 0), scene(engine)
 {
 
 }
@@ -41,25 +41,28 @@ bool App::Prepare()
 	GetInputManager().AddMapping(KEY_DOWN, STATE, "RotateDown");
 	GetInputManager().AddMapping(KEY_MOUSE_LEFT_BUTTON, STATE, "RotateBoth");
 
-	fontFace = resourcePool->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18);
-	root = NodePtr(new Node(engine, "root"));
-	camera = CameraPtr(new Camera);
-	camera->SetPosition(vec3(0, 2, 0));
-	scene.SetRootNodeAndCamera(root, camera);
+	fontFace = resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18);
+	root = scene.GetRootNode();
+	
+	cameraNode = root->CreateChild();
+	camera = cameraNode->CreateComponent<Camera>();	
+	cameraNode->SetTranslation(vec3(0, 2, 0));
+	camera->SetPerspectiveProjectionParameters(60.0f, (float)GetWidth() / (float)GetHeight(), 0.1f, 200.0f);
+	scene.SetCamera(camera);
 
-	node = root->CreateChild();
+	Node *node = root->CreateChild();
 	node->Move(vec3(5, 5, 5));	
-	node->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourcePool()->GetResource<Mesh>("../Assets/Models/teapot.3ds"));
+	node->CreateComponent<StaticModel>()->CreateFromMesh(resourceCache->GetResource<Mesh>("../Assets/Models/teapot.3ds"));
 
-	terrainNode = root->CreateChild("Terrain");
-	terrain = terrainNode->CreateComponent<Terrain>();
+	node = root->CreateChild("Terrain");
+	terrain = node->CreateComponent<Terrain>();
 	terrain->SetPatchSize(64);
 	terrain->SetVerticesSpacing(vec3(1.0f, 50.0f, 1.0f));
 	terrain->SetGenerateHardNormals(true);
-	terrain->CreateFromHeightMap(engine->GetResourcePool()->GetResource<Image>("../Assets/Textures/heightmap.bmp").get());	
-	terrain->SetMaterial(engine->GetResourcePool()->GetResource<Material>("Materials/TerrainNoTexture.xml"));
+	terrain->CreateFromHeightMap(resourceCache->GetResource<Image>("../Assets/Textures/heightmap.bmp"));
+	terrain->SetMaterial(resourceCache->GetResource<Material>("Materials/TerrainNoTexture.xml"));
 		
-	NodePtr lightNode = root->CreateChild("Light");
+	Node *lightNode = root->CreateChild("Light");
 	Light *light = lightNode->CreateComponent<Light>();
 	light->SetLightType(FireCube::DIRECTIONAL);
 	light->SetDiffuseColor(vec4(1.0f, 1.0f, 1.0f, 1));
@@ -69,44 +72,43 @@ bool App::Prepare()
 	scene.SetFogEnabled(true);
 	scene.SetFogParameters(vec3(0, 0.01f, 0));
 	scene.SetFogColor(vec3(0.30f, 0.42f, 0.95f));
-	
-	orthographicCamera = CameraPtr(new Camera);
+		
 	return true;
 }
 
 void App::Update(float time)
 {	
-	camera->Move(speed);
+	cameraNode->Move(speed);
 	ang += angSpeed;
 	angSpeed *= 0.9f;
-	vec3 pos = camera->GetPosition();
+	vec3 pos = cameraNode->GetTranslation();
 	float height = terrain->GetHeight(vec2(pos.x, pos.z));	
 	if (pos.y - height < 0.75f)
 	{
 		pos.y = height + 0.75f;
 		vec3 n = terrain->GetNormal(vec2(pos.x, pos.z));
 		speed = speed - speed.Dot(n) * n * 2;
-		camera->SetPosition(pos);
+		cameraNode->SetTranslation(pos);
 	}
 	speed = speed * 0.9f;
 }
 
 void App::Render(float time)
-{
-	mat4 projection;	
-	projection.GeneratePerspective(60.0f, (float) GetWidth() / (float) GetHeight(), 0.1f, 200.0f);
-	camera->SetProjectionMatrix(projection);
+{	
 	renderer->Clear(vec4(0.30f, 0.42f, 0.95f, 1.0f), 1.0f);	
-	camera->SetRotation(vec3(ang.x, ang.y, angSpeed.z));
+	mat4 rot = mat4::IDENTITY;
+	rot.RotateY(ang.y);
+	rot.RotateX(ang.x);	
+	rot.RotateZ(angSpeed.z);
+	cameraNode->SetRotation(rot);
 	
 	scene.Render(renderer);
 		
 	mat4 ortho;
-	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);
-	orthographicCamera->SetProjectionMatrix(ortho);
+	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	
 	std::ostringstream oss;
 	oss << "FPS:" << app.GetFps() << std::endl << "Rendered primitives: " << renderer->GetNumberOfPrimitivesRendered();
-	renderer->RenderText(fontFace, orthographicCamera, vec3(0, 0, 0), vec4(1), oss.str());	
+	renderer->RenderText(fontFace, ortho, vec3(0, 0, 0), vec4(1), oss.str());
 }
 
 void App::HandleInput(float time, const MappedInput &input)

@@ -8,13 +8,11 @@ public:
 	void Render(float time);
 
 private:
-	Terrain *terrain;
-	NodePtr root, node;	
-	Scene scene;
-	NodePtr terrainNode;
-	FontFacePtr fontFace;	
-	CameraPtr orthographicCamera;
-	CameraPtr camera;
+	Terrain *terrain;	
+	Node *root, *cameraNode;	
+	Scene scene;	
+	FontFace *fontFace;		
+	Camera *camera;
 	vec3 speed;
 	vec3 angSpeed;
 	vec3 ang;
