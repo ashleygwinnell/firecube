@@ -29,6 +29,7 @@
 #include "Rendering/CustomGeometry.h"
 #include "Rendering/DebugRenderer.h"
 #include "Rendering/RenderPath.h"
+#include "Rendering/RenderSurface.h"
 #include "Application/Input.h"
 #include "Application/Application.h"
 #include "Scene/Light.h"
