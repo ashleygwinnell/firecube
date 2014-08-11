@@ -191,7 +191,10 @@ void Scene::Render(Renderer *renderer)
 {
 	renderer->ResetCachedShaderParameters();
 
-	camera->SetAspectRatio((float)renderer->GetWidth() / (float)renderer->GetHeight());
+	if (renderSurface)
+		camera->SetAspectRatio((float)renderSurface->GetWidth() / (float)renderSurface->GetHeight());
+	else
+		camera->SetAspectRatio((float)renderer->GetWidth() / (float)renderer->GetHeight());
 
 	UpdateRenderables();
 	UpdateBaseQueue();
