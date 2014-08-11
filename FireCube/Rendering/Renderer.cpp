@@ -460,6 +460,7 @@ void Renderer::UpdateFrameBuffer()
 	if (!hasFbo)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		SetViewport(0, 0, width, height);
 		return;
 	}
 
