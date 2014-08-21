@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Rendering/Renderable.h"
+#include "Rendering/VertexBuffer.h"
 
 namespace FireCube
 {
@@ -26,7 +27,7 @@ private:
 	};
 
 	unsigned int currentVertex;
-	unsigned int vertexAttributes;
+	VertexAttribute vertexAttributes;
 	virtual void UpdateWorldBoundingBox();
 	BoundingBox boundingBox;
 	Geometry *geometry;

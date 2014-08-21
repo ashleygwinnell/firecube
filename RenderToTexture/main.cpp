@@ -76,8 +76,7 @@ void App::Update(float time)
 void App::Render(float time)
 {	
 	mat4 projection;	
-	
-	renderer->SetRenderTarget(0, renderSurface);    
+		
 	scene2.Render(renderer);	
 	projection.GenerateOrthographic(0, (float)renderSurface->GetWidth(), (float)renderSurface->GetHeight(), 0, 0, 1);
 	renderer->RenderText(fontFace, projection, vec3(0, 0, 0), vec4(1, 1, 1, 1), "RenderToTexture Test.");

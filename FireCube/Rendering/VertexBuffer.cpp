@@ -6,7 +6,7 @@
 
 using namespace FireCube;
 
-const unsigned int VertexBuffer::attributeSize[MAX_VERTEX_ATTRIBUTE] = {
+const unsigned int VertexBuffer::attributeSize[static_cast<int>(VertexAttribute::MAX_VERTEX_ATTRIBUTE)] = {
 	3 * sizeof(float), // position
 	3 * sizeof(float), // normal
 	2 * sizeof(float), // texture coordinate 0
@@ -29,7 +29,7 @@ void VertexBuffer::Create()
 	LOGINFO("Created buffer with id=", objectId);
 }
 
-bool VertexBuffer::LoadData(void *data, unsigned int vertexCount, unsigned int vertexAttributes, BufferType bt)
+bool VertexBuffer::LoadData(void *data, unsigned int vertexCount, VertexAttribute vertexAttributes, BufferType bt)
 {
 	GLenum e;
 	if (bt == STREAM)
@@ -77,9 +77,9 @@ void VertexBuffer::SetVertexAttribute(int index, int numCoords, int stride, int 
 void VertexBuffer::UpdateAttributesOffsets()
 {
 	unsigned int currentOffset = 0;
-	for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBUTE; ++i)
+	for (unsigned int i = 0; i < static_cast<int>(VertexAttribute::MAX_VERTEX_ATTRIBUTE); ++i)
 	{
-		if (vertexAttributes & (1 << i))
+		if (static_cast<int>(vertexAttributes) & (1 << i))
 		{
 			vertexAttributesOffset[i] = currentOffset;
 			currentOffset += attributeSize[i];
@@ -91,9 +91,9 @@ void VertexBuffer::UpdateAttributesOffsets()
 void VertexBuffer::ApplyAttributes()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, objectId);
-	for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBUTE; ++i)
+	for (unsigned int i = 0; i < static_cast<int>(VertexAttribute::MAX_VERTEX_ATTRIBUTE); ++i)
 	{
-		if (vertexAttributes & (1 << i))
+		if (static_cast<int>(vertexAttributes)& (1 << i))
 		{
 			glEnableVertexAttribArray(i);
 			glVertexAttribPointer(i, attributeSize[i] / sizeof(float), GL_FLOAT, GL_FALSE, vertexSize, (void *) vertexAttributesOffset[i]);
@@ -123,14 +123,14 @@ unsigned int VertexBuffer::GetVertexSize() const
 	return vertexSize;
 }
 
-unsigned int VertexBuffer::GetVertexAttributes() const
+VertexAttribute VertexBuffer::GetVertexAttributes() const
 {
 	return vertexAttributes;
 }
 
-unsigned int VertexBuffer::GetVertexAttributeOffset(unsigned int attributeIndex)
+unsigned int VertexBuffer::GetVertexAttributeOffset(VertexAttribute vertexAttribute)
 {
-	return vertexAttributesOffset[attributeIndex];
+	return vertexAttributesOffset[VertexBuffer::GetVertexAttributeIndex(vertexAttribute)];
 }
 
 const std::vector<char> &VertexBuffer::GetShadowData() const
@@ -148,12 +148,12 @@ const bool VertexBuffer::Shadowed() const
 	return isShadowed;
 }
 
-unsigned int VertexBuffer::GetVertexSize(unsigned int vertexAttributes)
+unsigned int VertexBuffer::GetVertexSize(VertexAttribute vertexAttributes)
 {
 	unsigned int currentOffset = 0;
-	for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBUTE; ++i)
+	for (unsigned int i = 0; i < static_cast<int>(VertexAttribute::MAX_VERTEX_ATTRIBUTE); ++i)
 	{
-		if (vertexAttributes & (1 << i))
+		if (static_cast<int>(vertexAttributes) & (1 << i))
 		{			
 			currentOffset += attributeSize[i];
 		}
@@ -161,7 +161,50 @@ unsigned int VertexBuffer::GetVertexSize(unsigned int vertexAttributes)
 	return currentOffset;
 }
 
-unsigned int VertexBuffer::GetAttributeSize(unsigned int vertexAttribute)
+unsigned int VertexBuffer::GetAttributeSize(VertexAttribute vertexAttribute)
 {
-	return attributeSize[vertexAttribute];
+	return attributeSize[VertexBuffer::GetVertexAttributeIndex(vertexAttribute)];
+}
+
+unsigned int VertexBuffer::GetVertexAttributeIndex(VertexAttribute vertexAttribute)
+{
+	switch (vertexAttribute)
+	{
+	case VertexAttribute::POSITION:
+		return 0;
+		break;
+	case VertexAttribute::NORMAL:
+		return 1;
+		break;
+	case VertexAttribute::TEXCOORD0:
+		return 2;
+		break;
+	case VertexAttribute::TANGENT:
+		return 3;
+		break;
+	case VertexAttribute::COLOR:
+		return 4;
+		break;
+	default:
+		return 0;
+		break;
+	}
+}
+
+VertexAttribute FireCube::operator | (const VertexAttribute &lhs, const VertexAttribute &rhs)
+{
+	VertexAttribute ret = static_cast<VertexAttribute>(static_cast<int>(lhs) | static_cast<int>(rhs));
+	return ret;
+}
+
+VertexAttribute FireCube::operator |= (VertexAttribute &lhs, const VertexAttribute &rhs)
+{
+	lhs = static_cast<VertexAttribute>(static_cast<int>(lhs) | static_cast<int>(rhs));
+	return lhs;
+}
+
+VertexAttribute FireCube::operator & (const VertexAttribute &lhs, const VertexAttribute &rhs)
+{
+	VertexAttribute ret = static_cast<VertexAttribute>(static_cast<int>(lhs)& static_cast<int>(rhs));
+	return ret;
 }

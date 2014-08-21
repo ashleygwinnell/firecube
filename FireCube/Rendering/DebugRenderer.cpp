@@ -32,7 +32,7 @@ void DebugRenderer::Render(Camera *camera)
 	Shader *fs = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/solidColor.frag")->GenerateShader("");	
 	renderer->SetShaders(vs, fs);
 	renderer->UseCamera(camera);
-	linesVertexBuffer->LoadData(&lines[0], lines.size() / 2, VERTEX_ATTRIBUTE_POSITION | VERTEX_ATTRIBUTE_COLOR, DYNAMIC);
+	linesVertexBuffer->LoadData(&lines[0], lines.size() / 2, VertexAttribute::POSITION | VertexAttribute::COLOR, DYNAMIC);
 	linesGeometry->Update();
 	linesGeometry->Render();
 	lines.clear();
