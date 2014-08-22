@@ -8,9 +8,9 @@ StringHash::StringHash()
 
 }
 
-StringHash::StringHash(const std::string &str)
+StringHash::StringHash(const std::string &str) : StringHash(str.c_str())
 {
-	hash = MathUtils::MurmurHash2(str.c_str(), str.size(), 0x1234);
+	
 }
 
 StringHash::StringHash(const char *str)
