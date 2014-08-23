@@ -80,7 +80,8 @@ void App::Render(float time)
 	scene2.Render(renderer);	
 	projection.GenerateOrthographic(0, (float)renderSurface->GetWidth(), (float)renderSurface->GetHeight(), 0, 0, 1);
 	renderer->RenderText(fontFace, projection, vec3(0, 0, 0), vec4(1, 1, 1, 1), "RenderToTexture Test.");
-	    
+	renderSurface->GetLinkedTexture()->GenerateMipMaps();
+
 	scene.Render(renderer);
 	projection.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	
     std::ostringstream oss;

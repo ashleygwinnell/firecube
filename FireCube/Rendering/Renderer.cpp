@@ -578,12 +578,11 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 		Texture *texture = new Texture(engine);
 		texture->SetWidth(width);
 		texture->SetHeight(height);
+		texture->SetFiltering(MIPMAP, LINEAR);
 		UseTexture(0, texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);		
 		renderSurface->SetLinkedTexture(texture);		
 	}
 	else if (type == DEPTH)
