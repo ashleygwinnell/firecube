@@ -31,6 +31,24 @@ void VertexBuffer::Create()
 
 bool VertexBuffer::LoadData(void *data, unsigned int vertexCount, VertexAttributeType vertexAttributes, BufferType bt)
 {
+	this->vertexAttributes.clear();	
+	for (unsigned int i = 0; i < static_cast<int>(VertexAttributeType::MAX_VERTEX_ATTRIBUTE); ++i)
+	{
+		if (static_cast<int>(vertexAttributes) & (1 << i))
+		{
+			AddVertexAttribute(static_cast<VertexAttributeType>(1 << i), attributeSize[i]);			
+		}
+		else
+		{
+			AddVertexAttribute(VertexAttributeType::NONE, 0);
+		}
+	}
+
+	return LoadData(data, vertexCount, bt);
+}
+
+bool VertexBuffer::LoadData(void *data, unsigned int vertexCount, BufferType bt)
+{
 	GLenum e;
 	if (bt == STREAM)
 		e = GL_STREAM_DRAW;
@@ -39,9 +57,8 @@ bool VertexBuffer::LoadData(void *data, unsigned int vertexCount, VertexAttribut
 	else if (bt == STATIC)
 		e = GL_STATIC_DRAW;
 	else
-		e = GL_STATIC_DRAW;
+		e = GL_STATIC_DRAW;	
 
-	this->vertexAttributes = vertexAttributes;
 	this->vertexCount = vertexCount;
 	UpdateAttributesOffsets();
 
@@ -77,13 +94,10 @@ void VertexBuffer::SetVertexAttribute(int index, int numCoords, int stride, int 
 void VertexBuffer::UpdateAttributesOffsets()
 {
 	unsigned int currentOffset = 0;
-	for (unsigned int i = 0; i < static_cast<int>(VertexAttributeType::MAX_VERTEX_ATTRIBUTE); ++i)
+	for (auto &vertexAttribute : vertexAttributes)
 	{
-		if (static_cast<int>(vertexAttributes) & (1 << i))
-		{
-			vertexAttributesOffset[i] = currentOffset;
-			currentOffset += attributeSize[i];
-		}
+		vertexAttribute.offset = currentOffset;			
+		currentOffset += vertexAttribute.size;	
 	}
 	vertexSize = currentOffset;
 }
@@ -91,15 +105,23 @@ void VertexBuffer::UpdateAttributesOffsets()
 void VertexBuffer::ApplyAttributes()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, objectId);
-	for (unsigned int i = 0; i < static_cast<int>(VertexAttributeType::MAX_VERTEX_ATTRIBUTE); ++i)
+	for (unsigned int i = 0; i < vertexAttributes.size(); ++i)
 	{
-		if (static_cast<int>(vertexAttributes)& (1 << i))
+		const VertexAttribute &vertexAttribute = vertexAttributes[i];
+		if (vertexAttribute.size > 0)
 		{
 			glEnableVertexAttribArray(i);
-			glVertexAttribPointer(i, attributeSize[i] / sizeof(float), GL_FLOAT, GL_FALSE, vertexSize, (void *) vertexAttributesOffset[i]);
+			glVertexAttribPointer(i, vertexAttribute.size / sizeof(float), GL_FLOAT, GL_FALSE, vertexSize, (void *)vertexAttribute.offset);
 		}
 		else
+		{
 			glDisableVertexAttribArray(i);
+		}
+	}
+
+	for (unsigned int i = vertexAttributes.size(); i < 16; ++i)
+	{
+		glDisableVertexAttribArray(i);
 	}
 }
 
@@ -123,14 +145,42 @@ unsigned int VertexBuffer::GetVertexSize() const
 	return vertexSize;
 }
 
-VertexAttributeType VertexBuffer::GetVertexAttributes() const
+const std::vector<VertexAttribute> &VertexBuffer::GetVertexAttributes() const
 {
 	return vertexAttributes;
 }
 
-unsigned int VertexBuffer::GetVertexAttributeOffset(VertexAttributeType vertexAttribute)
+void VertexBuffer::AddVertexAttribute(VertexAttributeType type, int size)
 {
-	return vertexAttributesOffset[VertexBuffer::GetVertexAttributeIndex(vertexAttribute)];
+	vertexAttributes.push_back(VertexAttribute());
+	vertexAttributes.back().type = type;
+	vertexAttributes.back().size = size;
+}
+
+unsigned int VertexBuffer::GetVertexAttributeOffset(VertexAttributeType type)
+{
+	for (const auto &vertexAttribute : vertexAttributes)
+	{
+		if (vertexAttribute.type == type)
+		{
+			return vertexAttribute.offset;
+		}
+	}
+	
+	return 0;
+}
+
+bool VertexBuffer::HasAttribute(VertexAttributeType type)
+{
+	for (const auto &vertexAttribute : vertexAttributes)
+	{
+		if (vertexAttribute.type == type)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 const std::vector<char> &VertexBuffer::GetShadowData() const

@@ -87,7 +87,7 @@ void Document::GenerateNormals(float l)
 		normalsGeometry->SetMaterial(gridMaterial);
 		for (auto buffer : buffers)
 		{
-			if ((buffer->GetVertexAttributes() & VertexAttributeType::NORMAL) == VertexAttributeType::NORMAL)
+			if (buffer->HasAttribute(VertexAttributeType::NORMAL))
 			{
 				auto &vertexData = buffer->GetShadowData();
 				for (unsigned int i = 0; i < buffer->GetVertexCount(); ++i)
@@ -127,7 +127,7 @@ void Document::GenerateTangents(float l)
 		tangentsGeometry->SetMaterial(tangentsMaterial);
 		for (auto buffer : buffers)
 		{
-			if ((buffer->GetVertexAttributes() & VertexAttributeType::TANGENT) == VertexAttributeType::TANGENT && (buffer->GetVertexAttributes() & VertexAttributeType::NORMAL) == VertexAttributeType::NORMAL)
+			if (buffer->HasAttribute(VertexAttributeType::TANGENT) && buffer->HasAttribute(VertexAttributeType::NORMAL))
 			{
 				hasTangents = true;
 				auto &vertexData = buffer->GetShadowData();
