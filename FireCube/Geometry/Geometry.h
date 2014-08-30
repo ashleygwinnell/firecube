@@ -36,19 +36,6 @@ enum PrimitiveType
 };
 
 /**
-* Defines an edge in a geometry.
-*/
-class FIRECUBE_API Edge
-{
-public:
-
-	/**
-	* The two indices of the edge.
-	*/
-	unsigned int v[2];
-};
-
-/**
 * A class representing a geometry.
 * Geometries consists of vertices(position, normal, etc..), faces and a material.
 */
