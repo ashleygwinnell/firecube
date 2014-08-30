@@ -149,10 +149,10 @@ VertexBuffer *M3dsLoader::CreateVertexBufferAndBoundingBoxOfObject(Object &objec
 	VertexBuffer *vertexBuffer = new VertexBuffer(engine->GetRenderer());
 	vertexBuffer->SetShadowed(true);
 	unsigned int vertexSize = 3 + 3;
-	VertexAttribute vertexAttributes = VertexAttribute::POSITION | VertexAttribute::NORMAL;		
+	VertexAttributeType vertexAttributes = VertexAttributeType::POSITION | VertexAttributeType::NORMAL;		
 	if (!object.uv.empty())
 	{
-		vertexAttributes |= VertexAttribute::TEXCOORD0 | VertexAttribute::TANGENT;
+		vertexAttributes |= VertexAttributeType::TEXCOORD0 | VertexAttributeType::TANGENT;
 		vertexSize += 2 + 3;
 	}
 	std::vector<float> vertexData(vertexSize * object.vertex.size());		
@@ -160,7 +160,7 @@ VertexBuffer *M3dsLoader::CreateVertexBufferAndBoundingBoxOfObject(Object &objec
 	{
 		*((vec3 *) &vertexData[j * vertexSize + 0]) = object.vertex[j];
 		*((vec3 *) &vertexData[j * vertexSize + 3]) = object.normal[j];
-		if ((vertexAttributes & VertexAttribute::TEXCOORD0) == VertexAttribute::TEXCOORD0)
+		if ((vertexAttributes & VertexAttributeType::TEXCOORD0) == VertexAttributeType::TEXCOORD0)
 		{
 
 			vec2 uv = object.uv[j];
@@ -170,7 +170,7 @@ VertexBuffer *M3dsLoader::CreateVertexBufferAndBoundingBoxOfObject(Object &objec
 				uv.y = 1.0f - uv.y;
 			*((vec2 *) &vertexData[j * vertexSize + 6]) = uv;
 		}
-		if ((vertexAttributes & VertexAttribute::TANGENT) == VertexAttribute::TANGENT)
+		if ((vertexAttributes & VertexAttributeType::TANGENT) == VertexAttributeType::TANGENT)
 		{				
 			*((vec3 *) &vertexData[j * vertexSize + 8]) = object.tangents[j];
 		}

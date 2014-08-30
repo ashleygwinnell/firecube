@@ -88,13 +88,10 @@ void App::Update(float t)
 	root->GetChild("Earth")->Rotate(vec3(0, 0.1f, 0) * t);	
 }
 void App::Render(float t)
-{	
-	mat4 projection;
-	projection.GeneratePerspective(90.0f, (float) GetWidth() / (float) GetHeight(), 0.1f, 1000.0f);
-	camera->SetProjectionMatrix(projection);	
-	
+{		
 	scene.Render(renderer);
 	
+	mat4 projection;
 	projection.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	
 	std::ostringstream oss;
 	oss << "FPS:" << app.GetFps();

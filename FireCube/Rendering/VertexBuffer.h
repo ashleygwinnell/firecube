@@ -23,14 +23,14 @@ enum BufferType
 	STATIC, DYNAMIC, STREAM
 };
 
-enum class FIRECUBE_API VertexAttribute
+enum class FIRECUBE_API VertexAttributeType
 {
 	POSITION = 1, NORMAL = 2, TEXCOORD0 = 4, TANGENT = 8, COLOR = 16, MAX_VERTEX_ATTRIBUTE = 5	
 };
 
-VertexAttribute operator | (const VertexAttribute &lhs, const VertexAttribute &rhs);
-VertexAttribute operator |= (VertexAttribute &lhs, const VertexAttribute &rhs);
-VertexAttribute operator & (const VertexAttribute &lhs, const VertexAttribute &rhs);
+VertexAttributeType operator | (const VertexAttributeType &lhs, const VertexAttributeType &rhs);
+VertexAttributeType operator |= (VertexAttributeType &lhs, const VertexAttributeType &rhs);
+VertexAttributeType operator & (const VertexAttributeType &lhs, const VertexAttributeType &rhs);
 
 /**
 * A buffer of data used for rendering.
@@ -53,7 +53,7 @@ public:
 	* @param bt The buffer type.
 	* @return true on success.
 	*/
-	bool LoadData(void *data, unsigned int vertexCount, VertexAttribute vertexAttributes, BufferType bt);
+	bool LoadData(void *data, unsigned int vertexCount, VertexAttributeType vertexAttributes, BufferType bt);
 	
 	/**
 	* Binds the buffer as a vertex attribute.
@@ -73,22 +73,22 @@ public:
 	
 	unsigned int GetVertexCount() const;
 	unsigned int GetVertexSize() const;
-	VertexAttribute GetVertexAttributes() const;
-	unsigned int GetVertexAttributeOffset(VertexAttribute vertexAttribute);
+	VertexAttributeType GetVertexAttributes() const;
+	unsigned int GetVertexAttributeOffset(VertexAttributeType vertexAttribute);
 
 	const std::vector<char> &GetShadowData() const;
 	void SetShadowed(bool isShadowed);
 	const bool Shadowed() const;
 
-	static unsigned int GetVertexSize(VertexAttribute vertexAttributes);
-	static unsigned int GetAttributeSize(VertexAttribute vertexAttribute);
-	static unsigned int GetVertexAttributeIndex(VertexAttribute vertexAttribute);
+	static unsigned int GetVertexSize(VertexAttributeType vertexAttributes);
+	static unsigned int GetAttributeSize(VertexAttributeType vertexAttribute);
+	static unsigned int GetVertexAttributeIndex(VertexAttributeType vertexAttribute);
 private:
-	static const unsigned int attributeSize[static_cast<int>(VertexAttribute::MAX_VERTEX_ATTRIBUTE)];
+	static const unsigned int attributeSize[static_cast<int>(VertexAttributeType::MAX_VERTEX_ATTRIBUTE)];
 	void UpdateAttributesOffsets();
 	
-	VertexAttribute vertexAttributes;
-	unsigned int vertexAttributesOffset[static_cast<int>(VertexAttribute::MAX_VERTEX_ATTRIBUTE)];
+	VertexAttributeType vertexAttributes;
+	unsigned int vertexAttributesOffset[static_cast<int>(VertexAttributeType::MAX_VERTEX_ATTRIBUTE)];
 	unsigned int vertexSize;
 	unsigned int vertexCount;
 	bool isShadowed;

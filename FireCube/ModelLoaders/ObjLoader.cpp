@@ -551,11 +551,11 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			if (generatedNormals.empty())
 				MathUtils::CalculateNormals(generatedNormals, generatedVertices, indexData);
 
-			VertexAttribute vertexAttributes = VertexAttribute::POSITION | VertexAttribute::NORMAL;
+			VertexAttributeType vertexAttributes = VertexAttributeType::POSITION | VertexAttributeType::NORMAL;
 			unsigned int vertexSize = 6;
 			if (generatedTexCoords.empty() == false)
 			{
-				vertexAttributes |= VertexAttribute::TEXCOORD0;
+				vertexAttributes |= VertexAttributeType::TEXCOORD0;
 				vertexSize += 2;
 			}
 			std::vector<float> vertexData(vertexSize * generatedVertices.size());
@@ -563,7 +563,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			{
 				*((vec3 *) &vertexData[k * vertexSize + 0]) = generatedVertices[k];
 				*((vec3 *) &vertexData[k * vertexSize + 3]) = generatedNormals[k];
-				if ((vertexAttributes & VertexAttribute::TEXCOORD0) == VertexAttribute::TEXCOORD0)
+				if ((vertexAttributes & VertexAttributeType::TEXCOORD0) == VertexAttributeType::TEXCOORD0)
 					*((vec2 *) &vertexData[k * vertexSize + 6]) = generatedTexCoords[k];
 				boundingBox.Expand(generatedVertices[k]);
 			}
@@ -620,11 +620,11 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			if (generatedNormals.empty())
 				MathUtils::CalculateNormals(generatedNormals, generatedVertices, indexData);
 
-			VertexAttribute vertexAttributes = VertexAttribute::POSITION | VertexAttribute::NORMAL;
+			VertexAttributeType vertexAttributes = VertexAttributeType::POSITION | VertexAttributeType::NORMAL;
 			unsigned int vertexSize = 6;
 			if (generatedTexCoords.empty() == false)
 			{
-				vertexAttributes |= VertexAttribute::TEXCOORD0;
+				vertexAttributes |= VertexAttributeType::TEXCOORD0;
 				vertexSize += 2;
 			}
 			std::vector<float> vertexData(vertexSize * generatedVertices.size());
@@ -632,7 +632,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			{
 				*((vec3 *)&vertexData[k * vertexSize + 0]) = generatedVertices[k];
 				*((vec3 *)&vertexData[k * vertexSize + 3]) = generatedNormals[k];
-				if ((vertexAttributes & VertexAttribute::TEXCOORD0) == VertexAttribute::TEXCOORD0)
+				if ((vertexAttributes & VertexAttributeType::TEXCOORD0) == VertexAttributeType::TEXCOORD0)
 					*((vec2 *)&vertexData[k * vertexSize + 6]) = generatedTexCoords[k];
 				boundingBox.Expand(generatedVertices[k]);
 			}

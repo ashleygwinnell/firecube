@@ -185,7 +185,7 @@ void Terrain::GeneratePatchGeometry(TerrainPatch *patch, int patchX, int patchY)
 		}		
 	}
 	
-	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttribute::POSITION | VertexAttribute::NORMAL | VertexAttribute::TEXCOORD0, STATIC);	
+	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, STATIC);	
 	patch->SetBoundingBox(boundingBox);		
 	geometry->SetPrimitiveCount(patchSize * patchSize * 2);
 	geometry->Update();

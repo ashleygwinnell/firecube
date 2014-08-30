@@ -87,13 +87,13 @@ void Document::GenerateNormals(float l)
 		normalsGeometry->SetMaterial(gridMaterial);
 		for (auto buffer : buffers)
 		{
-			if ((buffer->GetVertexAttributes() & VertexAttribute::NORMAL) == VertexAttribute::NORMAL)
+			if ((buffer->GetVertexAttributes() & VertexAttributeType::NORMAL) == VertexAttributeType::NORMAL)
 			{
 				auto &vertexData = buffer->GetShadowData();
 				for (unsigned int i = 0; i < buffer->GetVertexCount(); ++i)
 				{
 					vec3 pos = *((vec3 *) &vertexData[i * buffer->GetVertexSize()]);
-					vec3 normal = *((vec3 *)&vertexData[i * buffer->GetVertexSize() + buffer->GetVertexAttributeOffset(VertexAttribute::NORMAL)]);					
+					vec3 normal = *((vec3 *)&vertexData[i * buffer->GetVertexSize() + buffer->GetVertexAttributeOffset(VertexAttributeType::NORMAL)]);					
 					normalsGeometry->AddVertex(pos);
 					normalsGeometry->AddVertex(pos + normal * l);
 				}
@@ -127,15 +127,15 @@ void Document::GenerateTangents(float l)
 		tangentsGeometry->SetMaterial(tangentsMaterial);
 		for (auto buffer : buffers)
 		{
-			if ((buffer->GetVertexAttributes() & VertexAttribute::TANGENT) == VertexAttribute::TANGENT && (buffer->GetVertexAttributes() & VertexAttribute::NORMAL) == VertexAttribute::NORMAL)
+			if ((buffer->GetVertexAttributes() & VertexAttributeType::TANGENT) == VertexAttributeType::TANGENT && (buffer->GetVertexAttributes() & VertexAttributeType::NORMAL) == VertexAttributeType::NORMAL)
 			{
 				hasTangents = true;
 				auto &vertexData = buffer->GetShadowData();
 				for (unsigned int i = 0; i < buffer->GetVertexCount(); ++i)
 				{
 					vec3 pos = *((vec3 *)&vertexData[i * buffer->GetVertexSize()]);
-					vec3 tangent = *((vec3 *)&vertexData[i * buffer->GetVertexSize() + buffer->GetVertexAttributeOffset(VertexAttribute::TANGENT)]);
-					vec3 normal = *((vec3 *)&vertexData[i * buffer->GetVertexSize() + buffer->GetVertexAttributeOffset(VertexAttribute::NORMAL)]);
+					vec3 tangent = *((vec3 *)&vertexData[i * buffer->GetVertexSize() + buffer->GetVertexAttributeOffset(VertexAttributeType::TANGENT)]);
+					vec3 normal = *((vec3 *)&vertexData[i * buffer->GetVertexSize() + buffer->GetVertexAttributeOffset(VertexAttributeType::NORMAL)]);
 					vec3 bitangent = FireCube::Cross(normal, tangent);
 					tangentsGeometry->AddVertex(pos);
 					tangentsGeometry->AddVertex(pos + tangent * l);

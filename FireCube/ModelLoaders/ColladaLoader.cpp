@@ -1607,16 +1607,16 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 			/*if (geometry->GetTangents().size() == 0)
 				geometry->CalculateTangents();*/
 
-			VertexAttribute vertexAttributes = VertexAttribute::POSITION | VertexAttribute::NORMAL;
+			VertexAttributeType vertexAttributes = VertexAttributeType::POSITION | VertexAttributeType::NORMAL;
 			unsigned int vertexSize = 6;
 			if (uv.empty() == false)
 			{
-				vertexAttributes |= VertexAttribute::TEXCOORD0;
+				vertexAttributes |= VertexAttributeType::TEXCOORD0;
 				vertexSize += 2;
 			}
 			if (tangents.empty() == false)
 			{
-				vertexAttributes |= VertexAttribute::TANGENT;
+				vertexAttributes |= VertexAttributeType::TANGENT;
 				vertexSize += 3;
 			}
 			
@@ -1626,12 +1626,12 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 				*((vec3 *) &vertexData[k * vertexSize + 0]) = vertices[k];
 				*((vec3 *) &vertexData[k * vertexSize + 3]) = normals[k];
 				unsigned int currentOffset = 6;
-				if ((vertexAttributes & VertexAttribute::TEXCOORD0) == VertexAttribute::TEXCOORD0)
+				if ((vertexAttributes & VertexAttributeType::TEXCOORD0) == VertexAttributeType::TEXCOORD0)
 				{
 					*((vec2 *) &vertexData[k * vertexSize + currentOffset]) = uv[k];
 					currentOffset += 2;
 				}
-				if ((vertexAttributes & VertexAttribute::TANGENT) == VertexAttribute::TANGENT)
+				if ((vertexAttributes & VertexAttributeType::TANGENT) == VertexAttributeType::TANGENT)
 				{
 					*((vec3 *) &vertexData[k * vertexSize + currentOffset]) = tangents[k];
 					currentOffset += 3;

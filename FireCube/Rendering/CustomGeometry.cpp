@@ -5,7 +5,7 @@
 #include "Rendering/VertexBuffer.h"
 using namespace FireCube;
 
-CustomGeometry::CustomGeometry(Engine *engine) : Renderable(engine), geometry(new Geometry(engine->GetRenderer())), vertexAttributes(VertexAttribute::POSITION), currentVertex(0)
+CustomGeometry::CustomGeometry(Engine *engine) : Renderable(engine), geometry(new Geometry(engine->GetRenderer())), vertexAttributes(VertexAttributeType::POSITION), currentVertex(0)
 {
 	renderableParts.resize(1);
 	renderableParts[0].geometry = geometry;
@@ -40,13 +40,13 @@ void CustomGeometry::AddVertex(vec3 position)
 void CustomGeometry::SetNormal(vec3 normal)
 {
 	vertices[currentVertex].normal = normal;
-	vertexAttributes |= VertexAttribute::NORMAL;
+	vertexAttributes |= VertexAttributeType::NORMAL;
 }
 
 void CustomGeometry::SetTexCoord(vec2 texcoord)
 {
 	vertices[currentVertex].texcoord = texcoord;
-	vertexAttributes |= VertexAttribute::TEXCOORD0;
+	vertexAttributes |= VertexAttributeType::TEXCOORD0;
 }
 
 void CustomGeometry::UpdateGeometry()
@@ -57,20 +57,20 @@ void CustomGeometry::UpdateGeometry()
 	unsigned int currentOffset = 0;
 	for (unsigned int i = 0; i < vertices.size(); ++i)
 	{
-		if ((vertexAttributes & VertexAttribute::POSITION) == VertexAttribute::POSITION)
+		if ((vertexAttributes & VertexAttributeType::POSITION) == VertexAttributeType::POSITION)
 		{
 			*((vec3 *) &vertexData[currentOffset]) = vertices[i].position;
-			currentOffset += VertexBuffer::GetAttributeSize(VertexAttribute::POSITION);
+			currentOffset += VertexBuffer::GetAttributeSize(VertexAttributeType::POSITION);
 		}
-		if ((vertexAttributes & VertexAttribute::NORMAL) == VertexAttribute::NORMAL)
+		if ((vertexAttributes & VertexAttributeType::NORMAL) == VertexAttributeType::NORMAL)
 		{
 			*((vec3 *) &vertexData[currentOffset]) = vertices[i].normal;
-			currentOffset += VertexBuffer::GetAttributeSize(VertexAttribute::NORMAL);
+			currentOffset += VertexBuffer::GetAttributeSize(VertexAttributeType::NORMAL);
 		}
-		if ((vertexAttributes & VertexAttribute::TEXCOORD0) == VertexAttribute::TEXCOORD0)
+		if ((vertexAttributes & VertexAttributeType::TEXCOORD0) == VertexAttributeType::TEXCOORD0)
 		{
 			*((vec2 *) &vertexData[currentOffset]) = vertices[i].texcoord;
-			currentOffset += VertexBuffer::GetAttributeSize(VertexAttribute::TEXCOORD0);
+			currentOffset += VertexBuffer::GetAttributeSize(VertexAttributeType::TEXCOORD0);
 		}
 	}	
 	

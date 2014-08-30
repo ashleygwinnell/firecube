@@ -27,7 +27,7 @@ private:
 	};
 
 	unsigned int currentVertex;
-	VertexAttribute vertexAttributes;
+	VertexAttributeType vertexAttributes;
 	virtual void UpdateWorldBoundingBox();
 	BoundingBox boundingBox;
 	Geometry *geometry;
