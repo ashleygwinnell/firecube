@@ -35,7 +35,7 @@
 #include "Scene/Light.h"
 #include "Scene/Node.h"
 #include "Scene/Camera.h"
-#include "Scene/NodeObserverCamera.h"
+#include "Scene/OrbitCamera.h"
 #include "Core/ResourceCache.h"
 #include "Core/Engine.h"
 #include "Core/Memory.h"

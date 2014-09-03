@@ -7,7 +7,7 @@ public:
 	void Update(float t);
 	bool Prepare();    
 	Node *root;
-	NodeObserverCamera *camera;	
+	OrbitCamera *camera;	
 	Scene scene;	
 	FontFace *fontFace;
 };

@@ -45,7 +45,8 @@ void GLCanvas::Init()
 	Node *root = theApp->GetDocument().GetRoot();
 	scene = theApp->GetDocument().GetScene();
 	
-	renderingParameters.camera = root->CreateComponent<NodeObserverCamera>();
+	Node *cameraNode = root->CreateChild("Camera");
+	renderingParameters.camera = cameraNode->CreateComponent<OrbitCamera>();
 	renderingParameters.camera->SetDistance(5.0f);
 	renderingParameters.camera->SetMaxDistance(10000.0f);
 	
@@ -53,7 +54,6 @@ void GLCanvas::Init()
 	
 	theApp->GetDocument().CreateGrid(2, 20);
 
-	renderingParameters.camera->SetTarget(root);
 	theApp->LoadDocument("../Assets/Models/teapot2.3ds");
 
 	Node *lightNode = root->CreateChild("Light");

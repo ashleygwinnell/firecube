@@ -16,7 +16,7 @@ public:
 		bool renderTangents;		
 		
 		DWORD gridCount;		
-		FireCube::NodeObserverCamera *camera;		
+		FireCube::OrbitCamera *camera;		
 	};
 	GLCanvas( wxWindow *parent, wxWindowID id = wxID_ANY,
 				const wxPoint& pos = wxDefaultPosition,

@@ -27,14 +27,14 @@ bool App::Prepare()
 	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
 	
 	root = scene.GetRootNode();
-	camera = root->CreateComponent<NodeObserverCamera>();
-	camera->SetTarget(root);
+	Node *childNode = root->CreateChild("Camera");
+	camera = childNode->CreateComponent<OrbitCamera>();
 	camera->SetMaxAngX(0);
 	camera->SetZoomFactor(1000.0f);
 	camera->RegisterWithInputManager(GetInputManager());
 	scene.SetCamera(camera);	
 
-	Node *childNode = root->CreateChild("Model");	
+	childNode = root->CreateChild("Model");	
 	StaticModel *staticModel = childNode->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(resourceCache->GetResource<Mesh>("scene.3ds"));
 	childNode->Scale(vec3(0.05f));
@@ -62,7 +62,7 @@ bool App::Prepare()
 	return true;
 }
 void App::Update(float t)
-{
+{	
 	//root->GetChild("LightNode")->Move(vec3(0.2f, 0.0f, 0.2f) * t);
 }
 void App::Render(float t)

@@ -120,9 +120,6 @@
     <ClCompile Include="Scene\Node.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\NodeObserverCamera.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Application\Input.cpp">
       <Filter>Application</Filter>
     </ClCompile>
@@ -246,6 +243,9 @@
     <ClCompile Include="Core\Memory.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\OrbitCamera.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -318,9 +318,6 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene\Node.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\NodeObserverCamera.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Application\Input.h">
@@ -446,6 +443,9 @@
     </ClInclude>
     <ClInclude Include="Core\Memory.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\OrbitCamera.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
