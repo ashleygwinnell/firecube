@@ -31,12 +31,12 @@ public:
 	/**
 	* Returns the view matrix of this camera.
 	*/
-	virtual mat4 GetViewMatrix();
+	mat4 GetViewMatrix();
 
 	/**
 	* Returns the view frustum of this camera.
 	*/
-	virtual Frustum &GetFrustum();
+	Frustum &GetFrustum();
 
 	/**
 	* Constructs a Look-at camera.
