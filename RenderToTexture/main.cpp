@@ -20,7 +20,7 @@ bool App::Prepare()
     SetTitle("RenderToTexture Example");
     fontFace = resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(10);
 
-	renderSurface = renderer->GetRenderSurface(128, 128, COLOR);
+	renderSurface = renderer->GetRenderSurface(128, 128, RenderSurfaceType::COLOR);
 	Node *root = scene2.GetRootNode();
 	camera2 = root->CreateComponent<Camera>();
 	camera2->SetPerspectiveProjectionParameters(90.0f, (float)renderSurface->GetWidth() / (float)renderSurface->GetHeight(), 0.1f, 1000.0f);

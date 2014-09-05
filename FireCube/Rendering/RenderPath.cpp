@@ -203,7 +203,7 @@ void RenderPath::AllocateRenderSurfaces()
 			width = desc.width;
 			height = desc.height;
 		}
-		SharedPtr<RenderSurface> renderSurface = engine->GetRenderer()->GetRenderSurface(width, height, COLOR);
+		SharedPtr<RenderSurface> renderSurface = engine->GetRenderer()->GetRenderSurface(width, height, RenderSurfaceType::COLOR);
 		renderTargets[StringHash(desc.name)] = renderSurface;
 	}
 	

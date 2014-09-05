@@ -514,7 +514,7 @@ void Renderer::UpdateFrameBuffer()
 	}
 	else
 	{
-		frameBuffer->SetDepthBufferSurface(GetRenderSurface(width, height, DEPTH));
+		frameBuffer->SetDepthBufferSurface(GetRenderSurface(width, height, RenderSurfaceType::DEPTH));
 	}
 
 	if (frameBuffer->IsValid() == false)
@@ -577,7 +577,7 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 		return i->second;
 
 	SharedPtr<RenderSurface> renderSurface(new RenderSurface(this));
-	if (type == COLOR)
+	if (type == RenderSurfaceType::COLOR)
 	{
 		Texture *texture = new Texture(engine);
 		texture->SetWidth(width);
@@ -589,7 +589,7 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);		
 		renderSurface->SetLinkedTexture(texture);		
 	}
-	else if (type == DEPTH)
+	else if (type == RenderSurfaceType::DEPTH)
 	{
 		renderSurface->CreateDepth(width, height);
 	}

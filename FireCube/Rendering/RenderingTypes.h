@@ -31,7 +31,7 @@ enum ShaderPermutation
 	MAX_SHADER_PERMUTATIONS
 };
 
-enum RenderSurfaceType
+enum class RenderSurfaceType
 {
 	COLOR,
 	DEPTH
