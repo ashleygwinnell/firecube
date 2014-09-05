@@ -11,9 +11,9 @@ class TiXmlElement;
 namespace FireCube
 {
 
-enum RenderPathCommandType
+enum class RenderPathCommandType
 {
-	COMMAND_UNKNOWN, COMMAND_CLEAR, COMMAND_BASEPASS, COMMAND_LIGHTPASS, COMMAND_QUAD
+	UNKNOWN, CLEAR, BASEPASS, LIGHTPASS, QUAD
 };
 
 class RenderPath;

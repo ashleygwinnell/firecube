@@ -95,7 +95,7 @@ void Scene::UpdateBaseQueue()
 
 				for (const auto &command : commands)
 				{
-					if (command.type == COMMAND_BASEPASS)
+					if (command.type == RenderPathCommandType::BASEPASS)
 					{
 						RenderQueue &queue = baseQueues[command.pass];
 						RenderJob newRenderJob;
@@ -165,7 +165,7 @@ void Scene::UpdateLightQueues()
 					for (const auto &command : commands)
 					{
 
-						if (command.type == COMMAND_LIGHTPASS)
+						if (command.type == RenderPathCommandType::LIGHTPASS)
 						{
 							RenderQueue &queue = lightQueues[i].second[command.pass];
 							RenderJob newRenderJob;
@@ -234,7 +234,7 @@ void Scene::Render(Renderer *renderer)
 	{
 		switch (command.type)
 		{
-		case COMMAND_CLEAR:
+		case RenderPathCommandType::CLEAR:
 			SetRenderTargets(renderer, command);
 			renderer->SetDepthWrite(true);
 			if (command.useFogColor)
@@ -243,7 +243,7 @@ void Scene::Render(Renderer *renderer)
 				renderer->Clear(vec4(command.clearColor, 1.0f), 1.0f);
 			break;
 
-		case COMMAND_BASEPASS:
+		case RenderPathCommandType::BASEPASS:
 		{
 			SetRenderTargets(renderer, command);
 
@@ -279,7 +279,7 @@ void Scene::Render(Renderer *renderer)
 		}
 			
 
-		case COMMAND_LIGHTPASS:
+		case RenderPathCommandType::LIGHTPASS:
 			SetRenderTargets(renderer, command);			
 
 			for (auto &lightQueue : lightQueues)
@@ -316,7 +316,7 @@ void Scene::Render(Renderer *renderer)
 			
 			break;
 
-		case COMMAND_QUAD:
+		case RenderPathCommandType::QUAD:
 			SetRenderTargets(renderer, command);
 			SetTextures(renderer, command);			
 			renderer->SetShaders(command.vertexShader, command.fragmentShader);

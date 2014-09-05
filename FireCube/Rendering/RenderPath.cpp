@@ -11,7 +11,7 @@
 
 using namespace FireCube;
 
-RenderPathCommand::RenderPathCommand(RenderPath *renderPath) : renderPath(renderPath), type(COMMAND_UNKNOWN), useFogColor(false)
+RenderPathCommand::RenderPathCommand(RenderPath *renderPath) : renderPath(renderPath), type(RenderPathCommandType::UNKNOWN), useFogColor(false)
 {
 
 }
@@ -22,7 +22,7 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 
 	switch (type)
 	{
-	case COMMAND_CLEAR:
+	case RenderPathCommandType::CLEAR:
 	{
 		std::string clearStr = element->Attribute("color");
 		if (clearStr == "fogcolor")
@@ -39,7 +39,7 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 	}
 
 
-	case COMMAND_BASEPASS:
+	case RenderPathCommandType::BASEPASS:
 	{
 		const char *passNameStr = element->Attribute("pass");
 		if (passNameStr)
@@ -50,7 +50,7 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 	}
 
 
-	case COMMAND_LIGHTPASS:
+	case RenderPathCommandType::LIGHTPASS:
 	{
 		const char *passNameStr = element->Attribute("pass");
 		if (passNameStr)
@@ -61,7 +61,7 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 	}
 
 
-	case COMMAND_QUAD:
+	case RenderPathCommandType::QUAD:
 	{
 		ShaderTemplate *vertexShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>(element->Attribute("vs"));
 		ShaderTemplate *fragmentShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>(element->Attribute("fs"));
@@ -107,15 +107,15 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 RenderPathCommandType RenderPathCommand::stringToType(const std::string &type)
 {
 	if (type == "clear")
-		return COMMAND_CLEAR;
+		return RenderPathCommandType::CLEAR;
 	else if (type == "basepass")
-		return COMMAND_BASEPASS;
+		return RenderPathCommandType::BASEPASS;
 	else if (type == "lightpass")
-		return COMMAND_LIGHTPASS;
+		return RenderPathCommandType::LIGHTPASS;
 	else if (type == "quad")
-		return COMMAND_QUAD;
+		return RenderPathCommandType::QUAD;
 	else
-		return COMMAND_UNKNOWN;
+		return RenderPathCommandType::UNKNOWN;
 }
 
 RenderPath::RenderPath(Engine *engine) : Resource(engine)
