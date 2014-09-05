@@ -110,6 +110,16 @@ bool Shader::Create(ShaderType type, const std::string &source)
 
 }
 
+void Shader::SetOutputAttributes(const std::vector<std::string> &output)
+{
+	outputVariables = output;
+}
+
+const std::vector<std::string> &Shader::GetOutputAttributes() const
+{
+	return outputVariables;
+}
+
 Program::Program(Renderer *renderer) : GraphicsResource(renderer)
 {
 
@@ -132,19 +142,38 @@ void Program::Create()
 void Program::Create(Shader *shader1, Shader *shader2)
 {
 	Create();
-	Attach(shader1);
-	Attach(shader2);
+	if (shader1)
+	{
+		Attach(shader1);
+	}
+
+	if (shader2)
+	{
+		Attach(shader2);
+	}
 	Link();
 }
 
 void Program::Attach(Shader *shader)
 {
 	glAttachShader(objectId, shader->GetObjectId());
+	
+	const std::vector<std::string> &outputVariables = shader->GetOutputAttributes();
+	if (outputVariables.empty() == false)
+	{		
+		std::vector<const char *> data;
+		for (auto &str : outputVariables)
+		{
+			data.push_back(str.c_str());
+		}
+		glTransformFeedbackVaryings(objectId, outputVariables.size(), &data[0], GL_INTERLEAVED_ATTRIBS);
+	}	
 }
 
 void Program::Link()
 {
 	variables.clear();
+
 	glLinkProgram(objectId);
 
 	GLint status;

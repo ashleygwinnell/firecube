@@ -46,8 +46,10 @@ public:
 	*/
 	bool Create(ShaderType type, const std::string &source);
 
+	void SetOutputAttributes(const std::vector<std::string> &output);
+	const std::vector<std::string> &GetOutputAttributes() const;
 private:
-	
+	std::vector<std::string> outputVariables;	
 };
 
 /**
@@ -159,7 +161,7 @@ public:
 	std::string GetInfoLog() const;
 
 private:    
-	std::map<StringHash, GLint> variables;
+	std::map<StringHash, GLint> variables;	
 };
 
 }
