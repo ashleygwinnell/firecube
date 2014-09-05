@@ -163,8 +163,8 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3
 	indices[34] = currentVertex - 3;
 	indices[35] = currentVertex - 1;
 		
-	vertexBuffer->LoadData(&vertexData[0], 4 * 6, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, STATIC);	
-	indexBuffer->LoadData(&indices[0], indices.size(), STATIC);
+	vertexBuffer->LoadData(&vertexData[0], 4 * 6, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, BufferType::STATIC);	
+	indexBuffer->LoadData(&indices[0], indices.size(), BufferType::STATIC);
 
 	ret->SetPrimitiveType(PrimitiveType::TRIANGLES);
 	ret->SetPrimitiveCount(indices.size() / 3);
@@ -234,8 +234,8 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateSphere(Engine *engine, float r
 		}
 	}
 	
-	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, STATIC);	
-	indexBuffer->LoadData(&indexData[0], indexData.size(), STATIC);
+	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, BufferType::STATIC);
+	indexBuffer->LoadData(&indexData[0], indexData.size(), BufferType::STATIC);
 
 	ret->SetPrimitiveType(PrimitiveType::TRIANGLES);
 	ret->SetPrimitiveCount(indexData.size() / 3);
@@ -281,8 +281,8 @@ Geometry *FIRECUBE_API GeometryGenerator::GeneratePlane(Engine *engine, const ve
 	indexData[4] = 1;
 	indexData[5] = 3;
 	
-	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, STATIC);
-	indexBuffer->LoadData(&indexData[0], indexData.size(), STATIC);
+	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, BufferType::STATIC);
+	indexBuffer->LoadData(&indexData[0], indexData.size(), BufferType::STATIC);
 	
 	ret->SetPrimitiveType(PrimitiveType::TRIANGLES);
 	ret->SetPrimitiveCount(indexData.size() / 3);

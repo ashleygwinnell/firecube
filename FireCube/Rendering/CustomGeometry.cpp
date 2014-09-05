@@ -75,7 +75,7 @@ void CustomGeometry::UpdateGeometry()
 	}	
 	
 	if (vertexData.empty() == false)
-		vertexBuffer->LoadData(&vertexData[0], vertices.size(), vertexAttributes, STATIC);
+		vertexBuffer->LoadData(&vertexData[0], vertices.size(), vertexAttributes, BufferType::STATIC);
 
 	switch (geometry->GetPrimitiveType())
 	{

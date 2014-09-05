@@ -84,7 +84,7 @@ void Terrain::GenerateIndexBuffer()
 			indices[y * patchSize * 6 + x * 6 + 5] = i3;
 		}
 	}
-	indexBuffer->LoadData(&indices[0], indices.size(), STATIC);
+	indexBuffer->LoadData(&indices[0], indices.size(), BufferType::STATIC);
 }
 
 void Terrain::GeneratePatchGeometry(TerrainPatch *patch, int patchX, int patchY)
@@ -185,7 +185,7 @@ void Terrain::GeneratePatchGeometry(TerrainPatch *patch, int patchX, int patchY)
 		}		
 	}
 	
-	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, STATIC);	
+	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, BufferType::STATIC);
 	patch->SetBoundingBox(boundingBox);		
 	geometry->SetPrimitiveCount(patchSize * patchSize * 2);
 	geometry->Update();

@@ -18,7 +18,7 @@ namespace FireCube
 * DYNAMIC: Graphics driver will choose the location for the data.<br>
 * STREAM:  Data is sent each time.
 */
-enum BufferType
+enum class BufferType
 {
 	STATIC, DYNAMIC, STREAM
 };

@@ -67,7 +67,7 @@ void Renderer::Initialize()
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
 		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f };
-	quadVertexBuffer->LoadData(&quadVertices[0], 6, VertexAttributeType::POSITION | VertexAttributeType::TEXCOORD0, STATIC);
+	quadVertexBuffer->LoadData(&quadVertices[0], 6, VertexAttributeType::POSITION | VertexAttributeType::TEXCOORD0, BufferType::STATIC);
 	quadVertexBuffer->ApplyAttributes();
 	glBindVertexArray(0);
 
@@ -200,7 +200,7 @@ void Renderer::RenderText(FontFace *fontFace, mat4 projectionMatrix, const vec3 
 			previous = glyphIndex;
 		}
 	}		
-	textVertexBuffer->LoadData(&vBuffer[0], numTris * 3, VertexAttributeType::POSITION | VertexAttributeType::TEXCOORD0, STREAM);
+	textVertexBuffer->LoadData(&vBuffer[0], numTris * 3, VertexAttributeType::POSITION | VertexAttributeType::TEXCOORD0, BufferType::STREAM);
 	glBindVertexArray(textVao);
 	textVertexBuffer->ApplyAttributes();
 	RenderStream(PrimitiveType::TRIANGLES, numTris * 3);

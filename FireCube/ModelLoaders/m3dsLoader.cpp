@@ -177,7 +177,7 @@ VertexBuffer *M3dsLoader::CreateVertexBufferAndBoundingBoxOfObject(Object &objec
 
 		boundingBox.Expand(object.vertex[j]);
 	}		
-	vertexBuffer->LoadData(&vertexData[0], object.vertex.size(), vertexAttributes, STATIC);
+	vertexBuffer->LoadData(&vertexData[0], object.vertex.size(), vertexAttributes, BufferType::STATIC);
 	return vertexBuffer;
 }
 Geometry *M3dsLoader::CreateGeometryOfMesh(Mesh &mesh, VertexBuffer *vertexBuffer)
@@ -188,7 +188,7 @@ Geometry *M3dsLoader::CreateGeometryOfMesh(Mesh &mesh, VertexBuffer *vertexBuffe
 	geom->SetVertexBuffer(vertexBuffer);
 	geom->SetIndexBuffer(indexBuffer);
 						
-	indexBuffer->LoadData(&mesh.indices[0], mesh.indices.size(), STATIC);
+	indexBuffer->LoadData(&mesh.indices[0], mesh.indices.size(), BufferType::STATIC);
 
 	geom->SetPrimitiveType(PrimitiveType::TRIANGLES);
 	geom->SetPrimitiveCount(mesh.indices.size() / 3);

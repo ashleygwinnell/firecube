@@ -25,14 +25,21 @@ void IndexBuffer::Create()
 bool IndexBuffer::LoadData(void *data, unsigned int count, BufferType bt)
 {
 	GLenum e;
-	if (bt == STREAM)
-		e = GL_STREAM_DRAW;
-	else if (bt == DYNAMIC)
+	switch (bt)
+	{
+	case BufferType::STATIC:
+		e = GL_STATIC_DRAW;
+		break;
+	case BufferType::DYNAMIC:
 		e = GL_DYNAMIC_DRAW;
-	else if (bt == STATIC)
+		break;
+	case BufferType::STREAM:
+		e = GL_STREAM_DRAW;
+		break;
+	default:
 		e = GL_STATIC_DRAW;
-	else
-		e = GL_STATIC_DRAW;
+		break;
+	}	
 	
 	if (isShadowed)
 	{

@@ -568,8 +568,8 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 				boundingBox.Expand(generatedVertices[k]);
 			}
 			
-			vertexBuffer->LoadData(&vertexData[0], generatedVertices.size(), vertexAttributes, STATIC);			
-			indexBuffer->LoadData(&indexData[0], indexData.size(), STATIC);
+			vertexBuffer->LoadData(&vertexData[0], generatedVertices.size(), vertexAttributes, BufferType::STATIC);
+			indexBuffer->LoadData(&indexData[0], indexData.size(), BufferType::STATIC);
 
 			geometry->SetPrimitiveType(PrimitiveType::TRIANGLES);
 			geometry->SetPrimitiveCount(j->second.size());
@@ -637,8 +637,8 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 				boundingBox.Expand(generatedVertices[k]);
 			}
 
-			vertexBuffer->LoadData(&vertexData[0], generatedVertices.size(), vertexAttributes, STATIC);
-			indexBuffer->LoadData(&indexData[0], indexData.size(), STATIC);
+			vertexBuffer->LoadData(&vertexData[0], generatedVertices.size(), vertexAttributes, BufferType::STATIC);
+			indexBuffer->LoadData(&indexData[0], indexData.size(), BufferType::STATIC);
 
 			FireCube::Material *material;
 			if (allMaterials.find("generatedMaterial") != allMaterials.end())

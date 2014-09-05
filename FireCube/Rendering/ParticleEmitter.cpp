@@ -36,7 +36,7 @@ ParticleEmitter::ParticleEmitter(Engine *engine) : Renderable(engine)
 		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::POSITION, sizeof(float) * 3); // Position
 		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, sizeof(float) * 3);   // Velocity
 		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, sizeof(float));		  // Age
-		particleBuffers[i]->LoadData(&particleData[0], numberOfParticles, STREAM);
+		particleBuffers[i]->LoadData(&particleData[0], numberOfParticles, BufferType::STREAM);
 	}
 
 	geometry = new Geometry(engine->GetRenderer());
