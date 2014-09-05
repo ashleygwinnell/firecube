@@ -14,6 +14,8 @@
 #include "Scene/Camera.h"
 #include "Scene.h"
 #include "Utils/Logger.h"
+#include "Core/Engine.h"
+
 using namespace FireCube;
 
 Scene::Scene(Engine *engine) : Object(engine), ambientColor(0.1f), fogEnabled(false), rootNode(engine), fogColor(1.0f)
@@ -76,7 +78,9 @@ void Scene::RemoveLight(Light *light)
 
 void Scene::UpdateBaseQueue()
 {
-	baseQueue.Clear();
+	baseQueues.clear();
+	const std::vector<RenderPathCommand> commands = engine->GetRenderer()->GetCurrentRenderPath()->GetCommands();
+
 	for (auto renderable : renderables)
 	{
 		if (camera->GetFrustum().Contains(renderable->GetWorldBoundingBox()))
@@ -88,29 +92,41 @@ void Scene::UpdateBaseQueue()
 				Technique *technique = renderablePart.material->GetTechnique();
 				if (!technique)
 					continue;
-				RenderJob newRenderJob;				
-				newRenderJob.pass = technique->GetPass(BASE_PASS);
-				if (newRenderJob.pass == nullptr)
-					continue;
-				newRenderJob.pass->GenerateAllShaderPermutations();
-				unsigned int shaderPermutation = 0;
-				if (fogEnabled)
-					shaderPermutation += 1;
-				newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(shaderPermutation);
-				newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(shaderPermutation);
-				newRenderJob.geometry = renderablePart.geometry;
-				newRenderJob.material = renderablePart.material;
-				newRenderJob.transformation = renderablePart.transformation;
-				newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetNode()->GetWorldPosition()).Length();
-				newRenderJob.CalculateSortKey();
-				baseQueue.renderJobs.push_back(newRenderJob);
-			}			
+
+				for (const auto &command : commands)
+				{
+					if (command.type == COMMAND_BASEPASS)
+					{
+						RenderQueue &queue = baseQueues[command.pass];
+						RenderJob newRenderJob;
+						newRenderJob.pass = technique->GetPass(command.pass);
+						if (newRenderJob.pass == nullptr)
+							continue;
+						newRenderJob.pass->GenerateAllShaderPermutations();
+						unsigned int shaderPermutation = 0;
+						if (fogEnabled)
+							shaderPermutation += 1;
+						newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(shaderPermutation);
+						newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(shaderPermutation);
+						newRenderJob.geometry = renderablePart.geometry;
+						newRenderJob.material = renderablePart.material;
+						newRenderJob.transformation = renderablePart.transformation;
+						newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetNode()->GetWorldPosition()).Length();
+						newRenderJob.CalculateSortKey();
+						queue.renderJobs.push_back(newRenderJob);
+					}
+				}
+			}
 		}
+
 	}
 }
 
 void Scene::UpdateLightQueues()
 {
+	const std::vector<RenderPathCommand> commands = engine->GetRenderer()->GetCurrentRenderPath()->GetCommands();
+
+	lightQueues.clear();
 	lightQueues.resize(lights.size());
 	for (unsigned int i = 0; i < lightQueues.size(); ++i)
 	{
@@ -125,8 +141,8 @@ void Scene::UpdateLightQueues()
 		if (fogEnabled)
 			shaderPermutation += MAX_SHADER_PERMUTATIONS;
 
-		lightQueues[i].light = lights[i];
-		lightQueues[i].renderQueue.Clear();
+		lightQueues[i].first = lights[i];
+
 		for (auto renderable : renderables)
 		{
 			if (camera->GetFrustum().Contains(renderable->GetWorldBoundingBox()))
@@ -135,10 +151,10 @@ void Scene::UpdateLightQueues()
 				{
 					// TODO: Need to cull spot lights using frustum
 					if (lights[i]->GetLightType() == POINT || lights[i]->GetLightType() == SPOT)
-					{ 
+					{
 						BoundingBox bbox = renderable->GetWorldBoundingBox();
 						float l = bbox.GetSize().Length();
-						if ((bbox.GetCenter() - lights[i]->GetNode()->GetWorldPosition()).Length() - l> lights[i]->GetRange())
+						if ((bbox.GetCenter() - lights[i]->GetNode()->GetWorldPosition()).Length() - l > lights[i]->GetRange())
 							continue;
 					}
 					if (!renderablePart.material)
@@ -146,23 +162,31 @@ void Scene::UpdateLightQueues()
 					Technique *technique = renderablePart.material->GetTechnique();
 					if (!technique)
 						continue;
-					RenderJob newRenderJob;
-					newRenderJob.pass = technique->GetPass(LIGHT_PASS);
-					if (newRenderJob.pass == nullptr)
-						continue;
-					newRenderJob.pass->GenerateAllShaderPermutations();
-					newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(shaderPermutation);
-					newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(shaderPermutation);
-					newRenderJob.geometry = renderablePart.geometry;
-					newRenderJob.material = renderablePart.material;
-					newRenderJob.transformation = renderablePart.transformation;
-					newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetNode()->GetWorldPosition()).Length();
-					newRenderJob.CalculateSortKey();
-					lightQueues[i].renderQueue.renderJobs.push_back(newRenderJob);
-				}			
+					for (const auto &command : commands)
+					{
+
+						if (command.type == COMMAND_LIGHTPASS)
+						{
+							RenderQueue &queue = lightQueues[i].second[command.pass];
+							RenderJob newRenderJob;
+							newRenderJob.pass = technique->GetPass(LIGHT_PASS);
+							if (newRenderJob.pass == nullptr)
+								continue;
+							newRenderJob.pass->GenerateAllShaderPermutations();
+							newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(shaderPermutation);
+							newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(shaderPermutation);
+							newRenderJob.geometry = renderablePart.geometry;
+							newRenderJob.material = renderablePart.material;
+							newRenderJob.transformation = renderablePart.transformation;
+							newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetNode()->GetWorldPosition()).Length();
+							newRenderJob.CalculateSortKey();
+							queue.renderJobs.push_back(newRenderJob);
+						}
+					}
+				}
 			}
 		}
-	}	
+	}
 }
 
 
@@ -212,6 +236,7 @@ void Scene::Render(Renderer *renderer)
 		{
 		case COMMAND_CLEAR:
 			SetRenderTargets(renderer, command);
+			renderer->SetDepthWrite(true);
 			if (command.useFogColor)
 				renderer->Clear(vec4(fogColor, 1.0f), 1.0f);
 			else
@@ -219,11 +244,13 @@ void Scene::Render(Renderer *renderer)
 			break;
 
 		case COMMAND_BASEPASS:
-			SetRenderTargets(renderer, command);			
+		{
+			SetRenderTargets(renderer, command);
 
-			baseQueue.Sort();
-			for (auto &renderJob : baseQueue.GetRenderJobs())
-			{				
+			RenderQueue &queue = baseQueues[command.pass];
+			queue.Sort();
+			for (auto &renderJob : queue.GetRenderJobs())
+			{
 				Program *program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
 				program->SetUniform(PARAM_AMBIENT_COLOR, ambientColor);
 				if (fogEnabled)
@@ -245,19 +272,22 @@ void Scene::Render(Renderer *renderer)
 				renderer->UseMaterial(renderJob.material);
 				renderer->SetBlendMode(renderJob.pass->GetBlendMode());
 				renderer->SetDepthWrite(renderJob.pass->GetDepthWrite());
-				renderer->SetDepthTest(renderJob.pass->GetDepthTest());
+				renderer->SetDepthTest(renderJob.pass->GetDepthTest());								
 				renderJob.geometry->Render();
 			}
 			break;
+		}
+			
 
 		case COMMAND_LIGHTPASS:
 			SetRenderTargets(renderer, command);			
 
 			for (auto &lightQueue : lightQueues)
 			{
-				lightQueue.renderQueue.Sort();
-				Light *light = lightQueue.light;
-				for (auto &renderJob : lightQueue.renderQueue.GetRenderJobs())
+				RenderQueue &queue = lightQueue.second[command.pass];
+				queue.Sort();
+				Light *light = lightQueue.first;
+				for (auto &renderJob : queue.GetRenderJobs())
 				{
 					Program *program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
 					program->SetUniform(PARAM_AMBIENT_COLOR, ambientColor);
@@ -279,14 +309,11 @@ void Scene::Render(Renderer *renderer)
 					renderer->UseLight(light);
 					renderer->SetBlendMode(renderJob.pass->GetBlendMode());
 					renderer->SetDepthWrite(renderJob.pass->GetDepthWrite());
-					renderer->SetDepthTest(renderJob.pass->GetDepthTest());
+					renderer->SetDepthTest(renderJob.pass->GetDepthTest());					
 					renderJob.geometry->Render();
 				}
 			}
-
-			glDisable(GL_BLEND);
-			glDepthFunc(GL_LESS);
-			glDepthMask(true);
+			
 			break;
 
 		case COMMAND_QUAD:

@@ -542,9 +542,9 @@ void Renderer::RenderFullscreenQuad()
 	currentProgram->SetUniform(PARAM_VIEW_PROJECTION_MATRIX, mat4::IDENTITY);
 	currentProgram->SetUniform(PARAM_CAMERA_POS, mat4::IDENTITY);	
 	glBindVertexArray(quadVao);
-	glDisable(GL_DEPTH_TEST);
-	RenderStream(TRIANGLES, 6);	
-	glEnable(GL_DEPTH_TEST);
+	SetDepthTest(DepthTest::ALWAYS);
+	SetBlendMode(BlendMode::REPLACE);
+	RenderStream(TRIANGLES, 6);		
 }
 
 void Renderer::SetWidth(int width)
@@ -603,8 +603,6 @@ void Renderer::SetBlendMode(BlendMode blendMode)
 	}
 
 	this->blendMode = blendMode;
-
-
 
 	switch (blendMode)
 	{

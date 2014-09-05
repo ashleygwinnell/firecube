@@ -71,13 +71,6 @@ public:
 	std::vector<RenderJob> renderJobs;
 };
 
-class LightQueue
-{
-public:
-	Light *light;
-	RenderQueue renderQueue;
-};
-
 }
 
 #pragma warning(pop)

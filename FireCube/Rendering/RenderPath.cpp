@@ -23,53 +23,56 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 	switch (type)
 	{
 	case COMMAND_CLEAR:
+	{
+		std::string clearStr = element->Attribute("color");
+		if (clearStr == "fogcolor")
 		{
-			std::string clearStr = element->Attribute("color");
-			if (clearStr == "fogcolor")
-			{
-				useFogColor = true;
-			}
-			else
-			{
-				useFogColor = false;
-				Variant v = Variant::FromString(clearStr);
-				clearColor = v.GetVec3();
-			}
+			useFogColor = true;
+		}
+		else
+		{
+			useFogColor = false;
+			Variant v = Variant::FromString(clearStr);
+			clearColor = v.GetVec3();
 		}
 		break;
+	}
+
 
 	case COMMAND_BASEPASS:
+	{
+		const char *passNameStr = element->Attribute("pass");
+		if (passNameStr)
 		{
-			const char *passNameStr = element->Attribute("pass");
-			if (passNameStr)
-			{
-				pass = passNameStr;
-			}
+			pass = passNameStr;
 		}
 		break;
+	}
+
 
 	case COMMAND_LIGHTPASS:
+	{
+		const char *passNameStr = element->Attribute("pass");
+		if (passNameStr)
 		{
-			const char *passNameStr = element->Attribute("pass");
-			if (passNameStr)
-			{
-				pass = passNameStr;
-			}
+			pass = passNameStr;
 		}
 		break;
+	}
+
 
 	case COMMAND_QUAD:
-		{
-			ShaderTemplate *vertexShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>(element->Attribute("vs"));
-			ShaderTemplate *fragmentShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>(element->Attribute("fs"));
-			std::string shaderDefines = element->Attribute("defines");
-			if (vertexShaderTemplate == nullptr || fragmentShaderTemplate == nullptr)
-				return false;
+	{
+		ShaderTemplate *vertexShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>(element->Attribute("vs"));
+		ShaderTemplate *fragmentShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>(element->Attribute("fs"));
+		std::string shaderDefines = element->Attribute("defines");
+		if (vertexShaderTemplate == nullptr || fragmentShaderTemplate == nullptr)
+			return false;
 
-			vertexShader = vertexShaderTemplate->GenerateShader(shaderDefines);
-			fragmentShader = fragmentShaderTemplate->GenerateShader(shaderDefines);
-		}
+		vertexShader = vertexShaderTemplate->GenerateShader(shaderDefines);
+		fragmentShader = fragmentShaderTemplate->GenerateShader(shaderDefines);
 		break;
+	}
 
 	default:
 		return false;
