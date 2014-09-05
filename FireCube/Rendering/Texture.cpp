@@ -7,7 +7,7 @@
 
 using namespace FireCube;
 
-Texture::Texture(Engine *engine) : Resource(engine), GraphicsResource(engine->GetRenderer()), minFilter(LINEAR), magFilter(LINEAR)
+Texture::Texture(Engine *engine) : Resource(engine), GraphicsResource(engine->GetRenderer()), minFilter(TextureFilter::LINEAR), magFilter(TextureFilter::LINEAR)
 {
 	Create();
 }
@@ -58,7 +58,7 @@ bool Texture::Load(const std::string &filename)
 	glBindTexture(GL_TEXTURE_2D, objectId);        		
 	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, img.GetWidth(), img.GetHeight(), 0, format, GL_UNSIGNED_BYTE, &img.GetPixels()[0]);		
 	GenerateMipMaps();
-	SetFiltering(MIPMAP, LINEAR);		
+	SetFiltering(TextureFilter::MIPMAP, TextureFilter::LINEAR);
 	return true;
 }
 

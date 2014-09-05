@@ -19,7 +19,7 @@ class Renderer;
 /**
 * Specifies the type of texture filtering.
 */
-enum TextureFilter
+enum class TextureFilter
 {
 	NEAREST, LINEAR, MIPMAP
 };
