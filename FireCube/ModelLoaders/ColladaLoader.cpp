@@ -112,11 +112,11 @@ void ColladaLoader::ReadAsset(TiXmlNode *parent)
 			{
 				std::string v = element->FirstChild()->ToText()->ValueStr();
 				if (v == "X_UP")
-					upDirection = X_UP;
+					upDirection = UpDirection::X;
 				else if (v == "Y_UP")
-					upDirection = Y_UP;
+					upDirection = UpDirection::Y;
 				else if (v == "Z_UP")
-					upDirection = Z_UP;
+					upDirection = UpDirection::Z;
 			}
 		}
 	}
@@ -262,22 +262,22 @@ void ColladaLoader::ReadEffectProfileCommon(TiXmlNode *parent, Effect &effect)
 			// Read the shading type of this effect and descend into this element to get the shading parameters (ambient, diffuse, etc...)
 			else if (element->ValueStr() == "phong")
 			{				
-				effect.shadingType = SHADING_PHONG;
+				effect.shadingType = ShadingType::PHONG;
 				ReadEffectProfileCommon(element, effect);
 			}
 			else if (element->ValueStr() == "lambert")
 			{
-				effect.shadingType = SHADING_LAMBERT;
+				effect.shadingType = ShadingType::LAMBERT;
 				ReadEffectProfileCommon(element, effect);
 			}
 			else if (element->ValueStr() == "blinn")
 			{
-				effect.shadingType = SHADING_BLINN;
+				effect.shadingType = ShadingType::BLINN;
 				ReadEffectProfileCommon(element, effect);
 			}
 			else if (element->ValueStr() == "constant")
 			{
-				effect.shadingType = SHADING_CONSTANT;
+				effect.shadingType = ShadingType::CONSTANT;
 				ReadEffectProfileCommon(element, effect);
 			}
 			else if (element->ValueStr() == "ambient")
@@ -306,7 +306,7 @@ void ColladaLoader::ReadEffectParam(TiXmlNode *parent, EffectParam &effectParam)
 				TiXmlElement *e = element->FirstChildElement();
 				if (e->ValueStr() == "init_from")
 				{
-					effectParam.type = PARAM_SURFACE;
+					effectParam.type = ParamType::SURFACE;
 					effectParam.reference = e->GetText();
 				}
 			}
@@ -315,7 +315,7 @@ void ColladaLoader::ReadEffectParam(TiXmlNode *parent, EffectParam &effectParam)
 				TiXmlElement *e = element->FirstChildElement();
 				if (e->ValueStr() == "source")
 				{
-					effectParam.type = PARAM_SAMPLER_2D;
+					effectParam.type = ParamType::SAMPLER_2D;
 					effectParam.reference = e->GetText();
 				}
 			}
@@ -562,7 +562,7 @@ void ColladaLoader::ReadInputChannel(TiXmlNode *parent, std::vector<InputChannel
 	if (element->QueryIntAttribute("offset", &ic.offset) != TIXML_SUCCESS)
 		ic.offset = 0;
 
-	if ((ic.type == INPUT_TEXCOORD) || (ic.type == INPUT_COLOR))
+	if ((ic.type == InputType::TEXCOORD) || (ic.type == InputType::COLOR))
 	{
 		if (element->QueryIntAttribute("set", &ic.index) != TIXML_SUCCESS)
 			ic.index = 0;
@@ -589,7 +589,7 @@ void ColladaLoader::ReadTriangles(TiXmlNode *parent, Mesh &mesh)
 	element->QueryIntAttribute("count", &count);
 	subMesh.material = element->Attribute("material");
 	subMesh.numPrimtives = count;
-	subMesh.primitiveType = PRIMITIVE_TRIANGLES;
+	subMesh.primitiveType = PrimitiveType::TRIANGLES;
 
 	// Read all the input channels for this sub mesh and then it's triangles indices
 	for (node = parent->FirstChild(); node != nullptr; node = node->NextSibling())
@@ -618,7 +618,7 @@ void ColladaLoader::ReadPolylist(TiXmlNode *parent, Mesh &mesh)
 	element->QueryIntAttribute("count", &count);
 	subMesh.material = element->Attribute("material");
 	subMesh.numPrimtives = count;
-	subMesh.primitiveType = PRIMITIVE_POLYLIST;
+	subMesh.primitiveType = PrimitiveType::POLYLIST;
 
 	// Read all the input channels for this sub mesh, the vertices count for each polygon and it's indices
 	for (node = parent->FirstChild(); node != nullptr; node = node->NextSibling())
@@ -660,14 +660,14 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 	for (unsigned int i = 0; i < primInputChannels.size(); i++)
 	{
 		offset = std::max(offset, primInputChannels[i].offset + 1);
-		if (primInputChannels[i].type == INPUT_VERTEX)
+		if (primInputChannels[i].type == InputType::VERTEX)
 			vertexOffset = primInputChannels[i].offset;
 	}
 	// Allocate space for the indices
 	int expectedIndicesCount = 0;
-	if (subMesh.primitiveType == PRIMITIVE_TRIANGLES)
+	if (subMesh.primitiveType == PrimitiveType::TRIANGLES)
 		expectedIndicesCount = count * 3;
-	else if (subMesh.primitiveType == PRIMITIVE_POLYLIST)
+	else if (subMesh.primitiveType == PrimitiveType::POLYLIST)
 	{
 		for (unsigned int i = 0; i < subMesh.vcount.size(); i++)
 			expectedIndicesCount += subMesh.vcount[i];
@@ -696,7 +696,7 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 	{
 		if (primInputChannels[i].source == nullptr)
 		{
-			if (primInputChannels[i].type != INPUT_VERTEX)
+			if (primInputChannels[i].type != InputType::VERTEX)
 				primInputChannels[i].source = &ResolveLibraryReference(sources, primInputChannels[i].sourceName);
 		}
 	}
@@ -705,9 +705,9 @@ void ColladaLoader::ReadPrimitives(TiXmlNode *parent, Mesh &mesh, SubMesh &subMe
 	for (int i = 0; i < count; i++)
 	{
 		int pointCount = 0;
-		if (subMesh.primitiveType == PRIMITIVE_TRIANGLES)
+		if (subMesh.primitiveType == PrimitiveType::TRIANGLES)
 			pointCount = 3;
-		else if (subMesh.primitiveType == PRIMITIVE_POLYLIST)
+		else if (subMesh.primitiveType == PrimitiveType::POLYLIST)
 			pointCount = subMesh.vcount[i];
 		if (pointCount != 3)
 		{
@@ -756,7 +756,7 @@ void ColladaLoader::GetDataFromChannel(InputChannel &ic, int index, Mesh &mesh)
 	// storing it in the appropriate array
 
 	// TODO: handle input of type "vertex" correctly (they point to the vertices element)
-	if (ic.type == INPUT_VERTEX)
+	if (ic.type == InputType::VERTEX)
 		return;
 
 	float *data = &ic.source->dataArray.floatData[0] + ic.source->accessor.offset + index * ic.source->accessor.stride;
@@ -767,11 +767,11 @@ void ColladaLoader::GetDataFromChannel(InputChannel &ic, int index, Mesh &mesh)
 			values[i] = data[ic.source->accessor.componentsOffset[i]];
 	}
 
-	if (ic.type == INPUT_POSITION)
+	if (ic.type == InputType::POSITION)
 		mesh.vertices.push_back(vec3(values[0], values[1], values[2]));
-	else if (ic.type == INPUT_NORMAL)
+	else if (ic.type == InputType::NORMAL)
 		mesh.normals.push_back(vec3(values[0], values[1], values[2]));
-	else if (ic.type == INPUT_TEXCOORD)
+	else if (ic.type == InputType::TEXCOORD)
 	{
 		if (ic.index < 4)
 			mesh.texcoords[ic.index].push_back(vec2(values[0], 1.0f - values[1]));
@@ -945,37 +945,37 @@ void ColladaLoader::ReadTransformation(TiXmlNode *parent, Node *node)
 	TiXmlElement *element = parent->ToElement();
 	Transform t;
 	if (element->ValueStr() == "lookat")
-		t.type = TRANSFORM_LOOKAT;
+		t.type = TransformationType::LOOKAT;
 	else if (element->ValueStr() == "rotate")
-		t.type = TRANSFORM_ROTATE;
+		t.type = TransformationType::ROTATE;
 	else if (element->ValueStr() == "translate")
-		t.type = TRANSFORM_TRANSLATE;
+		t.type = TransformationType::TRANSLATE;
 	else if (element->ValueStr() == "scale")
-		t.type = TRANSFORM_SCALE;
+		t.type = TransformationType::SCALE;
 	else if (element->ValueStr() == "matrix")
-		t.type = TRANSFORM_MATRIX;
+		t.type = TransformationType::MATRIX;
 	std::istringstream iss(parent->ToElement()->GetText());
-	if (t.type == TRANSFORM_LOOKAT)
+	if (t.type == TransformationType::LOOKAT)
 	{
 		for (int i = 0; i < 9; i++)
 			iss >> t.v[i];
 	}
-	else if (t.type == TRANSFORM_ROTATE)
+	else if (t.type == TransformationType::ROTATE)
 	{
 		for (int i = 0; i < 4; i++)
 			iss >> t.v[i];
 	}
-	else if (t.type == TRANSFORM_TRANSLATE)
+	else if (t.type == TransformationType::TRANSLATE)
 	{
 		for (int i = 0; i < 3; i++)
 			iss >> t.v[i];
 	}
-	else if (t.type == TRANSFORM_SCALE)
+	else if (t.type == TransformationType::SCALE)
 	{
 		for (int i = 0; i < 3; i++)
 			iss >> t.v[i];
 	}
-	else if (t.type == TRANSFORM_MATRIX)
+	else if (t.type == TransformationType::MATRIX)
 	{
 		for (int i = 0; i < 16; i++)
 			iss >> t.v[i];
@@ -997,30 +997,30 @@ mat4 ColladaLoader::CalculateTranformation(std::vector<Transform> &transformatio
 	{
 		Transform &t = transformations[i];
 		mat4 temp = mat4::IDENTITY;
-		if (t.type == TRANSFORM_TRANSLATE)
+		if (t.type == TransformationType::TRANSLATE)
 		{
 			temp.Translate(t.v[0], t.v[1], t.v[2]);
 			ret *= temp;
 		}
-		else if (t.type == TRANSFORM_SCALE)
+		else if (t.type == TransformationType::SCALE)
 		{
 			temp.Scale(t.v[0], t.v[1], t.v[2]);
 			ret *= temp;
 		}
-		else if (t.type == TRANSFORM_ROTATE)
+		else if (t.type == TransformationType::ROTATE)
 		{
 			float angle = (float)(-t.v[3] / 180.0f * PI);
 
 			temp.Rotate(vec3(t.v[0], t.v[1], t.v[2]), angle);
 			ret *= temp;
 		}
-		else if (t.type == TRANSFORM_MATRIX)
+		else if (t.type == TransformationType::MATRIX)
 		{
 			for (unsigned int j = 0; j < 16; j++)
 				temp.m[j] = t.v[j];
 			ret *= temp;
 		}
-		else if (t.type == TRANSFORM_LOOKAT)
+		else if (t.type == TransformationType::LOOKAT)
 		{
 			vec3 pos(t.v[0], t.v[1], t.v[2]);
 			vec3 dst(t.v[3], t.v[4], t.v[5]);
@@ -1039,7 +1039,7 @@ vec3 ColladaLoader::GetTranslation(std::vector<Transform> &transformations)
 	for (unsigned int i = 0; i < transformations.size(); i++)
 	{
 		Transform &t = transformations[i];
-		if (t.type == TRANSFORM_TRANSLATE)
+		if (t.type == TransformationType::TRANSLATE)
 		{
 			ret += vec3(t.v[0], t.v[1], t.v[2]);
 		}
@@ -1054,7 +1054,7 @@ mat4 ColladaLoader::GetRotation(std::vector<Transform> &transformations)
 	for (unsigned int i = 0; i < transformations.size(); i++)
 	{
 		Transform &t = transformations[i];
-		if (t.type == TRANSFORM_ROTATE)
+		if (t.type == TransformationType::ROTATE)
 		{			
 			float angle = (float)(-t.v[3] / 180.0f * PI);			
 			ret.Rotate(vec3(t.v[0], t.v[1], t.v[2]), angle);			
@@ -1070,7 +1070,7 @@ vec3 ColladaLoader::GetScale(std::vector<Transform> &transformations)
 	for (unsigned int i = 0; i < transformations.size(); i++)
 	{
 		Transform &t = transformations[i];
-		if (t.type == TRANSFORM_SCALE)
+		if (t.type == TransformationType::SCALE)
 		{
 			ret.x *= t.v[0];
 			ret.y *= t.v[1];
@@ -1087,13 +1087,13 @@ mat4 ColladaLoader::GetTransformMatrix(std::vector<Transform> &transformations)
 	{
 		Transform &t = transformations[i];
 		mat4 temp = mat4::IDENTITY;
-		if (t.type == TRANSFORM_MATRIX)
+		if (t.type == TransformationType::MATRIX)
 		{
 			for (unsigned int j = 0; j < 16; j++)
 				temp.m[j] = t.v[j];
 			ret *= temp;
 		}
-		else if (t.type == TRANSFORM_LOOKAT)
+		else if (t.type == TransformationType::LOOKAT)
 		{
 			vec3 pos(t.v[0], t.v[1], t.v[2]);
 			vec3 dst(t.v[3], t.v[4], t.v[5]);
@@ -1114,7 +1114,7 @@ void ColladaLoader::ApplyMaterialInstanceSemanticMapping(Sampler &sampler, Mater
 	sampler.uvId = -1;
 	if (iter != materialInstance.inputMap.end())
 	{
-		if (iter->second.type == INPUT_TEXCOORD)
+		if (iter->second.type == InputType::TEXCOORD)
 			sampler.uvId = iter->second.set;
 	}
 }
@@ -1428,12 +1428,12 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 		std::vector<vec3> vertices = mesh.vertices;
 		for (unsigned int j = 0; j < vertices.size(); j++)
 		{
-			if (upDirection == X_UP)
+			if (upDirection == UpDirection::X)
 			{
 				std::swap(vertices[j].x, vertices[j].y);
 				vertices[j].x *= -1;
 			}
-			else if (upDirection == Z_UP)
+			else if (upDirection == UpDirection::Z)
 			{
 				std::swap(vertices[j].y, vertices[j].z);
 				vertices[j].z *= -1;
@@ -1443,12 +1443,12 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 		std::vector<vec3> normals = mesh.normals;
 		for (unsigned int j = 0; j < normals.size(); j++)
 		{            
-			if (upDirection == X_UP)
+			if (upDirection == UpDirection::X)
 			{
 				std::swap(normals[j].x, normals[j].y);
 				normals[j].x *= -1;
 			}
-			else if (upDirection == Z_UP)
+			else if (upDirection == UpDirection::Z)
 			{
 				std::swap(normals[j].y, normals[j].z);
 				normals[j].z *= -1;
@@ -1459,12 +1459,12 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 		std::vector<vec3> tangents = mesh.tangents;
 		for (unsigned int j = 0; j < tangents.size(); j++)
 		{            
-			if (upDirection == X_UP)
+			if (upDirection == UpDirection::X)
 			{
 				std::swap(tangents[j].x, tangents[j].y);
 				tangents[j].x *= -1;
 			}
-			else if (upDirection == Z_UP)
+			else if (upDirection == UpDirection::Z)
 			{
 				std::swap(tangents[j].y, tangents[j].z);
 				tangents[j].z *= -1;
@@ -1475,12 +1475,12 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 		std::vector<vec3> bitangents = mesh.binormals;
 		for (unsigned int j = 0; j < bitangents.size(); j++)
 		{            
-			if (upDirection == X_UP)
+			if (upDirection == UpDirection::X)
 			{
 				std::swap(bitangents[j].x, bitangents[j].y);
 				bitangents[j].x *= -1;
 			}
-			else if (upDirection == Z_UP)
+			else if (upDirection == UpDirection::Z)
 			{
 				std::swap(bitangents[j].y, bitangents[j].z);
 				bitangents[j].z *= -1;
@@ -1573,7 +1573,7 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 
 			// Create the faces of this geometry
 			std::vector<unsigned int> indexData;
-			if (subMesh.primitiveType == PRIMITIVE_TRIANGLES)
+			if (subMesh.primitiveType == PrimitiveType::TRIANGLES)
 			{
 				for (int p = 0; p < subMesh.numPrimtives; p++)
 				{					
@@ -1582,7 +1582,7 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 					indexData.push_back(subMesh.indices[p * 3 + 2]);
 				}
 			}
-			else if (subMesh.primitiveType == PRIMITIVE_POLYLIST)
+			else if (subMesh.primitiveType == PrimitiveType::POLYLIST)
 			{
 				for (int p = 0; p < subMesh.numPrimtives; p++)
 				{
@@ -1682,19 +1682,19 @@ TiXmlElement *ColladaLoader::GetChildElement(TiXmlNode *node, const std::string 
 ColladaLoader::InputType ColladaLoader::SemanticToInputType(const std::string &semantic)
 {
 	if (semantic == "POSITION")
-		return INPUT_POSITION;
+		return InputType::POSITION;
 	else if (semantic == "VERTEX")
-		return INPUT_VERTEX;
+		return InputType::VERTEX;
 	else if (semantic == "NORMAL")
-		return INPUT_NORMAL;
+		return InputType::NORMAL;
 	else if (semantic == "TEXCOORD")
-		return INPUT_TEXCOORD;
+		return InputType::TEXCOORD;
 	else if (semantic == "COLOR")
-		return INPUT_COLOR;
+		return InputType::COLOR;
 	else if (semantic == "TEXBINORMAL")
-		return INPUT_BINORMAL;
+		return InputType::BINORMAL;
 	else if (semantic == "TEXTANGENT")
-		return INPUT_TANGENT;
+		return InputType::TANGENT;
 	else
-		return INPUT_UNKNOWN;
+		return InputType::UNKNOWN;
 }

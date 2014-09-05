@@ -27,29 +27,29 @@ namespace FireCube
 		virtual const std::vector<Material *> &GetGeneratedMaterials();
 		virtual BoundingBox GetBoundingBox() const;
 	private:
-		enum UpDirection
+		enum class UpDirection
 		{
-			X_UP, Y_UP, Z_UP
+			X, Y, Z
 		};
-		enum ParamType
+		enum class ParamType
 		{
-			PARAM_SAMPLER_2D, PARAM_SURFACE
+			SAMPLER_2D, SURFACE
 		};
-		enum ShadingType
+		enum class ShadingType
 		{
-			SHADING_PHONG, SHADING_CONSTANT, SHADING_LAMBERT, SHADING_BLINN
+			PHONG, CONSTANT, LAMBERT, BLINN
 		};
-		enum InputType
+		enum class InputType
 		{
-			INPUT_POSITION, INPUT_VERTEX, INPUT_NORMAL, INPUT_TEXCOORD, INPUT_COLOR, INPUT_TANGENT, INPUT_BINORMAL, INPUT_UNKNOWN
+			POSITION, VERTEX, NORMAL, TEXCOORD, COLOR, TANGENT, BINORMAL, UNKNOWN
 		};
-		enum PrimitiveType
+		enum class PrimitiveType
 		{
-			PRIMITIVE_TRIANGLES, PRIMITIVE_POLYLIST
+			TRIANGLES, POLYLIST
 		};
-		enum TransformationType
+		enum class TransformationType
 		{
-			TRANSFORM_LOOKAT, TRANSFORM_ROTATE, TRANSFORM_TRANSLATE, TRANSFORM_MATRIX, TRANSFORM_SCALE
+			LOOKAT, ROTATE, TRANSLATE, MATRIX, SCALE
 		};
 		class Transform
 		{
