@@ -2,4 +2,5 @@
 <command type = "clear" color = "fogcolor" />
 <command type = "basepass" pass = "base" />
 <command type = "lightpass" pass = "light" />
+<command type = "basepass" pass = "alpha" />
 </renderpath>

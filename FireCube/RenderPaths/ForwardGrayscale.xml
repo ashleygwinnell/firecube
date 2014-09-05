@@ -3,6 +3,7 @@
 <command type = "clear" color = "fogcolor" output = "temp" />
 <command type = "basepass" pass = "base" output = "temp" />
 <command type = "lightpass" pass = "light" output = "temp" />
+<command type = "basepass" pass = "alpha" output = "temp" />
 <command type = "quad" vs = "Shaders/grayscale.vert" fs = "Shaders/grayscale.frag" defines = "">
 	<texture unit = "diffuse" name = "temp" />
 </command>
