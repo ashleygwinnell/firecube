@@ -32,9 +32,9 @@ void OrbitCamera::RegisterWithInputManager(InputManager &inputManager)
 	inputManager.AddInputListener(this);
 	inputManager.AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "NodeObserverCamera_Rotate", KeyModifier::NONE);
 	inputManager.AddMapping(Key::MOUSE_MIDDLE_BUTTON, InputMappingType::STATE, "NodeObserverCamera_Zoom", KeyModifier::NONE);
-	inputManager.AddMapping(MOUSE_AXIS_X_RELATIVE, "NodeObserverCamera_MouseX");
-	inputManager.AddMapping(MOUSE_AXIS_Y_RELATIVE, "NodeObserverCamera_MouseY");
-	inputManager.AddMapping(MOUSE_WHEEL_Y_RELATIVE, "NodeObserverCamera_MouseWheelY");
+	inputManager.AddMapping(AnalogInput::MOUSE_AXIS_X_RELATIVE, "NodeObserverCamera_MouseX");
+	inputManager.AddMapping(AnalogInput::MOUSE_AXIS_Y_RELATIVE, "NodeObserverCamera_MouseY");
+	inputManager.AddMapping(AnalogInput::MOUSE_WHEEL_Y_RELATIVE, "NodeObserverCamera_MouseWheelY");
 }
 
 void OrbitCamera::SetMinDistance(float v)

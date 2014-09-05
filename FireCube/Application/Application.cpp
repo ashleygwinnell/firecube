@@ -212,15 +212,15 @@ void Application::Run()
 			else if (event.type == SDL_MOUSEMOTION)
 			{
 				// Set the corresponding analog values of the input manager (mouse location)
-				inputManager.SetRawAnalogValue(MOUSE_AXIS_X_RELATIVE, (float) event.motion.xrel);
-				inputManager.SetRawAnalogValue(MOUSE_AXIS_Y_RELATIVE, (float) event.motion.yrel);
-				inputManager.SetRawAnalogValue(MOUSE_AXIS_X_ABSOLUTE, (float) event.motion.x);
-				inputManager.SetRawAnalogValue(MOUSE_AXIS_Y_ABSOLUTE, (float) event.motion.y);
+				inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_X_RELATIVE, (float)event.motion.xrel);
+				inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_Y_RELATIVE, (float)event.motion.yrel);
+				inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_X_ABSOLUTE, (float)event.motion.x);
+				inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_Y_ABSOLUTE, (float)event.motion.y);
 			}
 			else if (event.type == SDL_MOUSEWHEEL)
 			{	
 				// Set the corresponding analog values of the input manager (mouse wheel)
-				inputManager.SetRawAnalogValue(MOUSE_WHEEL_Y_RELATIVE, ((float) event.wheel.y) / 60.0f);
+				inputManager.SetRawAnalogValue(AnalogInput::MOUSE_WHEEL_Y_RELATIVE, ((float)event.wheel.y) / 60.0f);
 			}
 			else if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED)
 			{
@@ -236,8 +236,8 @@ void Application::Run()
 		}		
 		int x,y;
 		SDL_GetMouseState(&x, &y);
-		inputManager.SetRawAnalogValue(MOUSE_AXIS_X_ABSOLUTE, (float) x);
-		inputManager.SetRawAnalogValue(MOUSE_AXIS_Y_ABSOLUTE, (float) y);
+		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_X_ABSOLUTE, (float)x);
+		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_Y_ABSOLUTE, (float)y);
 		renderer->ResetNumberOfPrimitivesRendered();
 		// Dispatch input to all input listeners
 		inputManager.DispatchInput(deltaTime);

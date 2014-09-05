@@ -61,7 +61,7 @@ KeyModifier operator & (const KeyModifier &lhs, const KeyModifier &rhs);
 /**
 * Analog mappings.
 */
-enum AnalogInput
+enum class AnalogInput
 {
 	MOUSE_AXIS_X_RELATIVE, MOUSE_AXIS_Y_RELATIVE, MOUSE_AXIS_X_ABSOLUTE, MOUSE_AXIS_Y_ABSOLUTE, MOUSE_WHEEL_Y_RELATIVE
 };
