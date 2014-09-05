@@ -42,6 +42,11 @@ enum class BlendMode
 	REPLACE, ADD
 };
 
+enum class DepthTest
+{
+	ALWAYS, NEVER, EQUAL, LESSEQUAL, LESS
+};
+
 extern StringHash PARAM_MATERIAL_AMBIENT;
 extern StringHash PARAM_MATERIAL_DIFFUSE;
 extern StringHash PARAM_MATERIAL_SPECULAR;

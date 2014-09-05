@@ -160,6 +160,7 @@ public:
 
 	void SetBlendMode(BlendMode blendMode);
 	void SetDepthWrite(bool depthWrite);
+	void SetDepthTest(DepthTest depthTest);
 private:
 	
 
@@ -189,6 +190,7 @@ private:
 	int width, height;
 	BlendMode blendMode;
 	bool depthWrite;
+	DepthTest depthTest;
 };
 
 }

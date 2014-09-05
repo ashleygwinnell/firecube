@@ -112,6 +112,16 @@ bool Pass::GetDepthWrite() const
 	return depthWrite;
 }
 
+void Pass::SetDepthTest(DepthTest depthTest)
+{
+	this->depthTest = depthTest;
+}
+
+DepthTest Pass::GetDepthTest() const
+{
+	return depthTest;
+}
+
 Technique::Technique(Engine *engine) : Resource(engine)
 {
 	
@@ -153,6 +163,9 @@ bool Technique::Load(const std::string &filename)
 
 			const char *depthWriteStr = element->Attribute("depth_write");
 			bool depthWrite = depthWriteStr ? Variant::FromString(depthWriteStr).GetBool() : true;
+
+			const char *depthTestStr = element->Attribute("depth_test");
+			std::string depthTest = depthTestStr == nullptr ? "less" : depthTestStr;
 			
 			if (passName.empty() || vertexShaderTemplate.empty() || fragmentShaderTemplate.empty())
 				continue;			
@@ -164,6 +177,7 @@ bool Technique::Load(const std::string &filename)
 			pass->SetBlendMode(Technique::GetBlendModeFromString(blendMode));
 			pass->SetIsBase(isBase);
 			pass->SetDepthWrite(depthWrite);
+			pass->SetDepthTest(Technique::GetDepthTestFromString(depthTest));
 			passes[StringHash(passName)] = pass;
 		}
 	}
@@ -190,6 +204,32 @@ BlendMode Technique::GetBlendModeFromString(const std::string &str)
 	}
 
 	return BlendMode::REPLACE;
+}
+
+DepthTest Technique::GetDepthTestFromString(const std::string &str)
+{
+	if (str == "always")
+	{
+		return DepthTest::ALWAYS;
+	}
+	else if (str == "never")
+	{
+		return DepthTest::NEVER;
+	}
+	else if (str == "equal")
+	{
+		return DepthTest::EQUAL;
+	}
+	else if (str == "less")
+	{
+		return DepthTest::LESS;
+	}
+	else if (str == "less_equal")
+	{
+		return DepthTest::LESSEQUAL;
+	}
+
+	return DepthTest::LESS;
 }
 
 void Pass::SetIsBase(bool isBase)

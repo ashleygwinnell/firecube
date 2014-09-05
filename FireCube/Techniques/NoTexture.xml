@@ -1,4 +1,4 @@
 <technique>
 	<pass name = "base" vs= "Shaders/default.vert" fs = "Shaders/default.frag" defines = ""/>
-	<pass name = "light" vs= "Shaders/default.vert" fs = "Shaders/default.frag" defines = "PER_PIXEL_LIGHTING" />
+	<pass name = "light" vs= "Shaders/default.vert" fs = "Shaders/default.frag"  blend = "add" depth_write = "false" depth_test = "equal" defines = "PER_PIXEL_LIGHTING" />
 </technique>

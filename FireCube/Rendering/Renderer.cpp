@@ -630,3 +630,33 @@ void Renderer::SetDepthWrite(bool depthWrite)
 	this->depthWrite = depthWrite;
 	glDepthMask(depthWrite);
 }
+
+void Renderer::SetDepthTest(DepthTest depthTest)
+{
+	if (this->depthTest == depthTest)
+	{
+		return;
+	}
+
+	this->depthTest = depthTest;
+	switch (depthTest)
+	{
+	case DepthTest::ALWAYS:
+		glDepthFunc(GL_ALWAYS);
+		break;
+	case DepthTest::NEVER:
+		glDepthFunc(GL_NEVER);
+		break;
+	case DepthTest::EQUAL:
+		glDepthFunc(GL_EQUAL);
+		break;
+	case DepthTest::LESSEQUAL:
+		glDepthFunc(GL_LEQUAL);
+		break;
+	case DepthTest::LESS:
+		glDepthFunc(GL_LESS);
+		break;
+	default:
+		break;
+	}
+}

@@ -219,10 +219,7 @@ void Scene::Render(Renderer *renderer)
 			break;
 
 		case COMMAND_BASEPASS:
-			SetRenderTargets(renderer, command);
-			glDisable(GL_BLEND);
-			glDepthFunc(GL_LESS);
-			glDepthMask(true);
+			SetRenderTargets(renderer, command);			
 
 			baseQueue.Sort();
 			for (auto &renderJob : baseQueue.GetRenderJobs())
@@ -247,16 +244,14 @@ void Scene::Render(Renderer *renderer)
 
 				renderer->UseMaterial(renderJob.material);
 				renderer->SetBlendMode(renderJob.pass->GetBlendMode());
+				renderer->SetDepthWrite(renderJob.pass->GetDepthWrite());
+				renderer->SetDepthTest(renderJob.pass->GetDepthTest());
 				renderJob.geometry->Render();
 			}
 			break;
 
 		case COMMAND_LIGHTPASS:
-			SetRenderTargets(renderer, command);
-			glEnable(GL_BLEND);
-			glDepthFunc(GL_EQUAL);
-			glBlendFunc(GL_ONE, GL_ONE);
-			glDepthMask(false);
+			SetRenderTargets(renderer, command);			
 
 			for (auto &lightQueue : lightQueues)
 			{
@@ -283,6 +278,8 @@ void Scene::Render(Renderer *renderer)
 					renderer->UseMaterial(renderJob.material);
 					renderer->UseLight(light);
 					renderer->SetBlendMode(renderJob.pass->GetBlendMode());
+					renderer->SetDepthWrite(renderJob.pass->GetDepthWrite());
+					renderer->SetDepthTest(renderJob.pass->GetDepthTest());
 					renderJob.geometry->Render();
 				}
 			}

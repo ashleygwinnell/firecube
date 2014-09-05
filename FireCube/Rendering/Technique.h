@@ -32,6 +32,8 @@ public:
 	void SetIsBase(bool isBase);
 	void SetDepthWrite(bool depthWrite);
 	bool GetDepthWrite() const;
+	void SetDepthTest(DepthTest depthTest);
+	DepthTest GetDepthTest() const;
 private:
 	std::string name;
 	ShaderTemplate *vertexShaderTemplate;
@@ -42,6 +44,7 @@ private:
 	BlendMode blendMode;
 	bool isBase;
 	bool depthWrite;
+	DepthTest depthTest;
 };
 
 class FIRECUBE_API Technique : public Resource
@@ -54,6 +57,7 @@ public:
 	bool Load(const std::string &filename);	
 private:
 	static BlendMode GetBlendModeFromString(const std::string &str);
+	static DepthTest GetDepthTestFromString(const std::string &str);
 	std::map<StringHash, Pass *> passes;	
 	Renderer *renderer;
 };
