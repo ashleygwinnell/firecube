@@ -32,7 +32,7 @@ public:
 	bool useFogColor;
 	vec3 clearColor;
 	StringHash output;
-	StringHash textures[MAX_TEXTURE_UNITS];
+	StringHash textures[static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS)];
 	StringHash pass;
 	Shader *vertexShader;
 	Shader *fragmentShader;	

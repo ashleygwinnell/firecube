@@ -204,10 +204,10 @@ bool MyMainFrame::AddMaterial(DWORD id, Material *mat)
 	}				
 	std::ostringstream ossDiffuseTexture;
 	ossDiffuseTexture << "TextureDiffuse" << id;
-	propertyGrid1->Append(new wxFileProperty("Diffuse texture", ossDiffuseTexture.str(), mat->GetTexture(TEXTURE_UNIT_DIFFUSE) ? mat->GetTexture(TEXTURE_UNIT_DIFFUSE)->GetFileName() : ""));
+	propertyGrid1->Append(new wxFileProperty("Diffuse texture", ossDiffuseTexture.str(), mat->GetTexture(TextureUnit::DIFFUSE) ? mat->GetTexture(TextureUnit::DIFFUSE)->GetFileName() : ""));
 	std::ostringstream ossNormalTexture;
 	ossNormalTexture << "TextureNormal" << id;
-	propertyGrid1->Append(new wxFileProperty("Normal texture", ossNormalTexture.str(), mat->GetTexture(TEXTURE_UNIT_NORMAL) ? mat->GetTexture(TEXTURE_UNIT_NORMAL)->GetFileName() : ""));
+	propertyGrid1->Append(new wxFileProperty("Normal texture", ossNormalTexture.str(), mat->GetTexture(TextureUnit::NORMAL) ? mat->GetTexture(TextureUnit::NORMAL)->GetFileName() : ""));
 	std::ostringstream ossTechnique;
 	ossTechnique << "Technique" << id;
 	propertyGrid1->Append(new wxFileProperty("Technique", ossTechnique.str(), mat->GetTechnique() ? mat->GetTechnique()->GetFileName() : ""));
@@ -280,7 +280,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		std::istringstream idss(properyName.substr(14));
 		idss >> id;
 		mat = materialMap[id];
-		mat->SetTexture(TEXTURE_UNIT_DIFFUSE, theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Texture>(evt->GetPropertyValue().GetString().ToStdString()));	
+		mat->SetTexture(TextureUnit::DIFFUSE, theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Texture>(evt->GetPropertyValue().GetString().ToStdString()));
 		updateTechnique = true;
 	}
 	if (properyName.substr(0, 13) == "TextureNormal")
@@ -289,7 +289,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		std::istringstream idss(properyName.substr(13));
 		idss >> id;
 		mat = materialMap[id];		
-		mat->SetTexture(TEXTURE_UNIT_NORMAL, theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Texture>(evt->GetPropertyValue().GetString().ToStdString()));
+		mat->SetTexture(TextureUnit::NORMAL, theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Texture>(evt->GetPropertyValue().GetString().ToStdString()));
 		updateTechnique = true;
 	}
 	if (properyName.substr(0, 9) == "Technique")
@@ -302,11 +302,11 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 	}
 	if (updateTechnique && mat)
 	{
-		if (mat->GetTexture(TEXTURE_UNIT_DIFFUSE) && mat->GetTexture(TEXTURE_UNIT_NORMAL))
+		if (mat->GetTexture(TextureUnit::DIFFUSE) && mat->GetTexture(TextureUnit::NORMAL))
 			mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseNormalMap.xml"));
-		else if (mat->GetTexture(TEXTURE_UNIT_DIFFUSE))
+		else if (mat->GetTexture(TextureUnit::DIFFUSE))
 			mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
-		else if (mat->GetTexture(TEXTURE_UNIT_NORMAL))
+		else if (mat->GetTexture(TextureUnit::NORMAL))
 			mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Technique>("Techniques/NormalMap.xml"));
 		else
 			mat->SetTechnique(theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));

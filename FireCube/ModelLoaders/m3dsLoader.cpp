@@ -215,7 +215,7 @@ FireCube::Material *M3dsLoader::CreateMaterialOfMesh(Mesh &mesh)
 		if (mesh.material->diffuseTextureMap.empty() == false)
 		{
 			material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
-			material->SetTexture(TEXTURE_UNIT_DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(mesh.material->diffuseTextureMap));
+			material->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(mesh.material->diffuseTextureMap));
 		}
 		else
 			material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));

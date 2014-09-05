@@ -482,7 +482,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			Texture *texture = engine->GetResourceCache()->GetResource<Texture>(baseDir + "\\" + textureName);
 			if (!texture)
 				texture = engine->GetResourceCache()->GetResource<Texture>(textureName);
-			material->SetTexture(TEXTURE_UNIT_DIFFUSE, texture);
+			material->SetTexture(TextureUnit::DIFFUSE, texture);
 			material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
 		}
 		else
@@ -497,7 +497,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			Texture *texture = engine->GetResourceCache()->GetResource<Texture>(baseDir + "\\" + textureName);
 			if (!texture)
 				texture = engine->GetResourceCache()->GetResource<Texture>(textureName);
-			material->SetTexture(TEXTURE_UNIT_NORMAL, texture);
+			material->SetTexture(TextureUnit::NORMAL, texture);
 		}
 		allMaterials[i->first] = material;
 	}

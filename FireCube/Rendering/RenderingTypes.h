@@ -11,15 +11,15 @@ class StringHash;
 /**
 * Specifies the type of a shader.
 */
-enum ShaderType
+enum class ShaderType
 {
 	VERTEX_SHADER, FRAGMENT_SHADER
 };
 
-enum TextureUnit
+enum class TextureUnit
 {
-	TEXTURE_UNIT_DIFFUSE,
-	TEXTURE_UNIT_NORMAL,
+	DIFFUSE,
+	NORMAL,
 	MAX_TEXTURE_UNITS
 };
 

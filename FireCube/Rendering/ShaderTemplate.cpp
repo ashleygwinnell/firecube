@@ -30,10 +30,10 @@ bool ShaderTemplate::Load(const std::string &filename)
 	if (d != std::string::npos)
 	{
 		std::string ext = ToLower(filename.substr(d + 1));
-		if (ext == "vert")	
-			type = VERTEX_SHADER;				
+		if (ext == "vert")
+			type = ShaderType::VERTEX_SHADER;
 		else if (ext == "frag")
-			type = FRAGMENT_SHADER;
+			type = ShaderType::FRAGMENT_SHADER;
 		else
 			return false;
 	}

@@ -60,7 +60,7 @@ bool App::Prepare()
 	mat->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(0.7f, 0.7f, 0.7f, 1.0f));
 	mat->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0.3f, 0.3f, 0.3f, 1.0f));
 	mat->SetParameter(PARAM_MATERIAL_SHININESS, 20.0f);
-	mat->SetTexture(TEXTURE_UNIT_DIFFUSE, engine->GetResourceCache()->GetResource<Texture>("earthmap1k.jpg"));
+	mat->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>("earthmap1k.jpg"));
 	mat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("./Techniques/DiffuseMap.xml"));
 
 	Node *n = root->CreateChild("Earth");

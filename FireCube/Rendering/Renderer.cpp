@@ -304,7 +304,7 @@ void Renderer::UseMaterial(Material *material)
 	}
 
 	Texture **textures = material->GetTextures();
-	for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
+	for (int i = 0; i < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS); ++i)
 	{
 		TextureUnit textureUnit = (TextureUnit)i;
 		if (textures[i])

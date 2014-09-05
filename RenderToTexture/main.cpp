@@ -64,7 +64,7 @@ bool App::Prepare()
 	scene.SetAmbientColor(vec3(1, 1, 1));
 	scene.SetFogColor(vec3(0.4f, 0.4f, 0.4f));	
 	
-	material->SetTexture(TEXTURE_UNIT_DIFFUSE, renderSurface->GetLinkedTexture());
+	material->SetTexture(TextureUnit::DIFFUSE, renderSurface->GetLinkedTexture());
 		
     return true;
 }

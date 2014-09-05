@@ -96,7 +96,7 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 				continue;
 
 			TextureUnit textureUnit = Material::ParseTextureUnitName(textureUnitName);
-			textures[textureUnit] = StringHash(textureName);			
+			textures[static_cast<int>(textureUnit)] = StringHash(textureName);			
 		}
 	}
 

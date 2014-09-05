@@ -80,9 +80,9 @@ bool Shader::Create(ShaderType type, const std::string &source)
 	if (objectId != 0)
 		glDeleteShader(objectId);
 
-	if (type == VERTEX_SHADER)
+	if (type == ShaderType::VERTEX_SHADER)
 		glShaderType = GL_VERTEX_SHADER;
-	else if (type == FRAGMENT_SHADER)
+	else if (type == ShaderType::FRAGMENT_SHADER)
 		glShaderType = GL_FRAGMENT_SHADER;
 	else
 		return false;

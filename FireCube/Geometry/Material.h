@@ -77,7 +77,7 @@ private:
 	
 	
 	std::string name;	
-	Texture *textures[MAX_TEXTURE_UNITS];	
+	Texture *textures[static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS)];
 	Technique *technique;
 	std::map<StringHash, Variant> parameters;
 };

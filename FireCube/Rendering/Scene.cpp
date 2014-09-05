@@ -204,7 +204,7 @@ void Scene::SetRenderTargets(Renderer *renderer, const RenderPathCommand &comman
 
 void Scene::SetTextures(Renderer *renderer, const RenderPathCommand &command)
 {
-	for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
+	for (int i = 0; i < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS); ++i)
 	{
 		RenderSurface *renderTarget = command.renderPath->GetRenderTarget(command.textures[i]);
 		if (renderTarget)

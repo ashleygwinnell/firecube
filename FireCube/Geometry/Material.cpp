@@ -9,7 +9,7 @@
 using namespace FireCube;
 Material::Material(Engine *engine) : Resource(engine)
 {
-	for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
+	for (int i = 0; i < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS); ++i)
 		textures[i] = nullptr;
 }
 
@@ -55,7 +55,7 @@ bool Material::Load(const std::string &filename)
 				continue;		
 
 			TextureUnit textureUnit = ParseTextureUnitName(textureUnitName);
-			textures[textureUnit] = engine->GetResourceCache()->GetResource<Texture>(textureName);
+			textures[static_cast<int>(textureUnit)] = engine->GetResourceCache()->GetResource<Texture>(textureName);
 		}
 	}
 	return true;
@@ -75,7 +75,7 @@ Material *Material::Clone()
 {
 	Material *ret = new Material(engine);	
 	ret->name = name;
-	for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
+	for (int i = 0; i < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS); ++i)
 		ret->textures[i] = textures[i];
 	ret->technique = technique;
 	ret->parameters = parameters;	
@@ -144,25 +144,25 @@ Texture **Material::GetTextures()
 
 void Material::SetTexture(TextureUnit textureUnit, Texture *texture)
 {
-	if (textureUnit < MAX_TEXTURE_UNITS)
-		textures[textureUnit] = texture;
+	if (static_cast<int>(textureUnit) < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS))
+		textures[static_cast<int>(textureUnit)] = texture;
 }
 
 Texture *Material::GetTexture(TextureUnit textureUnit) const
 {
-	if (textureUnit < MAX_TEXTURE_UNITS)
-		return textures[textureUnit];
+	if (static_cast<int>(textureUnit) < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS))
+		return textures[static_cast<int>(textureUnit)];
 	else
 		return nullptr;
 }
 
 TextureUnit Material::ParseTextureUnitName(const std::string &name)
 {
-	TextureUnit ret = TEXTURE_UNIT_DIFFUSE;
+	TextureUnit ret = TextureUnit::DIFFUSE;
 	if (name == "diffuse")
-		ret = TEXTURE_UNIT_DIFFUSE;
+		ret = TextureUnit::DIFFUSE;
 	else if (name == "normal")
-		ret = TEXTURE_UNIT_NORMAL;
+		ret = TextureUnit::NORMAL;
 
 	return ret;
 }

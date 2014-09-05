@@ -1524,7 +1524,7 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 				if (effect.diffuseSampler.name != "")
 				{		
 					fmat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
-					fmat->SetTexture(TEXTURE_UNIT_DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(GetTextureFileNameFromSampler(effect, effect.diffuseSampler)));
+					fmat->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(GetTextureFileNameFromSampler(effect, effect.diffuseSampler)));
 				}
 				else
 					fmat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
