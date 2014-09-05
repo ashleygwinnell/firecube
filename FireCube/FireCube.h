@@ -30,6 +30,7 @@
 #include "Rendering/DebugRenderer.h"
 #include "Rendering/RenderPath.h"
 #include "Rendering/RenderSurface.h"
+#include "Rendering/ParticleEmitter.h"
 #include "Application/Input.h"
 #include "Application/Application.h"
 #include "Scene/Light.h"

@@ -52,6 +52,7 @@
     <ClCompile Include="Rendering\DebugRenderer.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\Octree.cpp" />
+    <ClCompile Include="Rendering\ParticleEmitter.cpp" />
     <ClCompile Include="Rendering\RenderingTypes.cpp" />
     <ClCompile Include="Rendering\RenderPath.cpp" />
     <ClCompile Include="Rendering\RenderSurface.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="Rendering\DebugRenderer.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />
     <ClInclude Include="Rendering\Octree.h" />
+    <ClInclude Include="Rendering\ParticleEmitter.h" />
     <ClInclude Include="Rendering\RenderingTypes.h" />
     <ClInclude Include="Rendering\RenderPath.h" />
     <ClInclude Include="Rendering\RenderSurface.h" />

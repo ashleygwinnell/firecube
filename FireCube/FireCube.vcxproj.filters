@@ -246,6 +246,9 @@
     <ClCompile Include="Scene\OrbitCamera.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\ParticleEmitter.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -446,6 +449,9 @@
     </ClInclude>
     <ClInclude Include="Scene\OrbitCamera.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\ParticleEmitter.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

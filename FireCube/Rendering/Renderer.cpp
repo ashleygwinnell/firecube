@@ -78,6 +78,8 @@ void Renderer::Initialize()
 	textFragmentShader = textFragmentShaderTemplate->GenerateShader("");
 
 	currentRenderPath = engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/Forward.xml");
+
+	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	blendMode = BlendMode::REPLACE;
 	depthWrite = true;
 }

@@ -39,6 +39,10 @@ bool App::Prepare()
 	staticModel->CreateFromMesh(resourceCache->GetResource<Mesh>("scene.3ds"));
 	childNode->Scale(vec3(0.05f));
 	childNode->Move(vec3(0, 0.0251f, 0));
+
+	childNode = root->CreateChild("Particles");
+	childNode->CreateComponent<ParticleEmitter>();
+
 	childNode = root->CreateChild("Terrain");	
 	Terrain *terrain = childNode->CreateComponent<Terrain>();
 	childNode->Scale(vec3(0.05f));
@@ -58,7 +62,7 @@ bool App::Prepare()
 	fontFace = resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18);
 
 	scene.SetFogColor(vec3(44, 80, 222) / 255.0f);
-	renderer->SetCurrentRenderPath(resourceCache->GetResource<RenderPath>("RenderPaths/ForwardGrayscale.xml"));
+	//renderer->SetCurrentRenderPath(resourceCache->GetResource<RenderPath>("RenderPaths/ForwardGrayscale.xml"));
 	return true;
 }
 void App::Update(float t)
