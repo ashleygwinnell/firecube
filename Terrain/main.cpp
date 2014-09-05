@@ -64,7 +64,7 @@ bool App::Prepare()
 		
 	Node *lightNode = root->CreateChild("Light");
 	Light *light = lightNode->CreateComponent<Light>();
-	light->SetLightType(FireCube::DIRECTIONAL);
+	light->SetType(FireCube::LightType::DIRECTIONAL);
 	light->SetDiffuseColor(vec4(1.0f, 1.0f, 1.0f, 1));
 	light->SetSpecularColor(vec4(0, 0, 0, 0));
 	lightNode->Rotate(vec3(1, 1, 0));

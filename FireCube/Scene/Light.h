@@ -12,7 +12,7 @@ class Scene;
 /**
 * Specifies the type of a light.
 */
-enum LightType
+enum class LightType
 {
 	DIRECTIONAL, POINT, SPOT
 };
@@ -28,13 +28,13 @@ public:
 	* Sets the light type.
 	* @param type The new light type.
 	*/
-	void SetLightType(LightType type);
+	void SetType(LightType type);
 
 	/**
 	* Gets the type of this light.
 	* @return The type of this light.
 	*/
-	LightType GetLightType() const;
+	LightType GetType() const;
 
 	/**
 	* Sets the diffuse color of this light.

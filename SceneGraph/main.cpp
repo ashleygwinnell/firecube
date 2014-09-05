@@ -44,7 +44,7 @@ bool App::Prepare()
 	Light *light = lightNode->CreateComponent<Light>();		
 	light->SetDiffuseColor(vec4(1.0f, 1.0f, 1.0f, 1));
 	light->SetSpecularColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	light->SetLightType(FireCube::POINT);
+	light->SetType(FireCube::LightType::POINT);
 	lightNode->Move(vec3(0, 0, 4.0f));	
 	StaticModel *staticModel = lightNode->CreateComponent<StaticModel>();
 	lightMarker = new Mesh(engine);

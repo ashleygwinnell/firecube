@@ -132,11 +132,11 @@ void Scene::UpdateLightQueues()
 	{
 		unsigned int shaderPermutation = 0;
 
-		if (lights[i]->GetLightType() == DIRECTIONAL)
+		if (lights[i]->GetType() == LightType::DIRECTIONAL)
 			shaderPermutation = SP_DIRECTIONAL_LIGHT;
-		else if (lights[i]->GetLightType() == POINT)
+		else if (lights[i]->GetType() == LightType::POINT)
 			shaderPermutation = SP_POINT_LIGHT;
-		else if (lights[i]->GetLightType() == SPOT)
+		else if (lights[i]->GetType() == LightType::SPOT)
 			shaderPermutation = SP_SPOT_LIGHT;
 		if (fogEnabled)
 			shaderPermutation += MAX_SHADER_PERMUTATIONS;
@@ -150,7 +150,7 @@ void Scene::UpdateLightQueues()
 				for (auto &renderablePart : renderable->GetRenderableParts())
 				{
 					// TODO: Need to cull spot lights using frustum
-					if (lights[i]->GetLightType() == POINT || lights[i]->GetLightType() == SPOT)
+					if (lights[i]->GetType() == LightType::POINT || lights[i]->GetType() == LightType::SPOT)
 					{
 						BoundingBox bbox = renderable->GetWorldBoundingBox();
 						float l = bbox.GetSize().Length();

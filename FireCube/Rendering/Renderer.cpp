@@ -405,15 +405,15 @@ void Renderer::UseLight(Light *light)
 
 	currentLight = light;
 	mat4 lightMatrix = mat4::IDENTITY;
-	if (light->GetLightType() == DIRECTIONAL)
+	if (light->GetType() == LightType::DIRECTIONAL)
 	{
 		currentProgram->SetUniform(PARAM_LIGHT_DIR, vec3(0, 0, 1).TransformNormal(light->GetNode()->GetWorldTransformation()));
 	}
-	else if (light->GetLightType() == POINT)
+	else if (light->GetType() == LightType::POINT)
 	{
 		currentProgram->SetUniform(PARAM_LIGHT_POS, vec4(light->GetNode()->GetWorldTransformation().GetTranslation(), light->GetRange()));
 	}	
-	else if (light->GetLightType() == SPOT)
+	else if (light->GetType() == LightType::SPOT)
 	{
 		currentProgram->SetUniform(PARAM_LIGHT_POS, vec4(light->GetNode()->GetWorldTransformation().GetTranslation(), light->GetRange()));
 		currentProgram->SetUniform(PARAM_LIGHT_SPOT_DIR, vec4(vec3(0, 0, 1).TransformNormal(light->GetNode()->GetWorldTransformation()), light->GetSpotCutOff()));		
