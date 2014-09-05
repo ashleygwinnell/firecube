@@ -16,7 +16,7 @@ bool App::Prepare()
     Filesystem::AddSearchPath("../Assets/Textures");
     Filesystem::AddSearchPath("../Assets/Models");
 	GetInputManager().AddInputListener(this);
-	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
+	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
     SetTitle("RenderToTexture Example");
     fontFace = resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(10);
 

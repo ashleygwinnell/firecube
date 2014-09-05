@@ -17,7 +17,7 @@ namespace FireCube
 * The type of a mapping.
 * <br>An action happens upon a key press, while a state is on while the key is down.
 */
-enum InputMappingType
+enum class InputMappingType
 {
 	ACTION, STATE
 };
@@ -25,16 +25,16 @@ enum InputMappingType
 /**
 * List of keys for mapping.
 */
-enum Key
+enum class Key
 {
-	KEY_A, KEY_B, KEY_C, KEY_D, KEY_E, KEY_F, KEY_G, KEY_H, KEY_I,
-	KEY_J, KEY_K, KEY_L, KEY_M, KEY_N, KEY_O, KEY_P, KEY_Q, KEY_R,
-	KEY_S, KEY_T, KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z,
-	KEY_0, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9,
-	KEY_ESCAPE, KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN,
-	KEY_LEFT_SHIFT, KEY_RIGHT_SHIFT, KEY_LEFT_CTRL, KEY_RIGHT_CTRL, KEY_LEFT_ALT, KEY_RIGHT_ALT,
-	KEY_TAB, KEY_SPACE,
-	KEY_MOUSE_LEFT_BUTTON, KEY_MOUSE_MIDDLE_BUTTON, KEY_MOUSE_RIGHT_BUTTON
+	A, B, C, D, E, F, G, H, I,
+	J, K, L, M, N, O, P, Q, R,
+	S, T, U, V, W, X, Y, Z,
+	NUM0, NUM1, NUM2, NUM3, NUM4, NUM5, NUM6, NUM7, NUM8, NUM9,
+	ESCAPE, LEFT, RIGHT, UP, DOWN,
+	LEFT_SHIFT, RIGHT_SHIFT, LEFT_CTRL, RIGHT_CTRL, LEFT_ALT, RIGHT_ALT,
+	TAB, SPACE,
+	MOUSE_LEFT_BUTTON, MOUSE_MIDDLE_BUTTON, MOUSE_RIGHT_BUTTON
 };
 
 /**

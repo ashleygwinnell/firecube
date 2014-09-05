@@ -30,7 +30,7 @@ bool App::Prepare()
 	Filesystem::AddSearchPath("../Assets/Models");
 	SetTitle("SceneGraph Test Application");
 	GetInputManager().AddInputListener(this);
-	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
+	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
 	fontFace = engine->GetResourceCache()->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18);	
 	
 	root = scene.GetRootNode();

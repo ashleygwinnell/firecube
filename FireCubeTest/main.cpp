@@ -24,7 +24,7 @@ bool App::Prepare()
 {	
 	SetTitle(std::string("FireCube Test Application"));
 	GetInputManager().AddInputListener(this);
-	GetInputManager().AddMapping(KEY_ESCAPE, ACTION, "Close");
+	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
 	
 	root = scene.GetRootNode();
 	Node *childNode = root->CreateChild("Camera");

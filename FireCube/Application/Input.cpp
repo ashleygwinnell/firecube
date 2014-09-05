@@ -101,20 +101,20 @@ void InputManager::RemoveMapping(AnalogInput analogInput, const std::string &nam
 
 void InputManager::SetRawKeyState(Key key, bool pressed, bool previouslyPressed, KeyModifier modifier)
 {
-	if (key == KEY_LEFT_CTRL || key == KEY_RIGHT_CTRL || key == KEY_LEFT_ALT || key == KEY_RIGHT_ALT || key == KEY_LEFT_SHIFT || key == KEY_RIGHT_SHIFT)
+	if (key == Key::LEFT_CTRL || key == Key::RIGHT_CTRL || key == Key::LEFT_ALT || key == Key::RIGHT_ALT || key == Key::LEFT_SHIFT || key == Key::RIGHT_SHIFT)
 	{
 		KeyModifier modifier = MODIFIER_NONE;							
-		if (key == KEY_LEFT_CTRL)
+		if (key == Key::LEFT_CTRL)
 			modifier = MODIFIER_LEFT_CTRL;
-		else if (key == KEY_RIGHT_CTRL)
+		else if (key == Key::RIGHT_CTRL)
 			modifier = MODIFIER_RIGHT_CTRL;
-		else if (key == KEY_LEFT_ALT)
+		else if (key == Key::LEFT_ALT)
 			modifier = MODIFIER_LEFT_ALT;
-		else if (key == KEY_RIGHT_ALT)
+		else if (key == Key::RIGHT_ALT)
 			modifier = MODIFIER_RIGHT_ALT;
-		else if (key == KEY_LEFT_SHIFT)
+		else if (key == Key::LEFT_SHIFT)
 			modifier = MODIFIER_LEFT_SHIFT;
-		else if (key == KEY_RIGHT_SHIFT)
+		else if (key == Key::RIGHT_SHIFT)
 			modifier = MODIFIER_RIGHT_SHIFT;
 
 		// Iterate over all pressed keys
@@ -129,13 +129,13 @@ void InputManager::SetRawKeyState(Key key, bool pressed, bool previouslyPressed,
 					// If a modifier key which is required to an active state is released remove this state
 					if (!pressed)
 					{			
-						if (keyMapping.inputMappingType == STATE && ((keyMapping.modifier == MODIFIER_NONE && modifier != MODIFIER_NONE) || ((keyMapping.modifier & modifier) != 0)))
+						if (keyMapping.inputMappingType == InputMappingType::STATE && ((keyMapping.modifier == MODIFIER_NONE && modifier != MODIFIER_NONE) || ((keyMapping.modifier & modifier) != 0)))
 							mappedInput.states.erase(keyMapping.actionName);
 					}
 					else
 					{
 						// If a modifier key which is required to an active state is pressed while the main key is already down, add this state
-						if (keyMapping.inputMappingType == STATE && (keyMapping.modifier != MODIFIER_NONE) && (keyMapping.modifier != MODIFIER_ANY) && ((keyMapping.modifier & modifier) != 0))
+						if (keyMapping.inputMappingType == InputMappingType::STATE && (keyMapping.modifier != MODIFIER_NONE) && (keyMapping.modifier != MODIFIER_ANY) && ((keyMapping.modifier & modifier) != 0))
 							mappedInput.states.insert(keyMapping.actionName);
 					}
 				}
@@ -160,11 +160,11 @@ void InputManager::SetRawKeyState(Key key, bool pressed, bool previouslyPressed,
 	for (unsigned int j = 0; j < i->second.size(); j++)
 	{
 		InputMapping &keyMapping = i->second[j];
-		if (keyMapping.inputMappingType == ACTION && ((keyMapping.modifier == MODIFIER_ANY) || (keyMapping.modifier == MODIFIER_NONE && modifier == MODIFIER_NONE) || ((keyMapping.modifier & modifier) != 0))  && !pressed && previouslyPressed)
+		if (keyMapping.inputMappingType ==  InputMappingType::ACTION && ((keyMapping.modifier == MODIFIER_ANY) || (keyMapping.modifier == MODIFIER_NONE && modifier == MODIFIER_NONE) || ((keyMapping.modifier & modifier) != 0))  && !pressed && previouslyPressed)
 			mappedInput.actions.insert(keyMapping.actionName);
-		else if (keyMapping.inputMappingType == STATE && ((keyMapping.modifier == MODIFIER_ANY) || (keyMapping.modifier == MODIFIER_NONE && modifier == MODIFIER_NONE) || ((keyMapping.modifier & modifier) != 0)) && pressed)
+		else if (keyMapping.inputMappingType == InputMappingType::STATE && ((keyMapping.modifier == MODIFIER_ANY) || (keyMapping.modifier == MODIFIER_NONE && modifier == MODIFIER_NONE) || ((keyMapping.modifier & modifier) != 0)) && pressed)
 			mappedInput.states.insert(keyMapping.actionName);
-		else if (keyMapping.inputMappingType == STATE && !pressed)
+		else if (keyMapping.inputMappingType == InputMappingType::STATE && !pressed)
 			mappedInput.states.erase(keyMapping.actionName);
 	}	
 }

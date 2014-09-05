@@ -30,8 +30,8 @@ OrbitCamera::OrbitCamera(Engine *engine, InputManager &inputManager) : Camera(en
 void OrbitCamera::RegisterWithInputManager(InputManager &inputManager)
 {
 	inputManager.AddInputListener(this);
-	inputManager.AddMapping(KEY_MOUSE_LEFT_BUTTON, STATE, "NodeObserverCamera_Rotate", MODIFIER_NONE);
-	inputManager.AddMapping(KEY_MOUSE_MIDDLE_BUTTON, STATE, "NodeObserverCamera_Zoom", MODIFIER_NONE);
+	inputManager.AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "NodeObserverCamera_Rotate", MODIFIER_NONE);
+	inputManager.AddMapping(Key::MOUSE_MIDDLE_BUTTON, InputMappingType::STATE, "NodeObserverCamera_Zoom", MODIFIER_NONE);
 	inputManager.AddMapping(MOUSE_AXIS_X_RELATIVE, "NodeObserverCamera_MouseX");
 	inputManager.AddMapping(MOUSE_AXIS_Y_RELATIVE, "NodeObserverCamera_MouseY");
 	inputManager.AddMapping(MOUSE_WHEEL_Y_RELATIVE, "NodeObserverCamera_MouseWheelY");
