@@ -54,10 +54,10 @@ public:
 
 	/**
 	* Sets the texture filtering.
-	* @param minFilter The minifying filter.
+	* @param filter The filter.
 	* @param magFilter The magnification filter.
 	*/
-	void SetFiltering(TextureFilter minFilter, TextureFilter magFilter);
+	void SetFiltering(TextureFilter filter);
 	
 	int GetWidth() const;
 	int GetHeight() const;
@@ -65,7 +65,7 @@ public:
 	void SetWidth(int width);
 	void SetHeight(int height);
 private:		
-	TextureFilter minFilter, magFilter;
+	TextureFilter filter;
 
 	int width, height;
 };

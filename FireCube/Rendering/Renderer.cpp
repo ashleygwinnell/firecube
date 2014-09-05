@@ -110,16 +110,18 @@ void Renderer::UseTexture(unsigned int unit, const Texture *texture)
 	
 	GLint min = GL_LINEAR_MIPMAP_LINEAR, mag = GL_LINEAR;
 
-	if (texture->minFilter == TextureFilter::NEAREST)
+	if (texture->filter == TextureFilter::NEAREST)
 		min = GL_NEAREST;
-	else if (texture->minFilter == TextureFilter::LINEAR)
+	else if (texture->filter == TextureFilter::LINEAR)
 		min = GL_LINEAR;
-	else if (texture->minFilter == TextureFilter::MIPMAP)
+	else if (texture->filter == TextureFilter::MIPMAP)
 		min = GL_LINEAR_MIPMAP_LINEAR;
 
-	if (texture->magFilter == TextureFilter::NEAREST)
+	if (texture->filter == TextureFilter::NEAREST)
 		mag = GL_NEAREST;
-	else if (texture->magFilter == TextureFilter::LINEAR)
+	else if (texture->filter == TextureFilter::LINEAR)
+		mag = GL_LINEAR;
+	else if (texture->filter == TextureFilter::MIPMAP)
 		mag = GL_LINEAR;
 
 	glSamplerParameteri(textureSampler[unit], GL_TEXTURE_MAG_FILTER, mag);
@@ -582,7 +584,7 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 		Texture *texture = new Texture(engine);
 		texture->SetWidth(width);
 		texture->SetHeight(height);
-		texture->SetFiltering(TextureFilter::MIPMAP, TextureFilter::LINEAR);
+		texture->SetFiltering(TextureFilter::MIPMAP);
 		UseTexture(0, texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
