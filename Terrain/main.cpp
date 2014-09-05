@@ -31,10 +31,10 @@ bool App::Prepare()
 	GetInputManager().AddMapping(Key::S, InputMappingType::STATE, "Backward");
 	GetInputManager().AddMapping(Key::A, InputMappingType::STATE, "Left");
 	GetInputManager().AddMapping(Key::D, InputMappingType::STATE, "Right");
-	GetInputManager().AddMapping(Key::W, InputMappingType::STATE, "ForwardFast", MODIFIER_SHIFT);
-	GetInputManager().AddMapping(Key::S, InputMappingType::STATE, "BackwardFast", MODIFIER_SHIFT);
-	GetInputManager().AddMapping(Key::A, InputMappingType::STATE, "LeftFast", MODIFIER_SHIFT);
-	GetInputManager().AddMapping(Key::D, InputMappingType::STATE, "RightFast", MODIFIER_SHIFT);
+	GetInputManager().AddMapping(Key::W, InputMappingType::STATE, "ForwardFast", KeyModifier::SHIFT);
+	GetInputManager().AddMapping(Key::S, InputMappingType::STATE, "BackwardFast", KeyModifier::SHIFT);
+	GetInputManager().AddMapping(Key::A, InputMappingType::STATE, "LeftFast", KeyModifier::SHIFT);
+	GetInputManager().AddMapping(Key::D, InputMappingType::STATE, "RightFast", KeyModifier::SHIFT);
 	GetInputManager().AddMapping(Key::LEFT, InputMappingType::STATE, "RotateLeft");
 	GetInputManager().AddMapping(Key::RIGHT, InputMappingType::STATE, "RotateRight");
 	GetInputManager().AddMapping(Key::UP, InputMappingType::STATE, "RotateUp");

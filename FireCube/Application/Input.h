@@ -40,20 +40,23 @@ enum class Key
 /**
 * Key modifiers: Shift, Control, Alt.
 */
-enum KeyModifier
+enum class KeyModifier
 {
-	MODIFIER_NONE = 0,
-	MODIFIER_LEFT_SHIFT = 1,
-	MODIFIER_RIGHT_SHIFT = 2,
-	MODIFIER_SHIFT = 3,
-	MODIFIER_LEFT_CTRL = 4,
-	MODIFIER_RIGHT_CTRL = 8,
-	MODIFIER_CTRL = 12,
-	MODIFIER_LEFT_ALT = 16,
-	MODIFIER_RIGHT_ALT = 32,
-	MODIFIER_ALT = 48,
-	MODIFIER_ANY = 64
+	NONE = 0,
+	LEFT_SHIFT = 1,
+	RIGHT_SHIFT = 2,
+	SHIFT = 3,
+	LEFT_CTRL = 4,
+	RIGHT_CTRL = 8,
+	CTRL = 12,
+	LEFT_ALT = 16,
+	RIGHT_ALT = 32,
+	ALT = 48,
+	ANY = 64
 };
+
+KeyModifier operator | (const KeyModifier &lhs, const KeyModifier &rhs);
+KeyModifier operator & (const KeyModifier &lhs, const KeyModifier &rhs);
 
 /**
 * Analog mappings.
@@ -144,7 +147,7 @@ public:
 	* @param actionName the name of the mapping.
 	* @param modifier A modifier for the mapping.
 	*/
-	void AddMapping(Key key, InputMappingType inputMappingType, const std::string &actionName, KeyModifier modifier = MODIFIER_ANY);
+	void AddMapping(Key key, InputMappingType inputMappingType, const std::string &actionName, KeyModifier modifier = KeyModifier::ANY);
 
 	/**
 	* Adds an analog mapping.
@@ -160,7 +163,7 @@ public:
 	* @param actionName the name of the mapping.
 	* @param modifier A modifier for the mapping.
 	*/
-	void RemoveMapping(Key key, InputMappingType inputMappingType, const std::string &actionName, KeyModifier modifier = MODIFIER_ANY);
+	void RemoveMapping(Key key, InputMappingType inputMappingType, const std::string &actionName, KeyModifier modifier = KeyModifier::ANY);
 
 	/**
 	* Removes an analog mapping.
@@ -176,7 +179,7 @@ public:
 	* @param previouslyPressed Specifies whether the key was previously pressed.
 	* @param modifier Specifies the key modifiers.
 	*/
-	void SetRawKeyState(Key key, bool pressed, bool previouslyPressed, KeyModifier modifier = MODIFIER_ANY);
+	void SetRawKeyState(Key key, bool pressed, bool previouslyPressed, KeyModifier modifier = KeyModifier::ANY);
 
 	/**
 	* This function is used internally to provide analog input from the underlying input system(OS).

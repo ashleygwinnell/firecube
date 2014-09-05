@@ -132,13 +132,13 @@ void Application::Run()
 					keyState[event.key.keysym.sym] = true;
 					SDL_Keymod keyMod = SDL_GetModState();
 					// Check for key modifiers
-					KeyModifier modifier = MODIFIER_NONE;
-					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
-					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? MODIFIER_RIGHT_SHIFT : MODIFIER_NONE));
-					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? MODIFIER_LEFT_CTRL : MODIFIER_NONE));
-					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
-					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
-					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
+					KeyModifier modifier = KeyModifier::NONE;
+					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? KeyModifier::LEFT_SHIFT : KeyModifier::NONE));
+					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? KeyModifier::RIGHT_SHIFT : KeyModifier::NONE));
+					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? KeyModifier::LEFT_CTRL : KeyModifier::NONE));
+					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? KeyModifier::RIGHT_CTRL : KeyModifier::NONE));
+					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? KeyModifier::LEFT_ALT : KeyModifier::NONE));
+					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? KeyModifier::RIGHT_ALT : KeyModifier::NONE));
 					// Update the input manager's state
 					inputManager.SetRawKeyState(k->second, true, previouslyPressed, modifier);
 					
@@ -148,13 +148,13 @@ void Application::Run()
 			{
 				// Check for key modifiers
 				SDL_Keymod keyMod = SDL_GetModState();
-				KeyModifier modifier = MODIFIER_NONE;
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? MODIFIER_RIGHT_SHIFT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? MODIFIER_LEFT_CTRL : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
+				KeyModifier modifier = KeyModifier::NONE;
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? KeyModifier::LEFT_SHIFT : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? KeyModifier::RIGHT_SHIFT : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? KeyModifier::LEFT_CTRL : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? KeyModifier::RIGHT_CTRL : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? KeyModifier::LEFT_ALT : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? KeyModifier::RIGHT_ALT : KeyModifier::NONE));
 				// Get the mapping between SDL key code and the engine's key enum
 				std::map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
 				if (k != keyMap.end())
@@ -169,13 +169,13 @@ void Application::Run()
 			{					
 				// Check for key modifiers
 				SDL_Keymod keyMod = SDL_GetModState();
-				KeyModifier modifier = MODIFIER_NONE;
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? MODIFIER_RIGHT_SHIFT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? MODIFIER_LEFT_CTRL : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
+				KeyModifier modifier = KeyModifier::NONE;
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? KeyModifier::LEFT_SHIFT : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? KeyModifier::RIGHT_SHIFT : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? KeyModifier::LEFT_CTRL : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? KeyModifier::RIGHT_CTRL : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? KeyModifier::LEFT_ALT : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? KeyModifier::RIGHT_ALT : KeyModifier::NONE));
 				// Get the mapping between SDL key code and the engine's key enum
 				std::map<int, Key>::iterator k = mouseMap.find(event.button.button);
 				if (k != mouseMap.end())
@@ -192,13 +192,13 @@ void Application::Run()
 			{
 				// Check for key modifiers
 				SDL_Keymod keyMod = SDL_GetModState();
-				KeyModifier modifier = MODIFIER_NONE;
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? MODIFIER_LEFT_SHIFT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? MODIFIER_RIGHT_SHIFT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? MODIFIER_LEFT_CTRL : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? MODIFIER_RIGHT_CTRL : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? MODIFIER_LEFT_ALT : MODIFIER_NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? MODIFIER_RIGHT_ALT : MODIFIER_NONE));
+				KeyModifier modifier = KeyModifier::NONE;
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? KeyModifier::LEFT_SHIFT : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? KeyModifier::RIGHT_SHIFT : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? KeyModifier::LEFT_CTRL : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? KeyModifier::RIGHT_CTRL : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? KeyModifier::LEFT_ALT : KeyModifier::NONE));
+				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? KeyModifier::RIGHT_ALT : KeyModifier::NONE));
 				// Get the mapping between SDL key code and the engine's key enum
 				std::map<int, Key>::iterator k = mouseMap.find(event.button.button);
 				if (k != mouseMap.end())
