@@ -5,6 +5,7 @@
 #include "Utils/Filesystem.h"
 #include "Core/Engine.h"
 #include "Core/ResourceCache.h"
+#include "Core/Variant.h"
 
 using namespace FireCube;
 
@@ -54,7 +55,7 @@ void Pass::GenerateAllShaderPermutations()
 	if (generatedVertexShaders.empty() == false && generatedFragmentShaders.empty() == false)
 		return;
 
-	if (name == "base")
+	if (isBase)
 	{
 		generatedVertexShaders.resize(2);
 		generatedFragmentShaders.resize(2);
@@ -91,6 +92,26 @@ Shader *Pass::GetGeneratedFragmentShader(unsigned int index)
 	return generatedFragmentShaders[index];
 }
 
+void Pass::SetBlendMode(BlendMode blendMode)
+{
+	this->blendMode = blendMode;
+}
+
+BlendMode Pass::GetBlendMode() const
+{
+	return blendMode;
+}
+
+void Pass::SetDepthWrite(bool depthWrite)
+{
+	this->depthWrite = depthWrite;
+}
+
+bool Pass::GetDepthWrite() const
+{
+	return depthWrite;
+}
+
 Technique::Technique(Engine *engine) : Resource(engine)
 {
 	
@@ -120,7 +141,19 @@ bool Technique::Load(const std::string &filename)
 			std::string passName = element->Attribute("name");
 			std::string vertexShaderTemplate = element->Attribute("vs");
 			std::string fragmentShaderTemplate = element->Attribute("fs");
-			std::string shaderDefines = element->Attribute("defines");
+			
+			const char *shaderDefinesStr = element->Attribute("defines");
+			std::string shaderDefines = shaderDefinesStr == nullptr ? "" : shaderDefinesStr;
+			
+			const char *blendStr = element->Attribute("blend");
+			std::string blendMode = blendStr == nullptr ? "replace" : blendStr;
+
+			const char *isBaseStr = element->Attribute("is_base");
+			bool isBase = isBaseStr ? Variant::FromString(isBaseStr).GetBool() : (passName == "base" || passName == "alpha");
+
+			const char *depthWriteStr = element->Attribute("depth_write");
+			bool depthWrite = depthWriteStr ? Variant::FromString(depthWriteStr).GetBool() : true;
+			
 			if (passName.empty() || vertexShaderTemplate.empty() || fragmentShaderTemplate.empty())
 				continue;			
 			Pass *pass = new Pass();
@@ -128,6 +161,9 @@ bool Technique::Load(const std::string &filename)
 			pass->SetVertexShaderTemplate(engine->GetResourceCache()->GetResource<ShaderTemplate>(vertexShaderTemplate));
 			pass->SetFragmentShaderTemplate(engine->GetResourceCache()->GetResource<ShaderTemplate>(fragmentShaderTemplate));
 			pass->SetShaderDefines(shaderDefines);
+			pass->SetBlendMode(Technique::GetBlendModeFromString(blendMode));
+			pass->SetIsBase(isBase);
+			pass->SetDepthWrite(depthWrite);
 			passes[StringHash(passName)] = pass;
 		}
 	}
@@ -140,4 +176,23 @@ Pass *Technique::GetPass(const StringHash &nameHash)
 	if (i != passes.end())
 		return i->second;
 	return nullptr;
+}
+
+BlendMode Technique::GetBlendModeFromString(const std::string &str)
+{
+	if (str == "replace")
+	{
+		return BlendMode::REPLACE;
+	}
+	else if (str == "add")
+	{
+		return BlendMode::ADD;
+	}
+
+	return BlendMode::REPLACE;
+}
+
+void Pass::SetIsBase(bool isBase)
+{
+	this->isBase = isBase;
 }

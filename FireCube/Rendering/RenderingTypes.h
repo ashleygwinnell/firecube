@@ -37,6 +37,11 @@ enum RenderSurfaceType
 	DEPTH
 };
 
+enum class BlendMode
+{
+	REPLACE, ADD
+};
+
 extern StringHash PARAM_MATERIAL_AMBIENT;
 extern StringHash PARAM_MATERIAL_DIFFUSE;
 extern StringHash PARAM_MATERIAL_SPECULAR;

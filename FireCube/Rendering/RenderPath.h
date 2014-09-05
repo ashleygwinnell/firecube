@@ -33,8 +33,9 @@ public:
 	vec3 clearColor;
 	StringHash output;
 	StringHash textures[MAX_TEXTURE_UNITS];
+	StringHash pass;
 	Shader *vertexShader;
-	Shader *fragmentShader;
+	Shader *fragmentShader;	
 };
 
 class FIRECUBE_API RenderSurfaceDescriptor

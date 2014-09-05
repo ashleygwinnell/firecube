@@ -16,7 +16,7 @@ class Renderer;
 
 class FIRECUBE_API Pass
 {
-public:
+public:	
 	void SetName(const std::string &name);
 	std::string GetName() const;
 	void SetShaderDefines(const std::string &shaderDefines);
@@ -27,6 +27,11 @@ public:
 	Shader *GetGeneratedVertexShader(unsigned int index);
 	Shader *GetGeneratedFragmentShader(unsigned int index);
 	void GenerateAllShaderPermutations();
+	void SetBlendMode(BlendMode blendMode);
+	BlendMode GetBlendMode() const;
+	void SetIsBase(bool isBase);
+	void SetDepthWrite(bool depthWrite);
+	bool GetDepthWrite() const;
 private:
 	std::string name;
 	ShaderTemplate *vertexShaderTemplate;
@@ -34,6 +39,9 @@ private:
 	std::string shaderDefines;
 	std::vector<Shader *> generatedVertexShaders;
 	std::vector<Shader *> generatedFragmentShaders;
+	BlendMode blendMode;
+	bool isBase;
+	bool depthWrite;
 };
 
 class FIRECUBE_API Technique : public Resource
@@ -45,6 +53,7 @@ public:
 	Pass *GetPass(const StringHash &nameHash);
 	bool Load(const std::string &filename);	
 private:
+	static BlendMode GetBlendModeFromString(const std::string &str);
 	std::map<StringHash, Pass *> passes;	
 	Renderer *renderer;
 };

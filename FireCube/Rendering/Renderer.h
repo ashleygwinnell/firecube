@@ -157,6 +157,9 @@ public:
 	int GetHeight() const;
 
 	SharedPtr<RenderSurface> GetRenderSurface(int width, int height, RenderSurfaceType type);
+
+	void SetBlendMode(BlendMode blendMode);
+	void SetDepthWrite(bool depthWrite);
 private:
 	
 
@@ -184,6 +187,8 @@ private:
 	bool fboDirty;
 	SharedPtr<RenderPath> currentRenderPath;
 	int width, height;
+	BlendMode blendMode;
+	bool depthWrite;
 };
 
 }

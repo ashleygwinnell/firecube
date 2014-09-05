@@ -78,6 +78,8 @@ void Renderer::Initialize()
 	textFragmentShader = textFragmentShaderTemplate->GenerateShader("");
 
 	currentRenderPath = engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/Forward.xml");
+	blendMode = BlendMode::REPLACE;
+	depthWrite = true;
 }
 
 void Renderer::Destroy()
@@ -591,4 +593,40 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 	}
 	renderSurfaces[key] = renderSurface;
 	return renderSurface;
+}
+
+void Renderer::SetBlendMode(BlendMode blendMode)
+{
+	if (this->blendMode == blendMode)
+	{
+		return;
+	}
+
+	this->blendMode = blendMode;
+
+
+
+	switch (blendMode)
+	{
+	case BlendMode::REPLACE:
+		glDisable(GL_BLEND);
+		break;
+	case BlendMode::ADD:
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
+		break;
+	default:
+		break;
+	}
+}
+
+void Renderer::SetDepthWrite(bool depthWrite)
+{
+	if (this->depthWrite == depthWrite)
+	{
+		return;
+	}
+
+	this->depthWrite = depthWrite;
+	glDepthMask(depthWrite);
 }

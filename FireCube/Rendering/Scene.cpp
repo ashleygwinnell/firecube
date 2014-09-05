@@ -226,7 +226,7 @@ void Scene::Render(Renderer *renderer)
 
 			baseQueue.Sort();
 			for (auto &renderJob : baseQueue.GetRenderJobs())
-			{
+			{				
 				Program *program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
 				program->SetUniform(PARAM_AMBIENT_COLOR, ambientColor);
 				if (fogEnabled)
@@ -246,6 +246,7 @@ void Scene::Render(Renderer *renderer)
 				// Set material properties if this geometry is different from the last one 
 
 				renderer->UseMaterial(renderJob.material);
+				renderer->SetBlendMode(renderJob.pass->GetBlendMode());
 				renderJob.geometry->Render();
 			}
 			break;
@@ -281,6 +282,7 @@ void Scene::Render(Renderer *renderer)
 					// Set material properties if this geometry is different from the last one 
 					renderer->UseMaterial(renderJob.material);
 					renderer->UseLight(light);
+					renderer->SetBlendMode(renderJob.pass->GetBlendMode());
 					renderJob.geometry->Render();
 				}
 			}

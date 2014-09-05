@@ -43,8 +43,7 @@ private:
 	Camera *camera;
 	std::vector<Renderable *> renderables;
 	std::vector<Light *> lights;
-	std::vector<LightQueue> lightQueues;
-	std::vector<std::string> scenePasses;
+	std::vector<LightQueue> lightQueues;	
 	RenderQueue baseQueue;
 	vec3 ambientColor;
 	bool fogEnabled;

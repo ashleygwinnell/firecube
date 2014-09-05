@@ -395,8 +395,7 @@ void mat4::GenerateOrthographic(float left, float right, float bottom, float top
 }
 
 void mat4::LookAt(vec3 pos, vec3 at, vec3 up)
-{
-	mat4 trans = mat4::IDENTITY;
+{	
 	vec3 f = at - pos;
 
 	up.Normalize();
@@ -428,9 +427,8 @@ void mat4::LookAt(vec3 pos, vec3 at, vec3 up)
 	m[7] = 0;
 	m[11] = 0;
 	m[15] = 1;
-
-	trans.Translate(-pos.x, -pos.y, -pos.z);
-	(*this) *= trans;
+	
+	this->Translate(pos * -1.0f);
 }
 
 vec3 mat4::ExtractEulerAngles() const

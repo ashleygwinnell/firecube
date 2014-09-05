@@ -39,9 +39,23 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 		break;
 
 	case COMMAND_BASEPASS:
+		{
+			const char *passNameStr = element->Attribute("pass");
+			if (passNameStr)
+			{
+				pass = passNameStr;
+			}
+		}
 		break;
 
 	case COMMAND_LIGHTPASS:
+		{
+			const char *passNameStr = element->Attribute("pass");
+			if (passNameStr)
+			{
+				pass = passNameStr;
+			}
+		}
 		break;
 
 	case COMMAND_QUAD:
