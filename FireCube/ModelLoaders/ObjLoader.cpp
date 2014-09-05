@@ -571,7 +571,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			vertexBuffer->LoadData(&vertexData[0], generatedVertices.size(), vertexAttributes, STATIC);			
 			indexBuffer->LoadData(&indexData[0], indexData.size(), STATIC);
 
-			geometry->SetPrimitiveType(TRIANGLES);
+			geometry->SetPrimitiveType(PrimitiveType::TRIANGLES);
 			geometry->SetPrimitiveCount(j->second.size());
 			geometry->Update();			
 		}
@@ -656,7 +656,7 @@ void ObjLoader::GenerateGeometries(Renderer *renderer)
 			material->SetParameter(PARAM_MATERIAL_SHININESS, 0);
 			material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
 			generatedMaterials.push_back(material);
-			geometry->SetPrimitiveType(TRIANGLES);
+			geometry->SetPrimitiveType(PrimitiveType::TRIANGLES);
 			geometry->SetPrimitiveCount(i->second.facesWithoutMaterial.size());
 			geometry->Update();
 		}

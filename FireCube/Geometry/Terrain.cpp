@@ -388,7 +388,7 @@ TerrainPatch::TerrainPatch(Engine *engine) : Renderable(engine)
 {
 	renderableParts.resize(1);
 	geometry = new Geometry(engine->GetRenderer());
-	geometry->SetPrimitiveType(TRIANGLES);
+	geometry->SetPrimitiveType(PrimitiveType::TRIANGLES);
 	renderableParts[0].geometry = geometry;
 }
 

@@ -36,7 +36,7 @@ class vec4;
 class mat3;
 class mat4;
 class Camera;
-enum PrimitiveType;
+enum class PrimitiveType;
 class VertexBuffer;
 class ShaderTemplate;
 class Light;

@@ -41,7 +41,7 @@ ParticleEmitter::ParticleEmitter(Engine *engine) : Renderable(engine)
 
 	geometry = new Geometry(engine->GetRenderer());
 	geometry->SetVertexBuffer(particleBuffers[0]);
-	geometry->SetPrimitiveType(POINTS);
+	geometry->SetPrimitiveType(PrimitiveType::POINTS);
 	geometry->SetPrimitiveCount(numberOfParticles);
 	geometry->Update();
 

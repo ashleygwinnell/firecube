@@ -190,7 +190,7 @@ Geometry *M3dsLoader::CreateGeometryOfMesh(Mesh &mesh, VertexBuffer *vertexBuffe
 						
 	indexBuffer->LoadData(&mesh.indices[0], mesh.indices.size(), STATIC);
 
-	geom->SetPrimitiveType(TRIANGLES);
+	geom->SetPrimitiveType(PrimitiveType::TRIANGLES);
 	geom->SetPrimitiveCount(mesh.indices.size() / 3);
 	geom->Update();		
 	return geom;

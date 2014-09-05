@@ -30,7 +30,7 @@ class Renderer;
 /**
 * Specifies the kind of primitives to render.
 */
-enum PrimitiveType
+enum class PrimitiveType
 {
 	POINTS, LINES, TRIANGLES, TRIANGLE_STRIP, QUADS, LINE_LOOP, LINE_STRIP, TRIANGLE_FAN
 };

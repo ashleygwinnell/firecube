@@ -83,7 +83,7 @@ void Document::GenerateNormals(float l)
 			facesCount += g->GetPrimitiveCount();
 		}
 		normalsGeometry = modelNode->CreateComponent<CustomGeometry>();
-		normalsGeometry->SetPrimitiveType(LINES);
+		normalsGeometry->SetPrimitiveType(PrimitiveType::LINES);
 		normalsGeometry->SetMaterial(gridMaterial);
 		for (auto buffer : buffers)
 		{
@@ -123,7 +123,7 @@ void Document::GenerateTangents(float l)
 			facesCount += g->GetPrimitiveCount();
 		}
 		tangentsGeometry = modelNode->CreateComponent<CustomGeometry>();
-		tangentsGeometry->SetPrimitiveType(LINES);
+		tangentsGeometry->SetPrimitiveType(PrimitiveType::LINES);
 		tangentsGeometry->SetMaterial(tangentsMaterial);
 		for (auto buffer : buffers)
 		{
@@ -187,7 +187,7 @@ void Document::CreateGrid(float size, DWORD numberOfCells)
 		gridGeometry->AddVertex(pos3);
 		gridGeometry->AddVertex(pos4);
 	}
-	gridGeometry->SetPrimitiveType(LINES);
+	gridGeometry->SetPrimitiveType(PrimitiveType::LINES);
 	gridGeometry->SetMaterial(gridMaterial);
 	gridGeometry->UpdateGeometry();
 }

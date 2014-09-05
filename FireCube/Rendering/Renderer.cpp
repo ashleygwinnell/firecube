@@ -203,7 +203,7 @@ void Renderer::RenderText(FontFace *fontFace, mat4 projectionMatrix, const vec3 
 	textVertexBuffer->LoadData(&vBuffer[0], numTris * 3, VertexAttributeType::POSITION | VertexAttributeType::TEXCOORD0, STREAM);
 	glBindVertexArray(textVao);
 	textVertexBuffer->ApplyAttributes();
-	RenderStream(TRIANGLES, numTris * 3);
+	RenderStream(PrimitiveType::TRIANGLES, numTris * 3);
 	glBindVertexArray(0);
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
@@ -214,28 +214,28 @@ void Renderer::RenderIndexStream(const PrimitiveType &primitiveType, unsigned in
 	GLenum glmode;
 	switch (primitiveType)
 	{
-	case POINTS:
+	case PrimitiveType::POINTS:
 		glmode = GL_POINTS;
 		break;
-	case LINES:
+	case PrimitiveType::LINES:
 		glmode = GL_LINES;
 		break;
-	case TRIANGLES:
+	case PrimitiveType::TRIANGLES:
 		glmode = GL_TRIANGLES;
 		break;
-	case TRIANGLE_STRIP:
+	case PrimitiveType::TRIANGLE_STRIP:
 		glmode = GL_TRIANGLE_STRIP;
 		break;
-	case QUADS:
+	case PrimitiveType::QUADS:
 		glmode = GL_QUADS;
 		break;
-	case LINE_LOOP:
+	case PrimitiveType::LINE_LOOP:
 		glmode = GL_LINE_LOOP;
 		break;
-	case LINE_STRIP:
+	case PrimitiveType::LINE_STRIP:
 		glmode = GL_LINE_STRIP;
 		break;
-	case TRIANGLE_FAN:
+	case PrimitiveType::TRIANGLE_FAN:
 		glmode = GL_TRIANGLE_FAN;
 		break;
 	default:
@@ -251,28 +251,28 @@ void Renderer::RenderStream(const PrimitiveType &primitiveType, unsigned int cou
 	GLenum glmode;
 	switch (primitiveType)
 	{
-	case POINTS:
+	case PrimitiveType::POINTS:
 		glmode = GL_POINTS;
 		break;
-	case LINES:
+	case PrimitiveType::LINES:
 		glmode = GL_LINES;
 		break;
-	case TRIANGLES:
+	case PrimitiveType::TRIANGLES:
 		glmode = GL_TRIANGLES;
 		break;
-	case TRIANGLE_STRIP:
+	case PrimitiveType::TRIANGLE_STRIP:
 		glmode = GL_TRIANGLE_STRIP;
 		break;
-	case QUADS:
+	case PrimitiveType::QUADS:
 		glmode = GL_QUADS;
 		break;
-	case LINE_LOOP:
+	case PrimitiveType::LINE_LOOP:
 		glmode = GL_LINE_LOOP;
 		break;
-	case LINE_STRIP:
+	case PrimitiveType::LINE_STRIP:
 		glmode = GL_LINE_STRIP;
 		break;
-	case TRIANGLE_FAN:
+	case PrimitiveType::TRIANGLE_FAN:
 		glmode = GL_TRIANGLE_FAN;
 		break;
 	default:
@@ -546,7 +546,7 @@ void Renderer::RenderFullscreenQuad()
 	glBindVertexArray(quadVao);
 	SetDepthTest(DepthTest::ALWAYS);
 	SetBlendMode(BlendMode::REPLACE);
-	RenderStream(TRIANGLES, 6);		
+	RenderStream(PrimitiveType::TRIANGLES, 6);
 }
 
 void Renderer::SetWidth(int width)

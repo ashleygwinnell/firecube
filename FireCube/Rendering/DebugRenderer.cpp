@@ -22,7 +22,7 @@ void DebugRenderer::Initialize()
 	linesGeometry = new Geometry(engine->GetRenderer());
 	linesVertexBuffer = new VertexBuffer(engine->GetRenderer());
 	linesGeometry->SetVertexBuffer(linesVertexBuffer);
-	linesGeometry->SetPrimitiveType(LINES);
+	linesGeometry->SetPrimitiveType(PrimitiveType::LINES);
 	linesGeometry->SetPrimitiveCount(0);
 }
 void DebugRenderer::Render(Camera *camera)

@@ -1642,7 +1642,7 @@ void ColladaLoader::GenerateGeometries(Renderer *renderer, Node *node, mat4 pare
 			vertexBuffer->LoadData(&vertexData[0], vertices.size(), vertexAttributes, STATIC);			
 			indexBuffer->LoadData(&indexData[0], indexData.size(), STATIC);
 			
-			geometry->SetPrimitiveType(TRIANGLES);
+			geometry->SetPrimitiveType(FireCube::PrimitiveType::TRIANGLES);
 			geometry->SetPrimitiveCount(indexData.size() / 3);
 			geometry->Update();
 		}    

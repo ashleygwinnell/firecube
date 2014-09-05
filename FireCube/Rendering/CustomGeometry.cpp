@@ -79,11 +79,11 @@ void CustomGeometry::UpdateGeometry()
 
 	switch (geometry->GetPrimitiveType())
 	{
-	case POINTS:
+	case PrimitiveType::POINTS:
 		geometry->SetPrimitiveCount(vertices.size());
-	case LINES:
+	case PrimitiveType::LINES:
 		geometry->SetPrimitiveCount(vertices.size() / 2);
-	case TRIANGLES:
+	case PrimitiveType::TRIANGLES:
 		geometry->SetPrimitiveCount(vertices.size() / 3);
 	default:
 		break;
