@@ -24,6 +24,7 @@ private:
 	Shader *updateShader;
 	VertexBuffer *particleBuffers[2];	
 	SharedPtr<Geometry> geometry;
+	float lifeTime;
 };
 
 }

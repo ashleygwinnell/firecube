@@ -662,3 +662,13 @@ void Renderer::SetDepthTest(DepthTest depthTest)
 		break;
 	}
 }
+
+void Renderer::SetTimeStep(float timeStep)
+{
+	this->timeStep = timeStep;
+}
+
+float Renderer::GetTimeStep() const
+{
+	return timeStep;
+}

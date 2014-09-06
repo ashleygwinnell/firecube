@@ -266,9 +266,8 @@ void Scene::Render(Renderer *renderer)
 				normalMatrix.Inverse();
 				normalMatrix.Transpose();
 				program->SetUniform(PARAM_NORMAL_MATRIX, normalMatrix);
-
+				program->SetUniform(PARAM_TIME_STEP, renderer->GetTimeStep());
 				// Set material properties if this geometry is different from the last one 
-
 				renderer->UseMaterial(renderJob.material);
 				renderer->SetBlendMode(renderJob.pass->GetBlendMode());
 				renderer->SetDepthWrite(renderJob.pass->GetDepthWrite());
@@ -304,6 +303,7 @@ void Scene::Render(Renderer *renderer)
 					normalMatrix.Inverse();
 					normalMatrix.Transpose();
 					program->SetUniform(PARAM_NORMAL_MATRIX, normalMatrix);
+					program->SetUniform(PARAM_TIME_STEP, renderer->GetTimeStep());
 					// Set material properties if this geometry is different from the last one 
 					renderer->UseMaterial(renderJob.material);
 					renderer->UseLight(light);

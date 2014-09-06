@@ -12,23 +12,22 @@
 
 using namespace FireCube;
 
-ParticleEmitter::ParticleEmitter(Engine *engine) : Renderable(engine)
+ParticleEmitter::ParticleEmitter(Engine *engine) : Renderable(engine), lifeTime(2.0f)
 {
 	updateShader = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/particleUpdate.vert")->GenerateShader("");
 	updateShader->SetOutputAttributes({"outPosition", "outVelocity", "outAge"});
-	const int numberOfParticles = 1000000;
+	const int numberOfParticles = 100000;
 	std::vector<float> particleData(numberOfParticles * 7);
 	for (int i = 0; i < numberOfParticles; ++i)
 	{
 		particleData[i * 7 + 0] = RangedRandom(-1, 1.0f); // Position
 		particleData[i * 7 + 1] = RangedRandom(0, 1.0f);
 		particleData[i * 7 + 2] = RangedRandom(-1, 1.0f);
-		vec3 velocity = vec3(RangedRandom(-1, 1), RangedRandom(-1, 1), RangedRandom(-1, 1)).Normalized() * 0.005f;
+		vec3 velocity = vec3(RangedRandom(-1, 1), RangedRandom(-1, 1), RangedRandom(-1, 1)).Normalized();		
 		particleData[i * 7 + 3] = velocity.x; // Veloctiy
 		particleData[i * 7 + 4] = velocity.y;
 		particleData[i * 7 + 5] = velocity.z;
-		particleData[i * 7 + 6] = 0.0f; // Age
-		
+		particleData[i * 7 + 6] = RangedRandom(0.0f, lifeTime); // Age				
 	}
 	for (int i = 0; i < 2; ++i)
 	{
@@ -75,7 +74,9 @@ void ParticleEmitter::IntersectRay(RayQuery &rayQuery)
 
 void ParticleEmitter::UpdateRenderableParts()
 {
-	engine->GetRenderer()->SetShaders(updateShader, nullptr);
+	Program *program = engine->GetRenderer()->SetShaders(updateShader, nullptr);
+	program->SetUniform(PARAM_TIME_STEP, engine->GetRenderer()->GetTimeStep());
+	program->SetUniform(PARAM_LIFE_TIME, lifeTime);
 	glEnable(GL_RASTERIZER_DISCARD);
 	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, particleBuffers[1]->GetObjectId());
 	glBeginTransformFeedback(GL_POINTS);		

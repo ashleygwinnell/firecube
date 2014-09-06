@@ -111,6 +111,7 @@ void Application::Run()
 {
 	running = true;
 	SDL_Event event;
+	timer.Update();
 	LOGINFO("Entering main loop...");
 	while (running)
 	{
@@ -239,6 +240,7 @@ void Application::Run()
 		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_X_ABSOLUTE, (float)x);
 		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_Y_ABSOLUTE, (float)y);
 		renderer->ResetNumberOfPrimitivesRendered();
+		renderer->SetTimeStep(deltaTime);
 		// Dispatch input to all input listeners
 		inputManager.DispatchInput(deltaTime);
 		// Update the scene

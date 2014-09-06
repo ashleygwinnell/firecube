@@ -161,6 +161,8 @@ public:
 	void SetBlendMode(BlendMode blendMode);
 	void SetDepthWrite(bool depthWrite);
 	void SetDepthTest(DepthTest depthTest);
+	void SetTimeStep(float timeStep);
+	float GetTimeStep() const;
 private:
 	
 
@@ -191,6 +193,7 @@ private:
 	BlendMode blendMode;
 	bool depthWrite;
 	DepthTest depthTest;
+	float timeStep;
 };
 
 }
