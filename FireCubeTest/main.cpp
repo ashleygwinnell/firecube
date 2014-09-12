@@ -54,7 +54,7 @@ bool App::Prepare()
 
 	childNode = root->CreateChild("LightNode");	
 	Light *light = childNode->CreateComponent<Light>();
-	light->SetType(FireCube::LightType::POINT);
+	light->SetLightType(FireCube::LightType::POINT);
 	light->SetDiffuseColor(vec4(1, 1, 1, 1));
 	light->SetSpecularColor(vec4(0, 0, 0, 0));	
 	childNode->Move(vec3(0, 1, 0));
@@ -66,7 +66,7 @@ bool App::Prepare()
 	return true;
 }
 void App::Update(float t)
-{	
+{		
 	//root->GetChild("LightNode")->Move(vec3(0.2f, 0.0f, 0.2f) * t);
 }
 void App::Render(float t)

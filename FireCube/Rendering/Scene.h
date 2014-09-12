@@ -14,6 +14,7 @@ class DebugRenderer;
 
 class Scene : public Object
 {
+	OBJECT(Scene)
 public:
 	Scene(Engine *engine);
 	~Scene();

@@ -13,6 +13,7 @@ class Shader;
 
 class FIRECUBE_API ShaderTemplate : public Resource
 {
+	OBJECT(ShaderTemplate)
 public:
 	ShaderTemplate(Engine *engine);
 	~ShaderTemplate();

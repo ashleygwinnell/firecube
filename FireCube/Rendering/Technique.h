@@ -49,6 +49,7 @@ private:
 
 class FIRECUBE_API Technique : public Resource
 {
+	OBJECT(Technique)
 public:
 	Technique(Engine *engine);
 	~Technique();

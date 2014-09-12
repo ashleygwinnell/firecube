@@ -35,6 +35,7 @@ class Program;
 */
 class FIRECUBE_API Node : public Object
 {
+	OBJECT(Node)
 	friend class RenderQueue;
 public:	
 	Node(Engine *engine);

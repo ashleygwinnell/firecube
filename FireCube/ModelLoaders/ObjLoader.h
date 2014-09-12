@@ -15,6 +15,7 @@ namespace FireCube
 {
 	class ObjLoader : public ModelLoader
 	{
+		OBJECT(ObjLoader)
 	public:
 		class Face
 		{

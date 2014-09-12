@@ -9,12 +9,12 @@ Light::Light(Engine *engine) : Component(engine), range(50.0f), spotCutOff(0.8f)
 
 }
 
-void Light::SetType(LightType type)
+void Light::SetLightType(LightType type)
 {
 	this->type = type;
 }
 
-LightType Light::GetType() const
+LightType Light::GetLightType() const
 {
 	return type;
 }

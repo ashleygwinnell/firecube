@@ -21,20 +21,20 @@ enum class LightType
 */
 class FIRECUBE_API Light : public Component
 {
-	//OBJECT(Light)
+	OBJECT(Light)
 public:
 	Light(Engine *engine);
 	/**
 	* Sets the light type.
 	* @param type The new light type.
 	*/
-	void SetType(LightType type);
+	void SetLightType(LightType type);
 
 	/**
 	* Gets the type of this light.
 	* @return The type of this light.
 	*/
-	LightType GetType() const;
+	LightType GetLightType() const;
 
 	/**
 	* Sets the diffuse color of this light.

@@ -65,6 +65,7 @@ class Material;
 
 class M3dsLoader : public ModelLoader
 {
+	OBJECT(M3dsLoader)
 public:
 	class Material
 	{

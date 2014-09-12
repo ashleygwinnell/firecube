@@ -11,6 +11,7 @@ class Node;
 
 class FIRECUBE_API Component : public Object
 {	
+	OBJECT(Component)
 	friend class Node;
 public:
 	Component(Engine *engine);

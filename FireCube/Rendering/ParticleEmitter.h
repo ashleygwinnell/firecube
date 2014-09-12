@@ -9,6 +9,7 @@ class Shader;
 
 class ParticleEmitter : public Renderable
 {
+	OBJECT(ParticleEmitter)
 public:
 	ParticleEmitter(Engine *engine);
 	~ParticleEmitter();

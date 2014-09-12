@@ -12,6 +12,7 @@ class Geometry;
 
 class FIRECUBE_API Mesh : public Resource
 {
+	OBJECT(Mesh)
 public:
 	Mesh(Engine *engine);
 	

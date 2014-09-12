@@ -31,6 +31,7 @@ class Texture;
 */
 class FIRECUBE_API Texture : public Resource, public GraphicsResource
 {
+	OBJECT(Texture)
 	friend class Renderer;
 public:
 	Texture(Engine *engine);

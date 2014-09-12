@@ -30,7 +30,7 @@ bool App::Prepare()
 	Light *light = lightNode->CreateComponent<Light>();   
     light->SetDiffuseColor(vec4(0.8f, 0.8f, 0.8f, 1.0f));
     light->SetSpecularColor(vec4(0.2f, 0.2f, 0.2f, 1.0f));	
-	light->SetType(LightType::DIRECTIONAL);
+	light->SetLightType(LightType::DIRECTIONAL);
     
 	node = root->CreateChild("Mesh");
 	node->CreateComponent<StaticModel>()->CreateFromMesh(resourceCache->GetResource<Mesh>("../Assets/Models/1.3ds"));

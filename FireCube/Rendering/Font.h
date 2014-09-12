@@ -55,6 +55,7 @@ public:
 */
 class FIRECUBE_API Font : public Resource
 {	
+	OBJECT(Font)
 public:
 	Font(Engine *engine);
 	~Font();

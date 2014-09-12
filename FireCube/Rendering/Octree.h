@@ -16,6 +16,7 @@ private:
 
 class FIRECUBE_API Octree : public Object
 {
+	OBJECT(Octree)
 public:
 	Octree(Engine *engine);
 };

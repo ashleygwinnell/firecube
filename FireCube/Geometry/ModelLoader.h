@@ -36,6 +36,7 @@ public:
 
 class ModelLoader : public Object
 {
+	OBJECT(ModelLoader)
 public:
 	ModelLoader(Engine *engine);
 	virtual bool Load(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions()) = 0;	

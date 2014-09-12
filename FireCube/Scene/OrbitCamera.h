@@ -12,14 +12,12 @@
 namespace FireCube
 {
 
-// Forward declarations.
-class Node;
-
 /**
 * A class representing a node observer camera.
 */
 class FIRECUBE_API OrbitCamera : public Camera, public InputListener
 {
+	OBJECT(OrbitCamera)
 public:
 	/**
 	* Constructs a NodeObserverCamera.

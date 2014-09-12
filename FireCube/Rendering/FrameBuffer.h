@@ -22,6 +22,7 @@ class RenderSurface;
 */
 class FIRECUBE_API FrameBuffer : public Object, public GraphicsResource
 {
+	OBJECT(FrameBuffer)
     friend class Renderer;
 public:
     FrameBuffer(Engine *engine);

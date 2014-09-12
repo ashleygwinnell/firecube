@@ -9,6 +9,7 @@ class Mesh;
 
 class StaticModel : public Renderable
 {	
+	OBJECT(StaticModel)
 public:
 	StaticModel(Engine *engine);	
 	void CreateFromMesh(Mesh *mesh);	

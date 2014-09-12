@@ -23,7 +23,7 @@ ParticleEmitter::ParticleEmitter(Engine *engine) : Renderable(engine), lifeTime(
 		particleData[i * 7 + 0] = RangedRandom(-1, 1.0f); // Position
 		particleData[i * 7 + 1] = RangedRandom(0, 1.0f);
 		particleData[i * 7 + 2] = RangedRandom(-1, 1.0f);
-		vec3 velocity = vec3(RangedRandom(-1, 1), RangedRandom(-1, 1), RangedRandom(-1, 1)).Normalized();		
+		vec3 velocity = vec3(RangedRandom(-1, 1), RangedRandom(-1, 1), RangedRandom(-1, 1)).Normalized() * RangedRandom(1, 1.5f);		
 		particleData[i * 7 + 3] = velocity.x; // Veloctiy
 		particleData[i * 7 + 4] = velocity.y;
 		particleData[i * 7 + 5] = velocity.z;

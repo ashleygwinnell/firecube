@@ -16,6 +16,7 @@ namespace FireCube
 {	
 	class ColladaLoader : public ModelLoader
 	{
+		OBJECT(ColladaLoader)
 	public:
 		ColladaLoader(Engine *engine);
 		~ColladaLoader();
