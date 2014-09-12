@@ -344,3 +344,16 @@ void Node::Load(const std::string &filename, ModelLoadingOptions options)
 		delete modelLoader;
 	}	
 }
+
+Component *Node::GetComponent(const StringHash &type)
+{
+	for (auto c : components)
+	{
+		if (c->GetType() == type)
+		{
+			return c;
+		}
+	}
+
+	return nullptr;
+}

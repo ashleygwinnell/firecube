@@ -208,6 +208,14 @@ public:
 		return component;
 	}
 
+	Component *GetComponent(const StringHash &type);
+
+	template <class T> T* GetComponent()
+	{
+		T *ret = static_cast<T *>(GetComponent(T::GetTypeStatic()));
+		return ret;
+	}
+
 	void Load(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());
 
 protected:		
