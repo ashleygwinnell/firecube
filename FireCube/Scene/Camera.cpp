@@ -74,30 +74,42 @@ void Camera::NodeChanged()
 
 void Camera::SetFOV(float fov)
 {
-	this->fov = fov;
-	projectionMatrixChanged = true;
-	frustumChanged = true;
+	if (this->fov != fov)
+	{
+		this->fov = fov;
+		projectionMatrixChanged = true;
+		frustumChanged = true;
+	}
 }
 
 void Camera::SetNearPlane(float nearPlane)
 {
-	this->nearPlane = nearPlane;
-	projectionMatrixChanged = true;
-	frustumChanged = true;
+	if (this->nearPlane != nearPlane)
+	{
+		this->nearPlane = nearPlane;
+		projectionMatrixChanged = true;
+		frustumChanged = true;
+	}
 }
 
 void Camera::SetFarPlane(float farPlane)
 {
-	this->farPlane = farPlane;
-	projectionMatrixChanged = true;
-	frustumChanged = true;
+	if (this->farPlane != farPlane)
+	{
+		this->farPlane = farPlane;
+		projectionMatrixChanged = true;
+		frustumChanged = true;
+	}
 }
 
 void Camera::SetAspectRatio(float aspectRatio)
 {
-	this->aspectRatio = aspectRatio;
-	projectionMatrixChanged = true;
-	frustumChanged = true;
+	if (this->aspectRatio != aspectRatio)
+	{
+		this->aspectRatio = aspectRatio;
+		projectionMatrixChanged = true;
+		frustumChanged = true;
+	}
 }
 
 void Camera::SetPerspectiveProjectionParameters(float fov, float aspectRatio, float nearPlane, float farPlane)

@@ -144,21 +144,28 @@ void OrbitCamera::SetRotation(vec3 rotation)
 
 void OrbitCamera::HandleInput(float time, const MappedInput &input)
 {
+	bool shouldUpdateNode = false;
 	if (input.HasValue("NodeObserverCamera_MouseWheelY"))
 	{
 		Zoom(time * input.GetValue("NodeObserverCamera_MouseWheelY") * zoomFactor);
+		shouldUpdateNode = true;
 	}
 	if (input.IsStateOn("NodeObserverCamera_Rotate"))
 	{
 		RotateX(-input.GetValue("NodeObserverCamera_MouseY") * time);
 		RotateY(-input.GetValue("NodeObserverCamera_MouseX") * time);
+		shouldUpdateNode = true;
 	}
 	if (input.IsStateOn("NodeObserverCamera_Zoom"))
 	{
 		Zoom(-input.GetValue("NodeObserverCamera_MouseY") * time);		
+		shouldUpdateNode = true;
 	}
 
-	UpdateNode();
+	if (shouldUpdateNode)
+	{
+		UpdateNode();
+	}
 }
 
 void OrbitCamera::UpdateNode()
