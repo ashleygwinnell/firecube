@@ -22,7 +22,7 @@ void Frustum::Extract(const mat4 &viewMatrix, const mat4 &projectionMatrix)
 	length = normal.Length();
 	normal /= length;
 	distance /= length;
-	rightPlane = Plane(normal, distance);
+	rightPlane = Plane(normal, -distance);
 
 	/* Extract the numbers for the LEFT plane */
 	normal.x = viewProj.m[ 3] + viewProj.m[ 0];
@@ -34,7 +34,7 @@ void Frustum::Extract(const mat4 &viewMatrix, const mat4 &projectionMatrix)
 	length = normal.Length();
 	normal /= length;
 	distance /= length;
-	leftPlane = Plane(normal, distance);
+	leftPlane = Plane(normal, -distance);
 
 	/* Extract the BOTTOM plane */
 	normal.x = viewProj.m[ 3] + viewProj.m[ 1];
@@ -46,7 +46,7 @@ void Frustum::Extract(const mat4 &viewMatrix, const mat4 &projectionMatrix)
 	length = normal.Length();
 	normal /= length;
 	distance /= length;
-	bottomPlane = Plane(normal, distance);
+	bottomPlane = Plane(normal, -distance);
 
 	/* Extract the TOP plane */
 	normal.x = viewProj.m[ 3] - viewProj.m[ 1];
@@ -58,7 +58,7 @@ void Frustum::Extract(const mat4 &viewMatrix, const mat4 &projectionMatrix)
 	length = normal.Length();
 	normal /= length;
 	distance /= length;
-	topPlane = Plane(normal, distance);
+	topPlane = Plane(normal, -distance);
 
 
 	/* Extract the FAR plane */
@@ -71,7 +71,7 @@ void Frustum::Extract(const mat4 &viewMatrix, const mat4 &projectionMatrix)
 	length = normal.Length();
 	normal /= length;
 	distance /= length;
-	farPlane = Plane(normal, distance);
+	farPlane = Plane(normal, -distance);
 
 	/* Extract the NEAR plane */
 	normal.x = viewProj.m[ 3] + viewProj.m[ 2];
@@ -83,7 +83,7 @@ void Frustum::Extract(const mat4 &viewMatrix, const mat4 &projectionMatrix)
 	length = normal.Length();
 	normal /= length;
 	distance /= length;
-	nearPlane = Plane(normal, distance);
+	nearPlane = Plane(normal, -distance);
 }
 
 bool Frustum::Contains(const BoundingBox &boundingBox) const

@@ -35,5 +35,10 @@ float Plane::GetDistance() const
 
 float Plane::GetDistance(const vec3 &point) const
 {
-	return normal.Dot(point) + distance;
+	return normal.Dot(point) - distance;
+}
+
+bool Plane::IsFrontFacingTo(const vec3 &dir) const
+{
+	return (normal.Dot(dir) <= 0.0f);
 }

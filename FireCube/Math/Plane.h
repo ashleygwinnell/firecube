@@ -59,6 +59,9 @@ public:
 	*/
 	float GetDistance(const vec3 &point) const;
 
+	bool IsFrontFacingTo(const vec3 &dir) const;	
+
+
 private:
 	vec3 normal;
 	float distance;
