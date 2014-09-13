@@ -7,6 +7,7 @@
 #include "ModelLoaders/m3dsLoader.h"
 #include "ModelLoaders/ObjLoader.h"
 #include "Core/Engine.h"
+#include "Rendering/Scene.h"
 
 using namespace FireCube;
 
@@ -355,5 +356,15 @@ Component *Node::GetComponent(const StringHash &type)
 		}
 	}
 
+	return nullptr;
+}
+
+Node *Node::GetRootNode() const
+{
+	if (scene)
+	{
+		return scene->GetRootNode();
+	}
+	
 	return nullptr;
 }

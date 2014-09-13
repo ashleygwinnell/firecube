@@ -23,6 +23,7 @@
     <ClCompile Include="Application\Input.cpp" />
     <ClCompile Include="Core\Component.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
+    <ClCompile Include="Core\Events.cpp" />
     <ClCompile Include="Core\Memory.cpp" />
     <ClCompile Include="Core\Object.cpp" />
     <ClCompile Include="Core\Resource.cpp" />
@@ -48,6 +49,8 @@
     <ClCompile Include="ModelLoaders\ColladaLoader.cpp" />
     <ClCompile Include="ModelLoaders\m3dsLoader.cpp" />
     <ClCompile Include="ModelLoaders\ObjLoader.cpp" />
+    <ClCompile Include="Physics\CollisionShape.cpp" />
+    <ClCompile Include="Physics\PhysicsWorld.cpp" />
     <ClCompile Include="Rendering\CustomGeometry.cpp" />
     <ClCompile Include="Rendering\DebugRenderer.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
@@ -91,6 +94,8 @@
     <ClInclude Include="Application\Input.h" />
     <ClInclude Include="Core\Component.h" />
     <ClInclude Include="Core\Engine.h" />
+    <ClInclude Include="Core\Events.h" />
+    <ClInclude Include="Core\EventSystem.h" />
     <ClInclude Include="Core\Memory.h" />
     <ClInclude Include="Core\Object.h" />
     <ClInclude Include="Core\Resource.h" />
@@ -118,6 +123,8 @@
     <ClInclude Include="ModelLoaders\ColladaLoader.h" />
     <ClInclude Include="ModelLoaders\m3dsLoader.h" />
     <ClInclude Include="ModelLoaders\ObjLoader.h" />
+    <ClInclude Include="Physics\CollisionShape.h" />
+    <ClInclude Include="Physics\PhysicsWorld.h" />
     <ClInclude Include="Rendering\CustomGeometry.h" />
     <ClInclude Include="Rendering\DebugRenderer.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />

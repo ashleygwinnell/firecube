@@ -218,6 +218,8 @@ public:
 
 	void Load(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());
 
+	Node *GetRootNode() const;
+
 protected:		
 	void SetTransformationChanged();	
 	

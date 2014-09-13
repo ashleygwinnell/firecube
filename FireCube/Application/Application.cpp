@@ -8,6 +8,7 @@
 #include "Core/ResourceCache.h"
 #include "Core/Engine.h"
 #include "Rendering/DebugRenderer.h"
+#include "Core/Events.h"
 
 using namespace FireCube;
 
@@ -244,6 +245,7 @@ void Application::Run()
 		// Dispatch input to all input listeners
 		inputManager.DispatchInput(deltaTime);
 		// Update the scene
+		Events::Update(deltaTime);
 		Update(deltaTime);
 		// Render the scene
 		Render(deltaTime);

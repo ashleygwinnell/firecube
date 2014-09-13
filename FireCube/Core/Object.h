@@ -2,6 +2,7 @@
 
 #include "Utils/StringHash.h"
 #include "Core/Memory.h"
+#include "Core/EventSystem.h"
 
 namespace FireCube
 {
@@ -13,11 +14,18 @@ class Object : public RefCounted
 public:
 	Object(Engine *engine);
 	virtual ~Object() {};
+
+	template<class T, class... Args>
+	void SubscribeToEvent(Event<Args...> &s, void(T::*f)(Args...))
+	{
+		eventCallback.Connect(static_cast<T *>(this), f, s);
+	}
 	
 	virtual StringHash GetType() const = 0;	
 	virtual const std::string& GetTypeName() const = 0;
 protected:
 	Engine *engine;
+	Callback eventCallback;
 };
 
 
