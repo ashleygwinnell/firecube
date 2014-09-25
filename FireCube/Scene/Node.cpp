@@ -156,6 +156,7 @@ Node *Node::CreateChild(const std::string &name)
 {
 	Node *child = new Node(engine, name);
 	AddChild(child);
+	child->transformationChanged = transformationChanged;
 	return child;
 }
 
