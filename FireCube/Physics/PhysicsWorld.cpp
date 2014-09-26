@@ -44,7 +44,7 @@ void PhysicsWorld::Update(float deltaTime)
 	{
 		for (auto characterController : characterControllers)
 		{
-			if ((characterController->transformedVelocity * characterController->radius).Length2() > 0.001f * 0.001f)
+			if (characterController->finishedMovement == false && (characterController->transformedVelocity * characterController->radius).Length2() > 0.001f * 0.001f)
 			{
 				characterController->normalizedTransformedVelocity = characterController->transformedVelocity.Normalized();
 				characterController->collisionFound = false;
@@ -68,7 +68,7 @@ void PhysicsWorld::Update(float deltaTime)
 				if (characterController->collisionFound == false)
 				{
 					characterController->transformedPosition += characterController->transformedVelocity;	
-					// TODO: don't continue iterating with this controller
+					characterController->finishedMovement = true;					
 				}
 				else
 				{
@@ -97,7 +97,7 @@ void PhysicsWorld::Update(float deltaTime)
 			characterController->velocity.x *= 0.7f;
 			characterController->velocity.z *= 0.7f;
 		}
-		characterController->velocity += vec3(0, -0.1f, 0) * deltaTime;
+		characterController->velocity += vec3(0, -0.2f, 0) * deltaTime;
 	}	
 }
 

@@ -59,6 +59,7 @@ private:
 	vec3 nearestIntersectionPoint;
 	std::vector<CollisionEntry> collisions;
 	bool onGround;
+	bool finishedMovement;
 	WeakPtr<PhysicsWorld> physicsWorld;
 };
 

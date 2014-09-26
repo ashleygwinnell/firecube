@@ -350,6 +350,7 @@ void CharacterController::UpdateTransformedState()
 	transformedVelocity = velocity / radius;
 	normalizedTransformedVelocity = transformedVelocity.Normalized();
 	collisions.clear();
+	finishedMovement = false;
 }
 
 void CharacterController::UpdateFromTransformedState()
