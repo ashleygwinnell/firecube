@@ -30,3 +30,16 @@ RenderToTexture/Debug/
 Terrain/log.txt
 CharacterController/Debug/
 CharacterController/CharacterController.vcxproj.user
+Samples/SceneGraph/Debug/
+Samples/RenderToTexture/Debug/
+Samples/PhysicsAttempt1/Debug/
+Samples/Terrain/Debug/
+Samples/ShadowMapping/Debug/
+Samples/FireCubeTest/Debug/
+Samples/ModelViewer/Debug/
+Samples/CharacterController/Debug/
+Samples/CSG/Debug/
+Samples/FireCubeTest/log.txt
+Samples/ModelViewer/log.txt
+Samples/Terrain/Terrain.vcxproj.user
+Samples/Terrain/log.txt
