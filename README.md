@@ -17,12 +17,7 @@ Currently only the basic framework of the engine is implemented. features so far
    * Text rendering
    * Input system
    * Terrain
+
 TODO:
    * Finish physics
    * Better rendering pipeline(shaders, materials, etc...)
-
-Screens:
-
-![](http://sites.google.com/site/ibachar/screenshots/Terrain.jpg)
-![](http://sites.google.com/site/ibachar/screenshots/modelviewer.jpg)
-![](http://sites.google.com/site/ibachar/screenshots/scenegraph.jpg)
