@@ -8,6 +8,7 @@ namespace FireCube
 {
 
 class Node;
+class DebugRenderer;
 
 class FIRECUBE_API Component : public Object
 {	
@@ -20,6 +21,7 @@ public:
 	Node *GetNode();	
 	void SetEnabled(bool enabled);
 	bool IsEnabled() const;
+	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer) {};
 protected:	
 	void SetNode(Node *node);
 	virtual void MarkedDirty() = 0;

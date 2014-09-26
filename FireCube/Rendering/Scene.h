@@ -39,6 +39,7 @@ private:
 	void UpdateLightQueues();
 	void SetRenderTargets(Renderer *renderer, const RenderPathCommand &command);
 	void SetTextures(Renderer *renderer, const RenderPathCommand &command);
+	void RenderDebugGeometry(DebugRenderer *debugRenderer, Node *node);
 
 	Node rootNode;
 	Camera *camera;

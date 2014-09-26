@@ -32,6 +32,14 @@ public:
 	Plane(const vec3 &normal, float distance);
 
 	/**
+	* Constructs a place from a triangle.
+	* @param p1 The first point of the triangle.
+	* @param p2 The second point of the triangle.
+	* @param p3 The third point of the triangle.	
+	*/
+	Plane(const vec3 &p1, const vec3 &p2, const vec3 &p3);
+
+	/**
 	* Sets the normal vector of this plane.
 	* @param normal The new normal vector.
 	*/

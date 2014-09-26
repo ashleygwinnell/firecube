@@ -261,6 +261,9 @@
     <ClCompile Include="Core\Events.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\CharacterController.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -476,6 +479,9 @@
     </ClInclude>
     <ClInclude Include="Core\Events.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\CharacterController.h">
+      <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

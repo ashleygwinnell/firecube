@@ -369,3 +369,8 @@ Node *Node::GetRootNode() const
 	
 	return nullptr;
 }
+
+std::vector<Component *> &Node::GetComponents()
+{
+	return components;
+}

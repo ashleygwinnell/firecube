@@ -27,15 +27,21 @@ void DebugRenderer::Initialize()
 }
 void DebugRenderer::Render(Camera *camera)
 {
-	Renderer *renderer = engine->GetRenderer();
-	Shader *vs = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/solidColor.vert")->GenerateShader("");
-	Shader *fs = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/solidColor.frag")->GenerateShader("");	
-	renderer->SetShaders(vs, fs);
-	renderer->UseCamera(camera);
-	linesVertexBuffer->LoadData(&lines[0], lines.size() / 2, VertexAttributeType::POSITION | VertexAttributeType::COLOR, BufferType::DYNAMIC);
-	linesGeometry->Update();
-	linesGeometry->Render();
-	lines.clear();
+	if (lines.empty() == false)
+	{
+		Renderer *renderer = engine->GetRenderer();
+		Shader *vs = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/solidColor.vert")->GenerateShader("");
+		Shader *fs = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/solidColor.frag")->GenerateShader("");
+		renderer->SetDepthTest(DepthTest::LESS);
+		renderer->SetDepthWrite(true);
+		renderer->SetBlendMode(BlendMode::REPLACE);
+		renderer->SetShaders(vs, fs);
+		renderer->UseCamera(camera);
+		linesVertexBuffer->LoadData(&lines[0], lines.size() / 2, VertexAttributeType::POSITION | VertexAttributeType::COLOR, BufferType::DYNAMIC);
+		linesGeometry->Update();
+		linesGeometry->Render();
+		lines.clear();
+	}
 }
 
 void DebugRenderer::AddLine(const vec3 &start, const vec3 &end, const vec3 &color)

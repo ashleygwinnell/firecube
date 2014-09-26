@@ -56,6 +56,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lua", "FireCube\ThirdParty\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL", "FireCube\ThirdParty\SDL\SDL.vcxproj", "{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CharacterController", "CharacterController\CharacterController.vcxproj", "{7749B663-11D7-42EC-8984-3E20B690EA49}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Multithreaded|Win32 = Debug Multithreaded|Win32
@@ -370,6 +375,30 @@ Global
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release|Win32.Build.0 = Release|Win32
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release|x64.ActiveCfg = Release|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release|x64.Build.0 = Release|x64
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Debug Multithreaded|Win32.ActiveCfg = Debug|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Debug Multithreaded|Win32.Build.0 = Debug|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Debug Multithreaded|x64.ActiveCfg = Debug|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Debug Singlethreaded|Win32.ActiveCfg = Debug|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Debug Singlethreaded|Win32.Build.0 = Debug|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Debug Singlethreaded|x64.ActiveCfg = Debug|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Debug Static|Win32.ActiveCfg = Debug|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Debug Static|Win32.Build.0 = Debug|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Debug Static|x64.ActiveCfg = Debug|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Debug|Win32.Build.0 = Debug|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Debug|x64.ActiveCfg = Debug|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Release Multithreaded|Win32.ActiveCfg = Release|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Release Multithreaded|Win32.Build.0 = Release|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Release Multithreaded|x64.ActiveCfg = Release|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Release Singlethreaded|Win32.ActiveCfg = Release|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Release Singlethreaded|Win32.Build.0 = Release|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Release Singlethreaded|x64.ActiveCfg = Release|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Release Static|Win32.ActiveCfg = Release|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Release Static|Win32.Build.0 = Release|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Release Static|x64.ActiveCfg = Release|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Release|Win32.ActiveCfg = Release|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Release|Win32.Build.0 = Release|Win32
+		{7749B663-11D7-42EC-8984-3E20B690EA49}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

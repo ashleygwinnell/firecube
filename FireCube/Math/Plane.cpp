@@ -13,6 +13,13 @@ Plane::Plane(const vec3 &normal, float distance)
 	this->distance = distance;
 }
 
+Plane::Plane(const vec3 &p1, const vec3 &p2, const vec3 &p3)
+{
+	normal.Cross(p2 - p1, p3 - p1);
+	normal.Normalize();
+	distance = p1.Dot(normal);
+}
+
 void Plane::SetNormal(const vec3 &normal)
 {
 	this->normal = normal;

@@ -216,9 +216,23 @@ public:
 		return ret;
 	}
 
+	template <class T>
+	void GetComponents(const StringHash &type, std::vector<Component *> components)
+	{
+		for (auto c : this->components)
+		{
+			if (c->GetType() == type)
+			{
+				components.push_back(c);
+			}
+		}		
+	}	
+
 	void Load(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());
 
 	Node *GetRootNode() const;
+
+	std::vector<Component *> &GetComponents();
 
 protected:		
 	void SetTransformationChanged();	

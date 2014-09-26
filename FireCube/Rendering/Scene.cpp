@@ -357,9 +357,24 @@ void Scene::IntersectRay(RayQuery &rayQuery, unsigned int collisionQueryMask)
 
 void Scene::RenderDebugGeometry(DebugRenderer *debugRenderer)
 {
-	for (auto renderable : renderables)
-		renderable->RenderDebugGeometry(debugRenderer);
+	RenderDebugGeometry(debugRenderer, &rootNode);
 	debugRenderer->Render(camera);
+}
+
+void Scene::RenderDebugGeometry(DebugRenderer *debugRenderer, Node *node)
+{
+	auto &components = node->GetComponents();
+	for (auto c : components)
+	{
+		c->RenderDebugGeometry(debugRenderer);
+	}
+
+	auto &children = node->GetChildren();
+
+	for (auto child : children)
+	{
+		RenderDebugGeometry(debugRenderer, child);
+	}
 }
 
 void Scene::SetFogEnabled(bool fogEnabled)

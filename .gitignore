@@ -28,3 +28,5 @@ FireCube/Documentation/
 FireCube/ThirdParty/SDL/Release Static/
 RenderToTexture/Debug/
 Terrain/log.txt
+CharacterController/Debug/
+CharacterController/CharacterController.vcxproj.user

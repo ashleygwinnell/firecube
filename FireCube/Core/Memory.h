@@ -219,6 +219,31 @@ public:
 
 		return *this;
 	}
+
+	WeakPtr<T>& operator = (T *ptr)
+	{
+		RefCount *refCount = ptr ? ptr->GetRefCountObject() : nullptr;
+
+		if (this->ptr == ptr && this->refCount == refCount)
+			return *this;
+
+		ReleaseRef();
+		this->ptr = ptr;
+		this->refCount = refCount;
+		AddRef();
+
+		return *this;
+	}
+
+	operator T* () const 
+	{ 
+		return Get(); 
+	}
+
+	T* operator -> () const
+	{		
+		return Get();
+	}
 private:
 
 	void AddRef()
