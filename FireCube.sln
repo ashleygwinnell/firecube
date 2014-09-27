@@ -24,18 +24,33 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CSG", "Samples\CSG\CSG.vcxproj", "{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FireCubeTest", "Samples\FireCubeTest\FireCubeTest.vcxproj", "{AF6EFDA6-3B19-4401-A2E6-B651291E110B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelViewer", "Samples\ModelViewer\ModelViewer.vcxproj", "{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsAttempt1", "Samples\PhysicsAttempt1\PhysicsAttempt1.vcxproj", "{117A3653-33B8-4159-8CDC-77EB1D8275A0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderToTexture", "Samples\RenderToTexture\RenderToTexture.vcxproj", "{97AF73CA-DF0C-445A-8451-4C54108C059D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SceneGraph", "Samples\SceneGraph\SceneGraph.vcxproj", "{9660D4D1-A287-4B77-B67C-B6C6D56A41F3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShadowMapping", "Samples\ShadowMapping\ShadowMapping.vcxproj", "{B69C902C-FDEF-49D2-8EB1-D629B352C82E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Terrain", "Samples\Terrain\Terrain.vcxproj", "{C6A530C8-4558-4DC2-A79F-B7EE06C2D2B4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
