@@ -14,6 +14,8 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3
 	IndexBuffer *indexBuffer = new IndexBuffer(engine->GetRenderer());
 	ret->SetVertexBuffer(vertexBuffer);
 	ret->SetIndexBuffer(indexBuffer);
+	vertexBuffer->SetShadowed(true);
+	indexBuffer->SetShadowed(true);
 	vec3 halfSize = size * 0.5f;
 	unsigned int currentVertex = 0;
 	unsigned int vertexSize = 3 + 3 + 2;
@@ -180,6 +182,8 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateSphere(Engine *engine, float r
 	IndexBuffer *indexBuffer = new IndexBuffer(engine->GetRenderer());
 	ret->SetVertexBuffer(vertexBuffer);
 	ret->SetIndexBuffer(indexBuffer);
+	vertexBuffer->SetShadowed(true);
+	indexBuffer->SetShadowed(true);
 	std::vector<unsigned int> indices;
 	unsigned int vertexSize = 3 + 3 + 2;
 	unsigned int vertexCount = (rings + 1) * (columns + 1);
@@ -251,6 +255,8 @@ Geometry *FIRECUBE_API GeometryGenerator::GeneratePlane(Engine *engine, const ve
 	IndexBuffer *indexBuffer = new IndexBuffer(engine->GetRenderer());
 	ret->SetVertexBuffer(vertexBuffer);
 	ret->SetIndexBuffer(indexBuffer);
+	vertexBuffer->SetShadowed(true);
+	indexBuffer->SetShadowed(true);
 	vec2 halfSize = size * 0.5f;
 	unsigned int vertexSize = 3 + 3 + 2;
 	unsigned int vertexCount = 4;
