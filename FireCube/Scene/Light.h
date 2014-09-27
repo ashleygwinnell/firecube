@@ -37,29 +37,17 @@ public:
 	LightType GetLightType() const;
 
 	/**
-	* Sets the diffuse color of this light.
-	* @param color The diffuse color to set.
+	* Sets the color of this light.
+	* @param color The color to set.
 	*/
-	void SetDiffuseColor(const vec4 &color);
+	void SetColor(const vec4 &color);
 
 	/**
-	* Gets the diffuse color of this light.
-	* @return The diffuse color of this light.
+	* Gets the color of this light.
+	* @return The color of this light.
 	*/
-	vec4 GetDiffuseColor() const;
-
-	/**
-	* Sets the specular color of this light.
-	* @param color The specular color to set.
-	*/
-	void SetSpecularColor(const vec4 &color);
-
-	/**
-	* Gets the specular color of this light.
-	* @return The specular color of this light.
-	*/
-	vec4 GetSpecularColor() const;
-
+	vec4 GetColor() const;
+	
 	void SetRange(float range);
 
 	float GetRange() const;
@@ -78,8 +66,7 @@ protected:
 	virtual void NodeChanged();
 private:
 	LightType type;	
-	vec4 diffuseColor;
-	vec4 specularColor;
+	vec4 color;	
 	float range;
 	float spotCutOff;
 	Scene *scene;

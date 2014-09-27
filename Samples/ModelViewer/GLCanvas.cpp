@@ -59,8 +59,7 @@ void GLCanvas::Init()
 	Node *lightNode = root->CreateChild("Light");
 	Light *l = lightNode->CreateComponent<Light>();
 	l->SetLightType(LightType::DIRECTIONAL);
-	l->SetDiffuseColor(vec4(0.7f, 0.7f, 0.7f, 1.0f));
-	l->SetSpecularColor(vec4(0.3f, 0.3f, 0.3f, 1.0f));	
+	l->SetColor(vec4(0.7f, 0.7f, 0.7f, 1.0f));	
 	lightNode->Rotate(vec3((float)PI / 4.0f, (float)PI / 4.0f, 0));
 }
 void GLCanvas::Render()

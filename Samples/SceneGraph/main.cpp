@@ -42,8 +42,7 @@ bool App::Prepare()
 	Node *nn = root->CreateChild("Ln");	
 	Node *lightNode = nn->CreateChild("LightNode1");	
 	Light *light = lightNode->CreateComponent<Light>();		
-	light->SetDiffuseColor(vec4(1.0f, 1.0f, 1.0f, 1));
-	light->SetSpecularColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	light->SetColor(vec4(1.0f, 1.0f, 1.0f, 1));	
 	light->SetLightType(FireCube::LightType::POINT);
 	lightNode->Move(vec3(0, 0, 4.0f));	
 	StaticModel *staticModel = lightNode->CreateComponent<StaticModel>();

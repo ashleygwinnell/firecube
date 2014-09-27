@@ -7,10 +7,8 @@ smooth in vec2 texcoord;
 	smooth in vec3 normal;
 #endif
 
-#if defined(DIRECTIONAL_LIGHT) || defined(POINT_LIGHT) || defined(SPOT_LIGHT)
-	uniform vec4 lightAmbient;
-	uniform vec4 lightDiffuse;
-	uniform vec4 lightSpecular;
+#if defined(DIRECTIONAL_LIGHT) || defined(POINT_LIGHT) || defined(SPOT_LIGHT)	
+	uniform vec4 lightColor;	
 	smooth in vec3 lightDir;
 	smooth in vec3 eyeVec;
 #endif
@@ -60,17 +58,17 @@ void main()
 		float specular = max(pow(max(dot(R, E), 0.0), materialShininess), 0.0);
 		#ifdef POINT_LIGHT
 			float distanceAtten = 1.0 - pow(clamp(lightDirLength, 0.0, 1.0), 3);
-			color = distanceAtten * lightDiffuse.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * lightSpecular.rgb * specular);
+			color = distanceAtten * lightColor.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * lightColor.rgb * specular);
 		#elif defined(SPOT_LIGHT)
 			float spotCos = dot(l, normalize(spotLightDir.xyz));
 			if (spotCos > spotLightDir.w)
 			{				
 				float distanceAtten = 1.0 - pow(clamp(lightDirLength, 0.0, 1.0), 3);
 				distanceAtten = distanceAtten * (1.0 - (1.0 - spotCos) / (1.0 - spotLightDir.w));
-				color = distanceAtten * lightDiffuse.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * lightSpecular.rgb * specular);
+				color = distanceAtten * lightColor.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * lightColor.rgb * specular);
 			}
 		#else
-			color = lightDiffuse.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * lightSpecular.rgb * specular);
+			color = lightColor.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * lightColor.rgb * specular);
 		#endif
 		#ifdef FOG
 			/*const float LOG2 = 1.442695;

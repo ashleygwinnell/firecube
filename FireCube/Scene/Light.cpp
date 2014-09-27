@@ -19,24 +19,14 @@ LightType Light::GetLightType() const
 	return type;
 }
 
-void Light::SetDiffuseColor(const vec4 &color)
+void Light::SetColor(const vec4 &color)
 {
-	diffuseColor = color;
+	this->color = color;
 }
 
-vec4 Light::GetDiffuseColor() const
+vec4 Light::GetColor() const
 {
-	return diffuseColor;
-}
-
-void Light::SetSpecularColor(const vec4 &color)
-{
-	specularColor = color;
-}
-
-vec4 Light::GetSpecularColor() const
-{
-	return specularColor;
+	return color;
 }
 
 void Light::SetRange(float range)
@@ -61,7 +51,7 @@ float Light::GetSpotCutOff() const
 
 bool Light::operator == (const Light &other) const
 {
-	return diffuseColor == other.diffuseColor && specularColor == other.specularColor && type == other.type;
+	return color == other.color && type == other.type;
 }
 
 void Light::NodeChanged()

@@ -3,9 +3,7 @@
 out vec4 outputColor;
 
 #if defined(DIRECTIONAL_LIGHT) || defined(POINT_LIGHT) || defined(SPOT_LIGHT)
-	uniform vec4 lightAmbient;
-	uniform vec4 lightDiffuse;
-	uniform vec4 lightSpecular;
+	uniform vec4 lightColor;	
 	smooth in vec3 lightDir;
 	smooth in vec3 eyeVec;
 #endif

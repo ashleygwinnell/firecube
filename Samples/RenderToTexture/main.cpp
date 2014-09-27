@@ -28,8 +28,7 @@ bool App::Prepare()
 	scene2.SetFogColor(vec3(0.2f, 0.4f, 0.4f));
 	Node *lightNode = root->CreateChild("LightNode");
 	Light *light = lightNode->CreateComponent<Light>();   
-    light->SetDiffuseColor(vec4(0.8f, 0.8f, 0.8f, 1.0f));
-    light->SetSpecularColor(vec4(0.2f, 0.2f, 0.2f, 1.0f));	
+	light->SetColor(vec4(0.8f, 0.8f, 0.8f, 1.0f));    
 	light->SetLightType(LightType::DIRECTIONAL);
     
 	node = root->CreateChild("Mesh");

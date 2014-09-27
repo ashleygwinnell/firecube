@@ -78,8 +78,7 @@ bool App::Prepare()
 	childNode = root->CreateChild("LightNode");
 	Light *light = childNode->CreateComponent<Light>();
 	light->SetLightType(FireCube::LightType::DIRECTIONAL);
-	light->SetDiffuseColor(vec4(1, 1, 1, 1));
-	light->SetSpecularColor(vec4(0, 0, 0, 0));
+	light->SetColor(vec4(1, 1, 1, 1));	
 	childNode->Rotate(vec3(PI * 0.5f, 0.0f, 0.0f));
 
 	fontFace = resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18);

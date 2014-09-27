@@ -421,8 +421,7 @@ void Renderer::UseLight(Light *light)
 		currentProgram->SetUniform(PARAM_LIGHT_SPOT_DIR, vec4(vec3(0, 0, 1).TransformNormal(light->GetNode()->GetWorldTransformation()), light->GetSpotCutOff()));		
 	}
 	currentProgram->SetUniform(PARAM_LIGHT_MATRIX, lightMatrix);
-	currentProgram->SetUniform(PARAM_LIGHT_DIFFUSE, light->GetDiffuseColor());
-	currentProgram->SetUniform(PARAM_LIGHT_SPECULAR, light->GetSpecularColor());
+	currentProgram->SetUniform(PARAM_LIGHT_COLOR, light->GetColor());	
 }
 
 void Renderer::ResetCachedShaderParameters()
