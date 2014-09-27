@@ -4,6 +4,7 @@
 #include "Scene/Node.h"
 #include "Math/Plane.h"
 #include "Rendering/DebugRenderer.h"
+#include "Math/MathUtils.h"
 
 using namespace FireCube;
 
@@ -37,62 +38,7 @@ void CharacterController::NodeChanged()
 	}
 }
 
-bool PointTri(vec3 aa, vec3 bb, vec3 cc, vec3 p)
-{
-	vec3 a, b, c, an, bn, cn;
-	vec3 tnorm = Cross(bb - aa, cc - aa).Normalized();
-	float d1, d2, d3, dot1, dot2, dot3;
-	a = bb - aa;
-	b = cc - bb;
-	c = aa - cc;
 
-	an.Cross(a, tnorm);
-	bn.Cross(b, tnorm);
-	cn.Cross(c, tnorm);
-
-	d1 = aa.Dot(an);
-	d2 = bb.Dot(bn);
-	d3 = cc.Dot(cn);
-
-	dot1 = p.Dot(an) - d1;
-	dot2 = p.Dot(bn) - d2;
-	dot3 = p.Dot(cn) - d3;
-
-
-	if (((dot1 <= 0) && (dot2 <= 0) && (dot3 <= 0)) || ((dot1 >= 0) && (dot2 >= 0) && (dot3 >= 0))) return true;
-	return false;
-}
-bool getLowestRoot(float a, float b, float c, float maxR, float &root)
-{
-	float determinant = b*b - 4.0f*a*c;
-
-	if (determinant < 0.0f)
-		return false;
-
-	float sqrtD = (float)sqrt(determinant);
-	float r1 = (-b - sqrtD) / (2 * a);
-	float r2 = (-b + sqrtD) / (2 * a);
-
-	if (r1 > r2)
-	{
-		float temp = r2;
-		r2 = r1;
-		r1 = temp;
-	}
-	if ((r1 > 0) && (r1 < maxR))
-	{
-		root = r1;
-		return true;
-	}
-
-	if ((r2>0) && (r2 < maxR))
-	{
-		root = r2;
-		return true;
-	}
-	return false;
-
-}
 
 void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionMesh, mat4 transform)
 {	
@@ -156,7 +102,7 @@ void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionM
 			if (!embeddedInPlane)
 			{
 				vec3 planeIntersectionPoint = (transformedPosition - trianglePlane.GetNormal()) + transformedVelocity*t0;
-				if (PointTri(p1, p2, p3, planeIntersectionPoint))
+				if (MathUtils::PointTri(p1, p2, p3, planeIntersectionPoint))
 				{
 					foundCollision = true;
 					t = t0;
@@ -178,7 +124,7 @@ void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionM
 				//P1
 				b = 2.0f*(tVelocity.Dot(tPosition - p1));
 				c = (p1 - tPosition).Length2() - 1.0f;
-				if (getLowestRoot(a, b, c, t, newT))
+				if (MathUtils::GetLowestRoot(a, b, c, t, newT))
 				{
 					t = newT;
 					foundCollision = true;
@@ -189,7 +135,7 @@ void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionM
 				//P2
 				b = 2.0f*(tVelocity.Dot(tPosition - p2));
 				c = (p2 - tPosition).Length2() - 1.0f;
-				if (getLowestRoot(a, b, c, t, newT))
+				if (MathUtils::GetLowestRoot(a, b, c, t, newT))
 				{
 					t = newT;
 					foundCollision = true;
@@ -200,7 +146,7 @@ void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionM
 				//P3
 				b = 2.0f*(tVelocity.Dot(tPosition - p3));
 				c = (p3 - tPosition).Length2() - 1.0f;
-				if (getLowestRoot(a, b, c, t, newT))
+				if (MathUtils::GetLowestRoot(a, b, c, t, newT))
 				{
 					t = newT;
 					foundCollision = true;
@@ -221,7 +167,7 @@ void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionM
 				b = edgeSquaredLength*(2 * tVelocity.Dot(posToVertex)) - 2.0f*edgeDotVelocity*edgeDotPosToVertex;
 				c = edgeSquaredLength*(1 - posToVertex.Length2()) + edgeDotPosToVertex*edgeDotPosToVertex;
 
-				if (getLowestRoot(a, b, c, t, newT))
+				if (MathUtils::GetLowestRoot(a, b, c, t, newT))
 				{
 					float f = (edgeDotVelocity*newT - edgeDotPosToVertex) / edgeSquaredLength;
 					if ((f >= 0.0f) && (f <= 1.0f))
@@ -245,7 +191,7 @@ void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionM
 				b = edgeSquaredLength*(2 * tVelocity.Dot(posToVertex)) - 2.0f*edgeDotVelocity*edgeDotPosToVertex;
 				c = edgeSquaredLength*(1 - posToVertex.Length2()) + edgeDotPosToVertex*edgeDotPosToVertex;
 
-				if (getLowestRoot(a, b, c, t, newT))
+				if (MathUtils::GetLowestRoot(a, b, c, t, newT))
 				{
 					float f = (edgeDotVelocity*newT - edgeDotPosToVertex) / edgeSquaredLength;
 					if ((f >= 0.0f) && (f <= 1.0f))
@@ -269,7 +215,7 @@ void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionM
 				b = edgeSquaredLength*(2 * tVelocity.Dot(posToVertex)) - 2.0f*edgeDotVelocity*edgeDotPosToVertex;
 				c = edgeSquaredLength*(1 - posToVertex.Length2()) + edgeDotPosToVertex*edgeDotPosToVertex;
 
-				if (getLowestRoot(a, b, c, t, newT))
+				if (MathUtils::GetLowestRoot(a, b, c, t, newT))
 				{
 					float f = (edgeDotVelocity*newT - edgeDotPosToVertex) / edgeSquaredLength;
 					if ((f >= 0.0f) && (f <= 1.0f))
@@ -289,9 +235,9 @@ void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionM
 				collisions.push_back(CollisionEntry());
 				CollisionEntry &e = collisions.back();
 				e.time = t;
-				e.nearestDistance = distToCollision;
-				e.nearestIntersectionPoint = collisionPoint;
-				e.nearestNormal = nearestNormal;
+				e.distance = distToCollision;
+				e.intersectionPoint = collisionPoint;
+				e.normal = nearestNormal;
 				if ((collisionFound == false) || (distToCollision < nearestDistance))
 				{					
 					this->nearestTime = t;
@@ -323,15 +269,15 @@ void CharacterController::CheckCollisionWithPlane(const Plane &plane, mat4 trans
 		collisions.push_back(CollisionEntry());
 		CollisionEntry &e = collisions.back();
 		e.time = t;
-		e.nearestDistance = distToCollision;
-		e.nearestIntersectionPoint = transformedPosition + t * transformedVelocity - n;
-		e.nearestNormal = n;
+		e.distance = distToCollision;
+		e.intersectionPoint = transformedPosition + t * transformedVelocity - n;
+		e.normal = n;
 		if ((collisionFound == false) || (distToCollision < nearestDistance))
 		{			
 			this->nearestTime = t;
 			this->nearestDistance = distToCollision;
-			this->nearestIntersectionPoint = e.nearestIntersectionPoint;
-			this->nearestNormal = e.nearestNormal;
+			this->nearestIntersectionPoint = e.intersectionPoint;
+			this->nearestNormal = e.normal;
 			this->collisionFound = true;		
 		}
 	}
@@ -405,7 +351,7 @@ void CharacterController::RenderDebugGeometry(DebugRenderer *debugRenderer)
 
 	for (auto &c : collisions)
 	{
-		debugRenderer->AddLine(c.nearestIntersectionPoint * radius, (c.nearestIntersectionPoint + c.nearestNormal * 5.0f) * radius, vec3(0, 1, 0));
+		debugRenderer->AddLine(c.intersectionPoint * radius, (c.intersectionPoint + c.normal * 5.0f) * radius, vec3(0, 1, 0));
 	}
 }
 

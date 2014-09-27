@@ -85,7 +85,7 @@ void PhysicsWorld::Update(float deltaTime)
 		characterController->onGround = false;
 		for (auto &col : characterController->collisions)
 		{
-			if (Dot(col.nearestNormal, vec3(0, 1, 0)) > 1.0f - 0.01f)
+			if (Dot(col.normal, vec3(0, 1, 0)) > 1.0f - 0.01f)
 			{			
 				characterController->onGround = true;
 				break;

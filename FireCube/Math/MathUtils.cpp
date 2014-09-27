@@ -123,6 +123,65 @@ void MathUtils::CalculateTangents(const std::vector<vec3> &vertices, const std::
 	}	
 }
 
+bool MathUtils::PointTri(vec3 aa, vec3 bb, vec3 cc, vec3 p)
+{
+	vec3 a, b, c, an, bn, cn;
+	vec3 tnorm = Cross(bb - aa, cc - aa).Normalized();
+	float d1, d2, d3, dot1, dot2, dot3;
+	a = bb - aa;
+	b = cc - bb;
+	c = aa - cc;
+
+	an.Cross(a, tnorm);
+	bn.Cross(b, tnorm);
+	cn.Cross(c, tnorm);
+
+	d1 = aa.Dot(an);
+	d2 = bb.Dot(bn);
+	d3 = cc.Dot(cn);
+
+	dot1 = p.Dot(an) - d1;
+	dot2 = p.Dot(bn) - d2;
+	dot3 = p.Dot(cn) - d3;
+
+
+	if (((dot1 <= 0) && (dot2 <= 0) && (dot3 <= 0)) || ((dot1 >= 0) && (dot2 >= 0) && (dot3 >= 0))) return true;
+	return false;
+}
+
+
+bool MathUtils::GetLowestRoot(float a, float b, float c, float maxR, float &root)
+{
+	float determinant = b*b - 4.0f*a*c;
+
+	if (determinant < 0.0f)
+		return false;
+
+	float sqrtD = (float)sqrt(determinant);
+	float r1 = (-b - sqrtD) / (2 * a);
+	float r2 = (-b + sqrtD) / (2 * a);
+
+	if (r1 > r2)
+	{
+		float temp = r2;
+		r2 = r1;
+		r1 = temp;
+	}
+	if ((r1 > 0) && (r1 < maxR))
+	{
+		root = r1;
+		return true;
+	}
+
+	if ((r2>0) && (r2 < maxR))
+	{
+		root = r2;
+		return true;
+	}
+	return false;
+
+}
+
 /*
 void MathUtils::CalculateTangents(const std::vector<vec3> &vertices, const std::vector<vec3> &normals, const std::vector<vec2> &uv, const std::vector<unsigned int> &indices, std::vector<vec3> &tangents, std::vector<vec3> &bitangents)
 {

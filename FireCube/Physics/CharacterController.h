@@ -15,9 +15,9 @@ class CollisionEntry
 public:
 	bool operator < (const CollisionEntry &entry);
 	float time;
-	float nearestDistance;
-	vec3 nearestNormal;
-	vec3 nearestIntersectionPoint;
+	float distance;
+	vec3 normal;
+	vec3 intersectionPoint;
 };
 
 class CharacterController : public Component
