@@ -7,6 +7,7 @@
 
 #include "Math/Frustum.h"
 #include "Math/Math.h"
+#include "Math/Ray.h"
 #include "Core/Component.h"
 
 namespace FireCube
@@ -37,20 +38,15 @@ public:
 	/**
 	* Returns the view frustum of this camera.
 	*/
-	Frustum &GetFrustum();
-
-	/**
-	* Constructs a Look-at camera.
-	* @param target The position the camera will be facing.
-	* @param up The up vector.
-	*/
-	void LookAt(const vec3 &target, const vec3 &up);
+	Frustum &GetFrustum();	
 
 	void SetFOV(float fov);
 	void SetNearPlane(float nearPlane);
 	void SetFarPlane(float farPlane);
 	void SetAspectRatio(float aspectRatio);
 	void SetPerspectiveProjectionParameters(float fov, float aspectRatio, float nearPlane, float farPlane);
+	vec3 Unproject(vec3 pos);
+	Ray GetPickingRay(vec2 pos, float width, float height);
 
 	virtual void MarkedDirty();
 	virtual void NodeChanged();

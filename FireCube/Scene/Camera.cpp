@@ -51,15 +51,6 @@ Frustum &Camera::GetFrustum()
 	return frustum;
 }
 
-void Camera::LookAt(const vec3 &target, const vec3 &up)
-{
-	/*mat4 t;	
-	t.LookAt(position, target, up);
-	rotation = t.ExtractEulerAngles() * -1.0f;
-	viewMatrixChanged = true;
-	frustumChanged = true;*/
-}
-
 void Camera::MarkedDirty()
 {
 	viewMatrixChanged = true;
@@ -120,4 +111,24 @@ void Camera::SetPerspectiveProjectionParameters(float fov, float aspectRatio, fl
 	this->farPlane = farPlane;	
 	projectionMatrixChanged = true;
 	frustumChanged = true;
+}
+
+vec3 Camera::Unproject(vec3 pos)
+{
+	mat4 inverse = GetProjectionMatrix() * GetViewMatrix();
+	inverse.Inverse();
+	vec4 tmp = vec4(pos, 1.0f);	
+
+	vec4 obj = inverse * tmp;
+	obj /= obj.w;
+	return obj.ToVec3();
+}
+
+Ray Camera::GetPickingRay(vec2 pos, float width, float height)
+{
+	vec3 ndcPos(pos.x / width, pos.y / height, 0.5f);
+	ndcPos = ndcPos * 2.0f - 1.0f;
+	vec3 worldPos = Unproject(ndcPos);
+	vec3 cameraPos = node->GetWorldPosition();
+	return Ray(cameraPos, (worldPos - cameraPos).Normalized());
 }
