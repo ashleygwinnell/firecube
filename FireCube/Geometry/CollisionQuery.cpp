@@ -10,9 +10,3 @@ const std::vector<RayQueryResult> &RayQuery::GetResult() const
 {
 	return results;
 }
-
-EllipsoidQuery::EllipsoidQuery(vec3 position, vec3 velocity, vec3 radius) : position(position), velocity(velocity), 
-	radius(radius), normalizedVelocity(velocity.Normalized())
-{
-
-}

@@ -27,14 +27,4 @@ public:
 	float maxDistance;
 };
 
-class FIRECUBE_API EllipsoidQuery
-{
-public:
-	EllipsoidQuery(vec3 position, vec3 velocity, vec3 radius);
-	vec3 position;
-	vec3 velocity;
-	vec3 radius;
-	vec3 normalizedVelocity;
-};
-
 }
