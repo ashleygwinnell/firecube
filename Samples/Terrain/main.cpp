@@ -93,8 +93,7 @@ void App::Update(float time)
 }
 
 void App::Render(float time)
-{	
-	renderer->Clear(vec4(0.30f, 0.42f, 0.95f, 1.0f), 1.0f);	
+{		
 	mat4 rot = mat4::IDENTITY;
 	rot.RotateY(ang.y);
 	rot.RotateX(ang.x);	
