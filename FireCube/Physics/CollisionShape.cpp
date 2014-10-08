@@ -3,7 +3,7 @@
 #include "Physics/CollisionShape.h"
 #include "Scene/Node.h"
 #include "Physics/PhysicsWorld.h"
-#include "Rendering/StaticModel.h"
+#include "Geometry/Mesh.h"
 #include "Geometry/Geometry.h"
 #include "Rendering/VertexBuffer.h"
 #include "Rendering/IndexBuffer.h"
@@ -61,12 +61,12 @@ CollisionMesh *CollisionShape::GetMesh()
 	return mesh;
 }
 
-void CollisionShape::FromStaticModel(StaticModel *staticModel)
+void CollisionShape::FromMesh(Mesh *mesh)
 {
 	type = CollisionShapeType::TRIANGLE_MESH;
-	mesh = new CollisionMesh;
+	this->mesh = new CollisionMesh;
 
-	auto geometries = staticModel->GetGeometries();
+	auto geometries = mesh->GetGeometries();
 	for (auto geometry : geometries)
 	{
 		VertexBuffer *vertexBuffer = geometry->GetVertexBuffer();
@@ -86,7 +86,7 @@ void CollisionShape::FromStaticModel(StaticModel *staticModel)
 				vec3 pos1 = *((vec3 *)&vertexData[i1 * vertexBuffer->GetVertexSize() + positionOffset]);
 				vec3 pos2 = *((vec3 *)&vertexData[i2 * vertexBuffer->GetVertexSize() + positionOffset]);
 
-				mesh->triangles.push_back(CollisionTriangle(pos0, pos1, pos2));
+				this->mesh->triangles.push_back(CollisionTriangle(pos0, pos1, pos2));
 			}
 		}
 	}	

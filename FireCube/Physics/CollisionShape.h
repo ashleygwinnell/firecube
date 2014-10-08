@@ -9,7 +9,7 @@ namespace FireCube
 {
 
 class PhysicsWorld;
-class StaticModel;
+class Mesh;
 
 enum class CollisionShapeType
 {
@@ -39,7 +39,7 @@ public:
 	~CollisionShape();
 	
 	void SetShapeType(CollisionShapeType type);
-	void FromStaticModel(StaticModel *staticModel);
+	void FromMesh(Mesh *mesh);
 	CollisionShapeType GetShapeType() const;
 	void SetPlane(const Plane &plane);
 	void SetBox(vec3 size);
