@@ -30,11 +30,11 @@ OrbitCamera::OrbitCamera(Engine *engine, InputManager &inputManager) : Camera(en
 void OrbitCamera::RegisterWithInputManager(InputManager &inputManager)
 {
 	inputManager.AddInputListener(this);
-	inputManager.AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "NodeObserverCamera_Rotate", KeyModifier::NONE);
-	inputManager.AddMapping(Key::MOUSE_MIDDLE_BUTTON, InputMappingType::STATE, "NodeObserverCamera_Zoom", KeyModifier::NONE);
-	inputManager.AddMapping(AnalogInput::MOUSE_AXIS_X_RELATIVE, "NodeObserverCamera_MouseX");
-	inputManager.AddMapping(AnalogInput::MOUSE_AXIS_Y_RELATIVE, "NodeObserverCamera_MouseY");
-	inputManager.AddMapping(AnalogInput::MOUSE_WHEEL_Y_RELATIVE, "NodeObserverCamera_MouseWheelY");
+	inputManager.AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "OrbitCamera_Rotate", KeyModifier::NONE);
+	inputManager.AddMapping(Key::MOUSE_MIDDLE_BUTTON, InputMappingType::STATE, "OrbitCamera_Zoom", KeyModifier::NONE);
+	inputManager.AddMapping(AnalogInput::MOUSE_AXIS_X_RELATIVE, "OrbitCamera_MouseX");
+	inputManager.AddMapping(AnalogInput::MOUSE_AXIS_Y_RELATIVE, "OrbitCamera_MouseY");
+	inputManager.AddMapping(AnalogInput::MOUSE_WHEEL_Y_RELATIVE, "OrbitCamera_MouseWheelY");
 }
 
 void OrbitCamera::SetMinDistance(float v)
@@ -145,20 +145,20 @@ void OrbitCamera::SetRotation(vec3 rotation)
 void OrbitCamera::HandleInput(float time, const MappedInput &input)
 {
 	bool shouldUpdateNode = false;
-	if (input.HasValue("NodeObserverCamera_MouseWheelY"))
+	if (input.HasValue("OrbitCamera_MouseWheelY"))
 	{
-		Zoom(time * input.GetValue("NodeObserverCamera_MouseWheelY") * zoomFactor);
+		Zoom(time * input.GetValue("OrbitCamera_MouseWheelY") * zoomFactor);
 		shouldUpdateNode = true;
 	}
-	if (input.IsStateOn("NodeObserverCamera_Rotate"))
+	if (input.IsStateOn("OrbitCamera_Rotate"))
 	{
-		RotateX(-input.GetValue("NodeObserverCamera_MouseY") * time);
-		RotateY(-input.GetValue("NodeObserverCamera_MouseX") * time);
+		RotateX(-input.GetValue("OrbitCamera_MouseY") * time);
+		RotateY(-input.GetValue("OrbitCamera_MouseX") * time);
 		shouldUpdateNode = true;
 	}
-	if (input.IsStateOn("NodeObserverCamera_Zoom"))
+	if (input.IsStateOn("OrbitCamera_Zoom"))
 	{
-		Zoom(-input.GetValue("NodeObserverCamera_MouseY") * time);		
+		Zoom(-input.GetValue("OrbitCamera_MouseY") * time);		
 		shouldUpdateNode = true;
 	}
 
