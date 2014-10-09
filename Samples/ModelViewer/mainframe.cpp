@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Oct  8 2012)
+// C++ code generated with wxFormBuilder (version Jun  5 2014)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -241,7 +241,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	menuItem1 = new wxMenuItem( menu1, wxID_ANY, wxString( wxT("E&xit") ) , wxT("Close the application."), wxITEM_NORMAL );
 	#ifdef __WXMSW__
 	menuItem1->SetBitmaps( wxNullBitmap );
-	#elif defined( __WXGTK__ )
+	#elif (defined( __WXGTK__ ) || defined( __WXOSX__ ))
 	menuItem1->SetBitmap( wxNullBitmap );
 	#endif
 	menu1->Append( menuItem1 );
