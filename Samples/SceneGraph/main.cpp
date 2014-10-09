@@ -8,7 +8,7 @@ using namespace FireCube;
 App app;
 int main(int argc, char *argv[])
 {
-	if (!app.Initialize(1024, 768, 32, 0, false))
+	if (!app.Initialize(1024, 768, 0, false))
 		return 0;
 	app.Run();
 	return 0;

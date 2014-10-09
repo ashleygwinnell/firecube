@@ -26,10 +26,10 @@ Application::~Application()
 
 bool Application::Initialize()
 {
-	return Initialize(800, 600, 32, 0, false);
+	return Initialize(800, 600, 0, false);
 }
 
-bool Application::Initialize(int width, int height, int bpp, int multisample, bool fullscreen)
+bool Application::Initialize(int width, int height, int multisample, bool fullscreen)
 {    
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		return false;

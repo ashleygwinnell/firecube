@@ -40,7 +40,7 @@ public:
 	* Creates a window and initializes OpenGL.
 	* @return true on success, false otherwise.
 	*/
-	bool Initialize(int width, int height, int bpp, int multisample, bool fullscreen);
+	bool Initialize(int width, int height,int multisample, bool fullscreen);
 
 	/**
 	* Initializes without creating a window (assumes there is already an active rendering context).
