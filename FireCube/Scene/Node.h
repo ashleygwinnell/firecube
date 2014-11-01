@@ -217,16 +217,23 @@ public:
 	}
 
 	template <class T>
-	void GetComponents(const StringHash &type, std::vector<Component *> components)
+	void GetComponents(std::vector<T *> &components, bool recursive = false)
 	{
-		for (auto c : this->components)
+		if (!recursive)
 		{
-			if (c->GetType() == type)
+			for (auto c : this->components)
 			{
-				components.push_back(c);
+				if (c->GetType() == T::GetTypeStatic())
+				{
+					components.push_back(static_cast<T *>(c));
+				}
 			}
-		}		
-	}	
+		}
+		else
+		{
+			GetComponentsRecursive(components);
+		}
+	}			
 
 	void Load(const std::string &filename, ModelLoadingOptions options = ModelLoadingOptions());
 
@@ -235,6 +242,24 @@ public:
 	std::vector<Component *> &GetComponents();
 
 protected:		
+
+	template <class T>
+	void GetComponentsRecursive(std::vector<T *> &components)
+	{
+		for (auto c : this->components)
+		{
+			if (c->GetType() == T::GetTypeStatic())
+			{
+				components.push_back(static_cast<T *>(c));
+			}
+		}
+
+		for (auto c : children)
+		{
+			c->GetComponentsRecursive(components);
+		}
+	}
+
 	void SetTransformationChanged();	
 	
 	std::vector<Node *> children;	

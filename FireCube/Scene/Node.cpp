@@ -161,16 +161,18 @@ Node *Node::CreateChild(const std::string &name)
 }
 
 void Node::SetParent(Node *parent)
-{
-	if (GetParent())	
-		GetParent()->RemoveChild(this);
-	
+{	
 	this->parent = parent;
 	if (parent)
 	{
 		scene = parent->scene;
 		parent->children.push_back(this);
 	}
+
+	if (this->parent)
+		this->parent->RemoveChild(this);
+
+	SetTransformationChanged();
 }
 
 Node *Node::GetChild(const std::string &name, bool recursive)
@@ -196,8 +198,7 @@ void Node::RemoveChild(Node *node)
 	{
 		if ((*i) == node)
 		{
-			children.erase(i);			
-			delete node;
+			children.erase(i);						
 			break;
 		}
 	}		
