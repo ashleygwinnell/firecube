@@ -53,6 +53,9 @@ void InputManager::RemoveInputListener(InputListener *inputListener)
 
 void InputManager::DispatchInput(float time)
 {
+	// Trigger no key input (mainly used to detect mouse movement)
+	SetRawKeyState(Key::NO_KEY, true, false);
+
 	for (unsigned int i = 0; i < inputListeners.size(); i++)
 		inputListeners[i]->HandleInput(time, mappedInput);
 
