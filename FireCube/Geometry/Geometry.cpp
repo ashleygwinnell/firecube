@@ -252,15 +252,18 @@ IndexBuffer *Geometry::GetIndexBuffer()
 
 void Geometry::Render()
 {
-	glBindVertexArray(objectId);
+	if (primitiveCount > 0)
+	{
+		glBindVertexArray(objectId);
 
-	if (indexBuffer && indexBuffer->IsValid())			
-		renderer->RenderIndexStream(primitiveType, indexBuffer->GetIndicesCount());											
-	else
-		renderer->RenderStream(primitiveType, vertexBuffer->GetVertexCount());				
-	renderer->IncreamentNumberOfPrimitivesRendered(primitiveCount);
+		if (indexBuffer && indexBuffer->IsValid())
+			renderer->RenderIndexStream(primitiveType, indexBuffer->GetIndicesCount());
+		else
+			renderer->RenderStream(primitiveType, vertexBuffer->GetVertexCount());
+		renderer->IncreamentNumberOfPrimitivesRendered(primitiveCount);
 
-	glBindVertexArray(0);
+		glBindVertexArray(0);
+	}
 }
 
 bool Geometry::IntersectRay(const Ray &ray, float &distance, vec3 &normal) const
