@@ -81,10 +81,13 @@ void CustomGeometry::UpdateGeometry()
 	{
 	case PrimitiveType::POINTS:
 		geometry->SetPrimitiveCount(vertices.size());
+		break;
 	case PrimitiveType::LINES:
 		geometry->SetPrimitiveCount(vertices.size() / 2);
+		break;
 	case PrimitiveType::TRIANGLES:
 		geometry->SetPrimitiveCount(vertices.size() / 3);
+		break;
 	default:
 		break;
 	}
@@ -96,4 +99,12 @@ void CustomGeometry::SetMaterial(Material *material)
 {
 	this->material = material;
 	renderableParts[0].material = material;
+}
+
+void CustomGeometry::Clear()
+{
+	vertexAttributes = VertexAttributeType::POSITION;
+	currentVertex = 0;
+	boundingBox = BoundingBox();
+	vertices.clear();
 }

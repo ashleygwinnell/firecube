@@ -18,6 +18,7 @@ public:
 	void SetNormal(vec3 normal);
 	void SetTexCoord(vec2 texcoord);
 	void SetMaterial(Material *material);
+	void Clear();
 private:
 	class CustomVertex
 	{
