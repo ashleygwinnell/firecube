@@ -62,6 +62,20 @@ bool BoundingBox::Contains(const BoundingBox &bb) const
 	return false;
 }
 
+bool BoundingBox::Intersects(const BoundingBox &bb) const
+{
+	if (bmax.x < bb.bmin.x ||
+		bmax.y < bb.bmin.y ||
+		bmax.z < bb.bmin.z ||
+		bmin.x > bb.bmax.x ||
+		bmin.y > bb.bmax.y ||
+		bmin.z > bb.bmax.z)
+	{
+		return false;
+	}
+	return true;
+}
+
 void BoundingBox::SetMin(const vec3 &min)
 {
 	bmin = min;

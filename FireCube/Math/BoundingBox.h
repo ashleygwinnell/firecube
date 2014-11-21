@@ -79,6 +79,13 @@ public:
 	bool Contains(const BoundingBox &bb) const;
 
 	/**
+	* Checks whether this bounding box intersects another one.
+	* @param bb The bounding box to check.
+	* @return True if the given bounding box intersects this one, false otherwise.
+	*/
+	bool Intersects(const BoundingBox &bb) const;
+
+	/**
 	* Transforms the bounding box by a given 4x4 matrix.
 	* @param mat The matrix to transform with.
 	*/
