@@ -48,20 +48,28 @@ void PhysicsWorld::Update(float deltaTime)
 			{
 				characterController->normalizedTransformedVelocity = characterController->transformedVelocity.Normalized();
 				characterController->collisionFound = false;
+				BoundingBox characterControllerBoundingBox = BoundingBox(characterController->transformedPosition * characterController->GetRadius() - characterController->GetRadius(), characterController->transformedPosition * characterController->GetRadius() + characterController->GetRadius());
+				characterControllerBoundingBox.Expand(characterControllerBoundingBox.GetMin() + characterController->transformedVelocity * characterController->GetRadius());
+				characterControllerBoundingBox.Expand(characterControllerBoundingBox.GetMin() - characterController->transformedVelocity * characterController->GetRadius());
+				characterControllerBoundingBox.Expand(characterControllerBoundingBox.GetMax() + characterController->transformedVelocity * characterController->GetRadius());
+				characterControllerBoundingBox.Expand(characterControllerBoundingBox.GetMax() - characterController->transformedVelocity * characterController->GetRadius());
 
 				for (auto collisionShape : collisionShapes)
 				{
-					if (collisionShape->GetShapeType() == CollisionShapeType::TRIANGLE_MESH || collisionShape->GetShapeType() == CollisionShapeType::BOX)
+					if (characterControllerBoundingBox.Intersects(collisionShape->GetWorldBoundingBox()))
 					{
-						CollisionMesh *mesh = collisionShape->GetMesh();
+						if (collisionShape->GetShapeType() == CollisionShapeType::TRIANGLE_MESH || collisionShape->GetShapeType() == CollisionShapeType::BOX)
+						{
+							CollisionMesh *mesh = collisionShape->GetMesh();
 
-						characterController->CheckCollisionWithMesh(*mesh, collisionShape->GetNode()->GetWorldTransformation());
-					}
-					else if (collisionShape->GetShapeType() == CollisionShapeType::PLANE)
-					{
-						CollisionMesh *mesh = collisionShape->GetMesh();
+							characterController->CheckCollisionWithMesh(*mesh, collisionShape->GetNode()->GetWorldTransformation());
+						}
+						else if (collisionShape->GetShapeType() == CollisionShapeType::PLANE)
+						{
+							CollisionMesh *mesh = collisionShape->GetMesh();
 
-						characterController->CheckCollisionWithPlane(collisionShape->GetPlane(), collisionShape->GetNode()->GetWorldTransformation());
+							characterController->CheckCollisionWithPlane(collisionShape->GetPlane(), collisionShape->GetNode()->GetWorldTransformation());
+						}
 					}
 				}
 

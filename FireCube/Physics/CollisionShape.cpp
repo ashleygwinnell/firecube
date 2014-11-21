@@ -94,12 +94,15 @@ void CollisionShape::FromMesh(Mesh *mesh)
 			}
 		}
 	}	
+	
+	worldBoundingBoxChanged = true;
 }
 
 void CollisionShape::SetPlane(const Plane &plane)
 {
 	type = CollisionShapeType::PLANE;
 	this->plane = plane;
+	worldBoundingBoxChanged = true;
 }
 
 Plane CollisionShape::GetPlane() const
@@ -131,6 +134,8 @@ void CollisionShape::SetBox(vec3 size)
 	// Bottom
 	mesh->triangles.push_back(CollisionTriangle(vec3(-halfSize.x, -halfSize.y, halfSize.z), vec3(-halfSize.x, -halfSize.y, -halfSize.z), vec3(halfSize.x, -halfSize.y, -halfSize.z)));
 	mesh->triangles.push_back(CollisionTriangle(vec3(-halfSize.x, -halfSize.y, halfSize.z), vec3(halfSize.x, -halfSize.y, -halfSize.z), vec3(halfSize.x, -halfSize.y, halfSize.z)));
+
+	worldBoundingBoxChanged = true;
 }
 
 void CollisionShape::RenderDebugGeometry(DebugRenderer *debugRenderer)
@@ -224,6 +229,5 @@ void CollisionShape::UpdateWorldBoundingBox()
 	}
 
 	worldBoundingBox = boundingBox;
-	worldBoundingBox.Transform(node->GetWorldTransformation());
-	worldBoundingBoxChanged = false;
+	worldBoundingBox.Transform(node->GetWorldTransformation());	
 }
