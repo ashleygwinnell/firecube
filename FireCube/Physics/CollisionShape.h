@@ -4,6 +4,7 @@
 #include "Core/Component.h"
 #include "Core/Memory.h"
 #include "Math/Plane.h"
+#include "Math/BoundingBox.h"
 
 namespace FireCube
 {
@@ -28,6 +29,7 @@ class CollisionMesh : public RefCounted
 {
 public:
 	std::vector<CollisionTriangle> triangles;
+	BoundingBox boundingBox;
 };
 
 
@@ -47,10 +49,16 @@ public:
 	Plane GetPlane() const;
 	CollisionMesh *GetMesh();
 
-	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
+	BoundingBox GetWorldBoundingBox();
+
+	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);	
 private:
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
+	void UpdateWorldBoundingBox();
+
+	BoundingBox worldBoundingBox;
+	bool worldBoundingBoxChanged;
 
 	CollisionShapeType type;
 	WeakPtr<PhysicsWorld> physicsWorld;

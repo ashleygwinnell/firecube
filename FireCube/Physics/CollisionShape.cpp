@@ -16,7 +16,7 @@ CollisionTriangle::CollisionTriangle(vec3 p1, vec3 p2, vec3 p3) : p1(p1), p2(p2)
 
 }
 
-CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld(nullptr)
+CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld(nullptr), worldBoundingBoxChanged(false)
 {
 
 }
@@ -42,6 +42,7 @@ CollisionShapeType CollisionShape::GetShapeType() const
 void CollisionShape::MarkedDirty()
 {
 	// Update shape (if scale changed)
+	worldBoundingBoxChanged = true;
 }
 void CollisionShape::NodeChanged()
 {
@@ -87,6 +88,9 @@ void CollisionShape::FromMesh(Mesh *mesh)
 				vec3 pos2 = *((vec3 *)&vertexData[i2 * vertexBuffer->GetVertexSize() + positionOffset]);
 
 				this->mesh->triangles.push_back(CollisionTriangle(pos0, pos1, pos2));
+				this->mesh->boundingBox.Expand(pos0);
+				this->mesh->boundingBox.Expand(pos1);
+				this->mesh->boundingBox.Expand(pos2);
 			}
 		}
 	}	
@@ -188,4 +192,38 @@ void CollisionShape::RenderDebugGeometry(DebugRenderer *debugRenderer)
 			debugRenderer->AddLine(p3, p4, vec3(0, 1, 0));
 		}
 	}
+}
+
+BoundingBox CollisionShape::GetWorldBoundingBox()
+{
+	if (worldBoundingBoxChanged)
+	{
+		worldBoundingBoxChanged = false;
+		UpdateWorldBoundingBox();
+	}
+	return worldBoundingBox;
+}
+
+void CollisionShape::UpdateWorldBoundingBox()
+{
+	BoundingBox boundingBox;
+
+	switch (type)
+	{
+	case CollisionShapeType::TRIANGLE_MESH:
+		boundingBox = mesh->boundingBox;
+		break;
+	case CollisionShapeType::PLANE:
+		boundingBox = BoundingBox(vec3(-10e6), vec3(10e6)); // In case of a plane, return a large bounding box
+		break;
+	case CollisionShapeType::BOX:
+		boundingBox = BoundingBox(-boxSize * 0.5f, boxSize * 0.5f);
+		break;
+	default:
+		break;
+	}
+
+	worldBoundingBox = boundingBox;
+	worldBoundingBox.Transform(node->GetWorldTransformation());
+	worldBoundingBoxChanged = false;
 }
