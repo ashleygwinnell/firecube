@@ -3,9 +3,6 @@
 #include "Utils/Logger.h"
 
 #include "Utils/Filesystem.h"
-#include "ModelLoaders/ColladaLoader.h"
-#include "ModelLoaders/m3dsLoader.h"
-#include "ModelLoaders/ObjLoader.h"
 #include "Core/Engine.h"
 #include "Rendering/Scene.h"
 
@@ -317,35 +314,6 @@ void Node::RemoveAllComponents()
 	}
 
 	components.clear();
-}
-
-void Node::Load(const std::string &filename, ModelLoadingOptions options)
-{
-	std::string file = Filesystem::SearchForFileName(filename);
-	if (file.empty())
-		return;
-	std::string::size_type d;
-	d = filename.find_last_of(".");		
-	LOGINFO("Created model with name:", filename);
-	if (d != std::string::npos)
-	{
-		std::string ext = ToLower(filename.substr(d + 1));
-		ModelLoader *modelLoader = nullptr;
-		if (ext == "3ds")
-			modelLoader = new M3dsLoader(engine);		
-		else if (ext == "dae")		
-			modelLoader = new ColladaLoader(engine);
-		else if (ext == "obj")
-			modelLoader = new ObjLoader(engine);
-
-		if (modelLoader->Load(file, options))
-		{
-			modelLoader->GenerateScene(engine->GetRenderer(), this);
-			
-		}		
-
-		delete modelLoader;
-	}	
 }
 
 Component *Node::GetComponent(const StringHash &type)

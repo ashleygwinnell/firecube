@@ -46,9 +46,6 @@
     <ClCompile Include="Math\vec2.cpp" />
     <ClCompile Include="Math\vec3.cpp" />
     <ClCompile Include="Math\vec4.cpp" />
-    <ClCompile Include="ModelLoaders\ColladaLoader.cpp" />
-    <ClCompile Include="ModelLoaders\m3dsLoader.cpp" />
-    <ClCompile Include="ModelLoaders\ObjLoader.cpp" />
     <ClCompile Include="Physics\CharacterController.cpp" />
     <ClCompile Include="Physics\CollisionShape.cpp" />
     <ClCompile Include="Physics\PhysicsWorld.cpp" />
@@ -121,9 +118,6 @@
     <ClInclude Include="Math\vec2.h" />
     <ClInclude Include="Math\vec3.h" />
     <ClInclude Include="Math\vec4.h" />
-    <ClInclude Include="ModelLoaders\ColladaLoader.h" />
-    <ClInclude Include="ModelLoaders\m3dsLoader.h" />
-    <ClInclude Include="ModelLoaders\ObjLoader.h" />
     <ClInclude Include="Physics\CharacterController.h" />
     <ClInclude Include="Physics\CollisionShape.h" />
     <ClInclude Include="Physics\PhysicsWorld.h" />

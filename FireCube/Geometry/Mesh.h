@@ -21,8 +21,7 @@ class FIRECUBE_API Mesh : public Resource
 public:
 	Mesh(Engine *engine);
 	
-	virtual bool Load(const std::string &filename);
-	bool LoadOld(const std::string &filename);
+	virtual bool Load(const std::string &filename);	
 	const std::vector<SharedPtr<Geometry>> &GetGeometries() const;
 	const std::vector<SharedPtr<Material>> &GetMaterials() const;
 	void AddGeometry(Geometry *geometry, Material *material);

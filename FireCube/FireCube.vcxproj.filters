@@ -46,9 +46,6 @@
     <Filter Include="Core">
       <UniqueIdentifier>{d3823a06-0aea-4a4e-af95-ceb9ac7b58bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ModelLoaders">
-      <UniqueIdentifier>{096253bd-7589-413d-9cbb-ab520980ca5f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Physics">
       <UniqueIdentifier>{f076d51d-0a0c-43b6-a1bb-5511e0d7413a}</UniqueIdentifier>
     </Filter>
@@ -218,15 +215,6 @@
     </ClCompile>
     <ClCompile Include="Rendering\Scene.cpp">
       <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelLoaders\m3dsLoader.cpp">
-      <Filter>ModelLoaders</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelLoaders\ObjLoader.cpp">
-      <Filter>ModelLoaders</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelLoaders\ColladaLoader.cpp">
-      <Filter>ModelLoaders</Filter>
     </ClCompile>
     <ClCompile Include="Geometry\ModelLoader.cpp">
       <Filter>Geometry</Filter>
@@ -434,15 +422,6 @@
     </ClInclude>
     <ClInclude Include="Rendering\Scene.h">
       <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelLoaders\m3dsLoader.h">
-      <Filter>ModelLoaders</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelLoaders\ObjLoader.h">
-      <Filter>ModelLoaders</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelLoaders\ColladaLoader.h">
-      <Filter>ModelLoaders</Filter>
     </ClInclude>
     <ClInclude Include="Geometry\ModelLoader.h">
       <Filter>Geometry</Filter>
