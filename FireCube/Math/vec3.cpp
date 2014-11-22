@@ -188,9 +188,8 @@ vec3 vec3::TransformCoordinate(const mat4 &m) const
 }
 
 vec3 vec3::TransformNormal(const mat4 &m) const
-{
-	mat4 t = m;
-	vec3 ret = vec3(x * t.m[0] + y * t.m[4] + z * t.m[8], x * t.m[1] + y * t.m[5] + z * t.m[9], x * t.m[2] + y * t.m[6] + z * m.m[10]);
+{	
+	vec3 ret = vec3(x * m.m[0] + y * m.m[4] + z * m.m[8], x * m.m[1] + y * m.m[5] + z * m.m[9], x * m.m[2] + y * m.m[6] + z * m.m[10]);
 	return ret;
 }
 
