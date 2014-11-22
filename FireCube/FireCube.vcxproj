@@ -248,7 +248,7 @@
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\ThirdParty\FreeType\include;$(ProjectDir)\ThirdParty\TinyXML;$(ProjectDir)\ThirdParty\GLEW;$(ProjectDir)\ThirdParty\STB;$(ProjectDir);$(ProjectDir)\ThirdParty\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\ThirdParty\FreeType\include;$(ProjectDir)\ThirdParty\TinyXML;$(ProjectDir)\ThirdParty\GLEW;$(ProjectDir)\ThirdParty\STB;$(ProjectDir);$(ProjectDir)\ThirdParty\SDL\include;$(ProjectDir)\ThirdParty\Assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;GLEW_BUILD;FIRECUBE_EXPORTS;FIRECUBE_DYNAMIC_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -259,8 +259,8 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;sdl.lib;freetype250MT_D.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)\ThirdParty\FreeType\Debug;$(ProjectDir)\ThirdParty\SDL\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;sdl.lib;freetype250MT_D.lib;assimp.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\ThirdParty\FreeType\Debug;$(ProjectDir)\ThirdParty\SDL\Debug;$(ProjectDir)\ThirdParty\Assimp\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>MSVCRT;LIBCMTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -300,8 +300,8 @@
       </Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL.lib;freetype250MT_D.lib;Lua.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)\ThirdParty\FreeType\Debug;$(ProjectDir)\ThirdParty\SDL\Debug;$(ProjectDir)\ThirdParty\Lua\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL.lib;freetype250MT_D.lib;Lua.lib;Assimp.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\ThirdParty\FreeType\Debug;$(ProjectDir)\ThirdParty\SDL\Debug;$(ProjectDir)\ThirdParty\Lua\Debug;$(ProjectDir)\ThirdParty\Assimp\Debug</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -362,8 +362,8 @@
       </Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL.lib;freetype250MT.lib;Lua.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)\ThirdParty\FreeType\Release;$(ProjectDir)\ThirdParty\SDL\Release;$(ProjectDir)\ThirdParty\Lua\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL.lib;freetype250MT.lib;Lua.lib;Assimp.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\ThirdParty\FreeType\Release;$(ProjectDir)\ThirdParty\SDL\Release;$(ProjectDir)\ThirdParty\Lua\Release;$(ProjectDir)\ThirdParty\Assimp\Release</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,35 +1,3 @@
-FireCube.opensdf
-FireCube.sdf
-FireCube/Debug Static/
-CSG/Debug/
-FireCube/ThirdParty/FreeType/Debug/
-FireCube/ThirdParty/Lua/Debug/
-FireCube/ThirdParty/SDL/Debug/
-FireCubeTest/Debug/
-ModelViewer/Debug/
-PhysicsAttempt1/Debug/
-SceneGraph/Debug/
-ShadowMapping/Debug/
-Terrain/Debug/
-fboTest/Debug/
-FireCube.v12.suo
-FireCube/Release Static/
-FireCube/ThirdParty/FreeType/Release/
-FireCube/ThirdParty/Lua/Release/
-FireCube/ThirdParty/SDL/Release/
-FireCube/ThirdParty/SDL/SDL.vcxproj.user
-FireCubeTest/Release/
-ModelViewer/Release/
-ModelViewer/log.txt
-Release/
-FireCube/log.txt
-FireCubeTest/log.txt
-FireCube/Documentation/
-FireCube/ThirdParty/SDL/Release Static/
-RenderToTexture/Debug/
-Terrain/log.txt
-CharacterController/Debug/
-CharacterController/CharacterController.vcxproj.user
 Samples/SceneGraph/Debug/
 Samples/RenderToTexture/Debug/
 Samples/PhysicsAttempt1/Debug/
@@ -44,3 +12,26 @@ Samples/ModelViewer/log.txt
 Samples/Terrain/Terrain.vcxproj.user
 Samples/Terrain/log.txt
 Samples/SceneEditor/Debug/
+FireCube/ThirdParty/Assimp/Debug/
+FireCube/ThirdParty/Assimp/Release/
+Samples/Terrain/Release/
+Samples/SceneGraph/Release/
+Samples/CharacterController/Release/
+Samples/FireCubeTest/Release/
+Samples/SceneEditor/Release/
+Samples/ModelViewer/Release/
+Samples/RenderToTexture/Release/
+FireCube/ThirdParty/Lua/Debug/
+FireCube/ThirdParty/FreeType/Release/
+FireCube/ThirdParty/FreeType/Debug/
+FireCube/ThirdParty/Lua/Release/
+FireCube/Release Static/
+FireCube/ThirdParty/SDL/Debug/
+FireCube/Documentation/
+FireCube/ThirdParty/SDL/Release/
+FireCube/ThirdParty/SDL/Release Static/
+FireCube/Debug Static/
+FireCube.opensdf
+FireCube.sdf
+FireCube.v12.suo
+FireCube/log.txt
