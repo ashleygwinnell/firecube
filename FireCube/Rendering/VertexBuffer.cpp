@@ -91,13 +91,6 @@ void VertexBuffer::Destroy()
 	objectId = 0;
 }
 
-void VertexBuffer::SetVertexAttribute(int index, int numCoords, int stride, int offset)
-{
-	glBindBuffer(GL_ARRAY_BUFFER, objectId);
-	glEnableVertexAttribArray(index);
-	glVertexAttribPointer(index, numCoords, GL_FLOAT, GL_FALSE, stride, (void*) offset);
-}
-
 void VertexBuffer::UpdateAttributesOffsets()
 {
 	unsigned int currentOffset = 0;

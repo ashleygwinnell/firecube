@@ -37,8 +37,7 @@ class VertexAttribute
 public:
 	VertexAttributeType type;
 	unsigned int size;
-	unsigned int offset;
-	unsigned int index;
+	unsigned int offset;	
 };
 
 /**
@@ -71,15 +70,7 @@ public:
 	* @return true on success.
 	*/
 	bool LoadData(void *data, unsigned int vertexCount, VertexAttributeType vertexAttributes, BufferType bt);
-	
-	/**
-	* Binds the buffer as a vertex attribute.
-	* @param index The vertex attribute index.
-	* @param numCoords The number of coordinates each element of the buffer has.
-	* @param stride The distance between the start of each element in bytes.
-	* @param offset The offset in bytes where this attribute starts from the beginning of the buffer.
-	*/
-	void SetVertexAttribute(int index, int numCoords, int stride, int offset);    		
+
 	void ApplyAttributes();
 	void *Lock();
 	void Unlock();
