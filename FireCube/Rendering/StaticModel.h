@@ -11,7 +11,8 @@ class StaticModel : public Renderable
 {	
 	OBJECT(StaticModel)
 public:
-	StaticModel(Engine *engine);	
+	StaticModel(Engine *engine);
+	StaticModel(Engine *engine, Mesh *mesh);
 	void CreateFromMesh(Mesh *mesh);	
 	std::vector<SharedPtr<Geometry>> &GetGeometries();
 	std::vector<SharedPtr<Material>> &GetMaterials();	

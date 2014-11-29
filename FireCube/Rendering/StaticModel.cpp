@@ -11,6 +11,11 @@ StaticModel::StaticModel(Engine *engine) : Renderable(engine)
 	
 }
 
+StaticModel::StaticModel(Engine *engine, Mesh *mesh) : StaticModel(engine)
+{
+	CreateFromMesh(mesh);
+}
+
 void StaticModel::CreateFromMesh(Mesh *mesh)
 {
 	for (unsigned int i = 0; i < mesh->GetGeometries().size(); ++i)
