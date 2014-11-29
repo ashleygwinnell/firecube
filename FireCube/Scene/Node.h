@@ -201,9 +201,9 @@ public:
 
 	void RemoveAllComponents();
 
-	template <class T> T* CreateComponent()
+	template <class T, typename... Args> T* CreateComponent(Args... args)
 	{
-		T *component = new T(engine);
+		T *component = new T(engine, args...);
 		AddComponent(component);
 		return component;
 	}
