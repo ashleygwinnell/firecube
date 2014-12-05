@@ -20,10 +20,10 @@ public:
 	void Update(float time);
 	void SetAnimation(unsigned int index);
 protected:
-	void CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<RenderablePart> &nonSkinned, std::vector<RenderablePart> &skinned);	
-	void SetBoundingBox(BoundingBox boundingBox);
+	void CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<RenderablePart> &nonSkinned, std::vector<RenderablePart> &skinned);		
 	void CalculateNodeAnimations(float animationTime);
 	virtual void UpdateWorldBoundingBox();
+	void UpdateBoundingBox();
 
 	void BuildTreeTransformations(SkeletonNode &node, mat4 parentTransform);
 	
@@ -37,7 +37,7 @@ protected:
 	void CalcInterpolatedRotation(quat &out, float animationTime, const NodeAnimation &nodeAnim);
 	void CalcInterpolatedScaling(vec3 &out, float animationTime, const NodeAnimation &nodeAnim);
 
-	BoundingBox boundingBox;
+	std::vector<BoundingBox> boundingBoxes;
 	std::vector<SharedPtr<Geometry>> geometries;
 	std::vector<SharedPtr<Material>> materials;
 	SkeletonNode skeletonRoot;	

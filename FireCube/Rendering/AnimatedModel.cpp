@@ -40,7 +40,8 @@ void AnimatedModel::CreateFromMesh(AnimatedMesh *mesh)
 		}
 	}
 	
-	SetBoundingBox(mesh->GetBoundingBox());		
+	boundingBoxes = mesh->GetBoundingBoxes();
+	MarkedDirty();	
 	nodeTransformations.resize(mesh->GetNumberOfTreeNodes());	
 
 	// Create renderable parts based on the meshes in the skeleton
@@ -54,6 +55,7 @@ void AnimatedModel::CreateFromMesh(AnimatedMesh *mesh)
 void AnimatedModel::Update(float time)
 {
 	currentTime += time;
+	MarkedDirty();
 }
 
 void AnimatedModel::CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<RenderablePart> &nonSkinned, std::vector<RenderablePart> &skinned)
@@ -119,15 +121,25 @@ void AnimatedModel::CalculateNodeAnimations(float animationTime)
 }
 
 
-void AnimatedModel::SetBoundingBox(BoundingBox boundingBox)
-{
-	this->boundingBox = boundingBox;
-	MarkedDirty();
-}
-
 void AnimatedModel::UpdateWorldBoundingBox()
 {
-	worldBoundingBox = boundingBox;
+	worldBoundingBox = BoundingBox();
+	for (unsigned int i = 0; i < numNonSkinnedRenderableParts; ++i)
+	{
+		unsigned int geometryIndex = 0;
+		for (unsigned int j = 0; j < geometries.size(); ++j)
+		{
+			if (renderableParts[i].geometry == geometries[j].Get())
+			{
+				geometryIndex = j;
+				break;
+			}
+		}
+		BoundingBox transformedBoundingBox = boundingBoxes[geometryIndex];
+		transformedBoundingBox.Transform(nodeTransformations[nonSkinnedRenderablePartsNodeIndices[i]]);
+		worldBoundingBox.Expand(transformedBoundingBox);
+
+	}	
 	worldBoundingBox.Transform(node->GetWorldTransformation());
 }
 
@@ -140,6 +152,7 @@ void AnimatedModel::UpdateRenderableParts()
 	CalculateNodeAnimations(animationTime);
 	BuildTreeTransformations(skeletonRoot, mat4::IDENTITY);
 	UpdateSkinningMatrices();
+	UpdateBoundingBox();
 	for (unsigned int i = 0; i < numNonSkinnedRenderableParts; ++i)
 	{
 		renderableParts[i].transformation = node->GetWorldTransformation() * nodeTransformations[nonSkinnedRenderablePartsNodeIndices[i]];
@@ -239,6 +252,11 @@ void AnimatedModel::UpdateSkinningMatrices()
 			skinMatrices[i][j] = nodeTransformations[meshBones[i][j].nodeIndex] * meshBones[i][j].offsetMarix;
 		}
 	}
+}
+
+void AnimatedModel::UpdateBoundingBox()
+{
+
 }
 
 unsigned int AnimatedModel::FindPosition(float animationTime, const NodeAnimation &nodeAnim)

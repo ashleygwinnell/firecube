@@ -58,6 +58,7 @@ void AnimatedMesh::ProcessAssimpScene(const aiScene *aScene)
 
 	meshBoneWeights.resize(aScene->mNumMeshes);
 	meshBones.resize(aScene->mNumMeshes);
+	boundingBoxes.resize(aScene->mNumMeshes);
 
 	for (unsigned int i = 0; i < aScene->mNumMeshes; ++i)
 	{
@@ -261,7 +262,7 @@ SharedPtr<Geometry> AnimatedMesh::ProcessAssimpMesh(const aiMesh *aMesh, unsigne
 		*((float *) &vertexData[i * vertexSize + 4]) = position.y;
 		*((float *) &vertexData[i * vertexSize + 8]) = position.z;
 
-		boundingBox.Expand(position);
+		boundingBoxes[meshIndex].Expand(position);
 
 		unsigned int currentOffset = 12;
 
@@ -333,14 +334,9 @@ void AnimatedMesh::AddGeometry(Geometry *geometry, Material *material)
 	materials.push_back(material);
 }
 
-const BoundingBox &AnimatedMesh::GetBoundingBox() const
+const std::vector<BoundingBox> &AnimatedMesh::GetBoundingBoxes() const
 {
-	return boundingBox;
-}
-
-void AnimatedMesh::SetBoundingBox(BoundingBox boundingBox)
-{
-	this->boundingBox = boundingBox;
+	return boundingBoxes;
 }
 
 void AnimatedMesh::ReadSkeleton(const aiScene *aScene, const aiNode *aNode, SkeletonNode &node)

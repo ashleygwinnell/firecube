@@ -75,8 +75,7 @@ public:
 	const std::vector<SharedPtr<Geometry>> &GetGeometries() const;
 	const std::vector<SharedPtr<Material>> &GetMaterials() const;
 	void AddGeometry(Geometry *geometry, Material *material);
-	const BoundingBox &GetBoundingBox() const;
-	void SetBoundingBox(BoundingBox boundingBox);
+	const std::vector<BoundingBox> &GetBoundingBoxes() const;	
 	unsigned int GetNumberOfTreeNodes() const;
 	SkeletonNode &GetSkeletonRoot();
 	std::vector<Animation> &GetAnimations();
@@ -93,7 +92,7 @@ private:
 	void BuildTreeIndices(SkeletonNode &node, unsigned int &index);
 	unsigned int CountTreeNodes(SkeletonNode &node);
 
-	BoundingBox boundingBox;
+	std::vector<BoundingBox> boundingBoxes;
 	std::vector<SharedPtr<Geometry>> geometries;
 	std::vector<SharedPtr<Material>> materials;
 	SkeletonNode skeletonRoot;
