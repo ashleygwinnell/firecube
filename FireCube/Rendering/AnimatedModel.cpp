@@ -172,7 +172,7 @@ void AnimatedModel::UpdateRenderableParts()
 	for (unsigned int i = 0; i < renderableParts.size() - numNonSkinnedRenderableParts; ++i)
 	{
 		auto &renderablePart = renderableParts[i + numNonSkinnedRenderableParts];
-		renderableParts[i].transformation = node->GetWorldTransformation();
+		renderableParts[i + numNonSkinnedRenderableParts].transformation = node->GetWorldTransformation();
 	}	
 }
 

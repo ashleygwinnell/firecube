@@ -72,7 +72,7 @@ void AnimatedMesh::ProcessAssimpScene(const aiScene *aScene)
 
 	ReadAnimations(aScene);	
 
-	// Assign each node in the skeleton an index into the nodeTransformations array
+	// Assign each node in the skeleton an index
 	unsigned int index = 0;
 	BuildTreeIndices(skeletonRoot, index);
 	numberOfTreeNodes = CountTreeNodes(skeletonRoot);
