@@ -148,7 +148,7 @@ void quat::Interpolate(quat &out, const quat &start, const quat &end, float fact
 void quat::Normalize()
 {
 	// compute the magnitude and divide through it
-	const float mag = sqrt(x*x + y*y + z*z + w*w);
+	const float mag = sqrt(x * x + y * y + z * z + w * w);
 	if (mag)
 	{
 		const float invMag = 1.0f / mag;
@@ -161,10 +161,10 @@ void quat::Normalize()
 
 quat FireCube::operator*(const quat &a, const quat &b)
 {
-	return quat(a.w*b.w - a.x*b.x - a.y*b.y - a.z*b.z,
-		a.w*b.x + a.x*b.w + a.y*b.z - a.z*b.y,
-		a.w*b.y + a.y*b.w + a.z*b.x - a.x*b.z,
-		a.w*b.z + a.z*b.w + a.x*b.y - a.y*b.x);
+	return quat(a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z,
+		a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
+		a.w * b.y + a.y * b.w + a.z * b.x - a.x * b.z,
+		a.w * b.z + a.z * b.w + a.x * b.y - a.y * b.x);
 }
 
 void quat::Conjugate()
@@ -179,7 +179,7 @@ vec3 quat::Rotate(const vec3 &v)
 	quat q2(0.0f, v.x, v.y, v.z), q = *this, qinv = q;
 	q.Conjugate();
 
-	q = q*q2*qinv;
+	q = q * q2 * qinv;
 	return vec3(q.x, q.y, q.z);
 
 }
