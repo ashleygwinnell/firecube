@@ -20,7 +20,7 @@ public:
 	void Update(float time);
 	void SetAnimation(unsigned int index);
 protected:
-	void CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<RenderablePart> &nonSkinned, std::vector<RenderablePart> &skinned);		
+	void CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<RenderablePart> &nonSkinned, std::vector<unsigned int> &nonSkinnedGeometryIndex, std::vector<RenderablePart> &skinned, std::vector<unsigned int> &skinnedGeometryIndex);
 	void CalculateNodeAnimations(float animationTime);
 	virtual void UpdateWorldBoundingBox();	
 
@@ -52,6 +52,7 @@ protected:
 	std::vector<unsigned int> nonSkinnedRenderablePartsNodeIndices;
 	std::vector<unsigned int> skinnedRenderablePartsBoneIndices;
 	unsigned int numNonSkinnedRenderableParts;
+	std::vector<unsigned int> renderablePartGeometryIndex;
 };
 
 }

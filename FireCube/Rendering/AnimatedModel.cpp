@@ -46,9 +46,11 @@ void AnimatedModel::CreateFromMesh(AnimatedMesh *mesh)
 
 	// Create renderable parts based on the meshes in the skeleton
 	std::vector<RenderablePart> skinned;
-	CreateRenderableParts(skeletonRoot, renderableParts, skinned);
+	std::vector<unsigned int> skinnedGeometryIndex;
+	CreateRenderableParts(skeletonRoot, renderableParts, renderablePartGeometryIndex, skinned, skinnedGeometryIndex);
 	numNonSkinnedRenderableParts = renderableParts.size();
 	renderableParts.insert(renderableParts.end(), skinned.begin(), skinned.end());
+	renderablePartGeometryIndex.insert(renderablePartGeometryIndex.end(), skinnedGeometryIndex.begin(), skinnedGeometryIndex.end());
 	SetAnimation(0);
 }
 
@@ -58,7 +60,7 @@ void AnimatedModel::Update(float time)
 	MarkedDirty();
 }
 
-void AnimatedModel::CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<RenderablePart> &nonSkinned, std::vector<RenderablePart> &skinned)
+void AnimatedModel::CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<RenderablePart> &nonSkinned, std::vector<unsigned int> &nonSkinnedGeometryIndex, std::vector<RenderablePart> &skinned, std::vector<unsigned int> &skinnedGeometryIndex)
 {
 	for (auto meshIndex : skeletonNode.meshes)
 	{
@@ -70,18 +72,20 @@ void AnimatedModel::CreateRenderableParts(SkeletonNode &skeletonNode, std::vecto
 			part.skinMatricesCount = meshBones[meshIndex].size();
 			part.skinMatrices = skinMatrices[meshIndex].data();
 			skinned.push_back(part);
+			skinnedGeometryIndex.push_back(meshIndex);
 			skinnedRenderablePartsBoneIndices.push_back(meshIndex);			
 		}
 		else
 		{
 			
 			nonSkinned.push_back(part);
+			nonSkinnedGeometryIndex.push_back(meshIndex);
 			nonSkinnedRenderablePartsNodeIndices.push_back(skeletonNode.nodeIndex);
 		}		
 	}
 	for (auto &c : skeletonNode.children)
 	{
-		CreateRenderableParts(c, nonSkinned, skinned);
+		CreateRenderableParts(c, nonSkinned, nonSkinnedGeometryIndex, skinned, skinnedGeometryIndex);
 	}
 }
 
@@ -126,32 +130,16 @@ void AnimatedModel::UpdateWorldBoundingBox()
 	worldBoundingBox = BoundingBox();
 	for (unsigned int i = 0; i < numNonSkinnedRenderableParts; ++i)
 	{
-		unsigned int geometryIndex = 0;
-		for (unsigned int j = 0; j < geometries.size(); ++j)
-		{
-			if (renderableParts[i].geometry == geometries[j].Get())
-			{
-				geometryIndex = j;
-				break;
-			}
-		}
+		unsigned int geometryIndex = renderablePartGeometryIndex[i];		
 		BoundingBox transformedBoundingBox = boundingBoxes[geometryIndex];
 		transformedBoundingBox.Transform(nodeTransformations[nonSkinnedRenderablePartsNodeIndices[i]]);
 		worldBoundingBox.Expand(transformedBoundingBox);
 	}	
 
 	for (unsigned int i = 0; i < renderableParts.size() - numNonSkinnedRenderableParts; ++i)
-	{
-		auto &renderablePart = renderableParts[i + numNonSkinnedRenderableParts];
-		unsigned int geometryIndex = 0;
-		for (unsigned int j = 0; j < geometries.size(); ++j)
-		{
-			if (renderablePart.geometry == geometries[j].Get())
-			{
-				geometryIndex = j;
-				break;
-			}
-		}
+	{		
+		unsigned int geometryIndex = renderablePartGeometryIndex[i + numNonSkinnedRenderableParts];
+		
 		BoundingBox transformedBoundingBox;
 		auto &bones = meshBones[geometryIndex];
 		for (auto &bone : bones)
@@ -168,8 +156,7 @@ void AnimatedModel::UpdateWorldBoundingBox()
 }
 
 void AnimatedModel::UpdateRenderableParts()
-{
-	unsigned int partIndex = 0;
+{	
 	float ticksPerSecond = animations[0].ticksPerSecond != 0.0f ? animations[0].ticksPerSecond : 25.0f;
 	float timeInTicks = currentTime * ticksPerSecond;
 	float animationTime = fmod(timeInTicks, animations[0].duration);
