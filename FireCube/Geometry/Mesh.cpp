@@ -29,10 +29,11 @@ bool Mesh::Load(const std::string &filename)
 	Assimp::Importer importer;
 	
 	const aiScene* scene = importer.ReadFile(filename,
-		aiProcess_CalcTangentSpace |
 		aiProcess_Triangulate |
-		aiProcess_JoinIdenticalVertices |
-		aiProcess_SortByPType);
+		aiProcess_GenSmoothNormals |
+		aiProcess_FlipUVs |
+		aiProcess_CalcTangentSpace |
+		aiProcess_JoinIdenticalVertices);
 	
 	if (!scene)
 	{
@@ -54,14 +55,6 @@ void Mesh::ProcessAssimpScene(const aiScene *aScene)
 		auto material = ProcessAssimpMaterial(aMaterial);
 		materialList.push_back(material);
 	}
-
-	/*for (unsigned int i = 0; i < aScene->mNumMeshes; ++i)
-	{
-		auto aMesh = aScene->mMeshes[i];
-		auto geometry = ProcessAssimpMesh(aMesh);
-		geometries.push_back(geometry);
-		materials.push_back(materialList[aMesh->mMaterialIndex]);
-	}*/
 
 	ProcessAssimpNode(aScene, aScene->mRootNode, materialList, mat4::IDENTITY);
 }
@@ -213,7 +206,7 @@ SharedPtr<Geometry> Mesh::ProcessAssimpMesh(const aiMesh *aMesh, mat4 transforma
 		if (aMesh->HasTextureCoords(0))
 		{
 			vertexData[i * vertexSize + currentOffset++] = aMesh->mTextureCoords[0][i].x;
-			vertexData[i * vertexSize + currentOffset++] = 1.0f - aMesh->mTextureCoords[0][i].y;			
+			vertexData[i * vertexSize + currentOffset++] = aMesh->mTextureCoords[0][i].y;			
 		}
 
 		if (aMesh->HasTangentsAndBitangents())

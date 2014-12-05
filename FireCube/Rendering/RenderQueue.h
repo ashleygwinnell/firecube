@@ -54,6 +54,10 @@ public:
 	unsigned long long int sortKey;
 
 	float distance;
+
+	mat4 *skinMatrices;
+
+	unsigned int skinMatricesCount;
 };
 
 class FIRECUBE_API RenderQueue

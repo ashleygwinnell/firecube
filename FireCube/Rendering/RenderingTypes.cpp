@@ -23,6 +23,7 @@ StringHash PARAM_FOG_COLOR("fogColor");
 StringHash PARAM_LIGHT_MATRIX("lightMatrix");
 StringHash PARAM_TIME_STEP("timeStep");
 StringHash PARAM_LIFE_TIME("lifeTime");
+StringHash PARAM_SKIN_MATRICES("skinMatrices");
 
 StringHash BASE_PASS("base");
 StringHash LIGHT_PASS("light");

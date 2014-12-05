@@ -133,6 +133,14 @@ public:
 	void SetUniform(const StringHash &nameHash, const mat4 &value);
 
 	/**
+	* Sets an array of 4x4 uniform matrix.
+	* @param name The name of the variable.
+	* @param value The array of matrices.
+	* @param count The number of matrices
+	*/
+	void SetUniform(const StringHash &nameHash, mat4 *value, unsigned int count);
+
+	/**
 	* Sets a 1d uniform boolean.
 	* @param name The name of the variable.
 	* @param value The value to assign for it.

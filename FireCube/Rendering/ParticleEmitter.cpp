@@ -32,9 +32,9 @@ ParticleEmitter::ParticleEmitter(Engine *engine) : Renderable(engine), lifeTime(
 	for (int i = 0; i < 2; ++i)
 	{
 		particleBuffers[i] = new VertexBuffer(engine->GetRenderer());
-		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::POSITION, sizeof(float) * 3); // Position
-		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, sizeof(float) * 3);   // Velocity
-		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, sizeof(float));		  // Age
+		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::POSITION, VertexAttributeDataType::FLOAT, 3); // Position
+		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 3);   // Velocity
+		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 1);	  // Age
 		particleBuffers[i]->LoadData(&particleData[0], numberOfParticles, BufferType::STREAM);
 	}
 

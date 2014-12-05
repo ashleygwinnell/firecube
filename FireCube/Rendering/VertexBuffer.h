@@ -23,9 +23,16 @@ enum class BufferType
 	STATIC, DYNAMIC, STREAM
 };
 
+#define NUM_BONES_PER_VEREX 4
+
 enum class FIRECUBE_API VertexAttributeType
 {
-	NONE = 0, POSITION = 1, NORMAL = 2, TEXCOORD0 = 4, TANGENT = 8, COLOR = 16, CUSTOM = 32, MAX_VERTEX_ATTRIBUTE = 5	
+	NONE = 0, POSITION = 1, NORMAL = 2, TEXCOORD0 = 4, TANGENT = 8, COLOR = 16, BONE_WEIGHTS = 32, BONE_INDICES = 64, CUSTOM = 128, MAX_VERTEX_ATTRIBUTE = 7
+};
+
+enum class FIRECUBE_API VertexAttributeDataType
+{
+	FLOAT, UNSIGNED_BYTE
 };
 
 VertexAttributeType operator | (const VertexAttributeType &lhs, const VertexAttributeType &rhs);
@@ -36,7 +43,8 @@ class VertexAttribute
 {
 public:
 	VertexAttributeType type;
-	unsigned int size;
+	VertexAttributeDataType dataType;
+	unsigned int count;
 	unsigned int offset;	
 };
 
@@ -83,7 +91,7 @@ public:
 	unsigned int GetVertexSize() const;
 	const std::vector<VertexAttribute> &GetVertexAttributes() const;
 	unsigned int GetVertexAttributeOffset(VertexAttributeType type);
-	void AddVertexAttribute(VertexAttributeType type, int size);
+	void AddVertexAttribute(VertexAttributeType type, VertexAttributeDataType dataType, int count);
 	bool HasAttribute(VertexAttributeType type);
 
 	const std::vector<char> &GetShadowData() const;
@@ -95,6 +103,7 @@ public:
 	static unsigned int GetVertexAttributeIndex(VertexAttributeType vertexAttribute);
 private:
 	static const unsigned int attributeSize[static_cast<int>(VertexAttributeType::MAX_VERTEX_ATTRIBUTE)];
+	static const VertexAttributeDataType attributeDataType[static_cast<int>(VertexAttributeType::MAX_VERTEX_ATTRIBUTE)];
 	void UpdateAttributesOffsets();
 	
 	std::vector<VertexAttribute> vertexAttributes;

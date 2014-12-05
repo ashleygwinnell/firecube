@@ -9,7 +9,7 @@
 
 using namespace FireCube;
 
-Geometry::Geometry(Renderer *renderer) : GraphicsResource(renderer), primitiveCount(0), vertexBuffer(nullptr), indexBuffer(nullptr)
+Geometry::Geometry(Renderer *renderer) : GraphicsResource(renderer), primitiveCount(0), vertexBuffer(nullptr), indexBuffer(nullptr), geometryType(GeometryType::STATIC)
 {
 
 }
@@ -289,4 +289,14 @@ bool Geometry::IntersectRay(const Ray &ray, float &distance, vec3 &normal) const
 		}
 	}
 	return found;
+}
+
+void Geometry::SetGeometryType(GeometryType geometryType)
+{
+	this->geometryType = geometryType;
+}
+
+GeometryType Geometry::GetGeometryType() const
+{
+	return geometryType;
 }

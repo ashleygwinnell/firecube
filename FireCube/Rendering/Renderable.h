@@ -31,7 +31,11 @@ public:
 	/**
 	* The transformation to apply to this part.
 	*/
-	mat4 transformation;	
+	mat4 transformation;
+
+	mat4 *skinMatrices;
+
+	unsigned int skinMatricesCount;
 };
 
 class FIRECUBE_API Renderable : public Component

@@ -60,17 +60,17 @@ void CustomGeometry::UpdateGeometry()
 		if ((vertexAttributes & VertexAttributeType::POSITION) == VertexAttributeType::POSITION)
 		{
 			*((vec3 *) &vertexData[currentOffset]) = vertices[i].position;
-			currentOffset += VertexBuffer::GetAttributeSize(VertexAttributeType::POSITION);
+			currentOffset += VertexBuffer::GetAttributeSize(VertexAttributeType::POSITION) * sizeof(float);
 		}
 		if ((vertexAttributes & VertexAttributeType::NORMAL) == VertexAttributeType::NORMAL)
 		{
 			*((vec3 *) &vertexData[currentOffset]) = vertices[i].normal;
-			currentOffset += VertexBuffer::GetAttributeSize(VertexAttributeType::NORMAL);
+			currentOffset += VertexBuffer::GetAttributeSize(VertexAttributeType::NORMAL) * sizeof(float);
 		}
 		if ((vertexAttributes & VertexAttributeType::TEXCOORD0) == VertexAttributeType::TEXCOORD0)
 		{
 			*((vec2 *) &vertexData[currentOffset]) = vertices[i].texcoord;
-			currentOffset += VertexBuffer::GetAttributeSize(VertexAttributeType::TEXCOORD0);
+			currentOffset += VertexBuffer::GetAttributeSize(VertexAttributeType::TEXCOORD0) * sizeof(float);
 		}
 	}	
 	

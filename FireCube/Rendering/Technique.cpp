@@ -9,11 +9,18 @@
 
 using namespace FireCube;
 
-static std::string shaderPermutationsDefines[] = { " SPOT_LIGHT",
-									   " POINT_LIGHT",
-									   " DIRECTIONAL_LIGHT"};
+static std::string vertexShaderLightPermutationsDefines[] = { " SPOT_LIGHT",
+															  " POINT_LIGHT",
+															  " DIRECTIONAL_LIGHT"};
+static std::string fragmentShaderLightPermutationsDefines[] = { " SPOT_LIGHT",
+																" POINT_LIGHT",
+																" DIRECTIONAL_LIGHT" };
+
 static std::string fogPermutationsDefines[] = { "",
-									" FOG" };
+												" FOG" };
+
+static std::string geometryPermutationsDefines[] = { "",
+													 " SKINNING" };
 
 void Pass::SetName(const std::string &name)
 {
@@ -58,26 +65,37 @@ void Pass::GenerateAllShaderPermutations()
 	if (isBase)
 	{
 		generatedVertexShaders.resize(2);
-		generatedFragmentShaders.resize(2);
+		generatedFragmentShaders.resize(2);		
+
+		for (unsigned int i = 0; i < 2; ++i)
+		{
+			unsigned int g = i;
+			generatedVertexShaders[i] = vertexShaderTemplate->GenerateShader(shaderDefines + geometryPermutationsDefines[g]);			
+		}
 
 		for (unsigned int i = 0; i < 2; ++i)
 		{			
-			unsigned int fp = i;
-			generatedVertexShaders[i] = vertexShaderTemplate->GenerateShader(shaderDefines + fogPermutationsDefines[fp]);
-			generatedFragmentShaders[i] = fragmentShaderTemplate->GenerateShader(shaderDefines + fogPermutationsDefines[fp]);
+			unsigned int f = i;			
+			generatedFragmentShaders[i] = fragmentShaderTemplate->GenerateShader(shaderDefines + fogPermutationsDefines[f]);
 		}
 	}
 	else
 	{
-		generatedVertexShaders.resize(MAX_SHADER_PERMUTATIONS * 2);
-		generatedFragmentShaders.resize(MAX_SHADER_PERMUTATIONS * 2);
+		generatedVertexShaders.resize(MAX_VERTEX_SHADER_LIGHT_PERMUTATIONS * 2);
+		generatedFragmentShaders.resize(MAX_FRAGMENT_SHADER_LIGHT_PERMUTATIONS * 2);
 
-		for (unsigned int i = 0; i < MAX_SHADER_PERMUTATIONS * 2; ++i)
+		for (unsigned int i = 0; i < MAX_VERTEX_SHADER_LIGHT_PERMUTATIONS * 2; ++i)
 		{
-			unsigned int sp = i % MAX_SHADER_PERMUTATIONS;
-			unsigned int fp = i / MAX_SHADER_PERMUTATIONS;
-			generatedVertexShaders[i] = vertexShaderTemplate->GenerateShader(shaderDefines + shaderPermutationsDefines[sp] + fogPermutationsDefines[fp]);
-			generatedFragmentShaders[i] = fragmentShaderTemplate->GenerateShader(shaderDefines + shaderPermutationsDefines[sp] + fogPermutationsDefines[fp]);
+			unsigned int l = i % MAX_VERTEX_SHADER_LIGHT_PERMUTATIONS;			
+			unsigned int g = i / MAX_VERTEX_SHADER_LIGHT_PERMUTATIONS;
+			generatedVertexShaders[i] = vertexShaderTemplate->GenerateShader(shaderDefines + vertexShaderLightPermutationsDefines[l] + geometryPermutationsDefines[g]);			
+		}
+
+		for (unsigned int i = 0; i < MAX_FRAGMENT_SHADER_LIGHT_PERMUTATIONS * 2; ++i)
+		{
+			unsigned int l = i % MAX_FRAGMENT_SHADER_LIGHT_PERMUTATIONS;			
+			unsigned int f = i / MAX_FRAGMENT_SHADER_LIGHT_PERMUTATIONS;
+			generatedFragmentShaders[i] = fragmentShaderTemplate->GenerateShader(shaderDefines + fragmentShaderLightPermutationsDefines[l] + fogPermutationsDefines[f]);
 		}
 	}	
 }

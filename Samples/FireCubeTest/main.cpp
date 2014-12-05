@@ -26,6 +26,9 @@ bool App::Prepare()
 	GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
 	
+
+	auto rr = resourceCache->GetResource<AnimatedMesh>("../Assets/Models/AnimationTest.fbx");
+
 	root = scene.GetRootNode();
 	Node *childNode = root->CreateChild("Camera");
 	camera = childNode->CreateComponent<OrbitCamera>();
@@ -35,22 +38,23 @@ bool App::Prepare()
 	scene.SetCamera(camera);	
 
 	childNode = root->CreateChild("Model");	
-	StaticModel *staticModel = childNode->CreateComponent<StaticModel>();
-	staticModel->CreateFromMesh(resourceCache->GetResource<Mesh>("scene.3ds"));
+	/*StaticModel *staticModel = childNode->CreateComponent<StaticModel>(resourceCache->GetResource<Mesh>("scene.3ds"));	
 	childNode->Scale(vec3(0.05f));
-	childNode->Move(vec3(0, 0.0251f, 0));
+	childNode->Move(vec3(0, 0.0251f, 0));*/
+	AnimatedModel *animatedModel = childNode->CreateComponent<AnimatedModel>(rr);	
+	childNode->Scale(vec3(0.05f));
 
-	childNode = root->CreateChild("Particles");
-	childNode->CreateComponent<ParticleEmitter>();
+	/*childNode = root->CreateChild("Particles");
+	childNode->CreateComponent<ParticleEmitter>();*/
 
-	childNode = root->CreateChild("Terrain");	
+	/*childNode = root->CreateChild("Terrain");	
 	Terrain *terrain = childNode->CreateComponent<Terrain>();
 	childNode->Scale(vec3(0.05f));
 	Image *image = resourceCache->GetResource<Image>("heightmap3.bmp");
 	terrain->SetPatchSize(64);
 	terrain->CreateFromHeightMap(image);
 	terrain->SetMaterial(resourceCache->GetResource<Material>("Materials/TerrainNoTexture.xml"));
-	//terrain->SetMaterial(resourceCache->GetResource<Material>("Materials/DebugNormals.xml"));
+	//terrain->SetMaterial(resourceCache->GetResource<Material>("Materials/DebugNormals.xml"));*/
 
 	childNode = root->CreateChild("LightNode");	
 	Light *light = childNode->CreateComponent<Light>();
@@ -71,6 +75,8 @@ void App::Update(float t)
 void App::Render(float t)
 {    		
 	scene.Render(renderer);
+
+	scene.RenderDebugGeometry(engine->GetDebugRenderer());
 
 	mat4 ortho;
 	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	

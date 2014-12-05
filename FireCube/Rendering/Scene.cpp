@@ -103,15 +103,21 @@ void Scene::UpdateBaseQueue()
 						if (newRenderJob.pass == nullptr)
 							continue;
 						newRenderJob.pass->GenerateAllShaderPermutations();
-						unsigned int shaderPermutation = 0;
+						unsigned int vertexShaderPermutation = 0;
+						unsigned int fragmentShaderPermutation = 0;
+						if (renderablePart.geometry->GetGeometryType() == GeometryType::SKINNED)
+							vertexShaderPermutation += 1;
+
 						if (fogEnabled)
-							shaderPermutation += 1;
-						newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(shaderPermutation);
-						newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(shaderPermutation);
+							fragmentShaderPermutation += 1;
+						newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(vertexShaderPermutation);
+						newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(fragmentShaderPermutation);
 						newRenderJob.geometry = renderablePart.geometry;
 						newRenderJob.material = renderablePart.material;
 						newRenderJob.transformation = renderablePart.transformation;
 						newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetNode()->GetWorldPosition()).Length();
+						newRenderJob.skinMatrices = renderablePart.skinMatrices;
+						newRenderJob.skinMatricesCount = renderablePart.skinMatricesCount;
 						newRenderJob.CalculateSortKey();
 						queue.renderJobs.push_back(newRenderJob);
 					}
@@ -130,16 +136,28 @@ void Scene::UpdateLightQueues()
 	lightQueues.resize(lights.size());
 	for (unsigned int i = 0; i < lightQueues.size(); ++i)
 	{
-		unsigned int shaderPermutation = 0;
+		unsigned int vertexShaderPermutation = 0;
+		unsigned int fragmentShaderPermutation = 0;		
 
 		if (lights[i]->GetLightType() == LightType::DIRECTIONAL)
-			shaderPermutation = SP_DIRECTIONAL_LIGHT;
+		{
+			vertexShaderPermutation = VSP_DIRECTIONAL_LIGHT;
+			fragmentShaderPermutation = FSP_DIRECTIONAL_LIGHT;
+		}
 		else if (lights[i]->GetLightType() == LightType::POINT)
-			shaderPermutation = SP_POINT_LIGHT;
+		{
+			vertexShaderPermutation = VSP_POINT_LIGHT;
+			fragmentShaderPermutation = FSP_POINT_LIGHT;
+		}
 		else if (lights[i]->GetLightType() == LightType::SPOT)
-			shaderPermutation = SP_SPOT_LIGHT;
+		{
+			vertexShaderPermutation = VSP_SPOT_LIGHT;
+			fragmentShaderPermutation = FSP_SPOT_LIGHT;
+		}
 		if (fogEnabled)
-			shaderPermutation += MAX_SHADER_PERMUTATIONS;
+		{
+			fragmentShaderPermutation += MAX_FRAGMENT_SHADER_LIGHT_PERMUTATIONS;
+		}
 
 		lightQueues[i].first = lights[i];
 
@@ -173,12 +191,17 @@ void Scene::UpdateLightQueues()
 							if (newRenderJob.pass == nullptr)
 								continue;
 							newRenderJob.pass->GenerateAllShaderPermutations();
-							newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(shaderPermutation);
-							newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(shaderPermutation);
+							unsigned int currentPartVertexShaderPermutation = vertexShaderPermutation;
+							if (renderablePart.geometry->GetGeometryType() == GeometryType::SKINNED)
+								currentPartVertexShaderPermutation += MAX_VERTEX_SHADER_LIGHT_PERMUTATIONS;
+							newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(currentPartVertexShaderPermutation);
+							newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(fragmentShaderPermutation);
 							newRenderJob.geometry = renderablePart.geometry;
 							newRenderJob.material = renderablePart.material;
 							newRenderJob.transformation = renderablePart.transformation;
 							newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - camera->GetNode()->GetWorldPosition()).Length();
+							newRenderJob.skinMatrices = renderablePart.skinMatrices;
+							newRenderJob.skinMatricesCount = renderablePart.skinMatricesCount;
 							newRenderJob.CalculateSortKey();
 							queue.renderJobs.push_back(newRenderJob);
 						}
@@ -272,7 +295,12 @@ void Scene::Render(Renderer *renderer)
 				renderer->SetBlendMode(renderJob.pass->GetBlendMode());
 				renderer->SetDepthWrite(renderJob.pass->GetDepthWrite());
 				renderer->SetDepthTest(renderJob.pass->GetDepthTest());								
-				renderJob.geometry->Render();
+				Geometry *geometry = renderJob.geometry;
+				if (geometry->GetGeometryType() == GeometryType::SKINNED)
+				{					
+					program->SetUniform(PARAM_SKIN_MATRICES, renderJob.skinMatrices, renderJob.skinMatricesCount);
+				}
+				geometry->Render();
 			}
 			break;
 		}
@@ -310,7 +338,12 @@ void Scene::Render(Renderer *renderer)
 					renderer->SetBlendMode(renderJob.pass->GetBlendMode());
 					renderer->SetDepthWrite(renderJob.pass->GetDepthWrite());
 					renderer->SetDepthTest(renderJob.pass->GetDepthTest());					
-					renderJob.geometry->Render();
+					Geometry *geometry = renderJob.geometry;
+					if (geometry->GetGeometryType() == GeometryType::SKINNED)
+					{
+						program->SetUniform(PARAM_SKIN_MATRICES, renderJob.skinMatrices, renderJob.skinMatricesCount);
+					}
+					geometry->Render();
 				}
 			}
 			

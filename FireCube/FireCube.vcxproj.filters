@@ -252,8 +252,14 @@
     <ClCompile Include="Physics\CharacterController.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Geometry\AnimatedMesh.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
     <ClCompile Include="Math\quat.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\AnimatedModel.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -465,8 +471,14 @@
     <ClInclude Include="Physics\CharacterController.h">
       <Filter>Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Geometry\AnimatedMesh.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
     <ClInclude Include="Math\quat.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\AnimatedModel.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

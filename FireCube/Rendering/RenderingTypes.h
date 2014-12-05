@@ -23,13 +23,22 @@ enum class TextureUnit
 	MAX_TEXTURE_UNITS
 };
 
-enum ShaderPermutation
+enum VertexShaderLightPermutation
 {
-	SP_SPOT_LIGHT,
-	SP_POINT_LIGHT,
-	SP_DIRECTIONAL_LIGHT,
-	MAX_SHADER_PERMUTATIONS
+	VSP_SPOT_LIGHT,
+	VSP_POINT_LIGHT,
+	VSP_DIRECTIONAL_LIGHT,
+	MAX_VERTEX_SHADER_LIGHT_PERMUTATIONS
 };
+
+enum FragmentShaderLightPermutation
+{
+	FSP_SPOT_LIGHT,
+	FSP_POINT_LIGHT,
+	FSP_DIRECTIONAL_LIGHT,
+	MAX_FRAGMENT_SHADER_LIGHT_PERMUTATIONS
+};
+
 
 enum class RenderSurfaceType
 {
@@ -65,6 +74,7 @@ extern StringHash PARAM_FOG_COLOR;
 extern StringHash PARAM_LIGHT_MATRIX;
 extern StringHash PARAM_TIME_STEP;
 extern StringHash PARAM_LIFE_TIME;
+extern StringHash PARAM_SKIN_MATRICES;
 
 extern StringHash BASE_PASS;
 extern StringHash LIGHT_PASS;

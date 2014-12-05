@@ -29,6 +29,7 @@
     <ClCompile Include="Core\Resource.cpp" />
     <ClCompile Include="Core\ResourceCache.cpp" />
     <ClCompile Include="Core\Variant.cpp" />
+    <ClCompile Include="Geometry\AnimatedMesh.cpp" />
     <ClCompile Include="Geometry\Geometry.cpp" />
     <ClCompile Include="Geometry\GeometryGenerator.cpp" />
     <ClCompile Include="Geometry\Material.cpp" />
@@ -50,6 +51,7 @@
     <ClCompile Include="Physics\CharacterController.cpp" />
     <ClCompile Include="Physics\CollisionShape.cpp" />
     <ClCompile Include="Physics\PhysicsWorld.cpp" />
+    <ClCompile Include="Rendering\AnimatedModel.cpp" />
     <ClCompile Include="Rendering\CustomGeometry.cpp" />
     <ClCompile Include="Rendering\DebugRenderer.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
@@ -101,6 +103,7 @@
     <ClInclude Include="Core\ResourceCache.h" />
     <ClInclude Include="Core\Variant.h" />
     <ClInclude Include="FireCube.h" />
+    <ClInclude Include="Geometry\AnimatedMesh.h" />
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\GeometryGenerator.h" />
     <ClInclude Include="Geometry\Material.h" />
@@ -123,6 +126,7 @@
     <ClInclude Include="Physics\CharacterController.h" />
     <ClInclude Include="Physics\CollisionShape.h" />
     <ClInclude Include="Physics\PhysicsWorld.h" />
+    <ClInclude Include="Rendering\AnimatedModel.h" />
     <ClInclude Include="Rendering\CustomGeometry.h" />
     <ClInclude Include="Rendering\DebugRenderer.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />

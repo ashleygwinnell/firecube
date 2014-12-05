@@ -7,11 +7,22 @@
 using namespace FireCube;
 
 const unsigned int VertexBuffer::attributeSize[static_cast<int>(VertexAttributeType::MAX_VERTEX_ATTRIBUTE)] = {
-	3 * sizeof(float), // position
-	3 * sizeof(float), // normal
-	2 * sizeof(float), // texture coordinate 0
-	3 * sizeof(float), // tangent	
-	3 * sizeof(float)}; // color
+	3,					   // position
+	3,					   // normal
+	2,					   // texture coordinate 0
+	3,					   // tangent	
+	3,					   // color
+	NUM_BONES_PER_VEREX,   // blend weights
+	NUM_BONES_PER_VEREX }; // blend indices
+
+const VertexAttributeDataType VertexBuffer::attributeDataType[static_cast<int>(VertexAttributeType::MAX_VERTEX_ATTRIBUTE)] = {
+	VertexAttributeDataType::FLOAT,			  // position
+	VertexAttributeDataType::FLOAT,			  // normal
+	VertexAttributeDataType::FLOAT,			  // texture coordinate 0
+	VertexAttributeDataType::FLOAT,			  // tangent	
+	VertexAttributeDataType::FLOAT,			  // color
+	VertexAttributeDataType::FLOAT,			  // blend weights
+	VertexAttributeDataType::UNSIGNED_BYTE }; // blend indices
 
 VertexBuffer::VertexBuffer(Renderer *renderer) : GraphicsResource(renderer), isShadowed(false)
 {
@@ -36,11 +47,11 @@ bool VertexBuffer::LoadData(void *data, unsigned int vertexCount, VertexAttribut
 	{
 		if (static_cast<int>(vertexAttributes) & (1 << i))
 		{
-			AddVertexAttribute(static_cast<VertexAttributeType>(1 << i), attributeSize[i]);			
+			AddVertexAttribute(static_cast<VertexAttributeType>(1 << i), attributeDataType[i], attributeSize[i]);
 		}
 		else
 		{
-			AddVertexAttribute(VertexAttributeType::NONE, 0);
+			AddVertexAttribute(VertexAttributeType::NONE, VertexAttributeDataType::FLOAT, 0);
 		}
 	}
 
@@ -97,7 +108,19 @@ void VertexBuffer::UpdateAttributesOffsets()
 	for (auto &vertexAttribute : vertexAttributes)
 	{
 		vertexAttribute.offset = currentOffset;			
-		currentOffset += vertexAttribute.size;	
+		unsigned int size;
+		switch (vertexAttribute.dataType)
+		{
+		case VertexAttributeDataType::FLOAT:
+			size = sizeof(float);
+			break;
+		case VertexAttributeDataType::UNSIGNED_BYTE:
+			size = sizeof(unsigned char);
+			break;
+		default:
+			break;
+		}
+		currentOffset += vertexAttribute.count * size;	
 	}
 	vertexSize = currentOffset;
 }
@@ -108,10 +131,22 @@ void VertexBuffer::ApplyAttributes()
 	for (unsigned int i = 0; i < vertexAttributes.size(); ++i)
 	{
 		const VertexAttribute &vertexAttribute = vertexAttributes[i];
-		if (vertexAttribute.size > 0)
+		if (vertexAttribute.count > 0)
 		{
 			glEnableVertexAttribArray(i);
-			glVertexAttribPointer(i, vertexAttribute.size / sizeof(float), GL_FLOAT, GL_FALSE, vertexSize, (void *)vertexAttribute.offset);
+			GLenum type;
+			switch (vertexAttribute.dataType)
+			{
+			case VertexAttributeDataType::FLOAT:
+				type = GL_FLOAT;
+				break;
+			case VertexAttributeDataType::UNSIGNED_BYTE:
+				type = GL_UNSIGNED_BYTE;
+				break;
+			default:
+				break;
+			}
+			glVertexAttribPointer(i, vertexAttribute.count, type, GL_FALSE, vertexSize, (void *)vertexAttribute.offset);
 		}
 		else
 		{
@@ -150,11 +185,12 @@ const std::vector<VertexAttribute> &VertexBuffer::GetVertexAttributes() const
 	return vertexAttributes;
 }
 
-void VertexBuffer::AddVertexAttribute(VertexAttributeType type, int size)
+void VertexBuffer::AddVertexAttribute(VertexAttributeType type, VertexAttributeDataType dataType, int count)
 {
 	vertexAttributes.push_back(VertexAttribute());
 	vertexAttributes.back().type = type;
-	vertexAttributes.back().size = size;
+	vertexAttributes.back().dataType = dataType;
+	vertexAttributes.back().count = count;
 }
 
 unsigned int VertexBuffer::GetVertexAttributeOffset(VertexAttributeType type)
@@ -205,7 +241,19 @@ unsigned int VertexBuffer::GetVertexSize(VertexAttributeType vertexAttributes)
 	{
 		if (static_cast<int>(vertexAttributes) & (1 << i))
 		{			
-			currentOffset += attributeSize[i];
+			unsigned int size;
+			switch (attributeDataType[i])
+			{
+			case VertexAttributeDataType::FLOAT:
+				size = sizeof(float);
+				break;
+			case VertexAttributeDataType::UNSIGNED_BYTE:
+				size = sizeof(unsigned char);
+				break;
+			default:
+				break;
+			}
+			currentOffset += attributeSize[i] * size;
 		}
 	}
 	return currentOffset;
@@ -234,6 +282,12 @@ unsigned int VertexBuffer::GetVertexAttributeIndex(VertexAttributeType vertexAtt
 		break;
 	case VertexAttributeType::COLOR:
 		return 4;
+		break;
+	case VertexAttributeType::BONE_WEIGHTS:
+		return 5;
+		break;
+	case VertexAttributeType::BONE_INDICES:
+		return 6;
 		break;
 	default:
 		return 0;

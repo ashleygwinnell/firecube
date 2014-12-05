@@ -203,6 +203,8 @@ void Program::Link()
 		nameData.resize(values[0]); //The length of the name.
 		glGetProgramResourceName(objectId, GL_UNIFORM, i, nameData.size(), NULL, &nameData[0]);
 		std::string name(nameData.begin(), nameData.end() - 1);		
+		if (name.substr(name.size() - 3) == "[0]")
+			name = name.substr(0, name.size() - 3);
 		variables[StringHash(name)] = values[1];
 	}
 	glUseProgram(objectId);
@@ -258,6 +260,13 @@ void Program::SetUniform(const StringHash &nameHash, const mat4 &value)
 	std::map<StringHash, GLint>::iterator i = variables.find(nameHash);
 	if (i != variables.end())
 		glUniformMatrix4fv(i->second, 1, false, value.m);
+}
+
+void Program::SetUniform(const StringHash &nameHash, mat4 *value, unsigned int count)
+{
+	std::map<StringHash, GLint>::iterator i = variables.find(nameHash);
+	if (i != variables.end())
+		glUniformMatrix4fv(i->second, count, false, (float *) value);
 }
 
 void Program::SetUniform(const StringHash &nameHash, bool value)

@@ -35,6 +35,11 @@ enum class PrimitiveType
 	POINTS, LINES, TRIANGLES, TRIANGLE_STRIP, QUADS, LINE_LOOP, LINE_STRIP, TRIANGLE_FAN
 };
 
+enum class GeometryType
+{
+	STATIC, SKINNED
+};
+
 /**
 * A class representing a geometry.
 * Geometries consists of vertices(position, normal, etc..), faces and a material.
@@ -66,6 +71,17 @@ public:
 	PrimitiveType GetPrimitiveType() const;
 
 	/**
+	* Sets the geometry type of this geometry.
+	* @param primitiveType The type of the primitive.
+	*/
+	void SetGeometryType(GeometryType geometryType);
+
+	/**
+	* @return The geometry type of this geometry.
+	*/
+	GeometryType GetGeometryType() const;
+
+	/**
 	* Sets the amount of primitives to be rendered by this geometry.
 	* @param primitiveCount The number of primitives.
 	*/
@@ -95,6 +111,7 @@ private:
 	VertexBuffer *vertexBuffer;	
 	IndexBuffer *indexBuffer;	
 	PrimitiveType primitiveType;
+	GeometryType geometryType;
 	unsigned int primitiveCount;	
 };
 }
