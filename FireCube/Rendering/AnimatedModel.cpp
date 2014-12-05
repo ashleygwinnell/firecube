@@ -138,8 +138,32 @@ void AnimatedModel::UpdateWorldBoundingBox()
 		BoundingBox transformedBoundingBox = boundingBoxes[geometryIndex];
 		transformedBoundingBox.Transform(nodeTransformations[nonSkinnedRenderablePartsNodeIndices[i]]);
 		worldBoundingBox.Expand(transformedBoundingBox);
-
 	}	
+
+	for (unsigned int i = 0; i < renderableParts.size() - numNonSkinnedRenderableParts; ++i)
+	{
+		auto &renderablePart = renderableParts[i + numNonSkinnedRenderableParts];
+		unsigned int geometryIndex = 0;
+		for (unsigned int j = 0; j < geometries.size(); ++j)
+		{
+			if (renderablePart.geometry == geometries[j].Get())
+			{
+				geometryIndex = j;
+				break;
+			}
+		}
+		BoundingBox transformedBoundingBox;
+		auto &bones = meshBones[geometryIndex];
+		for (auto &bone : bones)
+		{
+			BoundingBox transformedBoneBoundingBox = bone.boundingBox;			
+			transformedBoneBoundingBox.Transform(nodeTransformations[bone.nodeIndex]);
+			transformedBoundingBox.Expand(transformedBoneBoundingBox);
+		}
+
+		worldBoundingBox.Expand(transformedBoundingBox);
+	}
+
 	worldBoundingBox.Transform(node->GetWorldTransformation());
 }
 
@@ -152,7 +176,7 @@ void AnimatedModel::UpdateRenderableParts()
 	CalculateNodeAnimations(animationTime);
 	BuildTreeTransformations(skeletonRoot, mat4::IDENTITY);
 	UpdateSkinningMatrices();
-	UpdateBoundingBox();
+	
 	for (unsigned int i = 0; i < numNonSkinnedRenderableParts; ++i)
 	{
 		renderableParts[i].transformation = node->GetWorldTransformation() * nodeTransformations[nonSkinnedRenderablePartsNodeIndices[i]];
@@ -252,11 +276,6 @@ void AnimatedModel::UpdateSkinningMatrices()
 			skinMatrices[i][j] = nodeTransformations[meshBones[i][j].nodeIndex] * meshBones[i][j].offsetMarix;
 		}
 	}
-}
-
-void AnimatedModel::UpdateBoundingBox()
-{
-
 }
 
 unsigned int AnimatedModel::FindPosition(float animationTime, const NodeAnimation &nodeAnim)

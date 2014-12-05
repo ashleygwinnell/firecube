@@ -22,8 +22,7 @@ public:
 protected:
 	void CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<RenderablePart> &nonSkinned, std::vector<RenderablePart> &skinned);		
 	void CalculateNodeAnimations(float animationTime);
-	virtual void UpdateWorldBoundingBox();
-	void UpdateBoundingBox();
+	virtual void UpdateWorldBoundingBox();	
 
 	void BuildTreeTransformations(SkeletonNode &node, mat4 parentTransform);
 	

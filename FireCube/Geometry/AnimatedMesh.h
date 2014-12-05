@@ -62,6 +62,7 @@ public:
 	std::string name;
 	mat4 offsetMarix;
 	unsigned int nodeIndex;
+	BoundingBox boundingBox;
 };
 
 
@@ -90,7 +91,7 @@ private:
 	unsigned int GetNodeIndex(SkeletonNode &node, const std::string name);
 	void LinkBonesToTree();
 	void BuildTreeIndices(SkeletonNode &node, unsigned int &index);
-	unsigned int CountTreeNodes(SkeletonNode &node);
+	unsigned int CountTreeNodes(SkeletonNode &node);	
 
 	std::vector<BoundingBox> boundingBoxes;
 	std::vector<SharedPtr<Geometry>> geometries;

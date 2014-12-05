@@ -77,7 +77,7 @@ void AnimatedMesh::ProcessAssimpScene(const aiScene *aScene)
 	BuildTreeIndices(skeletonRoot, index);
 	numberOfTreeNodes = CountTreeNodes(skeletonRoot);
 
-	LinkBonesToTree();
+	LinkBonesToTree();	
 }
 
 SharedPtr<Material> AnimatedMesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
@@ -200,6 +200,12 @@ SharedPtr<Geometry> AnimatedMesh::ProcessAssimpMesh(const aiMesh *aMesh, unsigne
 				if (l == NUM_BONES_PER_VEREX)
 				{
 					// TODO: Emit warning about not enough bone per vertex
+				}
+
+				if (weight > 0)
+				{
+					vec3 vertexBoneSpace = bone.offsetMarix * vec3(aMesh->mVertices[vertexIndex].x, aMesh->mVertices[vertexIndex].y, aMesh->mVertices[vertexIndex].z);
+					bone.boundingBox.Expand(vertexBoneSpace);
 				}
 			}
 
@@ -476,3 +482,4 @@ BoneWeights::BoneWeights()
 		boneIndex[i] = 0;
 	}
 }
+
