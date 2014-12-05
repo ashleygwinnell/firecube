@@ -252,6 +252,9 @@
     <ClCompile Include="Physics\CharacterController.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Math\quat.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -461,6 +464,9 @@
     </ClInclude>
     <ClInclude Include="Physics\CharacterController.h">
       <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\quat.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -16,3 +16,4 @@ class vec4;
 #include "vec4.h"
 #include "mat3.h"
 #include "mat4.h"
+#include "quat.h"
