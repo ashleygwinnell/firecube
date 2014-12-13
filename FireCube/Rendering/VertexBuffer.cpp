@@ -146,7 +146,15 @@ void VertexBuffer::ApplyAttributes()
 			default:
 				break;
 			}
-			glVertexAttribPointer(i, vertexAttribute.count, type, GL_FALSE, vertexSize, (void *)vertexAttribute.offset);
+
+			if (vertexAttribute.dataType == VertexAttributeDataType::UNSIGNED_BYTE)
+			{
+				glVertexAttribIPointer(i, vertexAttribute.count, type, vertexSize, (void *)vertexAttribute.offset);
+			}
+			else
+			{
+				glVertexAttribPointer(i, vertexAttribute.count, type, GL_FALSE, vertexSize, (void *)vertexAttribute.offset);
+			}
 		}
 		else
 		{
