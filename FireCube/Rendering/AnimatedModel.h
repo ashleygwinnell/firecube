@@ -49,8 +49,7 @@ protected:
 	unsigned int currentAnimation;
 
 	std::vector<mat4> nodeTransformations;
-	std::vector<unsigned int> nonSkinnedRenderablePartsNodeIndices;
-	std::vector<unsigned int> skinnedRenderablePartsBoneIndices;
+	std::vector<unsigned int> nonSkinnedRenderablePartsNodeIndices;	
 	unsigned int numNonSkinnedRenderableParts;
 	std::vector<unsigned int> renderablePartGeometryIndex;
 };

@@ -33,11 +33,12 @@ bool AnimatedMesh::Load(const std::string &filename)
 		aiProcess_GenSmoothNormals |
 		aiProcess_FlipUVs |
 		aiProcess_CalcTangentSpace |
-		aiProcess_JoinIdenticalVertices);
+		aiProcess_JoinIdenticalVertices | 
+		aiProcess_LimitBoneWeights);
 
 	if (!scene)
 	{
-		//DoTheErrorLogging(importer.GetErrorString());
+		LOGERROR("Failed loading model: ", filename);
 		return false;
 	}
 
@@ -103,7 +104,7 @@ SharedPtr<Material> AnimatedMesh::ProcessAssimpMaterial(const aiMaterial *aMater
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4::ZERO);
+		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f));
 	}
 
 	if (aMaterial->Get(AI_MATKEY_COLOR_SPECULAR, aColor) == AI_SUCCESS)
@@ -112,7 +113,7 @@ SharedPtr<Material> AnimatedMesh::ProcessAssimpMaterial(const aiMaterial *aMater
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4::ZERO);
+		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(1.0f));
 	}
 
 	if (aMaterial->Get(AI_MATKEY_SHININESS, value) == AI_SUCCESS)
@@ -121,7 +122,7 @@ SharedPtr<Material> AnimatedMesh::ProcessAssimpMaterial(const aiMaterial *aMater
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_SHININESS, 1.0f);
+		material->SetParameter(PARAM_MATERIAL_SHININESS, 15.0f);
 	}
 
 	bool hasDiffuseTexture = false;
@@ -199,7 +200,7 @@ SharedPtr<Geometry> AnimatedMesh::ProcessAssimpMesh(const aiMesh *aMesh, unsigne
 
 				if (l == NUM_BONES_PER_VEREX)
 				{
-					// TODO: Emit warning about not enough bone per vertex
+					LOGWARNING("Number of bones per vertex exceeds maximum of ", NUM_BONES_PER_VEREX);					
 				}
 
 				if (weight > 0)

@@ -72,12 +72,10 @@ void AnimatedModel::CreateRenderableParts(SkeletonNode &skeletonNode, std::vecto
 			part.skinMatricesCount = meshBones[meshIndex].size();
 			part.skinMatrices = skinMatrices[meshIndex].data();
 			skinned.push_back(part);
-			skinnedGeometryIndex.push_back(meshIndex);
-			skinnedRenderablePartsBoneIndices.push_back(meshIndex);			
+			skinnedGeometryIndex.push_back(meshIndex);			
 		}
 		else
-		{
-			
+		{			
 			nonSkinned.push_back(part);
 			nonSkinnedGeometryIndex.push_back(meshIndex);
 			nonSkinnedRenderablePartsNodeIndices.push_back(skeletonNode.nodeIndex);
@@ -157,9 +155,9 @@ void AnimatedModel::UpdateWorldBoundingBox()
 
 void AnimatedModel::UpdateRenderableParts()
 {	
-	float ticksPerSecond = animations[0].ticksPerSecond != 0.0f ? animations[0].ticksPerSecond : 25.0f;
+	float ticksPerSecond = animations[currentAnimation].ticksPerSecond != 0.0f ? animations[currentAnimation].ticksPerSecond : 25.0f;
 	float timeInTicks = currentTime * ticksPerSecond;
-	float animationTime = fmod(timeInTicks, animations[0].duration);
+	float animationTime = fmod(timeInTicks, animations[currentAnimation].duration);
 	CalculateNodeAnimations(animationTime);
 	BuildTreeTransformations(skeletonRoot, mat4::IDENTITY);
 	UpdateSkinningMatrices();

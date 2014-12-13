@@ -82,7 +82,7 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4::ZERO);
+		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f));
 	}
 
 	if (aMaterial->Get(AI_MATKEY_COLOR_SPECULAR, aColor) == AI_SUCCESS)
@@ -91,7 +91,7 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4::ZERO);
+		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(1.0f));
 	}
 
 	if (aMaterial->Get(AI_MATKEY_SHININESS, value) == AI_SUCCESS)
@@ -100,7 +100,7 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_SHININESS, 1.0f);
+		material->SetParameter(PARAM_MATERIAL_SHININESS, 15.0f);
 	}
 
 	bool hasDiffuseTexture = false;
