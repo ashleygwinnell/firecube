@@ -102,23 +102,23 @@ void AnimatedModel::CalculateNodeAnimations(float animationTime)
 	{
 		// Interpolate scaling and generate scaling transformation matrix
 		vec3 scaling;
-		CalcInterpolatedScaling(scaling, animationTime, nodeAnim);
-		mat4 scalingM = mat4::IDENTITY;
-		scalingM.Scale(scaling.x, scaling.y, scaling.z);
+		CalcInterpolatedScaling(scaling, animationTime, nodeAnim);		
 
 		// Interpolate rotation and generate rotation transformation matrix
 		quat rotationQ;
-		CalcInterpolatedRotation(rotationQ, animationTime, nodeAnim);
-		mat4 rotationM = rotationQ.GetMatrix().ToMat4();
+		CalcInterpolatedRotation(rotationQ, animationTime, nodeAnim);		
 
 		// Interpolate translation and generate translation transformation matrix
 		vec3 translation;
 		CalcInterpolatedPosition(translation, animationTime, nodeAnim);
-		mat4 translationM = mat4::IDENTITY;
-		translationM.Translate(translation);
-
+		
 		// Combine the above transformations
-		nodeAnimTransformations[i++] = translationM * rotationM * scalingM;		
+		mat4 &mat = nodeAnimTransformations[i++];		
+		mat = rotationQ.GetMatrix().ToMat4();
+		mat.m[0] *= scaling.x; mat.m[1] *= scaling.x; mat.m[2] *= scaling.x;
+		mat.m[4] *= scaling.y; mat.m[5] *= scaling.y; mat.m[6] *= scaling.y;
+		mat.m[8] *= scaling.z; mat.m[9] *= scaling.z; mat.m[10] *= scaling.z;
+		mat.m[12] = translation.x; mat.m[13] = translation.y; mat.m[14] = translation.z;
 	}
 }
 
