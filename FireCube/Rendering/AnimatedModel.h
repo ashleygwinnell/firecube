@@ -32,9 +32,9 @@ protected:
 	unsigned int FindPosition(float animationTime, const NodeAnimation &nodeAnim);
 	unsigned int FindRotation(float animationTime, const NodeAnimation &nodeAnim);
 	unsigned int FindScaling(float animationTime, const NodeAnimation &nodeAnim);
-	void CalcInterpolatedPosition(vec3 &out, float animationTime, const NodeAnimation &nodeAnim);
-	void CalcInterpolatedRotation(quat &out, float animationTime, const NodeAnimation &nodeAnim);
-	void CalcInterpolatedScaling(vec3 &out, float animationTime, const NodeAnimation &nodeAnim);
+	void CalcInterpolatedPosition(vec3 &out, float animationTime, NodeAnimation &nodeAnim);
+	void CalcInterpolatedRotation(quat &out, float animationTime, NodeAnimation &nodeAnim);
+	void CalcInterpolatedScaling(vec3 &out, float animationTime, NodeAnimation &nodeAnim);
 
 	std::vector<BoundingBox> boundingBoxes;
 	std::vector<SharedPtr<Geometry>> geometries;
@@ -46,6 +46,7 @@ protected:
 	std::vector<mat4> nodeAnimTransformations;
 	std::vector<std::vector<mat4>> skinMatrices;
 	float currentTime;
+	float prevTime;
 	unsigned int currentAnimation;
 
 	std::vector<mat4> nodeTransformations;

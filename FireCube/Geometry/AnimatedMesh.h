@@ -37,6 +37,9 @@ public:
 	std::vector<std::pair<float, vec3>> positionAnimation;
 	std::vector<std::pair<float, vec3>> scaleAnimation;
 	std::vector<std::pair<float, quat>> rotationAnimation;
+	unsigned int lastPositionIndex;
+	unsigned int lastScaleIndex;
+	unsigned int lastRotationIndex;
 };
 
 class Animation

@@ -7,7 +7,7 @@
 #include "Core/Events.h"
 using namespace FireCube;
 
-AnimatedModel::AnimatedModel(Engine *engine) : Renderable(engine), currentTime(0.0f)
+AnimatedModel::AnimatedModel(Engine *engine) : Renderable(engine), currentTime(0.0f), prevTime(0.0f)
 {
 	SubscribeToEvent(Events::Update, &AnimatedModel::Update);
 }
@@ -120,6 +120,8 @@ void AnimatedModel::CalculateNodeAnimations(float animationTime)
 		mat.m[8] *= scaling.z; mat.m[9] *= scaling.z; mat.m[10] *= scaling.z;
 		mat.m[12] = translation.x; mat.m[13] = translation.y; mat.m[14] = translation.z;
 	}
+
+	prevTime = animationTime;
 }
 
 
@@ -269,7 +271,8 @@ unsigned int AnimatedModel::FindPosition(float animationTime, const NodeAnimatio
 		return 0;
 	if (animationTime > nodeAnim.positionAnimation.back().first)
 		return nodeAnim.positionAnimation.size() - 1;
-	for (unsigned int i = 0; i < nodeAnim.positionAnimation.size() - 1; i++)
+	unsigned int start = animationTime >= prevTime ? nodeAnim.lastPositionIndex : 0;
+	for (unsigned int i = start; i < nodeAnim.positionAnimation.size() - 1; i++)
 	{
 		if (animationTime < nodeAnim.positionAnimation[i + 1].first)
 		{
@@ -287,8 +290,8 @@ unsigned int AnimatedModel::FindRotation(float animationTime, const NodeAnimatio
 		return 0;
 	if (animationTime > nodeAnim.rotationAnimation.back().first)
 		return nodeAnim.rotationAnimation.size() - 1;
-
-	for (unsigned int i = 0; i < nodeAnim.rotationAnimation.size() - 1; i++)
+	unsigned int start = animationTime >= prevTime ? nodeAnim.lastRotationIndex : 0;
+	for (unsigned int i = start; i < nodeAnim.rotationAnimation.size() - 1; i++)
 	{
 		if (animationTime < nodeAnim.rotationAnimation[i + 1].first)
 		{
@@ -306,8 +309,8 @@ unsigned int AnimatedModel::FindScaling(float animationTime, const NodeAnimation
 		return 0;
 	if (animationTime > nodeAnim.scaleAnimation.back().first)
 		return nodeAnim.scaleAnimation.size() - 1;
-
-	for (unsigned int i = 0; i < nodeAnim.scaleAnimation.size() - 1; i++)
+	unsigned int start = animationTime >= prevTime ? nodeAnim.lastScaleIndex : 0;
+	for (unsigned int i = start; i < nodeAnim.scaleAnimation.size() - 1; i++)
 	{
 		if (animationTime < nodeAnim.scaleAnimation[i + 1].first)
 		{
@@ -319,7 +322,7 @@ unsigned int AnimatedModel::FindScaling(float animationTime, const NodeAnimation
 }
 
 
-void AnimatedModel::CalcInterpolatedPosition(vec3 &out, float animationTime, const NodeAnimation &nodeAnim)
+void AnimatedModel::CalcInterpolatedPosition(vec3 &out, float animationTime, NodeAnimation &nodeAnim)
 {
 	if (nodeAnim.positionAnimation.size() == 1)
 	{
@@ -328,6 +331,7 @@ void AnimatedModel::CalcInterpolatedPosition(vec3 &out, float animationTime, con
 	}
 
 	unsigned int positionIndex = FindPosition(animationTime, nodeAnim);
+	nodeAnim.lastPositionIndex = positionIndex;
 	unsigned int nextPositionIndex = (positionIndex + 1) % nodeAnim.positionAnimation.size();
 
 	float deltaTime = (float)(nodeAnim.positionAnimation[nextPositionIndex].first - nodeAnim.positionAnimation[positionIndex].first);
@@ -342,7 +346,7 @@ void AnimatedModel::CalcInterpolatedPosition(vec3 &out, float animationTime, con
 }
 
 
-void AnimatedModel::CalcInterpolatedRotation(quat &out, float animationTime, const NodeAnimation &nodeAnim)
+void AnimatedModel::CalcInterpolatedRotation(quat &out, float animationTime, NodeAnimation &nodeAnim)
 {
 	// we need at least two values to interpolate...
 	if (nodeAnim.rotationAnimation.size() == 1)
@@ -352,6 +356,7 @@ void AnimatedModel::CalcInterpolatedRotation(quat &out, float animationTime, con
 	}
 
 	unsigned int rotationIndex = FindRotation(animationTime, nodeAnim);
+	nodeAnim.lastRotationIndex = rotationIndex;
 	unsigned int nextRotationIndex = (rotationIndex + 1) % nodeAnim.rotationAnimation.size();
 
 	float deltaTime = (float)(nodeAnim.rotationAnimation[nextRotationIndex].first - nodeAnim.rotationAnimation[rotationIndex].first);
@@ -366,7 +371,7 @@ void AnimatedModel::CalcInterpolatedRotation(quat &out, float animationTime, con
 }
 
 
-void AnimatedModel::CalcInterpolatedScaling(vec3 &out, float animationTime, const NodeAnimation &nodeAnim)
+void AnimatedModel::CalcInterpolatedScaling(vec3 &out, float animationTime, NodeAnimation &nodeAnim)
 {
 	if (nodeAnim.scaleAnimation.size() == 1)
 	{
@@ -375,6 +380,7 @@ void AnimatedModel::CalcInterpolatedScaling(vec3 &out, float animationTime, cons
 	}
 
 	unsigned int scalingIndex = FindScaling(animationTime, nodeAnim);
+	nodeAnim.lastScaleIndex = scalingIndex;
 	unsigned int nextScalingIndex = (scalingIndex + 1) % nodeAnim.scaleAnimation.size();
 
 	float deltaTime = (float)(nodeAnim.scaleAnimation[nextScalingIndex].first - nodeAnim.scaleAnimation[scalingIndex].first);
