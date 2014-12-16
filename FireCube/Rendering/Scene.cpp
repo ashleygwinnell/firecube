@@ -316,8 +316,7 @@ void Scene::Render(Renderer *renderer)
 				Light *light = lightQueue.first;
 				for (auto &renderJob : queue.GetRenderJobs())
 				{
-					Program *program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);
-					program->SetUniform(PARAM_AMBIENT_COLOR, ambientColor);
+					Program *program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);					
 					if (fogEnabled)
 					{
 						program->SetUniform(PARAM_FOG_PARAMETERS, fogParameters);

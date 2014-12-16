@@ -27,8 +27,9 @@ smooth in vec2 texcoord;
 	uniform vec3 fogParameters;
 	uniform vec3 fogColor;
 #endif
-uniform vec3 ambientColor;
-uniform vec4 materialAmbient;
+#ifndef PER_PIXEL_LIGHTING
+	uniform vec3 ambientColor;
+#endif
 uniform vec4 materialDiffuse;
 uniform vec4 materialSpecular;
 uniform float materialShininess;
