@@ -383,6 +383,9 @@ void AnimatedMesh::ReadAnimations(const aiScene *aScene)
 			auto &aNodeAnim = aAnimation->mChannels[j];
 			animation.nodeAnimations.push_back(NodeAnimation());
 			auto &nodeAnimation = animation.nodeAnimations.back();
+			nodeAnimation.lastPositionIndex = 0;
+			nodeAnimation.lastRotationIndex = 0;
+			nodeAnimation.lastScaleIndex = 0;
 			nodeAnimation.nodeName = aNodeAnim->mNodeName.C_Str();
 			for (unsigned int k = 0; k < aNodeAnim->mNumPositionKeys; ++k)
 			{

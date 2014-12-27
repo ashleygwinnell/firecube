@@ -61,8 +61,7 @@ void  main()
 		mat3 tbn = mat3(normalize(normalMatrix * atrTangent), normalize(normalMatrix * bitangent), normalize(normalMatrix * norm));
 		eyeVec = eyeVec * tbn;
 		lightDir = lightDir * tbn;
-	#endif
-	#if !defined(NORMAL_MAPPING)
+	#else
 		normal = normalMatrix * norm;
 	#endif
 	gl_Position = viewProjectionMatrix * vec4(worldSpacePos, 1.0);
