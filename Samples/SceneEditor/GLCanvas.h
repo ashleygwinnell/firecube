@@ -1,13 +1,8 @@
 #pragma once
 
-enum GeometryType
-{
-	AUX_GEOMETRY   = 0x80000000,
-	GIZMO_GEOMETRY = 0x40000000,
-	USER_GEOMETRY  = 0x00000001
-};
-
 class MyApp;
+class TranslateGizmo;
+
 class GLCanvas : public wxGLCanvas
 {
 
@@ -37,11 +32,10 @@ private:
 	FireCube::Engine *engine;
 	FireCube::Scene *scene;
 	FireCube::OrbitCamera *camera;
-	FireCube::Node *root, *gridNode, *currentNode, *translateGizmo;	
+	FireCube::Node *root, *gridNode, *currentNode;
+	FireCube::SharedPtr<TranslateGizmo> translateGizmo;
 	FireCube::CustomGeometry *gridGeometry;
 	FireCube::SharedPtr<FireCube::Material> gridMaterial;
 	FireCube::vec2 lastMousePos;
-	std::string currentOperation;
-	FireCube::vec3 dragStart;
-	FireCube::vec3 startPosition;
+	std::string currentOperation;	
 };

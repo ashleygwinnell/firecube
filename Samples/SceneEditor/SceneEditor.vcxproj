@@ -90,14 +90,19 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="MainFrameImpl.cpp" />
+    <ClCompile Include="MathUtils.cpp" />
     <ClCompile Include="Project.cpp" />
+    <ClCompile Include="TranslateGizmo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h" />
     <ClInclude Include="GLCanvas.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="MainFrameImpl.h" />
+    <ClInclude Include="MathUtils.h" />
     <ClInclude Include="Project.h" />
+    <ClInclude Include="TranslateGizmo.h" />
+    <ClInclude Include="Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

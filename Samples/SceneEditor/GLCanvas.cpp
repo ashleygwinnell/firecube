@@ -6,6 +6,8 @@ using namespace FireCube;
 #include "mainframe.h"
 #include "MainFrameImpl.h"
 #include "app.h"
+#include "Types.h"
+#include "TranslateGizmo.h"
 
 GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id,
 	const wxPoint& pos, const wxSize& size, long style, const wxString& name)
@@ -57,64 +59,20 @@ void GLCanvas::Init()
 	light->SetColor(vec4(1.0f));
 	lightNode->Rotate(vec3(PI * 0.7f, 0.2f, 0));
 
-	Node *testNode = root->CreateChild("TestNode");
-	StaticModel *model = testNode->CreateComponent<StaticModel>();
-	SharedPtr<Mesh> mesh(new Mesh(engine));
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(1.0f)), engine->GetResourceCache()->GetResource<Material>("Materials/TerrainNoTexture.xml"));
-	mesh->SetBoundingBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
-	model->CreateFromMesh(mesh);
-	model->SetCollisionQueryMask(USER_GEOMETRY);
-
-	testNode = root->CreateChild("TestNode2");
-	testNode->Move(vec3(5.0f, 0.0f, 0.0f));
-	model = testNode->CreateComponent<StaticModel>();
-	mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(1.0f)), engine->GetResourceCache()->GetResource<Material>("Materials/TerrainNoTexture.xml"));
-	mesh->SetBoundingBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
-	model->CreateFromMesh(mesh);
-	model->SetCollisionQueryMask(USER_GEOMETRY);
-
-	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/TerrainNoTexture.xml")->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 0.0f, 0.0f, 1.0f));
-	mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.1f, 1.0f, 0.1f)), material);
-	mesh->SetBoundingBox(BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)));
-	StaticModel *staticModel;
-	Node *node;
-	translateGizmo = root->CreateChild("TranslateGizmo");
-	node = translateGizmo->CreateChild("XAxis");	
-	node->Move(vec3(0.5f, 0.0f, 0.0f));
-	node->Rotate(vec3(0.0f, 0.0f, PI * 0.5f));
-	staticModel = node->CreateComponent<StaticModel>();	
-	staticModel->CreateFromMesh(mesh);
-	staticModel->SetCollisionQueryMask(GIZMO_GEOMETRY);
-	staticModel->SetEnabled(false);
-
-	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(0.0f, 1.0f, 0.0f, 1.0f));
-	mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.1f, 1.0f, 0.1f)), material);
-	mesh->SetBoundingBox(BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)));
-	node = translateGizmo->CreateChild("YAxis");	
-	node->Move(vec3(0.0f, 0.5f, 0.0f));
-	staticModel = node->CreateComponent<StaticModel>();	
-	staticModel->CreateFromMesh(mesh);
-	staticModel->SetCollisionQueryMask(GIZMO_GEOMETRY);
-	staticModel->SetEnabled(false);
-
-	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(0.0f, 0.0f, 1.0f, 1.0f));
-	mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.1f, 1.0f, 0.1f)), material);
-	mesh->SetBoundingBox(BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)));
-	node = translateGizmo->CreateChild("ZAxis");	
-	node->Move(vec3(0.0f, 0.0f, -0.5f));
-	node->Rotate(vec3(PI * 0.5f, 0.0f, 0.0f));
-	staticModel = node->CreateComponent<StaticModel>();	
-	staticModel->CreateFromMesh(mesh);
-	staticModel->SetCollisionQueryMask(GIZMO_GEOMETRY);
-	staticModel->SetEnabled(false);
-
+	for (int i = 0; i < 10; ++i)
+	{
+		Node *testNode = root->CreateChild("TestNode");
+		StaticModel *model = testNode->CreateComponent<StaticModel>();
+		SharedPtr<Mesh> mesh(new Mesh(engine));
+		mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(1.0f)), engine->GetResourceCache()->GetResource<Material>("Materials/TerrainNoTexture.xml"));
+		mesh->SetBoundingBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
+		model->CreateFromMesh(mesh);
+		model->SetCollisionQueryMask(USER_GEOMETRY);
+		testNode->SetTranslation(vec3(RangedRandom(-10, 10), 0.5, RangedRandom(-10, 10)));
+	}
+	
+	translateGizmo = new TranslateGizmo(engine, root);
+	//translateGizmo->SetSnapToGrid(true);
 	gridMaterial = FireCube::SharedPtr<FireCube::Material>(new Material(engine));
 	gridMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	gridMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));
@@ -171,43 +129,12 @@ void GLCanvas::OnEraseBackground(wxEraseEvent& WXUNUSED(event))
 {
 	// Do nothing, to avoid flashing.
 }
-//Two non-parallel lines which may or may not touch each other have a point on each line which are closest
-//to each other. This function finds those two points. If the lines are not parallel, the function
-//outputs true, otherwise false.
-
-bool ClosestPointsOnTwoLines(vec3 &closestPointLine1, vec3 linePoint1, vec3 lineVec1, vec3 linePoint2, vec3 lineVec2)
-{
-	float a = Dot(lineVec1, lineVec1);
-	float b = Dot(lineVec1, lineVec2);
-	float e = Dot(lineVec2, lineVec2);
-	float d = a*e - b*b;
-	
-	//lines are not parallel
-	if (d != 0.0f)
-	{
-		vec3 r = linePoint1 - linePoint2;
-		float c = Dot(lineVec1, r);
-		float f = Dot(lineVec2, r);
-		float s = (b*f - c*e) / d;
-		float t = (a*f - c*b) / d;
-		closestPointLine1 = linePoint1 + lineVec1 * s;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
 
 void GLCanvas::OnMotion(wxMouseEvent& event)
 {
 	vec2 curpos(event.GetPosition().x, event.GetPosition().y);
-	if (event.LeftIsDown() && event.ShiftDown())
-	{
-		camera->RotateX(-(curpos.y - lastMousePos.y) / 60.0f);
-		camera->RotateY(-(curpos.x - lastMousePos.x) / 60.0f);
-	}
-	else if (event.MiddleIsDown())
+	
+	if (event.MiddleIsDown())
 	{
 		if (event.ShiftDown())
 			camera->Zoom(-(curpos.y - lastMousePos.y) / 15.0f);
@@ -216,67 +143,37 @@ void GLCanvas::OnMotion(wxMouseEvent& event)
 	}
 	else if (event.LeftIsDown() && event.ShiftDown() == false)
 	{
-		if (currentOperation == "")
-		{
-			wxPoint mousePos = event.GetPosition();
-			wxSize size = this->GetSize();
-			Ray ray = camera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
-			RayQuery query(ray, 10e4);
+		wxPoint mousePos = event.GetPosition();
+		wxSize size = this->GetSize();
+		Ray ray = camera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
 
-			scene->IntersectRay(query, GIZMO_GEOMETRY);
-			if (query.results.empty() == false)
+		if (currentOperation == "")
+		{				
+			bool startTranslation = translateGizmo->CheckOperationStart(scene, currentNode, ray);
+			if (startTranslation)
+			{							
+				currentOperation = "Translate";				
+			}		
+			else
 			{
-				auto &result = query.results.front();
-				Node *node = result.renderable->GetNode();
-				//wxMessageBox(node->GetName());
-				currentOperation = node->GetName();
-				dragStart = query.ray.origin + query.ray.direction * result.distance;
-				startPosition = currentNode->GetTranslation();
-			}			
+				currentOperation = "CameraOrbit";				
+			}
 		}
 		
-		if (currentOperation == "XAxis")
+		if (currentOperation == "CameraOrbit")
 		{
-			wxPoint mousePos = event.GetPosition();
-			wxSize size = this->GetSize();
-			Ray ray = camera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());			
-			vec3 intersectionPoint;
-			if (ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(1, 0, 0), ray.origin, ray.direction))
-			{
-				vec3 translation(startPosition.x + (intersectionPoint.x - dragStart.x), startPosition.y, startPosition.z);
-				currentNode->SetTranslation(translation);
-				translateGizmo->SetTranslation(currentNode->GetWorldPosition());
-			}						
+			camera->RotateX(-(curpos.y - lastMousePos.y) / 60.0f);
+			camera->RotateY(-(curpos.x - lastMousePos.x) / 60.0f);
+			this->Refresh(false);
 		}
-		else if (currentOperation == "YAxis")
-		{
-			wxPoint mousePos = event.GetPosition();
-			wxSize size = this->GetSize();
-			Ray ray = camera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
-			vec3 intersectionPoint;
-			if (ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(0, 1, 0), ray.origin, ray.direction))
-			{
-				vec3 translation(startPosition.x, startPosition.y + (intersectionPoint.y - dragStart.y), startPosition.z);
-				currentNode->SetTranslation(translation);
-				translateGizmo->SetTranslation(currentNode->GetWorldPosition());
-			}
-		}
-		else if (currentOperation == "ZAxis")
-		{
-			wxPoint mousePos = event.GetPosition();
-			wxSize size = this->GetSize();
-			Ray ray = camera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
-			vec3 intersectionPoint;
-			if (ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(0, 0, 1), ray.origin, ray.direction))
-			{
-				vec3 translation(startPosition.x, startPosition.y, startPosition.z + (intersectionPoint.z - dragStart.z));
-				currentNode->SetTranslation(translation);
-				translateGizmo->SetTranslation(currentNode->GetWorldPosition());
-			}
+		else if (currentOperation == "Translate")
+		{			
+			translateGizmo->PerformOperation(ray, currentNode);
+			this->Refresh(false);
 		}
 	}
-	lastMousePos = curpos;
-	this->Refresh(false);
+
+	lastMousePos = curpos;	
 }
 void GLCanvas::OnMouseWheel(wxMouseEvent& event)
 {
@@ -296,28 +193,26 @@ void GLCanvas::OnLeftUp(wxMouseEvent& event)
 		wxSize size = this->GetSize();
 		Ray ray = camera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
 		RayQuery query(ray, 10e4);
-
-		if (currentNode)
-		{
-			currentOperation = "";			
-		}
-		else
+					
+		if (currentOperation == "")
 		{			
 			scene->IntersectRay(query, USER_GEOMETRY);
 			if (query.results.empty() == false)
 			{
 				auto &result = query.results.front();
-				currentNode = result.renderable->GetNode();
-				translateGizmo->SetTranslation(currentNode->GetWorldPosition());
-				std::vector<StaticModel *> components;
-				translateGizmo->GetComponents<StaticModel>(components, true);
-				for (auto c : components)
-				{
-					c->SetEnabled(true);
-				}
-				this->Refresh(false);
+				currentNode = result.renderable->GetNode();				
+				translateGizmo->SetPosition(currentNode->GetWorldPosition());
+				translateGizmo->Show();								
 			}
+			else
+			{
+				currentNode = nullptr;
+				translateGizmo->Hide();
+			}
+			this->Refresh(false);
 		}
+		
+		currentOperation = "";
 	}
 }
 
