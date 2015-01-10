@@ -31,9 +31,9 @@ protected:
 
 #define OBJECT(typeName) \
 public: \
-	virtual StringHash GetType() const { return GetTypeStatic(); } \
+	virtual FireCube::StringHash GetType() const { return GetTypeStatic(); } \
 	virtual const std::string& GetTypeName() const { return GetTypeNameStatic(); } \
-	static StringHash GetTypeStatic() { static const StringHash typeStatic(#typeName); return typeStatic; } \
+	static FireCube::StringHash GetTypeStatic() { static const FireCube::StringHash typeStatic(#typeName); return typeStatic; } \
 	static const std::string& GetTypeNameStatic() { static const std::string typeNameStatic(#typeName); return typeNameStatic; } \
 
 }
