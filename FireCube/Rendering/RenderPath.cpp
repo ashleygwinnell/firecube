@@ -24,16 +24,42 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 	{
 	case RenderPathCommandType::CLEAR:
 	{
-		std::string clearStr = element->Attribute("color");
-		if (clearStr == "fogcolor")
+		clearBuffers = ClearBufferType::NONE;
+		const char *buffers = element->Attribute("buffers");
+		if (buffers)
 		{
-			useFogColor = true;
+			auto bufferTypes = Split(std::string(buffers), ' ');
+			for (const auto &bufferType : bufferTypes)
+			{
+				if (bufferType == "color")
+				{
+					clearBuffers |= ClearBufferType::COLOR;
+				}
+				else if (bufferType == "depth")
+				{
+					clearBuffers |= ClearBufferType::DEPTH;
+				}
+			}
 		}
 		else
 		{
-			useFogColor = false;
-			Variant v = Variant::FromString(clearStr);
-			clearColor = v.GetVec3();
+			clearBuffers = ClearBufferType::COLOR | ClearBufferType::DEPTH;
+		}
+
+		const char *clearColor = element->Attribute("color");
+		if (clearColor)
+		{
+			std::string clearColorStr = clearColor;
+			if (clearColorStr == "fogcolor")
+			{
+				useFogColor = true;
+			}
+			else
+			{
+				useFogColor = false;
+				Variant v = Variant::FromString(clearColorStr);
+				this->clearColor = v.GetVec3();
+			}
 		}
 		break;
 	}

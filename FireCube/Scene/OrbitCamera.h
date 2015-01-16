@@ -114,8 +114,7 @@ private:
 	
 	void CheckRanges();
 	void UpdateNode();
-	vec3 rotation;
-	vec3 position;
+	vec3 rotation;	
 	float distance;
 	float minDistance;
 	float maxDistance;

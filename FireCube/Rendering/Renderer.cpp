@@ -94,11 +94,17 @@ void Renderer::Destroy()
 	glDeleteSamplers(16, textureSampler);
 }
 
-void Renderer::Clear(const vec4 &color, float depth)
+void Renderer::Clear(const vec4 &color, float depth, ClearBufferType buffers)
 {
 	glClearColor(color.x, color.y, color.z, color.w);
 	glClearDepth(depth);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	GLbitfield target = 0;
+	if ((buffers & ClearBufferType::COLOR) == ClearBufferType::COLOR)
+		target |= GL_COLOR_BUFFER_BIT;
+	if ((buffers & ClearBufferType::DEPTH) == ClearBufferType::DEPTH)
+		target |= GL_DEPTH_BUFFER_BIT;
+
+	glClear(target);
 }
 
 void Renderer::UseTexture(unsigned int unit, const Texture *texture)

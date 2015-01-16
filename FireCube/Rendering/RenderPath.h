@@ -31,6 +31,7 @@ public:
 	RenderPathCommandType type;
 	bool useFogColor;
 	vec3 clearColor;
+	ClearBufferType clearBuffers;
 	StringHash output;
 	StringHash textures[static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS)];
 	StringHash pass;

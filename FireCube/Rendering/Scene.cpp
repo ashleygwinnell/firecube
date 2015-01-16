@@ -261,9 +261,9 @@ void Scene::Render(Renderer *renderer)
 			SetRenderTargets(renderer, command);
 			renderer->SetDepthWrite(true);
 			if (command.useFogColor)
-				renderer->Clear(vec4(fogColor, 1.0f), 1.0f);
+				renderer->Clear(vec4(fogColor, 1.0f), 1.0f, command.clearBuffers);
 			else
-				renderer->Clear(vec4(command.clearColor, 1.0f), 1.0f);
+				renderer->Clear(vec4(command.clearColor, 1.0f), 1.0f, command.clearBuffers);
 			break;
 
 		case RenderPathCommandType::BASEPASS:

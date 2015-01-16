@@ -56,6 +56,15 @@ enum class DepthTest
 	ALWAYS, NEVER, EQUAL, LESSEQUAL, LESS
 };
 
+enum class ClearBufferType
+{
+	NONE = 0, COLOR = 1, DEPTH = 2
+};
+
+ClearBufferType operator | (const ClearBufferType &lhs, const ClearBufferType &rhs);
+ClearBufferType operator |= (ClearBufferType &lhs, const ClearBufferType &rhs);
+ClearBufferType operator & (const ClearBufferType &lhs, const ClearBufferType &rhs);
+
 extern StringHash PARAM_MATERIAL_AMBIENT;
 extern StringHash PARAM_MATERIAL_DIFFUSE;
 extern StringHash PARAM_MATERIAL_SPECULAR;

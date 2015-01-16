@@ -28,5 +28,22 @@ StringHash PARAM_SKIN_MATRICES("skinMatrices");
 StringHash BASE_PASS("base");
 StringHash LIGHT_PASS("light");
 
+ClearBufferType FireCube::operator | (const ClearBufferType &lhs, const ClearBufferType &rhs)
+{
+	ClearBufferType ret = static_cast<ClearBufferType>(static_cast<int>(lhs) | static_cast<int>(rhs));
+	return ret;
+}
+
+ClearBufferType FireCube::operator |= (ClearBufferType &lhs, const ClearBufferType &rhs)
+{
+	lhs = static_cast<ClearBufferType>(static_cast<int>(lhs) | static_cast<int>(rhs));
+	return lhs;
+}
+
+ClearBufferType FireCube::operator & (const ClearBufferType &lhs, const ClearBufferType &rhs)
+{
+	ClearBufferType ret = static_cast<ClearBufferType>(static_cast<int>(lhs)& static_cast<int>(rhs));
+	return ret;
+}
 
 }

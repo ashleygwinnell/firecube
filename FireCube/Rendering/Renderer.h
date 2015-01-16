@@ -64,7 +64,7 @@ public:
 	* @param color The color to clear the framebuffer.
 	* @param depth The depth to set the depth buffer.
 	*/
-	void Clear(const vec4 &color, float depth);
+	void Clear(const vec4 &color, float depth, ClearBufferType buffers);
 
 	/**
 	* Binds the specified texture.
