@@ -41,17 +41,21 @@ GLCanvas::~GLCanvas()
 void GLCanvas::Init()
 {
 	Filesystem::AddSearchPath("../Assets/Textures");
-	theApp->fcApp.InitializeNoWindow();
+	Filesystem::AddSearchPath("../Samples/SceneEditor");
+	
+	theApp->fcApp.InitializeNoWindow();	
 	engine = theApp->fcApp.GetEngine();
+	engine->GetRenderer()->SetCurrentRenderPath(engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/ForwardWithOverlay.xml"));
 
-	theApp->GetProject().Init(engine);
+	theApp->GetProject().Init(engine);	
 
 	scene = theApp->GetProject().GetScene();	
 	root = scene->GetRootNode();
 
 	((MainFrameImpl *) this->GetParent())->SetScene(scene);
 
-	Node *cameraNode = root->CreateChild("Camera");
+	cameraTarget = root->CreateChild("CameraTarget");
+	Node *cameraNode = cameraTarget->CreateChild("Camera");
 	camera = cameraNode->CreateComponent<OrbitCamera>();
 	scene->SetCamera(camera);
 	camera->SetDistance(5.0f);
@@ -81,7 +85,7 @@ void GLCanvas::Init()
 	gridMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	gridMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));
 
-	CreateGrid(1.0f, 100);
+	CreateGrid(1.0f, 100);	
 }
 void GLCanvas::Render()
 {
@@ -183,9 +187,15 @@ void GLCanvas::OnMouseWheel(wxMouseEvent& event)
 {
 	int r = event.GetWheelRotation();
 	if (event.ShiftDown())
+	{
 		camera->Zoom((float)r / 400.0f);
+		UpdateGizmo();
+	}
 	else
+	{
 		camera->Zoom((float)r / 150.0f);
+		UpdateGizmo();
+	}
 	this->Refresh(false);
 }
 
@@ -205,7 +215,7 @@ void GLCanvas::OnLeftUp(wxMouseEvent& event)
 			{
 				auto &result = query.results.front();
 				currentNode = result.renderable->GetNode();								
-				transformGizmo->SetPosition(currentNode->GetWorldPosition());
+				UpdateGizmo();
 				transformGizmo->Show();
 			}
 			else
@@ -230,7 +240,7 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 			transformGizmo = translateGizmo.Get();
 			if (currentNode)
 			{
-				transformGizmo->SetPosition(currentNode->GetWorldPosition());
+				UpdateGizmo();
 				transformGizmo->Show();
 			}
 			this->Refresh(false);
@@ -244,7 +254,7 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 			transformGizmo = rotateGizmo.Get();
 			if (currentNode)
 			{
-				transformGizmo->SetPosition(currentNode->GetWorldPosition());
+				UpdateGizmo();
 				transformGizmo->Show();
 			}
 			this->Refresh(false);
@@ -275,8 +285,15 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 				UpdateGizmo();
 				this->Refresh(false);
 			}
+		}		
+	}
+	else if (event.GetKeyCode() == 'Z')
+	{
+		if (currentNode)
+		{
+			cameraTarget->SetTranslation(currentNode->GetWorldPosition());
+			this->Refresh(false);
 		}
-		
 	}
 }
 
@@ -285,7 +302,9 @@ void GLCanvas::UpdateGizmo()
 	if (transformGizmo && currentNode)
 	{
 		transformGizmo->SetPosition(currentNode->GetWorldPosition());
+		transformGizmo->SetScale((camera->GetNode()->GetWorldPosition() - currentNode->GetWorldPosition()).Length() * 0.1f);
 	}
+	
 }
 
 void GLCanvas::CreateGrid(float size, unsigned int numberOfCells)

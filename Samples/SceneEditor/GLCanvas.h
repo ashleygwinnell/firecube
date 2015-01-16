@@ -41,7 +41,7 @@ private:
 	FireCube::Engine *engine;
 	FireCube::Scene *scene;
 	FireCube::OrbitCamera *camera;
-	FireCube::Node *root, *gridNode, *currentNode;
+	FireCube::Node *root, *gridNode, *currentNode, *cameraTarget;
 	FireCube::SharedPtr<TranslateGizmo> translateGizmo;
 	FireCube::SharedPtr<RotateGizmo> rotateGizmo;
 	TransformGizmo *transformGizmo;

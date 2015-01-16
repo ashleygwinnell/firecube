@@ -5,7 +5,7 @@ using namespace FireCube;
 
 TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Object(engine), snapToGrid(false)
 {
-	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/TerrainNoTexture.xml")->Clone();
+	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/Gizmo.xml")->Clone();
 	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
 	SharedPtr<Mesh> mesh = new Mesh(engine);
@@ -143,4 +143,9 @@ void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos
 void TranslateGizmo::SetSnapToGrid(bool snap)
 {
 	snapToGrid = snap;
+}
+
+void TranslateGizmo::SetScale(float scale)
+{
+	node->SetScale(vec3(scale));
 }

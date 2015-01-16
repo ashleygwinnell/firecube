@@ -1,0 +1,7 @@
+<material>
+	<technique name = "Techniques/Overlay.xml" />
+	<parameter name = "materialAmbient" value = "0.0 0.0 0.0 1.0" />
+	<parameter name = "materialDiffuse" value = "0.7 0.7 0.7 1.0" />
+	<parameter name = "materialSpecular" value = "0.0 0.0 0.0 1.0" />
+	<parameter name = "materialShininess" value = "0.0" />
+</material>

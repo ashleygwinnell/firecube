@@ -1,0 +1,8 @@
+<renderpath>
+<command type = "clear" color = "fogcolor" />
+<command type = "basepass" pass = "base" />
+<command type = "lightpass" pass = "light" />
+<command type = "clear" buffers = "depth" />
+<command type = "basepass" pass = "overlay_base" />
+<command type = "lightpass" pass = "overlay_light" />
+</renderpath>

@@ -1,0 +1,4 @@
+<technique>
+	<pass name = "overlay_base" vs= "Shaders/default.vert" fs = "Shaders/default.frag" defines = "" is_base = "true" />
+	<pass name = "overlay_light" vs= "Shaders/default.vert" fs = "Shaders/default.frag"  blend = "add" depth_write = "false" depth_test = "equal" defines = "PER_PIXEL_LIGHTING" />
+</technique>

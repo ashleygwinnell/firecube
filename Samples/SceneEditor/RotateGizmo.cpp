@@ -5,7 +5,7 @@ using namespace FireCube;
 
 RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Object(engine), snapToGrid(false)
 {
-	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/TerrainNoTexture.xml")->Clone();
+	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/Gizmo.xml")->Clone();
 	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
 	SharedPtr<Mesh> mesh = new Mesh(engine);
@@ -135,4 +135,9 @@ void RotateGizmo::PerformOperation(FireCube::Ray ray, vec2 mousePos, FireCube::N
 void RotateGizmo::SetSnapToGrid(bool snap)
 {
 	snapToGrid = snap;
+}
+
+void RotateGizmo::SetScale(float scale)
+{
+	node->SetScale(vec3(scale));
 }
