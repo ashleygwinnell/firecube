@@ -187,7 +187,7 @@ void Scene::UpdateLightQueues()
 						{
 							RenderQueue &queue = lightQueues[i].second[command.pass];
 							RenderJob newRenderJob;
-							newRenderJob.pass = technique->GetPass(LIGHT_PASS);
+							newRenderJob.pass = technique->GetPass(command.pass);
 							if (newRenderJob.pass == nullptr)
 								continue;
 							newRenderJob.pass->GenerateAllShaderPermutations();
