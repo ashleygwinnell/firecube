@@ -142,7 +142,13 @@ void GLCanvas::OnMotion(wxMouseEvent& event)
 {
 	vec2 curpos(event.GetPosition().x, event.GetPosition().y);
 	
-	if (event.MiddleIsDown())
+	if (event.LeftIsDown() && event.ShiftDown() == true)
+	{
+		camera->RotateX(-(curpos.y - lastMousePos.y) / 60.0f);
+		camera->RotateY(-(curpos.x - lastMousePos.x) / 60.0f);
+		this->Refresh(false);
+	}
+	else if (event.MiddleIsDown())
 	{
 		if (event.ShiftDown())
 			camera->Zoom(-(curpos.y - lastMousePos.y) / 15.0f);
@@ -161,20 +167,10 @@ void GLCanvas::OnMotion(wxMouseEvent& event)
 			if (startTransaform)
 			{							
 				currentOperation = Operation::OBJECT_TRANSFORM;
-			}				
-			else
-			{
-				currentOperation = Operation::CAMERA_ORBIT;
-			}
-		}
+			}							
+		}		
 		
-		if (currentOperation == Operation::CAMERA_ORBIT)
-		{
-			camera->RotateX(-(curpos.y - lastMousePos.y) / 60.0f);
-			camera->RotateY(-(curpos.x - lastMousePos.x) / 60.0f);
-			this->Refresh(false);
-		}
-		else if (currentOperation == Operation::OBJECT_TRANSFORM)
+		if (currentOperation == Operation::OBJECT_TRANSFORM)
 		{						
 			transformGizmo->PerformOperation(ray, vec2(mousePos.x, mousePos.y), currentNode);
 			this->Refresh(false);
