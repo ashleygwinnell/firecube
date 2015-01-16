@@ -42,13 +42,12 @@ class MainFrame : public wxFrame
 		wxButton* m_button1;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
 		virtual void MyButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Scene Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 876,616 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Scene Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 876,616 ), long style = wxDEFAULT_FRAME_STYLE|wxMAXIMIZE|wxTAB_TRAVERSAL );
 		
 		~MainFrame();
 	

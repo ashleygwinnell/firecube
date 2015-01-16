@@ -33,14 +33,12 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	glCanvas->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MainFrame::OnLeftDown ), NULL, this );
 	m_button1->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::MyButtonClicked ), NULL, this );
 }
 
 MainFrame::~MainFrame()
 {
 	// Disconnect Events
-	glCanvas->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MainFrame::OnLeftDown ), NULL, this );
 	m_button1->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::MyButtonClicked ), NULL, this );
 	
 }
