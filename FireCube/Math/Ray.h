@@ -3,6 +3,7 @@
 #include "Utils/utils.h"
 #include "Math/Math.h"
 #include "Math/BoundingBox.h"
+#include "Math/Plane.h"
 
 namespace FireCube
 {
@@ -18,6 +19,7 @@ public:
 	bool IntersectMesh(const char *vertexData, unsigned int vertexCount, unsigned int vertexSize, float &distance, vec3 &normal) const;
 	Ray Transformed(const mat4 &transformation) const;
 	bool Inside(const BoundingBox &boundingBox) const;
+	bool IntersectPlane(const Plane &plane, float &distance) const;
 	vec3 origin;
 	vec3 direction;
 };

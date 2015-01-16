@@ -192,3 +192,13 @@ bool Ray::Inside(const BoundingBox &boundingBox) const
 		   origin.y >= boundingBox.GetMin().y && origin.y <= boundingBox.GetMax().y &&
 		   origin.z >= boundingBox.GetMin().z && origin.z <= boundingBox.GetMax().z;
 }
+
+bool Ray::IntersectPlane(const Plane &plane, float &distance) const
+{
+	float denom = direction.Dot(plane.GetNormal());
+	if (fabs(denom) < 0.0001f)
+		return false;
+
+	distance = (plane.GetDistance() - origin.Dot(plane.GetNormal())) / denom;
+	return true;
+}
