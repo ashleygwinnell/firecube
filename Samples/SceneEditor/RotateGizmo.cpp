@@ -1,9 +1,9 @@
-#include "TranslateGizmo.h"
+#include "RotateGizmo.h"
 #include "Types.h"
 #include "MathUtils.h"
 using namespace FireCube;
 
-TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Object(engine), snapToGrid(false)
+RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Object(engine), snapToGrid(false)
 {
 	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/TerrainNoTexture.xml")->Clone();
 	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 0.0f, 0.0f, 1.0f));
@@ -48,16 +48,17 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 	staticModel->SetEnabled(false);
 }
 
-void TranslateGizmo::SetPosition(FireCube::vec3 position)
+void RotateGizmo::SetPosition(vec3 position)
 {
 	node->SetTranslation(position);
 }
 
-void TranslateGizmo::SetRotation(FireCube::mat4 rotation)
+void RotateGizmo::SetRotation(mat4 rotation)
 {
-
+	node->SetRotation(rotation);
 }
-void TranslateGizmo::Show()
+
+void RotateGizmo::Show()
 {
 	std::vector<StaticModel *> components;
 	node->GetComponents<StaticModel>(components, true);
@@ -67,7 +68,7 @@ void TranslateGizmo::Show()
 	}
 }
 
-void TranslateGizmo::Hide()
+void RotateGizmo::Hide()
 {
 	std::vector<StaticModel *> components;
 	node->GetComponents<StaticModel>(components, true);
@@ -77,7 +78,14 @@ void TranslateGizmo::Hide()
 	}
 }
 
-bool TranslateGizmo::CheckOperationStart(FireCube::Scene *scene, FireCube::Node *currentNode, FireCube::Ray ray, FireCube::vec2 mousePos)
+float GetAng(vec3 n, vec3 v1, vec3 v2)
+{
+	float det = (n.x * v1.y * v2.z + v1.x * v2.y * n.x + v2.x * n.y * v1.z) - (v2.x * v1.y * n.z + v1.x * n.y * v2.z + n.x * v2.y * v1.z);
+	float dot = Dot(v1, v2);
+	return std::atan2(dot, det);
+}
+
+bool RotateGizmo::CheckOperationStart(FireCube::Scene *scene, FireCube::Node *currentNode, FireCube::Ray ray, vec2 mousePos)
 {
 	RayQuery query(ray, 10e4);
 
@@ -85,62 +93,46 @@ bool TranslateGizmo::CheckOperationStart(FireCube::Scene *scene, FireCube::Node 
 	if (query.results.empty() == false)
 	{
 		auto &result = query.results.front();
-		Node *node = result.renderable->GetNode();		
-		currentAxis = node->GetName();
-		dragStart = query.ray.origin + query.ray.direction * result.distance;
-		startPosition = currentNode->GetTranslation();
-		return true;
+		Node *node = result.renderable->GetNode();
+		currentAxis = node->GetName();				
+		lastMousePos = mousePos;
+		
+		return true;		
 	}
 
 	return false;
 }
 
-void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos, FireCube::Node *currentNode)
+void RotateGizmo::PerformOperation(FireCube::Ray ray, vec2 mousePos, FireCube::Node *currentNode)
 {
-	vec3 intersectionPoint;
-	vec3 translation;
-	bool moved = false;
+	vec3 axis;
 	if (currentAxis == "XAxis")
-	{		
-		if (MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(1, 0, 0), ray.origin, ray.direction))
-		{
-			translation = vec3(startPosition.x + (intersectionPoint.x - dragStart.x), startPosition.y, startPosition.z);
-			moved = true;
-		}
+	{
+		axis = vec3(0.0f, 1.0f, 0.0f);
 	}
 	else if (currentAxis == "YAxis")
 	{
-		vec3 intersectionPoint;
-		if (MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(0, 1, 0), ray.origin, ray.direction))
-		{
-			translation = vec3(startPosition.x, startPosition.y + (intersectionPoint.y - dragStart.y), startPosition.z);
-			moved = true;
-		}
+		axis = vec3(1.0f, 0.0f, 0.0f);
 	}
 	else if (currentAxis == "ZAxis")
 	{
-		vec3 intersectionPoint;
-		if (MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(0, 0, 1), ray.origin, ray.direction))
-		{
-			translation = vec3(startPosition.x, startPosition.y, startPosition.z + (intersectionPoint.z - dragStart.z));
-			moved = true;
-		}
+		axis = vec3(0.0f, 0.0f, 1.0f);
 	}
+	
+	mat3 rotMat = currentNode->GetRotation().ToMat3();
+	rotMat.Inverse();	
+	axis = (rotMat * axis).Normalized();	
+	mat4 rotationMatrix = mat4::IDENTITY;
+	rotationMatrix.Rotate(axis, (lastMousePos.x - mousePos.x) * 0.01f);
+	currentNode->SetRotation(currentNode->GetRotation() * rotationMatrix);
+	//node->SetRotation(currentNode->GetRotation());
 
-	if (moved)
-	{
-		if (snapToGrid)
-		{
-			std::modf(translation.x, &translation.x);
-			std::modf(translation.y, &translation.y);
-			std::modf(translation.z, &translation.z);
-		}
-		currentNode->SetTranslation(translation);
-		this->SetPosition(currentNode->GetWorldPosition());
-	}
+	lastMousePos = mousePos;
+	
+	
 }
 
-void TranslateGizmo::SetSnapToGrid(bool snap)
+void RotateGizmo::SetSnapToGrid(bool snap)
 {
 	snapToGrid = snap;
 }

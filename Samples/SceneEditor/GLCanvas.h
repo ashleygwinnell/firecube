@@ -2,6 +2,13 @@
 
 class MyApp;
 class TranslateGizmo;
+class RotateGizmo;
+class TransformGizmo;
+
+enum class Operation
+{
+	NONE, OBJECT_TRANSFORM, CAMERA_ORBIT
+};
 
 class GLCanvas : public wxGLCanvas
 {
@@ -21,11 +28,13 @@ public:
 	void OnMotion(wxMouseEvent& event);
 	void OnMouseWheel(wxMouseEvent& event);
 	void OnLeftUp(wxMouseEvent& event);
+	void OnKeyUp(wxKeyEvent& event);
 	void Render();
 	void Init();	
 
 private:	
 	void CreateGrid(float size, unsigned int numberOfCells);
+	void UpdateGizmo();
 	bool init;
 	MyApp *theApp;
 	wxGLContext *context;
@@ -34,8 +43,10 @@ private:
 	FireCube::OrbitCamera *camera;
 	FireCube::Node *root, *gridNode, *currentNode;
 	FireCube::SharedPtr<TranslateGizmo> translateGizmo;
+	FireCube::SharedPtr<RotateGizmo> rotateGizmo;
+	TransformGizmo *transformGizmo;
 	FireCube::CustomGeometry *gridGeometry;
 	FireCube::SharedPtr<FireCube::Material> gridMaterial;
 	FireCube::vec2 lastMousePos;
-	std::string currentOperation;	
+	Operation currentOperation;	
 };

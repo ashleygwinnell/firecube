@@ -3,11 +3,11 @@
 #include "FireCube.h"
 #include "TransformGizmo.h"
 
-class TranslateGizmo : public FireCube::Object, public TransformGizmo
+class RotateGizmo : public FireCube::Object, public TransformGizmo
 {
-	OBJECT(TranslateGizmo)
+	OBJECT(RotateGizmo)
 public:
-	TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent);
+	RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent);
 	virtual void SetPosition(FireCube::vec3 position);
 	virtual void SetRotation(FireCube::mat4 rotation);
 	virtual void Show();
@@ -16,8 +16,8 @@ public:
 	virtual void PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos, FireCube::Node *currentNode);
 	virtual void SetSnapToGrid(bool snap);
 private:
-	FireCube::Node *node;
-	FireCube::vec3 startPosition, dragStart;
-	std::string currentAxis;
+	FireCube::Node *node;	
+	std::string currentAxis;	
 	bool snapToGrid;
+	FireCube::vec2 lastMousePos;
 };

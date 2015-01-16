@@ -8,10 +8,12 @@ using namespace FireCube;
 #include "app.h"
 #include "Types.h"
 #include "TranslateGizmo.h"
+#include "RotateGizmo.h"
+#include "MainFrameImpl.h"
 
-GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id,
-	const wxPoint& pos, const wxSize& size, long style, const wxString& name)
-	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name), init(false), theApp((MyApp*)wxTheApp), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), currentNode(nullptr)
+GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
+	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name), 
+	init(false), theApp((MyApp*)wxTheApp), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), currentNode(nullptr), currentOperation(Operation::NONE)
 {
 	context = new wxGLContext(this);
 	Bind(wxEVT_SIZE, &GLCanvas::OnSize, this);
@@ -21,6 +23,7 @@ GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id,
 	Bind(wxEVT_MOTION, &GLCanvas::OnMotion, this);
 	Bind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
 	Bind(wxEVT_LEFT_UP, &GLCanvas::OnLeftUp, this);
+	Bind(wxEVT_KEY_UP, &GLCanvas::OnKeyUp, this);
 }
 
 GLCanvas::~GLCanvas()
@@ -32,6 +35,7 @@ GLCanvas::~GLCanvas()
 	Unbind(wxEVT_MOTION, &GLCanvas::OnMotion, this);
 	Unbind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
 	Unbind(wxEVT_LEFT_UP, &GLCanvas::OnLeftUp, this);
+	Unbind(wxEVT_KEY_UP, &GLCanvas::OnKeyUp, this);
 }
 
 void GLCanvas::Init()
@@ -44,6 +48,8 @@ void GLCanvas::Init()
 
 	scene = theApp->GetProject().GetScene();	
 	root = scene->GetRootNode();
+
+	((MainFrameImpl *) this->GetParent())->SetScene(scene);
 
 	Node *cameraNode = root->CreateChild("Camera");
 	camera = cameraNode->CreateComponent<OrbitCamera>();
@@ -59,20 +65,18 @@ void GLCanvas::Init()
 	light->SetColor(vec4(1.0f));
 	lightNode->Rotate(vec3(PI * 0.7f, 0.2f, 0));
 
-	for (int i = 0; i < 10; ++i)
-	{
-		Node *testNode = root->CreateChild("TestNode");
-		StaticModel *model = testNode->CreateComponent<StaticModel>();
-		SharedPtr<Mesh> mesh(new Mesh(engine));
-		mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(1.0f)), engine->GetResourceCache()->GetResource<Material>("Materials/TerrainNoTexture.xml"));
-		mesh->SetBoundingBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
-		model->CreateFromMesh(mesh);
-		model->SetCollisionQueryMask(USER_GEOMETRY);
-		testNode->SetTranslation(vec3(RangedRandom(-10, 10), 0.5, RangedRandom(-10, 10)));
-	}
-	
+	Node *testNode = root->CreateChild("TestNode");
+	StaticModel *model = testNode->CreateComponent<StaticModel>();
+	SharedPtr<Mesh> mesh(new Mesh(engine));
+	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(1.0f)), engine->GetResourceCache()->GetResource<Material>("Materials/TerrainNoTexture.xml"));
+	mesh->SetBoundingBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
+	model->CreateFromMesh(mesh);
+	model->SetCollisionQueryMask(USER_GEOMETRY);
+
 	translateGizmo = new TranslateGizmo(engine, root);
-	//translateGizmo->SetSnapToGrid(true);
+	rotateGizmo = new RotateGizmo(engine, root);
+	transformGizmo = translateGizmo.Get();
+	
 	gridMaterial = FireCube::SharedPtr<FireCube::Material>(new Material(engine));
 	gridMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	gridMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));
@@ -147,30 +151,30 @@ void GLCanvas::OnMotion(wxMouseEvent& event)
 		wxSize size = this->GetSize();
 		Ray ray = camera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
 
-		if (currentOperation == "")
-		{				
-			bool startTranslation = translateGizmo->CheckOperationStart(scene, currentNode, ray);
-			if (startTranslation)
+		if (currentOperation == Operation::NONE)
+		{							
+			bool startTransaform = transformGizmo->CheckOperationStart(scene, currentNode, ray, vec2(mousePos.x, mousePos.y));
+			if (startTransaform)
 			{							
-				currentOperation = "Translate";				
-			}		
+				currentOperation = Operation::OBJECT_TRANSFORM;
+			}				
 			else
 			{
-				currentOperation = "CameraOrbit";				
+				currentOperation = Operation::CAMERA_ORBIT;
 			}
 		}
 		
-		if (currentOperation == "CameraOrbit")
+		if (currentOperation == Operation::CAMERA_ORBIT)
 		{
 			camera->RotateX(-(curpos.y - lastMousePos.y) / 60.0f);
 			camera->RotateY(-(curpos.x - lastMousePos.x) / 60.0f);
 			this->Refresh(false);
 		}
-		else if (currentOperation == "Translate")
-		{			
-			translateGizmo->PerformOperation(ray, currentNode);
+		else if (currentOperation == Operation::OBJECT_TRANSFORM)
+		{						
+			transformGizmo->PerformOperation(ray, vec2(mousePos.x, mousePos.y), currentNode);
 			this->Refresh(false);
-		}
+		}		
 	}
 
 	lastMousePos = curpos;	
@@ -194,25 +198,93 @@ void GLCanvas::OnLeftUp(wxMouseEvent& event)
 		Ray ray = camera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
 		RayQuery query(ray, 10e4);
 					
-		if (currentOperation == "")
+		if (currentOperation == Operation::NONE)
 		{			
 			scene->IntersectRay(query, USER_GEOMETRY);
 			if (query.results.empty() == false)
 			{
 				auto &result = query.results.front();
-				currentNode = result.renderable->GetNode();				
-				translateGizmo->SetPosition(currentNode->GetWorldPosition());
-				translateGizmo->Show();								
+				currentNode = result.renderable->GetNode();								
+				transformGizmo->SetPosition(currentNode->GetWorldPosition());
+				transformGizmo->Show();
 			}
 			else
 			{
-				currentNode = nullptr;
-				translateGizmo->Hide();
+				currentNode = nullptr;				
+				transformGizmo->Hide();
 			}
 			this->Refresh(false);
 		}
 		
-		currentOperation = "";
+		currentOperation = Operation::NONE;
+	}
+}
+
+void GLCanvas::OnKeyUp(wxKeyEvent& event)
+{
+	if (event.GetKeyCode() == 'Q')
+	{		
+		if (transformGizmo != translateGizmo.Get())
+		{
+			transformGizmo->Hide();
+			transformGizmo = translateGizmo.Get();
+			if (currentNode)
+			{
+				transformGizmo->SetPosition(currentNode->GetWorldPosition());
+				transformGizmo->Show();
+			}
+			this->Refresh(false);
+		}
+	}
+	else if (event.GetKeyCode() == 'W')
+	{	
+		if (transformGizmo != rotateGizmo.Get())
+		{
+			transformGizmo->Hide();
+			transformGizmo = rotateGizmo.Get();
+			if (currentNode)
+			{
+				transformGizmo->SetPosition(currentNode->GetWorldPosition());
+				transformGizmo->Show();
+			}
+			this->Refresh(false);
+		}
+	}
+	else if (event.GetKeyCode() == WXK_ESCAPE)
+	{
+		if (transformGizmo)
+			transformGizmo->Hide();
+		currentNode = nullptr;
+		currentOperation = Operation::NONE;		
+		this->Refresh(false);
+	}
+	else if (event.GetKeyCode() == 'G')
+	{
+		if (currentNode)
+		{		
+			std::vector<StaticModel *> models;
+			currentNode->GetComponents<StaticModel>(models, true);
+			if (models.empty() == false)
+			{
+				BoundingBox bbox;
+				for (auto &m : models)
+					bbox.Expand(m->GetWorldBoundingBox());
+				vec3 newPos = currentNode->GetWorldPosition();
+				newPos.y = bbox.GetHeight() * 0.5f;
+				currentNode->SetTranslation(newPos);
+				UpdateGizmo();
+				this->Refresh(false);
+			}
+		}
+		
+	}
+}
+
+void GLCanvas::UpdateGizmo()
+{
+	if (transformGizmo && currentNode)
+	{
+		transformGizmo->SetPosition(currentNode->GetWorldPosition());
 	}
 }
 

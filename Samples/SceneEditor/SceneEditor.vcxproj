@@ -92,6 +92,7 @@
     <ClCompile Include="MainFrameImpl.cpp" />
     <ClCompile Include="MathUtils.cpp" />
     <ClCompile Include="Project.cpp" />
+    <ClCompile Include="RotateGizmo.cpp" />
     <ClCompile Include="TranslateGizmo.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +102,8 @@
     <ClInclude Include="MainFrameImpl.h" />
     <ClInclude Include="MathUtils.h" />
     <ClInclude Include="Project.h" />
+    <ClInclude Include="RotateGizmo.h" />
+    <ClInclude Include="TransformGizmo.h" />
     <ClInclude Include="TranslateGizmo.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
