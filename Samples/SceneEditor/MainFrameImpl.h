@@ -16,7 +16,8 @@ class MainFrameImpl : public MainFrame
 	protected:
 		// Handlers for MainFrame events.
 		void MyButtonClicked( wxCommandEvent& event );
-		
+		void LoadMeshClicked(wxCommandEvent& event);
+
 		MyApp *theApp;
 		FireCube::Engine *engine;
 		FireCube::Scene *scene;

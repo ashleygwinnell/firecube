@@ -23,8 +23,17 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	glCanvas = new GLCanvas(this, wxID_ANY,wxDefaultPosition,wxSize(1,1));
 	fgSizer1->Add( glCanvas, 0, wxEXPAND, 5 );
 	
+	wxBoxSizer* bSizer1;
+	bSizer1 = new wxBoxSizer( wxVERTICAL );
+	
 	m_button1 = new wxButton( this, wxID_ANY, wxT("MyButton"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_button1, 0, 0, 5 );
+	bSizer1->Add( m_button1, 0, 0, 5 );
+	
+	m_button2 = new wxButton( this, wxID_ANY, wxT("MyButton"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer1->Add( m_button2, 0, 0, 5 );
+	
+	
+	fgSizer1->Add( bSizer1, 1, wxEXPAND, 5 );
 	
 	
 	this->SetSizer( fgSizer1 );
@@ -34,11 +43,13 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	// Connect Events
 	m_button1->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::MyButtonClicked ), NULL, this );
+	m_button2->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::LoadMeshClicked ), NULL, this );
 }
 
 MainFrame::~MainFrame()
 {
 	// Disconnect Events
 	m_button1->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::MyButtonClicked ), NULL, this );
+	m_button2->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::LoadMeshClicked ), NULL, this );
 	
 }

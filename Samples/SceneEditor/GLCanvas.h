@@ -4,6 +4,7 @@ class MyApp;
 class TranslateGizmo;
 class RotateGizmo;
 class TransformGizmo;
+class ScaleGizmo;
 
 enum class Operation
 {
@@ -44,6 +45,7 @@ private:
 	FireCube::Node *root, *gridNode, *currentNode, *cameraTarget;
 	FireCube::SharedPtr<TranslateGizmo> translateGizmo;
 	FireCube::SharedPtr<RotateGizmo> rotateGizmo;
+	FireCube::SharedPtr<ScaleGizmo> scaleGizmo;
 	TransformGizmo *transformGizmo;
 	FireCube::CustomGeometry *gridGeometry;
 	FireCube::SharedPtr<FireCube::Material> gridMaterial;

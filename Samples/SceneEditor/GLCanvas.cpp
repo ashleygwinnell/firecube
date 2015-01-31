@@ -9,6 +9,7 @@ using namespace FireCube;
 #include "Types.h"
 #include "TranslateGizmo.h"
 #include "RotateGizmo.h"
+#include "ScaleGizmo.h"
 #include "MainFrameImpl.h"
 
 GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
@@ -63,12 +64,11 @@ void GLCanvas::Init()
 
 	scene->SetFogColor(vec3(0.2f, 0.2f, 0.2f));
 	
-	Node *lightNode = root->CreateChild("lightNode");
+	Node *lightNode = cameraNode->CreateChild("lightNode");
 	Light *light = lightNode->CreateComponent<Light>();
 	light->SetLightType(LightType::DIRECTIONAL);
-	light->SetColor(vec4(1.0f));
-	lightNode->Rotate(vec3(PI * 0.7f, 0.2f, 0));
-
+	light->SetColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));
+	
 	Node *testNode = root->CreateChild("TestNode");
 	StaticModel *model = testNode->CreateComponent<StaticModel>();
 	SharedPtr<Mesh> mesh(new Mesh(engine));
@@ -79,13 +79,14 @@ void GLCanvas::Init()
 
 	translateGizmo = new TranslateGizmo(engine, root);
 	rotateGizmo = new RotateGizmo(engine, root);
+	scaleGizmo = new ScaleGizmo(engine, root);
 	transformGizmo = translateGizmo.Get();
 	
 	gridMaterial = FireCube::SharedPtr<FireCube::Material>(new Material(engine));
 	gridMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	gridMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));
 
-	CreateGrid(1.0f, 100);	
+	CreateGrid(10.0f, 100);	
 }
 void GLCanvas::Render()
 {
@@ -173,6 +174,7 @@ void GLCanvas::OnMotion(wxMouseEvent& event)
 		if (currentOperation == Operation::OBJECT_TRANSFORM)
 		{						
 			transformGizmo->PerformOperation(ray, vec2(mousePos.x, mousePos.y), currentNode);
+			UpdateGizmo();
 			this->Refresh(false);
 		}		
 	}
@@ -256,6 +258,20 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 			this->Refresh(false);
 		}
 	}
+	else if (event.GetKeyCode() == 'E')
+	{
+		if (transformGizmo != scaleGizmo.Get())
+		{
+			transformGizmo->Hide();
+			transformGizmo = scaleGizmo.Get();
+			if (currentNode)
+			{
+				UpdateGizmo();
+				transformGizmo->Show();
+			}
+			this->Refresh(false);
+		}
+	}
 	else if (event.GetKeyCode() == WXK_ESCAPE)
 	{
 		if (transformGizmo)
@@ -276,7 +292,7 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 				for (auto &m : models)
 					bbox.Expand(m->GetWorldBoundingBox());
 				vec3 newPos = currentNode->GetWorldPosition();
-				newPos.y = bbox.GetHeight() * 0.5f;
+				newPos.y = (bbox.GetMax().y - bbox.GetMin().y) * 0.5f;
 				currentNode->SetTranslation(newPos);
 				UpdateGizmo();
 				this->Refresh(false);
@@ -288,6 +304,18 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 		if (currentNode)
 		{
 			cameraTarget->SetTranslation(currentNode->GetWorldPosition());
+			this->Refresh(false);
+		}
+	}
+	else if (event.GetKeyCode() == WXK_DELETE)
+	{
+		if (currentNode)
+		{
+			if (transformGizmo)
+				transformGizmo->Hide();
+			
+			currentNode->GetParent()->RemoveChild(currentNode);
+			currentNode = nullptr;
 			this->Refresh(false);
 		}
 	}

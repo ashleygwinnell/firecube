@@ -40,9 +40,11 @@ class MainFrame : public wxFrame
 	protected:
 		GLCanvas *glCanvas;
 		wxButton* m_button1;
+		wxButton* m_button2;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void MyButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void LoadMeshClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
