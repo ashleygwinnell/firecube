@@ -195,7 +195,9 @@ void Node::RemoveChild(Node *node)
 	{
 		if ((*i) == node)
 		{
-			children.erase(i);						
+			Node *node = *i;
+			children.erase(i);
+			delete node;
 			break;
 		}
 	}		
