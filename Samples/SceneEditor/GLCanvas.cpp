@@ -292,7 +292,7 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 				for (auto &m : models)
 					bbox.Expand(m->GetWorldBoundingBox());
 				vec3 newPos = currentNode->GetWorldPosition();
-				newPos.y = (bbox.GetMax().y - bbox.GetMin().y) * 0.5f;
+				newPos.y += -bbox.GetMin().y;
 				currentNode->SetTranslation(newPos);
 				UpdateGizmo();
 				this->Refresh(false);
