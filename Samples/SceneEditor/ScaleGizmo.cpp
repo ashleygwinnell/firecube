@@ -46,6 +46,17 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 	staticModel->CreateFromMesh(mesh);
 	staticModel->SetCollisionQueryMask(GIZMO_GEOMETRY);
 	staticModel->SetEnabled(false);
+
+	material = material->Clone();
+	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	mesh = new Mesh(engine);
+	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.2f, 0.2f, 0.2f)), material);
+	mesh->SetBoundingBox(BoundingBox(vec3(-0.1f, -0.1f, -0.1f), vec3(0.1f, 0.1f, 0.1f)));
+	child = node->CreateChild("AllAxes");	
+	staticModel = child->CreateComponent<StaticModel>();
+	staticModel->CreateFromMesh(mesh);
+	staticModel->SetCollisionQueryMask(GIZMO_GEOMETRY);
+	staticModel->SetEnabled(false);
 }
 
 void ScaleGizmo::SetPosition(vec3 position)
@@ -101,7 +112,7 @@ void ScaleGizmo::PerformOperation(FireCube::Ray ray, vec2 mousePos, FireCube::No
 	vec3 axis;
 	if (currentAxis == "XAxis")
 	{		
-		axis = vec3(1.0f, 1.0f, 1.0f);
+		axis = vec3(1.0f, 0.0f, 0.0f);
 	}
 	else if (currentAxis == "YAxis")
 	{
@@ -110,6 +121,10 @@ void ScaleGizmo::PerformOperation(FireCube::Ray ray, vec2 mousePos, FireCube::No
 	else if (currentAxis == "ZAxis")
 	{
 		axis = vec3(0.0f, 0.0f, 1.0f);
+	}
+	else if (currentAxis == "AllAxes")
+	{
+		axis = vec3(1.0f, 1.0f, 1.0f);
 	}
 	
 	currentNode->SetScale(currentNode->GetScale() + axis * (mousePos.x - lastMousePos.x) * 0.01f);
