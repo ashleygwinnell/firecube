@@ -346,7 +346,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(ProjectDir)\ThirdParty\FreeType\include;$(ProjectDir)\ThirdParty\TinyXML;$(ProjectDir)\ThirdParty\GLEW;$(ProjectDir)\ThirdParty\STB;$(ProjectDir)\ThirdParty\jpgd;$(ProjectDir);$(ProjectDir)\ThirdParty\SDL\include;$(ProjectDir)\ThirdParty\Lua\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\ThirdParty\FreeType\include;$(ProjectDir)\ThirdParty\TinyXML;$(ProjectDir)\ThirdParty\GLEW;$(ProjectDir)\ThirdParty\STB;$(ProjectDir)\ThirdParty\jpgd;$(ProjectDir);$(ProjectDir)\ThirdParty\SDL\include;$(ProjectDir)\ThirdParty\Lua\src;$(ProjectDir)\ThirdParty\Assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;sdl.lib;sdl_image.lib;freetype242MT_D.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
