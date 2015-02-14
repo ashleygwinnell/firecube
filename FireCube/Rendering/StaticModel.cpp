@@ -83,7 +83,7 @@ void StaticModel::IntersectRay(RayQuery &rayQuery)
 			RayQueryResult result;
 			result.distance = minDistance;
 			result.renderable = this;
-			result.normal = minNormal;
+			result.normal = minNormal.TransformNormal(node->GetWorldTransformation());
 			rayQuery.results.push_back(result);
 		}
 	}	
