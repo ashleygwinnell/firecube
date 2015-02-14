@@ -45,7 +45,7 @@ bool App::Prepare()
 	childNode->Scale(vec3(0.05f));
 
 	/*childNode = root->CreateChild("Particles");
-	childNode->CreateComponent<ParticleEmitter>();*/
+	childNode->CreateComponent<ParticleEmitter>(1000, engine->GetResourceCache()->GetResource<Material>("Materials/ParticleNoTexture.xml"));*/
 
 	/*childNode = root->CreateChild("Terrain");	
 	Terrain *terrain = childNode->CreateComponent<Terrain>();

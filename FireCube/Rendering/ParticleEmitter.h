@@ -11,7 +11,7 @@ class ParticleEmitter : public Renderable
 {
 	OBJECT(ParticleEmitter)
 public:
-	ParticleEmitter(Engine *engine);
+	ParticleEmitter(Engine *engine, int numberOfParticles, Material *material);
 	~ParticleEmitter();
 
 	virtual void IntersectRay(RayQuery &rayQuery);

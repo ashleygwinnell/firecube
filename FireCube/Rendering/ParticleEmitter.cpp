@@ -12,11 +12,10 @@
 
 using namespace FireCube;
 
-ParticleEmitter::ParticleEmitter(Engine *engine) : Renderable(engine), lifeTime(2.0f)
+ParticleEmitter::ParticleEmitter(Engine *engine, int numberOfParticles, Material *material) : Renderable(engine), lifeTime(2.0f)
 {
 	updateShader = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/particleUpdate.vert")->GenerateShader("");
-	updateShader->SetOutputAttributes({"outPosition", "outVelocity", "outAge"});
-	const int numberOfParticles = 100000;
+	updateShader->SetOutputAttributes({"outPosition", "outVelocity", "outAge"});	
 	std::vector<float> particleData(numberOfParticles * 7);
 	for (int i = 0; i < numberOfParticles; ++i)
 	{
@@ -46,7 +45,7 @@ ParticleEmitter::ParticleEmitter(Engine *engine) : Renderable(engine), lifeTime(
 
 	renderableParts.resize(1);
 	renderableParts[0].geometry = geometry;
-	renderableParts[0].material = engine->GetResourceCache()->GetResource<Material>("Materials/ParticleNoTexture.xml");
+	renderableParts[0].material = material;
 }
 
 ParticleEmitter::~ParticleEmitter()
