@@ -20,6 +20,7 @@
 #include "Rendering/Texture.h"
 #include "Rendering/VertexBuffer.h"
 #include "Rendering/Shader.h"
+#include "Rendering/ShaderTemplate.h"
 #include "Rendering/FrameBuffer.h"
 #include "Rendering/Font.h"
 #include "Rendering/Renderer.h"
