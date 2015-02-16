@@ -43,7 +43,8 @@ enum FragmentShaderLightPermutation
 enum class RenderSurfaceType
 {
 	COLOR,
-	DEPTH
+	DEPTH,
+	DEPTH_TEXTURE
 };
 
 enum class BlendMode

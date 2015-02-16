@@ -142,7 +142,7 @@ public:
 
 	void SetRenderTarget(unsigned int index, RenderSurface *renderTarget);
 
-	void SetDepthSurface(RenderSurface *depthSurface); // TODO: Change to SetDepthSurface(RenderSurface *depthSurface) which accept seither a rendr surface or texture
+	void SetDepthSurface(RenderSurface *depthSurface);
 
 	void SetCurrentRenderPath(RenderPath *renderPath);
 	RenderPath *GetCurrentRenderPath();

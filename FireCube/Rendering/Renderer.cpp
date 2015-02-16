@@ -471,6 +471,7 @@ void Renderer::UpdateFrameBuffer()
 	if (!hasFbo)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glDrawBuffer(GL_BACK);
 		SetViewport(0, 0, width, height);
 		return;
 	}
@@ -507,12 +508,19 @@ void Renderer::UpdateFrameBuffer()
 		frameBuffers[key] = frameBuffer;
 	}
 
+	bool hasColorBuffer = false;
+
 	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
 	{
 		if (renderTargets[i])
+		{
 			frameBuffer->SetRenderTarget(renderTargets[i]->GetLinkedTexture(), i);
+			hasColorBuffer = true;
+		}
 		else
+		{
 			frameBuffer->SetRenderTarget(nullptr, i);
+		}
 	}
 
 	if (depthSurface) // TODO: Move this check to framebuffer object
@@ -522,6 +530,15 @@ void Renderer::UpdateFrameBuffer()
 	else
 	{
 		frameBuffer->SetDepthBufferSurface(GetRenderSurface(width, height, RenderSurfaceType::DEPTH));
+	}
+
+	if (hasColorBuffer)
+	{
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+	}
+	else
+	{
+		glDrawBuffer(GL_NONE);
 	}
 
 	if (frameBuffer->IsValid() == false)
@@ -599,6 +616,18 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 	else if (type == RenderSurfaceType::DEPTH)
 	{
 		renderSurface->CreateDepth(width, height);
+	}
+	else if (type == RenderSurfaceType::DEPTH_TEXTURE)
+	{
+		Texture *texture = new Texture(engine);
+		texture->SetWidth(width);
+		texture->SetHeight(height);
+		texture->SetFiltering(TextureFilter::LINEAR);
+		UseTexture(0, texture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		renderSurface->SetLinkedTexture(texture);		
 	}
 	renderSurfaces[key] = renderSurface;
 	return renderSurface;
