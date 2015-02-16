@@ -345,8 +345,7 @@ void Renderer::RestoreFrameBuffer()
 		SetRenderTarget(i, nullptr);
 
 	depthSurface = nullptr;
-	UpdateFrameBuffer();	
-	SetViewport(0, 0, width, height);
+	UpdateFrameBuffer();		
 }
 
 void Renderer::SetViewport(int left, int right, int width, int height)
