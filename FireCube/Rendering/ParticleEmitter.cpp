@@ -12,30 +12,19 @@
 
 using namespace FireCube;
 
-ParticleEmitter::ParticleEmitter(Engine *engine, int numberOfParticles, Material *material) : Renderable(engine), lifeTime(2.0f)
+ParticleEmitter::ParticleEmitter(Engine *engine, unsigned int numberOfParticles, Material *material) : Renderable(engine), lifeTime(2.0f), numberOfParticles(numberOfParticles)
 {
 	updateShader = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/particleUpdate.vert")->GenerateShader("");
-	updateShader->SetOutputAttributes({"outPosition", "outVelocity", "outAge"});	
-	std::vector<float> particleData(numberOfParticles * 7);
-	for (int i = 0; i < numberOfParticles; ++i)
-	{
-		particleData[i * 7 + 0] = RangedRandom(-1, 1.0f); // Position
-		particleData[i * 7 + 1] = RangedRandom(0, 1.0f);
-		particleData[i * 7 + 2] = RangedRandom(-1, 1.0f);
-		vec3 velocity = vec3(RangedRandom(-1, 1), RangedRandom(-1, 1), RangedRandom(-1, 1)).Normalized() * RangedRandom(1, 1.5f);		
-		particleData[i * 7 + 3] = velocity.x; // Veloctiy
-		particleData[i * 7 + 4] = velocity.y;
-		particleData[i * 7 + 5] = velocity.z;
-		particleData[i * 7 + 6] = RangedRandom(0.0f, lifeTime); // Age				
-	}
+	updateShader->SetOutputAttributes({"outPosition", "outVelocity", "outAge"});		
 	for (int i = 0; i < 2; ++i)
 	{
 		particleBuffers[i] = new VertexBuffer(engine->GetRenderer());
 		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::POSITION, VertexAttributeDataType::FLOAT, 3); // Position
 		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 3);   // Velocity
-		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 1);	  // Age
-		particleBuffers[i]->LoadData(&particleData[0], numberOfParticles, BufferType::STREAM);
+		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 1);	  // Age		
 	}
+
+	Reset();
 
 	geometry = new Geometry(engine->GetRenderer());
 	geometry->SetVertexBuffer(particleBuffers[0]);
@@ -89,5 +78,25 @@ void ParticleEmitter::UpdateRenderableParts()
 	for (auto &i : renderableParts)
 	{
 		i.transformation = node->GetWorldTransformation();
+	}
+}
+
+void ParticleEmitter::Reset()
+{
+	std::vector<float> particleData(numberOfParticles * 7);
+	for (unsigned int i = 0; i < numberOfParticles; ++i)
+	{
+		particleData[i * 7 + 0] = 0;// RangedRandom(-1, 1.0f); // Position
+		particleData[i * 7 + 1] = 0;// RangedRandom(0, 1.0f);
+		particleData[i * 7 + 2] = 0;// RangedRandom(-1, 1.0f);
+		vec3 velocity = vec3(RangedRandom(-1, 1), RangedRandom(-1, 1), RangedRandom(-1, 1)).Normalized() * RangedRandom(1, 1.5f);
+		particleData[i * 7 + 3] = velocity.x; // Veloctiy
+		particleData[i * 7 + 4] = velocity.y;
+		particleData[i * 7 + 5] = velocity.z;
+		particleData[i * 7 + 6] = RangedRandom(0.0f, lifeTime); // Age				
+	}
+	for (int i = 0; i < 2; ++i)
+	{		
+		particleBuffers[i]->LoadData(&particleData[0], numberOfParticles, BufferType::STREAM);
 	}
 }

@@ -11,10 +11,11 @@ class ParticleEmitter : public Renderable
 {
 	OBJECT(ParticleEmitter)
 public:
-	ParticleEmitter(Engine *engine, int numberOfParticles, Material *material);
+	ParticleEmitter(Engine *engine, unsigned int numberOfParticles, Material *material);
 	~ParticleEmitter();
 
 	virtual void IntersectRay(RayQuery &rayQuery);
+	void Reset();
 protected:
 	void SetBoundingBox(BoundingBox boundingBox);
 	virtual void UpdateWorldBoundingBox();
@@ -26,6 +27,7 @@ private:
 	VertexBuffer *particleBuffers[2];	
 	SharedPtr<Geometry> geometry;
 	float lifeTime;
+	unsigned int numberOfParticles;
 };
 
 }
