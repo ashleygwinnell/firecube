@@ -1,4 +1,3 @@
-#version 330
 layout (location = 0) in vec3 atrPosition;
 layout (location = 2) in vec2 atrTexCoord;
 smooth out vec2 texcoord;

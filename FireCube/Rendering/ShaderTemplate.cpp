@@ -72,6 +72,7 @@ Shader *ShaderTemplate::GenerateShader(const std::string &defines)
 
 	// Add defines to the shader source according to the shader properties
 	std::ostringstream definesPrefix;
+	definesPrefix << "#version 330" << std::endl;
 	for (unsigned int i = 0; i < definesList.size(); ++i)
 	{		
 		definesPrefix << "#define " << definesList[i] << std::endl;

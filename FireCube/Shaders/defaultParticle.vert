@@ -1,5 +1,3 @@
-#version 330
-
 #if defined(POINT_LIGHT) || defined(SPOT_LIGHT)
 	smooth out vec3 lightDir;
 	smooth out vec3 eyeVec;

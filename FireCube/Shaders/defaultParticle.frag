@@ -1,5 +1,3 @@
-#version 330
-
 out vec4 outputColor;
 
 #if defined(DIRECTIONAL_LIGHT) || defined(POINT_LIGHT) || defined(SPOT_LIGHT)

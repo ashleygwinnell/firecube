@@ -1,5 +1,3 @@
-#version 330
-
 layout (location = 0) in vec3 atrPosition;
 layout (location = 4) in vec3 atrColor;
 
