@@ -19,12 +19,15 @@ class FIRECUBE_API Image : public Resource
 public:
 	Image(Engine *engine);
 	
+	void Create(int width, int height, int bytesPerPixel);
+
 	/**
 	* Loads an image.
 	* @param filename The file to load.
 	*/
 	bool Load(const std::string &filename);
 	
+	bool Save(const std::string &filename);
 	/**
 	* Returns the width of the image.
 	*/

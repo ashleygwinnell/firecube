@@ -80,6 +80,7 @@
     <ClCompile Include="ThirdParty\GLEW\glew.c" />
     <ClCompile Include="ThirdParty\jpgd\jpgd.cpp" />
     <ClCompile Include="ThirdParty\STB\stb_image.c" />
+    <ClCompile Include="ThirdParty\STB\stb_image_write.c" />
     <ClCompile Include="ThirdParty\TinyXML\tinyxml.cpp" />
     <ClCompile Include="ThirdParty\TinyXML\tinyxmlerror.cpp" />
     <ClCompile Include="ThirdParty\TinyXML\tinyxmlparser.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="ThirdParty\GLEW\wglew.h" />
     <ClInclude Include="ThirdParty\jpgd\jpgd.h" />
     <ClInclude Include="ThirdParty\STB\stb_image.h" />
+    <ClInclude Include="ThirdParty\STB\stb_image_write.h" />
     <ClInclude Include="ThirdParty\TinyXML\tinyxml.h" />
     <ClInclude Include="Utils\Filesystem.h" />
     <ClInclude Include="Utils\Image.h" />

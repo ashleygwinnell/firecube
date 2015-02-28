@@ -5,6 +5,7 @@
 #include "Utils/Filesystem.h"
 #include "Utils/Image.h"
 #include "stb_image.h"
+#include "stb_image_write.h"
 #include "jpgd.h"
 
 using namespace FireCube;
@@ -12,6 +13,15 @@ using namespace FireCube;
 Image::Image(Engine *engine) : Resource(engine), width(0), height(0), bytesPerPixel(0)
 {
 
+}
+
+void Image::Create(int width, int height, int bytesPerPixel)
+{
+	this->width = width;
+	this->height = height;
+	this->bytesPerPixel = bytesPerPixel;
+
+	data.resize(width * height * bytesPerPixel);
 }
 
 bool Image::Load(const std::string &filename)
@@ -55,6 +65,32 @@ bool Image::Load(const std::string &filename)
 		free(pixels);
 
 	return true;		
+}
+
+bool Image::Save(const std::string &filename)
+{
+	unsigned int pos = filename.find_last_of('.');
+	std::string ext;	
+	if (pos != std::string::npos)
+	{
+		ext = filename.substr(pos + 1);
+		std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+	}
+
+	if (ext == "png")
+	{
+		return stbi_write_png(filename.c_str(), width, height, bytesPerPixel, data.data(), width * bytesPerPixel) != 0;
+	}
+	else if (ext == "bmp")
+	{
+		return stbi_write_bmp(filename.c_str(), width, height, bytesPerPixel, data.data()) != 0;
+	}
+	else if (ext == "tga")
+	{
+		return stbi_write_tga(filename.c_str(), width, height, bytesPerPixel, data.data()) != 0;
+	}
+
+	return false;
 }
 
 int Image::GetWidth() const
