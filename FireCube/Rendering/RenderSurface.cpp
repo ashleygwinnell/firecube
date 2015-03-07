@@ -3,7 +3,7 @@
 
 using namespace FireCube;
 
-RenderSurface::RenderSurface(Renderer *renderer) : GraphicsResource(renderer)
+RenderSurface::RenderSurface(Renderer *renderer, RenderSurfaceType type) : GraphicsResource(renderer), type(type)
 {
 	glGenRenderbuffers(1, &objectId);
 }
@@ -51,4 +51,9 @@ void RenderSurface::SetLinkedTexture(SharedPtr<Texture> linkedTexture)
 SharedPtr<Texture> RenderSurface::GetLinkedTexture()
 {
 	return linkedTexture;
+}
+
+RenderSurfaceType RenderSurface::GetRenderSurfaceType() const
+{
+	return type;
 }

@@ -328,15 +328,7 @@ void Renderer::ResetNumberOfPrimitivesRendered()
 void Renderer::UseFrameBuffer(FrameBuffer *frameBuffer)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->GetObjectId());
-	glViewport(0, 0, frameBuffer->width, frameBuffer->height);
-	bool found = false;
-	for (int i = 0; (i < MAX_TEXTURES) && (!found); i++)
-		if ((frameBuffer->texture[i]) && (frameBuffer->texture[i]->IsValid()))
-			found = true;
-	if (found)
-		glDrawBuffer(GL_BACK);
-	else
-		glDrawBuffer(GL_NONE);
+	glViewport(0, 0, frameBuffer->width, frameBuffer->height);	
 }
 
 void Renderer::RestoreFrameBuffer()
@@ -508,13 +500,16 @@ void Renderer::UpdateFrameBuffer()
 	}
 
 	bool hasColorBuffer = false;
-
+	
 	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
 	{
 		if (renderTargets[i])
 		{
 			frameBuffer->SetRenderTarget(renderTargets[i]->GetLinkedTexture(), i);
-			hasColorBuffer = true;
+			if (renderTargets[i]->GetRenderSurfaceType() == RenderSurfaceType::COLOR)
+			{
+				hasColorBuffer = true;
+			}			
 		}
 		else
 		{
@@ -527,8 +522,8 @@ void Renderer::UpdateFrameBuffer()
 		frameBuffer->SetDepthBufferSurface(depthSurface);
 	}
 	else
-	{
-		frameBuffer->SetDepthBufferSurface(GetRenderSurface(width, height, RenderSurfaceType::DEPTH));
+	{		
+		frameBuffer->SetDepthBufferSurface(GetRenderSurface(width, height, RenderSurfaceType::DEPTH));		
 	}
 
 	if (hasColorBuffer)
@@ -599,7 +594,7 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 	if (i != renderSurfaces.end())
 		return i->second;
 
-	SharedPtr<RenderSurface> renderSurface(new RenderSurface(this));
+	SharedPtr<RenderSurface> renderSurface(new RenderSurface(this, type));
 	if (type == RenderSurfaceType::COLOR)
 	{
 		Texture *texture = new Texture(engine);

@@ -77,16 +77,7 @@ bool FrameBuffer::IsValid() const
     if (objectId == 0)
         return false;
 
-    glBindFramebuffer(GL_FRAMEBUFFER, objectId);
-    bool found = false;
-    for (int i = 0; (i < MAX_TEXTURES) && (!found); i++)
-        if ((texture[i]) && (texture[i]->IsValid()))
-            found = true;
-    if (found)
-        glDrawBuffer(GL_BACK);
-    else
-        glDrawBuffer(GL_NONE);
-
+    glBindFramebuffer(GL_FRAMEBUFFER, objectId);    
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         return false;
     return true;
