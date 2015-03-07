@@ -46,8 +46,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SceneGraph", "Samples\Scene
 		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShadowMapping", "Samples\ShadowMapping\ShadowMapping.vcxproj", "{B69C902C-FDEF-49D2-8EB1-D629B352C82E}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Terrain", "Samples\Terrain\Terrain.vcxproj", "{C6A530C8-4558-4DC2-A79F-B7EE06C2D2B4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
@@ -404,34 +402,6 @@ Global
 		{9660D4D1-A287-4B77-B67C-B6C6D56A41F3}.Release|x64.ActiveCfg = Release|Win32
 		{9660D4D1-A287-4B77-B67C-B6C6D56A41F3}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
 		{9660D4D1-A287-4B77-B67C-B6C6D56A41F3}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug Multithreaded|Win32.ActiveCfg = Debug|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug Multithreaded|Win32.Build.0 = Debug|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug Multithreaded|x64.ActiveCfg = Debug|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug Singlethreaded|Win32.ActiveCfg = Debug|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug Singlethreaded|Win32.Build.0 = Debug|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug Singlethreaded|x64.ActiveCfg = Debug|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug Static|Win32.ActiveCfg = Debug|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug Static|Win32.Build.0 = Debug|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug Static|x64.ActiveCfg = Debug|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug|Win32.Build.0 = Debug|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Debug|x64.ActiveCfg = Debug|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.MinSizeRel|Win32.ActiveCfg = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.MinSizeRel|x64.ActiveCfg = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release Multithreaded|Win32.ActiveCfg = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release Multithreaded|Win32.Build.0 = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release Multithreaded|x64.ActiveCfg = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release Singlethreaded|Win32.ActiveCfg = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release Singlethreaded|Win32.Build.0 = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release Singlethreaded|x64.ActiveCfg = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release Static|Win32.ActiveCfg = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release Static|Win32.Build.0 = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release Static|x64.ActiveCfg = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release|Win32.ActiveCfg = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release|Win32.Build.0 = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.Release|x64.ActiveCfg = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
-		{B69C902C-FDEF-49D2-8EB1-D629B352C82E}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
 		{C6A530C8-4558-4DC2-A79F-B7EE06C2D2B4}.Debug Multithreaded|Win32.ActiveCfg = Debug|Win32
 		{C6A530C8-4558-4DC2-A79F-B7EE06C2D2B4}.Debug Multithreaded|Win32.Build.0 = Debug|Win32
 		{C6A530C8-4558-4DC2-A79F-B7EE06C2D2B4}.Debug Multithreaded|x64.ActiveCfg = Debug|Win32
