@@ -49,6 +49,8 @@ public:
 	void SetScene(Scene *scene);
 	void SetCollisionQueryMask(unsigned int collisionQueryMask);
 	unsigned int GetCollisionQueryMask() const;
+	void SetCastShadow(bool castShadow);
+	bool GetCastShadow() const;
 
 	virtual void IntersectRay(RayQuery &rayQuery);
 	virtual void UpdateRenderableParts();
@@ -64,6 +66,7 @@ protected:
 	bool worldBoundingBoxChanged;
 	Scene *scene;
 	unsigned int collisionQueryMask;
+	bool castShadow;
 private:
 
 };

@@ -34,13 +34,16 @@ bool App::Prepare()
 	camera = childNode->CreateComponent<OrbitCamera>();
 	camera->SetMaxAngX(0);
 	camera->SetZoomFactor(1000.0f);
-	camera->RegisterWithInputManager(GetInputManager());
+	camera->RegisterWithInputManager(GetInputManager());	
 	scene.SetCamera(camera);	
+	//camera->SetOrthographicProjectionParameters(-10, 10, -10, 10, -2, 20);
+	//camera->GetNode()->Rotate(vec3(PI * 0.25f, 0.0f, 0.0f));
 
 	childNode = root->CreateChild("Model");	
-	/*StaticModel *staticModel = childNode->CreateComponent<StaticModel>(resourceCache->GetResource<Mesh>("scene.3ds"));	
-	childNode->Scale(vec3(0.05f));
-	childNode->Move(vec3(0, 0.0251f, 0));*/
+	StaticModel *staticModel = childNode->CreateComponent<StaticModel>(resourceCache->GetResource<Mesh>("scene.3ds"));	
+	//childNode->Scale(vec3(0.05f));
+	//childNode->Move(vec3(0, 0.0251f, 0));
+	childNode = root->CreateChild("Model");
 	AnimatedModel *animatedModel = childNode->CreateComponent<AnimatedModel>(rr);	
 	childNode->Scale(vec3(0.05f));
 
@@ -58,9 +61,10 @@ bool App::Prepare()
 
 	childNode = root->CreateChild("LightNode");	
 	Light *light = childNode->CreateComponent<Light>();
-	light->SetLightType(FireCube::LightType::POINT);
+	light->SetLightType(FireCube::LightType::DIRECTIONAL);
 	light->SetColor(vec4(1, 1, 1, 1));	
-	childNode->Move(vec3(0, 1, 0));
+	light->SetCastShadow(true);
+	childNode->Rotate(vec3(PI * 0.25f, 0.0f, 0.0f));
 		
 	fontFace = resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18);
 
@@ -76,7 +80,7 @@ void App::Render(float t)
 {    		
 	scene.Render(renderer);
 
-	scene.RenderDebugGeometry(engine->GetDebugRenderer());
+	//scene.RenderDebugGeometry(engine->GetDebugRenderer());
 
 	mat4 ortho;
 	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	

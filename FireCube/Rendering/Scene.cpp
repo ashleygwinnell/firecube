@@ -1,4 +1,4 @@
-#include <algorithm>
+﻿#include <algorithm>
 
 #include "Rendering/Renderable.h"
 #include "Rendering/Shader.h"
@@ -124,7 +124,6 @@ void Scene::UpdateBaseQueue()
 				}
 			}
 		}
-
 	}
 }
 
@@ -137,7 +136,7 @@ void Scene::UpdateLightQueues()
 	for (unsigned int i = 0; i < lightQueues.size(); ++i)
 	{
 		unsigned int vertexShaderPermutation = 0;
-		unsigned int fragmentShaderPermutation = 0;		
+		unsigned int fragmentShaderPermutation = 0;
 
 		if (lights[i]->GetLightType() == LightType::DIRECTIONAL)
 		{
@@ -160,6 +159,16 @@ void Scene::UpdateLightQueues()
 		}
 
 		lightQueues[i].first = lights[i];
+
+		Camera *lightCamera = lights[i]->GetCamera();
+		Node *lightCameraNode = lightCamera->GetNode();
+		if (lights[i]->GetLightType() == LightType::DIRECTIONAL)
+		{			
+			lightCameraNode->SetTranslation(vec3(0.0f));
+			lightCameraNode->SetRotation(lights[i]->GetNode()->GetWorldRotation());
+		}
+
+		BoundingBox visibleObjectsBoundingBox;
 
 		for (auto renderable : renderables)
 		{
@@ -192,10 +201,22 @@ void Scene::UpdateLightQueues()
 								continue;
 							newRenderJob.pass->GenerateAllShaderPermutations();
 							unsigned int currentPartVertexShaderPermutation = vertexShaderPermutation;
+							unsigned int currentPartFragmentShaderPermutation = fragmentShaderPermutation;
 							if (renderablePart.geometry->GetGeometryType() == GeometryType::SKINNED)
 								currentPartVertexShaderPermutation += MAX_VERTEX_SHADER_LIGHT_PERMUTATIONS;
+							
+							if (lights[i]->GetCastShadow() && lights[i]->GetLightType() == LightType::DIRECTIONAL)
+							{
+								currentPartFragmentShaderPermutation += 3;
+								currentPartVertexShaderPermutation += 3;
+								if (renderable->GetCastShadow())
+								{
+									visibleObjectsBoundingBox.Expand(renderable->GetWorldBoundingBox());
+								}
+							}
+
 							newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(currentPartVertexShaderPermutation);
-							newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(fragmentShaderPermutation);
+							newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(currentPartFragmentShaderPermutation);
 							newRenderJob.geometry = renderablePart.geometry;
 							newRenderJob.material = renderablePart.material;
 							newRenderJob.transformation = renderablePart.transformation;
@@ -209,9 +230,59 @@ void Scene::UpdateLightQueues()
 				}
 			}
 		}
+		
+		if (lights[i]->GetCastShadow() && lights[i]->GetLightType() == LightType::DIRECTIONAL)
+		{
+			mat4 lightView = lightCamera->GetViewMatrix();
+			// Expand the visible bounding box a bit
+			visibleObjectsBoundingBox.SetMin(visibleObjectsBoundingBox.GetMin() - vec3(1.0f));
+			visibleObjectsBoundingBox.SetMax(visibleObjectsBoundingBox.GetMax() + vec3(1.0f));			
+			visibleObjectsBoundingBox.Transform(lightView);
+			// Note: The z axis is flipped because the lights transformation determines the direction towards the light and not from the lights point of view
+			lightCamera->SetOrthographicProjectionParameters(visibleObjectsBoundingBox.GetMin().x, visibleObjectsBoundingBox.GetMax().x, visibleObjectsBoundingBox.GetMin().y, visibleObjectsBoundingBox.GetMax().y, -visibleObjectsBoundingBox.GetMax().z, -visibleObjectsBoundingBox.GetMin().z);
+
+			for (auto renderable : renderables)
+			{				
+				if (renderable->GetCastShadow() && lightCamera->GetFrustum().Contains(renderable->GetWorldBoundingBox()))
+				{
+					for (auto &renderablePart : renderable->GetRenderableParts())
+					{
+						if (!renderablePart.material)
+							continue;
+						Technique *technique = renderablePart.material->GetTechnique();
+						if (!technique)
+							continue;
+
+						Pass *pass = technique->GetPass(SHADOW_PASS);
+						if (pass == nullptr)
+							continue;
+
+						RenderQueue &queue = lightQueues[i].second[SHADOW_PASS];
+						RenderJob newRenderJob;
+						newRenderJob.pass = pass;
+
+						newRenderJob.pass->GenerateAllShaderPermutations();
+						unsigned int vertexShaderPermutation = 0;
+						unsigned int fragmentShaderPermutation = 0;
+						if (renderablePart.geometry->GetGeometryType() == GeometryType::SKINNED)
+							vertexShaderPermutation += 1;
+
+						newRenderJob.vertexShader = newRenderJob.pass->GetGeneratedVertexShader(vertexShaderPermutation);
+						newRenderJob.fragmentShader = newRenderJob.pass->GetGeneratedFragmentShader(fragmentShaderPermutation);
+						newRenderJob.geometry = renderablePart.geometry;
+						newRenderJob.material = renderablePart.material;
+						newRenderJob.transformation = renderablePart.transformation;
+						newRenderJob.distance = (renderable->GetWorldBoundingBox().GetCenter() - lightCameraNode->GetWorldPosition()).Length();
+						newRenderJob.skinMatrices = renderablePart.skinMatrices;
+						newRenderJob.skinMatricesCount = renderablePart.skinMatricesCount;
+						newRenderJob.CalculateSortKey();
+						queue.renderJobs.push_back(newRenderJob);
+					}
+				}
+			}
+		}
 	}
 }
-
 
 void Scene::SetRenderTargets(Renderer *renderer, const RenderPathCommand &command)
 {
@@ -220,6 +291,7 @@ void Scene::SetRenderTargets(Renderer *renderer, const RenderPathCommand &comman
 		renderTarget = renderSurface;
 
 	renderer->SetRenderTarget(0, renderTarget);		
+	renderer->SetDepthSurface(nullptr);
 	for (int i = 1; i < MAX_RENDER_TARGETS; ++i)
 		renderer->SetRenderTarget(i, nullptr);
 	renderer->UpdateFrameBuffer();	
@@ -237,6 +309,7 @@ void Scene::SetTextures(Renderer *renderer, const RenderPathCommand &command)
 		}
 	}
 }
+
 void Scene::Render(Renderer *renderer)
 {
 	renderer->ResetCachedShaderParameters();
@@ -311,6 +384,8 @@ void Scene::Render(Renderer *renderer)
 
 			for (auto &lightQueue : lightQueues)
 			{
+				RenderShadowMap(renderer, lightQueue.first, lightQueue.second[SHADOW_PASS]);
+				SetRenderTargets(renderer, command);
 				RenderQueue &queue = lightQueue.second[command.pass];
 				queue.Sort();
 				Light *light = lightQueue.first;
@@ -336,14 +411,25 @@ void Scene::Render(Renderer *renderer)
 					renderer->UseLight(light);
 					renderer->SetBlendMode(renderJob.pass->GetBlendMode());
 					renderer->SetDepthWrite(renderJob.pass->GetDepthWrite());
-					renderer->SetDepthTest(renderJob.pass->GetDepthTest());					
+					renderer->SetDepthTest(renderJob.pass->GetDepthTest());		
+										
+					if (light->GetCastShadow() && light->GetLightType() == LightType::DIRECTIONAL)
+					{
+						mat4 biasMatrix(0.5f, 0.0f, 0.0f, 0.0f,
+										0.0f, 0.5f, 0.0f, 0.0f,
+										0.0f, 0.0f, 0.5f, 0.0f,
+										0.5f, 0.5f, 0.5f, 1.0f);						
+						mat4 lightBiasMVPMatrix = biasMatrix * light->GetCamera()->GetProjectionMatrix() * light->GetCamera()->GetViewMatrix();
+						program->SetUniform(PARAM_LIGHT_BIAS_MVP_MATRIX, lightBiasMVPMatrix);
+					}
 					Geometry *geometry = renderJob.geometry;
 					if (geometry->GetGeometryType() == GeometryType::SKINNED)
 					{
 						program->SetUniform(PARAM_SKIN_MATRICES, renderJob.skinMatrices, renderJob.skinMatricesCount);
 					}
-					geometry->Render();
-				}
+					
+					geometry->Render();									
+				}				
 			}
 			
 			break;
@@ -352,7 +438,7 @@ void Scene::Render(Renderer *renderer)
 			SetRenderTargets(renderer, command);
 			SetTextures(renderer, command);			
 			renderer->SetShaders(command.vertexShader, command.fragmentShader);
-			renderer->RenderFullscreenQuad();			
+			renderer->RenderFullscreenQuad();
 			break;
 
 		default:
@@ -437,4 +523,40 @@ Node *Scene::GetRootNode()
 void Scene::SetRenderTarget(SharedPtr<RenderSurface> renderSurface)
 {
 	this->renderSurface = renderSurface;
+}
+
+void Scene::RenderShadowMap(Renderer *renderer, Light *light, RenderQueue &queue)
+{
+	RenderSurface *renderTarget = renderer->GetShadowMap();
+	if (!renderTarget)
+		return;
+
+	renderer->SetDepthSurface(renderTarget);
+	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
+		renderer->SetRenderTarget(i, nullptr);
+	renderer->UpdateFrameBuffer();
+	
+	Camera *lightCamera = light->GetCamera();
+	glDisable(GL_CULL_FACE);
+	renderer->Clear(vec4(0.0f), 1.0f, ClearBufferType::DEPTH);
+	queue.Sort();
+	for (auto &renderJob : queue.GetRenderJobs())
+	{
+		Program *program = renderer->SetShaders(renderJob.vertexShader, renderJob.fragmentShader);		
+		renderer->UseCamera(lightCamera);
+		// View transformation
+		program->SetUniform(PARAM_MODEL_MATRIX, renderJob.transformation);		
+		program->SetUniform(PARAM_TIME_STEP, renderer->GetTimeStep());
+		// Set material properties if this geometry is different from the last one 
+		renderer->UseMaterial(renderJob.material);
+		renderer->SetBlendMode(renderJob.pass->GetBlendMode());
+		renderer->SetDepthWrite(renderJob.pass->GetDepthWrite());
+		renderer->SetDepthTest(renderJob.pass->GetDepthTest());
+		Geometry *geometry = renderJob.geometry;
+		if (geometry->GetGeometryType() == GeometryType::SKINNED)
+		{
+			program->SetUniform(PARAM_SKIN_MATRICES, renderJob.skinMatrices, renderJob.skinMatricesCount);
+		}
+		geometry->Render();
+	}
 }

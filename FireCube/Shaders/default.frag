@@ -20,7 +20,11 @@ smooth in vec2 texcoord;
 #endif
 #ifdef NORMAL_MAPPING
 	uniform sampler2D normalMap;
-#endif	
+#endif
+#ifdef SHADOW
+	uniform sampler2D shadowMap;
+	smooth in vec4 shadowCoord;
+#endif
 #ifdef FOG
 	uniform vec3 fogParameters;
 	uniform vec3 fogColor;
@@ -41,6 +45,7 @@ void main()
 	#else			
 		vec3 diffColor = materialDiffuse.rgb;			
 	#endif
+	
 	
 	#ifdef PER_PIXEL_LIGHTING
 		vec3 color = vec3(0.0);
@@ -68,6 +73,12 @@ void main()
 			}
 		#else
 			color = lightColor.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * lightColor.rgb * specular);
+		#endif
+		#ifdef SHADOW				
+		if (texture(shadowMap, shadowCoord.xy).x < min(shadowCoord.z, 1.0))
+		{
+			color.rgb *= 0.5;
+		}
 		#endif
 		#ifdef FOG
 			/*const float LOG2 = 1.442695;

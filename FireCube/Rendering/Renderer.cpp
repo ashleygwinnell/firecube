@@ -77,6 +77,8 @@ void Renderer::Initialize()
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	blendMode = BlendMode::REPLACE;
 	depthWrite = true;
+
+	shadowMap = GetRenderSurface(1024, 1024, RenderSurfaceType::DEPTH_TEXTURE);
 }
 
 void Renderer::Destroy()
@@ -429,6 +431,11 @@ void Renderer::UseLight(Light *light)
 	}
 	currentProgram->SetUniform(PARAM_LIGHT_MATRIX, lightMatrix);
 	currentProgram->SetUniform(PARAM_LIGHT_COLOR, light->GetColor());	
+
+	if (light->GetCastShadow())
+	{
+		UseTexture(static_cast<int>(TextureUnit::SHADOWMAP), shadowMap->GetLinkedTexture());
+	}
 }
 
 void Renderer::ResetCachedShaderParameters()
@@ -707,4 +714,9 @@ void Renderer::SetTimeStep(float timeStep)
 float Renderer::GetTimeStep() const
 {
 	return timeStep;
+}
+
+RenderSurface *Renderer::GetShadowMap()
+{
+	return shadowMap;
 }

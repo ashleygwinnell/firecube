@@ -1,12 +1,14 @@
 #include "Scene/Light.h"
 #include "Scene/Node.h"
 #include "Rendering/Scene.h"
+#include "Scene/Camera.h"
 
 using namespace FireCube;
 
-Light::Light(Engine *engine) : Component(engine), range(50.0f), spotCutOff(0.8f)
+Light::Light(Engine *engine) : Component(engine), range(50.0f), spotCutOff(0.8f), castShadow(false)
 {
-
+	cameraNode = new Node(engine);
+	camera = cameraNode->CreateComponent<Camera>();
 }
 
 void Light::SetLightType(LightType type)
@@ -70,4 +72,18 @@ void Light::NodeChanged()
 void Light::SetScene(Scene *scene)
 {
 	this->scene = scene;
+}
+
+Camera *Light::GetCamera()
+{
+	return camera;
+}
+
+void Light::SetCastShadow(bool castShadow)
+{
+	this->castShadow = castShadow;
+}
+bool Light::GetCastShadow() const
+{
+	return castShadow;
 }

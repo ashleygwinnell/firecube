@@ -26,6 +26,10 @@ uniform mat4 skinMatrices[MAX_SKIN_MATRICES];
 #if !defined(NORMAL_MAPPING)
 	smooth out vec3 normal;
 #endif
+#ifdef SHADOW
+smooth out vec4 shadowCoord;
+uniform mat4 lightBiasMVPMatrix;
+#endif
 smooth out vec2 texcoord;
 uniform mat4 modelMatrix;
 uniform mat4 viewProjectionMatrix;
@@ -61,6 +65,10 @@ void  main()
 		lightDir = lightDir * tbn;
 	#else
 		normal = normalMatrix * norm;
+	#endif
+
+	#ifdef SHADOW
+		shadowCoord = lightBiasMVPMatrix * vec4(worldSpacePos + normalize(normalMatrix * norm) * 0.1, 1.0);
 	#endif
 	gl_Position = viewProjectionMatrix * vec4(worldSpacePos, 1.0);
 }

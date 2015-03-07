@@ -40,6 +40,7 @@ private:
 	void SetRenderTargets(Renderer *renderer, const RenderPathCommand &command);
 	void SetTextures(Renderer *renderer, const RenderPathCommand &command);
 	void RenderDebugGeometry(DebugRenderer *debugRenderer, Node *node);
+	void RenderShadowMap(Renderer *renderer, Light *light, RenderQueue &queue);
 
 	Node rootNode;
 	Camera *camera;

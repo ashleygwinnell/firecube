@@ -8,6 +8,7 @@ namespace FireCube
 {
 
 class Scene;
+class Camera;
 
 /**
 * Specifies the type of a light.
@@ -56,11 +57,16 @@ public:
 	float GetSpotCutOff() const;
 	void SetScene(Scene *scene);
 
+	Camera *GetCamera();
+
 	/**
 	* Checks whether two lights are equal.
 	* @return True if the two lights are equal, false otherwise.
 	*/
 	bool operator == (const Light &other) const;
+
+	void SetCastShadow(bool castShadow);
+	bool GetCastShadow() const;
 protected:
 	virtual void MarkedDirty() {}
 	virtual void NodeChanged();
@@ -70,5 +76,8 @@ private:
 	float range;
 	float spotCutOff;
 	Scene *scene;
+	SharedPtr<Node> cameraNode;
+	Camera *camera;
+	bool castShadow;
 };
 }

@@ -5,7 +5,7 @@
 
 using namespace FireCube;
 
-Renderable::Renderable(Engine *engine) : Component(engine), worldBoundingBoxChanged(false), collisionQueryMask(1)
+Renderable::Renderable(Engine *engine) : Component(engine), worldBoundingBoxChanged(false), collisionQueryMask(1), castShadow(true)
 {
 }
 
@@ -98,4 +98,13 @@ void Renderable::IntersectRay(RayQuery &rayQuery)
 void Renderable::RenderDebugGeometry(DebugRenderer *debugRenderer)
 {
 	debugRenderer->AddBoundingBox(GetWorldBoundingBox(), vec3(0, 1, 0));
+}
+
+void Renderable::SetCastShadow(bool castShadow)
+{
+	this->castShadow = castShadow;
+}
+bool Renderable::GetCastShadow() const
+{
+	return castShadow;
 }

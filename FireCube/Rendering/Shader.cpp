@@ -208,9 +208,9 @@ void Program::Link()
 		variables[StringHash(name)] = values[1];
 	}
 	glUseProgram(objectId);
-	SetUniform(StringHash("diffuseMap"), 0);		
-	SetUniform(StringHash("normalMap"), 1);
-
+	SetUniform(StringHash("diffuseMap"), static_cast<int>(TextureUnit::DIFFUSE));		
+	SetUniform(StringHash("normalMap"), static_cast<int>(TextureUnit::NORMAL));
+	SetUniform(StringHash("shadowMap"), static_cast<int>(TextureUnit::SHADOWMAP));
 }
 
 void Program::SetUniform(const StringHash &nameHash, float value)

@@ -11,10 +11,16 @@ using namespace FireCube;
 
 static std::string vertexShaderLightPermutationsDefines[] = { " SPOT_LIGHT",
 															  " POINT_LIGHT",
-															  " DIRECTIONAL_LIGHT"};
+															  " DIRECTIONAL_LIGHT",
+															  " SPOT_LIGHT SHADOW",
+															  " POINT_LIGHT SHADOW",
+															  " DIRECTIONAL_LIGHT SHADOW" };
 static std::string fragmentShaderLightPermutationsDefines[] = { " SPOT_LIGHT",
 																" POINT_LIGHT",
-																" DIRECTIONAL_LIGHT" };
+																" DIRECTIONAL_LIGHT",
+																" SPOT_LIGHT SHADOW",
+																" POINT_LIGHT SHADOW",
+																" DIRECTIONAL_LIGHT SHADOW" };
 
 static std::string fogPermutationsDefines[] = { "",
 												" FOG" };
@@ -177,7 +183,7 @@ bool Technique::Load(const std::string &filename)
 			std::string blendMode = blendStr == nullptr ? "replace" : blendStr;
 
 			const char *isBaseStr = element->Attribute("is_base");
-			bool isBase = isBaseStr ? Variant::FromString(isBaseStr).GetBool() : (passName == "base" || passName == "alpha");
+			bool isBase = isBaseStr ? Variant::FromString(isBaseStr).GetBool() : (passName == "base" || passName == "alpha" || passName == "shadow");
 
 			const char *depthWriteStr = element->Attribute("depth_write");
 			bool depthWrite = depthWriteStr ? Variant::FromString(depthWriteStr).GetBool() : true;

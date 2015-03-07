@@ -158,6 +158,7 @@ public:
 	void SetDepthTest(DepthTest depthTest);
 	void SetTimeStep(float timeStep);
 	float GetTimeStep() const;
+	RenderSurface *GetShadowMap();
 private:
 
 	/**
@@ -187,6 +188,7 @@ private:
 	std::map<unsigned int, FrameBuffer *> frameBuffers;
 	std::map<long long int, SharedPtr<RenderSurface>> renderSurfaces;
 	FrameBuffer *currentFrameBuffer;
+	RenderSurface *shadowMap;
 	bool fboDirty;
 	SharedPtr<RenderPath> currentRenderPath;
 	int width, height;
