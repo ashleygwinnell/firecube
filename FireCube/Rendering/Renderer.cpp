@@ -427,7 +427,7 @@ void Renderer::UseLight(Light *light)
 	else if (light->GetLightType() == LightType::SPOT)
 	{
 		currentProgram->SetUniform(PARAM_LIGHT_POS, vec4(light->GetNode()->GetWorldTransformation().GetTranslation(), light->GetRange()));
-		currentProgram->SetUniform(PARAM_LIGHT_SPOT_DIR, vec4(vec3(0, 0, 1).TransformNormal(light->GetNode()->GetWorldTransformation()), std::cos(light->GetSpotCutOff())));
+		currentProgram->SetUniform(PARAM_LIGHT_SPOT_DIR, vec4(vec3(0, 0, 1).TransformNormal(light->GetNode()->GetWorldTransformation()), std::cos(light->GetSpotCutOff() * 0.5f)));
 	}
 	currentProgram->SetUniform(PARAM_LIGHT_MATRIX, lightMatrix);
 	currentProgram->SetUniform(PARAM_LIGHT_COLOR, light->GetColor());	
