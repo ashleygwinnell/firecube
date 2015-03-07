@@ -7,7 +7,7 @@
 
 using namespace FireCube;
 
-Texture::Texture(Engine *engine) : Resource(engine), GraphicsResource(engine->GetRenderer()), filter(TextureFilter::LINEAR)
+Texture::Texture(Engine *engine) : Resource(engine), GraphicsResource(engine->GetRenderer()), filter(TextureFilter::LINEAR), wrapMode(TextureWrapMode::REPEAT)
 {
 	Create();
 }
@@ -90,4 +90,9 @@ void Texture::SetWidth(int width)
 void Texture::SetHeight(int height)
 {
 	this->height = height;
+}
+
+void Texture::SetWrapMode(TextureWrapMode wrapMode)
+{
+	this->wrapMode = wrapMode;
 }

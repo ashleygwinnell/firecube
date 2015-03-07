@@ -108,13 +108,7 @@ public:
 	* @param material The material to use.
 	*/
 	void UseMaterial(Material *material);
-
-	/**
-	* Uses a frame buffer.
-	* @param frameBuffer The frame buffer to use.
-	*/
-	void UseFrameBuffer(FrameBuffer *frameBuffer);
-
+	
 	/**
 	* Restores the default render buffer.
 	*/
@@ -165,7 +159,12 @@ public:
 	void SetTimeStep(float timeStep);
 	float GetTimeStep() const;
 private:
-	
+
+	/**
+	* Uses a frame buffer.
+	* @param frameBuffer The frame buffer to use.
+	*/
+	void UseFrameBuffer(FrameBuffer *frameBuffer);	
 
 	VertexBuffer *textVertexBuffer, *quadVertexBuffer;	
 	GLuint textVao, quadVao;

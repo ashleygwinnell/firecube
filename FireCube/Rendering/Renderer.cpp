@@ -44,12 +44,7 @@ Renderer::Renderer(Engine *engine) : Object(engine), textVao(0), numberOfPrimiti
 void Renderer::Initialize()
 {
 	// Create texture samplers for each texture unit (hard coded to 16)
-	glGenSamplers(16, textureSampler);
-	for (int i = 0; i < 16; i++)
-	{
-		glSamplerParameteri(textureSampler[i], GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glSamplerParameteri(textureSampler[i], GL_TEXTURE_WRAP_T, GL_REPEAT);
-	}
+	glGenSamplers(16, textureSampler);	
 
 	// Create a vertex buffer for text rendering	
 	glGenVertexArrays(1, &textVao);
@@ -133,6 +128,21 @@ void Renderer::UseTexture(unsigned int unit, const Texture *texture)
 	glSamplerParameteri(textureSampler[unit], GL_TEXTURE_MAG_FILTER, mag);
 	glSamplerParameteri(textureSampler[unit], GL_TEXTURE_MIN_FILTER, min);
 	
+	GLint wrap;
+	switch (texture->wrapMode)
+	{
+	case TextureWrapMode::CLAMP_TO_EDGE:
+		wrap = GL_CLAMP_TO_EDGE;
+		break;
+	case TextureWrapMode::REPEAT:
+		wrap = GL_REPEAT;
+		break;
+	default:
+		break;
+	}
+	glSamplerParameteri(textureSampler[unit], GL_TEXTURE_WRAP_S, wrap);
+	glSamplerParameteri(textureSampler[unit], GL_TEXTURE_WRAP_T, wrap);
+
 	glBindSampler(unit, textureSampler[unit]);
 }
 
@@ -603,8 +613,7 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 		texture->SetFiltering(TextureFilter::MIPMAP);
 		UseTexture(0, texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);		
+		texture->SetWrapMode(TextureWrapMode::CLAMP_TO_EDGE);		
 		renderSurface->SetLinkedTexture(texture);		
 	}
 	else if (type == RenderSurfaceType::DEPTH)
@@ -616,11 +625,10 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 		Texture *texture = new Texture(engine);
 		texture->SetWidth(width);
 		texture->SetHeight(height);
-		texture->SetFiltering(TextureFilter::LINEAR);
+		texture->SetFiltering(TextureFilter::NEAREST);
 		UseTexture(0, texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+		texture->SetWrapMode(TextureWrapMode::CLAMP_TO_EDGE);
 		renderSurface->SetLinkedTexture(texture);		
 	}
 	renderSurfaces[key] = renderSurface;

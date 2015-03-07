@@ -24,6 +24,11 @@ enum class TextureFilter
 	NEAREST, LINEAR, MIPMAP
 };
 
+enum class TextureWrapMode
+{
+	REPEAT, CLAMP_TO_EDGE
+};
+
 class Texture;
 
 /**
@@ -65,8 +70,11 @@ public:
 
 	void SetWidth(int width);
 	void SetHeight(int height);
+
+	void SetWrapMode(TextureWrapMode wrapMode);
 private:		
 	TextureFilter filter;
+	TextureWrapMode wrapMode;
 
 	int width, height;
 };
