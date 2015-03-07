@@ -45,8 +45,13 @@ public:
 	void SetFarPlane(float farPlane);
 	void SetAspectRatio(float aspectRatio);
 	void SetPerspectiveProjectionParameters(float fov, float aspectRatio, float nearPlane, float farPlane);
+	void SetOrthographicProjectionParameters(float leftPlane, float rightPlane, float bottomPlane, float topPlane, float nearPlane, float farPlane);
 	vec3 Unproject(vec3 pos);
 	Ray GetPickingRay(vec2 pos, float width, float height);
+	float GetFOV() const;
+	float GetNearPlane() const;
+	float GetFarPlane() const;
+	float GetApectRatio() const;
 
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
@@ -76,8 +81,15 @@ protected:
 	float farPlane;
 	float aspectRatio;
 
+	float leftPlane;
+	float rightPlane;
+	float topPlane;
+	float bottomPlane;
+
 	/** a boolean indicating the view frustum has changed.*/
 	bool frustumChanged;	
+	
+	bool orthographic;
 };
 
 }

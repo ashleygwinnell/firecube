@@ -4,7 +4,7 @@
 using namespace FireCube;
 
 Camera::Camera(Engine *engine) : Component(engine), viewMatrixChanged(true), frustumChanged(true), projectionMatrixChanged(true), aspectRatio(1.0f), fov(60.0f), 
-								 nearPlane(0.1f), farPlane(500.0f)
+								 nearPlane(0.1f), farPlane(200.0f), orthographic(false)
 {
 
 }
@@ -14,7 +14,15 @@ mat4 Camera::GetProjectionMatrix()
 	if (projectionMatrixChanged)
 	{
 		projectionMatrixChanged = false;
-		projectionMatrix.GeneratePerspective(fov, aspectRatio, nearPlane, farPlane);
+		if (orthographic)
+		{
+			projectionMatrix.GenerateOrthographic(leftPlane, rightPlane, bottomPlane, topPlane, nearPlane, farPlane);
+		}
+		else
+		{
+			projectionMatrix.GeneratePerspective(fov, aspectRatio, nearPlane, farPlane);
+		}
+		
 	}
 	return projectionMatrix;
 }
@@ -68,8 +76,11 @@ void Camera::SetFOV(float fov)
 	if (this->fov != fov)
 	{
 		this->fov = fov;
-		projectionMatrixChanged = true;
-		frustumChanged = true;
+		if (orthographic == false)
+		{
+			projectionMatrixChanged = true;
+			frustumChanged = true;
+		}
 	}
 }
 
@@ -98,17 +109,34 @@ void Camera::SetAspectRatio(float aspectRatio)
 	if (this->aspectRatio != aspectRatio)
 	{
 		this->aspectRatio = aspectRatio;
-		projectionMatrixChanged = true;
-		frustumChanged = true;
+		if (orthographic == false)
+		{
+			projectionMatrixChanged = true;
+			frustumChanged = true;
+		}
 	}
 }
 
 void Camera::SetPerspectiveProjectionParameters(float fov, float aspectRatio, float nearPlane, float farPlane)
 {
+	orthographic = false;
 	this->fov = fov;
 	this->aspectRatio = aspectRatio;
 	this->nearPlane = nearPlane;
 	this->farPlane = farPlane;	
+	projectionMatrixChanged = true;
+	frustumChanged = true;
+}
+
+void Camera::SetOrthographicProjectionParameters(float leftPlane, float rightPlane, float bottomPlane, float topPlane, float nearPlane, float farPlane)
+{
+	orthographic = true;
+	this->leftPlane = leftPlane;
+	this->rightPlane = rightPlane;
+	this->topPlane = topPlane;
+	this->bottomPlane = bottomPlane;
+	this->nearPlane = nearPlane;
+	this->farPlane = farPlane;
 	projectionMatrixChanged = true;
 	frustumChanged = true;
 }
@@ -131,4 +159,23 @@ Ray Camera::GetPickingRay(vec2 pos, float width, float height)
 	vec3 worldPos = Unproject(ndcPos);
 	vec3 cameraPos = node->GetWorldPosition();
 	return Ray(cameraPos, (worldPos - cameraPos).Normalized());
+}
+
+float Camera::GetFOV() const
+{
+	return fov;
+}
+
+float Camera::GetNearPlane() const
+{
+	return nearPlane;
+}
+
+float Camera::GetFarPlane() const
+{
+	return farPlane;
+}
+float Camera::GetApectRatio() const
+{
+	return aspectRatio;
 }
