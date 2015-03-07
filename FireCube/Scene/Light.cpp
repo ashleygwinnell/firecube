@@ -5,7 +5,7 @@
 
 using namespace FireCube;
 
-Light::Light(Engine *engine) : Component(engine), range(50.0f), spotCutOff(0.8f), castShadow(false)
+Light::Light(Engine *engine) : Component(engine), range(50.0f), spotCutOff(PI * 0.25f), castShadow(false)
 {
 	cameraNode = new Node(engine);
 	camera = cameraNode->CreateComponent<Camera>();
