@@ -10,7 +10,8 @@ using namespace FireCube;
 
 Node::Node(Engine *engine) : Object(engine), parent(nullptr)
 {
-	rotation = mat4::IDENTITY;
+	rotation.Identity(); // Can't use mat4::IDENTITY since it might not be initialized yet.
+	worldRotation.Identity();
 	translation.Set(0, 0, 0);
 	scale.Set(1, 1, 1);
 	worldTransformation.Identity();
@@ -57,15 +58,37 @@ mat4 Node::GetLocalTransformation()
 
 mat4 Node::GetWorldTransformation()
 {
-	if (!transformationChanged)
-		return worldTransformation;
-	transformationChanged = false;
-	if (parent)
-		worldTransformation = parent->GetWorldTransformation() * GetLocalTransformation();			
-	else
-		worldTransformation = GetLocalTransformation();
+	if (transformationChanged)
+	{
+		UpdateWorldTransformation();
+	}
 	
 	return worldTransformation;	
+}
+
+mat4 Node::GetWorldRotation()
+{
+	if (transformationChanged)
+	{
+		UpdateWorldTransformation();
+	}
+
+	return worldRotation;
+}
+
+void Node::UpdateWorldTransformation()
+{
+	transformationChanged = false;
+	if (parent)
+	{
+		worldTransformation = parent->GetWorldTransformation() * GetLocalTransformation();
+		worldRotation = parent->GetWorldRotation() * rotation;
+	}
+	else
+	{
+		worldTransformation = GetLocalTransformation();
+		worldRotation = rotation;
+	}
 }
 
 void Node::SetTranslation(const vec3 &t)
@@ -236,6 +259,7 @@ Node *Node::Clone() const
 	ret->localTransformation = localTransformation;
 	ret->transformationChanged = transformationChanged;
 	ret->worldTransformation = worldTransformation;	
+	ret->worldRotation = worldRotation;
 	for (auto i = children.begin(); i != children.end(); i++)
 	{
 		Node *c = (*i)->Clone();

@@ -72,6 +72,10 @@ public:
 	*/
 	mat4 GetWorldTransformation();
 
+	mat4 GetWorldRotation();
+
+	void UpdateWorldTransformation();
+
 	/**
 	* Sets the translation of this node.
 	* @param t The translation to assign to this node.
@@ -268,6 +272,7 @@ protected:
 	mat4 localTransformation;
 	bool transformationChanged;	
 	mat4 worldTransformation;	
+	mat4 worldRotation;
 	
 	Node *parent;
 	std::string name;
