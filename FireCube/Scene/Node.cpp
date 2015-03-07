@@ -17,13 +17,8 @@ Node::Node(Engine *engine) : Object(engine), parent(nullptr)
 	transformationChanged = false;	
 }
 
-Node::Node(Engine *engine, const std::string &name) : Object(engine), parent(nullptr)
+Node::Node(Engine *engine, const std::string &name) : Node(engine)
 {
-	rotation = mat4::IDENTITY;
-	translation.Set(0, 0, 0);
-	scale.Set(1, 1, 1);		
-	worldTransformation.Identity();
-	transformationChanged = false;	
 	SetName(name);
 }
 
