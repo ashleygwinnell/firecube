@@ -67,6 +67,8 @@ public:
 
 	void SetCastShadow(bool castShadow);
 	bool GetCastShadow() const;
+	void SetLightMask(unsigned int lightMask);
+	unsigned int GetLightMask() const;
 protected:
 	virtual void MarkedDirty() {}
 	virtual void NodeChanged();
@@ -79,5 +81,6 @@ private:
 	SharedPtr<Node> cameraNode;
 	Camera *camera;
 	bool castShadow;
+	unsigned int lightMask;
 };
 }

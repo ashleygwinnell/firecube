@@ -177,7 +177,7 @@ void Scene::UpdateLightQueues()
 
 		for (auto renderable : renderables)
 		{
-			if (camera->GetFrustum().Contains(renderable->GetWorldBoundingBox()))
+			if ((renderable->GetLightMask() & lights[i]->GetLightMask()) && camera->GetFrustum().Contains(renderable->GetWorldBoundingBox()))
 			{
 				for (auto &renderablePart : renderable->GetRenderableParts())
 				{
@@ -255,7 +255,7 @@ void Scene::UpdateLightQueues()
 
 			for (auto renderable : renderables)
 			{				
-				if (renderable->GetCastShadow() && lightCamera->GetFrustum().Contains(renderable->GetWorldBoundingBox()))
+				if (renderable->GetCastShadow() && (renderable->GetLightMask() & lights[i]->GetLightMask()) && lightCamera->GetFrustum().Contains(renderable->GetWorldBoundingBox()))
 				{
 					for (auto &renderablePart : renderable->GetRenderableParts())
 					{

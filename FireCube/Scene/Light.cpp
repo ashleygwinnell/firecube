@@ -5,7 +5,7 @@
 
 using namespace FireCube;
 
-Light::Light(Engine *engine) : Component(engine), range(50.0f), spotCutOff(PI * 0.25f), castShadow(false)
+Light::Light(Engine *engine) : Component(engine), range(50.0f), spotCutOff(PI * 0.25f), castShadow(false), lightMask(0xFFFFFFFF)
 {
 	cameraNode = new Node(engine);
 	camera = cameraNode->CreateComponent<Camera>();
@@ -86,4 +86,14 @@ void Light::SetCastShadow(bool castShadow)
 bool Light::GetCastShadow() const
 {
 	return castShadow;
+}
+
+void Light::SetLightMask(unsigned int lightMask)
+{
+	this->lightMask = lightMask;
+}
+
+unsigned int Light::GetLightMask() const
+{
+	return lightMask;
 }
