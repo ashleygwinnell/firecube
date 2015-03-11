@@ -75,10 +75,17 @@ void main()
 			color = lightColor.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * lightColor.rgb * specular);
 		#endif
 		#ifdef SHADOW				
-		if (texture(shadowMap, shadowCoord.xy).x < min(shadowCoord.z, 1.0))
-		{
-			color.rgb *= 0.5;
-		}
+			#ifdef SPOT_LIGHT
+			if (textureProj(shadowMap, shadowCoord.xyw).x < min(shadowCoord.z / shadowCoord.w, 1.0))
+			{
+				color.rgb *= 0.5;
+			}
+			#else
+			if (texture(shadowMap, shadowCoord.xy).x < min(shadowCoord.z, 1.0))
+			{
+				color.rgb *= 0.5;
+			}
+			#endif
 		#endif
 		#ifdef FOG
 			/*const float LOG2 = 1.442695;

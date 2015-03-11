@@ -414,8 +414,7 @@ void Renderer::UseLight(Light *light)
 	if (light == currentLight)
 		return;
 
-	currentLight = light;
-	mat4 lightMatrix = mat4::IDENTITY;
+	currentLight = light;	
 	if (light->GetLightType() == LightType::DIRECTIONAL)
 	{
 		currentProgram->SetUniform(PARAM_LIGHT_DIR, vec3(0, 0, 1).TransformNormal(light->GetNode()->GetWorldTransformation()));
@@ -428,8 +427,7 @@ void Renderer::UseLight(Light *light)
 	{
 		currentProgram->SetUniform(PARAM_LIGHT_POS, vec4(light->GetNode()->GetWorldTransformation().GetTranslation(), light->GetRange()));
 		currentProgram->SetUniform(PARAM_LIGHT_SPOT_DIR, vec4(vec3(0, 0, 1).TransformNormal(light->GetNode()->GetWorldTransformation()), std::cos(light->GetSpotCutOff() * 0.5f)));
-	}
-	currentProgram->SetUniform(PARAM_LIGHT_MATRIX, lightMatrix);
+	}	
 	currentProgram->SetUniform(PARAM_LIGHT_COLOR, light->GetColor());	
 
 	if (light->GetCastShadow())

@@ -167,6 +167,11 @@ void Scene::UpdateLightQueues()
 			lightCameraNode->SetTranslation(vec3(0.0f));
 			lightCameraNode->SetRotation(lights[i]->GetNode()->GetWorldRotation());
 		}
+		else if (lights[i]->GetLightType() == LightType::SPOT)
+		{
+			lightCameraNode->SetTranslation(lights[i]->GetNode()->GetWorldTransformation().GetTranslation());
+			lightCameraNode->SetRotation(lights[i]->GetNode()->GetWorldRotation());
+		}
 
 		BoundingBox visibleObjectsBoundingBox;
 
@@ -205,7 +210,7 @@ void Scene::UpdateLightQueues()
 							if (renderablePart.geometry->GetGeometryType() == GeometryType::SKINNED)
 								currentPartVertexShaderPermutation += MAX_VERTEX_SHADER_LIGHT_PERMUTATIONS;
 							
-							if (lights[i]->GetCastShadow() && lights[i]->GetLightType() == LightType::DIRECTIONAL)
+							if (lights[i]->GetCastShadow() && (lights[i]->GetLightType() == LightType::DIRECTIONAL || lights[i]->GetLightType() == LightType::SPOT))
 							{
 								currentPartFragmentShaderPermutation += 3;
 								currentPartVertexShaderPermutation += 3;
@@ -231,15 +236,22 @@ void Scene::UpdateLightQueues()
 			}
 		}
 		
-		if (lights[i]->GetCastShadow() && lights[i]->GetLightType() == LightType::DIRECTIONAL)
+		if (lights[i]->GetCastShadow() && (lights[i]->GetLightType() == LightType::DIRECTIONAL || lights[i]->GetLightType() == LightType::SPOT))
 		{
 			mat4 lightView = lightCamera->GetViewMatrix();
 			// Expand the visible bounding box a bit
 			visibleObjectsBoundingBox.SetMin(visibleObjectsBoundingBox.GetMin() - vec3(1.0f));
-			visibleObjectsBoundingBox.SetMax(visibleObjectsBoundingBox.GetMax() + vec3(1.0f));			
+			visibleObjectsBoundingBox.SetMax(visibleObjectsBoundingBox.GetMax() + vec3(1.0f));
 			visibleObjectsBoundingBox.Transform(lightView);
-			// Note: The z axis is flipped because the lights transformation determines the direction towards the light and not from the lights point of view
-			lightCamera->SetOrthographicProjectionParameters(visibleObjectsBoundingBox.GetMin().x, visibleObjectsBoundingBox.GetMax().x, visibleObjectsBoundingBox.GetMin().y, visibleObjectsBoundingBox.GetMax().y, -visibleObjectsBoundingBox.GetMax().z, -visibleObjectsBoundingBox.GetMin().z);
+			if (lights[i]->GetLightType() == LightType::DIRECTIONAL)
+			{
+				// Note: The z axis is flipped because the lights transformation determines the direction towards the light and not from the lights point of view
+				lightCamera->SetOrthographicProjectionParameters(visibleObjectsBoundingBox.GetMin().x, visibleObjectsBoundingBox.GetMax().x, visibleObjectsBoundingBox.GetMin().y, visibleObjectsBoundingBox.GetMax().y, -visibleObjectsBoundingBox.GetMax().z, -visibleObjectsBoundingBox.GetMin().z);
+			}
+			else if (lights[i]->GetLightType() == LightType::SPOT)
+			{
+				lightCamera->SetPerspectiveProjectionParameters(lights[i]->GetSpotCutOff() * 180.0f / PI, 1.0f, 0.1f, lights[i]->GetRange());
+			}
 
 			for (auto renderable : renderables)
 			{				
@@ -413,7 +425,7 @@ void Scene::Render(Renderer *renderer)
 					renderer->SetDepthWrite(renderJob.pass->GetDepthWrite());
 					renderer->SetDepthTest(renderJob.pass->GetDepthTest());		
 										
-					if (light->GetCastShadow() && light->GetLightType() == LightType::DIRECTIONAL)
+					if (light->GetCastShadow() && (light->GetLightType() == LightType::DIRECTIONAL || light->GetLightType() == LightType::SPOT))
 					{
 						mat4 biasMatrix(0.5f, 0.0f, 0.0f, 0.0f,
 										0.0f, 0.5f, 0.0f, 0.0f,
@@ -536,8 +548,10 @@ void Scene::RenderShadowMap(Renderer *renderer, Light *light, RenderQueue &queue
 		renderer->SetRenderTarget(i, nullptr);
 	renderer->UpdateFrameBuffer();
 	
-	Camera *lightCamera = light->GetCamera();
-	glDisable(GL_CULL_FACE);
+	Camera *lightCamera = light->GetCamera();	
+	renderer->SetDepthWrite(true);
+	renderer->SetDepthTest(DepthTest::LESS);
+	renderer->SetBlendMode(BlendMode::REPLACE);
 	renderer->Clear(vec4(0.0f), 1.0f, ClearBufferType::DEPTH);
 	queue.Sort();
 	for (auto &renderJob : queue.GetRenderJobs())
