@@ -21,9 +21,7 @@ public:
 	void AddRenderable(Renderable *renderable);
 	void RemoveRenderable(Renderable *renderable);
 	void AddLight(Light *light);
-	void RemoveLight(Light *light);
-	void Render(Renderer *renderer);
-	void RenderDebugGeometry(DebugRenderer *debugRenderer);
+	void RemoveLight(Light *light);	
 	void SetCamera(Camera *camera);
 	void SetAmbientColor(vec3 color);
 	void IntersectRay(RayQuery &rayQuery, unsigned int collisionQueryMask = 0xFFFFFFFF);
@@ -31,29 +29,24 @@ public:
 	void SetFogParameters(vec3 fogParameters);
 	void SetFogColor(vec3 fogColor);
 	vec3 GetFogColor() const;
-	Node *GetRootNode();
-	void SetRenderTarget(SharedPtr<RenderSurface> renderSurface);
-private:	
+	Node *GetRootNode();	
+	std::vector<Renderable *> &GetRenderables();
+	std::vector<Light *> &GetLights();
+	Camera *GetCamera();
 	void UpdateRenderables();
-	void UpdateBaseQueue();
-	void UpdateLightQueues();
-	void SetRenderTargets(Renderer *renderer, const RenderPathCommand &command);
-	void SetTextures(Renderer *renderer, const RenderPathCommand &command);
-	void RenderDebugGeometry(DebugRenderer *debugRenderer, Node *node);
-	void RenderShadowMap(Renderer *renderer, Light *light, RenderQueue &queue);
-
+	bool GetFogEnabled() const;	
+	vec3 GetFogParameters() const;
+	vec3 GetAmbientColor() const;
+private:		
+	
 	Node rootNode;
 	Camera *camera;
 	std::vector<Renderable *> renderables;
-	std::vector<Light *> lights;
-	std::vector<std::pair<Light *, std::map<StringHash, RenderQueue>>> lightQueues;
-	std::map<StringHash, RenderQueue> baseQueues;
+	std::vector<Light *> lights;	
 	vec3 ambientColor;
 	bool fogEnabled;
 	vec3 fogParameters;
-	vec3 fogColor;
-	SharedPtr<RenderSurface> renderSurface;
-
+	vec3 fogColor;	
 };
 
 }

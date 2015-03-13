@@ -78,9 +78,10 @@ void App::Update(float t)
 }
 void App::Render(float t)
 {    		
-	scene.Render(renderer);
+	Frame frame(engine, &scene);
+	frame.Render(renderer);
 
-	//scene.RenderDebugGeometry(engine->GetDebugRenderer());
+	//frame.RenderDebugGeometry(engine->GetDebugRenderer());
 
 	mat4 ortho;
 	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	

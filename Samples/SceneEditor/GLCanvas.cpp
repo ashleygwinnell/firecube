@@ -99,7 +99,8 @@ void GLCanvas::Render()
 		Init();
 	}
 	
-	scene->Render(engine->GetRenderer());
+	FireCube::Frame frame(engine, scene);
+	frame.Render(engine->GetRenderer());
 
 	SwapBuffers();
 }

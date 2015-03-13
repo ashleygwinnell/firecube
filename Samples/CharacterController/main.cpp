@@ -93,7 +93,8 @@ void App::Update(float t)
 }
 void App::Render(float t)
 {
-	scene.Render(renderer);
+	Frame frame(engine, &scene);
+	frame.Render(renderer);
 	root->GetComponent<PhysicsWorld>()->RenderDebugGeometry(debugRenderer);
 	debugRenderer->Render(camera);
 

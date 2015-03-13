@@ -100,7 +100,8 @@ void App::Render(float time)
 	rot.RotateZ(angSpeed.z);
 	cameraNode->SetRotation(rot);
 	
-	scene.Render(renderer);
+	Frame frame(engine, &scene);
+	frame.Render(renderer);
 		
 	mat4 ortho;
 	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	

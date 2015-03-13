@@ -54,6 +54,7 @@
     <ClCompile Include="Rendering\AnimatedModel.cpp" />
     <ClCompile Include="Rendering\CustomGeometry.cpp" />
     <ClCompile Include="Rendering\DebugRenderer.cpp" />
+    <ClCompile Include="Rendering\Frame.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\Octree.cpp" />
     <ClCompile Include="Rendering\ParticleEmitter.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="Rendering\AnimatedModel.h" />
     <ClInclude Include="Rendering\CustomGeometry.h" />
     <ClInclude Include="Rendering\DebugRenderer.h" />
+    <ClInclude Include="Rendering\Frame.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />
     <ClInclude Include="Rendering\Octree.h" />
     <ClInclude Include="Rendering\ParticleEmitter.h" />

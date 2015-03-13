@@ -87,7 +87,8 @@ void App::Update(float t)
 }
 void App::Render(float t)
 {		
-	scene.Render(renderer);
+	Frame frame(engine, &scene);
+	frame.Render(renderer);
 	
 	mat4 projection;
 	projection.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	

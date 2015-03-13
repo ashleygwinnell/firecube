@@ -264,6 +264,9 @@
     <ClCompile Include="ThirdParty\STB\stb_image_write.c">
       <Filter>ThirdParty\STB</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\Frame.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -485,6 +488,9 @@
     </ClInclude>
     <ClInclude Include="ThirdParty\STB\stb_image_write.h">
       <Filter>ThirdParty\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Frame.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

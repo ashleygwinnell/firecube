@@ -81,8 +81,9 @@ void GLCanvas::Render()
 		glDisable(GL_CULL_FACE);
 
 	glPolygonMode(GL_FRONT_AND_BACK, renderingParameters.renderingMode);
-		
-	scene->Render(engine->GetRenderer());
+
+	Frame frame(engine, scene);
+	frame.Render(engine->GetRenderer());
 	
 	SwapBuffers();
 }

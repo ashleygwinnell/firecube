@@ -36,9 +36,7 @@ bool App::Prepare()
 	node->Move(vec3(1.3f, 0, -3));    	
 	node2 = root->CreateChild("Mesh2");
 	node2->CreateComponent<StaticModel>()->CreateFromMesh(resourceCache->GetResource<Mesh>("../Assets/Models/teapot2.3ds"));
-    node2->Move(vec3(-1.3f, 0, -3));
-
-	scene2.SetRenderTarget(renderSurface);
+    node2->Move(vec3(-1.3f, 0, -3));	
 
 	root = scene.GetRootNode();
 	Node *cameraNode = root->CreateChild("cameraNode");
@@ -75,13 +73,16 @@ void App::Update(float time)
 void App::Render(float time)
 {	
 	mat4 projection;	
-		
-	scene2.Render(renderer);	
+	Frame frame(engine, &scene);
+	Frame frame2(engine, &scene2);
+	
+	frame2.SetRenderTarget(renderSurface);
+	frame2.Render(renderer);
 	projection.GenerateOrthographic(0, (float)renderSurface->GetWidth(), (float)renderSurface->GetHeight(), 0, 0, 1);
 	renderer->RenderText(fontFace, projection, vec3(0, 0, 0), vec4(1, 1, 1, 1), "RenderToTexture Test.");
 	renderSurface->GetLinkedTexture()->GenerateMipMaps();
 
-	scene.Render(renderer);
+	frame.Render(renderer);
 	projection.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	
     std::ostringstream oss;
     oss << "FPS:" << GetFps();

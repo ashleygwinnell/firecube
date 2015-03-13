@@ -34,6 +34,7 @@
 #include "Rendering/RenderPath.h"
 #include "Rendering/RenderSurface.h"
 #include "Rendering/ParticleEmitter.h"
+#include "Rendering/Frame.h"
 #include "Physics/CharacterController.h"
 #include "Physics/CollisionShape.h"
 #include "Physics/PhysicsWorld.h"
