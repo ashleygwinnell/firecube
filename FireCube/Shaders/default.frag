@@ -60,33 +60,37 @@ void main()
 		vec3 E = normalize(eyeVec);
 		vec3 R = reflect(-l, n);
 		float specular = max(pow(max(dot(R, E), 0.0), materialShininess), 0.0);
+		float distanceAtten = 1.0;
 		#ifdef POINT_LIGHT
-			float distanceAtten = 1.0 - pow(clamp(lightDirLength, 0.0, 1.0), 3);
-			color = distanceAtten * lightColor.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * lightColor.rgb * specular);
+			distanceAtten = 1.0 - pow(clamp(lightDirLength, 0.0, 1.0), 3);			
 		#elif defined(SPOT_LIGHT)
 			float spotCos = dot(l, normalize(spotLightDir.xyz));
 			if (spotCos > spotLightDir.w)
 			{				
-				float distanceAtten = 1.0 - pow(clamp(lightDirLength, 0.0, 1.0), 3);
-				distanceAtten = distanceAtten * (1.0 - (1.0 - spotCos) / (1.0 - spotLightDir.w));
-				color = distanceAtten * lightColor.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * lightColor.rgb * specular);
+				distanceAtten = 1.0 - pow(clamp(lightDirLength, 0.0, 1.0), 3);
+				distanceAtten = distanceAtten * ((spotCos - spotLightDir.w) / (1.0 - spotLightDir.w));
 			}
-		#else
-			color = lightColor.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * lightColor.rgb * specular);
+			else
+			{
+				distanceAtten = 0.0;
+			}
 		#endif
 		#ifdef SHADOW				
 			#ifdef SPOT_LIGHT
 			if (textureProj(shadowMap, shadowCoord.xyw).x < min(shadowCoord.z / shadowCoord.w, 1.0))
 			{
-				color.rgb *= 0.5;
+				lambertTerm *= 0.5;
 			}
 			#else
 			if (texture(shadowMap, shadowCoord.xy).x < min(shadowCoord.z, 1.0))
 			{
-				color.rgb *= 0.5;
+				lambertTerm *= 0.5;
 			}
 			#endif
 		#endif
+		
+		color = distanceAtten * lightColor.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * specular);
+		
 		#ifdef FOG
 			/*const float LOG2 = 1.442695;
 			float z = gl_FragCoord.z / gl_FragCoord.w;
