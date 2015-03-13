@@ -29,11 +29,6 @@ CollisionShape::~CollisionShape()
 	}
 }
 
-void CollisionShape::SetShapeType(CollisionShapeType type)
-{
-	this->type = type;
-}
-
 CollisionShapeType CollisionShape::GetShapeType() const
 {
 	return type;
@@ -62,7 +57,7 @@ CollisionMesh *CollisionShape::GetMesh()
 	return mesh;
 }
 
-void CollisionShape::FromMesh(Mesh *mesh)
+void CollisionShape::SetMesh(Mesh *mesh)
 {
 	type = CollisionShapeType::TRIANGLE_MESH;
 	this->mesh = new CollisionMesh;

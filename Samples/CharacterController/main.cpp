@@ -44,7 +44,7 @@ bool App::Prepare()
 	StaticModel *staticModel = childNode->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(resourceCache->GetResource<Mesh>("level1.dae"));	
 	collisionShape = childNode->CreateComponent<CollisionShape>();
-	collisionShape->FromMesh(resourceCache->GetResource<Mesh>("level1.dae"));
+	collisionShape->SetMesh(resourceCache->GetResource<Mesh>("level1.dae"));
 	collisionShape = childNode->CreateComponent<CollisionShape>();
 	collisionShape->SetPlane(Plane(vec3(0, 1, 0), 0));
 	childNode2 = childNode->CreateChild();	

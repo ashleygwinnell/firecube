@@ -39,9 +39,8 @@ class CollisionShape : public Component
 public:
 	CollisionShape(Engine *engine);
 	~CollisionShape();
-	
-	void SetShapeType(CollisionShapeType type);
-	void FromMesh(Mesh *mesh);
+		
+	void SetMesh(Mesh *mesh);
 	CollisionShapeType GetShapeType() const;
 	void SetPlane(const Plane &plane);
 	void SetBox(vec3 size);
