@@ -216,9 +216,6 @@
     <ClCompile Include="Rendering\Scene.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Geometry\ModelLoader.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="Rendering\RenderPath.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
@@ -437,9 +434,6 @@
     </ClInclude>
     <ClInclude Include="Rendering\Scene.h">
       <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry\ModelLoader.h">
-      <Filter>Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\RenderPath.h">
       <Filter>Rendering</Filter>

@@ -3,7 +3,6 @@
 #include "AnimatedMesh.h"
 #include "Utils/Logger.h"
 #include "Utils/Filesystem.h"
-#include "Geometry/ModelLoader.h"
 #include "Core/Engine.h"
 #include "Rendering/VertexBuffer.h"
 #include "Rendering/IndexBuffer.h"

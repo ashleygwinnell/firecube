@@ -11,8 +11,6 @@
 #include "Math/BoundingBox.h"
 #include "Core/Component.h"
 
-#include "Geometry/ModelLoader.h"
-
 namespace FireCube
 {
 
