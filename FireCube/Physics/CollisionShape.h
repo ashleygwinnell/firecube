@@ -43,7 +43,7 @@ public:
 	void SetMesh(Mesh *mesh);
 	CollisionShapeType GetShapeType() const;
 	void SetPlane(const Plane &plane);
-	void SetBox(vec3 size);
+	void SetBox(BoundingBox bbox);
 
 	Plane GetPlane() const;
 	CollisionMesh *GetMesh();
@@ -64,7 +64,7 @@ private:
 
 	SharedPtr<CollisionMesh> mesh;
 	Plane plane;
-	vec3 boxSize;
+	BoundingBox shapeBoundingBox;
 	
 };
 

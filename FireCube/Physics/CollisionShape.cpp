@@ -105,30 +105,31 @@ Plane CollisionShape::GetPlane() const
 	return plane;
 }
 
-void CollisionShape::SetBox(vec3 size)
+void CollisionShape::SetBox(BoundingBox bbox)
 {
 	type = CollisionShapeType::BOX;
-	boxSize = size;
-	vec3 halfSize = size * 0.5f;
+	shapeBoundingBox = bbox;
+	vec3 bmin = bbox.GetMin();
+	vec3 bmax = bbox.GetMax();	
 	mesh = new CollisionMesh;
 	// Front
-	mesh->triangles.push_back(CollisionTriangle(vec3(-halfSize.x, -halfSize.y, halfSize.z), vec3(halfSize.x, -halfSize.y, halfSize.z), vec3(halfSize.x, halfSize.y, halfSize.z)));
-	mesh->triangles.push_back(CollisionTriangle(vec3(-halfSize.x, -halfSize.y, halfSize.z), vec3(halfSize.x, halfSize.y, halfSize.z), vec3(-halfSize.x, halfSize.y, halfSize.z)));
+	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmax.x, bmin.y, bmax.z), vec3(bmax.x, bmax.y, bmax.z)));
+	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmax.x, bmax.y, bmax.z), vec3(bmin.x, bmax.y, bmax.z)));
 	// Back
-	mesh->triangles.push_back(CollisionTriangle(vec3(-halfSize.x, -halfSize.y, -halfSize.z), vec3(-halfSize.x, halfSize.y, -halfSize.z), vec3(halfSize.x, halfSize.y, -halfSize.z)));
-	mesh->triangles.push_back(CollisionTriangle(vec3(-halfSize.x, -halfSize.y, -halfSize.z), vec3(halfSize.x, halfSize.y, -halfSize.z), vec3(halfSize.x, -halfSize.y, -halfSize.z)));
+	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmin.z), vec3(bmin.x, bmax.y, bmin.z), vec3(bmax.x, bmax.y, bmin.z)));
+	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmin.z), vec3(bmax.x, bmax.y, bmin.z), vec3(bmax.x, bmin.y, bmin.z)));
 	// Right
-	mesh->triangles.push_back(CollisionTriangle(vec3(halfSize.x, -halfSize.y, halfSize.z), vec3(halfSize.x, -halfSize.y, -halfSize.z), vec3(halfSize.x, halfSize.y, -halfSize.z)));
-	mesh->triangles.push_back(CollisionTriangle(vec3(halfSize.x, -halfSize.y, halfSize.z), vec3(halfSize.x, halfSize.y, -halfSize.z), vec3(halfSize.x, halfSize.y, halfSize.z)));
+	mesh->triangles.push_back(CollisionTriangle(vec3(bmax.x, bmin.y, bmax.z), vec3(bmax.x, bmin.y, bmin.z), vec3(bmax.x, bmax.y, bmin.z)));
+	mesh->triangles.push_back(CollisionTriangle(vec3(bmax.x, bmin.y, bmax.z), vec3(bmax.x, bmax.y, bmin.z), vec3(bmax.x, bmax.y, bmax.z)));
 	// Left
-	mesh->triangles.push_back(CollisionTriangle(vec3(-halfSize.x, -halfSize.y, halfSize.z), vec3(-halfSize.x, halfSize.y, halfSize.z), vec3(-halfSize.x, halfSize.y, -halfSize.z)));
-	mesh->triangles.push_back(CollisionTriangle(vec3(-halfSize.x, -halfSize.y, halfSize.z), vec3(-halfSize.x, halfSize.y, -halfSize.z), vec3(-halfSize.x, -halfSize.y, -halfSize.z)));
+	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmin.x, bmax.y, bmax.z), vec3(bmin.x, bmax.y, bmin.z)));
+	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmin.x, bmax.y, bmin.z), vec3(bmin.x, bmin.y, bmin.z)));
 	// Top
-	mesh->triangles.push_back(CollisionTriangle(vec3(-halfSize.x, halfSize.y, halfSize.z), vec3(halfSize.x, halfSize.y, halfSize.z), vec3(halfSize.x, halfSize.y, -halfSize.z)));
-	mesh->triangles.push_back(CollisionTriangle(vec3(-halfSize.x, halfSize.y, halfSize.z), vec3(halfSize.x, halfSize.y, -halfSize.z), vec3(-halfSize.x, halfSize.y, -halfSize.z)));
+	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmax.y, bmax.z), vec3(bmax.x, bmax.y, bmax.z), vec3(bmax.x, bmax.y, bmin.z)));
+	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmax.y, bmax.z), vec3(bmax.x, bmax.y, bmin.z), vec3(bmin.x, bmax.y, bmin.z)));
 	// Bottom
-	mesh->triangles.push_back(CollisionTriangle(vec3(-halfSize.x, -halfSize.y, halfSize.z), vec3(-halfSize.x, -halfSize.y, -halfSize.z), vec3(halfSize.x, -halfSize.y, -halfSize.z)));
-	mesh->triangles.push_back(CollisionTriangle(vec3(-halfSize.x, -halfSize.y, halfSize.z), vec3(halfSize.x, -halfSize.y, -halfSize.z), vec3(halfSize.x, -halfSize.y, halfSize.z)));
+	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmin.x, bmin.y, bmin.z), vec3(bmax.x, bmin.y, bmin.z)));
+	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmax.x, bmin.y, bmin.z), vec3(bmax.x, bmin.y, bmax.z)));
 
 	worldBoundingBoxChanged = true;
 }
@@ -217,7 +218,7 @@ void CollisionShape::UpdateWorldBoundingBox()
 		boundingBox = BoundingBox(vec3(-10e6), vec3(10e6)); // In case of a plane, return a large bounding box
 		break;
 	case CollisionShapeType::BOX:
-		boundingBox = BoundingBox(-boxSize * 0.5f, boxSize * 0.5f);
+		boundingBox = shapeBoundingBox;
 		break;
 	default:
 		break;

@@ -50,7 +50,7 @@ bool App::Prepare()
 	childNode2 = childNode->CreateChild();	
 	childNode2->Move(vec3(0.8f, 2, -0.8f));
 	collisionShape = childNode2->CreateComponent<CollisionShape>();
-	collisionShape->SetBox(vec3(0.7f, 2, 0.7f));
+	collisionShape->SetBox(BoundingBox(-vec3(0.7f, 2, 0.7f) * 0.5f, vec3(0.7f, 2, 0.7f) * 0.5f));
 
 	Node *playerNode = root->CreateChild("Player");
 	staticModel = playerNode->CreateComponent<StaticModel>();
