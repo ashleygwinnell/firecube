@@ -181,32 +181,11 @@ void AnimatedModel::IntersectRay(RayQuery &rayQuery)
 	float distance;
 	if (rayQuery.ray.IntersectBoundingBox(GetWorldBoundingBox(), distance) && distance <= rayQuery.maxDistance)
 	{
-		mat4 worldTransform = node->GetWorldTransformation();
-		worldTransform.Inverse();
-		Ray localRay = rayQuery.ray.Transformed(worldTransform);
-		vec3 normal, minNormal;
-		float minDistance;
-		bool found = false;
-		for (auto geometry : geometries)
-		{
-			if (geometry->IntersectRay(localRay, distance, normal) && distance <= rayQuery.maxDistance)
-			{
-				if (!found || distance < minDistance)
-				{
-					found = true;
-					minDistance = distance;
-					minNormal = normal;
-				}
-			}
-		}
-		if (found)
-		{
-			RayQueryResult result;
-			result.distance = minDistance;
-			result.renderable = this;
-			result.normal = minNormal;
-			rayQuery.results.push_back(result);
-		}
+		RayQueryResult result;
+		result.distance = distance;
+		result.renderable = this;
+		result.normal = -rayQuery.ray.direction; // TODO: Return the normal of the intersected face of the bounding box?
+		rayQuery.results.push_back(result);
 	}
 }
 
