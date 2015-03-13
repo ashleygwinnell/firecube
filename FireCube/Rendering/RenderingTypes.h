@@ -92,6 +92,7 @@ extern StringHash PARAM_TIME_STEP;
 extern StringHash PARAM_LIFE_TIME;
 extern StringHash PARAM_SKIN_MATRICES;
 extern StringHash PARAM_LIGHT_BIAS_MVP_MATRIX;
+extern StringHash PARAM_SHAODW_INTENSITY;
 
 extern StringHash BASE_PASS;
 extern StringHash LIGHT_PASS;

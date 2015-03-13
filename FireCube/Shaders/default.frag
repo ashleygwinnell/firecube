@@ -24,6 +24,7 @@ smooth in vec2 texcoord;
 #ifdef SHADOW
 	uniform sampler2D shadowMap;
 	smooth in vec4 shadowCoord;
+	uniform float shadowIntensity;
 #endif
 #ifdef FOG
 	uniform vec3 fogParameters;
@@ -79,12 +80,12 @@ void main()
 			#ifdef SPOT_LIGHT
 			if (textureProj(shadowMap, shadowCoord.xyw).x < min(shadowCoord.z / shadowCoord.w, 1.0))
 			{
-				lambertTerm *= 0.5;
+				lambertTerm *= shadowIntensity;
 			}
 			#else
 			if (texture(shadowMap, shadowCoord.xy).x < min(shadowCoord.z, 1.0))
 			{
-				lambertTerm *= 0.5;
+				lambertTerm *= shadowIntensity;
 			}
 			#endif
 		#endif

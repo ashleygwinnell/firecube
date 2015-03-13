@@ -433,6 +433,7 @@ void Renderer::UseLight(Light *light)
 	if (light->GetCastShadow())
 	{
 		UseTexture(static_cast<int>(TextureUnit::SHADOWMAP), shadowMap->GetLinkedTexture());
+		currentProgram->SetUniform(PARAM_SHAODW_INTENSITY, light->GetShadowIntensity());
 	}
 }
 

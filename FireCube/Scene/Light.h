@@ -69,6 +69,8 @@ public:
 	bool GetCastShadow() const;
 	void SetLightMask(unsigned int lightMask);
 	unsigned int GetLightMask() const;
+	void SetShadowIntensity(float shadowIntensity);
+	float GetShadowIntensity() const;
 protected:
 	virtual void MarkedDirty() {}
 	virtual void NodeChanged();
@@ -82,5 +84,6 @@ private:
 	Camera *camera;
 	bool castShadow;
 	unsigned int lightMask;
+	float shadowIntensity;
 };
 }
