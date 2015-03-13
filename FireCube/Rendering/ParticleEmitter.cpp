@@ -35,6 +35,7 @@ ParticleEmitter::ParticleEmitter(Engine *engine, unsigned int numberOfParticles,
 	renderableParts.resize(1);
 	renderableParts[0].geometry = geometry;
 	renderableParts[0].material = material;
+	castShadow = false;
 }
 
 ParticleEmitter::~ParticleEmitter()
