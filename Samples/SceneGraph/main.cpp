@@ -70,12 +70,11 @@ bool App::Prepare()
 			
 	Node *n2 = root->CreateChild("Teapot");
 	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>("../Assets/Models/teapot.3ds"));
-	n2->Move(vec3(8, -2, 0));
+	n2->Move(vec3(5, -2, 0));
 
 	n2 = root->CreateChild("Duck");	
-	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>("../Assets/Models/duck.dae"));
-	n2->Scale(vec3(0.03f, 0.03f, 0.03f));
-	n2->Move(vec3(-8, -4, 0));	
+	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>("../Assets/Models/duck.dae"));	
+	n2->Move(vec3(-5, -2, 0));	
 	
 	scene.SetFogColor(vec3(0.2f, 0.2f, 0.6f));
 	return true;
