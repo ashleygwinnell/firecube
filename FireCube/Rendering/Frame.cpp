@@ -279,13 +279,14 @@ void Frame::UpdateLightQueues()
 			if ((renderable->GetLightMask() & lights[i]->GetLightMask()) && camera->GetFrustum().Contains(renderable->GetWorldBoundingBox()))
 			{
 				for (auto &renderablePart : renderable->GetRenderableParts())
-				{
-					// TODO: Need to cull spot lights using frustum
+				{					
 					if (lights[i]->GetLightType() == LightType::POINT || lights[i]->GetLightType() == LightType::SPOT)
 					{
 						BoundingBox bbox = renderable->GetWorldBoundingBox();
 						float l = bbox.GetSize().Length();
-						if ((bbox.GetCenter() - lights[i]->GetNode()->GetWorldPosition()).Length() - l > lights[i]->GetRange())
+						if (lights[i]->GetLightType() == LightType::POINT && (bbox.GetCenter() - lights[i]->GetNode()->GetWorldPosition()).Length() - l > lights[i]->GetRange())
+							continue;
+						if (lights[i]->GetLightType() == LightType::SPOT && lightCamera->GetFrustum().Contains(bbox) == false)
 							continue;
 					}
 					if (!renderablePart.material)
