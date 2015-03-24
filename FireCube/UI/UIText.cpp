@@ -1,8 +1,5 @@
 #include "UI/UIText.h"
 #include "Rendering/Font.h"
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include "Rendering/privateFont.h"
 
 using namespace FireCube;
 
@@ -47,9 +44,8 @@ void UIText::SetText(const std::string &text)
 	int numTris = 0;
 	
 	vec2 intialPosition = GetScreenPosition();
-	vec2 curPos = intialPosition;
-	FT_Long useKerning = FT_HAS_KERNING(fontFace->fontImpl->face);
-	FT_UInt previous = 0;
+	vec2 curPos = intialPosition;	
+	char previous = 0;
 	for (std::string::const_iterator i = text.begin(); i != text.end(); i++)
 	{
 		char c = *i;
@@ -68,15 +64,11 @@ void UIText::SetText(const std::string &text)
 		}
 		else if (fontFace->glyph[c].size != vec2(0, 0))
 		{
-
-			FT_UInt glyphIndex = FT_Get_Char_Index(fontFace->fontImpl->face, c);
-			// Retrieve kerning distance and move pen position
-			if (useKerning && previous && glyphIndex)
+			if (previous && c)
 			{
-				FT_Vector delta;
-				FT_Get_Kerning(fontFace->fontImpl->face, previous, glyphIndex, FT_KERNING_DEFAULT, &delta);
-				curPos.x += delta.x >> 6;
+				curPos.x += fontFace->GetKerning(previous, c);
 			}
+
 			// Populate the vertex buffer with the position and the texture coordinates of the current glyph
 			vertexData[numTris * 3 + 0].position = vec3(fontFace->glyph[c].bitmapOffset.x + curPos.x, fontFace->glyph[c].bitmapOffset.y + curPos.y, 0.0f);
 			vertexData[numTris * 3 + 1].position = vec3(fontFace->glyph[c].bitmapOffset.x + curPos.x, fontFace->glyph[c].bitmapOffset.y + curPos.y + fontFace->glyph[c].size.y, 0.0f);
@@ -100,9 +92,9 @@ void UIText::SetText(const std::string &text)
 			vertexData[numTris * 3 + 2].color = color;
 			numTris++;
 
-			curPos.x += fontFace->glyph[c].advance;
-			previous = glyphIndex;
-		}
+			curPos.x += fontFace->glyph[c].advance;			
+			previous = c;
+		}		
 	}	
 
 	vertexData.resize(numTris * 3);

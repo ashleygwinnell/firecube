@@ -79,12 +79,16 @@ class FIRECUBE_API FontFace
 public:
 	FontFace();
 	~FontFace();
+
+	short GetKerning(unsigned int a, unsigned int b) const;
+
 private:
 	bool AddChar(char c);
 	int pointSize;
 	std::vector<Glyph> glyph;
 	FontPage *page;
 	FontImpl *fontImpl;
+	std::map<unsigned int, short> kerning;
 };
 
 }

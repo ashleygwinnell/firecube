@@ -76,6 +76,30 @@ FontFace *Font::GenerateFontFace(int pointSize)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);	
+
+	FT_Long useKerning = FT_HAS_KERNING(fontFace->fontImpl->face);
+	if (useKerning)
+	{
+		for (unsigned int i = 0; i < strlen(text); i++)
+		{
+			for (unsigned int j = 0; j < strlen(text); j++)
+			{
+				unsigned int a = text[i];
+				unsigned int b = text[j];
+				unsigned int key = a << 16 | b;
+				FT_UInt aIndex = FT_Get_Char_Index(fontFace->fontImpl->face, a);
+				FT_UInt bIndex = FT_Get_Char_Index(fontFace->fontImpl->face, b);
+				// Retrieve kerning distance and move pen position
+				if (aIndex && bIndex)
+				{
+					FT_Vector delta;
+					FT_Get_Kerning(fontFace->fontImpl->face, aIndex, bIndex, FT_KERNING_DEFAULT, &delta);
+					fontFace->kerning[key] = delta.x >> 6;
+				}
+			}
+		}
+	}
+
 	faces[pointSize] = fontFace;
 	return fontFace;
 }
@@ -134,4 +158,17 @@ bool FontFace::AddChar(char c)
 	page->curPos.x += glyph[c].size.x;
 
 	return true;
+}
+
+short FontFace::GetKerning(unsigned int a, unsigned int b) const
+{
+	if (kerning.empty())
+		return 0;
+
+	unsigned int key = a << 16 | b;
+	auto i = kerning.find(key);
+	if (i == kerning.end())
+		return 0;
+
+	return i->second;
 }
