@@ -40,8 +40,7 @@ bool App::Prepare()
 	GetInputManager().AddMapping(Key::UP, InputMappingType::STATE, "RotateUp");
 	GetInputManager().AddMapping(Key::DOWN, InputMappingType::STATE, "RotateDown");
 	GetInputManager().AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "RotateBoth");
-
-	fontFace = resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18);
+	
 	root = scene.GetRootNode();
 	
 	cameraNode = root->CreateChild();
@@ -72,11 +71,18 @@ bool App::Prepare()
 	scene.SetFogParameters(vec3(0, 0.01f, 0));
 	scene.SetFogColor(vec3(0.30f, 0.42f, 0.95f));
 		
+	text = engine->GetUI()->GetRoot()->CreateChild<UIText>();
+	text->SetFontFace(resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18));
+
 	return true;
 }
 
 void App::Update(float time)
 {	
+	std::ostringstream oss;
+	oss << "Rendered triangles: " << renderer->GetNumberOfPrimitivesRendered() << std::endl << "FPS: " << GetFps();
+	text->SetText(oss.str());
+
 	cameraNode->Move(speed);
 	ang += angSpeed;
 	angSpeed *= 0.9f;
@@ -101,13 +107,7 @@ void App::Render(float time)
 	cameraNode->SetRotation(rot);
 	
 	Frame frame(engine, &scene);
-	frame.Render(renderer);
-		
-	mat4 ortho;
-	ortho.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	
-	std::ostringstream oss;
-	oss << "FPS:" << app.GetFps() << std::endl << "Rendered primitives: " << renderer->GetNumberOfPrimitivesRendered();
-	renderer->RenderText(fontFace, ortho, vec3(0, 0, 0), vec4(1), oss.str());
+	frame.Render(renderer);	
 }
 
 void App::HandleInput(float time, const MappedInput &input)

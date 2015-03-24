@@ -7,7 +7,7 @@ public:
     void Render(float time);
     void HandleInput(float time, const MappedInput &input);
 
-    FontFace *fontFace;
+	UIText *text;
     Node *node, *node2;    
 	SharedPtr<RenderSurface> renderSurface;
     Camera *camera, *camera2;	

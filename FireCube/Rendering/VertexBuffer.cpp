@@ -11,7 +11,7 @@ const unsigned int VertexBuffer::attributeSize[static_cast<int>(VertexAttributeT
 	3,					   // normal
 	2,					   // texture coordinate 0
 	3,					   // tangent	
-	3,					   // color
+	4,					   // color
 	NUM_BONES_PER_VEREX,   // blend weights
 	NUM_BONES_PER_VEREX }; // blend indices
 

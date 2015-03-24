@@ -31,7 +31,6 @@ bool App::Prepare()
 	SetTitle("SceneGraph Test Application");
 	GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
-	fontFace = engine->GetResourceCache()->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18);	
 	
 	root = scene.GetRootNode();
 	Node *cameraNode = root->CreateChild("cameraNode");	
@@ -77,24 +76,26 @@ bool App::Prepare()
 	n2->Move(vec3(-5, -2, 0));	
 	
 	scene.SetFogColor(vec3(0.2f, 0.2f, 0.6f));
+
+	text = engine->GetUI()->GetRoot()->CreateChild<UIText>();
+	text->SetFontFace(resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18));
+
 	return true;
 }
 
 void App::Update(float t)
 {	
+	std::ostringstream oss;
+	oss << "Rendered triangles: " << renderer->GetNumberOfPrimitivesRendered() << std::endl << "FPS: " << GetFps();
+	text->SetText(oss.str());
+
 	root->GetChild("Ln")->Rotate(vec3(0, 1.0f, 0) * t);	
 	root->GetChild("Earth")->Rotate(vec3(0, 0.1f, 0) * t);	
 }
 void App::Render(float t)
 {		
 	Frame frame(engine, &scene);
-	frame.Render(renderer);
-	
-	mat4 projection;
-	projection.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	
-	std::ostringstream oss;
-	oss << "FPS:" << app.GetFps();
-	renderer->RenderText(fontFace, projection, vec3(0, (float)app.GetHeight() - 20.0f, 0.0f), vec4(1, 1, 1, 1), oss.str());
+	frame.Render(renderer);	
 }
 void App::HandleInput(float t, const MappedInput &input)
 {

@@ -79,17 +79,21 @@ bool App::Prepare()
 	Light *light = childNode->CreateComponent<Light>();
 	light->SetLightType(FireCube::LightType::DIRECTIONAL);
 	light->SetColor(vec4(1, 1, 1, 1));	
-	childNode->Rotate(vec3(PI * 0.5f, 0.0f, 0.0f));
-
-	fontFace = resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18);
+	childNode->Rotate(vec3(PI * 0.5f, 0.0f, 0.0f));	
 
 	scene.SetFogColor(vec3(44, 80, 222) / 255.0f);
 	//renderer->SetCurrentRenderPath(resourceCache->GetResource<RenderPath>("RenderPaths/ForwardGrayscale.xml"));
+
+	text = engine->GetUI()->GetRoot()->CreateChild<UIText>();
+	text->SetFontFace(resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18));
+
 	return true;
 }
 void App::Update(float t)
 {
-	
+	std::ostringstream oss;
+	oss << "Rendered triangles: " << renderer->GetNumberOfPrimitivesRendered() << std::endl << "FPS: " << GetFps();
+	text->SetText(oss.str());
 }
 void App::Render(float t)
 {
@@ -97,13 +101,6 @@ void App::Render(float t)
 	frame.Render(renderer);
 	root->GetComponent<PhysicsWorld>()->RenderDebugGeometry(debugRenderer);
 	debugRenderer->Render(camera);
-
-	mat4 ortho;
-	ortho.GenerateOrthographic(0, (float)GetWidth(), (float)GetHeight(), 0, 0, 1);
-	std::ostringstream oss;
-	oss << "Rendered triangles: " << renderer->GetNumberOfPrimitivesRendered() << std::endl << "FPS: " << GetFps();
-	renderer->RestoreFrameBuffer();
-	renderer->RenderText(fontFace, ortho, vec3(0, 0, 0), vec4(1, 1, 1, 1), oss.str());
 }
 void App::HandleInput(float t, const MappedInput &input)
 {

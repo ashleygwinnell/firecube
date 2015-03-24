@@ -9,6 +9,7 @@
 #include "Core/Engine.h"
 #include "Rendering/DebugRenderer.h"
 #include "Core/Events.h"
+#include "UI/UI.h"
 
 using namespace FireCube;
 
@@ -69,13 +70,15 @@ bool Application::InitializeNoWindow()
 	engine->SetResourceCache(resourceCache);
 	engine->SetInputManager(&inputManager);
 	debugRenderer = new DebugRenderer(engine);
-	engine->SetDebugRenderer(debugRenderer);
+	engine->SetDebugRenderer(debugRenderer);	
 	renderer->SetWidth(width);
 	renderer->SetHeight(height);
 	renderer->SetViewport(0, 0, width, height);
 	InitKeyMap();	
 	glewExperimental = GL_TRUE;
 	glewInit();
+	ui = new UI(engine);
+	engine->SetUI(ui);
 	Logger::Init("log.txt");
 	LOGINFO("Initializing application");	
 	timer.Init();
@@ -94,6 +97,7 @@ void Application::Destroy()
 	renderer->Destroy();
 	delete renderer;
 	delete debugRenderer;
+	delete ui;
 	LOGINFO("Destroying application");
 	if (context)
 		SDL_GL_DeleteContext(*context);
@@ -239,8 +243,7 @@ void Application::Run()
 		int x,y;
 		SDL_GetMouseState(&x, &y);
 		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_X_ABSOLUTE, (float)x);
-		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_Y_ABSOLUTE, (float)y);
-		renderer->ResetNumberOfPrimitivesRendered();
+		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_Y_ABSOLUTE, (float)y);		
 		renderer->SetTimeStep(deltaTime);
 		// Dispatch input to all input listeners
 		inputManager.DispatchInput(deltaTime);
@@ -248,7 +251,10 @@ void Application::Run()
 		Events::Update(deltaTime);
 		Update(deltaTime);
 		// Render the scene
+		renderer->ResetNumberOfPrimitivesRendered();
 		Render(deltaTime);
+		// Render UI
+		ui->Render(renderer);
 		SDL_GL_SwapWindow(mainWindow);
 		frameCount += 1.0f;
 		fpsTime += deltaTime;

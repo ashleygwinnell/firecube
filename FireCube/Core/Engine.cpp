@@ -44,3 +44,13 @@ DebugRenderer *Engine::GetDebugRenderer()
 {
 	return debugRenderer;
 }
+
+void Engine::SetUI(UI *ui)
+{
+	this->ui = ui;
+}
+
+UI *Engine::GetUI()
+{
+	return ui;
+}

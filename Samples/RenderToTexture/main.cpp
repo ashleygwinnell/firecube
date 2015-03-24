@@ -18,8 +18,7 @@ bool App::Prepare()
 	GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
     SetTitle("RenderToTexture Example");
-    fontFace = resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(10);
-
+    
 	renderSurface = renderer->GetRenderSurface(128, 128, RenderSurfaceType::COLOR);
 	Node *root = scene2.GetRootNode();
 	camera2 = root->CreateComponent<Camera>();
@@ -63,10 +62,17 @@ bool App::Prepare()
 	
 	material->SetTexture(TextureUnit::DIFFUSE, renderSurface->GetLinkedTexture());
 		
+	text = engine->GetUI()->GetRoot()->CreateChild<UIText>();
+	text->SetFontFace(resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18));
+
     return true;
 }
 void App::Update(float time)
 {
+	std::ostringstream oss;
+	oss << "Rendered triangles: " << renderer->GetNumberOfPrimitivesRendered() << std::endl << "FPS: " << GetFps();
+	text->SetText(oss.str());
+
 	node->Rotate(vec3(time * 1.5f, time * 1.5f, 0));
 	node2->Rotate(vec3(time * 1.5f, time * 1.5f, 0));	
 }
@@ -77,16 +83,10 @@ void App::Render(float time)
 	Frame frame2(engine, &scene2);
 	
 	frame2.SetRenderTarget(renderSurface);
-	frame2.Render(renderer);
-	projection.GenerateOrthographic(0, (float)renderSurface->GetWidth(), (float)renderSurface->GetHeight(), 0, 0, 1);
-	renderer->RenderText(fontFace, projection, vec3(0, 0, 0), vec4(1, 1, 1, 1), "RenderToTexture Test.");
+	frame2.Render(renderer);	
 	renderSurface->GetLinkedTexture()->GenerateMipMaps();
 
-	frame.Render(renderer);
-	projection.GenerateOrthographic(0, (float) GetWidth(), (float) GetHeight(), 0, 0, 1);	
-    std::ostringstream oss;
-    oss << "FPS:" << GetFps();
-	renderer->RenderText(fontFace, projection, vec3(0, 0, 0), vec4(1, 1, 1, 1), oss.str());
+	frame.Render(renderer);	
 }
 void App::HandleInput(float time, const MappedInput &input)
 {

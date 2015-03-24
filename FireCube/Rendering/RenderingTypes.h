@@ -56,7 +56,7 @@ enum class RenderSurfaceType
 
 enum class BlendMode
 {
-	REPLACE, ADD
+	REPLACE, ADD, ALPHA
 };
 
 enum class DepthTest
@@ -67,6 +67,14 @@ enum class DepthTest
 enum class ClearBufferType
 {
 	NONE = 0, COLOR = 1, DEPTH = 2
+};
+
+/**
+* Specifies the kind of primitives to render.
+*/
+enum class PrimitiveType
+{
+	POINTS, LINES, TRIANGLES, TRIANGLE_STRIP, QUADS, LINE_LOOP, LINE_STRIP, TRIANGLE_FAN
 };
 
 ClearBufferType operator | (const ClearBufferType &lhs, const ClearBufferType &rhs);

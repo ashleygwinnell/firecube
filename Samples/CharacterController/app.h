@@ -8,7 +8,7 @@ public:
 	bool Prepare();
 	Node *root;
 	Camera *camera;
-	Scene scene;
-	FontFace *fontFace;
+	Scene scene;	
 	CharacterController *characterController;
+	UIText *text;
 };

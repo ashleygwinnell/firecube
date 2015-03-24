@@ -49,6 +49,9 @@
     <Filter Include="Physics">
       <UniqueIdentifier>{f076d51d-0a0c-43b6-a1bb-5511e0d7413a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{558b416e-9eb2-4138-b214-8ce853cecbc8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Rendering\Font.cpp">
@@ -263,6 +266,15 @@
     </ClCompile>
     <ClCompile Include="Rendering\Frame.cpp">
       <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIElement.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIText.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -485,6 +497,15 @@
     </ClInclude>
     <ClInclude Include="Rendering\Frame.h">
       <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIElement.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIText.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -37,7 +37,7 @@ void DebugRenderer::Render(Camera *camera)
 		renderer->SetBlendMode(BlendMode::REPLACE);
 		renderer->SetShaders(vs, fs);
 		renderer->UseCamera(camera);
-		linesVertexBuffer->LoadData(&lines[0], lines.size() / 2, VertexAttributeType::POSITION | VertexAttributeType::COLOR, BufferType::DYNAMIC);
+		linesVertexBuffer->LoadData(lines.data(), lines.size(), VertexAttributeType::POSITION | VertexAttributeType::COLOR, BufferType::DYNAMIC);
 		linesGeometry->SetPrimitiveCount(lines.size() / 4);
 		linesGeometry->Update();
 		linesGeometry->Render();
@@ -47,10 +47,8 @@ void DebugRenderer::Render(Camera *camera)
 
 void DebugRenderer::AddLine(const vec3 &start, const vec3 &end, const vec3 &color)
 {
-	lines.push_back(start);
-	lines.push_back(color);
-	lines.push_back(end);
-	lines.push_back(color);
+	lines.push_back({ start, vec4(color, 1.0f) });
+	lines.push_back({ end, vec4(color, 1.0f) });	
 }
 
 void DebugRenderer::AddBoundingBox(const BoundingBox &boundingBox, const vec3 &color)

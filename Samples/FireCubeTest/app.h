@@ -9,5 +9,5 @@ public:
 	Node *root;
 	OrbitCamera *camera;	
 	Scene scene;	
-	FontFace *fontFace;
+	UIText *text;
 };

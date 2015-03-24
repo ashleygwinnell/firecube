@@ -74,15 +74,6 @@ public:
 	void UseTexture(unsigned int unit, const Texture *texture);
 
 	/**
-	* Renders text.
-	* @param font The font to use.
-	* @param pos The position of the text.
-	* @param color The color of the text.
-	* @param str The string to output.
-	*/
-	void RenderText(FontFace *fontFace, mat4 projectionMatrix, const vec3 &pos, const vec4 &color, const std::string &str);
-
-	/**
 	* Renders an index stream.
 	* @param primitiveType The primitive type.
 	* @param count The number of indices to render.
@@ -94,7 +85,7 @@ public:
 	* @param primitiveType The primitive type.
 	* @param count The number of indices to render.
 	*/
-	void RenderStream(const PrimitiveType &primitiveType, unsigned int count);
+	void RenderStream(const PrimitiveType &primitiveType, unsigned int count, unsigned int offset = 0);
 
 	/**
 	* Uses a program.
@@ -159,6 +150,7 @@ public:
 	void SetTimeStep(float timeStep);
 	float GetTimeStep() const;
 	RenderSurface *GetShadowMap();
+	void SetBuffer(VertexBuffer *vertexBuffer);
 private:
 
 	/**
@@ -167,13 +159,9 @@ private:
 	*/
 	void UseFrameBuffer(FrameBuffer *frameBuffer);	
 
-	VertexBuffer *textVertexBuffer, *quadVertexBuffer;	
-	GLuint textVao, quadVao;
-	Shader *textVertexShader;
-	Shader *textFragmentShader;
-	ShaderTemplate *textVertexShaderTemplate;
-	ShaderTemplate *textFragmentShaderTemplate;
-
+	VertexBuffer *quadVertexBuffer;	
+	GLuint quadVao, dummyVao;
+	
 	std::map<std::pair<Shader *, Shader *>, Program *> programs;
 	Program *currentProgram;	
 	Shader *currentVertexShader;

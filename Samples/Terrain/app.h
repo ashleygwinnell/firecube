@@ -11,7 +11,7 @@ private:
 	Terrain *terrain;	
 	Node *root, *cameraNode;	
 	Scene scene;	
-	FontFace *fontFace;		
+	UIText *text;
 	Camera *camera;
 	vec3 speed;
 	vec3 angSpeed;

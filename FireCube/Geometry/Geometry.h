@@ -11,6 +11,7 @@
 #include "Math/Math.h"
 #include "Math/BoundingBox.h"
 #include "Rendering/GraphicsResource.h"
+#include "Rendering/RenderingTypes.h"
 #include "Math/Ray.h"
 #include "Core/Memory.h"
 
@@ -26,14 +27,6 @@ class Geometry;
 class ProgramUniformsList;
 class Texture;
 class Renderer;
-
-/**
-* Specifies the kind of primitives to render.
-*/
-enum class PrimitiveType
-{
-	POINTS, LINES, TRIANGLES, TRIANGLE_STRIP, QUADS, LINE_LOOP, LINE_STRIP, TRIANGLE_FAN
-};
 
 enum class GeometryType
 {

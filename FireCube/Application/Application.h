@@ -20,6 +20,7 @@ class Texture;
 class Renderer;
 class ResourceCache;
 class DebugRenderer;
+class UI;
 
 /**
 * This class is responsible for the initialization and running of the application.
@@ -115,6 +116,7 @@ protected:
 	Engine *engine;
 	ResourceCache *resourceCache;
 	DebugRenderer *debugRenderer;
+	UI *ui;
 private:
 	void InitKeyMap();
 	std::map<int, Key> keyMap;

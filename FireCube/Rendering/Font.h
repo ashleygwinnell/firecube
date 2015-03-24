@@ -18,9 +18,8 @@ class Texture;
 class vec2;
 class vec3;
 class vec4;
-
+class UIText;
 class FontImpl;
-
 class FontFace;
 
 /**
@@ -76,6 +75,7 @@ class FIRECUBE_API FontFace
 {
 	friend class Font;
 	friend class Renderer;
+	friend class UIText;
 public:
 	FontFace();
 	~FontFace();

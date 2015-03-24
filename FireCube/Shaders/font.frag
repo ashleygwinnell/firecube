@@ -1,6 +1,6 @@
 out vec4 outputColor;
 smooth in vec2 texcoord;
-uniform vec4 textColor;
+smooth in vec4 textColor;
 uniform sampler2D tex0;
 
 void main()

@@ -32,10 +32,9 @@ struct FontVertex
 	vec2 uv;
 };
 
-Renderer::Renderer(Engine *engine) : Object(engine), textVao(0), numberOfPrimitivesRendered(0), 
+Renderer::Renderer(Engine *engine) : Object(engine), numberOfPrimitivesRendered(0), 
 	currentVertexShader(nullptr), currentFragmentShader(nullptr), currentMaterial(nullptr), currentCamera(nullptr),
-	currentLight(nullptr), textVertexBuffer(nullptr), textVertexShader(nullptr), textFragmentShader(nullptr),
-	textVertexShaderTemplate(nullptr), textFragmentShaderTemplate(nullptr), depthSurface(nullptr), currentFrameBuffer(nullptr), fboDirty(false)
+	currentLight(nullptr), depthSurface(nullptr), currentFrameBuffer(nullptr), fboDirty(false)
 {
 	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
 		renderTargets[i] = nullptr;
@@ -45,12 +44,6 @@ void Renderer::Initialize()
 {
 	// Create texture samplers for each texture unit (hard coded to 16)
 	glGenSamplers(16, textureSampler);	
-
-	// Create a vertex buffer for text rendering	
-	glGenVertexArrays(1, &textVao);
-	glBindVertexArray(textVao);
-	textVertexBuffer = new VertexBuffer(this);
-	glBindVertexArray(0);
 
 	glGenVertexArrays(1, &quadVao);
 	glBindVertexArray(quadVao);
@@ -66,11 +59,7 @@ void Renderer::Initialize()
 	quadVertexBuffer->ApplyAttributes();
 	glBindVertexArray(0);
 
-	// Create shaders for text rendering
-	textVertexShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/font.vert");
-	textFragmentShaderTemplate = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/font.frag");
-	textVertexShader = textVertexShaderTemplate->GenerateShader("");
-	textFragmentShader = textFragmentShaderTemplate->GenerateShader("");
+	glGenVertexArrays(1, &dummyVao);
 
 	currentRenderPath = engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/Forward.xml");
 
@@ -82,11 +71,9 @@ void Renderer::Initialize()
 }
 
 void Renderer::Destroy()
-{
-	delete textVertexBuffer;
+{	
 	delete quadVertexBuffer;
-
-	glDeleteVertexArrays(1, &textVao);
+	
 	glDeleteVertexArrays(1, &quadVao);
 	glDeleteSamplers(16, textureSampler);
 }
@@ -148,87 +135,6 @@ void Renderer::UseTexture(unsigned int unit, const Texture *texture)
 	glBindSampler(unit, textureSampler[unit]);
 }
 
-void Renderer::RenderText(FontFace *fontFace, mat4 projectionMatrix, const vec3 &pos, const vec4 &color, const std::string &str)
-{	
-	if (!fontFace || str.empty())
-		return;
-	static std::vector<FontVertex> vBuffer;    
-	vBuffer.resize(str.size() * 6);    
-	Program *textProgram = SetShaders(textVertexShader, textFragmentShader);
-	if (textProgram->IsValid())
-	{
-		UseProgram(textProgram);
-		textProgram->SetUniform("tex0", 0);
-		textProgram->SetUniform("textColor", color);
-		textProgram->SetUniform("modelViewMatrix", mat4::IDENTITY);
-		textProgram->SetUniform("projectionMatrix", projectionMatrix);
-	}
-	int numTris = 0;
-
-	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	UseTexture(0, fontFace->page->tex);
-	vec3 curPos = pos;
-	FT_Long useKerning = FT_HAS_KERNING(fontFace->fontImpl->face);
-	FT_UInt previous = 0;
-	for (std::string::const_iterator i = str.begin(); i != str.end(); i++)
-	{
-		char c = *i;
-		if (c == 32)
-		{
-			// If current glyph is space simply advance the current position
-			curPos.x += fontFace->glyph[c].advance;
-			continue;
-		}
-		else if (c == '\n')
-		{
-			// If current glyph is new line set the current position accordingly
-			curPos.x = pos.x;
-			curPos.y += fontFace->pointSize;
-			continue;
-		}
-		else if (fontFace->glyph[c].size != vec2(0, 0))
-		{
-
-			FT_UInt glyphIndex = FT_Get_Char_Index( fontFace->fontImpl->face, c );
-			// Retrieve kerning distance and move pen position
-			if ( useKerning && previous && glyphIndex )
-			{
-				FT_Vector delta;
-				FT_Get_Kerning( fontFace->fontImpl->face, previous, glyphIndex, FT_KERNING_DEFAULT, &delta );
-				curPos.x += delta.x >> 6;
-			}
-			// Populate the vertex buffer with the position and the texture coordinates of the current glyph
-			vBuffer[numTris * 3 + 0].position = vec3(fontFace->glyph[c].bitmapOffset.x + curPos.x, fontFace->glyph[c].bitmapOffset.y + curPos.y, curPos.z);
-			vBuffer[numTris * 3 + 1].position = vec3(fontFace->glyph[c].bitmapOffset.x + curPos.x, fontFace->glyph[c].bitmapOffset.y + curPos.y + fontFace->glyph[c].size.y, curPos.z);
-			vBuffer[numTris * 3 + 2].position = vec3(fontFace->glyph[c].bitmapOffset.x + curPos.x + fontFace->glyph[c].size.x, fontFace->glyph[c].bitmapOffset.y + curPos.y, curPos.z);
-			vBuffer[numTris * 3 + 0].uv = vec2(fontFace->glyph[c].uv.x, fontFace->glyph[c].uv.y);
-			vBuffer[numTris * 3 + 1].uv = vec2(fontFace->glyph[c].uv.x, fontFace->glyph[c].uv.y + fontFace->glyph[c].size.y / 512.0f);
-			vBuffer[numTris * 3 + 2].uv = vec2(fontFace->glyph[c].uv.x + fontFace->glyph[c].size.x / 512.0f, fontFace->glyph[c].uv.y);
-			numTris++;
-			
-			vBuffer[numTris * 3 + 0].position = vec3(fontFace->glyph[c].bitmapOffset.x + curPos.x + fontFace->glyph[c].size.x, fontFace->glyph[c].bitmapOffset.y + curPos.y, curPos.z);
-			vBuffer[numTris * 3 + 1].position = vec3(fontFace->glyph[c].bitmapOffset.x + curPos.x, fontFace->glyph[c].bitmapOffset.y + curPos.y + fontFace->glyph[c].size.y, curPos.z);			
-			vBuffer[numTris * 3 + 2].position = vec3(fontFace->glyph[c].bitmapOffset.x + curPos.x + fontFace->glyph[c].size.x, fontFace->glyph[c].bitmapOffset.y + curPos.y + fontFace->glyph[c].size.y, curPos.z);
-			vBuffer[numTris * 3 + 0].uv = vec2(fontFace->glyph[c].uv.x + fontFace->glyph[c].size.x / 512.0f, fontFace->glyph[c].uv.y);
-			vBuffer[numTris * 3 + 1].uv = vec2(fontFace->glyph[c].uv.x, fontFace->glyph[c].uv.y + fontFace->glyph[c].size.y / 512.0f);
-			vBuffer[numTris * 3 + 2].uv = vec2(fontFace->glyph[c].uv.x + fontFace->glyph[c].size.x / 512.0f, fontFace->glyph[c].uv.y + fontFace->glyph[c].size.y / 512.0f);
-			numTris++;
-
-			curPos.x += fontFace->glyph[c].advance;
-			previous = glyphIndex;
-		}
-	}		
-	textVertexBuffer->LoadData(&vBuffer[0], numTris * 3, VertexAttributeType::POSITION | VertexAttributeType::TEXCOORD0, BufferType::STREAM);
-	glBindVertexArray(textVao);
-	textVertexBuffer->ApplyAttributes();
-	RenderStream(PrimitiveType::TRIANGLES, numTris * 3);
-	glBindVertexArray(0);
-	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
-}
-
 void Renderer::RenderIndexStream(const PrimitiveType &primitiveType, unsigned int count)
 {
 	GLenum glmode;
@@ -266,7 +172,7 @@ void Renderer::RenderIndexStream(const PrimitiveType &primitiveType, unsigned in
 	glBindVertexArray(0);
 }
 
-void Renderer::RenderStream(const PrimitiveType &primitiveType, unsigned int count)
+void Renderer::RenderStream(const PrimitiveType &primitiveType, unsigned int count, unsigned int offset)
 {
 	GLenum glmode;
 	switch (primitiveType)
@@ -299,7 +205,7 @@ void Renderer::RenderStream(const PrimitiveType &primitiveType, unsigned int cou
 		//TODO: Add log of error.
 		return;
 	}
-	glDrawArrays(glmode, 0, count);
+	glDrawArrays(glmode, offset, count);
 	glBindVertexArray(0);
 }
 
@@ -659,6 +565,10 @@ void Renderer::SetBlendMode(BlendMode blendMode)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
 		break;
+	case BlendMode::ALPHA:
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		break;
 	default:
 		break;
 	}
@@ -718,4 +628,15 @@ float Renderer::GetTimeStep() const
 RenderSurface *Renderer::GetShadowMap()
 {
 	return shadowMap;
+}
+
+void Renderer::SetBuffer(VertexBuffer *vertexBuffer)
+{
+	if (!vertexBuffer)
+	{
+		return;
+	}
+
+	glBindVertexArray(dummyVao);	
+	vertexBuffer->ApplyAttributes();
 }

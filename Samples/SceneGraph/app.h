@@ -7,7 +7,7 @@ public:
     void Render(float t);
     void Update(float t);
     bool Prepare();
-    FontFace *fontFace;
+	UIText *text;
     Node *root;	
 	Camera *camera;
 	Mesh *lightMarker, *earthMesh;	

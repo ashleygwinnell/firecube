@@ -84,6 +84,9 @@
     <ClCompile Include="ThirdParty\TinyXML\tinyxml.cpp" />
     <ClCompile Include="ThirdParty\TinyXML\tinyxmlerror.cpp" />
     <ClCompile Include="ThirdParty\TinyXML\tinyxmlparser.cpp" />
+    <ClCompile Include="UI\UI.cpp" />
+    <ClCompile Include="UI\UIElement.cpp" />
+    <ClCompile Include="UI\UIText.cpp" />
     <ClCompile Include="Utils\Filesystem.cpp" />
     <ClCompile Include="Utils\Image.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
@@ -160,6 +163,9 @@
     <ClInclude Include="ThirdParty\STB\stb_image.h" />
     <ClInclude Include="ThirdParty\STB\stb_image_write.h" />
     <ClInclude Include="ThirdParty\TinyXML\tinyxml.h" />
+    <ClInclude Include="UI\UI.h" />
+    <ClInclude Include="UI\UIElement.h" />
+    <ClInclude Include="UI\UIText.h" />
     <ClInclude Include="Utils\Filesystem.h" />
     <ClInclude Include="Utils\Image.h" />
     <ClInclude Include="Utils\Logger.h" />

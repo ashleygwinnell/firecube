@@ -9,6 +9,7 @@ class Renderer;
 class ResourceCache;
 class InputManager;
 class DebugRenderer;
+class UI;
 
 class FIRECUBE_API Engine
 {
@@ -22,11 +23,14 @@ public:
 	InputManager *GetInputManager();
 	void SetDebugRenderer(DebugRenderer *debugRenderer);
 	DebugRenderer *GetDebugRenderer();
+	void SetUI(UI *ui);
+	UI *GetUI();
 private:
 	Renderer *renderer;
 	ResourceCache *resourceCache;
 	InputManager *inputManager;
 	DebugRenderer *debugRenderer;
+	UI *ui;
 };
 
 }
