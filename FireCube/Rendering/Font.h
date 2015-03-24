@@ -66,6 +66,8 @@ public:
 	bool Load(const std::string &filename);
 
 	FontFace *GenerateFontFace(int pointSize);
+
+	static void Init();
 private:
 	std::vector<char> data;
 	std::map<int, FontFace *> faces;

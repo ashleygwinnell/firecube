@@ -25,6 +25,11 @@ Font::~Font()
 		delete i.second;
 }
 
+void Font::Init()
+{
+	FT_Init_FreeType(&freeTypeLibrary);
+}
+
 bool Font::Load(const std::string &filename)
 {
 	LOGINFO("Loading font with name:" + filename);
@@ -94,7 +99,7 @@ FontFace *Font::GenerateFontFace(int pointSize)
 				{
 					FT_Vector delta;
 					FT_Get_Kerning(fontFace->fontImpl->face, aIndex, bIndex, FT_KERNING_DEFAULT, &delta);
-					fontFace->kerning[key] = delta.x >> 6;
+					fontFace->kerning[key] = (short) (delta.x >> 6);
 				}
 			}
 		}

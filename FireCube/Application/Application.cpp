@@ -1,7 +1,5 @@
 #include <SDL.h>
 #include "ThirdParty/GLEW/glew.h"
-#include <ft2build.h>
-#include FT_FREETYPE_H
 #include "Utils/Logger.h"
 #include "Rendering/Renderer.h"
 #include "Application/Application.h"
@@ -10,10 +8,9 @@
 #include "Rendering/DebugRenderer.h"
 #include "Core/Events.h"
 #include "UI/UI.h"
+#include "Rendering/Font.h"
 
 using namespace FireCube;
-
-extern FT_Library freeTypeLibrary;
 
 Application::Application() : engine(new Engine), running(false), frameCount(0), fpsTime(0), fps(0), context(nullptr), mainWindow(nullptr)
 {
@@ -85,7 +82,8 @@ bool Application::InitializeNoWindow()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	srand(GetTickCount());
-	FT_Init_FreeType(&freeTypeLibrary);
+	Font::Init();
+	
 	renderer->Initialize();
 	debugRenderer->Initialize();
 	return Prepare();
