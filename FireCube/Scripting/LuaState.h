@@ -22,6 +22,7 @@ public:
 	lua_State *GetState();
 private:
 	static int Print(lua_State *L);
+	static int LuaState::AtPanic(lua_State* L);
 	lua_State *luaState;
 };
 

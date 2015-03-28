@@ -19,7 +19,7 @@ void LuaScript::Update(float time)
 		if (updateFunction.isFunction())
 		{
 			// Call update function	
-			updateFunction(object, this, time);
+			updateFunction(object, time);
 		}
 	}
 }
@@ -50,9 +50,13 @@ void LuaScript::CreateObject(const std::string &objectName)
 	lua_pop(state, 1);
 
 	object["node"] = GetNode();
+	object["script"] = this;
 	initFunction = objectTable["Init"];
 	updateFunction = objectTable["Update"];
-	initFunction(object, this);
+	if (initFunction)
+	{
+		initFunction(object);
+	}
 }
 
 void LuaScript::CreateObject(LuaFile *luaFile, const std::string &objectName)

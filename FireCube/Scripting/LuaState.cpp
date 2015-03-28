@@ -18,6 +18,8 @@ LuaState::LuaState(Engine *engine) : Object(engine)
 		{ "print", &LuaState::Print },
 		{ NULL, NULL }
 	};
+
+	lua_atpanic(luaState, &LuaState::AtPanic);
 	
 	lua_getglobal(luaState, "_G");
 	luaL_setfuncs(luaState, reg, 0);	
@@ -64,6 +66,15 @@ int LuaState::Print(lua_State *L)
 
 	return 0;
 }
+
+int LuaState::AtPanic(lua_State* L)
+{
+	std::string errorMessage = luaL_checkstring(L, -1);
+	LOGERROR("Lua error: error message = '", errorMessage, "'");
+	lua_pop(L, 1);
+	return 0;
+}
+
 
 void LuaState::ExecuteFile(LuaFile *luaFile)
 {
