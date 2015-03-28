@@ -52,6 +52,9 @@
     <Filter Include="UI">
       <UniqueIdentifier>{558b416e-9eb2-4138-b214-8ce853cecbc8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripting">
+      <UniqueIdentifier>{7412e3da-e8bf-4814-9ed1-8c1e38581b12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Rendering\Font.cpp">
@@ -275,6 +278,18 @@
     </ClCompile>
     <ClCompile Include="UI\UIText.cpp">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\LuaState.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\LuaScript.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\LuaBindings.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\LuaFile.cpp">
+      <Filter>Scripting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -506,6 +521,18 @@
     </ClInclude>
     <ClInclude Include="UI\UIText.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripting\LuaState.h">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripting\LuaScript.h">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripting\LuaBindings.h">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripting\LuaFile.h">
+      <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -50,3 +50,6 @@
 #include "Core/ResourceCache.h"
 #include "Core/Engine.h"
 #include "Core/Memory.h"
+#include "Scripting/LuaState.h"
+#include "Scripting/LuaScript.h"
+#include "Scripting/LuaFile.h"

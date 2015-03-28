@@ -21,6 +21,7 @@ class Renderer;
 class ResourceCache;
 class DebugRenderer;
 class UI;
+class LuaState;
 
 /**
 * This class is responsible for the initialization and running of the application.
@@ -117,6 +118,7 @@ protected:
 	ResourceCache *resourceCache;
 	DebugRenderer *debugRenderer;
 	UI *ui;
+	LuaState *luaState;
 private:
 	void InitKeyMap();
 	std::map<int, Key> keyMap;

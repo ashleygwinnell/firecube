@@ -10,6 +10,7 @@ class ResourceCache;
 class InputManager;
 class DebugRenderer;
 class UI;
+class LuaState;
 
 class FIRECUBE_API Engine
 {
@@ -25,12 +26,15 @@ public:
 	DebugRenderer *GetDebugRenderer();
 	void SetUI(UI *ui);
 	UI *GetUI();
+	void SetLuaState(LuaState *luaState);
+	LuaState *GetLuaState();
 private:
 	Renderer *renderer;
 	ResourceCache *resourceCache;
 	InputManager *inputManager;
 	DebugRenderer *debugRenderer;
 	UI *ui;
+	LuaState *luaState;
 };
 
 }

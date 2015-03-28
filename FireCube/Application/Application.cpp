@@ -9,6 +9,7 @@
 #include "Core/Events.h"
 #include "UI/UI.h"
 #include "Rendering/Font.h"
+#include "Scripting/LuaState.h"
 
 using namespace FireCube;
 
@@ -19,7 +20,7 @@ Application::Application() : engine(new Engine), running(false), frameCount(0), 
 
 Application::~Application()
 {
-	
+	delete luaState;
 }
 
 bool Application::Initialize()
@@ -76,6 +77,8 @@ bool Application::InitializeNoWindow()
 	glewInit();
 	ui = new UI(engine);
 	engine->SetUI(ui);
+	luaState = new LuaState(engine);
+	engine->SetLuaState(luaState);
 	Logger::Init("log.txt");
 	LOGINFO("Initializing application");	
 	timer.Init();

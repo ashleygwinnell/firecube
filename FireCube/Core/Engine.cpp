@@ -54,3 +54,13 @@ UI *Engine::GetUI()
 {
 	return ui;
 }
+
+void Engine::SetLuaState(LuaState *luaState)
+{
+	this->luaState = luaState;
+}
+
+LuaState *Engine::GetLuaState()
+{
+	return luaState;
+}

@@ -38,9 +38,10 @@ bool App::Prepare()
 	scene.SetCamera(camera);	
 	//camera->SetOrthographicProjectionParameters(-10, 10, -10, 10, -2, 20);
 	//camera->GetNode()->Rotate(vec3(PI * 0.25f, 0.0f, 0.0f));
-
+	engine->GetLuaState()->ExecuteFile(resourceCache->GetResource<LuaFile>("../Samples/FireCubeTest/test.lua"));
 	childNode = root->CreateChild("Model");	
 	StaticModel *staticModel = childNode->CreateComponent<StaticModel>(resourceCache->GetResource<Mesh>("scene.3ds"));	
+	childNode->CreateComponent<LuaScript>()->CreateObject("Rotator");	
 	//childNode->Scale(vec3(0.05f));
 	//childNode->Move(vec3(0, 0.0251f, 0));
 	childNode = root->CreateChild("Model");
