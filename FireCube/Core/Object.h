@@ -18,7 +18,13 @@ public:
 	template<class T, class... Args>
 	void SubscribeToEvent(Event<Args...> &s, void(T::*f)(Args...))
 	{
-		eventCallback.Connect(static_cast<T *>(this), f, s);
+		eventCallback.Connect(nullptr, static_cast<T *>(this), f, s);
+	}
+
+	template<class T, class... Args>
+	void SubscribeToEvent(Object *sender, Event<Args...> &s, void(T::*f)(Args...))
+	{
+		eventCallback.Connect(sender, static_cast<T *>(this), f, s);
 	}
 	
 	virtual StringHash GetType() const = 0;	

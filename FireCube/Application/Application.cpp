@@ -13,7 +13,7 @@
 
 using namespace FireCube;
 
-Application::Application() : engine(new Engine), running(false), frameCount(0), fpsTime(0), fps(0), context(nullptr), mainWindow(nullptr)
+Application::Application() : Object(new Engine), running(false), frameCount(0), fpsTime(0), fps(0), context(nullptr), mainWindow(nullptr)
 {
 	
 }
@@ -249,7 +249,7 @@ void Application::Run()
 		// Dispatch input to all input listeners
 		inputManager.DispatchInput(deltaTime);
 		// Update the scene
-		Events::Update(deltaTime);
+		Events::Update(this, deltaTime);
 		Update(deltaTime);
 		// Render the scene
 		renderer->ResetNumberOfPrimitivesRendered();

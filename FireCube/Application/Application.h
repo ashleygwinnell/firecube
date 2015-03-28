@@ -5,6 +5,7 @@
 
 #include <string>
 
+#include "Core/Object.h"
 #include "Application/Input.h"
 #include "Utils/Timer.h"
 
@@ -26,8 +27,9 @@ class LuaState;
 /**
 * This class is responsible for the initialization and running of the application.
 */
-class FIRECUBE_API Application
+class FIRECUBE_API Application : public Object
 {
+	OBJECT(Application);
 public:
 	Application();
 	virtual ~Application();
@@ -113,8 +115,7 @@ public:
 	float GetPassedTime() const;
 
 protected:
-	Renderer *renderer;
-	Engine *engine;
+	Renderer *renderer;	
 	ResourceCache *resourceCache;
 	DebugRenderer *debugRenderer;
 	UI *ui;
