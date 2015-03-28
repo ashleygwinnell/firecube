@@ -17,16 +17,17 @@ public:
 template<class... Args> class AbstractCallback : public BaseCallback
 {
 protected:
-	virtual ~AbstractCallback();
+	AbstractCallback() : v(nullptr) {}
+	virtual ~AbstractCallback() {};
 
 	friend class Event < Args... > ;
 
-	void Add(Event<Args...> *s){ v.push_back(s); }
-	void Remove(Event<Args...> *s){ v.erase(std::remove(v.begin(), v.end(), s), v.end()); }
+	void Add(Event<Args...> *s){ v = s; }
+	void Remove(){ v = nullptr; }
 
 	virtual void Call(Args... args) = 0;
 
-	std::vector<Event<Args...>*> v;
+	Event<Args...>* v;
 };
 
 template<class T, class... Args> class ConcreteCallback : public AbstractCallback < Args... >
@@ -50,7 +51,7 @@ template<class... Args> class Event
 {
 public:
 	Event(){ }
-	~Event(){ for (auto i : v) i->Remove(this); }
+	~Event(){ for (auto i : v) i->Remove(); }
 
 	void Connect(AbstractCallback<Args...> &s){ v.push_back(&s); s.Add(this); }
 	void Disconnect(AbstractCallback<Args...> &s){ v.erase(std::remove(v.begin(), v.end(), &s), v.end()); }
@@ -63,11 +64,6 @@ private:
 
 	std::vector<AbstractCallback<Args...>*> v;
 };
-
-template<class... Args> AbstractCallback<Args...>::~AbstractCallback()
-{
-	for (auto i : v) i->Disconnect(*this);
-}
 
 template<class T, class... Args> ConcreteCallback<T, Args...>::ConcreteCallback(T *t, void(T::*f)(Args...), Event<Args...> &s) : t(t), f(f)
 {
