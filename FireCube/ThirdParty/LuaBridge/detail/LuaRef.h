@@ -1112,6 +1112,17 @@ public:
   }
   /** @} */
 
+  std::string className() const
+  {
+	  lua_rawgeti(m_L, LUA_REGISTRYINDEX, m_ref);	  
+	  lua_getmetatable(m_L, -1);
+	  lua_pushstring(m_L, "__type");
+	  lua_rawget(m_L, -2);
+	  std::string type = lua_tostring(m_L, -1);
+	  lua_pop(m_L, 3);
+	  return type;
+  }
+
   //============================================================================
 
 private:

@@ -797,6 +797,20 @@ private:
       return *this;
     }
 
+	//--------------------------------------------------------------------------
+	/**
+	Add or replace a member function as a free function.
+	*/
+	template <class FP>
+	Class <T>& addFunctionFree(char const* name, FP const fp)
+	{
+		new (lua_newuserdata(L, sizeof(fp))) FP(fp);
+		lua_pushcclosure(L, &CFunc::Call <FP>::f, 1);
+		rawsetfield(L, -3, name);
+
+		return *this;
+	}
+
     //--------------------------------------------------------------------------
     /**
         Add or replace a member lua_CFunction.
