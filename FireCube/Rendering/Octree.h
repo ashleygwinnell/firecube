@@ -2,7 +2,7 @@
 
 #include "Core/Object.h"
 #include "Utils/utils.h"
-#include "Rendering/Renderable.h"
+#include "Scene/Renderable.h"
 
 namespace FireCube
 {

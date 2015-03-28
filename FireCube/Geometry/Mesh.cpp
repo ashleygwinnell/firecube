@@ -13,7 +13,7 @@
 #include "Rendering/Technique.h"
 #include "Core/ResourceCache.h"
 #include "Geometry/Geometry.h"
-#include "Geometry/Material.h"
+#include "Rendering/Material.h"
 #include "Rendering/RenderingTypes.h"
 
 using namespace FireCube;

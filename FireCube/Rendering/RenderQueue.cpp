@@ -1,12 +1,5 @@
 #include <algorithm>
-
-#include "Geometry/Geometry.h"
-#include "Geometry/Material.h"
 #include "Rendering/RenderQueue.h"
-#include "Scene/Light.h"
-#include "Scene/Node.h"
-#include "Rendering/Texture.h"
-#include "Rendering/Shader.h"
 
 using namespace FireCube;
 

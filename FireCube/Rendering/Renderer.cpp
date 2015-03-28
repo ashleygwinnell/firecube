@@ -1,11 +1,9 @@
 #include <vector>
 #include <map>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
 #include "ThirdParty/GLEW/glew.h"
 #include "Geometry/Geometry.h"
-#include "Geometry/Material.h"
+#include "Rendering/Material.h"
 #include "Rendering/Texture.h"
 #include "Rendering/VertexBuffer.h"
 #include "Rendering/Shader.h"
@@ -13,7 +11,6 @@
 #include "Rendering/Font.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/RenderQueue.h"
-#include "Rendering/privateFont.h"
 #include "Rendering/RenderPath.h"
 #include "Rendering/ShaderTemplate.h"
 #include "Scene/Light.h"

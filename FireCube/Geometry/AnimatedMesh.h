@@ -2,7 +2,7 @@
 #include "Utils/utils.h"
 #include "Core/Resource.h"
 #include "Math/BoundingBox.h"
-#include "Geometry/Material.h"
+#include "Rendering/Material.h"
 #include "Rendering/VertexBuffer.h"
 
 struct aiScene;

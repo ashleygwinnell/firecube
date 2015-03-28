@@ -129,14 +129,8 @@
     <ClCompile Include="Application\Input.cpp">
       <Filter>Application</Filter>
     </ClCompile>
-    <ClCompile Include="Geometry\Material.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\Light.cpp">
       <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Geometry\Terrain.cpp">
-      <Filter>Geometry</Filter>
     </ClCompile>
     <ClCompile Include="ThirdParty\GLEW\glew.c">
       <Filter>ThirdParty\GLEW</Filter>
@@ -164,12 +158,6 @@
     </ClCompile>
     <ClCompile Include="Core\Component.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\Renderable.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\StaticModel.cpp">
-      <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\GraphicsResource.cpp">
       <Filter>Rendering</Filter>
@@ -204,9 +192,6 @@
     <ClCompile Include="Core\Variant.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\CustomGeometry.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="Geometry\Mesh.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
@@ -217,9 +202,6 @@
       <Filter>Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\DebugRenderer.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\Scene.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\RenderPath.cpp">
@@ -240,9 +222,6 @@
     <ClCompile Include="Scene\OrbitCamera.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\ParticleEmitter.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="Physics\CollisionShape.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
@@ -260,9 +239,6 @@
     </ClCompile>
     <ClCompile Include="Math\quat.cpp">
       <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\AnimatedModel.cpp">
-      <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="ThirdParty\STB\stb_image_write.c">
       <Filter>ThirdParty\STB</Filter>
@@ -290,6 +266,30 @@
     </ClCompile>
     <ClCompile Include="Scripting\LuaFile.cpp">
       <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Material.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Terrain.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\AnimatedModel.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\CustomGeometry.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\ParticleEmitter.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Renderable.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\StaticModel.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -368,14 +368,8 @@
     <ClInclude Include="Application\Input.h">
       <Filter>Application</Filter>
     </ClInclude>
-    <ClInclude Include="Geometry\Material.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\Light.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry\Terrain.h">
-      <Filter>Geometry</Filter>
     </ClInclude>
     <ClInclude Include="ThirdParty\GLEW\glew.h">
       <Filter>ThirdParty\GLEW</Filter>
@@ -404,12 +398,6 @@
     </ClInclude>
     <ClInclude Include="Core\Component.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\Renderable.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\StaticModel.h">
-      <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\GraphicsResource.h">
       <Filter>Rendering</Filter>
@@ -441,9 +429,6 @@
     <ClInclude Include="Core\Variant.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\CustomGeometry.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Geometry\Mesh.h">
       <Filter>Geometry</Filter>
     </ClInclude>
@@ -457,9 +442,6 @@
       <Filter>Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\DebugRenderer.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\Scene.h">
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\RenderPath.h">
@@ -479,9 +461,6 @@
     </ClInclude>
     <ClInclude Include="Scene\OrbitCamera.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\ParticleEmitter.h">
-      <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Physics\CollisionShape.h">
       <Filter>Physics</Filter>
@@ -503,9 +482,6 @@
     </ClInclude>
     <ClInclude Include="Math\quat.h">
       <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\AnimatedModel.h">
-      <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="ThirdParty\STB\stb_image_write.h">
       <Filter>ThirdParty\STB</Filter>
@@ -533,6 +509,30 @@
     </ClInclude>
     <ClInclude Include="Scripting\LuaFile.h">
       <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Material.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Terrain.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\AnimatedModel.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\CustomGeometry.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\ParticleEmitter.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Renderable.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\StaticModel.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

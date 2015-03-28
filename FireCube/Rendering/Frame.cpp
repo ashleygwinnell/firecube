@@ -1,5 +1,5 @@
 #include "Rendering/Frame.h"
-#include "Rendering/Renderable.h"
+#include "Scene/Renderable.h"
 #include "Rendering/Shader.h"
 #include "Rendering/Texture.h"
 #include "Rendering/IndexBuffer.h"
@@ -9,9 +9,9 @@
 #include "Rendering/RenderPath.h"
 #include "Rendering/RenderSurface.h"
 #include "Geometry/Geometry.h"
-#include "Geometry/Material.h"
+#include "Rendering/Material.h"
 #include "Scene/Camera.h"
-#include "Scene.h"
+#include "Scene/Scene.h"
 #include "Utils/Logger.h"
 #include "Core/Engine.h"
 

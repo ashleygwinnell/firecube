@@ -1,5 +1,4 @@
 #include "Geometry/GeometryGenerator.h"
-#include "Geometry/Material.h"
 #include "Rendering/VertexBuffer.h"
 #include "Rendering/IndexBuffer.h"
 #include "Core/Engine.h"

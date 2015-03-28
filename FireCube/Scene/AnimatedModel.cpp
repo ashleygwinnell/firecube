@@ -1,6 +1,6 @@
 #include <sstream>
 
-#include "Rendering/AnimatedModel.h"
+#include "Scene/AnimatedModel.h"
 #include "Scene/Node.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/AnimatedMesh.h"

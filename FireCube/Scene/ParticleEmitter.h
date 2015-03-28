@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderable.h"
+#include "Scene/Renderable.h"
 
 namespace FireCube
 {

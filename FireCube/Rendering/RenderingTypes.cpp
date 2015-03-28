@@ -1,5 +1,4 @@
 #include "Rendering/RenderingTypes.h"
-#include "Geometry/Material.h"
 #include "Utils/StringHash.h"
 
 namespace FireCube

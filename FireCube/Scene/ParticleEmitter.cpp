@@ -1,6 +1,6 @@
 #include <sstream>
 
-#include "Rendering/ParticleEmitter.h"
+#include "Scene/ParticleEmitter.h"
 #include "Scene/Node.h"
 #include "Geometry/Geometry.h"
 #include "Rendering/Shader.h"
@@ -8,7 +8,6 @@
 #include "Core/Engine.h"
 #include "Core/ResourceCache.h"
 #include "Rendering/VertexBuffer.h"
-#include "Geometry/Material.h"
 
 using namespace FireCube;
 

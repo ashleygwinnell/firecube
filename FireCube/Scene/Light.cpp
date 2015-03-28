@@ -1,6 +1,6 @@
 #include "Scene/Light.h"
 #include "Scene/Node.h"
-#include "Rendering/Scene.h"
+#include "Scene/Scene.h"
 #include "Scene/Camera.h"
 
 using namespace FireCube;

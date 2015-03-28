@@ -4,7 +4,7 @@
 #include "Core/Variant.h"
 #include "Core/Engine.h"
 #include "Rendering/Renderer.h"
-#include "Geometry/Material.h"
+#include "Rendering/Material.h"
 #include "Rendering/ShaderTemplate.h"
 #include "Core/ResourceCache.h"
 #include "Rendering/RenderSurface.h"

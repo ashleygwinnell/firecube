@@ -4,7 +4,7 @@
 
 #include "Utils/Filesystem.h"
 #include "Core/Engine.h"
-#include "Rendering/Scene.h"
+#include "Scene/Scene.h"
 
 using namespace FireCube;
 
