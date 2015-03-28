@@ -54,3 +54,9 @@ void LuaScript::CreateObject(const std::string &objectName)
 	updateFunction = objectTable["Update"];
 	initFunction(object, this);
 }
+
+void LuaScript::CreateObject(LuaFile *luaFile, const std::string &objectName)
+{
+	engine->GetLuaState()->ExecuteFile(luaFile);
+	CreateObject(objectName);
+}

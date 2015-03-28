@@ -8,12 +8,15 @@
 namespace FireCube
 {
 
+class LuaFile;
+
 class FIRECUBE_API LuaScript : public Component
 {
 	OBJECT(LuaScript);
 public:
 	LuaScript(Engine *engine);
 	void CreateObject(const std::string &objectName);
+	void CreateObject(LuaFile *luaFile, const std::string &objectName);
 private:
 	void Update(float time);
 	
