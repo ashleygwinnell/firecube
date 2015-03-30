@@ -102,6 +102,8 @@ void Frame::Render(Renderer *renderer)
 
 			for (auto &lightQueue : lightQueues)
 			{
+				if (lightQueue.first->IsEnabled() == false)
+					continue;
 				RenderShadowMap(renderer, lightQueue.first, lightQueue.second[SHADOW_PASS]);
 				SetRenderTargets(renderer, command);
 				RenderQueue &queue = lightQueue.second[command.pass];
@@ -234,6 +236,10 @@ void Frame::UpdateLightQueues()
 	lightQueues.resize(lights.size());
 	for (unsigned int i = 0; i < lightQueues.size(); ++i)
 	{
+		lightQueues[i].first = lights[i];
+		if (lights[i]->IsEnabled() == false)
+			continue;
+
 		unsigned int vertexShaderPermutation = 0;
 		unsigned int fragmentShaderPermutation = 0;
 
@@ -255,9 +261,7 @@ void Frame::UpdateLightQueues()
 		if (fogEnabled)
 		{
 			fragmentShaderPermutation += MAX_FRAGMENT_SHADER_LIGHT_PERMUTATIONS;
-		}
-
-		lightQueues[i].first = lights[i];
+		}		
 
 		Camera *lightCamera = lights[i]->GetCamera();
 		Node *lightCameraNode = lightCamera->GetNode();
