@@ -51,6 +51,8 @@ public:
 	unsigned int GetCollisionQueryMask() const;
 	void SetCastShadow(bool castShadow);
 	bool GetCastShadow() const;
+	void SetReceiveShadow(bool receiveShadow);
+	bool GetReceiveShadow() const;	
 	void SetLightMask(unsigned int lightMask);
 	unsigned int GetLightMask() const;
 
@@ -70,6 +72,7 @@ protected:
 	unsigned int collisionQueryMask;
 	unsigned int lightMask;
 	bool castShadow;
+	bool receiveShadow;
 private:
 
 };

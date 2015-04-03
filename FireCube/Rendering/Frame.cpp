@@ -316,8 +316,11 @@ void Frame::UpdateLightQueues()
 
 							if (lights[i]->GetCastShadow() && (lights[i]->GetLightType() == LightType::DIRECTIONAL || lights[i]->GetLightType() == LightType::SPOT))
 							{
-								currentPartFragmentShaderPermutation += 3;
-								currentPartVertexShaderPermutation += 3;
+								if (renderable->GetReceiveShadow())
+								{
+									currentPartFragmentShaderPermutation += 3;
+									currentPartVertexShaderPermutation += 3;
+								}
 								if (renderable->GetCastShadow())
 								{
 									visibleObjectsBoundingBox.Expand(renderable->GetWorldBoundingBox());
