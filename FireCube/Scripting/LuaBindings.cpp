@@ -49,15 +49,22 @@ void LuaBindings::InitMath(lua_State *luaState)
 		.endClass();
 }
 
+Component *GetComponent(Node *node, const std::string &type)
+{
+	return node->GetComponent(type);
+}
+
 void LuaBindings::InitScene(lua_State *luaState)
 {
 	getGlobalNamespace(luaState)		
 		.beginClass<Node>("Node")
 			.addFunction("Rotate", &Node::Rotate)
 			.addFunction("Move", &Node::Move)
+			.addFunctionFree("GetComponent", &GetComponent)
 		.endClass()
 		.beginClass<Component>("Component")
 			.addFunction("GetNode", &Component::GetNode)
+			.addProperty("enabled", &Component::IsEnabled, &Component::SetEnabled)
 		.endClass()
 		.deriveClass <LuaScript, Component>("LuaScript")
 		.endClass();
