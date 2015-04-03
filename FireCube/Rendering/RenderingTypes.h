@@ -56,7 +56,7 @@ enum class RenderSurfaceType
 
 enum class BlendMode
 {
-	REPLACE, ADD, ALPHA
+	REPLACE, ADD, ALPHA, ADDALPHA
 };
 
 enum class DepthTest

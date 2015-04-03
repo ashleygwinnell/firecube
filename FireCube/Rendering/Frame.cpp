@@ -104,7 +104,10 @@ void Frame::Render(Renderer *renderer)
 			{
 				if (lightQueue.first->IsEnabled() == false)
 					continue;
-				RenderShadowMap(renderer, lightQueue.first, lightQueue.second[SHADOW_PASS]);
+				if (command.pass == LIGHT_PASS) // Only render shadow maps for main lighting pass
+				{
+					RenderShadowMap(renderer, lightQueue.first, lightQueue.second[SHADOW_PASS]);
+				}
 				SetRenderTargets(renderer, command);
 				RenderQueue &queue = lightQueue.second[command.pass];
 				queue.Sort();

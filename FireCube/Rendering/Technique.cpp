@@ -226,6 +226,14 @@ BlendMode Technique::GetBlendModeFromString(const std::string &str)
 	{
 		return BlendMode::ADD;
 	}
+	else if (str == "alpha")
+	{
+		return BlendMode::ALPHA;
+	}
+	else if (str == "addalpha")
+	{
+		return BlendMode::ADDALPHA;
+	}
 
 	return BlendMode::REPLACE;
 }

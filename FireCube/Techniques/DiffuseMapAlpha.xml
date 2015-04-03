@@ -1,0 +1,5 @@
+<technique>
+	<pass name = "alpha" vs= "Shaders/default.vert" fs = "Shaders/default.frag" defines = "DIFFUSE_MAPPING" blend = "alpha" depth_write = "false" />		
+	<pass name = "light_alpha" vs= "Shaders/default.vert" fs = "Shaders/default.frag" defines = "PER_PIXEL_LIGHTING DIFFUSE_MAPPING" blend = "addalpha" depth_write = "false" />
+	<pass name = "shadow" vs= "Shaders/shadow.vert" fs = "Shaders/shadow.frag" />
+</technique>

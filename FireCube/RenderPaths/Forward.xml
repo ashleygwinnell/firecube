@@ -3,4 +3,5 @@
 <command type = "basepass" pass = "base" />
 <command type = "lightpass" pass = "light" />
 <command type = "basepass" pass = "alpha" />
+<command type = "lightpass" pass = "light_alpha" />
 </renderpath>
