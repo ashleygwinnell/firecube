@@ -28,6 +28,7 @@ StringHash PARAM_SHAODW_INTENSITY("shadowIntensity");
 StringHash BASE_PASS("base");
 StringHash LIGHT_PASS("light");
 StringHash SHADOW_PASS("shadow");
+StringHash ALPHA_PASS("alpha");
 
 ClearBufferType FireCube::operator | (const ClearBufferType &lhs, const ClearBufferType &rhs)
 {

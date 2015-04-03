@@ -105,5 +105,6 @@ extern StringHash PARAM_SHAODW_INTENSITY;
 extern StringHash BASE_PASS;
 extern StringHash LIGHT_PASS;
 extern StringHash SHADOW_PASS;
+extern StringHash ALPHA_PASS;
 
 }

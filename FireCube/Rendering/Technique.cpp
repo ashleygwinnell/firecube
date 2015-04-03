@@ -173,6 +173,7 @@ bool Technique::Load(const std::string &filename)
 		if (element->ValueStr() == "pass")
 		{			
 			std::string passName = element->Attribute("name");
+			StringHash passNameHash(passName);
 			std::string vertexShaderTemplate = element->Attribute("vs");
 			std::string fragmentShaderTemplate = element->Attribute("fs");
 			
@@ -183,7 +184,7 @@ bool Technique::Load(const std::string &filename)
 			std::string blendMode = blendStr == nullptr ? "replace" : blendStr;
 
 			const char *isBaseStr = element->Attribute("is_base");
-			bool isBase = isBaseStr ? Variant::FromString(isBaseStr).GetBool() : (passName == "base" || passName == "alpha" || passName == "shadow");
+			bool isBase = isBaseStr ? Variant::FromString(isBaseStr).GetBool() : (passNameHash == BASE_PASS || passNameHash == ALPHA_PASS || passNameHash == SHADOW_PASS);
 
 			const char *depthWriteStr = element->Attribute("depth_write");
 			bool depthWrite = depthWriteStr ? Variant::FromString(depthWriteStr).GetBool() : true;
@@ -202,7 +203,7 @@ bool Technique::Load(const std::string &filename)
 			pass->SetIsBase(isBase);
 			pass->SetDepthWrite(depthWrite);
 			pass->SetDepthTest(Technique::GetDepthTestFromString(depthTest));
-			passes[StringHash(passName)] = pass;
+			passes[passNameHash] = pass;
 		}
 	}
 	return true;
