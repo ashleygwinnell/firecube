@@ -1,9 +1,9 @@
 <renderpath>
 <rendersurface name = "temp" size_multiplier = "1 1" />
 <command type = "clear" color = "fogcolor" output = "temp" />
-<command type = "basepass" pass = "base" output = "temp" />
-<command type = "lightpass" pass = "light" output = "temp" />
-<command type = "basepass" pass = "alpha" output = "temp" />
+<command type = "basepass" pass = "base_opaque" output = "temp" />
+<command type = "lightpass" pass = "light_opaque" output = "temp" />
+<command type = "basepass" pass = "base_alpha" output = "temp" />
 <command type = "lightpass" pass = "light_alpha" output = "temp" />
 <command type = "quad" vs = "Shaders/grayscale.vert" fs = "Shaders/grayscale.frag" defines = "">
 	<texture unit = "diffuse" name = "temp" />

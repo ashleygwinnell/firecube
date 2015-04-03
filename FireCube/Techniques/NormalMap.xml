@@ -1,5 +1,5 @@
 <technique>
-	<pass name = "base" vs= "Shaders/default.vert" fs = "Shaders/default.frag" defines = "" />
-	<pass name = "light" vs= "Shaders/default.vert" fs = "Shaders/default.frag"  blend = "add" depth_write = "false" depth_test = "equal" defines = "PER_PIXEL_LIGHTING NORMAL_MAPPING" />
+	<pass name = "base_opaque" vs= "Shaders/default.vert" fs = "Shaders/default.frag" defines = "" />
+	<pass name = "light_opaque" vs= "Shaders/default.vert" fs = "Shaders/default.frag"  blend = "add" depth_write = "false" depth_test = "equal" defines = "PER_PIXEL_LIGHTING NORMAL_MAPPING" />
 	<pass name = "shadow" vs= "Shaders/shadow.vert" fs = "Shaders/shadow.frag" />
 </technique>

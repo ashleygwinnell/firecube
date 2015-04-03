@@ -25,10 +25,10 @@ StringHash PARAM_SKIN_MATRICES("skinMatrices");
 StringHash PARAM_LIGHT_BIAS_MVP_MATRIX("lightBiasMVPMatrix");
 StringHash PARAM_SHAODW_INTENSITY("shadowIntensity");
 
-StringHash BASE_PASS("base");
-StringHash LIGHT_PASS("light");
+StringHash BASE_PASS("base_opaque");
+StringHash LIGHT_PASS("light_opaque");
 StringHash SHADOW_PASS("shadow");
-StringHash ALPHA_PASS("alpha");
+StringHash ALPHA_PASS("base_alpha");
 
 ClearBufferType FireCube::operator | (const ClearBufferType &lhs, const ClearBufferType &rhs)
 {
