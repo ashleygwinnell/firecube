@@ -7,6 +7,7 @@ namespace FireCube
 
 class CollisionShape;
 class CharacterController;
+class RigidBody;
 
 class PhysicsWorld : public Component
 {
@@ -18,6 +19,10 @@ public:
 	
 	void AddCharacterController(CharacterController *characterController);
 	void RemoveCharacterController(CharacterController *characterController);
+
+	void AddRigidBody(RigidBody *rigidBody);
+	void RemoveRigidBody(RigidBody *rigidBody);
+
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
 private:
 	void Update(float deltaTime);
@@ -26,6 +31,7 @@ private:
 
 	std::vector<CollisionShape *> collisionShapes;
 	std::vector<CharacterController *> characterControllers;
+	std::vector<RigidBody *> rigidBodies;
 };
 
 }

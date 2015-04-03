@@ -3,6 +3,7 @@
 #include "Physics/PhysicsWorld.h"
 #include "Physics/CharacterController.h"
 #include "Physics/CollisionShape.h"
+#include "Physics/RigidBody.h"
 #include "Core/Events.h"
 #include "Scene/Node.h"
 
@@ -31,6 +32,16 @@ void PhysicsWorld::AddCharacterController(CharacterController *characterControll
 void PhysicsWorld::RemoveCharacterController(CharacterController *characterController)
 {
 	characterControllers.erase(std::remove(characterControllers.begin(), characterControllers.end(), characterController), characterControllers.end());
+}
+
+void PhysicsWorld::AddRigidBody(RigidBody *rigidBody)
+{
+	rigidBodies.push_back(rigidBody);
+}
+
+void PhysicsWorld::RemoveRigidBody(RigidBody *rigidBody)
+{
+	rigidBodies.erase(std::remove(rigidBodies.begin(), rigidBodies.end(), rigidBody), rigidBodies.end());
 }
 
 void PhysicsWorld::Update(float deltaTime)
@@ -107,6 +118,11 @@ void PhysicsWorld::Update(float deltaTime)
 		}
 		characterController->velocity += vec3(0, -0.2f, 0) * deltaTime;
 	}	
+
+	for (auto rigidBody : rigidBodies)
+	{
+		rigidBody->node->Move(rigidBody->velocity * deltaTime);
+	}
 }
 
 void PhysicsWorld::MarkedDirty()

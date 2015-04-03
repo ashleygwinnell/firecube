@@ -48,6 +48,7 @@
     <ClCompile Include="Physics\CharacterController.cpp" />
     <ClCompile Include="Physics\CollisionShape.cpp" />
     <ClCompile Include="Physics\PhysicsWorld.cpp" />
+    <ClCompile Include="Physics\RigidBody.cpp" />
     <ClCompile Include="Rendering\DebugRenderer.cpp" />
     <ClCompile Include="Rendering\Frame.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
@@ -131,6 +132,7 @@
     <ClInclude Include="Physics\CharacterController.h" />
     <ClInclude Include="Physics\CollisionShape.h" />
     <ClInclude Include="Physics\PhysicsWorld.h" />
+    <ClInclude Include="Physics\RigidBody.h" />
     <ClInclude Include="Rendering\DebugRenderer.h" />
     <ClInclude Include="Rendering\Frame.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />

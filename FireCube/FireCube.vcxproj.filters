@@ -291,6 +291,9 @@
     <ClCompile Include="Scene\StaticModel.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\RigidBody.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -533,6 +536,9 @@
     </ClInclude>
     <ClInclude Include="Scene\StaticModel.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\RigidBody.h">
+      <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
