@@ -38,7 +38,7 @@ uniform vec4 materialSpecular;
 uniform float materialShininess;
 void main()
 {
-	float alpha = 1.0;
+	float alpha = materialDiffuse.a;
 	#ifdef DIFFUSE_MAPPING
 		vec4 textureColor = texture(diffuseMap, texcoord.xy);
 		vec3 diffColor = materialDiffuse.rgb * textureColor.rgb;
