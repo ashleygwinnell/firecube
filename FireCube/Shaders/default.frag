@@ -42,7 +42,7 @@ void main()
 	#ifdef DIFFUSE_MAPPING
 		vec4 textureColor = texture(diffuseMap, texcoord.xy);
 		vec3 diffColor = materialDiffuse.rgb * textureColor.rgb;
-		alpha = textureColor.a;
+		alpha *= textureColor.a;
 	#else			
 		vec3 diffColor = materialDiffuse.rgb;			
 	#endif
