@@ -35,7 +35,7 @@ template<class T, class... Args> class ConcreteCallback : public AbstractCallbac
 {
 public:
 	ConcreteCallback(Object *sender, T *t, void(T::*f)(Args...), Event<Args...> &s);
-
+	virtual ~ConcreteCallback();
 private:
 	ConcreteCallback(const ConcreteCallback&);
 	void operator=(const ConcreteCallback&);
@@ -55,7 +55,11 @@ public:
 	~Event(){ for (auto i : v) i.second->Remove(); }
 
 	void Connect(Object *sender, AbstractCallback<Args...> &s){ v.push_back(std::make_pair(sender, &s)); s.Add(this); }
-	void Disconnect(Object *sender, AbstractCallback<Args...> &s){ v.erase(std::remove(v.begin(), v.end(), std::make_pair(sender, &s)), v.end()); }
+	void Disconnect(AbstractCallback<Args...> &s)
+	{ 
+		auto newEnd = std::remove_if(v.begin(), v.end(), [&s](const std::pair<Object *, AbstractCallback<Args...>*> &i) { return i.second == &s; });
+		v.erase(newEnd, v.end());
+	}
 
 	void operator()(Object *sender, Args... args){ for (auto i : v) if (i.first == nullptr || i.first == sender) i.second->Call(args...); }
 
@@ -69,6 +73,14 @@ private:
 template<class T, class... Args> ConcreteCallback<T, Args...>::ConcreteCallback(Object *sender, T *t, void(T::*f)(Args...), Event<Args...> &s) : t(t), f(f)
 {
 	s.Connect(sender, *this);
+}
+
+template<class T, class... Args> ConcreteCallback<T, Args...>::~ConcreteCallback()
+{
+	if (v)
+	{
+		v->Disconnect(*this);
+	}
 }
 
 class Callback
