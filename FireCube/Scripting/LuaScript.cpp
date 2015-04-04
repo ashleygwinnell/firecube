@@ -8,7 +8,8 @@
 using namespace FireCube;
 using namespace luabridge;
 
-LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState()), initFunction(engine->GetLuaState()->GetState()), updateFunction(engine->GetLuaState()->GetState())
+LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState()), initFunction(engine->GetLuaState()->GetState()), updateFunction(engine->GetLuaState()->GetState()),
+	handleInputFunction(engine->GetLuaState()->GetState())
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 }
@@ -75,4 +76,18 @@ LuaFunction *LuaScript::GetFunction(const std::string &functionName)
 LuaFunction *LuaScript::GetMemberFunction(const std::string &functionName)
 {
 	return GetFunction(objectName + "." + functionName);
+}
+
+void LuaScript::SubscribeToEventFromLua(const std::string &eventName, LuaRef function)
+{
+	if (eventName == "HandleInput")
+	{
+		handleInputFunction = function;
+		SubscribeToEvent(Events::HandleInput, &LuaScript::HandleInput);
+	}
+}
+
+void LuaScript::HandleInput(float time, const MappedInput &input)
+{
+	handleInputFunction(object, time, input);
 }

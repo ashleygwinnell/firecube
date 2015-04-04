@@ -25,7 +25,7 @@ bool App::Prepare()
 	SetTitle(std::string("FireCube Test Application"));
 	//GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
-	
+	GetInputManager().AddMapping(Key::Q, InputMappingType::ACTION, "Test");
 	SubscribeToEvent(Events::HandleInput, &App::HandleInput);
 	auto rr = resourceCache->GetResource<AnimatedMesh>("../Assets/Models/AnimationTest.fbx");
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Application/Input.h"
 #include "Utils/utils.h"
 #include "Scripting/LuaFunction.h"
 #include "Core/Component.h"
@@ -20,6 +21,8 @@ public:
 	void CreateObject(LuaFile *luaFile, const std::string &objectName);
 	LuaFunction *GetFunction(const std::string &functionName);
 	LuaFunction *GetMemberFunction(const std::string &functionName);
+	void SubscribeToEventFromLua(const std::string &eventName, luabridge::LuaRef function);
+	void HandleInput(float time, const MappedInput &input);
 
 	template<class... Args>
 	void CallMemberFunction(LuaFunction *function, Args&&... args)
@@ -61,7 +64,7 @@ private:
 
 	std::string objectName;
 	luabridge::LuaRef object;
-	luabridge::LuaRef initFunction, updateFunction;
+	luabridge::LuaRef initFunction, updateFunction, handleInputFunction;
 };
 
 }
