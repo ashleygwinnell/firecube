@@ -294,6 +294,9 @@
     <ClCompile Include="Physics\RigidBody.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Scripting\LuaFunction.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -539,6 +542,9 @@
     </ClInclude>
     <ClInclude Include="Physics\RigidBody.h">
       <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripting\LuaFunction.h">
+      <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

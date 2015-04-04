@@ -56,3 +56,4 @@
 #include "Scripting/LuaState.h"
 #include "Scripting/LuaScript.h"
 #include "Scripting/LuaFile.h"
+#include "Scripting/LuaFunction.h"

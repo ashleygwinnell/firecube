@@ -1,4 +1,5 @@
 #include "Scripting/LuaState.h"
+#include "Scripting/LuaFunction.h"
 #include "Utils/Logger.h"
 #include "lua.hpp"
 #include "LuaBridge.h"
@@ -31,6 +32,10 @@ LuaState::LuaState(Engine *engine) : Object(engine)
 
 LuaState::~LuaState()
 {
+	for (auto &f : functions)
+	{
+		delete f.second;
+	}
 	lua_close(luaState);
 }
 
@@ -108,4 +113,42 @@ void LuaState::ExecuteFile(LuaFile *luaFile)
 lua_State *LuaState::GetState()
 {
 	return luaState;
+}
+
+LuaFunction *LuaState::GetFunction(const std::string &functionName)
+{
+	StringHash functionNameHash(functionName);
+	auto functionIter = functions.find(functionNameHash);
+	if (functionIter != functions.end())
+	{
+		return functionIter->second;
+	}
+
+	auto fields = Split(functionName, '.');
+	LuaRef ref = getGlobal(luaState, fields[0].c_str());
+
+	if (fields.size() > 1)
+	{
+		unsigned int i = 1;
+		while (i < fields.size())
+		{
+			if (ref.isTable() == false)
+			{
+				LOGERROR(fields[i - 1], " is not a table, when getting function: ", functionName);
+				return nullptr;
+			}
+			LuaRef fieldRef = ref[fields[i++]];
+			ref = fieldRef;
+		}
+	}
+
+	if (ref.isFunction() == false)
+	{
+		LOGERROR(fields.back(), " is not a function, when getting function: ", functionName);
+		return nullptr;
+	}
+	
+	LuaFunction *ret = new LuaFunction(ref);
+	functions[functionNameHash] = ret;
+	return ret;
 }

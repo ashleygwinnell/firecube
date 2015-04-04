@@ -80,6 +80,7 @@
     <ClCompile Include="Scene\Terrain.cpp" />
     <ClCompile Include="Scripting\LuaBindings.cpp" />
     <ClCompile Include="Scripting\LuaFile.cpp" />
+    <ClCompile Include="Scripting\LuaFunction.cpp" />
     <ClCompile Include="Scripting\LuaScript.cpp" />
     <ClCompile Include="Scripting\LuaState.cpp" />
     <ClCompile Include="ThirdParty\GLEW\glew.c" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Scene\Terrain.h" />
     <ClInclude Include="Scripting\LuaBindings.h" />
     <ClInclude Include="Scripting\LuaFile.h" />
+    <ClInclude Include="Scripting\LuaFunction.h" />
     <ClInclude Include="Scripting\LuaScript.h" />
     <ClInclude Include="Scripting\LuaState.h" />
     <ClInclude Include="ThirdParty\GLEW\glew.h" />

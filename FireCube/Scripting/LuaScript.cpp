@@ -1,5 +1,6 @@
 #include "Utils/Logger.h"
 #include "Scripting/LuaScript.h"
+#include "Scripting/LuaFunction.h"
 #include "Core/Events.h"
 #include "Core/Engine.h"
 #include "Scripting/LuaState.h"
@@ -42,7 +43,7 @@ void LuaScript::CreateObject(const std::string &objectName)
 		LOGERROR("Can't init script object: ", objectName, " is not a table");
 		return;
 	}
-	
+		
 	object = newTable(state);
 	object.push(state);
 	objectTable.push(state);
@@ -57,10 +58,21 @@ void LuaScript::CreateObject(const std::string &objectName)
 	{
 		initFunction(object);
 	}
+	this->objectName = objectName;
 }
 
 void LuaScript::CreateObject(LuaFile *luaFile, const std::string &objectName)
 {
 	engine->GetLuaState()->ExecuteFile(luaFile);
 	CreateObject(objectName);
+}
+
+LuaFunction *LuaScript::GetFunction(const std::string &functionName)
+{
+	return engine->GetLuaState()->GetFunction(functionName);
+}
+
+LuaFunction *LuaScript::GetMemberFunction(const std::string &functionName)
+{
+	return GetFunction(objectName + "." + functionName);
 }

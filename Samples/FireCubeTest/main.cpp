@@ -40,7 +40,9 @@ bool App::Prepare()
 	//camera->GetNode()->Rotate(vec3(PI * 0.25f, 0.0f, 0.0f));	
 	childNode = root->CreateChild("Model");	
 	StaticModel *staticModel = childNode->CreateComponent<StaticModel>(resourceCache->GetResource<Mesh>("scene.3ds"));	
-	childNode->CreateComponent<LuaScript>()->CreateObject(resourceCache->GetResource<LuaFile>("../Samples/FireCubeTest/test.lua"), "Rotator");
+	auto luaScript = childNode->CreateComponent<LuaScript>();
+	luaScript->CreateObject(resourceCache->GetResource<LuaFile>("../Samples/FireCubeTest/test.lua"), "Rotator");	
+	luaScript->CallMemberFunction("SetRotationSpeed", vec3(0.0f, 5.0f, 0.0f));		
 	//childNode->Scale(vec3(0.05f));
 	//childNode->Move(vec3(0, 0.0251f, 0));
 	childNode = root->CreateChild("Model");
