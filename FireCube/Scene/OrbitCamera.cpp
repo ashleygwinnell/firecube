@@ -1,7 +1,10 @@
+#include "Core/Events.h"
 #include "Scene/OrbitCamera.h"
 #include "Scene/Node.h"
 
 using namespace FireCube;
+
+bool OrbitCamera::addedInputMapping = false;
 
 OrbitCamera::OrbitCamera(Engine *engine) : Camera(engine)
 {
@@ -12,29 +15,25 @@ OrbitCamera::OrbitCamera(Engine *engine) : Camera(engine)
 	minAngX = -(float)PI / 2.0f + 0.001f;
 	maxAngX = (float)PI / 2.0f - 0.001f;
 	zoomFactor = 1.0f;
+	SubscribeToEvent(Events::HandleInput, &OrbitCamera::HandleInput);
 }
 
-OrbitCamera::OrbitCamera(Engine *engine, InputManager &inputManager) : Camera(engine)
-{
-	rotation.Set(0.0f, 0.0f, 0.0f);
-	distance = 10.0f;
-	minDistance = 0.1f;
-	maxDistance = 100.0f;
-	minAngX = -(float)PI / 2.0f + 0.001f;
-	maxAngX = (float)PI / 2.0f - 0.001f;
-	zoomFactor = 1.0f;
-
-	RegisterWithInputManager(inputManager);
+OrbitCamera::OrbitCamera(Engine *engine, InputManager &inputManager) : OrbitCamera(engine)
+{	
+	if (!addedInputMapping)
+	{
+		AddInputManagerMappings(inputManager);
+	}
 }
 
-void OrbitCamera::RegisterWithInputManager(InputManager &inputManager)
+void OrbitCamera::AddInputManagerMappings(InputManager &inputManager)
 {
-	inputManager.AddInputListener(this);
 	inputManager.AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "OrbitCamera_Rotate", KeyModifier::NONE);
 	inputManager.AddMapping(Key::MOUSE_MIDDLE_BUTTON, InputMappingType::STATE, "OrbitCamera_Zoom", KeyModifier::NONE);
 	inputManager.AddMapping(AnalogInput::MOUSE_AXIS_X_RELATIVE, "OrbitCamera_MouseX");
 	inputManager.AddMapping(AnalogInput::MOUSE_AXIS_Y_RELATIVE, "OrbitCamera_MouseY");
 	inputManager.AddMapping(AnalogInput::MOUSE_WHEEL_Y_RELATIVE, "OrbitCamera_MouseWheelY");
+	addedInputMapping = true;
 }
 
 void OrbitCamera::SetMinDistance(float v)

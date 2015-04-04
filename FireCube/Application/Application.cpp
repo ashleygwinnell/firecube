@@ -125,109 +125,12 @@ void Application::Run()
 		deltaTime = (float) timer.Passed();
 		passedTime += deltaTime;
 		timer.Update();
+		inputManager.ResetInputState();
 		while(SDL_PollEvent(&event))
 		{
-			if (event.type == SDL_KEYDOWN)
-			{		
-				// Get the mapping between SDL key code and the engine's key enum
-				std::map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
-				if (k != keyMap.end())
-				{					
-					// Check if previously pressed and update the key state
-					std::map<int, bool>::iterator i = keyState.find(event.key.keysym.sym);
-					bool previouslyPressed = i != keyState.end() && i->second == true;
-					keyState[event.key.keysym.sym] = true;
-					SDL_Keymod keyMod = SDL_GetModState();
-					// Check for key modifiers
-					KeyModifier modifier = KeyModifier::NONE;
-					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? KeyModifier::LEFT_SHIFT : KeyModifier::NONE));
-					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? KeyModifier::RIGHT_SHIFT : KeyModifier::NONE));
-					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? KeyModifier::LEFT_CTRL : KeyModifier::NONE));
-					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? KeyModifier::RIGHT_CTRL : KeyModifier::NONE));
-					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? KeyModifier::LEFT_ALT : KeyModifier::NONE));
-					modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? KeyModifier::RIGHT_ALT : KeyModifier::NONE));
-					// Update the input manager's state
-					inputManager.SetRawKeyState(k->second, true, previouslyPressed, modifier);
-					
-				}
-			}
-			else if (event.type == SDL_KEYUP)
+			if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP || event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEMOTION || event.type == SDL_MOUSEWHEEL)
 			{
-				// Check for key modifiers
-				SDL_Keymod keyMod = SDL_GetModState();
-				KeyModifier modifier = KeyModifier::NONE;
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? KeyModifier::LEFT_SHIFT : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? KeyModifier::RIGHT_SHIFT : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? KeyModifier::LEFT_CTRL : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? KeyModifier::RIGHT_CTRL : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? KeyModifier::LEFT_ALT : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? KeyModifier::RIGHT_ALT : KeyModifier::NONE));
-				// Get the mapping between SDL key code and the engine's key enum
-				std::map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
-				if (k != keyMap.end())
-				{
-					// Update the input manager's state
-					inputManager.SetRawKeyState(k->second, false, true, modifier);
-					// Update the key state
-					keyState[event.key.keysym.sym] = false;
-				}
-			}
-			else if (event.type == SDL_MOUSEBUTTONDOWN)
-			{					
-				// Check for key modifiers
-				SDL_Keymod keyMod = SDL_GetModState();
-				KeyModifier modifier = KeyModifier::NONE;
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? KeyModifier::LEFT_SHIFT : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? KeyModifier::RIGHT_SHIFT : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? KeyModifier::LEFT_CTRL : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? KeyModifier::RIGHT_CTRL : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? KeyModifier::LEFT_ALT : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? KeyModifier::RIGHT_ALT : KeyModifier::NONE));
-				// Get the mapping between SDL key code and the engine's key enum
-				std::map<int, Key>::iterator k = mouseMap.find(event.button.button);
-				if (k != mouseMap.end())
-				{
-					// Check if previously pressed and update the key state
-					std::map<int, bool>::iterator i = mouseState.find(event.button.button);
-					bool previouslyPressed = i != mouseState.end() && i->second == true;
-					// Update the input manager's state
-					inputManager.SetRawKeyState(k->second, true, previouslyPressed, modifier);
-					mouseState[event.button.button] = true;
-				}
-			}
-			else if (event.type == SDL_MOUSEBUTTONUP)
-			{
-				// Check for key modifiers
-				SDL_Keymod keyMod = SDL_GetModState();
-				KeyModifier modifier = KeyModifier::NONE;
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LSHIFT) ? KeyModifier::LEFT_SHIFT : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RSHIFT) ? KeyModifier::RIGHT_SHIFT : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LCTRL) ? KeyModifier::LEFT_CTRL : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RCTRL) ? KeyModifier::RIGHT_CTRL : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_LALT) ? KeyModifier::LEFT_ALT : KeyModifier::NONE));
-				modifier = (KeyModifier) (modifier | ((keyMod & KMOD_RALT) ? KeyModifier::RIGHT_ALT : KeyModifier::NONE));
-				// Get the mapping between SDL key code and the engine's key enum
-				std::map<int, Key>::iterator k = mouseMap.find(event.button.button);
-				if (k != mouseMap.end())
-				{
-					// Update the input manager's state
-					inputManager.SetRawKeyState(k->second, false, true, modifier);
-					// Update the key state
-					mouseState[event.button.button] = false;
-				}
-			}
-			else if (event.type == SDL_MOUSEMOTION)
-			{
-				// Set the corresponding analog values of the input manager (mouse location)
-				inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_X_RELATIVE, (float)event.motion.xrel);
-				inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_Y_RELATIVE, (float)event.motion.yrel);
-				inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_X_ABSOLUTE, (float)event.motion.x);
-				inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_Y_ABSOLUTE, (float)event.motion.y);
-			}
-			else if (event.type == SDL_MOUSEWHEEL)
-			{	
-				// Set the corresponding analog values of the input manager (mouse wheel)
-				inputManager.SetRawAnalogValue(AnalogInput::MOUSE_WHEEL_Y_RELATIVE, ((float)event.wheel.y) / 60.0f);
+				ProcessInput(event);
 			}
 			else if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED)
 			{
@@ -246,8 +149,8 @@ void Application::Run()
 		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_X_ABSOLUTE, (float)x);
 		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_Y_ABSOLUTE, (float)y);		
 		renderer->SetTimeStep(deltaTime);
-		// Dispatch input to all input listeners
-		inputManager.DispatchInput(deltaTime);
+		// Dispatch input to all input listeners		
+		Events::HandleInput(this, deltaTime, inputManager.GetMappedInput());
 		// Update the scene
 		Events::Update(this, deltaTime);
 		Update(deltaTime);
@@ -376,4 +279,110 @@ Engine *Application::GetEngine()
 float Application::GetPassedTime() const
 {
 	return passedTime;
+}
+
+void Application::ProcessInput(const SDL_Event &event)
+{
+	if (event.type == SDL_KEYDOWN)
+	{
+		// Get the mapping between SDL key code and the engine's key enum
+		std::map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
+		if (k != keyMap.end())
+		{
+			// Check if previously pressed and update the key state
+			std::map<int, bool>::iterator i = keyState.find(event.key.keysym.sym);
+			bool previouslyPressed = i != keyState.end() && i->second == true;
+			keyState[event.key.keysym.sym] = true;
+			SDL_Keymod keyMod = SDL_GetModState();
+			// Check for key modifiers
+			KeyModifier modifier = KeyModifier::NONE;
+			modifier = (KeyModifier)(modifier | ((keyMod & KMOD_LSHIFT) ? KeyModifier::LEFT_SHIFT : KeyModifier::NONE));
+			modifier = (KeyModifier)(modifier | ((keyMod & KMOD_RSHIFT) ? KeyModifier::RIGHT_SHIFT : KeyModifier::NONE));
+			modifier = (KeyModifier)(modifier | ((keyMod & KMOD_LCTRL) ? KeyModifier::LEFT_CTRL : KeyModifier::NONE));
+			modifier = (KeyModifier)(modifier | ((keyMod & KMOD_RCTRL) ? KeyModifier::RIGHT_CTRL : KeyModifier::NONE));
+			modifier = (KeyModifier)(modifier | ((keyMod & KMOD_LALT) ? KeyModifier::LEFT_ALT : KeyModifier::NONE));
+			modifier = (KeyModifier)(modifier | ((keyMod & KMOD_RALT) ? KeyModifier::RIGHT_ALT : KeyModifier::NONE));
+			// Update the input manager's state
+			inputManager.SetRawKeyState(k->second, true, previouslyPressed, modifier);
+
+		}
+	}
+	else if (event.type == SDL_KEYUP)
+	{
+		// Check for key modifiers
+		SDL_Keymod keyMod = SDL_GetModState();
+		KeyModifier modifier = KeyModifier::NONE;
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_LSHIFT) ? KeyModifier::LEFT_SHIFT : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_RSHIFT) ? KeyModifier::RIGHT_SHIFT : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_LCTRL) ? KeyModifier::LEFT_CTRL : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_RCTRL) ? KeyModifier::RIGHT_CTRL : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_LALT) ? KeyModifier::LEFT_ALT : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_RALT) ? KeyModifier::RIGHT_ALT : KeyModifier::NONE));
+		// Get the mapping between SDL key code and the engine's key enum
+		std::map<int, Key>::iterator k = keyMap.find(event.key.keysym.sym);
+		if (k != keyMap.end())
+		{
+			// Update the input manager's state
+			inputManager.SetRawKeyState(k->second, false, true, modifier);
+			// Update the key state
+			keyState[event.key.keysym.sym] = false;
+		}
+	}
+	else if (event.type == SDL_MOUSEBUTTONDOWN)
+	{
+		// Check for key modifiers
+		SDL_Keymod keyMod = SDL_GetModState();
+		KeyModifier modifier = KeyModifier::NONE;
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_LSHIFT) ? KeyModifier::LEFT_SHIFT : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_RSHIFT) ? KeyModifier::RIGHT_SHIFT : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_LCTRL) ? KeyModifier::LEFT_CTRL : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_RCTRL) ? KeyModifier::RIGHT_CTRL : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_LALT) ? KeyModifier::LEFT_ALT : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_RALT) ? KeyModifier::RIGHT_ALT : KeyModifier::NONE));
+		// Get the mapping between SDL key code and the engine's key enum
+		std::map<int, Key>::iterator k = mouseMap.find(event.button.button);
+		if (k != mouseMap.end())
+		{
+			// Check if previously pressed and update the key state
+			std::map<int, bool>::iterator i = mouseState.find(event.button.button);
+			bool previouslyPressed = i != mouseState.end() && i->second == true;
+			// Update the input manager's state
+			inputManager.SetRawKeyState(k->second, true, previouslyPressed, modifier);
+			mouseState[event.button.button] = true;
+		}
+	}
+	else if (event.type == SDL_MOUSEBUTTONUP)
+	{
+		// Check for key modifiers
+		SDL_Keymod keyMod = SDL_GetModState();
+		KeyModifier modifier = KeyModifier::NONE;
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_LSHIFT) ? KeyModifier::LEFT_SHIFT : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_RSHIFT) ? KeyModifier::RIGHT_SHIFT : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_LCTRL) ? KeyModifier::LEFT_CTRL : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_RCTRL) ? KeyModifier::RIGHT_CTRL : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_LALT) ? KeyModifier::LEFT_ALT : KeyModifier::NONE));
+		modifier = (KeyModifier)(modifier | ((keyMod & KMOD_RALT) ? KeyModifier::RIGHT_ALT : KeyModifier::NONE));
+		// Get the mapping between SDL key code and the engine's key enum
+		std::map<int, Key>::iterator k = mouseMap.find(event.button.button);
+		if (k != mouseMap.end())
+		{
+			// Update the input manager's state
+			inputManager.SetRawKeyState(k->second, false, true, modifier);
+			// Update the key state
+			mouseState[event.button.button] = false;
+		}
+	}
+	else if (event.type == SDL_MOUSEMOTION)
+	{
+		// Set the corresponding analog values of the input manager (mouse location)
+		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_X_RELATIVE, (float)event.motion.xrel);
+		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_Y_RELATIVE, (float)event.motion.yrel);
+		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_X_ABSOLUTE, (float)event.motion.x);
+		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_Y_ABSOLUTE, (float)event.motion.y);
+	}
+	else if (event.type == SDL_MOUSEWHEEL)
+	{
+		// Set the corresponding analog values of the input manager (mouse wheel)
+		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_WHEEL_Y_RELATIVE, ((float)event.wheel.y) / 60.0f);
+	}
 }

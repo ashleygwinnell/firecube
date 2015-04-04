@@ -15,7 +15,7 @@ namespace FireCube
 /**
 * A class representing a node observer camera.
 */
-class FIRECUBE_API OrbitCamera : public Camera, public InputListener
+class FIRECUBE_API OrbitCamera : public Camera
 {
 	OBJECT(OrbitCamera)
 public:
@@ -108,10 +108,10 @@ public:
 
 	void HandleInput(float time, const MappedInput &input);
 
-	void RegisterWithInputManager(InputManager &inputManager);
+	static void AddInputManagerMappings(InputManager &inputManager);
 
 private:
-	
+	static bool addedInputMapping;
 	void CheckRanges();
 	void UpdateNode();
 	vec3 rotation;	

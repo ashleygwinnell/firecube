@@ -14,9 +14,9 @@ App::App() : scene(engine), scene2(engine)
 bool App::Prepare()
 {
     Filesystem::AddSearchPath("../Assets/Textures");
-    Filesystem::AddSearchPath("../Assets/Models");
-	GetInputManager().AddInputListener(this);
+    Filesystem::AddSearchPath("../Assets/Models");	
 	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
+	SubscribeToEvent(Events::HandleInput, &App::HandleInput);
     SetTitle("RenderToTexture Example");
     
 	renderSurface = renderer->GetRenderSurface(128, 128, RenderSurfaceType::COLOR);

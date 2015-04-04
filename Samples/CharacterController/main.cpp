@@ -22,14 +22,14 @@ App::App() : scene(engine)
 
 bool App::Prepare()
 {
-	SetTitle(std::string("Character controller test"));	
-	GetInputManager().AddInputListener(this);
+	SetTitle(std::string("Character controller test"));		
 	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
 	GetInputManager().AddMapping(Key::W, InputMappingType::STATE, "Forward");
 	GetInputManager().AddMapping(Key::S, InputMappingType::STATE, "Backward");
 	GetInputManager().AddMapping(Key::A, InputMappingType::STATE, "RotateLeft");
 	GetInputManager().AddMapping(Key::D, InputMappingType::STATE, "RotateRight");
 	GetInputManager().AddMapping(Key::SPACE, InputMappingType::STATE, "Jump");
+	SubscribeToEvent(Events::HandleInput, &App::HandleInput);
 
 	root = scene.GetRootNode();
 	root->CreateComponent<PhysicsWorld>();

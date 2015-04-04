@@ -11,6 +11,7 @@
 
 struct SDL_Window;
 typedef void *SDL_GLContext;
+union SDL_Event;
 
 namespace FireCube
 {
@@ -122,6 +123,8 @@ protected:
 	LuaState *luaState;
 private:
 	void InitKeyMap();
+	void ProcessInput(const SDL_Event &event);
+
 	std::map<int, Key> keyMap;
 	std::map<int, bool> keyState;
 	std::map<int, Key> mouseMap;

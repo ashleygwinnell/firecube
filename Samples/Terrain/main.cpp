@@ -22,8 +22,7 @@ App::App() : ang(0, (float)PI, 0), scene(engine)
 bool App::Prepare()
 {
 	Filesystem::AddSearchPath("../Assets/Textures");
-	SetTitle("Terrain");
-	GetInputManager().AddInputListener(this);
+	SetTitle("Terrain");	
 	GetInputManager().AddMapping(AnalogInput::MOUSE_AXIS_X_RELATIVE, "mouseX");
 	GetInputManager().AddMapping(AnalogInput::MOUSE_AXIS_Y_RELATIVE, "mouseY");
 	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
@@ -40,7 +39,8 @@ bool App::Prepare()
 	GetInputManager().AddMapping(Key::UP, InputMappingType::STATE, "RotateUp");
 	GetInputManager().AddMapping(Key::DOWN, InputMappingType::STATE, "RotateDown");
 	GetInputManager().AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "RotateBoth");
-	
+	SubscribeToEvent(Events::HandleInput, &App::HandleInput);
+
 	root = scene.GetRootNode();
 	
 	cameraNode = root->CreateChild();

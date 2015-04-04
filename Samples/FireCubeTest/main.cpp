@@ -23,18 +23,18 @@ App::App() : scene(engine)
 bool App::Prepare()
 {	
 	SetTitle(std::string("FireCube Test Application"));
-	GetInputManager().AddInputListener(this);
+	//GetInputManager().AddInputListener(this);
 	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
 	
-
+	SubscribeToEvent(Events::HandleInput, &App::HandleInput);
 	auto rr = resourceCache->GetResource<AnimatedMesh>("../Assets/Models/AnimationTest.fbx");
 
 	root = scene.GetRootNode();
 	Node *childNode = root->CreateChild("Camera");
-	camera = childNode->CreateComponent<OrbitCamera>();
+	InputManager &inputManager = GetInputManager();
+	camera = childNode->CreateComponent<OrbitCamera>(inputManager);	
 	camera->SetMaxAngX(0);
-	camera->SetZoomFactor(1000.0f);
-	camera->RegisterWithInputManager(GetInputManager());	
+	camera->SetZoomFactor(1000.0f);	
 	scene.SetCamera(camera);	
 	//camera->SetOrthographicProjectionParameters(-10, 10, -10, 10, -2, 20);
 	//camera->GetNode()->Rotate(vec3(PI * 0.25f, 0.0f, 0.0f));	

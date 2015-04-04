@@ -39,30 +39,6 @@ bool MappedInput::HasValue(const std::string &name) const
 	return i != values.end();
 }
 
-void InputManager::AddInputListener(InputListener *inputListener)
-{
-	inputListeners.push_back(inputListener);
-}
-
-void InputManager::RemoveInputListener(InputListener *inputListener)
-{
-	std::vector<InputListener *>::iterator i = std::find(inputListeners.begin(), inputListeners.end(), inputListener);
-	if (i != inputListeners.end())
-		inputListeners.erase(i);
-}
-
-void InputManager::DispatchInput(float time)
-{
-	// Trigger no key input (mainly used to detect mouse movement)
-	SetRawKeyState(Key::NO_KEY, true, false);
-
-	for (unsigned int i = 0; i < inputListeners.size(); i++)
-		inputListeners[i]->HandleInput(time, mappedInput);
-
-	mappedInput.actions.clear();
-	mappedInput.values.clear();
-}
-
 void InputManager::AddMapping(Key key, InputMappingType inputMappingType, const std::string &actionName, KeyModifier modifier)
 {
 	// Add a mapping to the list of mappings of the given key
@@ -196,4 +172,16 @@ void InputManager::SetRawAnalogValue(AnalogInput analogInput, float value)
 	}	
 }
 
+const MappedInput &InputManager::GetMappedInput() const
+{
+	return mappedInput;
+}
 
+void InputManager::ResetInputState()
+{
+	mappedInput.actions.clear();
+	mappedInput.values.clear();
+	
+	// Trigger no key input (mainly used to detect mouse movement)
+	SetRawKeyState(Key::NO_KEY, true, false);
+}

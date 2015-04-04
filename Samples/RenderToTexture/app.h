@@ -1,4 +1,4 @@
-class App : public Application, public InputListener
+class App : public Application
 {
 public:
 	App();	

@@ -110,38 +110,12 @@ private:
 };
 
 /**
-* Interface class to handle input.
-*/
-class FIRECUBE_API InputListener
-{
-public:
-	/**
-	* Override this function to handle input.
-	* @param time The time passed since last frame.
-	* @param input The current input state.
-	*/
-	virtual void HandleInput(float time, const MappedInput &input) = 0;
-};
-
-/**
 * This class is responsible to handle all input.
 */
 class FIRECUBE_API InputManager
 {
 	friend class Application;
-public:
-	/**
-	* Adds an input listener.
-	* @param inputListener the InputListener to add.
-	*/
-	void AddInputListener(InputListener *inputListener);
-
-	/**
-	* Removes an input listener.
-	* @param inputListener the InputListener to remove.
-	*/
-	void RemoveInputListener(InputListener *inputListener);
-
+public:	
 	/**
 	* Adds a key mapping.
 	* @param key The key which is associated with this mapping.
@@ -189,12 +163,9 @@ public:
 	* @param value The value of this analog input.
 	*/
 	void SetRawAnalogValue(AnalogInput analogInput, float value);
-
-	/**
-	* This function is used internally to dispatch the current input state to all input listeners.
-	* @param time The time passed since last frame.
-	*/
-	void DispatchInput(float time);
+	
+	const MappedInput &GetMappedInput() const;
+	void ResetInputState();
 private:
 	class InputMapping
 	{
@@ -204,8 +175,7 @@ private:
 		KeyModifier modifier;
 	};
 	std::map<Key, std::vector<InputMapping>> mappedKeys;
-	std::map<AnalogInput, std::vector<std::string>> mappedAnalogs;
-	std::vector<InputListener *> inputListeners;
+	std::map<AnalogInput, std::vector<std::string>> mappedAnalogs;	
 	std::vector<Key> pressedKeys;
 	MappedInput mappedInput;
 };

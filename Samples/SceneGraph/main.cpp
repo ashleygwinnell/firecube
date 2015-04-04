@@ -28,9 +28,9 @@ bool App::Prepare()
 {
 	Filesystem::AddSearchPath("../Assets/Textures");
 	Filesystem::AddSearchPath("../Assets/Models");
-	SetTitle("SceneGraph Test Application");
-	GetInputManager().AddInputListener(this);
+	SetTitle("SceneGraph Test Application");	
 	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
+	SubscribeToEvent(Events::HandleInput, &App::HandleInput);
 	
 	root = scene.GetRootNode();
 	Node *cameraNode = root->CreateChild("cameraNode");	

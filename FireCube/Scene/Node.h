@@ -203,12 +203,12 @@ public:
 
 	void RemoveAllComponents();
 
-	template <class T, typename... Args> T* CreateComponent(Args... args)
+	template <class T, typename... Args> T* CreateComponent(Args&&... args)
 	{
-		T *component = new T(engine, args...);
+		T *component = new T(engine, std::forward<Args>(args)...);
 		AddComponent(component);
 		return component;
-	}
+	}	
 
 	Component *GetComponent(const StringHash &type);
 
