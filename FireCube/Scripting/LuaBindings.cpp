@@ -4,6 +4,7 @@
 #include "Scene/Node.h"
 #include "Math/Math.h"
 #include "Scripting/LuaScript.h"
+#include "Scene/Scene.h"
 
 using namespace FireCube;
 using namespace luabridge;
@@ -56,11 +57,16 @@ Component *GetComponent(Node *node, const std::string &type)
 
 void LuaBindings::InitScene(lua_State *luaState)
 {
-	getGlobalNamespace(luaState)
+	getGlobalNamespace(luaState)	
+		.beginClass<Scene>("Scene")
+			.addFunction("ClonePrefab", &Scene::ClonePrefab)
+		.endClass()
 		.beginClass<Node>("Node")
 			.addFunction("Rotate", &Node::Rotate)
 			.addFunction("Move", &Node::Move)
-			.addFunctionFree("GetComponent", &GetComponent)
+			.addFunction("Scale", &Node::Scale)
+			.addFunction("GetScene", &Node::GetScene)
+			.addFunctionFree("GetComponent", &GetComponent)				
 		.endClass()
 		.beginClass<Component>("Component")
 			.addFunction("GetNode", &Component::GetNode)
@@ -74,5 +80,14 @@ void LuaBindings::InitScene(lua_State *luaState)
 			.addFunction("IsActionTriggered", &MappedInput::IsActionTriggered)
 			.addFunction("GetValue", &MappedInput::GetValue)
 			.addFunction("HasValue", &MappedInput::HasValue)
+		.endClass();
+}
+
+void LuaBindings::InitUtils(lua_State *luaState)
+{
+	getGlobalNamespace(luaState)
+		.beginClass<StringHash>("StringHash")
+			.addConstructor<void(*) ()>()
+			.addConstructor<void(*) (const std::string &)>()
 		.endClass();
 }

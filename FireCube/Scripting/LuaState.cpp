@@ -28,6 +28,7 @@ LuaState::LuaState(Engine *engine) : Object(engine)
 
 	LuaBindings::InitMath(luaState);
 	LuaBindings::InitScene(luaState);
+	LuaBindings::InitUtils(luaState);
 }
 
 LuaState::~LuaState()

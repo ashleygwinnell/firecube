@@ -37,6 +37,9 @@ public:
 	bool GetFogEnabled() const;	
 	vec3 GetFogParameters() const;
 	vec3 GetAmbientColor() const;
+	void SetPrefab(const StringHash &nameHash, Node *prefab);
+	Node *GetPrefab(const StringHash &nameHash);
+	Node *ClonePrefab(const StringHash &nameHash);
 private:		
 	
 	Node rootNode;
@@ -47,6 +50,8 @@ private:
 	bool fogEnabled;
 	vec3 fogParameters;
 	vec3 fogColor;	
+
+	std::map<StringHash, Node *> prefabs;
 };
 
 }
