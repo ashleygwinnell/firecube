@@ -14,6 +14,11 @@ CharacterController::CharacterController(Engine *engine) : Component(engine), ph
 
 }
 
+CharacterController::CharacterController(const CharacterController &other) : Component(other), physicsWorld(other.physicsWorld), velocity(other.velocity), radius(other.radius)
+{
+
+}
+
 CharacterController::~CharacterController()
 {
 	if (physicsWorld)
@@ -364,4 +369,10 @@ void CharacterController::RenderDebugGeometry(DebugRenderer *debugRenderer)
 bool CharacterController::IsOnGround() const
 {
 	return onGround;
+}
+
+Component *CharacterController::Clone() const
+{
+	CharacterController *clone = new CharacterController(*this);
+	return clone;
 }

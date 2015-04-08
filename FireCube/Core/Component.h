@@ -23,7 +23,10 @@ public:
 	void SetEnabled(bool enabled);
 	bool IsEnabled() const;
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer) {};
+	virtual Component *Clone() const = 0;
 protected:	
+	Component(const Component &other);
+
 	void SetNode(Node *node);
 	void SetScene(Scene *scene);
 	virtual void MarkedDirty() = 0;

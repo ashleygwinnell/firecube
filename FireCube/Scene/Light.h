@@ -71,11 +71,15 @@ public:
 	unsigned int GetLightMask() const;
 	void SetShadowIntensity(float shadowIntensity);
 	float GetShadowIntensity() const;
+	virtual Component *Clone() const;
 protected:
 	virtual void MarkedDirty() {}
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
 private:
+
+	Light(const Light &other);
+
 	LightType type;	
 	vec4 color;	
 	float range;

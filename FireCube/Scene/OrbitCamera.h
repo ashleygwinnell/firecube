@@ -109,8 +109,11 @@ public:
 	void HandleInput(float time, const MappedInput &input);
 
 	static void AddInputManagerMappings(InputManager &inputManager);
-
+	virtual Component *Clone() const;
 private:
+
+	OrbitCamera(const OrbitCamera &other);
+
 	static bool addedInputMapping;
 	void CheckRanges();
 	void UpdateNode();

@@ -11,6 +11,13 @@ Light::Light(Engine *engine) : Component(engine), range(50.0f), spotCutOff(PI * 
 	camera = cameraNode->CreateComponent<Camera>();
 }
 
+Light::Light(const Light &other) : Component(engine), type(other.type), color(other.color), range(other.range), spotCutOff(other.spotCutOff), castShadow(other.castShadow), lightMask(other.lightMask),
+								   shadowIntensity(other.shadowIntensity)
+{
+	cameraNode = new Node(engine);
+	camera = cameraNode->CreateComponent<Camera>();
+}
+
 void Light::SetLightType(LightType type)
 {
 	this->type = type;
@@ -111,4 +118,10 @@ void Light::SetShadowIntensity(float shadowIntensity)
 float Light::GetShadowIntensity() const
 {
 	return shadowIntensity;
+}
+
+Component *Light::Clone() const
+{
+	Light *clone = new Light(*this);
+	return clone;
 }

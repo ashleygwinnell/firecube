@@ -37,6 +37,32 @@ ParticleEmitter::ParticleEmitter(Engine *engine, unsigned int numberOfParticles,
 	castShadow = false;
 }
 
+ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : Renderable(other), lifeTime(other.lifeTime), numberOfParticles(other.numberOfParticles)
+{
+	updateShader = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/particleUpdate.vert")->GenerateShader("");
+	updateShader->SetOutputAttributes({ "outPosition", "outVelocity", "outAge" });
+	for (int i = 0; i < 2; ++i)
+	{
+		particleBuffers[i] = new VertexBuffer(engine->GetRenderer());
+		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::POSITION, VertexAttributeDataType::FLOAT, 3); // Position
+		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 3);   // Velocity
+		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 1);	  // Age		
+	}
+
+	Reset();
+
+	geometry = new Geometry(engine->GetRenderer());
+	geometry->SetVertexBuffer(particleBuffers[0]);
+	geometry->SetPrimitiveType(PrimitiveType::POINTS);
+	geometry->SetPrimitiveCount(numberOfParticles);
+	geometry->Update();
+
+	renderableParts.resize(1);
+	renderableParts[0].geometry = geometry;
+	renderableParts[0].material = other.renderableParts[0].material;
+	castShadow = false;
+}
+
 ParticleEmitter::~ParticleEmitter()
 {
 	// First buffer is being deleted by the geometry
@@ -99,4 +125,10 @@ void ParticleEmitter::Reset()
 	{		
 		particleBuffers[i]->LoadData(&particleData[0], numberOfParticles, BufferType::STREAM);
 	}
+}
+
+Component *ParticleEmitter::Clone() const
+{
+	ParticleEmitter *clone = new ParticleEmitter(*this);
+	return clone;
 }

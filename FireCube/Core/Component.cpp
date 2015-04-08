@@ -5,6 +5,11 @@ Component::Component(Engine *engine) : Object(engine), node(nullptr), enabled(tr
 {
 }
 
+Component::Component(const Component &other) : Object(other.engine), enabled(other.enabled), node(nullptr), scene(nullptr)
+{
+
+}
+
 Component::~Component()
 {
 }

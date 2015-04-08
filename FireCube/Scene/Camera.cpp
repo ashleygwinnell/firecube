@@ -9,6 +9,13 @@ Camera::Camera(Engine *engine) : Component(engine), viewMatrixChanged(true), fru
 
 }
 
+Camera::Camera(const Camera &other) : Component(other), viewMatrixChanged(true), frustumChanged(true), projectionMatrixChanged(true), aspectRatio(other.aspectRatio), fov(other.fov),
+									  nearPlane(other.nearPlane), farPlane(other.farPlane), leftPlane(other.leftPlane), rightPlane(other.rightPlane), topPlane(other.topPlane), 
+									  bottomPlane(other.bottomPlane), orthographic(other.orthographic)
+{
+
+}
+
 mat4 Camera::GetProjectionMatrix()
 {
 	if (projectionMatrixChanged)
@@ -180,7 +187,14 @@ float Camera::GetFarPlane() const
 {
 	return farPlane;
 }
+
 float Camera::GetApectRatio() const
 {
 	return aspectRatio;
+}
+
+Component *Camera::Clone() const
+{
+	Camera *clone = new Camera(*this);
+	return clone;
 }

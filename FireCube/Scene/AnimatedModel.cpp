@@ -12,6 +12,18 @@ AnimatedModel::AnimatedModel(Engine *engine) : Renderable(engine), currentTime(0
 	SubscribeToEvent(Events::Update, &AnimatedModel::Update);
 }
 
+AnimatedModel::AnimatedModel(const AnimatedModel &other) : Renderable(other), boundingBoxes(other.boundingBoxes), geometries(other.geometries),
+														   materials(other.materials), skeletonRoot(other.skeletonRoot), meshBoneWeights(other.meshBoneWeights), meshBones(other.meshBones),
+														   animations(other.animations), nodeAnimTransformations(other.nodeAnimTransformations), skinMatrices(other.skinMatrices),
+														   currentTime(other.currentTime), prevTime(other.prevTime), currentAnimation(other.currentAnimation), 
+														   nodeTransformations(other.nodeTransformations), nonSkinnedRenderablePartsNodeIndices(other.nonSkinnedRenderablePartsNodeIndices),
+														   numNonSkinnedRenderableParts(other.numNonSkinnedRenderableParts), renderablePartGeometryIndex(other.renderablePartGeometryIndex)
+
+{
+	renderableParts = other.renderableParts;
+	SubscribeToEvent(Events::Update, &AnimatedModel::Update);
+}
+
 AnimatedModel::AnimatedModel(Engine *engine, AnimatedMesh *mesh) : AnimatedModel(engine)
 {
 	CreateFromMesh(mesh);
@@ -371,4 +383,10 @@ void AnimatedModel::CalcInterpolatedScaling(vec3 &out, float animationTime, Node
 	const vec3 &end = nodeAnim.scaleAnimation[nextScalingIndex].second;
 	vec3 delta = end - start;
 	out = start + factor * delta;
+}
+
+Component *AnimatedModel::Clone() const
+{
+	AnimatedModel *clone = new AnimatedModel(*this);
+	return clone;
 }

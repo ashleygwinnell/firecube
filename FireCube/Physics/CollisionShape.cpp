@@ -22,6 +22,12 @@ CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld
 
 }
 
+CollisionShape::CollisionShape(const CollisionShape &other) : Component(other), worldBoundingBoxChanged(true), type(other.type), physicsWorld(other.physicsWorld), mesh(other.mesh), plane(other.plane),
+															  shapeBoundingBox(other.shapeBoundingBox)
+{
+	
+}
+
 CollisionShape::~CollisionShape()
 {
 	if (physicsWorld)
@@ -235,4 +241,10 @@ void CollisionShape::UpdateWorldBoundingBox()
 
 	worldBoundingBox = boundingBox;
 	worldBoundingBox.Transform(node->GetWorldTransformation());	
+}
+
+Component *CollisionShape::Clone() const
+{
+	CollisionShape *clone = new CollisionShape(*this);
+	return clone;
 }

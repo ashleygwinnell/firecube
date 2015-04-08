@@ -18,6 +18,12 @@ OrbitCamera::OrbitCamera(Engine *engine) : Camera(engine)
 	SubscribeToEvent(Events::HandleInput, &OrbitCamera::HandleInput);
 }
 
+OrbitCamera::OrbitCamera(const OrbitCamera &other) : Camera(other), rotation(other.rotation), distance(other.distance), minDistance(other.minDistance), maxDistance(other.maxDistance),
+													 minAngX(other.minAngX), maxAngX(other.maxAngX), zoomFactor(other.zoomFactor)
+{
+	SubscribeToEvent(Events::HandleInput, &OrbitCamera::HandleInput);
+}
+
 OrbitCamera::OrbitCamera(Engine *engine, InputManager &inputManager) : OrbitCamera(engine)
 {	
 	if (!addedInputMapping)
@@ -176,4 +182,10 @@ void OrbitCamera::UpdateNode()
 	node->LookAt(dir, vec3(0.0f), vec3(0.0f, 1.0f, 0.0f));	
 	viewMatrixChanged = true;
 	frustumChanged = true;
+}
+
+Component *OrbitCamera::Clone() const
+{
+	OrbitCamera *clone = new OrbitCamera(*this);
+	return clone;
 }

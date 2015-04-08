@@ -16,11 +16,14 @@ public:
 
 	virtual void IntersectRay(RayQuery &rayQuery);
 	void Reset();
+	virtual Component *Clone() const;
 protected:
 	void SetBoundingBox(BoundingBox boundingBox);
 	virtual void UpdateWorldBoundingBox();
 	virtual void UpdateRenderableParts();
 private:
+
+	ParticleEmitter(const ParticleEmitter &other);
 
 	BoundingBox boundingBox;
 	Shader *updateShader;

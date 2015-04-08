@@ -10,9 +10,17 @@
 using namespace FireCube;
 
 Terrain::Terrain(Engine *engine) : Component(engine), patchSize(32), verticesSpacing(1.0f, 64.0f, 1.0f), smoothHeightMap(false), generateHardNormals(false),
-								   indexBuffer(nullptr)
+								   indexBuffer(nullptr), patchesCreated(false)
 {
 
+}
+
+Terrain::Terrain(const Terrain &other) : Component(other), patchesCreated(false), heightData(other.heightData), patchSize(other.patchSize), numVerticesX(other.numVerticesX), 
+										 numVerticesY(other.numVerticesY), numPatchesX(other.numPatchesX), numPatchesY(other.numPatchesY), patchWorldSize(other.patchWorldSize), 
+										 verticesSpacing(other.verticesSpacing), smoothHeightMap(other.smoothHeightMap), generateHardNormals(other.generateHardNormals)
+{	
+	SetMaterial(other.material);
+	CreatePatches();
 }
 
 Terrain::~Terrain()
@@ -36,10 +44,18 @@ void Terrain::CreateFromHeightMap(Image *image)
 	}
 	if (smoothHeightMap)
 		SmoothHeightMap();
-	patchWorldSize = vec2(verticesSpacing.x, verticesSpacing.z) * (float) patchSize;
+	patchWorldSize = vec2(verticesSpacing.x, verticesSpacing.z) * (float) patchSize;	
+	if (!patchesCreated && heightData.empty() == false && node)
+	{
+		CreatePatches();
+	}
+}
+
+void Terrain::CreatePatches()
+{
 	if (!generateHardNormals)
-		GenerateIndexBuffer();	
-	vec3 offset(patchWorldSize .x * numPatchesX * -0.5f, 0, patchWorldSize.y * numPatchesY * -0.5f);
+		GenerateIndexBuffer();
+	vec3 offset(patchWorldSize.x * numPatchesX * -0.5f, 0, patchWorldSize.y * numPatchesY * -0.5f);
 	for (int y = 0; y < numPatchesY; ++y)
 	{
 		for (int x = 0; x < numPatchesX; ++x)
@@ -55,10 +71,21 @@ void Terrain::CreateFromHeightMap(Image *image)
 			}
 			TerrainPatch *patch = new TerrainPatch(engine);
 			patches.push_back(patch);
-			patchNode->AddComponent(patch);			
-			patchNode->SetTranslation(offset + vec3(x * patchWorldSize.x, 0, y * patchWorldSize.y));			
-			GeneratePatchGeometry(patch, x, y);						
+			patchNode->AddComponent(patch);
+			patchNode->SetTranslation(offset + vec3(x * patchWorldSize.x, 0, y * patchWorldSize.y));
+			GeneratePatchGeometry(patch, x, y);
+			patch->SetMaterial(material);
 		}
+	}
+
+	patchesCreated = true;
+}
+
+void Terrain::NodeChanged()
+{
+	if (!patchesCreated && heightData.empty() == false && node)
+	{
+		CreatePatches();
 	}
 }
 
@@ -383,6 +410,12 @@ vec2 Terrain::GetWorldSize() const
 	return vec2(patchWorldSize.x * numPatchesX, patchWorldSize.y * numPatchesY);
 }
 
+Component *Terrain::Clone() const
+{
+	Terrain *clone = new Terrain(*this);
+	return clone;
+}
+
 TerrainPatch::TerrainPatch(Engine *engine) : Renderable(engine)
 {
 	renderableParts.resize(1);
@@ -437,4 +470,10 @@ void TerrainPatch::IntersectRay(RayQuery &rayQuery)
 			rayQuery.results.push_back(result);
 		}		
 	}
+}
+
+Component *TerrainPatch::Clone() const
+{
+	// TerrainPatches are owned and created when their parent Terrain component is cloned
+	return nullptr;
 }

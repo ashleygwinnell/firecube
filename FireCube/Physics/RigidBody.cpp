@@ -11,6 +11,11 @@ RigidBody::RigidBody(Engine *engine) : Component(engine), physicsWorld(nullptr),
 
 }
 
+RigidBody::RigidBody(const RigidBody &other) : Component(engine), velocity(other.velocity), physicsWorld(other.physicsWorld)
+{
+
+}
+
 RigidBody::~RigidBody()
 {
 	if (physicsWorld)
@@ -26,15 +31,7 @@ void RigidBody::MarkedDirty()
 
 void RigidBody::NodeChanged()
 {
-	if (node)
-	{
-		physicsWorld = node->GetRootNode()->GetComponent<PhysicsWorld>();
-		physicsWorld->AddRigidBody(this);
-	}
-	else
-	{
-
-	}
+	
 }
 
 void RigidBody::SceneChanged(Scene *oldScene)
@@ -60,4 +57,10 @@ void RigidBody::SetVelocity(vec3 velocity)
 vec3 RigidBody::GetVelocity() const
 {
 	return velocity;
+}
+
+Component *RigidBody::Clone() const
+{
+	RigidBody *clone = new RigidBody(*this);
+	return clone;
 }

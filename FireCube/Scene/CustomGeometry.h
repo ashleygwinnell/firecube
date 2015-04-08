@@ -19,7 +19,11 @@ public:
 	void SetTexCoord(vec2 texcoord);
 	void SetMaterial(Material *material);
 	void Clear();
+	virtual Component *Clone() const;
 private:
+
+	CustomGeometry(const CustomGeometry &other);
+
 	class CustomVertex
 	{
 	public:

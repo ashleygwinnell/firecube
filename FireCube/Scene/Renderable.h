@@ -64,6 +64,9 @@ public:
 	virtual void MarkedDirty();
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
 protected:
+
+	Renderable(const Renderable &other);
+
 	virtual void UpdateWorldBoundingBox() = 0;
 
 	std::vector<RenderablePart> renderableParts;

@@ -51,7 +51,11 @@ public:
 	BoundingBox GetWorldBoundingBox();
 
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);	
+	Component *Clone() const;
 private:
+	
+	CollisionShape(const CollisionShape &other);
+
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);

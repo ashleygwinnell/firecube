@@ -9,9 +9,18 @@ using namespace FireCube;
 using namespace luabridge;
 
 LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState()), initFunction(engine->GetLuaState()->GetState()), updateFunction(engine->GetLuaState()->GetState()),
-	handleInputFunction(engine->GetLuaState()->GetState()), awakeFunction(engine->GetLuaState()->GetState())
+									   handleInputFunction(engine->GetLuaState()->GetState()), awakeFunction(engine->GetLuaState()->GetState())
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
+}
+
+LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState()), initFunction(engine->GetLuaState()->GetState()), 
+											   updateFunction(engine->GetLuaState()->GetState()), handleInputFunction(engine->GetLuaState()->GetState()), awakeFunction(engine->GetLuaState()->GetState())
+{
+	SubscribeToEvent(Events::Update, &LuaScript::Update);
+	CreateObject(objectName);
+
+	// TODO: Copy properties assigned to the object through the script
 }
 
 void LuaScript::Update(float time)
@@ -30,6 +39,14 @@ void LuaScript::MarkedDirty()
 
 void LuaScript::NodeChanged()
 {	
+	if (object.isTable())
+	{
+		object["node"] = node;
+		if (node && initFunction.isFunction())
+		{
+			initFunction(object);
+		}
+	}
 }
 
 void LuaScript::SceneChanged(Scene *oldScene)
@@ -56,14 +73,14 @@ void LuaScript::CreateObject(const std::string &objectName)
 	objectTable.push(state);
 	lua_setmetatable(state, -2);
 	lua_pop(state, 1);
-
-	object["node"] = GetNode();
+	
 	object["script"] = this;
 	initFunction = objectTable["Init"];
 	updateFunction = objectTable["Update"];
 	awakeFunction = objectTable["Awake"];
-	if (initFunction.isFunction())
+	if (node && initFunction.isFunction())
 	{
+		object["node"] = node;
 		initFunction(object);
 	}
 	if (scene && awakeFunction.isFunction())
@@ -101,4 +118,10 @@ void LuaScript::SubscribeToEventFromLua(const std::string &eventName, LuaRef fun
 void LuaScript::HandleInput(float time, const MappedInput &input)
 {
 	handleInputFunction(object, time, input);
+}
+
+Component *LuaScript::Clone() const
+{
+	LuaScript *clone = new LuaScript(*this);
+	return clone;
 }

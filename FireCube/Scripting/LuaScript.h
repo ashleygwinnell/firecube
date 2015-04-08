@@ -21,8 +21,7 @@ public:
 	void CreateObject(LuaFile *luaFile, const std::string &objectName);
 	LuaFunction *GetFunction(const std::string &functionName);
 	LuaFunction *GetMemberFunction(const std::string &functionName);
-	void SubscribeToEventFromLua(const std::string &eventName, luabridge::LuaRef function);
-	void HandleInput(float time, const MappedInput &input);
+	void SubscribeToEventFromLua(const std::string &eventName, luabridge::LuaRef function);	
 
 	template<class... Args>
 	void CallMemberFunction(LuaFunction *function, Args&&... args)
@@ -56,9 +55,13 @@ public:
 		}
 	}
 	
+	virtual Component *Clone() const;
 private:
+
+	LuaScript(const LuaScript &other);
+
 	void Update(float time);
-	
+	void HandleInput(float time, const MappedInput &input);
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);

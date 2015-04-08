@@ -13,6 +13,17 @@ CustomGeometry::CustomGeometry(Engine *engine) : Renderable(engine), geometry(ne
 	geometry->SetVertexBuffer(vertexBuffer);
 }
 
+CustomGeometry::CustomGeometry(const CustomGeometry &other) : Renderable(other), currentVertex(other.currentVertex), vertexAttributes(other.vertexAttributes), boundingBox(other.boundingBox),
+															  material(other.material), vertices(other.vertices), geometry(new Geometry(engine->GetRenderer()))
+{
+	renderableParts.resize(1);
+	renderableParts[0].geometry = geometry;
+	VertexBuffer *vertexBuffer = new VertexBuffer(engine->GetRenderer());
+	geometry->SetVertexBuffer(vertexBuffer);
+
+	UpdateGeometry();
+}
+
 CustomGeometry::~CustomGeometry()
 {	
 	delete geometry;
@@ -107,4 +118,10 @@ void CustomGeometry::Clear()
 	currentVertex = 0;
 	boundingBox = BoundingBox();
 	vertices.clear();
+}
+
+Component *CustomGeometry::Clone() const
+{
+	CustomGeometry *clone = new CustomGeometry(*this);
+	return clone;
 }

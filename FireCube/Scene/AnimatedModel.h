@@ -19,7 +19,11 @@ public:
 	virtual void UpdateRenderableParts();
 	void Update(float time);
 	void SetAnimation(unsigned int index);
+	virtual Component *Clone() const;
 protected:
+
+	AnimatedModel(const AnimatedModel &other);
+
 	void CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<RenderablePart> &nonSkinned, std::vector<unsigned int> &nonSkinnedGeometryIndex, std::vector<RenderablePart> &skinned, std::vector<unsigned int> &skinnedGeometryIndex);
 	void CalculateNodeAnimations(float animationTime);
 	virtual void UpdateWorldBoundingBox();	

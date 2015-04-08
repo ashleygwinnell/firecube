@@ -24,7 +24,11 @@ public:
 	void RemoveRigidBody(RigidBody *rigidBody);
 
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
+	virtual Component *Clone() const;
 private:
+
+	PhysicsWorld(const PhysicsWorld &other);
+
 	void Update(float deltaTime);
 	void MarkedDirty();
 	void NodeChanged();

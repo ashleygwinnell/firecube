@@ -9,6 +9,12 @@ Renderable::Renderable(Engine *engine) : Component(engine), worldBoundingBoxChan
 {
 }
 
+Renderable::Renderable(const Renderable &other) : Component(other), worldBoundingBoxChanged(true), collisionQueryMask(other.collisionQueryMask), lightMask(other.lightMask), castShadow(other.castShadow),
+												  receiveShadow(other.receiveShadow)
+{
+
+}
+
 Renderable::~Renderable()
 {
 }

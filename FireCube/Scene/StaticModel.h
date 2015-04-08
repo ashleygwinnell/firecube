@@ -17,7 +17,11 @@ public:
 	std::vector<SharedPtr<Geometry>> &GetGeometries();
 	std::vector<SharedPtr<Material>> &GetMaterials();	
 	virtual void IntersectRay(RayQuery &rayQuery);
+	virtual Component *Clone() const;
 protected:
+
+	StaticModel(const StaticModel &other);
+
 	void SetBoundingBox(BoundingBox boundingBox);
 	virtual void UpdateWorldBoundingBox();
 	BoundingBox boundingBox;

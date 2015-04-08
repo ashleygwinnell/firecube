@@ -22,6 +22,7 @@ public:
 	Geometry *GetGeometry();
 	void SetMaterial(Material *material);
 	virtual void IntersectRay(RayQuery &rayQuery);
+	virtual Component *Clone() const;
 private:
 	void SetBoundingBox(BoundingBox boundingBox);
 	virtual void UpdateWorldBoundingBox();
@@ -46,8 +47,13 @@ public:
 	float GetHeight(vec2 pos);
 	vec3 GetNormal(vec2 pos);
 	vec2 GetWorldSize() const;
+	virtual Component *Clone() const;
 private:
-	virtual void NodeChanged() {}
+
+	Terrain(const Terrain &other);
+
+	void CreatePatches();
+	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene) {}
 	void GeneratePatchGeometry(TerrainPatch *patch, int patchX, int patchY);
 	float GetHeightDiscrete(int x, int y);
@@ -65,6 +71,7 @@ private:
 	std::vector<TerrainPatch *> patches;
 	bool smoothHeightMap;
 	bool generateHardNormals;
+	bool patchesCreated;
 };
 
 /*class Camera;

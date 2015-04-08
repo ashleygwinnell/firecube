@@ -14,6 +14,11 @@ PhysicsWorld::PhysicsWorld(Engine *engine) : Component(engine)
 	SubscribeToEvent(Events::Update, &PhysicsWorld::Update);
 }
 
+PhysicsWorld::PhysicsWorld(const PhysicsWorld &other) : Component(other), collisionShapes(other.collisionShapes), characterControllers(other.characterControllers), rigidBodies(other.rigidBodies)
+{
+	SubscribeToEvent(Events::Update, &PhysicsWorld::Update);
+}
+
 void PhysicsWorld::AddCollisionShape(CollisionShape *collisionShape)
 {
 	collisionShapes.push_back(collisionShape);
@@ -151,4 +156,10 @@ void PhysicsWorld::RenderDebugGeometry(DebugRenderer *debugRenderer)
 	{
 		c->RenderDebugGeometry(debugRenderer);
 	}
+}
+
+Component *PhysicsWorld::Clone() const
+{
+	PhysicsWorld *clone = new PhysicsWorld(*this);
+	return clone;
 }

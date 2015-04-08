@@ -20,7 +20,10 @@ public:
 	
 	void SetVelocity(vec3 velocity);
 	vec3 GetVelocity() const;
+	virtual Component *Clone() const;
 private:
+
+	RigidBody(const RigidBody &other);
 
 	virtual void MarkedDirty();
 	virtual void NodeChanged();

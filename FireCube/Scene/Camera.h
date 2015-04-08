@@ -56,8 +56,11 @@ public:
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
+	virtual Component *Clone() const;
 protected:
 	
+	Camera(const Camera &other);
+
 	/**
 	* Calculated the frustum of this camera.
 	*/

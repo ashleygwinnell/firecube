@@ -186,18 +186,18 @@ void Node::SetParent(Node *parent)
 {	
 	if (parent == nullptr)
 	{		
-		SharedPtr<Node> sharedNode(this);
-		if (this->parent)
+		if (this->parent != nullptr)
 		{
+			SharedPtr<Node> sharedNode(this);
 			this->parent->RemoveChild(this);
-		}
 
-		this->parent = nullptr;
-		Scene *oldScene = scene;
-		scene = nullptr;
-		if (oldScene != scene)
-		{
-			SceneChanged(oldScene);
+			this->parent = nullptr;
+			Scene *oldScene = scene;
+			scene = nullptr;
+			if (oldScene != scene)
+			{
+				SceneChanged(oldScene);
+			}
 		}
 	}
 	else
@@ -262,7 +262,7 @@ std::vector<SharedPtr<Node>> Node::GetChildren()
 Node *Node::Clone() const
 {
 	Node *ret = new Node(engine);
-	//TODO: Implement
+	
 	ret->name = name;
 	ret->translation = translation;
 	ret->rotation = rotation;
@@ -271,11 +271,21 @@ Node *Node::Clone() const
 	ret->transformationChanged = transformationChanged;
 	ret->worldTransformation = worldTransformation;	
 	ret->worldRotation = worldRotation;
+	ret->scene = scene;
+
+	for (auto component : components)
+	{
+		Component *clonedComponent = component->Clone();
+		ret->AddComponent(clonedComponent);
+	}
+
 	for (auto i = children.begin(); i != children.end(); i++)
 	{
 		Node *c = (*i)->Clone();
-		c->SetParent(ret);
+		ret->AddChild(c);
 	}
+
+	ret->SetParent(parent);
 	return ret;
 }
 

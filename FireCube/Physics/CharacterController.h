@@ -38,12 +38,14 @@ public:
 	bool IsOnGround() const;
 
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
+	virtual Component *Clone() const;
 private:
 	
+	CharacterController(const CharacterController &other);
+
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
-
 	
 	vec3 velocity;
 	vec3 radius;

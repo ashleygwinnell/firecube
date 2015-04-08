@@ -11,6 +11,11 @@ StaticModel::StaticModel(Engine *engine) : Renderable(engine)
 	
 }
 
+StaticModel::StaticModel(const StaticModel &other) : Renderable(other), boundingBox(other.boundingBox), geometries(other.geometries), materials(other.materials)
+{
+	renderableParts = other.renderableParts;
+}
+
 StaticModel::StaticModel(Engine *engine, Mesh *mesh) : StaticModel(engine)
 {
 	CreateFromMesh(mesh);
@@ -87,4 +92,10 @@ void StaticModel::IntersectRay(RayQuery &rayQuery)
 			rayQuery.results.push_back(result);
 		}
 	}	
+}
+
+Component *StaticModel::Clone() const
+{
+	StaticModel *clone = new StaticModel(*this);	
+	return clone;
 }
