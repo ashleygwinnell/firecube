@@ -70,9 +70,7 @@ public:
 	*/
 	mat4 GetWorldTransformation();
 
-	mat4 GetWorldRotation();
-
-	void UpdateWorldTransformation();
+	mat4 GetWorldRotation();	
 
 	/**
 	* Sets the translation of this node.
@@ -151,7 +149,7 @@ public:
 	* Gets the children of this node.
 	* @return A list of children.
 	*/
-	std::vector<Node *> &GetChildren();
+	std::vector<SharedPtr<Node>> GetChildren();
 	
 	/**
 	* Adds a child node.
@@ -262,8 +260,9 @@ protected:
 
 	void SetTransformationChanged();	
 	void SceneChanged(Scene *oldScene);
+	void UpdateWorldTransformation();
 	
-	std::vector<Node *> children;	
+	std::vector<SharedPtr<Node>> children;	
 
 	vec3 translation;
 	mat4 rotation;

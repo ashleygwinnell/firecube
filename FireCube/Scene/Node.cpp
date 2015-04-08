@@ -25,9 +25,7 @@ Node::Node(Engine *engine, const std::string &name) : Node(engine)
 
 Node::~Node()
 {
-	RemoveAllComponents();
-	for (auto i : children)
-		delete i;
+	RemoveAllComponents();	
 }
 
 void Node::SetName(const std::string &name)
@@ -158,6 +156,7 @@ void Node::LookAt(vec3 position, vec3 at, vec3 up)
 
 Node *Node::AddChild(Node *node)
 {
+	SharedPtr<Node> sharedNode(node);
 	children.push_back(node);
 	// If the node has a parent, remove it from the parent's children list
 	if (node->parent)
@@ -170,6 +169,8 @@ Node *Node::AddChild(Node *node)
 	{
 		node->SceneChanged(oldScene);
 	}
+
+	node->SetTransformationChanged();
 	return node;
 }
 
@@ -183,27 +184,27 @@ Node *Node::CreateChild(const std::string &name)
 
 void Node::SetParent(Node *parent)
 {	
-	if (this->parent)
-		this->parent->RemoveChild(this);
-
-	this->parent = parent;
-	Scene *oldScene = scene;	
-	if (parent)
+	if (parent == nullptr)
 	{		
-		scene = parent->scene;
-		parent->children.push_back(this);		
-	}	
+		SharedPtr<Node> sharedNode(this);
+		if (this->parent)
+		{
+			this->parent->RemoveChild(this);
+		}
+
+		this->parent = nullptr;
+		Scene *oldScene = scene;
+		scene = nullptr;
+		if (oldScene != scene)
+		{
+			SceneChanged(oldScene);
+		}
+	}
 	else
 	{
-		scene = nullptr;
+		parent->AddChild(this);
 	}
-
-	if (oldScene != scene)
-	{
-		SceneChanged(oldScene);
-	}
-
-	SetTransformationChanged();
+	
 }
 
 Node *Node::GetChild(const std::string &name, bool recursive)
@@ -227,9 +228,8 @@ void Node::RemoveChild(Node *node)
 {
 	for (auto i = children.begin(); i != children.end(); i++)
 	{
-		if ((*i) == node)
-		{
-			Node *node = *i;
+		if (i->Get() == node)
+		{			
 			children.erase(i);			
 			break;
 		}
@@ -241,8 +241,7 @@ void Node::RemoveChild(const std::string &name)
 	for (auto i = children.begin(); i != children.end(); i++)
 	{
 		if ((*i)->GetName() == name)
-		{
-			Node *node = *i;			
+		{		
 			children.erase(i);			
 			break;
 		}
@@ -251,12 +250,10 @@ void Node::RemoveChild(const std::string &name)
 
 void Node::RemoveAllChildren()
 {
-	for (auto i : children)
-		delete i;
 	children.clear();
 }
 
-std::vector<Node *> &Node::GetChildren()
+std::vector<SharedPtr<Node>> Node::GetChildren()
 {
 	return children;
 }
