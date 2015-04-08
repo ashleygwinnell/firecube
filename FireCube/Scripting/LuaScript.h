@@ -65,7 +65,7 @@ private:
 
 	std::string objectName;
 	luabridge::LuaRef object;
-	luabridge::LuaRef initFunction, updateFunction, handleInputFunction;
+	luabridge::LuaRef initFunction, updateFunction, handleInputFunction, awakeFunction;
 };
 
 }

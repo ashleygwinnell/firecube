@@ -9,20 +9,17 @@ using namespace FireCube;
 using namespace luabridge;
 
 LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState()), initFunction(engine->GetLuaState()->GetState()), updateFunction(engine->GetLuaState()->GetState()),
-	handleInputFunction(engine->GetLuaState()->GetState())
+	handleInputFunction(engine->GetLuaState()->GetState()), awakeFunction(engine->GetLuaState()->GetState())
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 }
 
 void LuaScript::Update(float time)
 {	
-	if (IsEnabled())
+	if (IsEnabled() && updateFunction.isFunction())
 	{
-		if (updateFunction.isFunction())
-		{
-			// Call update function	
-			updateFunction(object, time);
-		}
+		// Call update function	
+		updateFunction(object, time);
 	}
 }
 
@@ -37,7 +34,11 @@ void LuaScript::NodeChanged()
 
 void LuaScript::SceneChanged(Scene *oldScene)
 {
-
+	if (scene && objectName.empty() == false && IsEnabled() && awakeFunction.isFunction())
+	{
+		// Call awake function	
+		awakeFunction(object);
+	}
 }
 
 void LuaScript::CreateObject(const std::string &objectName)
@@ -60,9 +61,14 @@ void LuaScript::CreateObject(const std::string &objectName)
 	object["script"] = this;
 	initFunction = objectTable["Init"];
 	updateFunction = objectTable["Update"];
-	if (initFunction)
+	awakeFunction = objectTable["Awake"];
+	if (initFunction.isFunction())
 	{
 		initFunction(object);
+	}
+	if (scene && awakeFunction.isFunction())
+	{
+		awakeFunction(object);
 	}
 	this->objectName = objectName;
 }
