@@ -61,6 +61,7 @@ private:
 	
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
+	virtual void SceneChanged(Scene *oldScene);
 
 	std::string objectName;
 	luabridge::LuaRef object;

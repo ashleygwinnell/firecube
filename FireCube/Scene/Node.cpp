@@ -8,7 +8,7 @@
 
 using namespace FireCube;
 
-Node::Node(Engine *engine) : Object(engine), parent(nullptr)
+Node::Node(Engine *engine) : Object(engine), parent(nullptr), scene(nullptr)
 {
 	rotation.Identity(); // Can't use mat4::IDENTITY since it might not be initialized yet.
 	worldRotation.Identity();
@@ -160,10 +160,16 @@ Node *Node::AddChild(Node *node)
 {
 	children.push_back(node);
 	// If the node has a parent, remove it from the parent's children list
-	if (node->GetParent())
-		node->GetParent()->RemoveChild(node);
+	if (node->parent)
+		node->parent->RemoveChild(node);
 	node->parent = this;
+	
+	Scene *oldScene = node->scene;
 	node->scene = scene;	
+	if (oldScene != scene)
+	{
+		node->SceneChanged(oldScene);
+	}
 	return node;
 }
 
@@ -177,15 +183,25 @@ Node *Node::CreateChild(const std::string &name)
 
 void Node::SetParent(Node *parent)
 {	
-	this->parent = parent;
-	if (parent)
-	{
-		scene = parent->scene;
-		parent->children.push_back(this);
-	}
-
 	if (this->parent)
 		this->parent->RemoveChild(this);
+
+	this->parent = parent;
+	Scene *oldScene = scene;	
+	if (parent)
+	{		
+		scene = parent->scene;
+		parent->children.push_back(this);		
+	}	
+	else
+	{
+		scene = nullptr;
+	}
+
+	if (oldScene != scene)
+	{
+		SceneChanged(oldScene);
+	}
 
 	SetTransformationChanged();
 }
@@ -214,8 +230,7 @@ void Node::RemoveChild(Node *node)
 		if ((*i) == node)
 		{
 			Node *node = *i;
-			children.erase(i);
-			delete node;
+			children.erase(i);			
 			break;
 		}
 	}		
@@ -228,8 +243,7 @@ void Node::RemoveChild(const std::string &name)
 		if ((*i)->GetName() == name)
 		{
 			Node *node = *i;			
-			children.erase(i);
-			delete node;
+			children.erase(i);			
 			break;
 		}
 	}		
@@ -299,6 +313,7 @@ void Node::AddComponent(Component *component)
 	{
 		components.push_back(component);
 		component->SetNode(this);
+		component->SetScene(scene);
 	}
 }
 
@@ -363,4 +378,17 @@ Node *Node::GetRootNode() const
 std::vector<Component *> &Node::GetComponents()
 {
 	return components;
+}
+
+void Node::SceneChanged(Scene *oldScene)
+{
+	for (auto component : components)
+	{
+		component->SetScene(scene);
+	}
+
+	for (auto child : children)
+	{
+		child->SceneChanged(oldScene);
+	}
 }

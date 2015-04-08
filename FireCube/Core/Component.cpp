@@ -1,7 +1,7 @@
 #include "Core/Component.h"
 using namespace FireCube;
 
-Component::Component(Engine *engine) : Object(engine), node(nullptr), enabled(true)
+Component::Component(Engine *engine) : Object(engine), node(nullptr), enabled(true), scene(nullptr)
 {
 }
 
@@ -13,6 +13,17 @@ void Component::SetNode(Node *node)
 {	
 	this->node = node;
 	NodeChanged();
+	
+}
+
+void Component::SetScene(Scene *scene)
+{
+	Scene *oldScene = this->scene;
+	this->scene = scene;
+	if (oldScene != scene)
+	{
+		SceneChanged(oldScene);
+	}
 }
 
 Node *Component::GetNode()

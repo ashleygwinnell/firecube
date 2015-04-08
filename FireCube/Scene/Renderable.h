@@ -59,6 +59,7 @@ public:
 	virtual void IntersectRay(RayQuery &rayQuery);
 	virtual void UpdateRenderableParts();
 	virtual void NodeChanged();	
+	virtual void SceneChanged(Scene *oldScene);
 	virtual void EnabledChanged();
 	virtual void MarkedDirty();
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
@@ -67,8 +68,7 @@ protected:
 
 	std::vector<RenderablePart> renderableParts;
 	BoundingBox worldBoundingBox;
-	bool worldBoundingBoxChanged;
-	Scene *scene;
+	bool worldBoundingBoxChanged;	
 	unsigned int collisionQueryMask;
 	unsigned int lightMask;
 	bool castShadow;

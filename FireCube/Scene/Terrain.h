@@ -47,7 +47,8 @@ public:
 	vec3 GetNormal(vec2 pos);
 	vec2 GetWorldSize() const;
 private:
-	virtual void NodeChanged() {};
+	virtual void NodeChanged() {}
+	virtual void SceneChanged(Scene *oldScene) {}
 	void GeneratePatchGeometry(TerrainPatch *patch, int patchX, int patchY);
 	float GetHeightDiscrete(int x, int y);
 	vec3 GetNormalDiscrete(int x, int y);

@@ -55,6 +55,7 @@ public:
 
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
+	virtual void SceneChanged(Scene *oldScene);
 protected:
 	
 	/**

@@ -58,15 +58,20 @@ bool Light::operator == (const Light &other) const
 
 void Light::NodeChanged()
 {
-	if (node && node->GetScene())
+	
+}
+
+void Light::SceneChanged(Scene *oldScene)
+{
+	if (oldScene)
 	{
-		node->GetScene()->AddLight(this);
-		scene = node->GetScene();
+		oldScene->RemoveLight(this);
 	}
-	else if (!node && scene)
+
+	if (scene)
 	{
-		scene->RemoveLight(this);
-	}
+		scene->AddLight(this);
+	}	
 }
 
 void Light::SetScene(Scene *scene)

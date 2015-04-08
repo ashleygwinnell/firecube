@@ -2,6 +2,7 @@
 #include "Physics/PhysicsWorld.h"
 #include "Scene/Node.h"
 #include "Math/Plane.h"
+#include "Scene/Scene.h"
 
 using namespace FireCube;
 
@@ -33,6 +34,21 @@ void RigidBody::NodeChanged()
 	else
 	{
 
+	}
+}
+
+void RigidBody::SceneChanged(Scene *oldScene)
+{
+	if (oldScene)
+	{
+		physicsWorld = oldScene->GetRootNode()->GetComponent<PhysicsWorld>();
+		physicsWorld->RemoveRigidBody(this);
+	}
+
+	if (scene)
+	{
+		physicsWorld = scene->GetRootNode()->GetComponent<PhysicsWorld>();
+		physicsWorld->AddRigidBody(this);
 	}
 }
 

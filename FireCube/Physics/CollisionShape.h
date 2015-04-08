@@ -54,6 +54,7 @@ public:
 private:
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
+	virtual void SceneChanged(Scene *oldScene);
 	void UpdateWorldBoundingBox();
 
 	BoundingBox worldBoundingBox;

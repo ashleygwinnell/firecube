@@ -35,6 +35,11 @@ void LuaScript::NodeChanged()
 {	
 }
 
+void LuaScript::SceneChanged(Scene *oldScene)
+{
+
+}
+
 void LuaScript::CreateObject(const std::string &objectName)
 {	
 	lua_State *state = engine->GetLuaState()->GetState();

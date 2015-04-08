@@ -261,6 +261,7 @@ protected:
 	}
 
 	void SetTransformationChanged();	
+	void SceneChanged(Scene *oldScene);
 	
 	std::vector<Node *> children;	
 

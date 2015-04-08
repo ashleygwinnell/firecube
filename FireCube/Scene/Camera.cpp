@@ -71,6 +71,11 @@ void Camera::NodeChanged()
 	frustumChanged = true;
 }
 
+void Camera::SceneChanged(Scene *oldScene)
+{
+
+}
+
 void Camera::SetFOV(float fov)
 {
 	if (this->fov != fov)

@@ -5,6 +5,7 @@
 #include "Math/Plane.h"
 #include "Rendering/DebugRenderer.h"
 #include "Math/MathUtils.h"
+#include "Scene/Scene.h"
 
 using namespace FireCube;
 
@@ -27,18 +28,23 @@ void CharacterController::MarkedDirty()
 }
 void CharacterController::NodeChanged()
 {
-	if (node)
-	{
-		physicsWorld = node->GetRootNode()->GetComponent<PhysicsWorld>();
-		physicsWorld->AddCharacterController(this);
-	}
-	else
-	{
-
-	}
+	
 }
 
+void CharacterController::SceneChanged(Scene *oldScene)
+{
+	if (oldScene)
+	{
+		physicsWorld = oldScene->GetRootNode()->GetComponent<PhysicsWorld>();
+		physicsWorld->RemoveCharacterController(this);
+	}
 
+	if (scene)
+	{
+		physicsWorld = scene->GetRootNode()->GetComponent<PhysicsWorld>();
+		physicsWorld->AddCharacterController(this);
+	}	
+}
 
 void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionMesh, mat4 transform)
 {	

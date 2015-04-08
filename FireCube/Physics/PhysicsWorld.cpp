@@ -135,6 +135,11 @@ void PhysicsWorld::NodeChanged()
 
 }
 
+void PhysicsWorld::SceneChanged(Scene *oldScene)
+{
+
+}
+
 void PhysicsWorld::RenderDebugGeometry(DebugRenderer *debugRenderer)
 {
 	for (auto s : collisionShapes)

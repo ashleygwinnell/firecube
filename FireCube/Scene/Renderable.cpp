@@ -35,15 +35,20 @@ unsigned int Renderable::GetCollisionQueryMask() const
 
 void Renderable::NodeChanged()
 {
-	if (node && node->GetScene())
+	
+}
+
+void Renderable::SceneChanged(Scene *oldScene)
+{
+	if (oldScene)
 	{
-		node->GetScene()->AddRenderable(this);	
-		scene = node->GetScene();
+		oldScene->RemoveRenderable(this);
 	}
-	else if (!node && scene)
+
+	if (scene)
 	{
-		scene->RemoveRenderable(this);
-	}
+		scene->AddRenderable(this);
+	}	
 }
 
 void Renderable::EnabledChanged()

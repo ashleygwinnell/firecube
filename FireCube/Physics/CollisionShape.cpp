@@ -8,6 +8,7 @@
 #include "Rendering/VertexBuffer.h"
 #include "Rendering/IndexBuffer.h"
 #include "Rendering/DebugRenderer.h"
+#include "Scene/Scene.h"
 
 using namespace FireCube;
 
@@ -39,16 +40,24 @@ void CollisionShape::MarkedDirty()
 	// Update shape (if scale changed)
 	worldBoundingBoxChanged = true;
 }
+
 void CollisionShape::NodeChanged()
 {
-	if (node)
-	{
-		physicsWorld = node->GetRootNode()->GetComponent<PhysicsWorld>();
-		physicsWorld->AddCollisionShape(this);
-	}
-	else
-	{
+	
+}
 
+void CollisionShape::SceneChanged(Scene *oldScene)
+{
+	if (oldScene)
+	{
+		physicsWorld = oldScene->GetRootNode()->GetComponent<PhysicsWorld>();
+		physicsWorld->RemoveCollisionShape(this);
+	}
+
+	if (scene)
+	{
+		physicsWorld = scene->GetRootNode()->GetComponent<PhysicsWorld>();
+		physicsWorld->AddCollisionShape(this);
 	}
 }
 

@@ -24,6 +24,7 @@ private:
 
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
+	virtual void SceneChanged(Scene *oldScene);
 		
 	WeakPtr<PhysicsWorld> physicsWorld;
 	vec3 velocity;

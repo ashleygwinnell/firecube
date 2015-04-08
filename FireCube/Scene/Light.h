@@ -74,12 +74,12 @@ public:
 protected:
 	virtual void MarkedDirty() {}
 	virtual void NodeChanged();
+	virtual void SceneChanged(Scene *oldScene);
 private:
 	LightType type;	
 	vec4 color;	
 	float range;
-	float spotCutOff;
-	Scene *scene;
+	float spotCutOff;	
 	SharedPtr<Node> cameraNode;
 	Camera *camera;
 	bool castShadow;

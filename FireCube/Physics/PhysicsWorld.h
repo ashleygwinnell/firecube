@@ -28,6 +28,7 @@ private:
 	void Update(float deltaTime);
 	void MarkedDirty();
 	void NodeChanged();
+	virtual void SceneChanged(Scene *oldScene);
 
 	std::vector<CollisionShape *> collisionShapes;
 	std::vector<CharacterController *> characterControllers;
