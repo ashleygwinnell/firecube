@@ -197,7 +197,7 @@ public:
 	
 	void SetScene(Scene *scene);
 
-	Scene *GetScene();
+	Scene *GetScene() const;
 
 	void RemoveAllComponents();
 

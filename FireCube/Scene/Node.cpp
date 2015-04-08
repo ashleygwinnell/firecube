@@ -343,7 +343,7 @@ void Node::SetScene(Scene *scene)
 	this->scene = scene;
 }
 
-Scene *Node::GetScene()
+Scene *Node::GetScene() const
 {
 	return scene;
 }
