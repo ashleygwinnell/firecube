@@ -826,6 +826,21 @@ private:
       return *this;
     }
 
+	//--------------------------------------------------------------------------
+	/**
+	Add or replace a member lua_CFunction as a free function.
+	*/
+	Class <T>& addCFunctionFree(char const* name, int (*mfp)(lua_State*))
+	{
+		typedef int (*MFP)(lua_State*);
+		assert(lua_istable(L, -1));
+		new (lua_newuserdata(L, sizeof(mfp))) MFP(mfp);
+		lua_pushcclosure(L, &CFunc::CallCFunction<T>::f, 1);
+		rawsetfield(L, -3, name); // class table
+
+		return *this;
+	}
+
     //--------------------------------------------------------------------------
     /**
         Add or replace a const member lua_CFunction.

@@ -355,6 +355,20 @@ struct CFunc
   };
 
   template <class T>
+  struct CallCFunction
+  {
+	  static int f(lua_State* L)
+	  {
+		  assert(isfulluserdata(L, lua_upvalueindex(1)));
+		  typedef int (*MFP)(lua_State* L);
+		  T* const t = Userdata::get <T>(L, 1, false);
+		  MFP const& fnptr = *static_cast <MFP const*> (lua_touserdata(L, lua_upvalueindex(1)));
+		  assert(fnptr != 0);
+		  return (*fnptr) (L);
+	  }
+  };
+
+  template <class T>
   struct CallConstMemberCFunction
   {
     static int f (lua_State* L)
