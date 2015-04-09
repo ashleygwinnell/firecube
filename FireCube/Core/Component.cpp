@@ -31,7 +31,7 @@ void Component::SetScene(Scene *scene)
 	}
 }
 
-Node *Component::GetNode()
+Node *Component::GetNode() const
 {
 	return node;
 }

@@ -8,6 +8,7 @@ namespace FireCube
 class LuaBindings
 {
 public:
+	static void Init(lua_State *luaState);
 	static void InitMath(lua_State *luaState);
 	static void InitScene(lua_State *luaState);
 	static void InitUtils(lua_State *luaState);

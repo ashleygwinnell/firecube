@@ -19,7 +19,7 @@ public:
 	Component(Engine *engine);
 	virtual ~Component();
 		
-	Node *GetNode();	
+	Node *GetNode() const;	
 	void SetEnabled(bool enabled);
 	bool IsEnabled() const;
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer) {};
