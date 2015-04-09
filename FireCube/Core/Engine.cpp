@@ -10,7 +10,7 @@ void Engine::SetRenderer(Renderer *renderer)
 {
 	this->renderer = renderer;
 }
-Renderer *Engine::GetRenderer()
+Renderer *Engine::GetRenderer() const
 {
 	return renderer;
 }
@@ -20,7 +20,7 @@ void Engine::SetResourceCache(ResourceCache *resourceCache)
 	this->resourceCache = resourceCache;
 }
 
-ResourceCache *Engine::GetResourceCache()
+ResourceCache *Engine::GetResourceCache() const
 {
 	return resourceCache;
 }
@@ -30,7 +30,7 @@ void Engine::SetInputManager(InputManager *inputManager)
 	this->inputManager = inputManager;
 }
 
-InputManager *Engine::GetInputManager()
+InputManager *Engine::GetInputManager() const
 {
 	return inputManager;
 }
@@ -40,7 +40,7 @@ void Engine::SetDebugRenderer(DebugRenderer *debugRenderer)
 	this->debugRenderer = debugRenderer;
 }
 
-DebugRenderer *Engine::GetDebugRenderer()
+DebugRenderer *Engine::GetDebugRenderer() const
 {
 	return debugRenderer;
 }
@@ -50,7 +50,7 @@ void Engine::SetUI(UI *ui)
 	this->ui = ui;
 }
 
-UI *Engine::GetUI()
+UI *Engine::GetUI() const
 {
 	return ui;
 }
@@ -60,7 +60,7 @@ void Engine::SetLuaState(LuaState *luaState)
 	this->luaState = luaState;
 }
 
-LuaState *Engine::GetLuaState()
+LuaState *Engine::GetLuaState() const
 {
 	return luaState;
 }

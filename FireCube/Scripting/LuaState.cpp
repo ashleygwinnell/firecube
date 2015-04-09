@@ -26,7 +26,7 @@ LuaState::LuaState(Engine *engine) : Object(engine)
 	luaL_setfuncs(luaState, reg, 0);	
 	lua_pop(luaState, 1);
 
-	LuaBindings::Init(luaState);	
+	LuaBindings::Init(luaState, engine);	
 }
 
 LuaState::~LuaState()

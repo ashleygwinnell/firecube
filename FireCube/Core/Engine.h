@@ -17,17 +17,17 @@ class FIRECUBE_API Engine
 public:
 	Engine();
 	void SetRenderer(Renderer *renderer);
-	Renderer *GetRenderer();
+	Renderer *GetRenderer() const;
 	void SetResourceCache(ResourceCache *resourceCache);
-	ResourceCache *GetResourceCache();
+	ResourceCache *GetResourceCache() const;
 	void SetInputManager(InputManager *inputManager);
-	InputManager *GetInputManager();
+	InputManager *GetInputManager() const;
 	void SetDebugRenderer(DebugRenderer *debugRenderer);
-	DebugRenderer *GetDebugRenderer();
+	DebugRenderer *GetDebugRenderer() const;
 	void SetUI(UI *ui);
-	UI *GetUI();
+	UI *GetUI() const;
 	void SetLuaState(LuaState *luaState);
-	LuaState *GetLuaState();
+	LuaState *GetLuaState() const;
 private:
 	Renderer *renderer;
 	ResourceCache *resourceCache;

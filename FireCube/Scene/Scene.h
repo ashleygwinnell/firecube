@@ -32,7 +32,7 @@ public:
 	Node *GetRootNode();	
 	std::vector<Renderable *> &GetRenderables();
 	std::vector<Light *> &GetLights();
-	Camera *GetCamera();
+	Camera *GetCamera() const;
 	void UpdateRenderables();
 	bool GetFogEnabled() const;	
 	vec3 GetFogParameters() const;

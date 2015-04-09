@@ -135,7 +135,7 @@ std::vector<Light *> &Scene::GetLights()
 	return lights;
 }
 
-Camera *Scene::GetCamera()
+Camera *Scene::GetCamera() const
 {
 	return camera;
 }
