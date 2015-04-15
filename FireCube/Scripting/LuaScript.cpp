@@ -131,7 +131,7 @@ void LuaScript::HandleInput(float time, const MappedInput &input)
 
 void LuaScript::CharacterControllerCollision(CharacterController *characterController, CollisionShape *collisionShape)
 {
-	characterControllerCollisionFunction(characterController, collisionShape);
+	characterControllerCollisionFunction(object, characterController, collisionShape);
 }
 
 Component *LuaScript::Clone() const
