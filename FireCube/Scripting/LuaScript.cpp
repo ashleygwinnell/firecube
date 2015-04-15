@@ -72,7 +72,9 @@ void LuaScript::CreateObject(const std::string &objectName)
 		
 	object = newTable(state);
 	object.push(state);
-	objectTable.push(state);
+	LuaRef metatable = newTable(state);
+	metatable["__index"] = objectTable;
+	metatable.push(state);
 	lua_setmetatable(state, -2);
 	lua_pop(state, 1);
 	
