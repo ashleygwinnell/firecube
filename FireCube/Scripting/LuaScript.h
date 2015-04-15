@@ -11,6 +11,8 @@ namespace FireCube
 {
 
 class LuaFile;
+class CharacterController;
+class CollisionShape;
 
 class FIRECUBE_API LuaScript : public Component
 {
@@ -62,13 +64,14 @@ private:
 
 	void Update(float time);
 	void HandleInput(float time, const MappedInput &input);
+	void CharacterControllerCollision(CharacterController *characterController, CollisionShape *collisionShape);
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
 
 	std::string objectName;
 	luabridge::LuaRef object;
-	luabridge::LuaRef initFunction, updateFunction, handleInputFunction, awakeFunction;
+	luabridge::LuaRef initFunction, updateFunction, handleInputFunction, awakeFunction, characterControllerCollisionFunction;
 };
 
 }

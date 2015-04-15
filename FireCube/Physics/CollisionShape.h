@@ -52,6 +52,10 @@ public:
 
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);	
 	Component *Clone() const;
+	
+	bool IsTrigger() const;
+	void SetIsTrigger(bool isTrigger);
+
 private:
 	
 	CollisionShape(const CollisionShape &other);
@@ -63,7 +67,8 @@ private:
 
 	BoundingBox worldBoundingBox;
 	bool worldBoundingBoxChanged;
-
+	bool isTrigger;
+	
 	CollisionShapeType type;
 	WeakPtr<PhysicsWorld> physicsWorld;
 

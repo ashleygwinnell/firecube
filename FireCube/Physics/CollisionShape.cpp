@@ -17,13 +17,13 @@ CollisionTriangle::CollisionTriangle(vec3 p1, vec3 p2, vec3 p3) : p1(p1), p2(p2)
 
 }
 
-CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld(nullptr), worldBoundingBoxChanged(false)
+CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld(nullptr), worldBoundingBoxChanged(false), isTrigger(false)
 {
 
 }
 
 CollisionShape::CollisionShape(const CollisionShape &other) : Component(other), worldBoundingBoxChanged(true), type(other.type), physicsWorld(other.physicsWorld), mesh(other.mesh), plane(other.plane),
-															  shapeBoundingBox(other.shapeBoundingBox)
+															  shapeBoundingBox(other.shapeBoundingBox), isTrigger(other.isTrigger)
 {
 	
 }
@@ -247,4 +247,14 @@ Component *CollisionShape::Clone() const
 {
 	CollisionShape *clone = new CollisionShape(*this);
 	return clone;
+}
+
+bool CollisionShape::IsTrigger() const 
+{ 
+	return isTrigger; 
+}
+
+void CollisionShape::SetIsTrigger(bool isTrigger)
+{ 
+	this->isTrigger = isTrigger;
 }

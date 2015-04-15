@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <set>
 
 #include "Physics/PhysicsWorld.h"
 #include "Physics/CharacterController.h"
@@ -55,10 +56,11 @@ void PhysicsWorld::Update(float deltaTime)
 	{
 		characterController->UpdateTransformedState();
 	}
-
-	for (int iter = 0; iter < 3; ++iter)
+	
+	for (auto characterController : characterControllers)
 	{
-		for (auto characterController : characterControllers)
+		std::set<CollisionShape *> triggeredCollisionShapes;
+		for (int iter = 0; iter < 3; ++iter)
 		{
 			if (characterController->finishedMovement == false && (characterController->transformedVelocity * characterController->radius).Length2() > 0.001f * 0.001f)
 			{
@@ -72,35 +74,56 @@ void PhysicsWorld::Update(float deltaTime)
 
 				for (auto collisionShape : collisionShapes)
 				{
-					if (characterControllerBoundingBox.Intersects(collisionShape->GetWorldBoundingBox()))
+					if ((collisionShape->IsTrigger() && triggeredCollisionShapes.find(collisionShape) == triggeredCollisionShapes.end()) || characterControllerBoundingBox.Intersects(collisionShape->GetWorldBoundingBox()))
 					{
+						CollisionResult result;
+						
 						if (collisionShape->GetShapeType() == CollisionShapeType::TRIANGLE_MESH || collisionShape->GetShapeType() == CollisionShapeType::BOX)
 						{
-							CollisionMesh *mesh = collisionShape->GetMesh();
-
-							characterController->CheckCollisionWithMesh(*mesh, collisionShape->GetNode()->GetWorldTransformation());
+							CollisionMesh *mesh = collisionShape->GetMesh();							
+							characterController->CheckCollisionWithMesh(*mesh, collisionShape->GetNode()->GetWorldTransformation(), result);							
 						}
 						else if (collisionShape->GetShapeType() == CollisionShapeType::PLANE)
-						{
-							CollisionMesh *mesh = collisionShape->GetMesh();
+						{													
+							characterController->CheckCollisionWithPlane(collisionShape->GetPlane(), collisionShape->GetNode()->GetWorldTransformation(), result);							
+						}
 
-							characterController->CheckCollisionWithPlane(collisionShape->GetPlane(), collisionShape->GetNode()->GetWorldTransformation());
+						if (collisionShape->IsTrigger() == false)
+						{
+							characterController->collisions.insert(characterController->collisions.end(), result.collisions.begin(), result.collisions.end());
+							if (result.collisionFound && ((characterController->collisionFound == false) || (result.nearestDistance < characterController->nearestDistance)))
+							{
+								characterController->nearestTime = result.nearestTime;
+								characterController->nearestDistance = result.nearestDistance;
+								characterController->nearestIntersectionPoint = result.nearestIntersectionPoint;
+								characterController->nearestNormal = result.nearestNormal;
+								characterController->collisionFound = true;
+							}
+						}
+						else if (result.collisionFound)
+						{
+							triggeredCollisionShapes.insert(collisionShape);
 						}
 					}
 				}
 
 				if (characterController->collisionFound == false)
 				{
-					characterController->transformedPosition += characterController->transformedVelocity;	
-					characterController->finishedMovement = true;					
+					characterController->transformedPosition += characterController->transformedVelocity;
+					characterController->finishedMovement = true;
 				}
 				else
 				{
 					characterController->transformedPosition += (characterController->normalizedTransformedVelocity * (characterController->nearestDistance - 0.001f));
-					vec3 normal = characterController->nearestNormal.Normalized();					
+					vec3 normal = characterController->nearestNormal.Normalized();
 					characterController->transformedVelocity -= normal * normal.Dot(characterController->transformedVelocity);
 				}
 			}
+		}
+
+		for (auto triggeredCollisionShape : triggeredCollisionShapes)
+		{
+			Events::CharacterControllerCollision(characterController, characterController, triggeredCollisionShape);
 		}
 	}
 
@@ -162,4 +185,9 @@ Component *PhysicsWorld::Clone() const
 {
 	PhysicsWorld *clone = new PhysicsWorld(*this);
 	return clone;
+}
+
+CollisionResult::CollisionResult() : collisionFound(false)
+{
+
 }

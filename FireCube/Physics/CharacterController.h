@@ -3,6 +3,7 @@
 #include "Core/Component.h"
 #include "Math/Math.h"
 #include "Math/Plane.h"
+#include "Physics/PhysicsWorld.h"
 
 namespace FireCube
 {
@@ -10,15 +11,7 @@ namespace FireCube
 class PhysicsWorld;
 class CollisionMesh;
 
-class CollisionEntry
-{
-public:
-	bool operator < (const CollisionEntry &entry);
-	float time;
-	float distance;
-	vec3 normal;
-	vec3 intersectionPoint;
-};
+class CollisionResult;
 
 class CharacterController : public Component
 {
@@ -27,8 +20,8 @@ class CharacterController : public Component
 public:
 	CharacterController(Engine *engine);
 	~CharacterController();
-	void CheckCollisionWithMesh(const CollisionMesh &collisionMesh, mat4 transform);
-	void CheckCollisionWithPlane(const Plane &plane, mat4 transform);
+	void CheckCollisionWithMesh(const CollisionMesh &collisionMesh, mat4 transform, CollisionResult &result) const;
+	void CheckCollisionWithPlane(const Plane &plane, mat4 transform, CollisionResult &result) const;
 	void UpdateTransformedState();
 	void UpdateFromTransformedState();
 	void SetRadius(vec3 radius);

@@ -9,13 +9,15 @@ using namespace FireCube;
 using namespace luabridge;
 
 LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState()), initFunction(engine->GetLuaState()->GetState()), updateFunction(engine->GetLuaState()->GetState()),
-									   handleInputFunction(engine->GetLuaState()->GetState()), awakeFunction(engine->GetLuaState()->GetState())
+									   handleInputFunction(engine->GetLuaState()->GetState()), awakeFunction(engine->GetLuaState()->GetState()), 
+									   characterControllerCollisionFunction(engine->GetLuaState()->GetState())
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 }
 
 LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState()), initFunction(engine->GetLuaState()->GetState()), 
-											   updateFunction(engine->GetLuaState()->GetState()), handleInputFunction(engine->GetLuaState()->GetState()), awakeFunction(engine->GetLuaState()->GetState())
+											   updateFunction(engine->GetLuaState()->GetState()), handleInputFunction(engine->GetLuaState()->GetState()), awakeFunction(engine->GetLuaState()->GetState()),
+											   characterControllerCollisionFunction(engine->GetLuaState()->GetState())
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 	CreateObject(objectName);
@@ -113,11 +115,21 @@ void LuaScript::SubscribeToEventFromLua(const std::string &eventName, LuaRef fun
 		handleInputFunction = function;
 		SubscribeToEvent(Events::HandleInput, &LuaScript::HandleInput);
 	}
+	else if (eventName == "CharacterControllerCollision")
+	{
+		characterControllerCollisionFunction = function;
+		SubscribeToEvent(Events::CharacterControllerCollision, &LuaScript::CharacterControllerCollision);
+	}
 }
 
 void LuaScript::HandleInput(float time, const MappedInput &input)
 {
 	handleInputFunction(object, time, input);
+}
+
+void LuaScript::CharacterControllerCollision(CharacterController *characterController, CollisionShape *collisionShape)
+{
+	characterControllerCollisionFunction(characterController, collisionShape);
 }
 
 Component *LuaScript::Clone() const

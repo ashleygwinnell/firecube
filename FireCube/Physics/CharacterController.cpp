@@ -51,7 +51,7 @@ void CharacterController::SceneChanged(Scene *oldScene)
 	}	
 }
 
-void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionMesh, mat4 transform)
+void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionMesh, mat4 transform, CollisionResult &result) const
 {	
 	transform = scaleMatrix * transform;
 	for (const auto &tri : collisionMesh.triangles)
@@ -243,26 +243,26 @@ void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionM
 			if (foundCollision == true)
 			{
 				float distToCollision = t*transformedVelocity.Length();
-				collisions.push_back(CollisionEntry());
-				CollisionEntry &e = collisions.back();
+				result.collisions.push_back(CollisionEntry());
+				CollisionEntry &e = result.collisions.back();
 				e.time = t;
 				e.distance = distToCollision;
 				e.intersectionPoint = collisionPoint;
 				e.normal = nearestNormal;
-				if ((collisionFound == false) || (distToCollision < nearestDistance))
+				if ((result.collisionFound == false) || (distToCollision < result.nearestDistance))
 				{					
-					this->nearestTime = t;
-					this->nearestDistance = distToCollision;
-					this->nearestIntersectionPoint = collisionPoint;
-					this->nearestNormal = nearestNormal;
-					this->collisionFound = true;				
+					result.nearestTime = t;
+					result.nearestDistance = distToCollision;
+					result.nearestIntersectionPoint = collisionPoint;
+					result.nearestNormal = nearestNormal;
+					result.collisionFound = true;
 				}
 			}
 		}
 	}
 }
 
-void CharacterController::CheckCollisionWithPlane(const Plane &plane, mat4 transform)
+void CharacterController::CheckCollisionWithPlane(const Plane &plane, mat4 transform, CollisionResult &result) const
 {	
 	vec4 p(plane.GetNormal(), -plane.GetDistance());
 	transform = scaleMatrix * transform;
@@ -277,19 +277,19 @@ void CharacterController::CheckCollisionWithPlane(const Plane &plane, mat4 trans
 	if (t >= 0.0f && t <= 1.0f)
 	{
 		float distToCollision = t * transformedVelocity.Length();
-		collisions.push_back(CollisionEntry());
-		CollisionEntry &e = collisions.back();
+		result.collisions.push_back(CollisionEntry());
+		CollisionEntry &e = result.collisions.back();
 		e.time = t;
 		e.distance = distToCollision;
 		e.intersectionPoint = transformedPosition + t * transformedVelocity - n;
 		e.normal = n;
-		if ((collisionFound == false) || (distToCollision < nearestDistance))
+		if ((result.collisionFound == false) || (distToCollision < result.nearestDistance))
 		{			
-			this->nearestTime = t;
-			this->nearestDistance = distToCollision;
-			this->nearestIntersectionPoint = e.intersectionPoint;
-			this->nearestNormal = e.normal;
-			this->collisionFound = true;		
+			result.nearestTime = t;
+			result.nearestDistance = distToCollision;
+			result.nearestIntersectionPoint = e.intersectionPoint;
+			result.nearestNormal = e.normal;
+			result.collisionFound = true;
 		}
 	}
 }

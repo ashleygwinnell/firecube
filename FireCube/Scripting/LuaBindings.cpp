@@ -11,6 +11,7 @@
 #include "Scene/Camera.h"
 #include "Core/Engine.h"
 #include "Rendering/Renderer.h"
+#include "Physics/CollisionShape.h"
 
 using namespace FireCube;
 using namespace luabridge;
@@ -161,6 +162,12 @@ int GetComponent(lua_State *L)
 		ret = node->GetComponent<Camera>();
 		ret.push(L);
 	}
+	else if (type == "CollisionShape")
+	{
+		LuaRef ret(L);
+		ret = node->GetComponent<CollisionShape>();
+		ret.push(L);
+	}
 	else
 	{
 		LuaRef ret(L); // nil
@@ -201,6 +208,8 @@ void LuaBindings::InitScene(lua_State *luaState)
 		.deriveClass<StaticModel, Renderable>("StaticModel")
 		.endClass()
 		.deriveClass<Light, Component>("Light")
+		.endClass()
+		.deriveClass<CollisionShape, Component>("CollisionShape")
 		.endClass()
 		.deriveClass<Camera, Component>("Camera")
 			.addFunction("GetPickingRay", &Camera::GetPickingRay)

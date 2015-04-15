@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Component.h"
+#include "Math/Math.h"
 
 namespace FireCube
 {
@@ -9,7 +10,30 @@ class CollisionShape;
 class CharacterController;
 class RigidBody;
 
-class PhysicsWorld : public Component
+class CollisionEntry
+{
+public:
+	bool operator < (const CollisionEntry &entry);
+	float time;
+	float distance;
+	vec3 normal;
+	vec3 intersectionPoint;
+};
+
+class CollisionResult
+{
+public:
+	CollisionResult();
+
+	bool collisionFound;
+	float nearestTime;
+	float nearestDistance;
+	vec3 nearestNormal;
+	vec3 nearestIntersectionPoint;
+	std::vector<CollisionEntry> collisions;
+};
+
+class FIRECUBE_API PhysicsWorld : public Component
 {
 	OBJECT(PhysicsWorld)
 public:
