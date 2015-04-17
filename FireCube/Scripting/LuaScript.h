@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include "Application/Input.h"
 #include "Utils/utils.h"
 #include "Scripting/LuaFunction.h"
@@ -13,6 +14,11 @@ namespace FireCube
 class LuaFile;
 class CharacterController;
 class CollisionShape;
+
+enum class ScriptFunction
+{
+	INIT, UPDATE, AWAKE
+};
 
 class FIRECUBE_API LuaScript : public Component
 {
@@ -71,7 +77,8 @@ private:
 
 	std::string objectName;
 	luabridge::LuaRef object;
-	luabridge::LuaRef initFunction, updateFunction, handleInputFunction, awakeFunction, characterControllerCollisionFunction;
+	std::map<ScriptFunction, LuaFunction *> scriptFunctions;
+	luabridge::LuaRef handleInputFunction, characterControllerCollisionFunction;
 };
 
 }

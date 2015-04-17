@@ -8,15 +8,13 @@
 using namespace FireCube;
 using namespace luabridge;
 
-LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState()), initFunction(engine->GetLuaState()->GetState()), updateFunction(engine->GetLuaState()->GetState()),
-									   handleInputFunction(engine->GetLuaState()->GetState()), awakeFunction(engine->GetLuaState()->GetState()), 
+LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState()), handleInputFunction(engine->GetLuaState()->GetState()), 
 									   characterControllerCollisionFunction(engine->GetLuaState()->GetState())
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 }
 
-LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState()), initFunction(engine->GetLuaState()->GetState()), 
-											   updateFunction(engine->GetLuaState()->GetState()), handleInputFunction(engine->GetLuaState()->GetState()), awakeFunction(engine->GetLuaState()->GetState()),
+LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState()), handleInputFunction(engine->GetLuaState()->GetState()),
 											   characterControllerCollisionFunction(engine->GetLuaState()->GetState())
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
@@ -27,10 +25,11 @@ LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(othe
 
 void LuaScript::Update(float time)
 {	
-	if (IsEnabled() && updateFunction.isFunction())
+	auto updateFunction = scriptFunctions[ScriptFunction::UPDATE];
+	if (IsEnabled() && updateFunction)
 	{
 		// Call update function	
-		updateFunction(object, time);
+		(*updateFunction)(object, time);
 	}
 }
 
@@ -44,19 +43,21 @@ void LuaScript::NodeChanged()
 	if (object.isTable())
 	{
 		object["node"] = node;
-		if (node && initFunction.isFunction())
-		{
-			initFunction(object);
+		auto initFunction = scriptFunctions[ScriptFunction::INIT];
+		if (node && initFunction)
+		{			
+			(*initFunction)(object);
 		}
 	}
 }
 
 void LuaScript::SceneChanged(Scene *oldScene)
 {
-	if (scene && objectName.empty() == false && IsEnabled() && awakeFunction.isFunction())
+	auto awakeFunction = scriptFunctions[ScriptFunction::AWAKE];
+	if (scene && objectName.empty() == false && IsEnabled() && awakeFunction)
 	{
 		// Call awake function	
-		awakeFunction(object);
+		(*awakeFunction)(object);
 	}
 }
 
@@ -70,6 +71,7 @@ void LuaScript::CreateObject(const std::string &objectName)
 		return;
 	}
 		
+	this->objectName = objectName;
 	object = newTable(state);
 	object.push(state);
 	LuaRef metatable = newTable(state);
@@ -79,19 +81,23 @@ void LuaScript::CreateObject(const std::string &objectName)
 	lua_pop(state, 1);
 	
 	object["script"] = this;
-	initFunction = objectTable["Init"];
-	updateFunction = objectTable["Update"];
-	awakeFunction = objectTable["Awake"];
-	if (node && initFunction.isFunction())
+	scriptFunctions[ScriptFunction::INIT] = GetMemberFunction("Init");	
+	scriptFunctions[ScriptFunction::UPDATE] = GetMemberFunction("Update");	
+	scriptFunctions[ScriptFunction::AWAKE] = GetMemberFunction("Awake");
+	
+	auto initFunction = scriptFunctions[ScriptFunction::INIT];
+	if (node && initFunction)
 	{
 		object["node"] = node;
-		initFunction(object);
+		(*initFunction)(object);
 	}
-	if (scene && awakeFunction.isFunction())
+
+	auto awakeFunction = scriptFunctions[ScriptFunction::AWAKE];
+	if (scene && awakeFunction)
 	{
-		awakeFunction(object);
+		(*awakeFunction)(object);
 	}
-	this->objectName = objectName;
+	
 }
 
 void LuaScript::CreateObject(LuaFile *luaFile, const std::string &objectName)
