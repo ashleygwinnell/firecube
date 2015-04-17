@@ -468,6 +468,44 @@ public:
     else
       lua_pushnil (L);
   }
+
+  /** Push non-const pointer to object given a specific class.
+  */
+  template <class T>
+  static inline void push(lua_State* const L, T* const p, const char *className)
+  {
+	  if (p)
+	  {
+
+		  new (lua_newuserdata(L, sizeof(UserdataPtr))) UserdataPtr(p);
+		  lua_pushstring(L, className);
+		  lua_rawget(L, LUA_REGISTRYINDEX);
+		  // If this goes off it means you forgot to register the class!
+		  assert(lua_istable(L, -1));
+		  lua_setmetatable(L, -2);
+	  }
+	  else
+		  lua_pushnil(L);
+  }
+
+  /** Push const pointer to object given a specific class..
+  */
+  template <class T>
+  static inline void push(lua_State* const L, T const* const p, const char *className)
+  {
+	  if (p)
+	  {
+		  new (lua_newuserdata(L, sizeof(UserdataPtr)))
+			  UserdataPtr(const_cast <void*> (p));
+		  lua_pushstring(L, (std::string(className) + std::string("_const")).c_str());
+		  lua_rawget(L, LUA_REGISTRYINDEX);
+		  // If this goes off it means you forgot to register the class!
+		  assert(lua_istable(L, -1));
+		  lua_setmetatable(L, -2);
+	  }
+	  else
+		  lua_pushnil(L);
+  }
 };
 
 //============================================================================

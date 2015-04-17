@@ -477,8 +477,14 @@ private:
         lua_rawsetp (L, LUA_REGISTRYINDEX, ClassInfo <T>::getStaticKey ());
         lua_pushvalue (L, -2);
         lua_rawsetp (L, LUA_REGISTRYINDEX, ClassInfo <T>::getClassKey ());
+		lua_pushstring(L, name);
+		lua_pushvalue(L, -3);
+		lua_rawset(L, LUA_REGISTRYINDEX);
         lua_pushvalue (L, -3);
         lua_rawsetp (L, LUA_REGISTRYINDEX, ClassInfo <T>::getConstKey ());
+		lua_pushstring(L, (std::string(name) + std::string("_const")).c_str());
+		lua_pushvalue(L, -4);
+		lua_rawset(L, LUA_REGISTRYINDEX);
       }
       else
       {
@@ -528,8 +534,14 @@ private:
       lua_rawsetp (L, LUA_REGISTRYINDEX, ClassInfo <T>::getStaticKey ());
       lua_pushvalue (L, -2);
       lua_rawsetp (L, LUA_REGISTRYINDEX, ClassInfo <T>::getClassKey ());
+	  lua_pushstring(L, name);
+	  lua_pushvalue(L, -3);
+	  lua_rawset(L, LUA_REGISTRYINDEX);
       lua_pushvalue (L, -3);
       lua_rawsetp (L, LUA_REGISTRYINDEX, ClassInfo <T>::getConstKey ());
+	  lua_pushstring(L, (std::string(name) + std::string("_const")).c_str());
+	  lua_pushvalue(L, -4);
+	  lua_rawset(L, LUA_REGISTRYINDEX);
     }
 
     //--------------------------------------------------------------------------
