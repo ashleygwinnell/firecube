@@ -133,47 +133,23 @@ void LuaBindings::InitMath(lua_State *luaState)
 }
 
 int GetComponent(lua_State *L)
-{	
+{
 	LuaRef param1 = LuaRef::fromStack(L, -2);
 	LuaRef param2 = LuaRef::fromStack(L, -1);
 	Node *node = param1.cast<Node *>();
 	std::string type = param2;
-	if (type == "StaticModel")
+
+	Component *component = node->GetComponent(type);
+
+	if (component)
 	{
-		LuaRef ret(L);
-		ret = node->GetComponent<StaticModel>();
-		ret.push(L);
-	}
-	else if (type == "Light")
-	{
-		LuaRef ret(L);
-		ret = node->GetComponent<Light>();
-		ret.push(L);
-	}
-	else if (type == "CharacterController")
-	{
-		LuaRef ret(L);
-		ret = node->GetComponent<CharacterController>();
-		ret.push(L);
-	}
-	else if (type == "Camera")
-	{
-		LuaRef ret(L);
-		ret = node->GetComponent<Camera>();
-		ret.push(L);
-	}
-	else if (type == "CollisionShape")
-	{
-		LuaRef ret(L);
-		ret = node->GetComponent<CollisionShape>();
-		ret.push(L);
+		UserdataPtr::push(L, component, component->GetTypeName().c_str());
 	}
 	else
 	{
-		LuaRef ret(L); // nil
-		ret.push(L);
+		lua_pushnil(L);		
 	}
-		
+
 	return 1;
 }
 
