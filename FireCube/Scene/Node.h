@@ -239,6 +239,8 @@ public:
 
 	std::vector<Component *> &GetComponents();
 
+	void Remove();
+
 protected:		
 
 	template <class T>

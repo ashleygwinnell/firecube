@@ -399,3 +399,8 @@ void Node::SceneChanged(Scene *oldScene)
 		child->SceneChanged(oldScene);
 	}
 }
+
+void Node::Remove()
+{
+	SetParent(nullptr);
+}
