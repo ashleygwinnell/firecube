@@ -61,7 +61,17 @@ public:
 		v.erase(newEnd, v.end());
 	}
 
-	void operator()(Object *sender, Args... args){ for (auto i : v) if (i.first == nullptr || i.first == sender) i.second->Call(args...); }
+	void operator()(Object *sender, Args... args)
+	{ 
+		auto tmpV = v;
+		for (auto i : tmpV)
+		{
+			if ((i.first == nullptr || i.first == sender) && std::find(v.begin(), v.end(), i) != v.end())
+			{
+				i.second->Call(args...);
+			}
+		}
+	}
 
 private:
 	Event(const Event&);
