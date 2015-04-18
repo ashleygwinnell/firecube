@@ -35,6 +35,7 @@ void LuaScript::Update(float time)
 		}
 		catch (LuaException &e)
 		{
+			(void)e; // Disable warning about e not being used
 			LOGERROR(e.what());
 		}		
 	}
@@ -59,6 +60,7 @@ void LuaScript::NodeChanged()
 			}
 			catch (LuaException &e)
 			{
+				(void)e; // Disable warning about e not being used
 				LOGERROR(e.what());
 			}
 		}
@@ -77,6 +79,7 @@ void LuaScript::SceneChanged(Scene *oldScene)
 		}
 		catch (LuaException &e)
 		{
+			(void)e; // Disable warning about e not being used
 			LOGERROR(e.what());
 		}		
 	}
@@ -116,6 +119,7 @@ void LuaScript::CreateObject(const std::string &objectName)
 		}
 		catch (LuaException &e)
 		{
+			(void)e; // Disable warning about e not being used
 			LOGERROR(e.what());
 		}
 	}
@@ -129,6 +133,7 @@ void LuaScript::CreateObject(const std::string &objectName)
 		}
 		catch (LuaException &e)
 		{
+			(void)e; // Disable warning about e not being used
 			LOGERROR(e.what());
 		}		
 	}
@@ -185,6 +190,7 @@ void LuaScript::HandleInput(float time, const MappedInput &input)
 	}
 	catch (LuaException &e)
 	{
+		(void)e; // Disable warning about e not being used
 		LOGERROR(e.what());
 	}	
 }
@@ -197,6 +203,7 @@ void LuaScript::CharacterControllerCollision(CharacterController *characterContr
 	}
 	catch (LuaException &e)
 	{
+		(void)e; // Disable warning about e not being used
 		LOGERROR(e.what());
 	}	
 }
