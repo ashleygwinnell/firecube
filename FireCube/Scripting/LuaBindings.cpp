@@ -60,6 +60,7 @@ struct MatHelper
 void LuaBindings::Init(lua_State *luaState, Engine *engine)
 {
 	LuaBindings::InitMath(luaState);
+	LuaBindings::InitCore(luaState);
 	LuaBindings::InitScene(luaState);
 	LuaBindings::InitUtils(luaState);
 	LuaBindings::InitRenderer(luaState);
@@ -175,8 +176,9 @@ void LuaBindings::InitScene(lua_State *luaState)
 			.addFunction("GetWorldPosition", &Node::GetWorldPosition)			
 			.addCFunctionFree("GetComponent", &GetComponent)	
 			.addFunction("Remove", &Node::Remove)
+			.addProperty("name", &Node::GetName, &Node::SetName)
 		.endClass()
-		.beginClass<Component>("Component")
+		.deriveClass<Component, Object>("Component")
 			.addProperty("node", &Component::GetNode)
 			.addProperty("enabled", &Component::IsEnabled, &Component::SetEnabled)
 		.endClass()		
@@ -231,4 +233,11 @@ void LuaBindings::InitEngine(lua_State *luaState, Engine *engine)
 		.endClass();
 
 	luabridge::setGlobal(luaState, engine, "engine");
+}
+
+void LuaBindings::InitCore(lua_State *luaState)
+{
+	getGlobalNamespace(luaState)
+		.beginClass<Object>("Object")
+		.endClass();
 }

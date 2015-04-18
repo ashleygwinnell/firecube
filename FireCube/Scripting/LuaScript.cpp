@@ -29,7 +29,14 @@ void LuaScript::Update(float time)
 	if (IsEnabled() && updateFunction)
 	{
 		// Call update function	
-		(*updateFunction)(object, time);
+		try
+		{
+			(*updateFunction)(object, time);
+		}
+		catch (LuaException &e)
+		{
+			LOGERROR(e.what());
+		}		
 	}
 }
 
@@ -45,8 +52,15 @@ void LuaScript::NodeChanged()
 		object["node"] = node;
 		auto initFunction = scriptFunctions[ScriptFunction::INIT];
 		if (node && initFunction)
-		{			
-			(*initFunction)(object);
+		{		
+			try
+			{
+				(*initFunction)(object);
+			}
+			catch (LuaException &e)
+			{
+				LOGERROR(e.what());
+			}
 		}
 	}
 }
@@ -57,7 +71,14 @@ void LuaScript::SceneChanged(Scene *oldScene)
 	if (scene && objectName.empty() == false && IsEnabled() && awakeFunction)
 	{
 		// Call awake function	
-		(*awakeFunction)(object);
+		try
+		{
+			(*awakeFunction)(object);
+		}
+		catch (LuaException &e)
+		{
+			LOGERROR(e.what());
+		}		
 	}
 }
 
@@ -88,14 +109,28 @@ void LuaScript::CreateObject(const std::string &objectName)
 	auto initFunction = scriptFunctions[ScriptFunction::INIT];
 	if (node && initFunction)
 	{
-		object["node"] = node;
-		(*initFunction)(object);
+		object["node"] = node;		
+		try
+		{
+			(*initFunction)(object);
+		}
+		catch (LuaException &e)
+		{
+			LOGERROR(e.what());
+		}
 	}
 
 	auto awakeFunction = scriptFunctions[ScriptFunction::AWAKE];
 	if (scene && awakeFunction)
 	{
-		(*awakeFunction)(object);
+		try
+		{
+			(*awakeFunction)(object);
+		}
+		catch (LuaException &e)
+		{
+			LOGERROR(e.what());
+		}		
 	}
 	
 }
@@ -116,28 +151,54 @@ LuaFunction *LuaScript::GetMemberFunction(const std::string &functionName)
 	return GetFunction(objectName + "." + functionName);
 }
 
-void LuaScript::SubscribeToEventFromLua(const std::string &eventName, LuaRef function)
+void LuaScript::SubscribeToEventFromLua(const std::string &eventName, LuaRef param1, LuaRef param2)
 {
+	Object *sender = nullptr;
+	LuaRef function(engine->GetLuaState()->GetState());
+	if (param1.isFunction())
+	{
+		function = param1;
+	}
+	else
+	{
+		sender = param1.cast<Object *>();
+		function = param2;
+	}
+
 	if (eventName == "HandleInput")
 	{
 		handleInputFunction = function;
-		SubscribeToEvent(Events::HandleInput, &LuaScript::HandleInput);
+		SubscribeToEvent(sender, Events::HandleInput, &LuaScript::HandleInput);
 	}
 	else if (eventName == "CharacterControllerCollision")
 	{
 		characterControllerCollisionFunction = function;
-		SubscribeToEvent(Events::CharacterControllerCollision, &LuaScript::CharacterControllerCollision);
+		SubscribeToEvent(sender, Events::CharacterControllerCollision, &LuaScript::CharacterControllerCollision);
 	}
 }
 
 void LuaScript::HandleInput(float time, const MappedInput &input)
 {
-	handleInputFunction(object, time, input);
+	try
+	{
+		handleInputFunction(object, time, input);
+	}
+	catch (LuaException &e)
+	{
+		LOGERROR(e.what());
+	}	
 }
 
 void LuaScript::CharacterControllerCollision(CharacterController *characterController, CollisionShape *collisionShape)
 {
-	characterControllerCollisionFunction(object, characterController, collisionShape);
+	try
+	{
+		characterControllerCollisionFunction(object, characterController, collisionShape);
+	}
+	catch (LuaException &e)
+	{
+		LOGERROR(e.what());
+	}	
 }
 
 Component *LuaScript::Clone() const

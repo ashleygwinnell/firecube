@@ -29,7 +29,7 @@ public:
 	void CreateObject(LuaFile *luaFile, const std::string &objectName);
 	LuaFunction *GetFunction(const std::string &functionName);
 	LuaFunction *GetMemberFunction(const std::string &functionName);
-	void SubscribeToEventFromLua(const std::string &eventName, luabridge::LuaRef function);	
+	void SubscribeToEventFromLua(const std::string &eventName, luabridge::LuaRef param1, luabridge::LuaRef param2);
 
 	template<class... Args>
 	void CallMemberFunction(LuaFunction *function, Args&&... args)

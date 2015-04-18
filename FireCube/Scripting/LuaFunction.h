@@ -14,7 +14,15 @@ public:
 	template<class... Args>
 	void operator ()(Args&&... args)
 	{
-		ref(std::forward<Args>(args)...);
+		try
+		{
+			ref(std::forward<Args>(args)...);
+		}
+		catch (luabridge::LuaException &e)
+		{
+			(void)e; // Disable warning about e not being used
+			LOGERROR(e.what());
+		}		
 	}
 	
 private:
