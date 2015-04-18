@@ -55,6 +55,9 @@
     <Filter Include="Scripting">
       <UniqueIdentifier>{7412e3da-e8bf-4814-9ed1-8c1e38581b12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ThirdParty\LuaBridge">
+      <UniqueIdentifier>{96a62362-69c0-43ae-90db-b95027404a93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Rendering\Font.cpp">
@@ -545,6 +548,57 @@
     </ClInclude>
     <ClInclude Include="Scripting\LuaFunction.h">
       <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\LuaBridge.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\RefCountedObject.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\RefCountedPtr.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\CFunctions.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\ClassInfo.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\Constructor.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\dump.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\FuncTraits.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\Iterator.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\LuaException.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\LuaHelpers.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\LuaRef.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\Namespace.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\Stack.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\TypeList.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\TypeTraits.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaBridge\detail\Userdata.h">
+      <Filter>ThirdParty\LuaBridge</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
