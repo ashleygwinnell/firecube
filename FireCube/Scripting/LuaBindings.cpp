@@ -12,6 +12,9 @@
 #include "Core/Engine.h"
 #include "Rendering/Renderer.h"
 #include "Physics/CollisionShape.h"
+#include "Scene/ParticleEmitter.h"
+#include "Core/ResourceCache.h"
+#include "Rendering/Material.h"
 
 using namespace FireCube;
 using namespace luabridge;
@@ -63,7 +66,7 @@ void LuaBindings::Init(lua_State *luaState, Engine *engine)
 	LuaBindings::InitCore(luaState);
 	LuaBindings::InitScene(luaState);
 	LuaBindings::InitUtils(luaState);
-	LuaBindings::InitRenderer(luaState);
+	LuaBindings::InitRendering(luaState);
 	LuaBindings::InitEngine(luaState, engine);
 }
 
@@ -154,6 +157,28 @@ int GetComponent(lua_State *L)
 	return 1;
 }
 
+int CreateComponent(lua_State *L)
+{
+	int n = lua_gettop(L);
+	LuaRef param1 = LuaRef::fromStack(L, 1);
+	LuaRef param2 = LuaRef::fromStack(L, 2);
+	Node *node = param1.cast<Node *>();
+	std::string type = param2;
+
+	if (type == "ParticleEmitter")
+	{
+		LuaRef param3 = LuaRef::fromStack(L, 3);
+		LuaRef param4 = LuaRef::fromStack(L, 4);
+		auto particleEmitter = node->CreateComponent<ParticleEmitter>(param3, param4.cast<Material *>());
+	}
+	else
+	{
+		lua_pushnil(L);
+	}
+
+	return 1;
+}
+
 void LuaBindings::InitScene(lua_State *luaState)
 {
 	getGlobalNamespace(luaState)
@@ -175,6 +200,7 @@ void LuaBindings::InitScene(lua_State *luaState)
 			.addFunction("GetWorldTransformation", &Node::GetWorldTransformation)
 			.addFunction("GetWorldPosition", &Node::GetWorldPosition)			
 			.addCFunctionFree("GetComponent", &GetComponent)	
+			.addCFunctionFree("CreateComponent", &CreateComponent)
 			.addFunction("Remove", &Node::Remove)
 			.addProperty("name", &Node::GetName, &Node::SetName)
 		.endClass()
@@ -189,6 +215,8 @@ void LuaBindings::InitScene(lua_State *luaState)
 		.deriveClass<Light, Component>("Light")
 		.endClass()
 		.deriveClass<CollisionShape, Component>("CollisionShape")
+		.endClass()
+		.deriveClass<ParticleEmitter, Renderable>("ParticleEmitter")
 		.endClass()
 		.deriveClass<Camera, Component>("Camera")
 			.addFunction("GetPickingRay", &Camera::GetPickingRay)
@@ -216,12 +244,16 @@ void LuaBindings::InitUtils(lua_State *luaState)
 		.endClass();
 }
 
-void LuaBindings::InitRenderer(lua_State *luaState)
+void LuaBindings::InitRendering(lua_State *luaState)
 {
 	getGlobalNamespace(luaState)
 		.beginClass<Renderer>("Renderer")
 			.addProperty("width", &Renderer::GetWidth)
 			.addProperty("height", &Renderer::GetHeight)
+		.endClass()
+		.deriveClass<Material, Resource>("Material")
+		.endClass()
+		.deriveClass<Mesh, Resource>("Mesh")
 		.endClass();
 }
 
@@ -230,14 +262,50 @@ void LuaBindings::InitEngine(lua_State *luaState, Engine *engine)
 	getGlobalNamespace(luaState)
 		.beginClass<Engine>("Engine")
 			.addProperty("renderer", &Engine::GetRenderer)
+			.addProperty("resourceCache", &Engine::GetResourceCache)
 		.endClass();
 
 	luabridge::setGlobal(luaState, engine, "engine");
+}
+
+int GetResource(lua_State *L)
+{
+	LuaRef param1 = LuaRef::fromStack(L, -3);
+	LuaRef param2 = LuaRef::fromStack(L, -2);
+	LuaRef param3 = LuaRef::fromStack(L, -1);
+	ResourceCache *resrouceCahce = param1.cast<ResourceCache*>();
+	std::string type = param2;
+	std::string path = param3;
+
+	
+	if (type == "Material")	
+	{
+		auto mat = resrouceCahce->GetResource<Material>(path);
+		if (mat)
+		{
+			UserdataPtr::push(L, mat);
+		}
+		else
+		{
+			lua_pushnil(L);
+		}		
+	}
+	else
+	{
+		lua_pushnil(L);
+	}
+
+	return 1;
 }
 
 void LuaBindings::InitCore(lua_State *luaState)
 {
 	getGlobalNamespace(luaState)
 		.beginClass<Object>("Object")
+		.endClass()
+		.beginClass<Resource>("Resource")
+		.endClass()
+		.beginClass<ResourceCache>("ResourceCache")
+			.addCFunctionFree("GetResource", &GetResource)
 		.endClass();
 }
