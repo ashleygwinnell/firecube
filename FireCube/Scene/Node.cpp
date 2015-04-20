@@ -330,6 +330,7 @@ void Node::RemoveComponent(Component *component)
 	{
 		if (*i == component)
 		{
+			component->SetScene(nullptr);
 			component->SetNode(nullptr);
 			components.erase(i);
 			delete component;
@@ -352,6 +353,7 @@ void Node::RemoveAllComponents()
 {
 	for (auto component : components)
 	{
+		component->SetScene(nullptr);
 		component->SetNode(nullptr);
 		delete component;
 	}

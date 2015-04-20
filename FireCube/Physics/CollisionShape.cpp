@@ -30,10 +30,7 @@ CollisionShape::CollisionShape(const CollisionShape &other) : Component(other), 
 
 CollisionShape::~CollisionShape()
 {
-	if (physicsWorld)
-	{
-		physicsWorld->RemoveCollisionShape(this);
-	}
+
 }
 
 CollisionShapeType CollisionShape::GetShapeType() const
@@ -56,8 +53,10 @@ void CollisionShape::SceneChanged(Scene *oldScene)
 {
 	if (oldScene)
 	{
-		physicsWorld = oldScene->GetRootNode()->GetComponent<PhysicsWorld>();
-		physicsWorld->RemoveCollisionShape(this);
+		if (physicsWorld.Expired() == false)
+		{
+			physicsWorld->RemoveCollisionShape(this);
+		}				
 	}
 
 	if (scene)

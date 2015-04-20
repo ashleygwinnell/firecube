@@ -21,10 +21,7 @@ CharacterController::CharacterController(const CharacterController &other) : Com
 
 CharacterController::~CharacterController()
 {
-	if (physicsWorld)
-	{
-		physicsWorld->RemoveCharacterController(this);
-	}
+	
 }
 
 void CharacterController::MarkedDirty()
@@ -40,8 +37,10 @@ void CharacterController::SceneChanged(Scene *oldScene)
 {
 	if (oldScene)
 	{
-		physicsWorld = oldScene->GetRootNode()->GetComponent<PhysicsWorld>();
-		physicsWorld->RemoveCharacterController(this);
+		if (physicsWorld.Expired() == false)
+		{
+			physicsWorld->RemoveCharacterController(this);
+		}		
 	}
 
 	if (scene)
