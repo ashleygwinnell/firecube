@@ -253,7 +253,7 @@ void Node::RemoveAllChildren()
 	children.clear();
 }
 
-std::vector<SharedPtr<Node>> Node::GetChildren()
+std::vector<SharedPtr<Node>> Node::GetChildren() const
 {
 	return children;
 }

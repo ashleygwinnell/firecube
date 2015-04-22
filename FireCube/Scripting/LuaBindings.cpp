@@ -15,6 +15,7 @@
 #include "Scene/ParticleEmitter.h"
 #include "Core/ResourceCache.h"
 #include "Rendering/Material.h"
+#include "Geometry/CollisionQuery.h"
 
 using namespace FireCube;
 using namespace luabridge;
@@ -101,6 +102,7 @@ void LuaBindings::InitMath(lua_State *luaState)
 			.addStaticFunction("Cross", (float(*)(const vec2 &, const vec2 &)) &FireCube::Cross)
 		.endClass()
 		.beginClass<Ray>("Ray")
+			.addConstructor<void(*) (const vec3 &, const vec3 &)>()
 			.addData("origin", &Ray::origin)
 			.addData("direction", &Ray::direction)
 		.endClass()
@@ -179,11 +181,38 @@ int CreateComponent(lua_State *L)
 	return 1;
 }
 
+namespace luabridge
+{
+
+template <>
+struct Stack < std::vector<SharedPtr<Node>> >
+{
+	static void push(lua_State* L, const std::vector<SharedPtr<Node>> &nodes)
+	{
+		LuaRef ret = LuaRef::newTable(L);
+
+		for (auto &n : nodes)
+		{
+			ret.append(n.Get());
+		}
+
+		ret.push(L);
+	}	
+};
+
+}
+
+void IntersectRay(Scene *scene, RayQuery *rayQuery, unsigned int collisionQueryMask)
+{
+	scene->IntersectRay(*rayQuery, collisionQueryMask);
+}
+
 void LuaBindings::InitScene(lua_State *luaState)
 {
 	getGlobalNamespace(luaState)
 		.beginClass<Scene>("Scene")
 			.addFunction("ClonePrefab", &Scene::ClonePrefab)
+			.addFunctionFree("IntersectRay", &IntersectRay)
 			.addProperty("camera", &Scene::GetCamera, &Scene::SetCamera)
 		.endClass()
 		.beginClass<Node>("Node")
@@ -203,6 +232,7 @@ void LuaBindings::InitScene(lua_State *luaState)
 			.addCFunctionFree("CreateComponent", &CreateComponent)
 			.addFunction("Remove", &Node::Remove)
 			.addProperty("name", &Node::GetName, &Node::SetName)
+			.addProperty("children", &Node::GetChildren)
 		.endClass()
 		.deriveClass<Component, Object>("Component")
 			.addProperty("node", &Component::GetNode)
@@ -230,11 +260,45 @@ void LuaBindings::InitScene(lua_State *luaState)
 		.endClass();
 }
 
+namespace luabridge
+{
+
+template <>
+struct Stack < std::vector<RayQueryResult> >
+{
+	static void push(lua_State* L, const std::vector<RayQueryResult> &results)
+	{
+		LuaRef ret = LuaRef::newTable(L);
+		for (auto &result : results)
+		{
+			ret.append(result);
+		}
+
+		ret.push(L);
+	}
+
+	static std::vector<RayQueryResult> get(lua_State* L, int index)
+	{
+		return{};
+	}
+};
+
+}
+
 void LuaBindings::InitUtils(lua_State *luaState)
 {
 	getGlobalNamespace(luaState)
 		.beginClass<StringHash>("StringHash")			
 			.addConstructor<void(*) (const std::string &)>()
+		.endClass()
+		.beginClass<RayQueryResult>("RayQueryResult")
+			.addData("distance", &RayQueryResult::distance)
+			.addData("normal", &RayQueryResult::normal)
+			.addData("renderable", &RayQueryResult::renderable)
+		.endClass()
+		.beginClass<RayQuery>("RayQuery")
+			.addConstructor<void(*) (const Ray &, float)>()			
+			.addData("results", &RayQuery::results, false)
 		.endClass()
 		.beginClass<MappedInput>("MappedInput")
 			.addFunction("IsStateOn", &MappedInput::IsStateOn)

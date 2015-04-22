@@ -149,7 +149,7 @@ public:
 	* Gets the children of this node.
 	* @return A list of children.
 	*/
-	std::vector<SharedPtr<Node>> GetChildren();
+	std::vector<SharedPtr<Node>> GetChildren() const;
 	
 	/**
 	* Adds a child node.
