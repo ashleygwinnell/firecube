@@ -78,6 +78,14 @@
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\StaticModel.cpp" />
     <ClCompile Include="Scene\Terrain.cpp" />
+    <ClCompile Include="Scripting\Bindings\CoreBindings.cpp" />
+    <ClCompile Include="Scripting\Bindings\GeometryBindings.cpp" />
+    <ClCompile Include="Scripting\Bindings\MathBindings.cpp" />
+    <ClCompile Include="Scripting\Bindings\PhysicsBindings.cpp" />
+    <ClCompile Include="Scripting\Bindings\RenderingBindings.cpp" />
+    <ClCompile Include="Scripting\Bindings\SceneBindings.cpp" />
+    <ClCompile Include="Scripting\Bindings\ScriptingBindings.cpp" />
+    <ClCompile Include="Scripting\Bindings\UtilsBindings.cpp" />
     <ClCompile Include="Scripting\LuaBindings.cpp" />
     <ClCompile Include="Scripting\LuaFile.cpp" />
     <ClCompile Include="Scripting\LuaFunction.cpp" />

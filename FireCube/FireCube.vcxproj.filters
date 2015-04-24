@@ -58,6 +58,9 @@
     <Filter Include="ThirdParty\LuaBridge">
       <UniqueIdentifier>{96a62362-69c0-43ae-90db-b95027404a93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripting\Bindings">
+      <UniqueIdentifier>{c1d8b1c3-d331-4447-8d80-4966f75cf604}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Rendering\Font.cpp">
@@ -299,6 +302,30 @@
     </ClCompile>
     <ClCompile Include="Scripting\LuaFunction.cpp">
       <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\Bindings\CoreBindings.cpp">
+      <Filter>Scripting\Bindings</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\Bindings\GeometryBindings.cpp">
+      <Filter>Scripting\Bindings</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\Bindings\MathBindings.cpp">
+      <Filter>Scripting\Bindings</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\Bindings\PhysicsBindings.cpp">
+      <Filter>Scripting\Bindings</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\Bindings\RenderingBindings.cpp">
+      <Filter>Scripting\Bindings</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\Bindings\SceneBindings.cpp">
+      <Filter>Scripting\Bindings</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\Bindings\ScriptingBindings.cpp">
+      <Filter>Scripting\Bindings</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\Bindings\UtilsBindings.cpp">
+      <Filter>Scripting\Bindings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
