@@ -17,6 +17,8 @@ public:
 	virtual void IntersectRay(RayQuery &rayQuery);
 	void Reset();
 	virtual Component *Clone() const;
+	void SetMaterial(Material *material);
+	Material *GetMaterial() const;
 protected:
 	void SetBoundingBox(BoundingBox boundingBox);
 	virtual void UpdateWorldBoundingBox();

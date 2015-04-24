@@ -132,3 +132,13 @@ Component *ParticleEmitter::Clone() const
 	ParticleEmitter *clone = new ParticleEmitter(*this);
 	return clone;
 }
+
+void ParticleEmitter::SetMaterial(Material *material)
+{
+	renderableParts[0].material = material;
+}
+
+Material *ParticleEmitter::GetMaterial() const
+{
+	return renderableParts[0].material;
+}
