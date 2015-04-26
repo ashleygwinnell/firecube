@@ -57,8 +57,17 @@ Sound *SoundEmitter::GetSound() const
 
 void SoundEmitter::Play()
 {
-	position = sound->GetStart();
-	fractPosition = 0;
+	if (position)
+	{
+		std::lock_guard<std::mutex> lock(engine->GetAudio()->GetMutex());
+		position = sound->GetStart();
+		fractPosition = 0;
+	}
+	else
+	{
+		position = sound->GetStart();
+		fractPosition = 0;
+	}
 }
 
 void SoundEmitter::Mix(int *dest, unsigned int samples, unsigned int mixRate, bool stereo)
