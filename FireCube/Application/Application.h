@@ -24,6 +24,7 @@ class ResourceCache;
 class DebugRenderer;
 class UI;
 class LuaState;
+class Audio;
 
 /**
 * This class is responsible for the initialization and running of the application.
@@ -121,6 +122,7 @@ protected:
 	DebugRenderer *debugRenderer;
 	UI *ui;
 	LuaState *luaState;
+	Audio *audio;
 private:
 	void InitKeyMap();
 	void ProcessInput(const SDL_Event &event);

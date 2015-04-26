@@ -61,6 +61,9 @@
     <Filter Include="Scripting\Bindings">
       <UniqueIdentifier>{c1d8b1c3-d331-4447-8d80-4966f75cf604}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{69e533eb-1c94-4e4a-bf09-2b4c3dcdb178}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Rendering\Font.cpp">
@@ -326,6 +329,15 @@
     </ClCompile>
     <ClCompile Include="Scripting\Bindings\UtilsBindings.cpp">
       <Filter>Scripting\Bindings</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\Audio.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\Sound.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SoundEmitter.cpp">
+      <Filter>Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -626,6 +638,15 @@
     </ClInclude>
     <ClInclude Include="ThirdParty\LuaBridge\detail\Userdata.h">
       <Filter>ThirdParty\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\Audio.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\Sound.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SoundEmitter.h">
+      <Filter>Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

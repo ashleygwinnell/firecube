@@ -56,6 +56,18 @@ std::string &RightTrim(std::string &s);
 
 std::string &Trim(std::string &s);
 
+template<typename T>
+T Clamp(T val, T min, T max)
+{
+	if (val < min)
+		return min;
+	else if (val > max)
+		return max;
+	else
+		return val;
+}
+
+
 /**
 * Specifies the maximum number of textures in various locations.
 */

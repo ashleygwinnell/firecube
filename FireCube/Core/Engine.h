@@ -11,6 +11,7 @@ class InputManager;
 class DebugRenderer;
 class UI;
 class LuaState;
+class Audio;
 
 class FIRECUBE_API Engine
 {
@@ -28,6 +29,9 @@ public:
 	UI *GetUI() const;
 	void SetLuaState(LuaState *luaState);
 	LuaState *GetLuaState() const;
+	void SetAudio(Audio *audio);
+	Audio *GetAudio() const;
+
 private:
 	Renderer *renderer;
 	ResourceCache *resourceCache;
@@ -35,6 +39,7 @@ private:
 	DebugRenderer *debugRenderer;
 	UI *ui;
 	LuaState *luaState;
+	Audio *audio;
 };
 
 }

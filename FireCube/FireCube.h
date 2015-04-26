@@ -57,3 +57,6 @@
 #include "Scripting/LuaScript.h"
 #include "Scripting/LuaFile.h"
 #include "Scripting/LuaFunction.h"
+#include "Audio/Audio.h"
+#include "Audio/Sound.h"
+#include "Audio/SoundEmitter.h"

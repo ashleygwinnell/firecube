@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="Application\Input.cpp" />
+    <ClCompile Include="Audio\Audio.cpp" />
+    <ClCompile Include="Audio\Sound.cpp" />
+    <ClCompile Include="Audio\SoundEmitter.cpp" />
     <ClCompile Include="Core\Component.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
     <ClCompile Include="Core\Events.cpp" />
@@ -111,6 +114,9 @@
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="Application\Input.h" />
+    <ClInclude Include="Audio\Audio.h" />
+    <ClInclude Include="Audio\Sound.h" />
+    <ClInclude Include="Audio\SoundEmitter.h" />
     <ClInclude Include="Core\Component.h" />
     <ClInclude Include="Core\Engine.h" />
     <ClInclude Include="Core\Events.h" />

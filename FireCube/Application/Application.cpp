@@ -10,6 +10,7 @@
 #include "UI/UI.h"
 #include "Rendering/Font.h"
 #include "Scripting/LuaState.h"
+#include "Audio/Audio.h"
 
 using namespace FireCube;
 
@@ -20,7 +21,7 @@ Application::Application() : Object(new Engine), running(false), frameCount(0), 
 
 Application::~Application()
 {
-	delete luaState;
+	Destroy();	
 }
 
 bool Application::Initialize()
@@ -30,7 +31,7 @@ bool Application::Initialize()
 
 bool Application::Initialize(int width, int height, int multisample, bool fullscreen)
 {    
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 		return false;
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -72,6 +73,9 @@ bool Application::InitializeNoWindow()
 	renderer->SetWidth(width);
 	renderer->SetHeight(height);
 	renderer->SetViewport(0, 0, width, height);
+	audio = new Audio();
+	audio->Init();
+	engine->SetAudio(audio);
 	InitKeyMap();	
 	glewExperimental = GL_TRUE;
 	glewInit();
@@ -94,12 +98,15 @@ bool Application::InitializeNoWindow()
 
 void Application::Destroy()
 {
+	LOGINFO("Destroying application");
 	delete resourceCache;
 	renderer->Destroy();
 	delete renderer;
 	delete debugRenderer;
-	delete ui;
-	LOGINFO("Destroying application");
+	delete ui;	
+	delete luaState;
+	delete audio;
+
 	if (context)
 		SDL_GL_DeleteContext(*context);
 	if (mainWindow)
@@ -169,8 +176,7 @@ void Application::Run()
 			frameCount = 0;
 		}
 	}
-	LOGINFO("Exiting main loop...");
-	Destroy();
+	LOGINFO("Exiting main loop...");	
 }
 
 void Application::SetTitle(const std::string &title)

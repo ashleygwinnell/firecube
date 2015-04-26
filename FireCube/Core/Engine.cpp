@@ -64,3 +64,13 @@ LuaState *Engine::GetLuaState() const
 {
 	return luaState;
 }
+
+void Engine::SetAudio(Audio *audio)
+{
+	this->audio = audio;
+}
+
+Audio *Engine::GetAudio() const
+{
+	return audio;
+}
