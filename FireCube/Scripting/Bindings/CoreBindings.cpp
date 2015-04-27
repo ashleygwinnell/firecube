@@ -7,6 +7,7 @@
 #include "Rendering/Material.h"
 #include "Geometry/Mesh.h"
 #include "Scripting/LuaFile.h"
+#include "Audio/Sound.h"
 
 using namespace FireCube;
 using namespace luabridge;
@@ -47,6 +48,18 @@ int GetResource(lua_State *L)
 	else if (type == "LuaFile")
 	{
 		auto resource = resrouceCahce->GetResource<LuaFile>(path);
+		if (resource)
+		{
+			UserdataPtr::push(L, resource);
+		}
+		else
+		{
+			lua_pushnil(L);
+		}
+	}
+	else if (type == "Sound")
+	{
+		auto resource = resrouceCahce->GetResource<Sound>(path);
 		if (resource)
 		{
 			UserdataPtr::push(L, resource);

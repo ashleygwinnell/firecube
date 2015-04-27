@@ -10,6 +10,11 @@ SoundEmitter::SoundEmitter(Engine *engine) : Component(engine), sound(nullptr), 
 
 }
 
+SoundEmitter::SoundEmitter(Engine *engine, Sound *sound) : SoundEmitter(engine)
+{
+	SetSound(sound);
+}
+
 SoundEmitter::SoundEmitter(const SoundEmitter &other) : Component(other), sound(other.sound), looped(other.looped), gain(other.gain), panning(other.panning), 
 														position(other.position), fractPosition(other.fractPosition)
 {

@@ -339,6 +339,9 @@
     <ClCompile Include="Audio\SoundEmitter.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
+    <ClCompile Include="Scripting\Bindings\AudioBindings.cpp">
+      <Filter>Scripting\Bindings</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">

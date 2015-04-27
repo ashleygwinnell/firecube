@@ -14,6 +14,7 @@ void LuaBindings::Init(lua_State *luaState, Engine *engine)
 	LuaBindings::InitScripting(luaState);
 	LuaBindings::InitGeometry(luaState);
 	LuaBindings::InitPhysics(luaState);
+	LuaBindings::InitAudio(luaState);
 
 }
 

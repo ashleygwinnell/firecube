@@ -25,6 +25,7 @@ public:
 	static void InitScripting(lua_State *luaState);
 	static void InitGeometry(lua_State *luaState);
 	static void InitPhysics(lua_State *luaState);
+	static void InitAudio(lua_State *luaState);
 };
 
 }

@@ -81,6 +81,7 @@
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\StaticModel.cpp" />
     <ClCompile Include="Scene\Terrain.cpp" />
+    <ClCompile Include="Scripting\Bindings\AudioBindings.cpp" />
     <ClCompile Include="Scripting\Bindings\CoreBindings.cpp" />
     <ClCompile Include="Scripting\Bindings\GeometryBindings.cpp" />
     <ClCompile Include="Scripting\Bindings\MathBindings.cpp" />

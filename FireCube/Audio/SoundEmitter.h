@@ -13,6 +13,7 @@ class FIRECUBE_API SoundEmitter : public Component
 	OBJECT(SoundEmitter)
 public:
 	SoundEmitter(Engine *engine);
+	SoundEmitter(Engine *engine, Sound *sound);
 	SoundEmitter(const SoundEmitter &other);
 	virtual Component *Clone() const;	
 	void SetSound(Sound *sound);

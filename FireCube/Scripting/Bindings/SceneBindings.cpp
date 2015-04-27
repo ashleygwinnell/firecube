@@ -11,6 +11,7 @@
 #include "Scene/Camera.h"
 #include "Physics/CollisionShape.h"
 #include "Scripting/LuaScript.h"
+#include "Audio/SoundEmitter.h"
 
 using namespace FireCube;
 using namespace luabridge;
@@ -79,6 +80,21 @@ int CreateComponent(lua_State *L)
 	else if (type == "LuaScript")
 	{
 		auto component = node->CreateComponent<LuaScript>();
+		UserdataPtr::push(L, component);
+	}
+	else if (type == "SoundEmitter")
+	{
+		SoundEmitter *component;
+		if (lua_gettop(L) == 3)
+		{
+			LuaRef param3 = LuaRef::fromStack(L, 3);
+			component = node->CreateComponent<SoundEmitter>(param3.cast<Sound *>());
+		}
+		else
+		{
+			component = node->CreateComponent<SoundEmitter>();
+		}
+		
 		UserdataPtr::push(L, component);
 	}
 	else
