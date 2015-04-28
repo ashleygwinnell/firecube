@@ -16,6 +16,7 @@ void LuaBindings::InitPhysics(lua_State *luaState)
 		.endClass()
 		.deriveClass<CollisionShape, Component>("CollisionShape")
 			.addFunction("SetBox", &CollisionShape::SetBox)
+			.addFunction("SetPlane", &CollisionShape::SetPlane)
 			.addProperty("isTrigger", &CollisionShape::IsTrigger, &CollisionShape::SetIsTrigger)
 		.endClass();
 }

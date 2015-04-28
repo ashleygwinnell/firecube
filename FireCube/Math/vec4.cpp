@@ -112,6 +112,14 @@ vec4 vec4::Normalize()
 	return *this;
 }
 
+vec4 vec4::Normalized() const
+{
+	vec4 ret = *this;
+	ret.Normalize();
+	return ret;
+}
+
+
 float vec4::Length() const
 {
 	return (float) sqrt(x * x + y * y + z * z + w * w);

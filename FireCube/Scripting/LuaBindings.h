@@ -5,6 +5,7 @@
 #include "Rendering/RenderingTypes.h"
 #include "Core/Memory.h"
 #include "Scene/Node.h"
+#include "Scene/Light.h"
 
 struct lua_State;
 
@@ -67,6 +68,22 @@ struct Stack < FireCube::PrimitiveType >
 	}
 
 };
+
+template <>
+struct Stack < FireCube::LightType >
+{
+	static void push(lua_State* L, FireCube::LightType type)
+	{
+		lua_pushnumber(L, static_cast<unsigned int>(type));
+	}
+
+	static FireCube::LightType get(lua_State* L, int index)
+	{
+		return static_cast<FireCube::LightType>((unsigned int)lua_tonumber(L, index));
+	}
+
+};
+
 
 template <>
 struct Stack < std::vector<FireCube::SharedPtr<FireCube::Node>> >

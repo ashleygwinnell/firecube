@@ -5,6 +5,7 @@
 #include "Geometry/GeometryGenerator.h"
 #include "Geometry/Mesh.h"
 #include "Geometry/CollisionQuery.h"
+#include "Geometry/AnimatedMesh.h"
 
 using namespace FireCube;
 using namespace luabridge;
@@ -29,6 +30,9 @@ void LuaBindings::InitGeometry(lua_State *luaState)
 			.addFunction("SetBoundingBox", &Mesh::SetBoundingBox)
 			.addFunction("GetBoundingBox", &Mesh::GetBoundingBox)
 			.addProperty("boundingBox", &Mesh::GetBoundingBox, &Mesh::SetBoundingBox)
+		.endClass()
+		.deriveClass<AnimatedMesh, Resource>("AnimatedMesh")
+			.addConstructor<void(*) (Engine *)>()			
 		.endClass()
 		.beginClass<RayQueryResult>("RayQueryResult")
 			.addData("distance", &RayQueryResult::distance)

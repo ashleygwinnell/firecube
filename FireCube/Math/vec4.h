@@ -194,6 +194,11 @@ public:
 	vec4 Normalize();
 
 	/**
+	* Returns the vector normalized.
+	*/
+	vec4 Normalized() const;
+
+	/**
 	* Returns the length of the vector
 	*/
 	float Length() const;

@@ -9,6 +9,7 @@
 #include "Scene/ParticleEmitter.h"
 #include "Scene/CustomGeometry.h"
 #include "Scene/Camera.h"
+#include "Scene/AnimatedModel.h"
 #include "Physics/CollisionShape.h"
 #include "Scripting/LuaScript.h"
 #include "Audio/SoundEmitter.h"
@@ -97,6 +98,26 @@ int CreateComponent(lua_State *L)
 		
 		UserdataPtr::push(L, component);
 	}
+	else if (type == "AnimatedModel")
+	{
+		AnimatedModel *component;
+		if (lua_gettop(L) == 3)
+		{
+			LuaRef param3 = LuaRef::fromStack(L, 3);
+			component = node->CreateComponent<AnimatedModel>(param3.cast<AnimatedMesh *>());
+		}
+		else
+		{
+			component = node->CreateComponent<AnimatedModel>();
+		}
+
+		UserdataPtr::push(L, component);
+	}
+	else if (type == "Light")
+	{
+		auto component = node->CreateComponent<Light>();
+		UserdataPtr::push(L, component);
+	}
 	else
 	{
 		lua_pushnil(L);
@@ -113,6 +134,25 @@ void IntersectRay(Scene *scene, RayQuery *rayQuery, unsigned int collisionQueryM
 Node *NodeNew(Engine *engine, const std::string &name)
 {
 	return new Node(engine, name);
+}
+
+int Clone(lua_State *L)
+{
+	LuaRef param1 = LuaRef::fromStack(L, -1);	
+	Component *component = param1.cast<Component *>();	
+
+	Component *clonedComponent = component->Clone();
+
+	if (clonedComponent)
+	{
+		UserdataPtr::push(L, clonedComponent, clonedComponent->GetTypeName().c_str());
+	}
+	else
+	{
+		lua_pushnil(L);
+	}
+
+	return 1;
 }
 
 void LuaBindings::InitScene(lua_State *luaState)
@@ -145,24 +185,36 @@ void LuaBindings::InitScene(lua_State *luaState)
 			.addProperty("children", &Node::GetChildren)
 			.addFunction("CreateChild", &Node::CreateChild)
 			.addStaticFunction("New", &NodeNew)
+			.addFunction("LookAt", &Node::LookAt)
 		.endClass()
 		.deriveClass<Component, Object>("Component")
 			.addProperty("node", &Component::GetNode)
 			.addProperty("enabled", &Component::IsEnabled, &Component::SetEnabled)
+			.addCFunctionFree("Clone", &Clone)
 		.endClass()
 		.deriveClass<Renderable, Component>("Renderable")
 			.addFunction("SetCollisionQueryMask", &Renderable::SetCollisionQueryMask)
 			.addFunction("GetCollisionQueryMask", &Renderable::GetCollisionQueryMask)
+			.addProperty("collisionQueryMask", &Renderable::GetCollisionQueryMask, &Renderable::SetCollisionQueryMask)
 			.addFunction("SetReceiveShadow", &Renderable::SetReceiveShadow)
 			.addFunction("GetReceiveShadow", &Renderable::GetReceiveShadow)
+			.addProperty("receiveShadow", &Renderable::GetReceiveShadow, &Renderable::SetReceiveShadow)
 			.addFunction("SetCastShadow", &Renderable::SetCastShadow)
 			.addFunction("GetCastShadow", &Renderable::GetCastShadow)
+			.addProperty("castShadow", &Renderable::GetCastShadow, &Renderable::SetCastShadow)
 			.addFunction("SetLightMask", &Renderable::SetLightMask)
 			.addFunction("GetLightMask", &Renderable::GetLightMask)
+			.addProperty("lightMask", &Renderable::GetLightMask, &Renderable::SetLightMask)
 		.endClass()
 		.deriveClass<StaticModel, Renderable>("StaticModel")
 		.endClass()
+		.deriveClass<AnimatedModel, Renderable>("AnimatedModel")
+		.endClass()
 		.deriveClass<Light, Component>("Light")
+			.addProperty("lightType", &Light::GetLightType, &Light::SetLightType)
+			.addProperty("castShadow", &Light::GetCastShadow, &Light::SetCastShadow)
+			.addProperty("color", &Light::GetColor, &Light::SetColor)
+			.addProperty("spotCutOff", &Light::GetSpotCutOff, &Light::SetSpotCutOff)
 		.endClass()		
 		.deriveClass<ParticleEmitter, Renderable>("ParticleEmitter")
 			.addFunction("Reset", &ParticleEmitter::Reset)
@@ -182,4 +234,10 @@ void LuaBindings::InitScene(lua_State *luaState)
 		.deriveClass<Camera, Component>("Camera")
 			.addFunction("GetPickingRay", &Camera::GetPickingRay)
 		.endClass();
+
+	LuaRef t = LuaRef::newTable(luaState);
+	t["DIRECTIONAL"] = static_cast<unsigned int>(LightType::DIRECTIONAL);
+	t["POINT"] = static_cast<unsigned int>(LightType::POINT);
+	t["SPOT"] = static_cast<unsigned int>(LightType::SPOT);
+	setGlobal(luaState, t, "LightType");
 }
