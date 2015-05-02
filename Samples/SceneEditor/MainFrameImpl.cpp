@@ -23,6 +23,7 @@ void MainFrameImpl::MyButtonClicked( wxCommandEvent& event )
 	model->SetCollisionQueryMask(USER_GEOMETRY);	
 	editorState->ExecuteCommand(new AddNodeCommand(editorState, nodeDescriptor, rootDescriptor));
 	this->glCanvas->Refresh(false);
+	this->glCanvas->SetFocus();
 }
 
 void MainFrameImpl::LoadMeshClicked(wxCommandEvent& event)
@@ -37,6 +38,7 @@ void MainFrameImpl::LoadMeshClicked(wxCommandEvent& event)
 	model->SetCollisionQueryMask(USER_GEOMETRY);
 	editorState->ExecuteCommand(new AddNodeCommand(editorState, nodeDescriptor, rootDescriptor));
 	this->glCanvas->Refresh(false);
+	this->glCanvas->SetFocus();
 }
 
 void MainFrameImpl::SetSceneDescriptor(SceneDescriptor *sceneDescriptor)

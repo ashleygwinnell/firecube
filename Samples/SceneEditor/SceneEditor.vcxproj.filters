@@ -57,6 +57,9 @@
     <ClCompile Include="Commands\AddNodeCommand.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="Commands\RemoveNodeCommand.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -102,6 +105,9 @@
       <Filter>Gizmos</Filter>
     </ClInclude>
     <ClInclude Include="Commands\AddNodeCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Commands\RemoveNodeCommand.h">
       <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>

@@ -12,6 +12,7 @@ using namespace FireCube;
 #include "Gizmos/ScaleGizmo.h"
 #include "MainFrameImpl.h"
 #include "Commands/TransformCommands.h"
+#include "Commands/RemoveNodeCommand.h"
 
 GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()),
@@ -247,12 +248,9 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 		if (transformGizmo != translateGizmo.Get())
 		{
 			transformGizmo->Hide();
-			transformGizmo = translateGizmo.Get();
-			if (editorState->GetSelectedNode())
-			{
-				UpdateGizmo();
-				transformGizmo->Show();
-			}
+			transformGizmo = translateGizmo.Get();			
+			UpdateGizmo();
+			
 			this->Refresh(false);
 		}
 	}
@@ -261,12 +259,9 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 		if (transformGizmo != rotateGizmo.Get())
 		{
 			transformGizmo->Hide();
-			transformGizmo = rotateGizmo.Get();
-			if (editorState->GetSelectedNode())
-			{
-				UpdateGizmo();
-				transformGizmo->Show();
-			}
+			transformGizmo = rotateGizmo.Get();			
+			UpdateGizmo();
+			
 			this->Refresh(false);
 		}
 	}
@@ -275,20 +270,16 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 		if (transformGizmo != scaleGizmo.Get())
 		{
 			transformGizmo->Hide();
-			transformGizmo = scaleGizmo.Get();
-			if (editorState->GetSelectedNode())
-			{
-				UpdateGizmo();
-				transformGizmo->Show();
-			}
+			transformGizmo = scaleGizmo.Get();			
+			UpdateGizmo();
+			
 			this->Refresh(false);
 		}
 	}
 	else if (event.GetKeyCode() == WXK_ESCAPE)
 	{
-		if (transformGizmo)
-			transformGizmo->Hide();
 		editorState->SetSelectedNode(nullptr);
+		UpdateGizmo();
 		currentOperation = Operation::NONE;		
 		this->Refresh(false);
 	}
@@ -322,13 +313,9 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 	else if (event.GetKeyCode() == WXK_DELETE)
 	{
 		if (editorState->GetSelectedNode())
-		{
-			if (transformGizmo)
-				transformGizmo->Hide();
-			
-			editorState->GetSelectedNode()->Remove();
-			editorState->SetSelectedNode(nullptr);
-			this->Refresh(false);
+		{							
+			editorState->ExecuteCommand(new RemoveNodeCommand(editorState, editorState->GetSelectedNode()));			
+			editorState->SetSelectedNode(nullptr);			
 		}
 	}
 }

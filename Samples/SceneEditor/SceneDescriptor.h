@@ -30,6 +30,7 @@ public:
 	NodeDescriptor *CreateChild(const std::string &name = "");
 	FireCube::Node *GetNode();
 	void SetParent(NodeDescriptor *parent);
+	NodeDescriptor *GetParent();
 	void Remove();
 private:
 	FireCube::SharedPtr<FireCube::Node> node;

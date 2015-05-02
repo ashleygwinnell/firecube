@@ -96,6 +96,11 @@ void NodeDescriptor::SetParent(NodeDescriptor *parent)
 	parent->children.push_back(this);
 }
 
+NodeDescriptor *NodeDescriptor::GetParent()
+{
+	return parent;
+}
+
 void NodeDescriptor::Remove()
 {
 	if (this->parent)

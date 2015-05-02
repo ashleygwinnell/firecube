@@ -87,6 +87,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Commands\AddNodeCommand.cpp" />
+    <ClCompile Include="Commands\RemoveNodeCommand.cpp" />
     <ClCompile Include="Commands\TransformCommands.cpp" />
     <ClCompile Include="EditorState.cpp" />
     <ClCompile Include="Gizmos\RotateGizmo.cpp" />
@@ -103,6 +104,7 @@
     <ClInclude Include="app.h" />
     <ClInclude Include="Commands\AddNodeCommand.h" />
     <ClInclude Include="Commands\Command.h" />
+    <ClInclude Include="Commands\RemoveNodeCommand.h" />
     <ClInclude Include="Commands\TransformCommands.h" />
     <ClInclude Include="EditorState.h" />
     <ClInclude Include="Gizmos\RotateGizmo.h" />
