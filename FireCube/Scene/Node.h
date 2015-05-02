@@ -181,8 +181,7 @@ public:
 	void RemoveAllChildren();
 		
 	/**
-	* Clones the node.
-	* The cloned node has no parent and points to the same geometries as the original.
+	* Clones the node.	
 	*/
 	virtual Node *Clone() const;
 	
