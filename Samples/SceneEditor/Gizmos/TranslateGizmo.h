@@ -2,6 +2,7 @@
 
 #include "FireCube.h"
 #include "TransformGizmo.h"
+class EditorState;
 
 class TranslateGizmo : public FireCube::Object, public TransformGizmo
 {
@@ -16,9 +17,10 @@ public:
 	virtual bool CheckOperationStart(FireCube::Scene *scene, FireCube::Node *currentNode, FireCube::Ray ray, FireCube::vec2 mousePos);
 	virtual void PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos, FireCube::Node *currentNode);
 	virtual void SetSnapToGrid(bool snap);
+	virtual Command *GetCommand(EditorState *editorState, NodeDescriptor *nodeDescriptor);
 private:
 	FireCube::Node *node;
-	FireCube::vec3 startPosition, dragStart;
+	FireCube::vec3 startPosition, dragStart, endPosition;
 	std::string currentAxis;
-	bool snapToGrid;
+	bool snapToGrid;	
 };

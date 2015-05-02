@@ -8,13 +8,19 @@ wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
+	editorState = new EditorState(fcApp.GetEngine());
 	frame = new MainFrameImpl(nullptr);
 	frame->Show(true);
 	return true;
 }
 
-Project &MyApp::GetProject()
+SceneDescriptor &MyApp::GetSceneDescriptor()
 {
-	return project;
+	return sceneDescriptor;
+}
+
+EditorState *MyApp::GetEditorState()
+{
+	return editorState;
 }
 

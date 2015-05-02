@@ -1,0 +1,17 @@
+<scene>
+	<node name = "root">
+		<node name = "ducky">
+			<transformation translation = "-1 -0.5 -1" scale = "0.3 0.3 0.3" rotation = "0 -1 0"/>
+			<component type = "StaticModel" mesh="duck.dae" />
+			<node name = "box">
+				<component type = "box" size="1 1 1" material = "Materials/TerrainNoTexture.xml" />
+				<component type = "LuaScript" script = "../Samples/FireCubeTest/test.lua" object = "Rotator"/>
+				<transformation translation = "2 0.5 0" />
+			</node>
+			<node name = "sphere">
+				<component type = "sphere" radius="1" material = "Materials/TerrainNoTexture.xml" />
+				<transformation translation = "4 1 0" />
+			</node>
+		</node>
+	</node>
+</scene>

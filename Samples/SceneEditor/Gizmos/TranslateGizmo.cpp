@@ -1,9 +1,10 @@
-#include "ScaleGizmo.h"
-#include "Types.h"
-#include "MathUtils.h"
+#include "TranslateGizmo.h"
+#include "../Types.h"
+#include "../MathUtils.h"
+#include "../Commands/TransformCommands.h"
 using namespace FireCube;
 
-ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Object(engine), snapToGrid(false)
+TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Object(engine), snapToGrid(false)
 {
 	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/Gizmo.xml")->Clone();
 	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 0.0f, 0.0f, 1.0f));
@@ -46,30 +47,18 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 	staticModel->CreateFromMesh(mesh);
 	staticModel->SetCollisionQueryMask(GIZMO_GEOMETRY);
 	staticModel->SetEnabled(false);
-
-	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.2f, 0.2f, 0.2f)), material);
-	mesh->SetBoundingBox(BoundingBox(vec3(-0.1f, -0.1f, -0.1f), vec3(0.1f, 0.1f, 0.1f)));
-	child = node->CreateChild("AllAxes");	
-	staticModel = child->CreateComponent<StaticModel>();
-	staticModel->CreateFromMesh(mesh);
-	staticModel->SetCollisionQueryMask(GIZMO_GEOMETRY);
-	staticModel->SetEnabled(false);
 }
 
-void ScaleGizmo::SetPosition(vec3 position)
+void TranslateGizmo::SetPosition(FireCube::vec3 position)
 {
 	node->SetTranslation(position);
 }
 
-void ScaleGizmo::SetRotation(mat4 rotation)
+void TranslateGizmo::SetRotation(FireCube::mat4 rotation)
 {
-	node->SetRotation(rotation);
-}
 
-void ScaleGizmo::Show()
+}
+void TranslateGizmo::Show()
 {
 	std::vector<StaticModel *> components;
 	node->GetComponents<StaticModel>(components, true);
@@ -79,7 +68,7 @@ void ScaleGizmo::Show()
 	}
 }
 
-void ScaleGizmo::Hide()
+void TranslateGizmo::Hide()
 {
 	std::vector<StaticModel *> components;
 	node->GetComponents<StaticModel>(components, true);
@@ -89,7 +78,7 @@ void ScaleGizmo::Hide()
 	}
 }
 
-bool ScaleGizmo::CheckOperationStart(FireCube::Scene *scene, FireCube::Node *currentNode, FireCube::Ray ray, vec2 mousePos)
+bool TranslateGizmo::CheckOperationStart(FireCube::Scene *scene, FireCube::Node *currentNode, FireCube::Ray ray, FireCube::vec2 mousePos)
 {
 	RayQuery query(ray, 10e4);
 
@@ -97,49 +86,73 @@ bool ScaleGizmo::CheckOperationStart(FireCube::Scene *scene, FireCube::Node *cur
 	if (query.results.empty() == false)
 	{
 		auto &result = query.results.front();
-		Node *node = result.renderable->GetNode();
+		Node *node = result.renderable->GetNode();		
 		currentAxis = node->GetName();
-		lastMousePos = mousePos;
-
+		dragStart = query.ray.origin + query.ray.direction * result.distance;
+		startPosition = currentNode->GetTranslation();
 		return true;
 	}
 
 	return false;
 }
 
-void ScaleGizmo::PerformOperation(FireCube::Ray ray, vec2 mousePos, FireCube::Node *currentNode)
+void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos, FireCube::Node *currentNode)
 {
-	vec3 axis;
+	vec3 intersectionPoint;
+	vec3 translation;
+	bool moved = false;
 	if (currentAxis == "XAxis")
 	{		
-		axis = vec3(1.0f, 0.0f, 0.0f);
+		if (MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(1, 0, 0), ray.origin, ray.direction))
+		{
+			translation = vec3(startPosition.x + (intersectionPoint.x - dragStart.x), startPosition.y, startPosition.z);
+			moved = true;
+		}
 	}
 	else if (currentAxis == "YAxis")
 	{
-		axis = vec3(0.0f, 1.0f, 0.0f);
+		vec3 intersectionPoint;
+		if (MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(0, 1, 0), ray.origin, ray.direction))
+		{
+			translation = vec3(startPosition.x, startPosition.y + (intersectionPoint.y - dragStart.y), startPosition.z);
+			moved = true;
+		}
 	}
 	else if (currentAxis == "ZAxis")
 	{
-		axis = vec3(0.0f, 0.0f, 1.0f);
+		vec3 intersectionPoint;
+		if (MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(0, 0, 1), ray.origin, ray.direction))
+		{
+			translation = vec3(startPosition.x, startPosition.y, startPosition.z + (intersectionPoint.z - dragStart.z));
+			moved = true;
+		}
 	}
-	else if (currentAxis == "AllAxes")
+
+	if (moved)
 	{
-		axis = vec3(1.0f, 1.0f, 1.0f);
+		if (snapToGrid)
+		{
+			std::modf(translation.x, &translation.x);
+			std::modf(translation.y, &translation.y);
+			std::modf(translation.z, &translation.z);
+		}
+		currentNode->SetTranslation(translation);
+		endPosition = translation;
+		this->SetPosition(currentNode->GetWorldPosition());
 	}
-	
-	currentNode->SetScale(currentNode->GetScale() + axis * (mousePos.x - lastMousePos.x) * 0.01f);
-	
-	lastMousePos = mousePos;
-
-
 }
 
-void ScaleGizmo::SetSnapToGrid(bool snap)
+void TranslateGizmo::SetSnapToGrid(bool snap)
 {
 	snapToGrid = snap;
 }
 
-void ScaleGizmo::SetScale(float scale)
+void TranslateGizmo::SetScale(float scale)
 {
 	node->SetScale(vec3(scale));
+}
+
+Command *TranslateGizmo::GetCommand(EditorState *editorState, NodeDescriptor *nodeDescriptor)
+{
+	return new SetTranslationCommand(editorState, nodeDescriptor, startPosition, endPosition);
 }

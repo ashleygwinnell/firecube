@@ -1,19 +1,24 @@
 #pragma once
 
+#include "FireCube.h"
+
 class MyApp;
 class TranslateGizmo;
 class RotateGizmo;
 class TransformGizmo;
 class ScaleGizmo;
+class EditorState;
+class SceneDescriptor;
+class NodeDescriptor;
 
 enum class Operation
 {
 	NONE, OBJECT_TRANSFORM, CAMERA_ORBIT
 };
 
-class GLCanvas : public wxGLCanvas
+class GLCanvas : public wxGLCanvas, public FireCube::Object
 {
-
+	OBJECT(GLCanvas)
 public:	
 	GLCanvas(wxWindow *parent, wxWindowID id = wxID_ANY,
 		const wxPoint& pos = wxDefaultPosition,
@@ -32,17 +37,18 @@ public:
 	void OnKeyUp(wxKeyEvent& event);
 	void Render();
 	void Init();	
-
+	void UpdateGizmo();	
 private:	
 	void CreateGrid(float size, unsigned int numberOfCells);
-	void UpdateGizmo();
+	void SelectedNodeChanged(NodeDescriptor *node);
+	void StateChanged();
+	
 	bool init;
 	MyApp *theApp;
-	wxGLContext *context;
-	FireCube::Engine *engine;
+	wxGLContext *context;	
 	FireCube::Scene *scene;
 	FireCube::OrbitCamera *camera;
-	FireCube::Node *root, *gridNode, *currentNode, *cameraTarget;
+	FireCube::Node *root, *gridNode, *cameraTarget;
 	FireCube::SharedPtr<TranslateGizmo> translateGizmo;
 	FireCube::SharedPtr<RotateGizmo> rotateGizmo;
 	FireCube::SharedPtr<ScaleGizmo> scaleGizmo;
@@ -51,4 +57,6 @@ private:
 	FireCube::SharedPtr<FireCube::Material> gridMaterial;
 	FireCube::vec2 lastMousePos;
 	Operation currentOperation;	
+	EditorState *editorState;
+	SceneDescriptor *sceneDescriptor;
 };

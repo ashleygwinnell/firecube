@@ -3,23 +3,25 @@
 #include "wx/filedlg.h"
 #include "app.h"
 #include "Types.h"
-
+#include "SceneDescriptor.h"
+#include "Commands/AddNodeCommand.h"
 using namespace FireCube;
 
-MainFrameImpl::MainFrameImpl( wxWindow* parent ) : MainFrame(parent), theApp((MyApp*) wxTheApp)
+MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState())
 {
 
 }
 
 void MainFrameImpl::MyButtonClicked( wxCommandEvent& event )
 {
-	Node *testNode = root->CreateChild("TestNode");
-	StaticModel *model = testNode->CreateComponent<StaticModel>();
+	NodeDescriptor *nodeDescriptor = new NodeDescriptor(engine, sceneDescriptor, "TestNode");	
+	StaticModel *model = nodeDescriptor->GetNode()->CreateComponent<StaticModel>();
 	SharedPtr<Mesh> mesh(new Mesh(engine));
 	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(1.0f)), engine->GetResourceCache()->GetResource<Material>("Materials/TerrainNoTexture.xml"));
 	mesh->SetBoundingBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
 	model->CreateFromMesh(mesh);
 	model->SetCollisionQueryMask(USER_GEOMETRY);	
+	editorState->ExecuteCommand(new AddNodeCommand(editorState, nodeDescriptor, rootDescriptor));
 	this->glCanvas->Refresh(false);
 }
 
@@ -30,15 +32,26 @@ void MainFrameImpl::LoadMeshClicked(wxCommandEvent& event)
 	if (sfile == "")
 		return;
 
-	Node *testNode = root->CreateChild("TestNode");
-	StaticModel *model = testNode->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(sfile));	
+	NodeDescriptor *nodeDescriptor = new NodeDescriptor(engine, sceneDescriptor, "TestNode");
+	StaticModel *model = nodeDescriptor->GetNode()->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(sfile));
 	model->SetCollisionQueryMask(USER_GEOMETRY);
+	editorState->ExecuteCommand(new AddNodeCommand(editorState, nodeDescriptor, rootDescriptor));
 	this->glCanvas->Refresh(false);
 }
 
-void MainFrameImpl::SetScene(Scene *scene)
+void MainFrameImpl::SetSceneDescriptor(SceneDescriptor *sceneDescriptor)
 {
 	engine = theApp->fcApp.GetEngine();
-	this->scene = scene;
-	root = scene->GetRootNode();
+	this->sceneDescriptor = sceneDescriptor;
+	rootDescriptor = sceneDescriptor->GetRootDescriptor();
+}
+
+void MainFrameImpl::UndoClicked(wxCommandEvent& event)
+{
+	editorState->Undo();	
+}
+
+void MainFrameImpl::RedoClicked(wxCommandEvent& event)
+{
+	editorState->Redo();	
 }

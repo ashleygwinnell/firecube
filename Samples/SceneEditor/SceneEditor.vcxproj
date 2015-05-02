@@ -86,27 +86,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Commands\AddNodeCommand.cpp" />
+    <ClCompile Include="Commands\TransformCommands.cpp" />
+    <ClCompile Include="EditorState.cpp" />
+    <ClCompile Include="Gizmos\RotateGizmo.cpp" />
+    <ClCompile Include="Gizmos\ScaleGizmo.cpp" />
+    <ClCompile Include="Gizmos\TranslateGizmo.cpp" />
     <ClCompile Include="GLCanvas.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="app.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="MainFrameImpl.cpp" />
     <ClCompile Include="MathUtils.cpp" />
-    <ClCompile Include="Project.cpp" />
-    <ClCompile Include="RotateGizmo.cpp" />
-    <ClCompile Include="ScaleGizmo.cpp" />
-    <ClCompile Include="TranslateGizmo.cpp" />
+    <ClCompile Include="SceneDescriptor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h" />
+    <ClInclude Include="Commands\AddNodeCommand.h" />
+    <ClInclude Include="Commands\Command.h" />
+    <ClInclude Include="Commands\TransformCommands.h" />
+    <ClInclude Include="EditorState.h" />
+    <ClInclude Include="Gizmos\RotateGizmo.h" />
+    <ClInclude Include="Gizmos\ScaleGizmo.h" />
+    <ClInclude Include="Gizmos\TransformGizmo.h" />
+    <ClInclude Include="Gizmos\TranslateGizmo.h" />
     <ClInclude Include="GLCanvas.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="MainFrameImpl.h" />
     <ClInclude Include="MathUtils.h" />
-    <ClInclude Include="Project.h" />
-    <ClInclude Include="RotateGizmo.h" />
-    <ClInclude Include="ScaleGizmo.h" />
-    <ClInclude Include="TransformGizmo.h" />
-    <ClInclude Include="TranslateGizmo.h" />
+    <ClInclude Include="SceneDescriptor.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
