@@ -8,8 +8,6 @@ class RotateGizmo;
 class TransformGizmo;
 class ScaleGizmo;
 class EditorState;
-class SceneDescriptor;
-class NodeDescriptor;
 
 enum class Operation
 {
@@ -40,7 +38,7 @@ public:
 	void UpdateGizmo();	
 private:	
 	void CreateGrid(float size, unsigned int numberOfCells);
-	void SelectedNodeChanged(NodeDescriptor *node);
+	void SelectedNodeChanged(FireCube::Node *node);
 	void StateChanged();
 	
 	bool init;
@@ -57,6 +55,5 @@ private:
 	FireCube::SharedPtr<FireCube::Material> gridMaterial;
 	FireCube::vec2 lastMousePos;
 	Operation currentOperation;	
-	EditorState *editorState;
-	SceneDescriptor *sceneDescriptor;
+	EditorState *editorState;	
 };

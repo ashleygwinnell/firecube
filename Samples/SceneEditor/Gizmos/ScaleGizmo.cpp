@@ -146,7 +146,7 @@ void ScaleGizmo::SetScale(float scale)
 	node->SetScale(vec3(scale));
 }
 
-Command *ScaleGizmo::GetCommand(EditorState *editorState, NodeDescriptor *nodeDescriptor)
+Command *ScaleGizmo::GetCommand(EditorState *editorState, Node *node)
 {
-	return new SetScaleCommand(editorState, nodeDescriptor, startScale, endScale);
+	return new SetScaleCommand(editorState, node, startScale, endScale);
 }

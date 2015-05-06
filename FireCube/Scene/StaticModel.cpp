@@ -23,6 +23,7 @@ StaticModel::StaticModel(Engine *engine, Mesh *mesh) : StaticModel(engine)
 
 void StaticModel::CreateFromMesh(Mesh *mesh)
 {
+	this->mesh = mesh;
 	for (unsigned int i = 0; i < mesh->GetGeometries().size(); ++i)
 	{					
 		RenderablePart part;
@@ -52,6 +53,11 @@ std::vector<SharedPtr<Geometry>> &StaticModel::GetGeometries()
 std::vector<SharedPtr<Material>> &StaticModel::GetMaterials()
 {
 	return materials;
+}
+
+Mesh *StaticModel::GetMesh()
+{
+	return mesh;
 }
 
 void StaticModel::UpdateWorldBoundingBox()

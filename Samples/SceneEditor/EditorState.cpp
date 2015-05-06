@@ -47,13 +47,18 @@ void EditorState::Redo()
 	stateChanged(this);
 }
 
-void EditorState::SetSelectedNode(NodeDescriptor *selectedNode)
+void EditorState::SetSelectedNode(FireCube::Node *selectedNode)
 {
 	this->selectedNode = selectedNode;
 	selectedNodeChanged(this, selectedNode);
 }
 
-NodeDescriptor *EditorState::GetSelectedNode()
+FireCube::Node *EditorState::GetSelectedNode()
 {
 	return selectedNode;
+}
+
+FireCube::Engine *EditorState::GetEngine()
+{
+	return engine;
 }

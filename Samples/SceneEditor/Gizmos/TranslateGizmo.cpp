@@ -152,7 +152,7 @@ void TranslateGizmo::SetScale(float scale)
 	node->SetScale(vec3(scale));
 }
 
-Command *TranslateGizmo::GetCommand(EditorState *editorState, NodeDescriptor *nodeDescriptor)
+Command *TranslateGizmo::GetCommand(EditorState *editorState, Node *node)
 {
-	return new SetTranslationCommand(editorState, nodeDescriptor, startPosition, endPosition);
+	return new SetTranslationCommand(editorState, node, startPosition, endPosition);
 }

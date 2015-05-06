@@ -3,7 +3,6 @@
 #include "FireCube.h"
 #include <vector>
 
-class NodeDescriptor;
 class Command;
 
 class EditorState : public FireCube::Object
@@ -14,12 +13,14 @@ public:
 	void ExecuteCommand(Command *command);
 	void Undo();
 	void Redo();
-	void SetSelectedNode(NodeDescriptor *selectedNode);
-	NodeDescriptor *GetSelectedNode();
-	FireCube::Event<NodeDescriptor *> selectedNodeChanged;
-	FireCube::Event<> stateChanged;
+	void SetSelectedNode(FireCube::Node *selectedNode);
+	FireCube::Node *GetSelectedNode();
+	FireCube::Engine *GetEngine();
+	FireCube::Event<FireCube::Node *> selectedNodeChanged;
+	FireCube::Event<> stateChanged;	
 private:
-	NodeDescriptor *selectedNode;
+	
+	FireCube::Node *selectedNode;
 	std::vector<Command *> commands;
 	int lastExecutedCommand;
 };

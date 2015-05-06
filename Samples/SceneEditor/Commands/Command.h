@@ -1,6 +1,5 @@
 #pragma once
 
-class NodeDescriptor;
 class EditorState;
 
 class Command

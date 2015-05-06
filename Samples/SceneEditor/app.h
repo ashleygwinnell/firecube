@@ -1,4 +1,3 @@
-#include "SceneDescriptor.h"
 #include "EditorState.h"
 
 class FireCubeApp : public FireCube::Application
@@ -12,13 +11,14 @@ public:
 class MyApp : public wxApp
 {
 public:
+	~MyApp();
 	virtual bool OnInit();
-	SceneDescriptor &GetSceneDescriptor();
+	FireCube::Scene *GetScene();
 	EditorState *GetEditorState();
-
+	void InitScene();
 	FireCubeApp fcApp;
 private:	
 	MainFrameImpl *frame;
-	SceneDescriptor sceneDescriptor;
+	FireCube::Scene *scene;
 	EditorState *editorState;
 };

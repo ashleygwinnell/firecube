@@ -1,17 +1,16 @@
 #pragma once
 
+#include "FireCube.h"
 #include "Command.h"
-
-class NodeDescriptor;
 
 class AddNodeCommand : public Command
 {
 public:
-	AddNodeCommand(EditorState *editorState, NodeDescriptor *node, NodeDescriptor *parent);
+	AddNodeCommand(EditorState *editorState, FireCube::Node *node, FireCube::Node *parent);
 	~AddNodeCommand();
 	virtual void Do();
 	virtual void Undo();
 private:
-	NodeDescriptor *node;
-	NodeDescriptor *parent;
+	FireCube::SharedPtr<FireCube::Node> node;
+	FireCube::Node *parent;
 };

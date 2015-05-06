@@ -142,7 +142,7 @@ void RotateGizmo::SetScale(float scale)
 	node->SetScale(vec3(scale));
 }
 
-Command *RotateGizmo::GetCommand(EditorState *editorState, NodeDescriptor *nodeDescriptor)
+Command *RotateGizmo::GetCommand(EditorState *editorState, Node *node)
 {
-	return new SetRotationCommand(editorState, nodeDescriptor, startRotation, endRotation);
+	return new SetRotationCommand(editorState, node, startRotation, endRotation);
 }

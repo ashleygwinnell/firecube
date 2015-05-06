@@ -1,8 +1,7 @@
 #include "RemoveNodeCommand.h"
-#include "../SceneDescriptor.h"
 #include "../EditorState.h"
 
-RemoveNodeCommand::RemoveNodeCommand(EditorState *editorState, NodeDescriptor *node) : Command(editorState), node(node), parent(node->GetParent())
+RemoveNodeCommand::RemoveNodeCommand(EditorState *editorState, FireCube::Node *node) : Command(editorState), node(node), parent(node->GetParent())
 {
 
 }

@@ -49,17 +49,17 @@ void GLCanvas::Init()
 	theApp->fcApp.InitializeNoWindow();	
 	
 	engine->GetRenderer()->SetCurrentRenderPath(engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/ForwardWithOverlay.xml"));
-
-	sceneDescriptor = &theApp->GetSceneDescriptor();
+	
 	editorState = theApp->GetEditorState();
 	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &GLCanvas::SelectedNodeChanged);
 	SubscribeToEvent(editorState, editorState->stateChanged, &GLCanvas::StateChanged);
-	sceneDescriptor->Init(engine);
-
-	scene = sceneDescriptor->GetScene();
+	
+	theApp->InitScene();
+	scene = theApp->GetScene();
 	root = scene->GetRootNode();
+	root->SetName("User_root");
 
-	((MainFrameImpl *) this->GetParent())->SetSceneDescriptor(sceneDescriptor);
+	((MainFrameImpl *) this->GetParent())->SetScene(scene);
 
 	cameraTarget = root->CreateChild("CameraTarget");
 	Node *cameraNode = cameraTarget->CreateChild("Camera");
@@ -87,7 +87,7 @@ void GLCanvas::Init()
 	CreateGrid(10.0f, 100);	
 }
 
-void GLCanvas::SelectedNodeChanged(NodeDescriptor *node)
+void GLCanvas::SelectedNodeChanged(Node *node)
 {
 	UpdateGizmo();
 	this->Refresh(false);
@@ -176,7 +176,7 @@ void GLCanvas::OnMotion(wxMouseEvent& event)
 
 		if (currentOperation == Operation::NONE && editorState->GetSelectedNode())
 		{							
-			bool startTransaform = transformGizmo->CheckOperationStart(scene, editorState->GetSelectedNode()->GetNode(), ray, vec2(mousePos.x, mousePos.y));
+			bool startTransaform = transformGizmo->CheckOperationStart(scene, editorState->GetSelectedNode(), ray, vec2(mousePos.x, mousePos.y));
 			if (startTransaform)
 			{							
 				currentOperation = Operation::OBJECT_TRANSFORM;
@@ -185,7 +185,7 @@ void GLCanvas::OnMotion(wxMouseEvent& event)
 		
 		if (currentOperation == Operation::OBJECT_TRANSFORM)
 		{						
-			transformGizmo->PerformOperation(ray, vec2(mousePos.x, mousePos.y), editorState->GetSelectedNode()->GetNode());
+			transformGizmo->PerformOperation(ray, vec2(mousePos.x, mousePos.y), editorState->GetSelectedNode());
 			UpdateGizmo();
 			this->Refresh(false);
 		}		
@@ -225,7 +225,7 @@ void GLCanvas::OnLeftUp(wxMouseEvent& event)
 			{
 				auto &result = query.results.front();
 				auto node = result.renderable->GetNode();	
-				editorState->SetSelectedNode(sceneDescriptor->NodeToNodeDescriptor(node));				
+				editorState->SetSelectedNode(node);
 			}
 			else
 			{
@@ -275,7 +275,7 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 			
 			this->Refresh(false);
 		}
-	}
+	}	
 	else if (event.GetKeyCode() == WXK_ESCAPE)
 	{
 		editorState->SetSelectedNode(nullptr);
@@ -288,15 +288,15 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 		if (editorState->GetSelectedNode())
 		{		
 			std::vector<StaticModel *> models;
-			editorState->GetSelectedNode()->GetNode()->GetComponents<StaticModel>(models, true);
+			editorState->GetSelectedNode()->GetComponents<StaticModel>(models, true);
 			if (models.empty() == false)
 			{
 				BoundingBox bbox;
 				for (auto &m : models)
 					bbox.Expand(m->GetWorldBoundingBox());
-				vec3 newPos = editorState->GetSelectedNode()->GetNode()->GetWorldPosition();
+				vec3 newPos = editorState->GetSelectedNode()->GetWorldPosition();
 				newPos.y += -bbox.GetMin().y;				
-				editorState->ExecuteCommand(new SetTranslationCommand(editorState, editorState->GetSelectedNode(), editorState->GetSelectedNode()->GetNode()->GetWorldPosition(), newPos));
+				editorState->ExecuteCommand(new SetTranslationCommand(editorState, editorState->GetSelectedNode(), editorState->GetSelectedNode()->GetWorldPosition(), newPos));
 				UpdateGizmo();
 				this->Refresh(false);
 			}
@@ -306,7 +306,7 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 	{
 		if (editorState->GetSelectedNode())
 		{
-			cameraTarget->SetTranslation(editorState->GetSelectedNode()->GetNode()->GetWorldPosition());
+			cameraTarget->SetTranslation(editorState->GetSelectedNode()->GetWorldPosition());
 			this->Refresh(false);
 		}
 	}
@@ -324,8 +324,8 @@ void GLCanvas::UpdateGizmo()
 {
 	if (transformGizmo && editorState->GetSelectedNode())
 	{
-		transformGizmo->SetPosition(editorState->GetSelectedNode()->GetNode()->GetWorldPosition());
-		transformGizmo->SetScale((camera->GetNode()->GetWorldPosition() - editorState->GetSelectedNode()->GetNode()->GetWorldPosition()).Length() * 0.1f);
+		transformGizmo->SetPosition(editorState->GetSelectedNode()->GetWorldPosition());
+		transformGizmo->SetScale((camera->GetNode()->GetWorldPosition() - editorState->GetSelectedNode()->GetWorldPosition()).Length() * 0.1f);
 		transformGizmo->Show();
 	}
 	else if (transformGizmo && editorState->GetSelectedNode() == nullptr)

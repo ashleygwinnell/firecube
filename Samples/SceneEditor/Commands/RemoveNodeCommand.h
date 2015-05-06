@@ -1,17 +1,16 @@
 #pragma once
 
+#include "FireCube.h"
 #include "Command.h"
-
-class NodeDescriptor;
 
 class RemoveNodeCommand : public Command
 {
 public:
-	RemoveNodeCommand(EditorState *editorState, NodeDescriptor *node);
+	RemoveNodeCommand(EditorState *editorState, FireCube::Node *node);
 	~RemoveNodeCommand();
 	virtual void Do();
 	virtual void Undo();
 private:
-	NodeDescriptor *node;
-	NodeDescriptor *parent;
+	FireCube::Node *node;
+	FireCube::Node *parent;
 };

@@ -32,6 +32,7 @@ public:
 		if (!resource->Load(name))
 			return nullptr;
 
+		resource->SetFileName(filename);
 		SharedPtr<Resource> resourcePtr;
 		resourcePtr.StaticCast(resource);
 		resources[name] = resourcePtr;

@@ -13,6 +13,7 @@ class Resource : public Object
 public:
 	Resource(Engine *engine);
 	virtual bool Load(const std::string &filename) = 0;
+	void SetFileName(const std::string &filename);
 	std::string GetFileName() const;
 protected:
 	std::string filename;

@@ -17,7 +17,7 @@ public:
 	virtual bool CheckOperationStart(FireCube::Scene *scene, FireCube::Node *currentNode, FireCube::Ray ray, FireCube::vec2 mousePos);
 	virtual void PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos, FireCube::Node *currentNode);
 	virtual void SetSnapToGrid(bool snap);
-	virtual Command *GetCommand(EditorState *editorState, NodeDescriptor *nodeDescriptor);
+	virtual Command *GetCommand(EditorState *editorState, FireCube::Node *node);
 private:
 	FireCube::Node *node;
 	FireCube::vec3 startPosition, dragStart, endPosition;

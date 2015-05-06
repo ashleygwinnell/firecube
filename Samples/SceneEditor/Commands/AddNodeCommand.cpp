@@ -1,8 +1,7 @@
 #include "AddNodeCommand.h"
-#include "../SceneDescriptor.h"
 #include "../EditorState.h"
 
-AddNodeCommand::AddNodeCommand(EditorState *editorState, NodeDescriptor *node, NodeDescriptor *parent) : Command(editorState), node(node), parent(parent)
+AddNodeCommand::AddNodeCommand(EditorState *editorState, FireCube::Node *node, FireCube::Node *parent) : Command(editorState), node(node), parent(parent)
 {
 
 }

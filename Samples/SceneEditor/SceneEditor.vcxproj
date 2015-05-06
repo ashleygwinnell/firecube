@@ -55,8 +55,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib\mswud;C:\Dev\wxWidgets-3.0.2\include;$(SolutionDir)\FireCube;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_STL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib\mswud;C:\Dev\wxWidgets-3.0.2\include;$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -73,8 +73,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib\mswu;C:\Dev\wxWidgets-3.0.2\include;$(SolutionDir)\FireCube;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TIXML_USE_STL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib\mswu;C:\Dev\wxWidgets-3.0.2\include;$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -86,7 +86,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxml.cpp" />
+    <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlparser.cpp" />
+    <ClCompile Include="Commands\AddComponentCommand.cpp" />
     <ClCompile Include="Commands\AddNodeCommand.cpp" />
+    <ClCompile Include="Commands\GroupCommand.cpp" />
     <ClCompile Include="Commands\RemoveNodeCommand.cpp" />
     <ClCompile Include="Commands\TransformCommands.cpp" />
     <ClCompile Include="EditorState.cpp" />
@@ -98,12 +103,15 @@
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="MainFrameImpl.cpp" />
     <ClCompile Include="MathUtils.cpp" />
-    <ClCompile Include="SceneDescriptor.cpp" />
+    <ClCompile Include="SceneWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\FireCube\ThirdParty\TinyXML\tinyxml.h" />
     <ClInclude Include="app.h" />
+    <ClInclude Include="Commands\AddComponentCommand.h" />
     <ClInclude Include="Commands\AddNodeCommand.h" />
     <ClInclude Include="Commands\Command.h" />
+    <ClInclude Include="Commands\GroupCommand.h" />
     <ClInclude Include="Commands\RemoveNodeCommand.h" />
     <ClInclude Include="Commands\TransformCommands.h" />
     <ClInclude Include="EditorState.h" />
@@ -115,7 +123,7 @@
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="MainFrameImpl.h" />
     <ClInclude Include="MathUtils.h" />
-    <ClInclude Include="SceneDescriptor.h" />
+    <ClInclude Include="SceneWriter.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

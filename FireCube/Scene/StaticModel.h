@@ -16,6 +16,7 @@ public:
 	void CreateFromMesh(Mesh *mesh);	
 	std::vector<SharedPtr<Geometry>> &GetGeometries();
 	std::vector<SharedPtr<Material>> &GetMaterials();	
+	Mesh *GetMesh();
 	virtual void IntersectRay(RayQuery &rayQuery);
 	virtual Component *Clone() const;
 protected:
@@ -24,6 +25,7 @@ protected:
 
 	void SetBoundingBox(BoundingBox boundingBox);
 	virtual void UpdateWorldBoundingBox();
+	Mesh *mesh;
 	BoundingBox boundingBox;
 	std::vector<SharedPtr<Geometry>> geometries;
 	std::vector<SharedPtr<Material>> materials;

@@ -19,6 +19,12 @@
     <Filter Include="Gizmos">
       <UniqueIdentifier>{06e7a75c-ce3f-4e54-8762-e30aa591983f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{d2700bb9-d3a7-414b-9933-7383be9f5b47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\TinyXml">
+      <UniqueIdentifier>{a42d150d-ce21-4dbb-87ad-aa076e6c349f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mainframe.cpp">
@@ -34,9 +40,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EditorState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneDescriptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="app.cpp">
@@ -60,6 +63,24 @@
     <ClCompile Include="Commands\RemoveNodeCommand.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="Commands\GroupCommand.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Commands\AddComponentCommand.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxml.cpp">
+      <Filter>ThirdParty\TinyXml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlerror.cpp">
+      <Filter>ThirdParty\TinyXml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlparser.cpp">
+      <Filter>ThirdParty\TinyXml</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneWriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -81,9 +102,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EditorState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneDescriptor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Commands\Command.h">
@@ -109,6 +127,18 @@
     </ClInclude>
     <ClInclude Include="Commands\RemoveNodeCommand.h">
       <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Commands\GroupCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Commands\AddComponentCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\FireCube\ThirdParty\TinyXML\tinyxml.h">
+      <Filter>ThirdParty\TinyXml</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneWriter.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

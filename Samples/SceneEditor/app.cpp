@@ -14,9 +14,9 @@ bool MyApp::OnInit()
 	return true;
 }
 
-SceneDescriptor &MyApp::GetSceneDescriptor()
+FireCube::Scene *MyApp::GetScene()
 {
-	return sceneDescriptor;
+	return scene;
 }
 
 EditorState *MyApp::GetEditorState()
@@ -24,3 +24,12 @@ EditorState *MyApp::GetEditorState()
 	return editorState;
 }
 
+void MyApp::InitScene()
+{
+	scene = new FireCube::Scene(fcApp.GetEngine());
+}
+
+MyApp::~MyApp()
+{
+	delete scene;
+}
