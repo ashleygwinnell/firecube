@@ -12,4 +12,5 @@ private:
 	void Serialize(FireCube::Node *node, TiXmlElement *parent);
 	void Serialize(FireCube::Component *component, TiXmlElement *parent);
 	void SerializeNodeTransformation(FireCube::Node *node, TiXmlElement *parent);
+	std::string basePath;
 };

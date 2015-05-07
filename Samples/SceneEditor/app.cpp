@@ -33,3 +33,8 @@ MyApp::~MyApp()
 {
 	delete scene;
 }
+
+SceneSettings *MyApp::GetSceneSettings()
+{
+	return &sceneSettings;
+}

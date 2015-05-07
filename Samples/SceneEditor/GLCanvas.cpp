@@ -42,8 +42,7 @@ GLCanvas::~GLCanvas()
 }
 
 void GLCanvas::Init()
-{
-	Filesystem::AddSearchPath("../Assets/Textures");
+{	
 	Filesystem::AddSearchPath("../Samples/SceneEditor");
 	
 	theApp->fcApp.InitializeNoWindow();	

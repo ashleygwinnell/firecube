@@ -45,6 +45,7 @@ class MainFrame : public wxFrame
 		GLCanvas *glCanvas;
 		wxButton* m_button1;
 		wxButton* m_button2;
+		wxButton* m_button3;
 		wxMenuBar* menuBar;
 		wxMenu* fileMenu;
 		wxMenu* editMenu;
@@ -52,6 +53,7 @@ class MainFrame : public wxFrame
 		// Virtual event handlers, overide them in your derived class
 		virtual void MyButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void LoadMeshClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void SetBasePathClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OpenClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SaveClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UndoClicked( wxCommandEvent& event ) { event.Skip(); }

@@ -140,5 +140,8 @@
     <ClInclude Include="SceneWriter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SceneSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,16 +1,18 @@
 #include "MainFrameImpl.h"
 #include <wx/msgdlg.h>
 #include "wx/filedlg.h"
+#include "wx/dirdlg.h"
 #include "app.h"
 #include "Types.h"
 #include "Commands/AddNodeCommand.h"
 #include "Commands/AddComponentCommand.h"
 #include "Commands/GroupCommand.h"
 #include "SceneWriter.h"
+#include "SceneSettings.h"
 
 using namespace FireCube;
 
-MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState())
+MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState()), sceneSettings(theApp->GetSceneSettings())
 {
 
 }
@@ -37,8 +39,6 @@ void MainFrameImpl::LoadMeshClicked(wxCommandEvent& event)
 		return;
 	
 	std::string sfile = openFileDialog.GetPath();
-	if (sfile == "")
-		return;
 	
 	Node *node = new Node(engine, "User_TestNode");
 	auto addNodeCommand = new AddNodeCommand(editorState, node, root);
@@ -77,17 +77,13 @@ void MainFrameImpl::RedoClicked(wxCommandEvent& event)
 }
 
 void MainFrameImpl::SaveClicked(wxCommandEvent& event)
-{
-	static std::string lastPath = "";
-	wxFileDialog saveFileDialog(this, "Save Scene file", lastPath, "", "Scene files (*.xml)|*.xml", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+{	
+	wxFileDialog saveFileDialog(this, "Save Scene file", sceneSettings->basePath, "", "Scene files (*.xml)|*.xml", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 	if (saveFileDialog.ShowModal() == wxID_CANCEL)
 		return;
 			
 	SceneWriter sceneWriter;
 	sceneWriter.Serialize(scene, saveFileDialog.GetPath().ToStdString());	
-	wxString path;
-	wxFileName::SplitPath(saveFileDialog.GetPath(), &path, nullptr, nullptr, wxPATH_NATIVE);
-	lastPath = path;
 }
 
 void UpdateNode(Node *node)
@@ -104,19 +100,31 @@ void UpdateNode(Node *node)
 }
 
 void MainFrameImpl::OpenClicked(wxCommandEvent& event)
-{
-	static std::string lastPath = "";
-	wxFileDialog openFileDialog(this, "Open Scene file", "", "", "Scene files (*.xml)|*.xml", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+{	
+	wxFileDialog openFileDialog(this, "Open Scene file", sceneSettings->basePath, "", "Scene files (*.xml)|*.xml", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return;
+
+	wxString path;
+	wxFileName::SplitPath(openFileDialog.GetPath(), &path, nullptr, nullptr, wxPATH_NATIVE);
+
+	sceneSettings->basePath = path;
+	Filesystem::AddSearchPath(sceneSettings->basePath);
 
 	SceneReader sceneReader(engine);
 	if (sceneReader.Read(*scene, openFileDialog.GetPath().ToStdString()))
 	{
 		UpdateNode(scene->GetRootNode());
-	}
+	}	
+}
+
+void MainFrameImpl::SetBasePathClicked(wxCommandEvent& event)
+{
+	wxDirDialog dirDialog(this, "Choose base directory", "", wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
 	
-	wxString path;
-	wxFileName::SplitPath(openFileDialog.GetPath(), &path, nullptr, nullptr, wxPATH_NATIVE);
-	lastPath = path;
+	if (dirDialog.ShowModal() == wxID_CANCEL)
+		return;
+
+	sceneSettings->basePath = dirDialog.GetPath().ToStdString();	
+	Filesystem::AddSearchPath(sceneSettings->basePath);
 }
