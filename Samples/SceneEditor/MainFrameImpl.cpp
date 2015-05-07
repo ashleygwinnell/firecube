@@ -83,7 +83,7 @@ void MainFrameImpl::SaveClicked(wxCommandEvent& event)
 		return;
 			
 	SceneWriter sceneWriter;
-	sceneWriter.Serialize(scene, saveFileDialog.GetPath().ToStdString());	
+	sceneWriter.Serialize(scene, sceneSettings, saveFileDialog.GetPath().ToStdString());	
 }
 
 void UpdateNode(Node *node)
@@ -112,6 +112,15 @@ void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 	Filesystem::AddSearchPath(sceneSettings->basePath);
 
 	SceneReader sceneReader(engine);
+	sceneReader.ReadSettings(openFileDialog.GetPath().ToStdString());
+	sceneSettings->resourcePaths = sceneReader.GetResroucePaths();
+
+	for (const auto &resourcePath : sceneSettings->resourcePaths)
+	{
+		std::string resourceFullpath = sceneSettings->basePath + (sceneSettings->basePath.back() == '/' || sceneSettings->basePath.back() == '\\' ? "" : "\\") + resourcePath;
+		Filesystem::AddSearchPath(resourceFullpath);
+	}
+	
 	if (sceneReader.Read(*scene, openFileDialog.GetPath().ToStdString()))
 	{
 		UpdateNode(scene->GetRootNode());
@@ -127,4 +136,18 @@ void MainFrameImpl::SetBasePathClicked(wxCommandEvent& event)
 
 	sceneSettings->basePath = dirDialog.GetPath().ToStdString();	
 	Filesystem::AddSearchPath(sceneSettings->basePath);
+}
+
+void MainFrameImpl::AddResourcePathClicked(wxCommandEvent& event)
+{
+	wxDirDialog dirDialog(this, "Choose resource directory", "", wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+
+	if (dirDialog.ShowModal() == wxID_CANCEL)
+		return;
+
+	wxFileName fileName(dirDialog.GetPath(), "");
+	fileName.MakeRelativeTo(sceneSettings->basePath);
+	sceneSettings->resourcePaths.push_back(fileName.GetFullPath().ToStdString());
+	
+	Filesystem::AddSearchPath(dirDialog.GetPath().ToStdString());
 }

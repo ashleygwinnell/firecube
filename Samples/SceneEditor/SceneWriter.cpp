@@ -1,16 +1,18 @@
 #include "SceneWriter.h"
 #include "tinyxml.h"
+#include "SceneSettings.h"
 #include "wx/filename.h"
 
 using namespace FireCube;
 
-void SceneWriter::Serialize(FireCube::Scene *scene, const std::string &filename)
+void SceneWriter::Serialize(FireCube::Scene *scene, SceneSettings *sceneSettings, const std::string &filename)
 {
 	wxString path;
 	wxFileName::SplitPath(filename, &path, nullptr, nullptr, wxPATH_NATIVE);
 
 	basePath = path;
 	TiXmlDocument doc;
+	SerializeSettings(sceneSettings, &doc);
 	TiXmlElement *element = new TiXmlElement("scene");	
 	doc.LinkEndChild(element);
 	Serialize(scene->GetRootNode(), element);
@@ -78,4 +80,18 @@ void SceneWriter::SerializeNodeTransformation(FireCube::Node *node, TiXmlElement
 	transformation->SetAttribute("translation", translationAttribute.str());
 	transformation->SetAttribute("scale", scaleAttribute.str());
 	transformation->SetAttribute("rotation", rotationAttribute.str());
+}
+
+void SceneWriter::SerializeSettings(SceneSettings *sceneSettings, TiXmlNode *parent)
+{
+	TiXmlElement *settings = new TiXmlElement("settings");
+	parent->LinkEndChild(settings);
+	
+	for (const auto &resourcePath : sceneSettings->resourcePaths)
+	{
+		TiXmlElement *element = new TiXmlElement("resource_path");
+		settings->LinkEndChild(element);
+		TiXmlText *text = new TiXmlText(resourcePath.c_str());
+		element->LinkEndChild(text);
+	}	
 }

@@ -22,6 +22,7 @@ class MainFrameImpl : public MainFrame
 		virtual void OpenClicked(wxCommandEvent& event);
 		virtual void SetBasePathClicked(wxCommandEvent& event);		
 		virtual void AddMeshClicked(wxCommandEvent& event);
+		virtual void AddResourcePathClicked(wxCommandEvent& event);
 
 		MyApp *theApp;
 		FireCube::Engine *engine;
