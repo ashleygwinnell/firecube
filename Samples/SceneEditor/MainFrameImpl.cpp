@@ -17,9 +17,9 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), theApp((MyAp
 
 }
 
-void MainFrameImpl::MyButtonClicked( wxCommandEvent& event )
+/*void MainFrameImpl::MyButtonClicked( wxCommandEvent& event )
 {
-	/*NodeDescriptor *nodeDescriptor = new NodeDescriptor(engine, sceneDescriptor, "TestNode");	
+	NodeDescriptor *nodeDescriptor = new NodeDescriptor(engine, sceneDescriptor, "TestNode");	
 	StaticModel *model = nodeDescriptor->GetNode()->CreateComponent<StaticModel>();
 	SharedPtr<Mesh> mesh(new Mesh(engine));
 	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(1.0f)), engine->GetResourceCache()->GetResource<Material>("Materials/TerrainNoTexture.xml"));
@@ -28,10 +28,10 @@ void MainFrameImpl::MyButtonClicked( wxCommandEvent& event )
 	model->SetCollisionQueryMask(USER_GEOMETRY);	
 	editorState->ExecuteCommand(new AddNodeCommand(editorState, nodeDescriptor, rootDescriptor));
 	this->glCanvas->Refresh(false);
-	this->glCanvas->SetFocus();*/
-}
+	this->glCanvas->SetFocus();
+}*/
 
-void MainFrameImpl::LoadMeshClicked(wxCommandEvent& event)
+void MainFrameImpl::AddMeshClicked(wxCommandEvent& event)
 {
 	static std::string lastPath = "";
 	wxFileDialog openFileDialog(this, "Open", lastPath, "", "Mesh files  (*.3ds,*.dae,*.obj,*.fbx)|*.3ds;*.dae;*.obj;*.fbx", wxFD_OPEN | wxFD_FILE_MUST_EXIST);

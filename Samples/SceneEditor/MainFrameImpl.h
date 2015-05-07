@@ -15,14 +15,13 @@ class SceneSettings;
 class MainFrameImpl : public MainFrame
 {
 	protected:
-		// Handlers for MainFrame events.
-		void MyButtonClicked( wxCommandEvent& event );
-		void LoadMeshClicked(wxCommandEvent& event);
+		// Handlers for MainFrame events.		
 		virtual void UndoClicked(wxCommandEvent& event);
 		virtual void RedoClicked(wxCommandEvent& event);
 		virtual void SaveClicked(wxCommandEvent& event);
 		virtual void OpenClicked(wxCommandEvent& event);
-		virtual void SetBasePathClicked(wxCommandEvent& event);
+		virtual void SetBasePathClicked(wxCommandEvent& event);		
+		virtual void AddMeshClicked(wxCommandEvent& event);
 
 		MyApp *theApp;
 		FireCube::Engine *engine;
