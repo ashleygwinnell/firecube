@@ -25,6 +25,12 @@ bool SceneReader::Read(Scene &scene, const std::string &filename)
 	if (!xmlDocument.LoadFile(Filesystem::SearchForFileName(filename)))
 		return false;
 
+	TiXmlElement *settingsElement = xmlDocument.FirstChildElement("settings");
+	if (settingsElement)
+	{
+		ReadSettings(settingsElement);
+	}
+
 	TiXmlElement *e = xmlDocument.FirstChildElement("scene");
 	if (e == nullptr)
 		return false;
@@ -183,4 +189,33 @@ void SceneReader::ReadTransformation(TiXmlElement *e, Node *node)
 		rotationMat.RotateZ(rotation.z);
 		node->SetRotation(rotationMat);
 	}
+}
+
+void SceneReader::ReadSettings(TiXmlElement *e)
+{
+	for (TiXmlElement *element = e->FirstChildElement(); element != nullptr; element = element->NextSiblingElement())
+	{
+		if (element->ValueStr() == "resource_path")
+		{
+			resourcePaths.push_back(element->GetText());
+		}
+	}
+}
+
+void SceneReader::ReadSettings(const std::string &filename)
+{
+	TiXmlDocument xmlDocument;
+	if (!xmlDocument.LoadFile(Filesystem::SearchForFileName(filename)))
+		return;
+
+	TiXmlElement *settingsElement = xmlDocument.FirstChildElement("settings");
+	if (settingsElement)
+	{
+		ReadSettings(settingsElement);
+	}
+}
+
+const std::vector<std::string> &SceneReader::GetResroucePaths() const
+{
+	return resourcePaths;
 }
