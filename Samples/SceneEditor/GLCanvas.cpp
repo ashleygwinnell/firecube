@@ -56,10 +56,10 @@ void GLCanvas::Init()
 	theApp->InitScene();
 	scene = theApp->GetScene();
 	root = scene->GetRootNode();
-	root->SetName("root");
+	root->SetName("Root");
 	editorState->nodeAdded(editorState, scene->GetRootNode());
 
-	((MainFrameImpl *) this->GetParent())->SetScene(scene);
+	((MainFrameImpl *) this->GetParent()->GetParent()->GetParent())->SetScene(scene);
 
 	cameraTarget = root->CreateChild("Editor_CameraTarget");
 	Node *cameraNode = cameraTarget->CreateChild("Camera");
@@ -86,6 +86,12 @@ void GLCanvas::Init()
 	gridMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));
 
 	CreateGrid(10.0f, 100);	
+
+	int w, h;
+	GetClientSize(&w, &h);
+	engine->GetRenderer()->SetWidth(w);
+	engine->GetRenderer()->SetHeight(h);
+	engine->GetRenderer()->SetViewport(0, 0, w, h);
 }
 
 void GLCanvas::SelectedNodeChanged(Node *node)
