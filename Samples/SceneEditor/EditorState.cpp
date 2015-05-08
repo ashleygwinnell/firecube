@@ -62,3 +62,13 @@ FireCube::Engine *EditorState::GetEngine()
 {
 	return engine;
 }
+
+void EditorState::SetCurrentSceneFile(const std::string &currentSceneFile)
+{
+	this->currentSceneFile = currentSceneFile;
+}
+
+std::string EditorState::GetCurrentSceneFile() const
+{
+	return currentSceneFile;
+}

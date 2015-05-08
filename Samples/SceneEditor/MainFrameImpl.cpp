@@ -12,9 +12,11 @@
 
 using namespace FireCube;
 
-MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState()), sceneSettings(theApp->GetSceneSettings())
+MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState()), sceneSettings(theApp->GetSceneSettings())
 {
-
+	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &MainFrameImpl::SelectedNodeChanged);
+	SubscribeToEvent(editorState, editorState->nodeAdded, &MainFrameImpl::NodeAdded);
+	SubscribeToEvent(editorState, editorState->nodeRemoved, &MainFrameImpl::NodeRemoved);	
 }
 
 /*void MainFrameImpl::MyButtonClicked( wxCommandEvent& event )
@@ -40,7 +42,7 @@ void MainFrameImpl::AddMeshClicked(wxCommandEvent& event)
 	
 	std::string sfile = openFileDialog.GetPath();
 	
-	Node *node = new Node(engine, "User_TestNode");
+	Node *node = new Node(engine, "TestNode");
 	auto addNodeCommand = new AddNodeCommand(editorState, node, root);
 	
 	auto addComponentCommand = new AddComponentCommand(editorState, node, [sfile](Engine *engine, Node *node) -> Component *
@@ -78,17 +80,31 @@ void MainFrameImpl::RedoClicked(wxCommandEvent& event)
 
 void MainFrameImpl::SaveClicked(wxCommandEvent& event)
 {	
+	if (editorState->GetCurrentSceneFile().empty())
+	{
+		SaveAsClicked(event);
+	}
+	else
+	{
+		SceneWriter sceneWriter;
+		sceneWriter.Serialize(scene, sceneSettings, editorState->GetCurrentSceneFile());		
+	}
+}
+
+void MainFrameImpl::SaveAsClicked(wxCommandEvent& event)
+{
 	wxFileDialog saveFileDialog(this, "Save Scene file", sceneSettings->basePath, "", "Scene files (*.xml)|*.xml", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 	if (saveFileDialog.ShowModal() == wxID_CANCEL)
 		return;
-			
+
 	SceneWriter sceneWriter;
-	sceneWriter.Serialize(scene, sceneSettings, saveFileDialog.GetPath().ToStdString());	
+	sceneWriter.Serialize(scene, sceneSettings, saveFileDialog.GetPath().ToStdString());
+	editorState->SetCurrentSceneFile(saveFileDialog.GetPath().ToStdString());
 }
 
 void UpdateNode(Node *node)
 {
-	if (node->GetName().substr(0, 5) == "User_")
+	if (node->GetName().substr(0, 7) != "Editor_")
 	{
 		std::vector<StaticModel *> staticModels;
 		node->GetComponents(staticModels);
@@ -107,6 +123,8 @@ void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 
 	wxString path;
 	wxFileName::SplitPath(openFileDialog.GetPath(), &path, nullptr, nullptr, wxPATH_NATIVE);
+
+	editorState->SetCurrentSceneFile(openFileDialog.GetPath().ToStdString());
 
 	sceneSettings->basePath = path;
 	Filesystem::AddSearchPath(sceneSettings->basePath);
@@ -144,10 +162,58 @@ void MainFrameImpl::AddResourcePathClicked(wxCommandEvent& event)
 
 	if (dirDialog.ShowModal() == wxID_CANCEL)
 		return;
-
-	wxFileName fileName(dirDialog.GetPath(), "");
-	fileName.MakeRelativeTo(sceneSettings->basePath);
-	sceneSettings->resourcePaths.push_back(fileName.GetFullPath().ToStdString());
+	
+	sceneSettings->resourcePaths.push_back(dirDialog.GetPath().ToStdString());
 	
 	Filesystem::AddSearchPath(dirDialog.GetPath().ToStdString());
+}
+
+void MainFrameImpl::SelectedNodeChanged(FireCube::Node *node)
+{
+	if (node)
+	{
+		sceneTreeCtrl->SelectItem(nodeToTreeItem[node]);
+	}
+	else
+	{
+		sceneTreeCtrl->UnselectAll();
+	}
+}
+
+void MainFrameImpl::NodeAdded(FireCube::Node *node)
+{
+	if (node->GetParent() == nullptr)
+	{
+		auto id = sceneTreeCtrl->AddRoot(node->GetName());
+		nodeToTreeItem[node] = id;
+		treeItemToNode[id] = node;
+	}
+	else if (nodeToTreeItem.find(node->GetParent()) != nodeToTreeItem.end())
+	{
+		wxTreeItemId parentId = nodeToTreeItem[node->GetParent()];
+		auto id = sceneTreeCtrl->AppendItem(parentId, node->GetName());
+		nodeToTreeItem[node] = id;
+		treeItemToNode[id] = node;
+	}
+	
+}
+
+void MainFrameImpl::NodeRemoved(FireCube::Node *node)
+{
+	if (nodeToTreeItem.find(node) != nodeToTreeItem.end())
+	{
+		wxTreeItemId id = nodeToTreeItem[node];
+		nodeToTreeItem.erase(node);
+		treeItemToNode.erase(id);
+		sceneTreeCtrl->Delete(id);		
+	}
+}
+
+void MainFrameImpl::SceneTreeSelectionChanged(wxTreeEvent& event)
+{
+	auto node = treeItemToNode[event.GetItem()];
+	if (node->GetParent())
+	{
+		editorState->SetSelectedNode(node);
+	}
 }

@@ -12,17 +12,23 @@ class MyApp;
 class SceneSettings;
 
 /** Implementing MainFrame */
-class MainFrameImpl : public MainFrame
+class MainFrameImpl : public MainFrame, public FireCube::Object
 {
+	OBJECT(MainFrameImpl)
 	protected:
 		// Handlers for MainFrame events.		
 		virtual void UndoClicked(wxCommandEvent& event);
 		virtual void RedoClicked(wxCommandEvent& event);
 		virtual void SaveClicked(wxCommandEvent& event);
+		virtual void SaveAsClicked(wxCommandEvent& event);
 		virtual void OpenClicked(wxCommandEvent& event);
 		virtual void SetBasePathClicked(wxCommandEvent& event);		
 		virtual void AddMeshClicked(wxCommandEvent& event);
 		virtual void AddResourcePathClicked(wxCommandEvent& event);
+		virtual void SceneTreeSelectionChanged(wxTreeEvent& event);
+		void SelectedNodeChanged(FireCube::Node *node);
+		void NodeAdded(FireCube::Node *node);
+		void NodeRemoved(FireCube::Node *node);
 
 		MyApp *theApp;
 		FireCube::Engine *engine;
@@ -30,6 +36,9 @@ class MainFrameImpl : public MainFrame
 		FireCube::Node *root;
 		EditorState *editorState;
 		SceneSettings *sceneSettings;
+
+		std::map<FireCube::Node *, wxTreeItemId> nodeToTreeItem;
+		std::map<wxTreeItemId, FireCube::Node *> treeItemToNode;
 	public:
 		/** Constructor */
 		MainFrameImpl( wxWindow* parent );	

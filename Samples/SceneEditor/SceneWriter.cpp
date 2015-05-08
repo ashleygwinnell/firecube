@@ -21,7 +21,7 @@ void SceneWriter::Serialize(FireCube::Scene *scene, SceneSettings *sceneSettings
 
 void SceneWriter::Serialize(FireCube::Node *node, TiXmlElement *parent)
 {
-	if (node->GetName().substr(0, 5) == "User_")
+	if (node->GetName().substr(0, 7) != "Editor_")
 	{
 		TiXmlElement *element = new TiXmlElement("node");
 		parent->LinkEndChild(element);
@@ -38,14 +38,7 @@ void SceneWriter::Serialize(FireCube::Node *node, TiXmlElement *parent)
 		{
 			Serialize(child, element);
 		}
-	}
-	else
-	{
-		for (auto child : node->GetChildren())
-		{
-			Serialize(child, parent);
-		}
-	}
+	}	
 }
 
 void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent)
@@ -91,7 +84,11 @@ void SceneWriter::SerializeSettings(SceneSettings *sceneSettings, TiXmlNode *par
 	{
 		TiXmlElement *element = new TiXmlElement("resource_path");
 		settings->LinkEndChild(element);
-		TiXmlText *text = new TiXmlText(resourcePath.c_str());
+
+		wxFileName resourcePathRelative(resourcePath, "");
+		resourcePathRelative.MakeRelativeTo(basePath);		
+
+		TiXmlText *text = new TiXmlText(resourcePathRelative.GetFullPath().ToStdString());
 		element->LinkEndChild(text);
 	}	
 }

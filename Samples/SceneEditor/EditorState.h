@@ -16,11 +16,17 @@ public:
 	void SetSelectedNode(FireCube::Node *selectedNode);
 	FireCube::Node *GetSelectedNode();
 	FireCube::Engine *GetEngine();
+	void SetCurrentSceneFile(const std::string &currentSceneFile);
+	std::string GetCurrentSceneFile() const;
+
 	FireCube::Event<FireCube::Node *> selectedNodeChanged;
+	FireCube::Event<FireCube::Node *> nodeAdded;
+	FireCube::Event<FireCube::Node *> nodeRemoved;
 	FireCube::Event<> stateChanged;	
 private:
 	
 	FireCube::Node *selectedNode;
 	std::vector<Command *> commands;
 	int lastExecutedCommand;
+	std::string currentSceneFile;
 };

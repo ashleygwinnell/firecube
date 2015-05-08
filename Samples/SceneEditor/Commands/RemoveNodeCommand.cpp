@@ -14,11 +14,13 @@ RemoveNodeCommand::~RemoveNodeCommand()
 void RemoveNodeCommand::Do()
 {
 	node->Remove();
-	editorState->SetSelectedNode(nullptr);	
+	editorState->nodeRemoved(editorState, node);
+	editorState->SetSelectedNode(nullptr);		
 }
 
 void RemoveNodeCommand::Undo()
 {
 	node->SetParent(parent);
-	editorState->SetSelectedNode(node);
+	editorState->nodeAdded(editorState, node);
+	editorState->SetSelectedNode(node);	
 }

@@ -56,13 +56,15 @@ void GLCanvas::Init()
 	theApp->InitScene();
 	scene = theApp->GetScene();
 	root = scene->GetRootNode();
-	root->SetName("User_root");
+	root->SetName("root");
+	editorState->nodeAdded(editorState, scene->GetRootNode());
 
 	((MainFrameImpl *) this->GetParent())->SetScene(scene);
 
-	cameraTarget = root->CreateChild("CameraTarget");
+	cameraTarget = root->CreateChild("Editor_CameraTarget");
 	Node *cameraNode = cameraTarget->CreateChild("Camera");
 	camera = cameraNode->CreateComponent<OrbitCamera>();
+	camera->SetFarPlane(2000.0f);
 	scene->SetCamera(camera);
 	camera->SetDistance(5.0f);
 	camera->SetMaxDistance(10000.0f);
@@ -336,7 +338,7 @@ void GLCanvas::UpdateGizmo()
 void GLCanvas::CreateGrid(float size, unsigned int numberOfCells)
 {
 	if (!gridNode)
-		gridNode = root->CreateChild("GridNode");
+		gridNode = root->CreateChild("Editor_GridNode");
 	gridNode->RemoveAllComponents();
 	gridGeometry = gridNode->CreateComponent<CustomGeometry>();
 	for (DWORD i = 0; i < numberOfCells + 1; i++)

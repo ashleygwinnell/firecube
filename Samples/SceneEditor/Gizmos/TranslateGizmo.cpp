@@ -14,7 +14,7 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 	mesh->SetBoundingBox(BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)));
 	StaticModel *staticModel;
 	Node *child;
-	node = parent->CreateChild("TranslateGizmo");
+	node = parent->CreateChild("Editor_TranslateGizmo");
 	child = node->CreateChild("XAxis");
 	child->Move(vec3(0.5f, 0.0f, 0.0f));
 	child->Rotate(vec3(0.0f, 0.0f, PI * 0.5f));

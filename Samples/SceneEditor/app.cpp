@@ -26,7 +26,7 @@ EditorState *MyApp::GetEditorState()
 
 void MyApp::InitScene()
 {
-	scene = new FireCube::Scene(fcApp.GetEngine());
+	scene = new FireCube::Scene(fcApp.GetEngine());	
 }
 
 MyApp::~MyApp()

@@ -10,6 +10,13 @@
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
+#include <wx/treectrl.h>
+#include <wx/gdicmn.h>
+#include <wx/font.h>
+#include <wx/colour.h>
+#include <wx/settings.h>
+#include <wx/string.h>
+#include <wx/sizer.h>
 #include <string>
 #include <vector>
 #include <sstream>
@@ -18,12 +25,6 @@
 #include <FireCube.h>
 #include <wx/glcanvas.h>
 #include "GlCanvas.h"
-#include <wx/gdicmn.h>
-#include <wx/font.h>
-#include <wx/colour.h>
-#include <wx/settings.h>
-#include <wx/string.h>
-#include <wx/sizer.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
@@ -41,6 +42,7 @@ class MainFrame : public wxFrame
 	private:
 	
 	protected:
+		wxTreeCtrl* sceneTreeCtrl;
 		GLCanvas *glCanvas;
 		wxMenuBar* menuBar;
 		wxMenu* fileMenu;
@@ -49,6 +51,7 @@ class MainFrame : public wxFrame
 		wxMenu* addMenu;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void SceneTreeSelectionChanged( wxTreeEvent& event ) { event.Skip(); }
 		virtual void OpenClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SaveClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UndoClicked( wxCommandEvent& event ) { event.Skip(); }
