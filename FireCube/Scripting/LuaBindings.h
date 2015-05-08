@@ -101,4 +101,21 @@ struct Stack < std::vector<FireCube::SharedPtr<FireCube::Node>> >
 	}
 };
 
+template <>
+struct Stack < std::vector<std::string> >
+{
+	static void push(lua_State* L, const std::vector<std::string> &strings)
+	{
+		LuaRef ret = LuaRef::newTable(L);
+
+		for (auto &str : strings)
+		{
+			ret.append(str);
+		}
+
+		ret.push(L);
+	}
+};
+
+
 }

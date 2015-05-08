@@ -24,11 +24,12 @@ public:
 	void ExecuteFile(LuaFile *luaFile);
 	lua_State *GetState();
 	LuaFunction *GetFunction(const std::string &functionName);
+	LuaFunction *GetFunction(int index = -1);
 private:
 	static int Print(lua_State *L);
 	static int LuaState::AtPanic(lua_State* L);
 	lua_State *luaState;
-	std::map<StringHash, LuaFunction *> functions;
+	std::map<StringHash, SharedPtr<LuaFunction>> functions;
 };
 
 }

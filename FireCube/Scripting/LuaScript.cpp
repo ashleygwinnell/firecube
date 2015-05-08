@@ -8,14 +8,12 @@
 using namespace FireCube;
 using namespace luabridge;
 
-LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState()), handleInputFunction(engine->GetLuaState()->GetState()), 
-									   characterControllerCollisionFunction(engine->GetLuaState()->GetState())
+LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState())									   
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 }
 
-LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState()), handleInputFunction(engine->GetLuaState()->GetState()),
-											   characterControllerCollisionFunction(engine->GetLuaState()->GetState())
+LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState())											  
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 	CreateObject(objectName);
@@ -156,28 +154,23 @@ LuaFunction *LuaScript::GetMemberFunction(const std::string &functionName)
 	return GetFunction(objectName + "." + functionName);
 }
 
-void LuaScript::SubscribeToEventFromLua(const std::string &eventName, LuaRef param1, LuaRef param2)
+void LuaScript::SubscribeToEventFromLua(const std::string &eventName, LuaRef param)
 {
 	Object *sender = nullptr;
-	LuaRef function(engine->GetLuaState()->GetState());
-	if (param1.isFunction())
+	int functionIndex = -1;
+	if (param.isFunction() == false)
 	{
-		function = param1;
-	}
-	else
-	{
-		sender = param1.cast<Object *>();
-		function = param2;
-	}
+		sender = param.cast<Object *>();
+	}	
 
 	if (eventName == "HandleInput")
 	{
-		handleInputFunction = function;
+		scriptFunctions[ScriptFunction::HANDLE_INPUT] = engine->GetLuaState()->GetFunction();		
 		SubscribeToEvent(sender, Events::HandleInput, &LuaScript::HandleInput);
 	}
 	else if (eventName == "CharacterControllerCollision")
 	{
-		characterControllerCollisionFunction = function;
+		scriptFunctions[ScriptFunction::CHARACTER_CONTROLLER_COLLISION] = engine->GetLuaState()->GetFunction();
 		SubscribeToEvent(sender, Events::CharacterControllerCollision, &LuaScript::CharacterControllerCollision);
 	}
 }
@@ -186,7 +179,7 @@ void LuaScript::HandleInput(float time, const MappedInput &input)
 {
 	try
 	{
-		handleInputFunction(object, time, input);
+		(*scriptFunctions[ScriptFunction::HANDLE_INPUT])(object, time, input);		
 	}
 	catch (LuaException &e)
 	{
@@ -199,7 +192,7 @@ void LuaScript::CharacterControllerCollision(CharacterController *characterContr
 {
 	try
 	{
-		characterControllerCollisionFunction(object, characterController, collisionShape);
+		(*scriptFunctions[ScriptFunction::CHARACTER_CONTROLLER_COLLISION])(object, characterController, collisionShape);		
 	}
 	catch (LuaException &e)
 	{

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Memory.h"
 #include "Utils/utils.h"
 #include "ThirdParty/Lua/src/lua.hpp"
 #include "ThirdParty/LuaBridge/LuaBridge.h"
@@ -7,7 +8,7 @@
 namespace FireCube
 {
 
-class FIRECUBE_API LuaFunction
+class FIRECUBE_API LuaFunction : public RefCounted
 {
 public:
 	LuaFunction(const luabridge::LuaRef &ref);

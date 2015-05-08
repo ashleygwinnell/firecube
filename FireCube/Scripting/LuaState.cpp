@@ -31,10 +31,7 @@ LuaState::LuaState(Engine *engine) : Object(engine)
 
 LuaState::~LuaState()
 {
-	for (auto &f : functions)
-	{
-		delete f.second;
-	}
+	functions.clear();
 	lua_close(luaState);
 }
 
@@ -150,4 +147,19 @@ LuaFunction *LuaState::GetFunction(const std::string &functionName)
 	LuaFunction *ret = new LuaFunction(ref);
 	functions[functionNameHash] = ret;
 	return ret;
+}
+
+LuaFunction *LuaState::GetFunction(int index)
+{
+	LuaRef ref = LuaRef::fromStack(luaState, index);
+
+	if (ref.isFunction() == false)
+	{
+		return nullptr;
+	}
+	else
+	{
+		LuaFunction *ret = new LuaFunction(ref);
+		return ret;
+	}
 }

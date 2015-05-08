@@ -23,13 +23,7 @@ bool SceneReader::Read(Scene &scene, const std::string &filename)
 {
 	TiXmlDocument xmlDocument;
 	if (!xmlDocument.LoadFile(Filesystem::SearchForFileName(filename)))
-		return false;
-
-	TiXmlElement *settingsElement = xmlDocument.FirstChildElement("settings");
-	if (settingsElement)
-	{
-		ReadSettings(settingsElement);
-	}
+		return false;	
 
 	TiXmlElement *e = xmlDocument.FirstChildElement("scene");
 	if (e == nullptr)

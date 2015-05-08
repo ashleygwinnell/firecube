@@ -13,6 +13,7 @@
 #include "Physics/CollisionShape.h"
 #include "Scripting/LuaScript.h"
 #include "Audio/SoundEmitter.h"
+#include "Scene/SceneReader.h"
 
 using namespace FireCube;
 using namespace luabridge;
@@ -155,6 +156,12 @@ int Clone(lua_State *L)
 	return 1;
 }
 
+void ReadScene(SceneReader *reader, Scene *scene, const std::string &filename)
+{
+	reader->Read(*scene, filename);
+}
+
+
 void LuaBindings::InitScene(lua_State *luaState)
 {
 	getGlobalNamespace(luaState)
@@ -233,6 +240,12 @@ void LuaBindings::InitScene(lua_State *luaState)
 		.endClass()
 		.deriveClass<Camera, Component>("Camera")
 			.addFunction("GetPickingRay", &Camera::GetPickingRay)
+		.endClass()
+		.beginClass<SceneReader>("SceneReader")
+			.addConstructor<void(*) (Engine *)>()
+			.addFunctionFree("Read", &ReadScene)
+			.addFunction("ReadSettings", (void(SceneReader::*)(const std::string &)) &SceneReader::ReadSettings)
+			.addProperty("resroucePaths", &SceneReader::GetResroucePaths)		
 		.endClass();
 
 	LuaRef t = LuaRef::newTable(luaState);
