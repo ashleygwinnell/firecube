@@ -35,3 +35,8 @@ FireCube.opensdf
 FireCube.sdf
 FireCube.v12.suo
 FireCube/log.txt
+Tools/SceneEditor/Debug/
+Tools/ModelViewer/Debug/
+Tools/ModelViewer/Release/
+Tools/SceneEditor/Release/
+Tools/ModelViewer/log.txt

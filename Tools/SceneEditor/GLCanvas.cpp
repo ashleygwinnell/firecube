@@ -43,7 +43,7 @@ GLCanvas::~GLCanvas()
 
 void GLCanvas::Init()
 {	
-	Filesystem::AddSearchPath("../Samples/SceneEditor");
+	Filesystem::AddSearchPath("../Tools/SceneEditor");
 	
 	theApp->fcApp.InitializeNoWindow();	
 	
