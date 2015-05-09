@@ -167,6 +167,21 @@
                         <event name="OnMenuSelection">SaveClicked</event>
                         <event name="OnUpdateUI"></event>
                     </object>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">1</property>
+                        <property name="help"></property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">MyMenuItem</property>
+                        <property name="name">saveAsMenuItem</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut">Ctrl+Shift+S</property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">SaveAsClicked</event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
                 </object>
                 <object class="wxMenu" expanded="1">
                     <property name="label">Edit</property>
