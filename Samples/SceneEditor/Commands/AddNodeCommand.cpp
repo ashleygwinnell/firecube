@@ -8,7 +8,7 @@ AddNodeCommand::AddNodeCommand(EditorState *editorState, FireCube::Node *node, F
 
 AddNodeCommand::~AddNodeCommand()
 {
-	delete node;
+	
 }
 
 void AddNodeCommand::Do()

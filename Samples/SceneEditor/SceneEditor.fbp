@@ -88,7 +88,7 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxMenuBar" expanded="0">
+            <object class="wxMenuBar" expanded="1">
                 <property name="bg"></property>
                 <property name="context_help"></property>
                 <property name="context_menu">1</property>
@@ -133,7 +133,7 @@
                 <event name="OnSetFocus"></event>
                 <event name="OnSize"></event>
                 <event name="OnUpdateUI"></event>
-                <object class="wxMenu" expanded="0">
+                <object class="wxMenu" expanded="1">
                     <property name="label">File</property>
                     <property name="name">fileMenu</property>
                     <property name="permission">protected</property>
@@ -147,7 +147,7 @@
                         <property name="label">Open</property>
                         <property name="name">openMenuItem</property>
                         <property name="permission">none</property>
-                        <property name="shortcut"></property>
+                        <property name="shortcut">Ctrl+O</property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">OpenClicked</event>
                         <event name="OnUpdateUI"></event>
@@ -162,13 +162,13 @@
                         <property name="label">Save</property>
                         <property name="name">saveMenuItem</property>
                         <property name="permission">none</property>
-                        <property name="shortcut"></property>
+                        <property name="shortcut">Ctrl+S</property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">SaveClicked</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                 </object>
-                <object class="wxMenu" expanded="0">
+                <object class="wxMenu" expanded="1">
                     <property name="label">Edit</property>
                     <property name="name">editMenu</property>
                     <property name="permission">protected</property>
@@ -182,7 +182,7 @@
                         <property name="label">Undo</property>
                         <property name="name">undoMenuItem</property>
                         <property name="permission">none</property>
-                        <property name="shortcut">CTRL-Z</property>
+                        <property name="shortcut">Ctrl+Z</property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">UndoClicked</event>
                         <event name="OnUpdateUI"></event>
@@ -197,7 +197,7 @@
                         <property name="label">Redo</property>
                         <property name="name">redoMenuItem</property>
                         <property name="permission">none</property>
-                        <property name="shortcut">CTRL-Y</property>
+                        <property name="shortcut">Ctrl+Y</property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">RedoClicked</event>
                         <event name="OnUpdateUI"></event>
@@ -352,8 +352,8 @@
                         <event name="OnSplitterSashPosChanging"></event>
                         <event name="OnSplitterUnsplit"></event>
                         <event name="OnUpdateUI"></event>
-                        <object class="splitteritem" expanded="0">
-                            <object class="wxPanel" expanded="0">
+                        <object class="splitteritem" expanded="1">
+                            <object class="wxPanel" expanded="1">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
                                 <property name="RightDockable">1</property>
@@ -427,7 +427,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnUpdateUI"></event>
-                                <object class="wxBoxSizer" expanded="0">
+                                <object class="wxBoxSizer" expanded="1">
                                     <property name="minimum_size"></property>
                                     <property name="name">bSizer1</property>
                                     <property name="orient">wxVERTICAL</property>
@@ -481,7 +481,7 @@
                                             <property name="resize">Resizable</property>
                                             <property name="show">1</property>
                                             <property name="size"></property>
-                                            <property name="style">wxTR_DEFAULT_STYLE|wxTR_NO_LINES|wxTR_TWIST_BUTTONS</property>
+                                            <property name="style">wxTR_DEFAULT_STYLE|wxTR_EDIT_LABELS|wxTR_FULL_ROW_HIGHLIGHT|wxTR_HIDE_ROOT|wxTR_NO_LINES|wxTR_TWIST_BUTTONS</property>
                                             <property name="subclass"></property>
                                             <property name="toolbar_pane">0</property>
                                             <property name="tooltip"></property>
@@ -510,12 +510,12 @@
                                             <event name="OnRightUp"></event>
                                             <event name="OnSetFocus"></event>
                                             <event name="OnSize"></event>
-                                            <event name="OnTreeBeginDrag"></event>
+                                            <event name="OnTreeBeginDrag">SceneTreeBeginDrag</event>
                                             <event name="OnTreeBeginLabelEdit"></event>
                                             <event name="OnTreeBeginRDrag"></event>
                                             <event name="OnTreeDeleteItem"></event>
-                                            <event name="OnTreeEndDrag"></event>
-                                            <event name="OnTreeEndLabelEdit"></event>
+                                            <event name="OnTreeEndDrag">SceneTreeEndDrag</event>
+                                            <event name="OnTreeEndLabelEdit">SceneTreeEndLabelEdit</event>
                                             <event name="OnTreeGetInfo"></event>
                                             <event name="OnTreeItemActivated"></event>
                                             <event name="OnTreeItemCollapsed"></event>

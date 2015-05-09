@@ -81,6 +81,9 @@
     <ClCompile Include="SceneWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Commands\RenameNodeCommand.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -142,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="SceneSettings.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Commands\RenameNodeCommand.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

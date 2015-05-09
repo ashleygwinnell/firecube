@@ -22,6 +22,7 @@ public:
 	FireCube::Event<FireCube::Node *> selectedNodeChanged;
 	FireCube::Event<FireCube::Node *> nodeAdded;
 	FireCube::Event<FireCube::Node *> nodeRemoved;
+	FireCube::Event<FireCube::Node *> nodeRenamed;
 	FireCube::Event<> stateChanged;	
 private:
 	

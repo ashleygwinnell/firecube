@@ -63,6 +63,9 @@ class MainFrame : public wxFrame
 		virtual void SetBasePathClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddResourcePathClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddMeshClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void SceneTreeBeginDrag( wxTreeEvent& event ) { event.Skip(); }
+		virtual void SceneTreeEndDrag( wxTreeEvent& event ) { event.Skip(); }
+		virtual void SceneTreeEndLabelEdit( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeSelectionChanged( wxTreeEvent& event ) { event.Skip(); }
 		
 	

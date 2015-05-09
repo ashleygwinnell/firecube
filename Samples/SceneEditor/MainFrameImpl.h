@@ -26,9 +26,16 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void AddMeshClicked(wxCommandEvent& event);
 		virtual void AddResourcePathClicked(wxCommandEvent& event);
 		virtual void SceneTreeSelectionChanged(wxTreeEvent& event);
+		virtual void SceneTreeEndLabelEdit(wxTreeEvent& event);
+		/*virtual void SceneTreeLeftDown(wxMouseEvent& event);
+		virtual void SceneTreeLeftUp(wxMouseEvent& event);
+		virtual void SceneTreeMotion(wxMouseEvent& event);*/
+		virtual void SceneTreeBeginDrag(wxTreeEvent& event);
+		virtual void SceneTreeEndDrag(wxTreeEvent& event);
 		void SelectedNodeChanged(FireCube::Node *node);
 		void NodeAdded(FireCube::Node *node);
 		void NodeRemoved(FireCube::Node *node);
+		void NodeRenamed(FireCube::Node *node);
 
 		MyApp *theApp;
 		FireCube::Engine *engine;
@@ -39,6 +46,8 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 
 		std::map<FireCube::Node *, wxTreeItemId> nodeToTreeItem;
 		std::map<wxTreeItemId, FireCube::Node *> treeItemToNode;
+		
+		wxTreeItemId dragItem;
 	public:
 		/** Constructor */
 		MainFrameImpl( wxWindow* parent );	

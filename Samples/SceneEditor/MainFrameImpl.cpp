@@ -5,6 +5,8 @@
 #include "app.h"
 #include "Types.h"
 #include "Commands/AddNodeCommand.h"
+#include "Commands/RemoveNodeCommand.h"
+#include "Commands/RenameNodeCommand.h"
 #include "Commands/AddComponentCommand.h"
 #include "Commands/GroupCommand.h"
 #include "SceneWriter.h"
@@ -12,11 +14,13 @@
 
 using namespace FireCube;
 
-MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState()), sceneSettings(theApp->GetSceneSettings())
+MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState()), 
+												 sceneSettings(theApp->GetSceneSettings())
 {
 	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &MainFrameImpl::SelectedNodeChanged);
 	SubscribeToEvent(editorState, editorState->nodeAdded, &MainFrameImpl::NodeAdded);
 	SubscribeToEvent(editorState, editorState->nodeRemoved, &MainFrameImpl::NodeRemoved);	
+	SubscribeToEvent(editorState, editorState->nodeRenamed, &MainFrameImpl::NodeRenamed);
 }
 
 /*void MainFrameImpl::MyButtonClicked( wxCommandEvent& event )
@@ -42,7 +46,7 @@ void MainFrameImpl::AddMeshClicked(wxCommandEvent& event)
 	
 	std::string sfile = openFileDialog.GetPath();
 	
-	Node *node = new Node(engine, "TestNode");
+	Node *node = new Node(engine, "Node");
 	auto addNodeCommand = new AddNodeCommand(editorState, node, root);
 	
 	auto addComponentCommand = new AddComponentCommand(editorState, node, [sfile](Engine *engine, Node *node) -> Component *
@@ -216,4 +220,43 @@ void MainFrameImpl::SceneTreeSelectionChanged(wxTreeEvent& event)
 	{
 		editorState->SetSelectedNode(node);
 	}
+}
+
+void MainFrameImpl::SceneTreeEndLabelEdit(wxTreeEvent& event)
+{
+	auto renameNodeCommand = new RenameNodeCommand(editorState, treeItemToNode[event.GetItem()], event.GetLabel().ToStdString());
+	editorState->ExecuteCommand(renameNodeCommand);
+}
+
+void MainFrameImpl::SceneTreeBeginDrag(wxTreeEvent& event)
+{
+	dragItem = event.GetItem();
+	event.Allow();
+}
+void MainFrameImpl::SceneTreeEndDrag(wxTreeEvent& event)
+{
+	auto newParent = event.GetItem();
+	if (newParent.IsOk() == false)
+	{
+		newParent = sceneTreeCtrl->GetRootItem();
+	}			
+
+	auto oldParent = sceneTreeCtrl->GetItemParent(dragItem);
+	if (oldParent == newParent)
+		return;
+
+	auto newParentNode = treeItemToNode[newParent];
+	auto node = treeItemToNode[dragItem];
+	
+	auto removeNodeCommand = new RemoveNodeCommand(editorState, node);
+	auto addNodeCommand = new AddNodeCommand(editorState, node, newParentNode);
+	auto groupCommand = new GroupCommand(editorState, { removeNodeCommand, addNodeCommand });
+
+	editorState->ExecuteCommand(groupCommand);
+}
+
+void MainFrameImpl::NodeRenamed(FireCube::Node *node)
+{
+	auto itemId = nodeToTreeItem[node];
+	sceneTreeCtrl->SetItemText(itemId, node->GetName());
 }
