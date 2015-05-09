@@ -51,10 +51,12 @@ class MainFrame : public wxFrame
 		wxMenu* addMenu;
 		wxMenu* viewMenu;
 		wxMenuItem* viewSceneHierarchyMenuItem;
+		wxMenuItem* viewComponentsMenuItem;
 		wxPanel* m_panel1;
 		wxTreeCtrl* sceneTreeCtrl;
 		wxPanel* m_panel2;
 		GLCanvas *glCanvas;
+		wxPanel* m_panel3;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void PaneClose( wxAuiManagerEvent& event ) { event.Skip(); }
@@ -67,6 +69,7 @@ class MainFrame : public wxFrame
 		virtual void AddResourcePathClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddMeshClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewSceneHierarchyClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ViewComponentsClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SceneTreeBeginDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeEndDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeEndLabelEdit( wxTreeEvent& event ) { event.Skip(); }

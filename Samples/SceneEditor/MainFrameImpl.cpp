@@ -277,6 +277,21 @@ void MainFrameImpl::ViewSceneHierarchyClicked(wxCommandEvent& event)
 	m_mgr.Update();
 }
 
+void MainFrameImpl::ViewComponentsClicked(wxCommandEvent& event)
+{
+	auto &pane = m_mgr.GetPane("componentsPane");
+	if (event.IsChecked())
+	{
+		pane.Show();
+	}
+	else
+	{
+		pane.Hide();
+	}
+
+	m_mgr.Update();
+}
+
 void MainFrameImpl::PaneClose(wxAuiManagerEvent& event)
 {
 	auto pane = event.GetPane();
@@ -284,5 +299,10 @@ void MainFrameImpl::PaneClose(wxAuiManagerEvent& event)
 	if (pane->name == "sceneHierarchyPane")
 	{
 		viewSceneHierarchyMenuItem->Check(false);
+	}
+
+	if (pane->name == "componentsPane")
+	{
+		viewComponentsMenuItem->Check(false);
 	}
 }
