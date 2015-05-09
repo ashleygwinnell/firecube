@@ -38,3 +38,8 @@ SceneSettings *MyApp::GetSceneSettings()
 {
 	return &sceneSettings;
 }
+
+MainFrameImpl *MyApp::GetMainFrame()
+{
+	return frame;
+}

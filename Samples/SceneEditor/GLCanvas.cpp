@@ -59,8 +59,8 @@ void GLCanvas::Init()
 	root->SetName("Root");
 	editorState->nodeAdded(editorState, scene->GetRootNode());
 
-	((MainFrameImpl *) this->GetParent()->GetParent()->GetParent())->SetScene(scene);
-
+	theApp->GetMainFrame()->SetScene(scene);
+	
 	cameraTarget = root->CreateChild("Editor_CameraTarget");
 	Node *cameraNode = cameraTarget->CreateChild("Camera");
 	camera = cameraNode->CreateComponent<OrbitCamera>();

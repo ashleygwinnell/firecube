@@ -18,6 +18,7 @@ public:
 	EditorState *GetEditorState();
 	SceneSettings *GetSceneSettings();
 	void InitScene();
+	MainFrameImpl *GetMainFrame();
 	FireCubeApp fcApp;
 private:	
 	MainFrameImpl *frame;

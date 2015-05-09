@@ -12,6 +12,8 @@
 MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	m_mgr.SetManagedWindow(this);
+	m_mgr.SetFlags(wxAUI_MGR_DEFAULT);
 	
 	menuBar = new wxMenuBar( 0 );
 	fileMenu = new wxMenu();
@@ -60,42 +62,33 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	this->SetMenuBar( menuBar );
 	
+	m_panel1 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( 150,-1 ), wxTAB_TRAVERSAL );
+	m_mgr.AddPane( m_panel1, wxAuiPaneInfo() .Left() .Caption( wxT("Scene") ).PinButton( true ).Dock().Resizable().FloatingSize( wxSize( -1,-1 ) ).DockFixed( false ) );
+	
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
-	m_splitter1 = new wxSplitterWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_3DSASH|wxSP_LIVE_UPDATE );
-	m_splitter1->Connect( wxEVT_IDLE, wxIdleEventHandler( MainFrame::m_splitter1OnIdle ), NULL, this );
-	m_splitter1->SetMinimumPaneSize( 1 );
-	
-	m_panel1 = new wxPanel( m_splitter1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer1;
-	bSizer1 = new wxBoxSizer( wxVERTICAL );
-	
 	sceneTreeCtrl = new wxTreeCtrl( m_panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE|wxTR_EDIT_LABELS|wxTR_FULL_ROW_HIGHLIGHT|wxTR_HIDE_ROOT|wxTR_NO_LINES|wxTR_TWIST_BUTTONS );
-	bSizer1->Add( sceneTreeCtrl, 1, wxALL|wxEXPAND, 1 );
+	bSizer2->Add( sceneTreeCtrl, 1, wxALL|wxEXPAND, 1 );
 	
 	
-	m_panel1->SetSizer( bSizer1 );
+	m_panel1->SetSizer( bSizer2 );
 	m_panel1->Layout();
-	bSizer1->Fit( m_panel1 );
-	m_panel2 = new wxPanel( m_splitter1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer4;
-	bSizer4 = new wxBoxSizer( wxVERTICAL );
+	m_panel2 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_mgr.AddPane( m_panel2, wxAuiPaneInfo() .Left() .CaptionVisible( false ).CloseButton( false ).PinButton( true ).Float().FloatingPosition( wxPoint( 628,556 ) ).Resizable().FloatingSize( wxSize( 42,59 ) ).DockFixed( false ).CentrePane() );
+	
+	wxBoxSizer* bSizer11;
+	bSizer11 = new wxBoxSizer( wxVERTICAL );
 	
 	glCanvas = new GLCanvas(m_panel2, wxID_ANY,wxDefaultPosition,wxSize(1,1));
-	bSizer4->Add( glCanvas, 1, wxEXPAND, 1 );
+	bSizer11->Add( glCanvas, 1, wxEXPAND, 1 );
 	
 	
-	m_panel2->SetSizer( bSizer4 );
+	m_panel2->SetSizer( bSizer11 );
 	m_panel2->Layout();
-	bSizer4->Fit( m_panel2 );
-	m_splitter1->SplitVertically( m_panel1, m_panel2, 150 );
-	bSizer2->Add( m_splitter1, 1, wxEXPAND, 5 );
+	bSizer11->Fit( m_panel2 );
 	
-	
-	this->SetSizer( bSizer2 );
-	this->Layout();
-	
+	m_mgr.Update();
 	this->Centre( wxBOTH );
 	
 	// Connect Events
@@ -128,5 +121,7 @@ MainFrame::~MainFrame()
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_END_DRAG, wxTreeEventHandler( MainFrame::SceneTreeEndDrag ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_END_LABEL_EDIT, wxTreeEventHandler( MainFrame::SceneTreeEndLabelEdit ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( MainFrame::SceneTreeSelectionChanged ), NULL, this );
+	
+	m_mgr.UnInit();
 	
 }

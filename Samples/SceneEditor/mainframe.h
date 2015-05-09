@@ -30,8 +30,8 @@
 #include <FireCube.h>
 #include <wx/glcanvas.h>
 #include "GlCanvas.h"
-#include <wx/splitter.h>
 #include <wx/frame.h>
+#include <wx/aui/aui.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -49,7 +49,6 @@ class MainFrame : public wxFrame
 		wxMenu* editMenu;
 		wxMenu* optionsMenu;
 		wxMenu* addMenu;
-		wxSplitterWindow* m_splitter1;
 		wxPanel* m_panel1;
 		wxTreeCtrl* sceneTreeCtrl;
 		wxPanel* m_panel2;
@@ -73,14 +72,9 @@ class MainFrame : public wxFrame
 	public:
 		
 		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Scene Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 876,616 ), long style = wxDEFAULT_FRAME_STYLE|wxMAXIMIZE|wxTAB_TRAVERSAL );
+		wxAuiManager m_mgr;
 		
 		~MainFrame();
-		
-		void m_splitter1OnIdle( wxIdleEvent& )
-		{
-			m_splitter1->SetSashPosition( 150 );
-			m_splitter1->Disconnect( wxEVT_IDLE, wxIdleEventHandler( MainFrame::m_splitter1OnIdle ), NULL, this );
-		}
 	
 };
 
