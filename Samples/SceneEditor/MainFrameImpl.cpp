@@ -21,6 +21,7 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	SubscribeToEvent(editorState, editorState->nodeAdded, &MainFrameImpl::NodeAdded);
 	SubscribeToEvent(editorState, editorState->nodeRemoved, &MainFrameImpl::NodeRemoved);	
 	SubscribeToEvent(editorState, editorState->nodeRenamed, &MainFrameImpl::NodeRenamed);
+	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);	
 }
 
 /*void MainFrameImpl::MyButtonClicked( wxCommandEvent& event )
@@ -259,4 +260,29 @@ void MainFrameImpl::NodeRenamed(FireCube::Node *node)
 {
 	auto itemId = nodeToTreeItem[node];
 	sceneTreeCtrl->SetItemText(itemId, node->GetName());
+}
+
+void MainFrameImpl::ViewSceneHierarchyClicked(wxCommandEvent& event)
+{
+	auto &pane = m_mgr.GetPane("sceneHierarchyPane");
+	if (event.IsChecked())
+	{
+		pane.Show();		
+	}
+	else
+	{
+		pane.Hide();		
+	}
+
+	m_mgr.Update();
+}
+
+void MainFrameImpl::PaneClose(wxAuiManagerEvent& event)
+{
+	auto pane = event.GetPane();
+
+	if (pane->name == "sceneHierarchyPane")
+	{
+		viewSceneHierarchyMenuItem->Check(false);
+	}
 }

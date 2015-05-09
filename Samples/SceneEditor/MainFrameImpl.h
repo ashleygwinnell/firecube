@@ -27,11 +27,10 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void AddResourcePathClicked(wxCommandEvent& event);
 		virtual void SceneTreeSelectionChanged(wxTreeEvent& event);
 		virtual void SceneTreeEndLabelEdit(wxTreeEvent& event);
-		/*virtual void SceneTreeLeftDown(wxMouseEvent& event);
-		virtual void SceneTreeLeftUp(wxMouseEvent& event);
-		virtual void SceneTreeMotion(wxMouseEvent& event);*/
+		virtual void ViewSceneHierarchyClicked(wxCommandEvent& event);
 		virtual void SceneTreeBeginDrag(wxTreeEvent& event);
 		virtual void SceneTreeEndDrag(wxTreeEvent& event);
+		virtual void PaneClose(wxAuiManagerEvent& event);
 		void SelectedNodeChanged(FireCube::Node *node);
 		void NodeAdded(FireCube::Node *node);
 		void NodeRemoved(FireCube::Node *node);
