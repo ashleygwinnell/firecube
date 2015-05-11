@@ -100,15 +100,28 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_panel2->SetSizer( bSizer11 );
 	m_panel2->Layout();
 	bSizer11->Fit( m_panel2 );
-	m_panel3 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( 150,-1 ), wxTAB_TRAVERSAL );
-	m_mgr.AddPane( m_panel3, wxAuiPaneInfo() .Name( wxT("componentsPane") ).Right() .Caption( wxT("Components") ).PinButton( true ).Dock().Resizable().FloatingSize( wxSize( 42,59 ) ).DockFixed( false ).Layer( 1 ) );
+	componentsPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( 300,-1 ), wxTAB_TRAVERSAL );
+	m_mgr.AddPane( componentsPanel, wxAuiPaneInfo() .Name( wxT("componentsPane") ).Right() .Caption( wxT("Components") ).PinButton( true ).Dock().Resizable().FloatingSize( wxSize( 42,59 ) ).DockFixed( false ).Layer( 1 ) );
 	
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 	
+	m_button1 = new wxButton( componentsPanel, wxID_ANY, wxT("MyButton"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( m_button1, 0, wxALL, 5 );
 	
-	m_panel3->SetSizer( bSizer3 );
-	m_panel3->Layout();
+	componentsList = new wxScrolledWindow( componentsPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), wxHSCROLL|wxVSCROLL );
+	componentsList->SetScrollRate( 5, 5 );
+	componentsSizer = new wxBoxSizer( wxVERTICAL );
+	
+	
+	componentsList->SetSizer( componentsSizer );
+	componentsList->Layout();
+	componentsSizer->Fit( componentsList );
+	bSizer3->Add( componentsList, 1, wxEXPAND | wxALL, 5 );
+	
+	
+	componentsPanel->SetSizer( bSizer3 );
+	componentsPanel->Layout();
 	
 	m_mgr.Update();
 	this->Centre( wxBOTH );
@@ -129,6 +142,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_END_DRAG, wxTreeEventHandler( MainFrame::SceneTreeEndDrag ), NULL, this );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_END_LABEL_EDIT, wxTreeEventHandler( MainFrame::SceneTreeEndLabelEdit ), NULL, this );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( MainFrame::SceneTreeSelectionChanged ), NULL, this );
+	m_button1->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::TestClicked ), NULL, this );
 }
 
 MainFrame::~MainFrame()
@@ -149,7 +163,76 @@ MainFrame::~MainFrame()
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_END_DRAG, wxTreeEventHandler( MainFrame::SceneTreeEndDrag ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_END_LABEL_EDIT, wxTreeEventHandler( MainFrame::SceneTreeEndLabelEdit ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( MainFrame::SceneTreeSelectionChanged ), NULL, this );
+	m_button1->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::TestClicked ), NULL, this );
 	
 	m_mgr.UnInit();
+	
+}
+
+BaseComponentPanel::BaseComponentPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer5;
+	bSizer5 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer6;
+	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
+	
+	componentTypeLabel = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
+	componentTypeLabel->Wrap( -1 );
+	bSizer6->Add( componentTypeLabel, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer6->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	removeComponent = new wxButton( this, wxID_ANY, wxT("Remove"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer6->Add( removeComponent, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer5->Add( bSizer6, 0, wxEXPAND, 5 );
+	
+	customComponentsSizer = new wxBoxSizer( wxVERTICAL );
+	
+	
+	bSizer5->Add( customComponentsSizer, 1, wxALL|wxEXPAND, 5 );
+	
+	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	bSizer5->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
+	
+	
+	this->SetSizer( bSizer5 );
+	this->Layout();
+	bSizer5->Fit( this );
+}
+
+BaseComponentPanel::~BaseComponentPanel()
+{
+}
+
+StaticModelPanel::StaticModelPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer8;
+	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxStaticText* m_staticText2;
+	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Mesh"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText2->Wrap( -1 );
+	bSizer8->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	meshFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
+	bSizer8->Add( meshFilePicker, 1, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	this->SetSizer( bSizer8 );
+	this->Layout();
+	bSizer8->Fit( this );
+	
+	// Connect Events
+	meshFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( StaticModelPanel::FileChanged ), NULL, this );
+}
+
+StaticModelPanel::~StaticModelPanel()
+{
+	// Disconnect Events
+	meshFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( StaticModelPanel::FileChanged ), NULL, this );
 	
 }

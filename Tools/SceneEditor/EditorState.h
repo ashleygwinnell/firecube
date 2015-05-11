@@ -24,6 +24,7 @@ public:
 	FireCube::Event<FireCube::Node *> nodeRemoved;
 	FireCube::Event<FireCube::Node *> nodeRenamed;
 	FireCube::Event<> stateChanged;	
+	FireCube::Event<> sceneChanged;
 private:
 	
 	FireCube::Node *selectedNode;

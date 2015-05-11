@@ -40,6 +40,7 @@ private:
 	void CreateGrid(float size, unsigned int numberOfCells);
 	void SelectedNodeChanged(FireCube::Node *node);
 	void StateChanged();
+	void SceneChanged();
 	
 	bool init;
 	MyApp *theApp;

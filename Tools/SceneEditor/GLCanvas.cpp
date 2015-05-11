@@ -52,6 +52,7 @@ void GLCanvas::Init()
 	editorState = theApp->GetEditorState();
 	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &GLCanvas::SelectedNodeChanged);
 	SubscribeToEvent(editorState, editorState->stateChanged, &GLCanvas::StateChanged);
+	SubscribeToEvent(editorState, editorState->sceneChanged, &GLCanvas::SceneChanged);
 	
 	theApp->InitScene();
 	scene = theApp->GetScene();
@@ -105,6 +106,13 @@ void GLCanvas::StateChanged()
 	UpdateGizmo();
 	this->Refresh(false);
 }
+
+void GLCanvas::SceneChanged()
+{
+	UpdateGizmo();
+	this->Refresh(false);
+}
+
 
 void GLCanvas::Render()
 {

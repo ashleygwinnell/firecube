@@ -30,8 +30,13 @@
 #include <FireCube.h>
 #include <wx/glcanvas.h>
 #include "GlCanvas.h"
+#include <wx/button.h>
+#include <wx/scrolwin.h>
 #include <wx/frame.h>
 #include <wx/aui/aui.h>
+#include <wx/stattext.h>
+#include <wx/statline.h>
+#include <wx/filepicker.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -56,7 +61,10 @@ class MainFrame : public wxFrame
 		wxTreeCtrl* sceneTreeCtrl;
 		wxPanel* m_panel2;
 		GLCanvas *glCanvas;
-		wxPanel* m_panel3;
+		wxPanel* componentsPanel;
+		wxButton* m_button1;
+		wxScrolledWindow* componentsList;
+		wxBoxSizer* componentsSizer;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void PaneClose( wxAuiManagerEvent& event ) { event.Skip(); }
@@ -74,6 +82,7 @@ class MainFrame : public wxFrame
 		virtual void SceneTreeEndDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeEndLabelEdit( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeSelectionChanged( wxTreeEvent& event ) { event.Skip(); }
+		virtual void TestClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -82,6 +91,47 @@ class MainFrame : public wxFrame
 		wxAuiManager m_mgr;
 		
 		~MainFrame();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class BaseComponentPanel
+///////////////////////////////////////////////////////////////////////////////
+class BaseComponentPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxStaticText* componentTypeLabel;
+		wxBoxSizer* customComponentsSizer;
+		wxStaticLine* m_staticline1;
+	
+	public:
+		wxButton* removeComponent;
+		
+		BaseComponentPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
+		~BaseComponentPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class StaticModelPanel
+///////////////////////////////////////////////////////////////////////////////
+class StaticModelPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxFilePickerCtrl* meshFilePicker;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void FileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		StaticModelPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
+		~StaticModelPanel();
 	
 };
 

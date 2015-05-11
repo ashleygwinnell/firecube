@@ -89,9 +89,11 @@
     <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxml.cpp" />
     <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlparser.cpp" />
+    <ClCompile Include="BaseComponentPanelImpl.cpp" />
     <ClCompile Include="Commands\AddComponentCommand.cpp" />
     <ClCompile Include="Commands\AddNodeCommand.cpp" />
     <ClCompile Include="Commands\GroupCommand.cpp" />
+    <ClCompile Include="Commands\RemoveComponentCommand.cpp" />
     <ClCompile Include="Commands\RemoveNodeCommand.cpp" />
     <ClCompile Include="Commands\RenameNodeCommand.cpp" />
     <ClCompile Include="Commands\TransformCommands.cpp" />
@@ -105,14 +107,17 @@
     <ClCompile Include="MainFrameImpl.cpp" />
     <ClCompile Include="MathUtils.cpp" />
     <ClCompile Include="SceneWriter.cpp" />
+    <ClCompile Include="StaticModelPanelImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\FireCube\ThirdParty\TinyXML\tinyxml.h" />
     <ClInclude Include="app.h" />
+    <ClInclude Include="BaseComponentPanelImpl.h" />
     <ClInclude Include="Commands\AddComponentCommand.h" />
     <ClInclude Include="Commands\AddNodeCommand.h" />
     <ClInclude Include="Commands\Command.h" />
     <ClInclude Include="Commands\GroupCommand.h" />
+    <ClInclude Include="Commands\RemoveComponentCommand.h" />
     <ClInclude Include="Commands\RemoveNodeCommand.h" />
     <ClInclude Include="Commands\RenameNodeCommand.h" />
     <ClInclude Include="Commands\TransformCommands.h" />
@@ -127,6 +132,7 @@
     <ClInclude Include="MathUtils.h" />
     <ClInclude Include="SceneSettings.h" />
     <ClInclude Include="SceneWriter.h" />
+    <ClInclude Include="StaticModelPanelImpl.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

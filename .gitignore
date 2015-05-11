@@ -2,13 +2,10 @@ Samples/SceneGraph/Debug/
 Samples/RenderToTexture/Debug/
 Samples/PhysicsAttempt1/Debug/
 Samples/Terrain/Debug/
-Samples/ShadowMapping/Debug/
 Samples/FireCubeTest/Debug/
-Samples/ModelViewer/Debug/
 Samples/CharacterController/Debug/
 Samples/CSG/Debug/
 Samples/FireCubeTest/log.txt
-Samples/ModelViewer/log.txt
 Samples/Terrain/Terrain.vcxproj.user
 Samples/Terrain/log.txt
 Samples/SceneEditor/Debug/
@@ -19,7 +16,6 @@ Samples/SceneGraph/Release/
 Samples/CharacterController/Release/
 Samples/FireCubeTest/Release/
 Samples/SceneEditor/Release/
-Samples/ModelViewer/Release/
 Samples/RenderToTexture/Release/
 FireCube/ThirdParty/Lua/Debug/
 FireCube/ThirdParty/FreeType/Release/
@@ -39,4 +35,3 @@ Tools/SceneEditor/Debug/
 Tools/ModelViewer/Debug/
 Tools/ModelViewer/Release/
 Tools/SceneEditor/Release/
-Tools/ModelViewer/log.txt

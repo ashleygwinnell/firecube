@@ -24,6 +24,10 @@ StaticModel::StaticModel(Engine *engine, Mesh *mesh) : StaticModel(engine)
 void StaticModel::CreateFromMesh(Mesh *mesh)
 {
 	this->mesh = mesh;
+	renderableParts.clear();
+	geometries.clear();
+	materials.clear();
+
 	for (unsigned int i = 0; i < mesh->GetGeometries().size(); ++i)
 	{					
 		RenderablePart part;

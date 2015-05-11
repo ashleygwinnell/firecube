@@ -11,6 +11,8 @@
 #include "Commands/GroupCommand.h"
 #include "SceneWriter.h"
 #include "SceneSettings.h"
+#include "BaseComponentPanelImpl.h"
+#include "StaticModelPanelImpl.h"
 
 using namespace FireCube;
 
@@ -178,9 +180,32 @@ void MainFrameImpl::SelectedNodeChanged(FireCube::Node *node)
 	if (node)
 	{
 		sceneTreeCtrl->SelectItem(nodeToTreeItem[node]);
+
+		componentsList->Freeze();
+		componentsList->DestroyChildren();
+
+		std::vector<StaticModel *> staticModels;
+		node->GetComponents(staticModels);
+		for (auto staticModel : staticModels)
+		{
+			auto t = new BaseComponentPanelImpl(componentsList, staticModel);			
+			t->AddControl(new StaticModelPanelImpl(t));
+
+			componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
+		}
+
+		componentsList->FitInside();
+		componentsList->Layout();
+		componentsList->Thaw();
+
 	}
 	else
 	{
+		componentsList->Freeze();
+		componentsList->DestroyChildren();				
+		componentsList->Layout();
+		componentsList->Thaw();
+
 		sceneTreeCtrl->UnselectAll();
 	}
 }
@@ -305,4 +330,18 @@ void MainFrameImpl::PaneClose(wxAuiManagerEvent& event)
 	{
 		viewComponentsMenuItem->Check(false);
 	}
+}
+
+void MainFrameImpl::TestClicked(wxCommandEvent& event)
+{
+	/*componentsList->Freeze();
+	auto t = new BaseComponentPanelImpl(componentsList);
+			
+	t->AddControl(new StaticModelPanelImpl(t));
+					
+	componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
+	
+	componentsList->FitInside();
+	componentsList->Layout();
+	componentsList->Thaw();*/
 }

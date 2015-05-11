@@ -1,6 +1,8 @@
 #include "EditorState.h"
 #include "SceneSettings.h"
 
+class MainFrameImpl;
+
 class FireCubeApp : public FireCube::Application
 {
 public:
