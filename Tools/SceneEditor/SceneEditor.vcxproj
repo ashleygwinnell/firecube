@@ -92,6 +92,7 @@
     <ClCompile Include="BaseComponentPanelImpl.cpp" />
     <ClCompile Include="Commands\AddComponentCommand.cpp" />
     <ClCompile Include="Commands\AddNodeCommand.cpp" />
+    <ClCompile Include="Commands\CustomCommand.cpp" />
     <ClCompile Include="Commands\GroupCommand.cpp" />
     <ClCompile Include="Commands\RemoveComponentCommand.cpp" />
     <ClCompile Include="Commands\RemoveNodeCommand.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="Commands\AddComponentCommand.h" />
     <ClInclude Include="Commands\AddNodeCommand.h" />
     <ClInclude Include="Commands\Command.h" />
+    <ClInclude Include="Commands\CustomCommand.h" />
     <ClInclude Include="Commands\GroupCommand.h" />
     <ClInclude Include="Commands\RemoveComponentCommand.h" />
     <ClInclude Include="Commands\RemoveNodeCommand.h" />
