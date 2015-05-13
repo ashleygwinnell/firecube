@@ -2,12 +2,14 @@
 #include "app.h"
 #include "EditorState.h"
 #include "Commands/TransformCommands.h"
+#include "Commands/RenameNodeCommand.h"
 
 using namespace FireCube;
 
 NodePropertiesPanelImpl::NodePropertiesPanelImpl(wxWindow* parent) : NodePropertiesPanel(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), editorState(((MyApp*)wxTheApp)->GetEditorState())
 {
 	SubscribeToEvent(editorState, editorState->nodeChanged, &NodePropertiesPanelImpl::UpdateUI);
+	SubscribeToEvent(editorState, editorState->nodeRenamed, &NodePropertiesPanelImpl::NodeRenamed);
 	UpdateUI();
 }
 
@@ -21,6 +23,8 @@ void NodePropertiesPanelImpl::UpdateUI()
 	auto node = editorState->GetSelectedNode();
 	if (node)
 	{
+		nameTextCtrl->SetLabelText(node->GetName());
+
 		positionXTextCtrl->SetLabelText(wxString::FromDouble(node->GetTranslation().x));
 		positionYTextCtrl->SetLabelText(wxString::FromDouble(node->GetTranslation().y));
 		positionZTextCtrl->SetLabelText(wxString::FromDouble(node->GetTranslation().z));
@@ -172,4 +176,19 @@ void NodePropertiesPanelImpl::ScaleZChanged(wxCommandEvent& event)
 		editorState->ExecuteCommand(new SetScaleCommand(editorState, node, node->GetScale(), scale));
 		editorState->sceneChanged(editorState);
 	}
+}
+
+void NodePropertiesPanelImpl::NameChanged(wxCommandEvent& event)
+{
+	auto node = editorState->GetSelectedNode();
+	if (node)
+	{
+		auto command = new RenameNodeCommand(editorState, node, event.GetString().ToStdString());
+		editorState->ExecuteCommand(command);
+	}
+}
+
+void NodePropertiesPanelImpl::NodeRenamed(FireCube::Node *node)
+{
+	nameTextCtrl->ChangeValue(node->GetName());
 }

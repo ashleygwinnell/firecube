@@ -21,6 +21,8 @@ public:
 	virtual void ScaleXChanged(wxCommandEvent& event);
 	virtual void ScaleYChanged(wxCommandEvent& event);
 	virtual void ScaleZChanged(wxCommandEvent& event);
+	virtual void NameChanged(wxCommandEvent& event);
+	void NodeRenamed(FireCube::Node *node);
 
 private:
 	void UpdateUI();

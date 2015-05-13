@@ -145,6 +145,8 @@ class NodePropertiesPanel : public wxPanel
 	private:
 	
 	protected:
+		wxStaticText* m_staticText27;
+		wxTextCtrl* nameTextCtrl;
 		wxStaticText* m_staticText3;
 		wxStaticText* m_staticText4;
 		wxTextCtrl* positionXTextCtrl;
@@ -168,6 +170,7 @@ class NodePropertiesPanel : public wxPanel
 		wxTextCtrl* scaleZTextCtrl;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void NameChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void PositionXChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void PositionYChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void PositionZChanged( wxCommandEvent& event ) { event.Skip(); }

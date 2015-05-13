@@ -239,18 +239,25 @@ StaticModelPanel::~StaticModelPanel()
 
 NodePropertiesPanel::NodePropertiesPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
-	wxBoxSizer* bSizer24;
-	bSizer24 = new wxBoxSizer( wxVERTICAL );
+	wxFlexGridSizer* fgSizer2;
+	fgSizer2 = new wxFlexGridSizer( 4, 2, 0, 0 );
+	fgSizer2->AddGrowableCol( 0 );
+	fgSizer2->SetFlexibleDirection( wxHORIZONTAL );
+	fgSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	wxBoxSizer* bSizer9;
-	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
+	m_staticText27 = new wxStaticText( this, wxID_ANY, wxT("Name"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText27->Wrap( -1 );
+	fgSizer2->Add( m_staticText27, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	nameTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	fgSizer2->Add( nameTextCtrl, 0, wxALL|wxEXPAND, 5 );
 	
 	m_staticText3 = new wxStaticText( this, wxID_ANY, wxT("Position"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText3->Wrap( -1 );
-	bSizer9->Add( m_staticText3, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer2->Add( m_staticText3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	
-	bSizer9->Add( 0, 0, 1, wxEXPAND, 5 );
+	wxBoxSizer* bSizer9;
+	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_staticText4 = new wxStaticText( this, wxID_ANY, wxT("X"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText4->Wrap( -1 );
@@ -280,17 +287,14 @@ NodePropertiesPanel::NodePropertiesPanel( wxWindow* parent, wxWindowID id, const
 	bSizer9->Add( positionZTextCtrl, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	
-	bSizer24->Add( bSizer9, 0, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer91;
-	bSizer91 = new wxBoxSizer( wxHORIZONTAL );
+	fgSizer2->Add( bSizer9, 1, wxEXPAND, 5 );
 	
 	m_staticText31 = new wxStaticText( this, wxID_ANY, wxT("Rotation"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText31->Wrap( -1 );
-	bSizer91->Add( m_staticText31, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer2->Add( m_staticText31, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 5 );
 	
-	
-	bSizer91->Add( 0, 0, 1, wxEXPAND, 5 );
+	wxBoxSizer* bSizer91;
+	bSizer91 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_staticText41 = new wxStaticText( this, wxID_ANY, wxT("X"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText41->Wrap( -1 );
@@ -320,17 +324,14 @@ NodePropertiesPanel::NodePropertiesPanel( wxWindow* parent, wxWindowID id, const
 	bSizer91->Add( rotationZTextCtrl, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	
-	bSizer24->Add( bSizer91, 0, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer92;
-	bSizer92 = new wxBoxSizer( wxHORIZONTAL );
+	fgSizer2->Add( bSizer91, 0, wxEXPAND, 5 );
 	
 	m_staticText32 = new wxStaticText( this, wxID_ANY, wxT("Scale"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText32->Wrap( -1 );
-	bSizer92->Add( m_staticText32, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer2->Add( m_staticText32, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	
-	bSizer92->Add( 0, 0, 1, wxEXPAND, 5 );
+	wxBoxSizer* bSizer92;
+	bSizer92 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_staticText42 = new wxStaticText( this, wxID_ANY, wxT("X"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText42->Wrap( -1 );
@@ -360,14 +361,15 @@ NodePropertiesPanel::NodePropertiesPanel( wxWindow* parent, wxWindowID id, const
 	bSizer92->Add( scaleZTextCtrl, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	
-	bSizer24->Add( bSizer92, 0, wxEXPAND, 5 );
+	fgSizer2->Add( bSizer92, 0, wxEXPAND, 5 );
 	
 	
-	this->SetSizer( bSizer24 );
+	this->SetSizer( fgSizer2 );
 	this->Layout();
-	bSizer24->Fit( this );
+	fgSizer2->Fit( this );
 	
 	// Connect Events
+	nameTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NodePropertiesPanel::NameChanged ), NULL, this );
 	positionXTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NodePropertiesPanel::PositionXChanged ), NULL, this );
 	positionYTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NodePropertiesPanel::PositionYChanged ), NULL, this );
 	positionZTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NodePropertiesPanel::PositionZChanged ), NULL, this );
@@ -382,6 +384,7 @@ NodePropertiesPanel::NodePropertiesPanel( wxWindow* parent, wxWindowID id, const
 NodePropertiesPanel::~NodePropertiesPanel()
 {
 	// Disconnect Events
+	nameTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NodePropertiesPanel::NameChanged ), NULL, this );
 	positionXTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NodePropertiesPanel::PositionXChanged ), NULL, this );
 	positionYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NodePropertiesPanel::PositionYChanged ), NULL, this );
 	positionZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NodePropertiesPanel::PositionZChanged ), NULL, this );
