@@ -9,17 +9,21 @@
 #include "Commands/RenameNodeCommand.h"
 #include "Commands/AddComponentCommand.h"
 #include "Commands/GroupCommand.h"
+#include "Commands/TransformCommands.h"
 #include "SceneWriter.h"
 #include "SceneSettings.h"
 #include "BaseComponentPanelImpl.h"
 #include "StaticModelPanelImpl.h"
+#include "NodePropertiesPanelImpl.h"
 
 using namespace FireCube;
 
 MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState()), 
 												 sceneSettings(theApp->GetSceneSettings())
 {
-	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &MainFrameImpl::SelectedNodeChanged);
+	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &MainFrameImpl::SelectedNodeChanged);	
+	SubscribeToEvent(editorState, editorState->componentAdded, &MainFrameImpl::AddComponentPanel);
+	SubscribeToEvent(editorState, editorState->componentRemoved, &MainFrameImpl::RemoveComponentPanel);
 	SubscribeToEvent(editorState, editorState->nodeAdded, &MainFrameImpl::NodeAdded);
 	SubscribeToEvent(editorState, editorState->nodeRemoved, &MainFrameImpl::NodeRemoved);	
 	SubscribeToEvent(editorState, editorState->nodeRenamed, &MainFrameImpl::NodeRenamed);
@@ -179,35 +183,14 @@ void MainFrameImpl::SelectedNodeChanged(FireCube::Node *node)
 {
 	if (node)
 	{
-		sceneTreeCtrl->SelectItem(nodeToTreeItem[node]);
-
-		componentsList->Freeze();
-		componentsList->DestroyChildren();
-
-		std::vector<StaticModel *> staticModels;
-		node->GetComponents(staticModels);
-		for (auto staticModel : staticModels)
-		{
-			auto t = new BaseComponentPanelImpl(componentsList, staticModel);			
-			t->AddControl(new StaticModelPanelImpl(t));
-
-			componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
-		}
-
-		componentsList->FitInside();
-		componentsList->Layout();
-		componentsList->Thaw();
-
+		sceneTreeCtrl->SelectItem(nodeToTreeItem[node]);		
 	}
 	else
-	{
-		componentsList->Freeze();
-		componentsList->DestroyChildren();				
-		componentsList->Layout();
-		componentsList->Thaw();
-
+	{		
 		sceneTreeCtrl->UnselectAll();
 	}
+
+	UpdateInpsectorPane();
 }
 
 void MainFrameImpl::NodeAdded(FireCube::Node *node)
@@ -242,7 +225,7 @@ void MainFrameImpl::NodeRemoved(FireCube::Node *node)
 void MainFrameImpl::SceneTreeSelectionChanged(wxTreeEvent& event)
 {
 	auto node = treeItemToNode[event.GetItem()];
-	if (node->GetParent())
+	if (node->GetParent() && node != editorState->GetSelectedNode())
 	{
 		editorState->SetSelectedNode(node);
 	}
@@ -302,9 +285,9 @@ void MainFrameImpl::ViewSceneHierarchyClicked(wxCommandEvent& event)
 	m_mgr.Update();
 }
 
-void MainFrameImpl::ViewComponentsClicked(wxCommandEvent& event)
+void MainFrameImpl::ViewInspectorClicked(wxCommandEvent& event)
 {
-	auto &pane = m_mgr.GetPane("componentsPane");
+	auto &pane = m_mgr.GetPane("inspectorPane");
 	if (event.IsChecked())
 	{
 		pane.Show();
@@ -326,9 +309,9 @@ void MainFrameImpl::PaneClose(wxAuiManagerEvent& event)
 		viewSceneHierarchyMenuItem->Check(false);
 	}
 
-	if (pane->name == "componentsPane")
+	if (pane->name == "inspectorPane")
 	{
-		viewComponentsMenuItem->Check(false);
+		viewInspectorMenuItem->Check(false);
 	}
 }
 
@@ -344,4 +327,62 @@ void MainFrameImpl::TestClicked(wxCommandEvent& event)
 	componentsList->FitInside();
 	componentsList->Layout();
 	componentsList->Thaw();*/
+}
+
+void MainFrameImpl::AddComponentPanel(Component *component)
+{
+	if (component->GetType() == StaticModel::GetTypeStatic())
+	{
+		auto t = new BaseComponentPanelImpl(componentsList, component);
+		t->AddControl(new StaticModelPanelImpl(t));
+
+		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
+
+		currentComponentPanels.push_back(t);
+	}
+
+	componentsList->FitInside();
+	componentsList->Layout();
+}
+
+void MainFrameImpl::RemoveComponentPanel(Component *component)
+{
+	for (auto i = currentComponentPanels.begin(); i != currentComponentPanels.end(); ++i)
+	{
+		if ((*i)->GetComponent() == component)
+		{
+			(*i)->Destroy();
+			currentComponentPanels.erase(i);
+			return;
+		}
+	}
+}
+
+void MainFrameImpl::UpdateInpsectorPane()
+{
+	auto node = editorState->GetSelectedNode();
+	if (node)
+	{				
+		componentsList->Freeze();
+		componentsList->DestroyChildren();
+		currentComponentPanels.clear();
+
+		componentsSizer->Add(new NodePropertiesPanelImpl(componentsList), 0, wxALL | wxEXPAND, 1);
+
+		std::vector<StaticModel *> staticModels;
+		node->GetComponents(staticModels);
+		for (auto staticModel : staticModels)
+		{
+			AddComponentPanel(staticModel);
+		}
+		
+		componentsList->Thaw();
+	}
+	else
+	{		
+		componentsList->Freeze();
+		componentsList->DestroyChildren();
+		componentsList->Layout();
+		componentsList->Thaw();		
+	}
 }

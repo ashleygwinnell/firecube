@@ -37,6 +37,8 @@
 #include <wx/stattext.h>
 #include <wx/statline.h>
 #include <wx/filepicker.h>
+#include <wx/textctrl.h>
+#include <wx/valtext.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -56,12 +58,12 @@ class MainFrame : public wxFrame
 		wxMenu* addMenu;
 		wxMenu* viewMenu;
 		wxMenuItem* viewSceneHierarchyMenuItem;
-		wxMenuItem* viewComponentsMenuItem;
+		wxMenuItem* viewInspectorMenuItem;
 		wxPanel* m_panel1;
 		wxTreeCtrl* sceneTreeCtrl;
 		wxPanel* m_panel2;
 		GLCanvas *glCanvas;
-		wxPanel* componentsPanel;
+		wxPanel* inspectorPanel;
 		wxButton* m_button1;
 		wxScrolledWindow* componentsList;
 		wxBoxSizer* componentsSizer;
@@ -77,7 +79,7 @@ class MainFrame : public wxFrame
 		virtual void AddResourcePathClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddMeshClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewSceneHierarchyClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void ViewComponentsClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ViewInspectorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SceneTreeBeginDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeEndDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeEndLabelEdit( wxTreeEvent& event ) { event.Skip(); }
@@ -87,7 +89,7 @@ class MainFrame : public wxFrame
 	
 	public:
 		
-		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Scene Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 876,616 ), long style = wxDEFAULT_FRAME_STYLE|wxMAXIMIZE|wxTAB_TRAVERSAL );
+		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Scene Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 911,643 ), long style = wxDEFAULT_FRAME_STYLE|wxMAXIMIZE|wxTAB_TRAVERSAL );
 		wxAuiManager m_mgr;
 		
 		~MainFrame();
@@ -132,6 +134,64 @@ class StaticModelPanel : public wxPanel
 		
 		StaticModelPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~StaticModelPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class NodePropertiesPanel
+///////////////////////////////////////////////////////////////////////////////
+class NodePropertiesPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_staticText3;
+		wxStaticText* m_staticText4;
+		wxTextCtrl* positionXTextCtrl;
+		wxStaticText* m_staticText5;
+		wxTextCtrl* positionYTextCtrl;
+		wxStaticText* m_staticText6;
+		wxTextCtrl* positionZTextCtrl;
+		wxStaticText* m_staticText31;
+		wxStaticText* m_staticText41;
+		wxTextCtrl* rotationXTextCtrl;
+		wxStaticText* m_staticText51;
+		wxTextCtrl* rotationYTextCtrl;
+		wxStaticText* m_staticText61;
+		wxTextCtrl* rotationZTextCtrl;
+		wxStaticText* m_staticText32;
+		wxStaticText* m_staticText42;
+		wxTextCtrl* scaleXTextCtrl;
+		wxStaticText* m_staticText52;
+		wxTextCtrl* scaleYTextCtrl;
+		wxStaticText* m_staticText62;
+		wxTextCtrl* scaleZTextCtrl;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void PositionXChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void PositionYChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void PositionZChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RotationXChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RotationYChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RotationZChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ScaleXChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ScaleYChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ScaleZChanged( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		wxString nodePositionXText; 
+		wxString nodePositionYText; 
+		wxString nodePositionZText; 
+		wxString nodeRotationXText; 
+		wxString nodeRotationYText; 
+		wxString nodeRotationZText; 
+		wxString nodeScaleXText; 
+		wxString nodeScaleYText; 
+		wxString nodeScaleZText; 
+		
+		NodePropertiesPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
+		~NodePropertiesPanel();
 	
 };
 

@@ -96,6 +96,9 @@
     <ClCompile Include="Commands\CustomCommand.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="NodePropertiesPanelImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -172,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="Commands\CustomCommand.h">
       <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="NodePropertiesPanelImpl.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

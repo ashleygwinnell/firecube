@@ -15,12 +15,14 @@ RemoveComponentCommand::~RemoveComponentCommand()
 
 void RemoveComponentCommand::Do()
 {
-	node->RemoveComponent(component);
-	editorState->selectedNodeChanged(editorState, node);	
+	editorState->componentRemoved(editorState, component);
+	node->RemoveComponent(component);	
+	editorState->sceneChanged(editorState);
 }
 
 void RemoveComponentCommand::Undo()
 {
 	component = creationFunction(editorState->GetEngine(), node);
-	editorState->selectedNodeChanged(editorState, node);
+	editorState->componentAdded(editorState, component);
+	editorState->sceneChanged(editorState);
 }

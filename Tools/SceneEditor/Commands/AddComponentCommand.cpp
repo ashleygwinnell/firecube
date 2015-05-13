@@ -16,9 +16,13 @@ AddComponentCommand::~AddComponentCommand()
 void AddComponentCommand::Do()
 {
 	component = creationFunction(editorState->GetEngine(), node);
+	editorState->componentAdded(editorState, component);
+	editorState->sceneChanged(editorState);
 }
 
 void AddComponentCommand::Undo()
 {
+	editorState->componentRemoved(editorState, component);
 	node->RemoveComponent(component);	
+	editorState->sceneChanged(editorState);
 }

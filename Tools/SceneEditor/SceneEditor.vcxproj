@@ -107,6 +107,7 @@
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="MainFrameImpl.cpp" />
     <ClCompile Include="MathUtils.cpp" />
+    <ClCompile Include="NodePropertiesPanelImpl.cpp" />
     <ClCompile Include="SceneWriter.cpp" />
     <ClCompile Include="StaticModelPanelImpl.cpp" />
   </ItemGroup>
@@ -132,6 +133,7 @@
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="MainFrameImpl.h" />
     <ClInclude Include="MathUtils.h" />
+    <ClInclude Include="NodePropertiesPanelImpl.h" />
     <ClInclude Include="SceneSettings.h" />
     <ClInclude Include="SceneWriter.h" />
     <ClInclude Include="StaticModelPanelImpl.h" />
