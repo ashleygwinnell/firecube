@@ -154,7 +154,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			LOGERROR("No script object name specified");
 		}
 	}
-	else if (type == "Light")
+	else if (type == "light")
 	{
 		auto light = node->CreateComponent<Light>();
 		if (e->Attribute("light_type"))
