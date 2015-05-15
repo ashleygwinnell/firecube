@@ -45,6 +45,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		void NodeRemoved(FireCube::Node *node);
 		void NodeRenamed(FireCube::Node *node);
 		void UpdateInpsectorPane();
+		void UpdateNode(FireCube::Node *node);
 
 		MyApp *theApp;
 		FireCube::Engine *engine;

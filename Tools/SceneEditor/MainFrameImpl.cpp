@@ -163,15 +163,26 @@ void MainFrameImpl::SaveAsClicked(wxCommandEvent& event)
 	editorState->SetCurrentSceneFile(saveFileDialog.GetPath().ToStdString());
 }
 
-void UpdateNode(Node *node)
+void MainFrameImpl::UpdateNode(Node *node)
 {
 	if (node->GetName().substr(0, 7) != "Editor_")
-	{
+	{		
+		editorState->nodeAdded(editorState, node);
 		std::vector<StaticModel *> staticModels;
 		node->GetComponents(staticModels);
 		for (auto staticModel : staticModels)
 		{
 			staticModel->SetCollisionQueryMask(USER_GEOMETRY);
+		}
+
+		for (auto component : node->GetComponents())
+		{
+			editorState->componentAdded(editorState, component);
+		}
+
+		for (auto child : node->GetChildren())
+		{
+			UpdateNode(child);
 		}
 	}
 }
@@ -199,11 +210,17 @@ void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 		std::string resourceFullpath = sceneSettings->basePath + (sceneSettings->basePath.back() == '/' || sceneSettings->basePath.back() == '\\' ? "" : "\\") + resourcePath;
 		Filesystem::AddSearchPath(resourceFullpath);
 	}
+
+	sceneTreeCtrl->DeleteAllItems();
+	nodeToTreeItem.clear();
+	treeItemToNode.clear();
 	
 	if (sceneReader.Read(*scene, openFileDialog.GetPath().ToStdString()))
 	{
 		UpdateNode(scene->GetRootNode());
 	}	
+
+	editorState->sceneChanged(editorState);
 }
 
 void MainFrameImpl::SetBasePathClicked(wxCommandEvent& event)
