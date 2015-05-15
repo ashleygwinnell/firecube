@@ -13,6 +13,7 @@ using namespace FireCube;
 #include "MainFrameImpl.h"
 #include "Commands/TransformCommands.h"
 #include "Commands/RemoveNodeCommand.h"
+#include "Commands/AddNodeCommand.h"
 
 GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()),
@@ -72,10 +73,10 @@ void GLCanvas::Init()
 
 	scene->SetFogColor(vec3(0.2f, 0.2f, 0.2f));
 	
-	Node *lightNode = cameraNode->CreateChild("lightNode");
+	/*Node *lightNode = cameraNode->CreateChild("lightNode");
 	Light *light = lightNode->CreateComponent<Light>();
 	light->SetLightType(LightType::DIRECTIONAL);
-	light->SetColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));		
+	light->SetColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));		*/
 
 	translateGizmo = new TranslateGizmo(engine, root);
 	rotateGizmo = new RotateGizmo(engine, root);
@@ -297,6 +298,20 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 		UpdateGizmo();
 		currentOperation = Operation::NONE;		
 		this->Refresh(false);
+	}
+	else if (event.GetKeyCode() == WXK_SPACE)
+	{
+		auto node = editorState->GetSelectedNode();
+		if (node)
+		{
+			auto clonedNode = node->Clone();
+			auto command = new AddNodeCommand(editorState, clonedNode, clonedNode->GetParent());
+			editorState->ExecuteCommand(command);
+			editorState->SetSelectedNode(clonedNode);
+			UpdateGizmo();			
+			this->Refresh(false);
+		}
+		
 	}
 	else if (event.GetKeyCode() == 'G')
 	{

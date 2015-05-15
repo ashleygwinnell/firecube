@@ -200,7 +200,7 @@ void Node::SetParent(Node *parent)
 			}
 		}
 	}
-	else
+	else if (this->parent != parent)
 	{
 		parent->AddChild(this);
 	}

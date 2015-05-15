@@ -30,15 +30,18 @@
 #include <FireCube.h>
 #include <wx/glcanvas.h>
 #include "GlCanvas.h"
-#include <wx/button.h>
 #include <wx/scrolwin.h>
 #include <wx/frame.h>
 #include <wx/aui/aui.h>
 #include <wx/stattext.h>
+#include <wx/button.h>
 #include <wx/statline.h>
 #include <wx/filepicker.h>
 #include <wx/textctrl.h>
 #include <wx/valtext.h>
+#include <wx/choice.h>
+#include <wx/clrpicker.h>
+#include <wx/checkbox.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -56,6 +59,7 @@ class MainFrame : public wxFrame
 		wxMenu* editMenu;
 		wxMenu* optionsMenu;
 		wxMenu* addMenu;
+		wxMenu* m_menu1;
 		wxMenu* viewMenu;
 		wxMenuItem* viewSceneHierarchyMenuItem;
 		wxMenuItem* viewInspectorMenuItem;
@@ -64,7 +68,6 @@ class MainFrame : public wxFrame
 		wxPanel* m_panel2;
 		GLCanvas *glCanvas;
 		wxPanel* inspectorPanel;
-		wxButton* m_button1;
 		wxScrolledWindow* componentsList;
 		wxBoxSizer* componentsSizer;
 		
@@ -77,14 +80,16 @@ class MainFrame : public wxFrame
 		virtual void RedoClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SetBasePathClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddResourcePathClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void AddNodeClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddMeshClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void AddStaticModelClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void AddLightClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewSceneHierarchyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewInspectorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SceneTreeBeginDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeEndDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeEndLabelEdit( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeSelectionChanged( wxTreeEvent& event ) { event.Skip(); }
-		virtual void TestClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -195,6 +200,47 @@ class NodePropertiesPanel : public wxPanel
 		
 		NodePropertiesPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~NodePropertiesPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class LightPanel
+///////////////////////////////////////////////////////////////////////////////
+class LightPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_staticText16;
+		wxChoice* lightTypeChoice;
+		wxStaticText* m_staticText17;
+		wxColourPickerCtrl* lightColorPicker;
+		wxCheckBox* castShadowCheckBox;
+		wxStaticText* m_staticText19;
+		wxTextCtrl* shadowIntensityTextCtrl;
+		wxPanel* rangePanel;
+		wxStaticText* m_staticText21;
+		wxTextCtrl* rangeTextCtrl;
+		wxPanel* spotCutoffPanel;
+		wxStaticText* m_staticText211;
+		wxTextCtrl* spotCutoffTextCtrl;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void LightTypeChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void LightColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
+		virtual void CastShadowChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ShadowIntensityChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RangeChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void SpotCutoffChanged( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		wxString shadowIntensityText; 
+		wxString rangeText; 
+		wxString spotCutoffText; 
+		
+		LightPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
+		~LightPanel();
 	
 };
 

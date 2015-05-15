@@ -29,7 +29,7 @@ void StaticModelPanelImpl::FileChanged(wxFileDirPickerEvent& event)
 	MyApp *theApp = ((MyApp *)wxTheApp);
 	auto engine = theApp->fcApp.GetEngine();
 	Node *node = staticModel->GetNode();
-	unsigned int componentIndex = std::distance(staticModel->GetNode()->GetComponents().begin(), std::find(staticModel->GetNode()->GetComponents().begin(), staticModel->GetNode()->GetComponents().end(), staticModel));
+	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), staticModel));
 	std::string newMeshFileName = event.GetPath().ToStdString();
 	std::string oldMeshFileName = staticModel->GetMesh()->GetFileName();
 

@@ -51,6 +51,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelViewer", "Tools\ModelViewer\ModelViewer.vcxproj", "{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SceneEditor", "Tools\SceneEditor\SceneEditor.vcxproj", "{902B23A0-5ADD-4183-A0E3-9B5E3E1F998E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

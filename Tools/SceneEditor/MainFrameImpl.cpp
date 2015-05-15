@@ -14,6 +14,7 @@
 #include "SceneSettings.h"
 #include "BaseComponentPanelImpl.h"
 #include "StaticModelPanelImpl.h"
+#include "LightPanelImpl.h"
 #include "NodePropertiesPanelImpl.h"
 
 using namespace FireCube;
@@ -22,8 +23,8 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 												 sceneSettings(theApp->GetSceneSettings())
 {
 	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &MainFrameImpl::SelectedNodeChanged);	
-	SubscribeToEvent(editorState, editorState->componentAdded, &MainFrameImpl::AddComponentPanel);
-	SubscribeToEvent(editorState, editorState->componentRemoved, &MainFrameImpl::RemoveComponentPanel);
+	SubscribeToEvent(editorState, editorState->componentAdded, &MainFrameImpl::ComponentAdded);
+	SubscribeToEvent(editorState, editorState->componentRemoved, &MainFrameImpl::ComponentRemoved);
 	SubscribeToEvent(editorState, editorState->nodeAdded, &MainFrameImpl::NodeAdded);
 	SubscribeToEvent(editorState, editorState->nodeRemoved, &MainFrameImpl::NodeRemoved);	
 	SubscribeToEvent(editorState, editorState->nodeRenamed, &MainFrameImpl::NodeRenamed);
@@ -43,6 +44,14 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	this->glCanvas->Refresh(false);
 	this->glCanvas->SetFocus();
 }*/
+
+void MainFrameImpl::AddNodeClicked(wxCommandEvent& event)
+{
+	Node *node = new Node(engine, "Node");
+	auto addNodeCommand = new AddNodeCommand(editorState, node, root);
+	editorState->ExecuteCommand(addNodeCommand);
+	this->glCanvas->SetFocus();	
+}
 
 void MainFrameImpl::AddMeshClicked(wxCommandEvent& event)
 {
@@ -64,12 +73,53 @@ void MainFrameImpl::AddMeshClicked(wxCommandEvent& event)
 	});
 
 	GroupCommand *groupCommand = new GroupCommand(editorState, {addNodeCommand, addComponentCommand});
-	editorState->ExecuteCommand(groupCommand);
-	this->glCanvas->Refresh(false);
-	this->glCanvas->SetFocus();	
+	editorState->ExecuteCommand(groupCommand);		
 	wxString path;
 	wxFileName::SplitPath(openFileDialog.GetPath(), &path, nullptr, nullptr, wxPATH_NATIVE);
 	lastPath = path;
+}
+
+void MainFrameImpl::AddStaticModelClicked(wxCommandEvent& event)
+{
+	auto node = editorState->GetSelectedNode();
+	if (node)
+	{
+		static std::string lastPath = "";
+		wxFileDialog openFileDialog(this, "Open", lastPath, "", "Mesh files  (*.3ds,*.dae,*.obj,*.fbx)|*.3ds;*.dae;*.obj;*.fbx", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+		if (openFileDialog.ShowModal() == wxID_CANCEL)
+			return;
+
+		std::string sfile = openFileDialog.GetPath();
+		
+		auto addComponentCommand = new AddComponentCommand(editorState, node, [sfile](Engine *engine, Node *node) -> Component *
+		{
+			StaticModel *model = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(sfile));
+			model->SetCollisionQueryMask(USER_GEOMETRY);
+			return model;
+		});
+		
+		editorState->ExecuteCommand(addComponentCommand);		
+		wxString path;
+		wxFileName::SplitPath(openFileDialog.GetPath(), &path, nullptr, nullptr, wxPATH_NATIVE);
+		lastPath = path;
+	}
+}
+
+void MainFrameImpl::AddLightClicked(wxCommandEvent& event)
+{
+	auto node = editorState->GetSelectedNode();
+	if (node)
+	{
+		auto addComponentCommand = new AddComponentCommand(editorState, node, [](Engine *engine, Node *node) -> Component *
+		{
+			Light *light = node->CreateComponent<Light>();			
+			light->SetLightType(LightType::DIRECTIONAL);
+			light->SetColor(vec4(1.0f));
+			return light;
+		});
+
+		editorState->ExecuteCommand(addComponentCommand);
+	}
 }
 
 void MainFrameImpl::SetScene(FireCube::Scene *scene)
@@ -315,26 +365,21 @@ void MainFrameImpl::PaneClose(wxAuiManagerEvent& event)
 	}
 }
 
-void MainFrameImpl::TestClicked(wxCommandEvent& event)
-{
-	/*componentsList->Freeze();
-	auto t = new BaseComponentPanelImpl(componentsList);
-			
-	t->AddControl(new StaticModelPanelImpl(t));
-					
-	componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
-	
-	componentsList->FitInside();
-	componentsList->Layout();
-	componentsList->Thaw();*/
-}
-
 void MainFrameImpl::AddComponentPanel(Component *component)
 {
 	if (component->GetType() == StaticModel::GetTypeStatic())
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, component);
 		t->AddControl(new StaticModelPanelImpl(t));
+
+		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
+
+		currentComponentPanels.push_back(t);
+	}
+	else if (component->GetType() == Light::GetTypeStatic())
+	{
+		auto t = new BaseComponentPanelImpl(componentsList, component);
+		t->AddControl(new LightPanelImpl(t));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
@@ -369,11 +414,10 @@ void MainFrameImpl::UpdateInpsectorPane()
 
 		componentsSizer->Add(new NodePropertiesPanelImpl(componentsList), 0, wxALL | wxEXPAND, 1);
 
-		std::vector<StaticModel *> staticModels;
-		node->GetComponents(staticModels);
-		for (auto staticModel : staticModels)
+		auto components = node->GetComponents();		
+		for (auto component : components)
 		{
-			AddComponentPanel(staticModel);
+			AddComponentPanel(component);
 		}
 		
 		componentsList->Thaw();
@@ -384,5 +428,25 @@ void MainFrameImpl::UpdateInpsectorPane()
 		componentsList->DestroyChildren();
 		componentsList->Layout();
 		componentsList->Thaw();		
+	}
+}
+
+void MainFrameImpl::ComponentAdded(Component *component)
+{
+	if (editorState->GetSelectedNode())
+	{
+		componentsList->Freeze();
+		AddComponentPanel(component);
+		componentsList->Thaw();
+	}
+}
+
+void MainFrameImpl::ComponentRemoved(Component *component)
+{
+	if (editorState->GetSelectedNode())
+	{
+		componentsList->Freeze();
+		RemoveComponentPanel(component);
+		componentsList->Thaw();
 	}
 }

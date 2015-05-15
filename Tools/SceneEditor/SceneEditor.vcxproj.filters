@@ -99,6 +99,9 @@
     <ClCompile Include="NodePropertiesPanelImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LightPanelImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -177,6 +180,9 @@
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="NodePropertiesPanelImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LightPanelImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

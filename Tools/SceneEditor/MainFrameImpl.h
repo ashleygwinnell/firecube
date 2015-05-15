@@ -32,8 +32,12 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void ViewInspectorClicked(wxCommandEvent& event);
 		virtual void SceneTreeBeginDrag(wxTreeEvent& event);
 		virtual void SceneTreeEndDrag(wxTreeEvent& event);
-		virtual void PaneClose(wxAuiManagerEvent& event);
-		virtual void TestClicked(wxCommandEvent& event);		
+		virtual void PaneClose(wxAuiManagerEvent& event);		
+		virtual void AddStaticModelClicked(wxCommandEvent& event);
+		virtual void AddLightClicked(wxCommandEvent& event);
+		virtual void AddNodeClicked(wxCommandEvent& event);
+		void ComponentAdded(FireCube::Component *component);
+		void ComponentRemoved(FireCube::Component *component);
 		void AddComponentPanel(FireCube::Component *component);
 		void RemoveComponentPanel(FireCube::Component *component);
 		void SelectedNodeChanged(FireCube::Node *node);

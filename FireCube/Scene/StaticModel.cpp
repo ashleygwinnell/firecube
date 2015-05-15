@@ -11,7 +11,7 @@ StaticModel::StaticModel(Engine *engine) : Renderable(engine)
 	
 }
 
-StaticModel::StaticModel(const StaticModel &other) : Renderable(other), boundingBox(other.boundingBox), geometries(other.geometries), materials(other.materials)
+StaticModel::StaticModel(const StaticModel &other) : Renderable(other), boundingBox(other.boundingBox), geometries(other.geometries), materials(other.materials), mesh(other.mesh)
 {
 	renderableParts = other.renderableParts;
 }
