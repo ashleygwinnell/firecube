@@ -58,6 +58,40 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 
 		element->SetAttribute("mesh", file);
 	}
+	else if (component->GetType() == Light::GetTypeStatic())
+	{
+		TiXmlElement *element = new TiXmlElement("component");
+		parent->LinkEndChild(element);
+
+		element->SetAttribute("type", component->GetTypeName());
+
+		auto light = static_cast<Light *>(component);		
+
+		std::string lightTypeStr;
+
+		switch (light->GetLightType())
+		{
+		case LightType::DIRECTIONAL:
+			lightTypeStr = "directional";
+			break;
+		case LightType::POINT:
+			lightTypeStr = "point";
+			break;
+		case LightType::SPOT:
+			lightTypeStr = "spot";
+			break;
+		default:
+			break;
+		}
+
+		element->SetAttribute("light_type", lightTypeStr);		
+		element->SetAttribute("color", ToString(light->GetColor()));
+		element->SetDoubleAttribute("range", light->GetRange());
+		element->SetDoubleAttribute("spot_cutoff", light->GetSpotCutOff());
+		element->SetDoubleAttribute("shadow_intensity", light->GetShadowIntensity());
+		element->SetAttribute("cast_shadow", light->GetCastShadow() ? "true" : "false");
+	}
+
 }
 
 void SceneWriter::SerializeNodeTransformation(FireCube::Node *node, TiXmlElement *parent)
@@ -65,14 +99,10 @@ void SceneWriter::SerializeNodeTransformation(FireCube::Node *node, TiXmlElement
 	TiXmlElement *transformation = new TiXmlElement("transformation");
 	parent->LinkEndChild(transformation);	
 
-	std::ostringstream translationAttribute, scaleAttribute, rotationAttribute;
-	translationAttribute << node->GetTranslation().x << " " << node->GetTranslation().y << " " << node->GetTranslation().z;
-	scaleAttribute << node->GetScale().x << " " << node->GetScale().y << " " << node->GetScale().z;
 	vec3 eulerAngles = node->GetRotation().ExtractEulerAngles();
-	rotationAttribute << eulerAngles.x << " " << eulerAngles.y << " " << eulerAngles.z;
-	transformation->SetAttribute("translation", translationAttribute.str());
-	transformation->SetAttribute("scale", scaleAttribute.str());
-	transformation->SetAttribute("rotation", rotationAttribute.str());
+	transformation->SetAttribute("translation", ToString(node->GetTranslation()));
+	transformation->SetAttribute("scale", ToString(node->GetScale()));
+	transformation->SetAttribute("rotation", ToString(eulerAngles));
 }
 
 void SceneWriter::SerializeSettings(SceneSettings *sceneSettings, TiXmlNode *parent)
@@ -91,4 +121,18 @@ void SceneWriter::SerializeSettings(SceneSettings *sceneSettings, TiXmlNode *par
 		TiXmlText *text = new TiXmlText(resourcePathRelative.GetFullPath().ToStdString());
 		element->LinkEndChild(text);
 	}	
+}
+
+std::string SceneWriter::ToString(vec3 v) const
+{
+	std::ostringstream str;
+	str << v.x << " " << v.y << " " << v.z;
+	return str.str();
+}
+
+std::string SceneWriter::ToString(vec4 v) const
+{
+	std::ostringstream str;
+	str << v.x << " " << v.y << " " << v.z << " " << v.w;
+	return str.str();
 }

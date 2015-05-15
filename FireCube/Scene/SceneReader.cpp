@@ -157,9 +157,9 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 	else if (type == "Light")
 	{
 		auto light = node->CreateComponent<Light>();
-		if (e->Attribute("type"))
+		if (e->Attribute("light_type"))
 		{
-			std::string lightTypeStr = e->Attribute("type");
+			std::string lightTypeStr = e->Attribute("light_type");
 			if (lightTypeStr == "directional")
 			{
 				light->SetLightType(LightType::DIRECTIONAL);
