@@ -154,6 +154,51 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			LOGERROR("No script object name specified");
 		}
 	}
+	else if (type == "Light")
+	{
+		auto light = node->CreateComponent<Light>();
+		if (e->Attribute("type"))
+		{
+			std::string lightTypeStr = e->Attribute("type");
+			if (lightTypeStr == "directional")
+			{
+				light->SetLightType(LightType::DIRECTIONAL);
+			}
+			else if (lightTypeStr == "point")
+			{
+				light->SetLightType(LightType::POINT);
+			}
+			else if (lightTypeStr == "spot")
+			{
+				light->SetLightType(LightType::SPOT);
+			}
+		}		
+
+		if (e->Attribute("color"))
+		{
+			light->SetColor(Variant::FromString(e->Attribute("color")).GetVec4());			
+		}
+
+		if (e->Attribute("range"))
+		{
+			light->SetRange(Variant::FromString(e->Attribute("range")).GetFloat());
+		}
+
+		if (e->Attribute("spot_cutoff"))
+		{
+			light->SetSpotCutOff(Variant::FromString(e->Attribute("spot_cutoff")).GetFloat());
+		}
+
+		if (e->Attribute("shadow_intensity"))
+		{
+			light->SetShadowIntensity(Variant::FromString(e->Attribute("shadow_intensity")).GetFloat());
+		}
+
+		if (e->Attribute("cast_shadow"))
+		{
+			light->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
+		}
+	}
 	else
 	{
 		LOGERROR("Unknow component type: ", type);
