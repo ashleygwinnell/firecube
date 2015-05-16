@@ -9,6 +9,8 @@
 #include "Utils/Filesystem.h"
 #include "Scripting/LuaScript.h"
 #include "Scripting/LuaFile.h"
+#include "Physics/PhysicsWorld.h"
+#include "Physics/CollisionShape.h"
 #include "tinyxml.h"
 #include <iostream>
 
@@ -95,6 +97,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 	}
 
 	std::string  type = e->Attribute("type");
+	
 	if (type == "StaticModel")
 	{
 		auto component = node->CreateComponent<StaticModel>();
@@ -215,6 +218,34 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		{
 			light->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
 		}
+	}
+	else if (type == "PhysicsWorld")
+	{		
+		node->CreateComponent<PhysicsWorld>();		
+	}
+	else if (type == "CollisionShape")
+	{
+		auto component = node->CreateComponent<CollisionShape>();
+		if (e->Attribute("shape_type"))
+		{
+			std::string shapeTypeStr = e->Attribute("shape_type");
+			if (shapeTypeStr == "triangle_mesh")
+			{
+				component->SetMesh(engine->GetResourceCache()->GetResource<Mesh>(e->Attribute("mesh")));
+			}
+			else if (shapeTypeStr == "box")
+			{
+				vec3 bboxMin = Variant::FromString(e->Attribute("bbox_min")).GetVec3();
+				vec3 bboxMax = Variant::FromString(e->Attribute("bbox_max")).GetVec3();
+				component->SetBox(BoundingBox(bboxMin, bboxMax));
+			}
+			else if (shapeTypeStr == "plane")
+			{
+				vec4 planeParams = Variant::FromString(e->Attribute("plane")).GetVec4();
+				Plane plane(planeParams.ToVec3(), planeParams.w);
+				component->SetPlane(plane);
+			}
+		}		
 	}
 	else
 	{
