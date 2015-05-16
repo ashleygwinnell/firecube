@@ -30,6 +30,8 @@ public:
 	LuaFunction *GetFunction(const std::string &functionName);
 	LuaFunction *GetMemberFunction(const std::string &functionName);
 	void SubscribeToEventFromLua(const std::string &eventName, luabridge::LuaRef param);
+	LuaFile *GetLuaFile();
+	std::string GetObjectName() const;
 
 	template<class... Args>
 	void CallMemberFunction(LuaFunction *function, Args&&... args)
@@ -75,6 +77,7 @@ private:
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
 
+	LuaFile *luaFile;
 	std::string objectName;
 	luabridge::LuaRef object;
 	std::map<ScriptFunction, LuaFunction *> scriptFunctions;	

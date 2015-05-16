@@ -8,12 +8,12 @@
 using namespace FireCube;
 using namespace luabridge;
 
-LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState())									   
+LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState()), luaFile(nullptr)
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 }
 
-LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState())											  
+LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState()), luaFile(other.luaFile)
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 	CreateObject(objectName);
@@ -140,6 +140,7 @@ void LuaScript::CreateObject(const std::string &objectName)
 
 void LuaScript::CreateObject(LuaFile *luaFile, const std::string &objectName)
 {
+	this->luaFile = luaFile;
 	engine->GetLuaState()->ExecuteFile(luaFile);
 	CreateObject(objectName);
 }
@@ -199,6 +200,16 @@ void LuaScript::CharacterControllerCollision(CharacterController *characterContr
 		(void)e; // Disable warning about e not being used
 		LOGERROR(e.what());
 	}	
+}
+
+LuaFile *LuaScript::GetLuaFile()
+{
+	return luaFile;
+}
+
+std::string LuaScript::GetObjectName() const
+{
+	return objectName;
 }
 
 Component *LuaScript::Clone() const
