@@ -32,6 +32,23 @@ bool SceneReader::Read(Scene &scene, const std::string &filename)
 	e = e->FirstChildElement("node");
 	if (e == nullptr)
 		return false;
+
+	auto i0 = filename.find_last_of('\\');
+	auto i1 = filename.find_last_of('/');
+	auto i = i0;
+	if (i0 == std::string::npos)
+	{
+		i = i1;
+	}
+	else if (i1 != std::string::npos)
+	{
+		i = std::max(i0, i1);
+	}
+
+	if (i != std::string::npos)
+	{
+		basePath = filename.substr(0, i + 1);
+	}
 	
 	Node *node = scene.GetRootNode();
 	ReadNode(e, node);
@@ -84,7 +101,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		
 		if (e->Attribute("mesh"))
 		{
-			component->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>(e->Attribute("mesh")));
+			component->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>(basePath + e->Attribute("mesh")));
 		}		
 	}
 	else if (type == "box")
@@ -154,7 +171,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			LOGERROR("No script object name specified");
 		}
 	}
-	else if (type == "light")
+	else if (type == "Light")
 	{
 		auto light = node->CreateComponent<Light>();
 		if (e->Attribute("light_type"))

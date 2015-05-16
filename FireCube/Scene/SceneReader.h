@@ -25,6 +25,7 @@ private:
 	void ReadTransformation(TiXmlElement *e, Node *node);
 	void ReadSettings(TiXmlElement *e);
 	std::vector<std::string> resourcePaths;
+	std::string basePath;
 };
 
 }
