@@ -169,6 +169,11 @@ void GLCanvas::OnEraseBackground(wxEraseEvent& WXUNUSED(event))
 
 void GLCanvas::OnMotion(wxMouseEvent& event)
 {
+	if (!this->HasFocus())
+	{
+		this->SetFocus();
+	}
+
 	vec2 curpos(event.GetPosition().x, event.GetPosition().y);
 	
 	if (event.LeftIsDown() && event.ShiftDown() == true)

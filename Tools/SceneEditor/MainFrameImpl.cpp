@@ -16,6 +16,7 @@
 #include "StaticModelPanelImpl.h"
 #include "LightPanelImpl.h"
 #include "NodePropertiesPanelImpl.h"
+#include "LuaScriptPanelImpl.h"
 
 using namespace FireCube;
 
@@ -112,10 +113,26 @@ void MainFrameImpl::AddLightClicked(wxCommandEvent& event)
 	{
 		auto addComponentCommand = new AddComponentCommand(editorState, node, [](Engine *engine, Node *node) -> Component *
 		{
-			Light *light = node->CreateComponent<Light>();			
+			Light *light = node->CreateComponent<Light>();
 			light->SetLightType(LightType::DIRECTIONAL);
 			light->SetColor(vec4(1.0f));
 			return light;
+		});
+
+		editorState->ExecuteCommand(addComponentCommand);
+	}
+}
+
+void MainFrameImpl::AddLuaScriptClicked(wxCommandEvent& event)
+{
+	auto node = editorState->GetSelectedNode();
+	if (node)
+	{
+		auto addComponentCommand = new AddComponentCommand(editorState, node, [](Engine *engine, Node *node) -> Component *
+		{
+			LuaScript *script = node->CreateComponent<LuaScript>();
+			script->SetEnabled(false);
+			return script;
 		});
 
 		editorState->ExecuteCommand(addComponentCommand);
@@ -210,7 +227,8 @@ void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 		std::string resourceFullpath = sceneSettings->basePath + (sceneSettings->basePath.back() == '/' || sceneSettings->basePath.back() == '\\' ? "" : "\\") + resourcePath;
 		Filesystem::AddSearchPath(resourceFullpath);
 	}
-
+	
+	editorState->ClearCommands();
 	sceneTreeCtrl->DeleteAllItems();
 	nodeToTreeItem.clear();
 	treeItemToNode.clear();
@@ -397,6 +415,15 @@ void MainFrameImpl::AddComponentPanel(Component *component)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, component);
 		t->AddControl(new LightPanelImpl(t));
+
+		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
+
+		currentComponentPanels.push_back(t);
+	}
+	else if (component->GetType() == LuaScript::GetTypeStatic())
+	{
+		auto t = new BaseComponentPanelImpl(componentsList, component);
+		t->AddControl(new LuaScriptPanelImpl(t));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 

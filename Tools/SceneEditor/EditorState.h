@@ -18,6 +18,7 @@ public:
 	FireCube::Engine *GetEngine();
 	void SetCurrentSceneFile(const std::string &currentSceneFile);
 	std::string GetCurrentSceneFile() const;
+	void ClearCommands();
 
 	FireCube::Event<FireCube::Node *> selectedNodeChanged;
 	FireCube::Event<FireCube::Node *> nodeAdded;

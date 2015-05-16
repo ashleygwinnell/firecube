@@ -105,6 +105,7 @@
     <ClCompile Include="GLCanvas.cpp" />
     <ClCompile Include="app.cpp" />
     <ClCompile Include="LightPanelImpl.cpp" />
+    <ClCompile Include="LuaScriptPanelImpl.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="MainFrameImpl.cpp" />
     <ClCompile Include="MathUtils.cpp" />
@@ -132,6 +133,7 @@
     <ClInclude Include="Gizmos\TranslateGizmo.h" />
     <ClInclude Include="GLCanvas.h" />
     <ClInclude Include="LightPanelImpl.h" />
+    <ClInclude Include="LuaScriptPanelImpl.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="MainFrameImpl.h" />
     <ClInclude Include="MathUtils.h" />

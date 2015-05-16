@@ -72,3 +72,9 @@ std::string EditorState::GetCurrentSceneFile() const
 {
 	return currentSceneFile;
 }
+
+void EditorState::ClearCommands()
+{
+	commands.clear();
+	lastExecutedCommand = -1;
+}

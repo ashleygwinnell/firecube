@@ -84,6 +84,7 @@ class MainFrame : public wxFrame
 		virtual void AddMeshClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddStaticModelClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddLightClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void AddLuaScriptClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewSceneHierarchyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewInspectorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SceneTreeBeginDrag( wxTreeEvent& event ) { event.Skip(); }
@@ -241,6 +242,29 @@ class LightPanel : public wxPanel
 		
 		LightPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~LightPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class LuaScriptPanel
+///////////////////////////////////////////////////////////////////////////////
+class LuaScriptPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxFilePickerCtrl* scriptFilePicker;
+		wxTextCtrl* objectNameTextCtrl;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void FileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
+		virtual void ObjectNameChanged( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		LuaScriptPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
+		~LuaScriptPanel();
 	
 };
 

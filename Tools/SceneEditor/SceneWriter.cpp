@@ -91,6 +91,26 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 		element->SetDoubleAttribute("shadow_intensity", light->GetShadowIntensity());
 		element->SetAttribute("cast_shadow", light->GetCastShadow() ? "true" : "false");
 	}
+	else if (component->GetType() == LuaScript::GetTypeStatic())
+	{
+		TiXmlElement *element = new TiXmlElement("component");
+		parent->LinkEndChild(element);
+
+		element->SetAttribute("type", component->GetTypeName());
+
+		auto luaScript = static_cast<LuaScript *>(component);
+
+		if (luaScript->GetLuaFile())
+		{
+			wxFileName fileName(luaScript->GetLuaFile()->GetFileName());
+			fileName.MakeRelativeTo(basePath);
+			std::string file = fileName.GetFullPath();
+
+			element->SetAttribute("script", file);
+		}
+
+		element->SetAttribute("object", luaScript->GetObjectName());		
+	}
 
 }
 
@@ -115,7 +135,7 @@ void SceneWriter::SerializeSettings(SceneSettings *sceneSettings, TiXmlNode *par
 		TiXmlElement *element = new TiXmlElement("resource_path");
 		settings->LinkEndChild(element);
 
-		wxFileName resourcePathRelative(resourcePath, "");
+		wxFileName resourcePathRelative(basePath + "\\" + resourcePath, "");
 		resourcePathRelative.MakeRelativeTo(basePath);		
 
 		TiXmlText *text = new TiXmlText(resourcePathRelative.GetFullPath().ToStdString());
