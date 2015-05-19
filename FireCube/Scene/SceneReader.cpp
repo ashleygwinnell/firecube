@@ -11,6 +11,7 @@
 #include "Scripting/LuaFile.h"
 #include "Physics/PhysicsWorld.h"
 #include "Physics/CollisionShape.h"
+#include "Physics/CharacterController.h"
 #include "tinyxml.h"
 #include <iostream>
 
@@ -251,6 +252,14 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		{
 			component->SetIsTrigger(Variant::FromString(e->Attribute("is_trigger")).GetBool());
 		}
+	}
+	else if (type == "CharacterController")
+	{
+		auto component = node->CreateComponent<CharacterController>();
+		if (e->Attribute("radius"))
+		{
+			component->SetRadius(Variant::FromString(e->Attribute("radius")).GetVec3());
+		}		
 	}
 	else
 	{
