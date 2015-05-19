@@ -85,6 +85,7 @@ class MainFrame : public wxFrame
 		virtual void AddStaticModelClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddLightClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddLuaScriptClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void AddCollisionShapeClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewSceneHierarchyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewInspectorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SceneTreeBeginDrag( wxTreeEvent& event ) { event.Skip(); }
@@ -174,6 +175,7 @@ class NodePropertiesPanel : public wxPanel
 		wxTextCtrl* scaleYTextCtrl;
 		wxStaticText* m_staticText62;
 		wxTextCtrl* scaleZTextCtrl;
+		wxStaticLine* m_staticline3;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void NameChanged( wxCommandEvent& event ) { event.Skip(); }
@@ -199,7 +201,7 @@ class NodePropertiesPanel : public wxPanel
 		wxString nodeScaleYText; 
 		wxString nodeScaleZText; 
 		
-		NodePropertiesPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
+		NodePropertiesPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 357,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~NodePropertiesPanel();
 	
 };
@@ -265,6 +267,77 @@ class LuaScriptPanel : public wxPanel
 		
 		LuaScriptPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~LuaScriptPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class CollisionShapePanel
+///////////////////////////////////////////////////////////////////////////////
+class CollisionShapePanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_staticText25;
+		wxChoice* shapeTypeChoice;
+		wxCheckBox* triggerCheckBox;
+		wxStaticText* planeStaticText;
+		wxPanel* planePanel;
+		wxStaticText* m_staticText27;
+		wxTextCtrl* planeXTextCtrl;
+		wxStaticText* m_staticText28;
+		wxTextCtrl* planeYTextCtrl;
+		wxStaticText* m_staticText29;
+		wxTextCtrl* planeZTextCtrl;
+		wxStaticText* m_staticText30;
+		wxTextCtrl* planeWTextCtrl;
+		wxStaticText* boxStaticText;
+		wxPanel* boxPanel;
+		wxStaticText* m_staticText271;
+		wxTextCtrl* bboxMinXTextCtrl;
+		wxStaticText* m_staticText281;
+		wxTextCtrl* bboxMinYTextCtrl;
+		wxStaticText* m_staticText292;
+		wxTextCtrl* bboxMinZTextCtrl;
+		wxStaticText* m_staticText272;
+		wxTextCtrl* bboxMaxXTextCtrl;
+		wxStaticText* m_staticText282;
+		wxTextCtrl* bboxMaxYTextCtrl;
+		wxStaticText* m_staticText293;
+		wxTextCtrl* bboxMaxZTextCtrl;
+		wxStaticText* meshStaticText;
+		wxFilePickerCtrl* meshFilePicker;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void ShapeTypeChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void TriggerChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void PlaneXChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void PlaneYChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void PlaneZChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void PlaneWChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void BBoxMinXChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void BBoxMinYChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void BBoxMinZChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void BBoxMaxXChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void BBoxMaxYChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void BBoxMaxZChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MeshFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		wxString planeXText; 
+		wxString planeYText; 
+		wxString planeZText; 
+		wxString planeWText; 
+		wxString bboxMinXText; 
+		wxString bboxMinYText; 
+		wxString bboxMinZText; 
+		wxString bboxMaxXText; 
+		wxString bboxMaxYText; 
+		wxString bboxMaxZText; 
+		
+		CollisionShapePanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
+		~CollisionShapePanel();
 	
 };
 

@@ -17,6 +17,7 @@
 #include "LightPanelImpl.h"
 #include "NodePropertiesPanelImpl.h"
 #include "LuaScriptPanelImpl.h"
+#include "CollisionShapePanelImpl.h"
 
 using namespace FireCube;
 
@@ -138,6 +139,24 @@ void MainFrameImpl::AddLuaScriptClicked(wxCommandEvent& event)
 		editorState->ExecuteCommand(addComponentCommand);
 	}
 }
+
+void MainFrameImpl::AddCollisionShapeClicked(wxCommandEvent& event)
+{
+	auto node = editorState->GetSelectedNode();
+	if (node)
+	{
+		auto addComponentCommand = new AddComponentCommand(editorState, node, [](Engine *engine, Node *node) -> Component *
+		{
+			CollisionShape *collisionShape = node->CreateComponent<CollisionShape>();			
+			collisionShape->SetBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
+			collisionShape->SetPlane(Plane(vec3(0.0f, 1.0f, 0.0f), 0.0f));
+			return collisionShape;
+		});
+
+		editorState->ExecuteCommand(addComponentCommand);
+	}
+}
+
 
 void MainFrameImpl::SetScene(FireCube::Scene *scene)
 {
@@ -429,6 +448,15 @@ void MainFrameImpl::AddComponentPanel(Component *component)
 
 		currentComponentPanels.push_back(t);
 	}
+	else if (component->GetType() == CollisionShape::GetTypeStatic())
+	{
+		auto t = new BaseComponentPanelImpl(componentsList, component);
+		t->AddControl(new CollisionShapePanelImpl(t));
+
+		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
+
+		currentComponentPanels.push_back(t);
+	}
 
 	componentsList->FitInside();
 	componentsList->Layout();
@@ -462,6 +490,12 @@ void MainFrameImpl::UpdateInpsectorPane()
 		for (auto component : components)
 		{
 			AddComponentPanel(component);
+		}
+
+		if (components.empty())
+		{
+			componentsList->FitInside();
+			componentsList->Layout();
 		}
 		
 		componentsList->Thaw();

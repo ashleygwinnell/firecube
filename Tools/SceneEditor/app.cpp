@@ -27,6 +27,7 @@ EditorState *MyApp::GetEditorState()
 void MyApp::InitScene()
 {
 	scene = new FireCube::Scene(fcApp.GetEngine());	
+	scene->GetRootNode()->CreateComponent<FireCube::PhysicsWorld>();
 }
 
 MyApp::~MyApp()

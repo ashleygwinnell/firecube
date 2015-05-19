@@ -30,9 +30,9 @@ void NodePropertiesPanelImpl::UpdateUI()
 		positionZTextCtrl->SetLabelText(wxString::FromDouble(node->GetTranslation().z));
 
 		vec3 rotationAngles = node->GetRotation().ExtractEulerAngles();
-		rotationXTextCtrl->SetLabelText(wxString::FromDouble(rotationAngles.x));
-		rotationYTextCtrl->SetLabelText(wxString::FromDouble(rotationAngles.y));
-		rotationZTextCtrl->SetLabelText(wxString::FromDouble(rotationAngles.z));
+		rotationXTextCtrl->SetLabelText(wxString::FromDouble(rotationAngles.x / PI * 180.0f));
+		rotationYTextCtrl->SetLabelText(wxString::FromDouble(rotationAngles.y / PI * 180.0f));
+		rotationZTextCtrl->SetLabelText(wxString::FromDouble(rotationAngles.z / PI * 180.0f));
 
 		scaleXTextCtrl->SetLabelText(wxString::FromDouble(node->GetScale().x));
 		scaleYTextCtrl->SetLabelText(wxString::FromDouble(node->GetScale().y));
@@ -90,7 +90,7 @@ void NodePropertiesPanelImpl::RotationXChanged(wxCommandEvent& event)
 		vec3 rotation = node->GetRotation().ExtractEulerAngles();
 		double ang;
 		event.GetString().ToDouble(&ang);
-		rotation.x = ang;
+		rotation.x = ang / 180.0f * PI;
 		mat4 rotationMatrix = mat4::IDENTITY;
 		rotationMatrix.RotateX(rotation.x);
 		rotationMatrix.RotateY(rotation.y);
@@ -108,7 +108,7 @@ void NodePropertiesPanelImpl::RotationYChanged(wxCommandEvent& event)
 		vec3 rotation = node->GetRotation().ExtractEulerAngles();
 		double ang;
 		event.GetString().ToDouble(&ang);
-		rotation.y = ang;
+		rotation.y = ang / 180.0f * PI;
 		mat4 rotationMatrix = mat4::IDENTITY;
 		rotationMatrix.RotateX(rotation.x);
 		rotationMatrix.RotateY(rotation.y);
@@ -126,7 +126,7 @@ void NodePropertiesPanelImpl::RotationZChanged(wxCommandEvent& event)
 		vec3 rotation = node->GetRotation().ExtractEulerAngles();
 		double ang;
 		event.GetString().ToDouble(&ang);
-		rotation.z = ang;
+		rotation.z = ang / 180.0f * PI;
 		mat4 rotationMatrix = mat4::IDENTITY;
 		rotationMatrix.RotateX(rotation.x);
 		rotationMatrix.RotateY(rotation.y);

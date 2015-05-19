@@ -115,6 +115,24 @@ void GLCanvas::SceneChanged()
 }
 
 
+void GLCanvas::RenderDebugGeometry(FireCube::Node *node, DebugRenderer *debugRenderer)
+{
+	if (node->GetName().substr(0, 7) != "Editor_")
+	{
+		std::vector<CollisionShape *> collisionShapes;
+		node->GetComponents(collisionShapes);
+		for (auto c : collisionShapes)
+		{
+			c->RenderDebugGeometry(debugRenderer);
+		}
+
+		for (auto child : node->GetChildren())
+		{
+			RenderDebugGeometry(child, debugRenderer);
+		}
+	}
+}
+
 void GLCanvas::Render()
 {
 	wxPaintDC dc(this);
@@ -128,6 +146,11 @@ void GLCanvas::Render()
 	
 	FireCube::Frame frame(engine, scene);
 	frame.Render(engine->GetRenderer());
+	if (editorState->GetSelectedNode())
+	{
+		RenderDebugGeometry(editorState->GetSelectedNode(), engine->GetDebugRenderer());
+	}
+	engine->GetDebugRenderer()->Render(camera);
 
 	SwapBuffers();
 }

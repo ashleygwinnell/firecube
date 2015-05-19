@@ -76,6 +76,10 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	addLuaScriptMenuItem = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("LuaScript") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu1->Append( addLuaScriptMenuItem );
 	
+	wxMenuItem* addCollisionShapeMenuItem;
+	addCollisionShapeMenuItem = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("CollisionShape") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( addCollisionShapeMenuItem );
+	
 	addMenu->Append( m_menu1Item );
 	
 	menuBar->Append( addMenu, wxT("Add") ); 
@@ -157,6 +161,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( addStaticModelMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddStaticModelClicked ) );
 	this->Connect( addLightMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddLightClicked ) );
 	this->Connect( addLuaScriptMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddLuaScriptClicked ) );
+	this->Connect( addCollisionShapeMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddCollisionShapeClicked ) );
 	this->Connect( viewSceneHierarchyMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Connect( viewInspectorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( MainFrame::SceneTreeBeginDrag ), NULL, this );
@@ -181,6 +186,7 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddStaticModelClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddLightClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddLuaScriptClicked ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddCollisionShapeClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( MainFrame::SceneTreeBeginDrag ), NULL, this );
@@ -262,6 +268,9 @@ StaticModelPanel::~StaticModelPanel()
 
 NodePropertiesPanel::NodePropertiesPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
+	wxBoxSizer* bSizer22;
+	bSizer22 = new wxBoxSizer( wxVERTICAL );
+	
 	wxFlexGridSizer* fgSizer2;
 	fgSizer2 = new wxFlexGridSizer( 4, 2, 0, 0 );
 	fgSizer2->AddGrowableCol( 0 );
@@ -387,9 +396,14 @@ NodePropertiesPanel::NodePropertiesPanel( wxWindow* parent, wxWindowID id, const
 	fgSizer2->Add( bSizer92, 0, wxEXPAND, 5 );
 	
 	
-	this->SetSizer( fgSizer2 );
+	bSizer22->Add( fgSizer2, 1, wxEXPAND, 0 );
+	
+	m_staticline3 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	bSizer22->Add( m_staticline3, 0, wxEXPAND | wxALL, 5 );
+	
+	
+	this->SetSizer( bSizer22 );
 	this->Layout();
-	fgSizer2->Fit( this );
 	
 	// Connect Events
 	nameTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NodePropertiesPanel::NameChanged ), NULL, this );
@@ -422,8 +436,12 @@ NodePropertiesPanel::~NodePropertiesPanel()
 
 LightPanel::LightPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
-	wxBoxSizer* bSizer12;
-	bSizer12 = new wxBoxSizer( wxVERTICAL );
+	wxFlexGridSizer* fgSizer2;
+	fgSizer2 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer2->AddGrowableCol( 0 );
+	fgSizer2->AddGrowableCol( 1 );
+	fgSizer2->SetFlexibleDirection( wxBOTH );
+	fgSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	wxBoxSizer* bSizer13;
 	bSizer13 = new wxBoxSizer( wxHORIZONTAL );
@@ -439,7 +457,7 @@ LightPanel::LightPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, con
 	bSizer13->Add( lightTypeChoice, 1, wxALIGN_CENTER|wxALL, 5 );
 	
 	
-	bSizer12->Add( bSizer13, 1, wxEXPAND, 5 );
+	fgSizer2->Add( bSizer13, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer14;
 	bSizer14 = new wxBoxSizer( wxHORIZONTAL );
@@ -452,7 +470,7 @@ LightPanel::LightPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, con
 	bSizer14->Add( lightColorPicker, 1, wxALIGN_CENTER|wxALL, 5 );
 	
 	
-	bSizer12->Add( bSizer14, 1, wxEXPAND, 5 );
+	fgSizer2->Add( bSizer14, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer15;
 	bSizer15 = new wxBoxSizer( wxHORIZONTAL );
@@ -461,25 +479,28 @@ LightPanel::LightPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, con
 	bSizer15->Add( castShadowCheckBox, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	
-	bSizer15->Add( 0, 0, 1, wxEXPAND, 5 );
+	fgSizer2->Add( bSizer15, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer21;
+	bSizer21 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_staticText19 = new wxStaticText( this, wxID_ANY, wxT("Intensity"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText19->Wrap( -1 );
-	bSizer15->Add( m_staticText19, 0, wxALIGN_CENTER|wxALL, 5 );
+	bSizer21->Add( m_staticText19, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	shadowIntensityTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	shadowIntensityTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &shadowIntensityText ) );
 	
-	bSizer15->Add( shadowIntensityTextCtrl, 0, wxALIGN_CENTER|wxALL, 5 );
+	bSizer21->Add( shadowIntensityTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
 	
 	
-	bSizer12->Add( bSizer15, 1, wxEXPAND, 5 );
+	fgSizer2->Add( bSizer21, 1, wxEXPAND, 5 );
 	
 	rangePanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer16;
 	bSizer16 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_staticText21 = new wxStaticText( rangePanel, wxID_ANY, wxT("Range"), wxDefaultPosition, wxSize( 65,-1 ), 0 );
+	m_staticText21 = new wxStaticText( rangePanel, wxID_ANY, wxT("Range"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_staticText21->Wrap( -1 );
 	bSizer16->Add( m_staticText21, 0, wxALIGN_CENTER|wxALL, 5 );
 	
@@ -492,13 +513,13 @@ LightPanel::LightPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, con
 	rangePanel->SetSizer( bSizer16 );
 	rangePanel->Layout();
 	bSizer16->Fit( rangePanel );
-	bSizer12->Add( rangePanel, 1, wxEXPAND, 5 );
+	fgSizer2->Add( rangePanel, 1, wxEXPAND, 5 );
 	
 	spotCutoffPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer161;
 	bSizer161 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_staticText211 = new wxStaticText( spotCutoffPanel, wxID_ANY, wxT("Spot Cutoff"), wxDefaultPosition, wxSize( 65,-1 ), 0 );
+	m_staticText211 = new wxStaticText( spotCutoffPanel, wxID_ANY, wxT("Spot Cutoff"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_staticText211->Wrap( -1 );
 	bSizer161->Add( m_staticText211, 0, wxALIGN_CENTER|wxALL, 5 );
 	
@@ -511,12 +532,12 @@ LightPanel::LightPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, con
 	spotCutoffPanel->SetSizer( bSizer161 );
 	spotCutoffPanel->Layout();
 	bSizer161->Fit( spotCutoffPanel );
-	bSizer12->Add( spotCutoffPanel, 1, wxEXPAND, 5 );
+	fgSizer2->Add( spotCutoffPanel, 1, wxEXPAND, 5 );
 	
 	
-	this->SetSizer( bSizer12 );
+	this->SetSizer( fgSizer2 );
 	this->Layout();
-	bSizer12->Fit( this );
+	fgSizer2->Fit( this );
 	
 	// Connect Events
 	lightTypeChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( LightPanel::LightTypeChanged ), NULL, this );
@@ -587,5 +608,198 @@ LuaScriptPanel::~LuaScriptPanel()
 	// Disconnect Events
 	scriptFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LuaScriptPanel::FileChanged ), NULL, this );
 	objectNameTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LuaScriptPanel::ObjectNameChanged ), NULL, this );
+	
+}
+
+CollisionShapePanel::CollisionShapePanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxFlexGridSizer* fgSizer3;
+	fgSizer3 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer3->AddGrowableCol( 1 );
+	fgSizer3->SetFlexibleDirection( wxBOTH );
+	fgSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText25 = new wxStaticText( this, wxID_ANY, wxT("Type"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText25->Wrap( -1 );
+	fgSizer3->Add( m_staticText25, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	wxString shapeTypeChoiceChoices[] = { wxT("Box"), wxT("Plane"), wxT("Mesh") };
+	int shapeTypeChoiceNChoices = sizeof( shapeTypeChoiceChoices ) / sizeof( wxString );
+	shapeTypeChoice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, shapeTypeChoiceNChoices, shapeTypeChoiceChoices, 0 );
+	shapeTypeChoice->SetSelection( 0 );
+	fgSizer3->Add( shapeTypeChoice, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
+	
+	triggerCheckBox = new wxCheckBox( this, wxID_ANY, wxT("Trigger"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer3->Add( triggerCheckBox, 0, wxALL, 5 );
+	
+	
+	fgSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	planeStaticText = new wxStaticText( this, wxID_ANY, wxT("Plane"), wxDefaultPosition, wxDefaultSize, 0 );
+	planeStaticText->Wrap( -1 );
+	fgSizer3->Add( planeStaticText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	planePanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer4;
+	fgSizer4 = new wxFlexGridSizer( 0, 6, 0, 0 );
+	fgSizer4->SetFlexibleDirection( wxBOTH );
+	fgSizer4->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText27 = new wxStaticText( planePanel, wxID_ANY, wxT("X"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText27->Wrap( -1 );
+	fgSizer4->Add( m_staticText27, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	planeXTextCtrl = new wxTextCtrl( planePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	planeXTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &planeXText ) );
+	
+	fgSizer4->Add( planeXTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_staticText28 = new wxStaticText( planePanel, wxID_ANY, wxT("Y"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText28->Wrap( -1 );
+	fgSizer4->Add( m_staticText28, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	planeYTextCtrl = new wxTextCtrl( planePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	planeYTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &planeYText ) );
+	
+	fgSizer4->Add( planeYTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_staticText29 = new wxStaticText( planePanel, wxID_ANY, wxT("Z"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText29->Wrap( -1 );
+	fgSizer4->Add( m_staticText29, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	planeZTextCtrl = new wxTextCtrl( planePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	planeZTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &planeZText ) );
+	
+	fgSizer4->Add( planeZTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_staticText30 = new wxStaticText( planePanel, wxID_ANY, wxT("W"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText30->Wrap( -1 );
+	fgSizer4->Add( m_staticText30, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	planeWTextCtrl = new wxTextCtrl( planePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	planeWTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &planeWText ) );
+	
+	fgSizer4->Add( planeWTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	
+	planePanel->SetSizer( fgSizer4 );
+	planePanel->Layout();
+	fgSizer4->Fit( planePanel );
+	fgSizer3->Add( planePanel, 1, wxEXPAND, 5 );
+	
+	boxStaticText = new wxStaticText( this, wxID_ANY, wxT("Box"), wxDefaultPosition, wxDefaultSize, 0 );
+	boxStaticText->Wrap( -1 );
+	fgSizer3->Add( boxStaticText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	boxPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer5;
+	fgSizer5 = new wxFlexGridSizer( 0, 6, 0, 0 );
+	fgSizer5->SetFlexibleDirection( wxBOTH );
+	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText271 = new wxStaticText( boxPanel, wxID_ANY, wxT("X"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText271->Wrap( -1 );
+	fgSizer5->Add( m_staticText271, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	bboxMinXTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	bboxMinXTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &bboxMinXText ) );
+	
+	fgSizer5->Add( bboxMinXTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_staticText281 = new wxStaticText( boxPanel, wxID_ANY, wxT("Y"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText281->Wrap( -1 );
+	fgSizer5->Add( m_staticText281, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	bboxMinYTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	bboxMinYTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &bboxMinYText ) );
+	
+	fgSizer5->Add( bboxMinYTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_staticText292 = new wxStaticText( boxPanel, wxID_ANY, wxT("Z"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText292->Wrap( -1 );
+	fgSizer5->Add( m_staticText292, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	bboxMinZTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	bboxMinZTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &bboxMinZText ) );
+	
+	fgSizer5->Add( bboxMinZTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_staticText272 = new wxStaticText( boxPanel, wxID_ANY, wxT("X"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText272->Wrap( -1 );
+	fgSizer5->Add( m_staticText272, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	bboxMaxXTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	bboxMaxXTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &bboxMaxXText ) );
+	
+	fgSizer5->Add( bboxMaxXTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_staticText282 = new wxStaticText( boxPanel, wxID_ANY, wxT("Y"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText282->Wrap( -1 );
+	fgSizer5->Add( m_staticText282, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	bboxMaxYTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	bboxMaxYTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &bboxMaxYText ) );
+	
+	fgSizer5->Add( bboxMaxYTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_staticText293 = new wxStaticText( boxPanel, wxID_ANY, wxT("Z"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText293->Wrap( -1 );
+	fgSizer5->Add( m_staticText293, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	bboxMaxZTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	bboxMaxZTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &bboxMaxZText ) );
+	
+	fgSizer5->Add( bboxMaxZTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	
+	boxPanel->SetSizer( fgSizer5 );
+	boxPanel->Layout();
+	fgSizer5->Fit( boxPanel );
+	fgSizer3->Add( boxPanel, 1, wxEXPAND | wxALL, 5 );
+	
+	meshStaticText = new wxStaticText( this, wxID_ANY, wxT("Mesh"), wxDefaultPosition, wxDefaultSize, 0 );
+	meshStaticText->Wrap( -1 );
+	fgSizer3->Add( meshStaticText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	meshFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
+	fgSizer3->Add( meshFilePicker, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	this->SetSizer( fgSizer3 );
+	this->Layout();
+	fgSizer3->Fit( this );
+	
+	// Connect Events
+	shapeTypeChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CollisionShapePanel::ShapeTypeChanged ), NULL, this );
+	triggerCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CollisionShapePanel::TriggerChanged ), NULL, this );
+	planeXTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneXChanged ), NULL, this );
+	planeYTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneYChanged ), NULL, this );
+	planeZTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneZChanged ), NULL, this );
+	planeWTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneWChanged ), NULL, this );
+	bboxMinXTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMinXChanged ), NULL, this );
+	bboxMinYTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMinYChanged ), NULL, this );
+	bboxMinZTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMinZChanged ), NULL, this );
+	bboxMaxXTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxXChanged ), NULL, this );
+	bboxMaxYTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxYChanged ), NULL, this );
+	bboxMaxZTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxZChanged ), NULL, this );
+	meshFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CollisionShapePanel::MeshFileChanged ), NULL, this );
+}
+
+CollisionShapePanel::~CollisionShapePanel()
+{
+	// Disconnect Events
+	shapeTypeChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CollisionShapePanel::ShapeTypeChanged ), NULL, this );
+	triggerCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CollisionShapePanel::TriggerChanged ), NULL, this );
+	planeXTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneXChanged ), NULL, this );
+	planeYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneYChanged ), NULL, this );
+	planeZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneZChanged ), NULL, this );
+	planeWTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneWChanged ), NULL, this );
+	bboxMinXTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMinXChanged ), NULL, this );
+	bboxMinYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMinYChanged ), NULL, this );
+	bboxMinZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMinZChanged ), NULL, this );
+	bboxMaxXTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxXChanged ), NULL, this );
+	bboxMaxYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxYChanged ), NULL, this );
+	bboxMaxZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxZChanged ), NULL, this );
+	meshFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CollisionShapePanel::MeshFileChanged ), NULL, this );
 	
 }

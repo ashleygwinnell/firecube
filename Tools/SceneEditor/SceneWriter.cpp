@@ -111,6 +111,49 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 
 		element->SetAttribute("object", luaScript->GetObjectName());		
 	}
+	else if (component->GetType() == PhysicsWorld::GetTypeStatic())
+	{
+		TiXmlElement *element = new TiXmlElement("component");
+		parent->LinkEndChild(element);
+
+		element->SetAttribute("type", component->GetTypeName());
+	}
+	else if (component->GetType() == CollisionShape::GetTypeStatic())
+	{
+		TiXmlElement *element = new TiXmlElement("component");
+		parent->LinkEndChild(element);
+
+		element->SetAttribute("type", component->GetTypeName());
+
+		auto collisionShape = static_cast<CollisionShape *>(component);
+
+		element->SetAttribute("is_trigger", collisionShape->IsTrigger() ? "true" : "false");
+
+		switch (collisionShape->GetShapeType())
+		{
+		case CollisionShapeType::BOX:
+			element->SetAttribute("shape_type", "box");
+			element->SetAttribute("bbox_min", ToString(collisionShape->GetBox().GetMin()));
+			element->SetAttribute("bbox_max", ToString(collisionShape->GetBox().GetMax()));
+			break;
+		case CollisionShapeType::PLANE:
+			element->SetAttribute("shape_type", "plane");
+			element->SetAttribute("plane", ToString(vec4(collisionShape->GetPlane().GetNormal(), collisionShape->GetPlane().GetDistance())));
+			break;
+		case CollisionShapeType::TRIANGLE_MESH:
+		{
+			element->SetAttribute("shape_type", "triangle_mesh");
+			wxFileName fileName(collisionShape->GetMesh()->GetFileName());
+			fileName.MakeRelativeTo(basePath);
+			std::string file = fileName.GetFullPath();
+
+			element->SetAttribute("mesh", file);
+			break;
+		}
+		default:
+			break;
+		}
+	}
 
 }
 

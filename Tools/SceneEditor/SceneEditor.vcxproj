@@ -90,6 +90,7 @@
     <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlparser.cpp" />
     <ClCompile Include="BaseComponentPanelImpl.cpp" />
+    <ClCompile Include="CollisionShapePanelImpl.cpp" />
     <ClCompile Include="Commands\AddComponentCommand.cpp" />
     <ClCompile Include="Commands\AddNodeCommand.cpp" />
     <ClCompile Include="Commands\CustomCommand.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="..\..\FireCube\ThirdParty\TinyXML\tinyxml.h" />
     <ClInclude Include="app.h" />
     <ClInclude Include="BaseComponentPanelImpl.h" />
+    <ClInclude Include="CollisionShapePanelImpl.h" />
     <ClInclude Include="Commands\AddComponentCommand.h" />
     <ClInclude Include="Commands\AddNodeCommand.h" />
     <ClInclude Include="Commands\Command.h" />

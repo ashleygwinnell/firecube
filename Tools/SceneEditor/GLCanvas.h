@@ -35,12 +35,13 @@ public:
 	void OnKeyUp(wxKeyEvent& event);
 	void Render();
 	void Init();	
-	void UpdateGizmo();	
+	void UpdateGizmo();		
 private:	
 	void CreateGrid(float size, unsigned int numberOfCells);
 	void SelectedNodeChanged(FireCube::Node *node);
 	void StateChanged();
 	void SceneChanged();
+	void RenderDebugGeometry(FireCube::Node *node, FireCube::DebugRenderer *debugRenderer);
 	
 	bool init;
 	MyApp *theApp;

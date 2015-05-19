@@ -35,7 +35,7 @@ LightPanelImpl::LightPanelImpl(BaseComponentPanelImpl* parent) : LightPanel(pare
 	castShadowCheckBox->SetValue(light->GetCastShadow());
 	shadowIntensityTextCtrl->SetLabel(wxString::FromDouble(light->GetShadowIntensity()));
 	rangeTextCtrl->SetLabel(wxString::FromDouble(light->GetRange()));
-	spotCutoffTextCtrl->SetLabel(wxString::FromDouble(light->GetSpotCutOff()));
+	spotCutoffTextCtrl->SetLabel(wxString::FromDouble(light->GetSpotCutOff() / PI * 180.0f));
 }
 
 LightPanelImpl::~LightPanelImpl()
@@ -256,6 +256,7 @@ void LightPanelImpl::SpotCutoffChanged(wxCommandEvent& event)
 
 	double newValue;
 	event.GetString().ToDouble(&newValue);
+	newValue = newValue / 180.0f * PI;
 	float oldValue = light->GetSpotCutOff();
 
 	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newValue, engine]()
