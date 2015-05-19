@@ -80,7 +80,7 @@ void PhysicsWorld::Update(float deltaTime)
 						
 						if (collisionShape->GetShapeType() == CollisionShapeType::TRIANGLE_MESH || collisionShape->GetShapeType() == CollisionShapeType::BOX)
 						{
-							CollisionMesh *mesh = collisionShape->GetMesh();							
+							CollisionMesh *mesh = collisionShape->GetCollisionMesh();
 							characterController->CheckCollisionWithMesh(*mesh, collisionShape->GetNode()->GetWorldTransformation(), result);							
 						}
 						else if (collisionShape->GetShapeType() == CollisionShapeType::PLANE)

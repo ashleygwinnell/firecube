@@ -245,7 +245,12 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 				Plane plane(planeParams.ToVec3(), planeParams.w);
 				component->SetPlane(plane);
 			}
-		}		
+		}	
+
+		if (e->Attribute("is_trigger"))
+		{
+			component->SetIsTrigger(Variant::FromString(e->Attribute("is_trigger")).GetBool());
+		}
 	}
 	else
 	{
