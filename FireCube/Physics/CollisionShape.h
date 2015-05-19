@@ -46,7 +46,9 @@ public:
 	void SetBox(BoundingBox bbox);
 
 	Plane GetPlane() const;
-	CollisionMesh *GetMesh();
+	CollisionMesh *GetCollisionMesh();
+	BoundingBox GetBox() const;
+	Mesh *GetMesh();
 
 	BoundingBox GetWorldBoundingBox();
 
@@ -72,7 +74,8 @@ private:
 	CollisionShapeType type;
 	WeakPtr<PhysicsWorld> physicsWorld;
 
-	SharedPtr<CollisionMesh> mesh;
+	SharedPtr<CollisionMesh> collisionMesh;
+	Mesh *mesh;
 	Plane plane;
 	BoundingBox shapeBoundingBox;
 	

@@ -17,12 +17,12 @@ CollisionTriangle::CollisionTriangle(vec3 p1, vec3 p2, vec3 p3) : p1(p1), p2(p2)
 
 }
 
-CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld(nullptr), worldBoundingBoxChanged(false), isTrigger(false)
+CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld(nullptr), worldBoundingBoxChanged(false), isTrigger(false), collisionMesh(nullptr), mesh(nullptr)
 {
 
 }
 
-CollisionShape::CollisionShape(const CollisionShape &other) : Component(other), worldBoundingBoxChanged(true), type(other.type), physicsWorld(other.physicsWorld), mesh(other.mesh), plane(other.plane),
+CollisionShape::CollisionShape(const CollisionShape &other) : Component(other), worldBoundingBoxChanged(true), type(other.type), physicsWorld(other.physicsWorld), collisionMesh(other.collisionMesh), mesh(other.mesh), plane(other.plane),
 															  shapeBoundingBox(other.shapeBoundingBox), isTrigger(other.isTrigger)
 {
 	
@@ -66,7 +66,12 @@ void CollisionShape::SceneChanged(Scene *oldScene)
 	}
 }
 
-CollisionMesh *CollisionShape::GetMesh()
+CollisionMesh *CollisionShape::GetCollisionMesh()
+{
+	return collisionMesh;
+}
+
+Mesh *CollisionShape::GetMesh()
 {
 	return mesh;
 }
@@ -74,7 +79,10 @@ CollisionMesh *CollisionShape::GetMesh()
 void CollisionShape::SetMesh(Mesh *mesh)
 {
 	type = CollisionShapeType::TRIANGLE_MESH;
-	this->mesh = new CollisionMesh;
+	collisionMesh = new CollisionMesh;
+	this->mesh = mesh;
+	if (!mesh)
+		return;
 
 	auto geometries = mesh->GetGeometries();
 	for (auto geometry : geometries)
@@ -96,10 +104,10 @@ void CollisionShape::SetMesh(Mesh *mesh)
 				vec3 pos1 = *((vec3 *)&vertexData[i1 * vertexBuffer->GetVertexSize() + positionOffset]);
 				vec3 pos2 = *((vec3 *)&vertexData[i2 * vertexBuffer->GetVertexSize() + positionOffset]);
 
-				this->mesh->triangles.push_back(CollisionTriangle(pos0, pos1, pos2));
-				this->mesh->boundingBox.Expand(pos0);
-				this->mesh->boundingBox.Expand(pos1);
-				this->mesh->boundingBox.Expand(pos2);
+				collisionMesh->triangles.push_back(CollisionTriangle(pos0, pos1, pos2));
+				collisionMesh->boundingBox.Expand(pos0);
+				collisionMesh->boundingBox.Expand(pos1);
+				collisionMesh->boundingBox.Expand(pos2);
 			}
 		}
 	}	
@@ -125,25 +133,25 @@ void CollisionShape::SetBox(BoundingBox bbox)
 	shapeBoundingBox = bbox;
 	vec3 bmin = bbox.GetMin();
 	vec3 bmax = bbox.GetMax();	
-	mesh = new CollisionMesh;
+	collisionMesh = new CollisionMesh;
 	// Front
-	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmax.x, bmin.y, bmax.z), vec3(bmax.x, bmax.y, bmax.z)));
-	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmax.x, bmax.y, bmax.z), vec3(bmin.x, bmax.y, bmax.z)));
+	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmax.x, bmin.y, bmax.z), vec3(bmax.x, bmax.y, bmax.z)));
+	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmax.x, bmax.y, bmax.z), vec3(bmin.x, bmax.y, bmax.z)));
 	// Back
-	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmin.z), vec3(bmin.x, bmax.y, bmin.z), vec3(bmax.x, bmax.y, bmin.z)));
-	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmin.z), vec3(bmax.x, bmax.y, bmin.z), vec3(bmax.x, bmin.y, bmin.z)));
+	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmin.z), vec3(bmin.x, bmax.y, bmin.z), vec3(bmax.x, bmax.y, bmin.z)));
+	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmin.z), vec3(bmax.x, bmax.y, bmin.z), vec3(bmax.x, bmin.y, bmin.z)));
 	// Right
-	mesh->triangles.push_back(CollisionTriangle(vec3(bmax.x, bmin.y, bmax.z), vec3(bmax.x, bmin.y, bmin.z), vec3(bmax.x, bmax.y, bmin.z)));
-	mesh->triangles.push_back(CollisionTriangle(vec3(bmax.x, bmin.y, bmax.z), vec3(bmax.x, bmax.y, bmin.z), vec3(bmax.x, bmax.y, bmax.z)));
+	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmax.x, bmin.y, bmax.z), vec3(bmax.x, bmin.y, bmin.z), vec3(bmax.x, bmax.y, bmin.z)));
+	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmax.x, bmin.y, bmax.z), vec3(bmax.x, bmax.y, bmin.z), vec3(bmax.x, bmax.y, bmax.z)));
 	// Left
-	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmin.x, bmax.y, bmax.z), vec3(bmin.x, bmax.y, bmin.z)));
-	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmin.x, bmax.y, bmin.z), vec3(bmin.x, bmin.y, bmin.z)));
+	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmin.x, bmax.y, bmax.z), vec3(bmin.x, bmax.y, bmin.z)));
+	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmin.x, bmax.y, bmin.z), vec3(bmin.x, bmin.y, bmin.z)));
 	// Top
-	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmax.y, bmax.z), vec3(bmax.x, bmax.y, bmax.z), vec3(bmax.x, bmax.y, bmin.z)));
-	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmax.y, bmax.z), vec3(bmax.x, bmax.y, bmin.z), vec3(bmin.x, bmax.y, bmin.z)));
+	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmax.y, bmax.z), vec3(bmax.x, bmax.y, bmax.z), vec3(bmax.x, bmax.y, bmin.z)));
+	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmax.y, bmax.z), vec3(bmax.x, bmax.y, bmin.z), vec3(bmin.x, bmax.y, bmin.z)));
 	// Bottom
-	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmin.x, bmin.y, bmin.z), vec3(bmax.x, bmin.y, bmin.z)));
-	mesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmax.x, bmin.y, bmin.z), vec3(bmax.x, bmin.y, bmax.z)));
+	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmin.x, bmin.y, bmin.z), vec3(bmax.x, bmin.y, bmin.z)));
+	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmax.x, bmin.y, bmin.z), vec3(bmax.x, bmin.y, bmax.z)));
 
 	worldBoundingBoxChanged = true;
 }
@@ -153,14 +161,14 @@ void CollisionShape::RenderDebugGeometry(DebugRenderer *debugRenderer)
 	if (type == CollisionShapeType::BOX)
 	{
 		vec3 p[8];
-		p[0] = node->GetWorldTransformation() * mesh->triangles[0].p1;
-		p[1] = node->GetWorldTransformation() * mesh->triangles[0].p2;
-		p[2] = node->GetWorldTransformation() * mesh->triangles[0].p3;
-		p[3] = node->GetWorldTransformation() * mesh->triangles[1].p3;
-		p[4] = node->GetWorldTransformation() * mesh->triangles[2].p1;
-		p[5] = node->GetWorldTransformation() * mesh->triangles[2].p2;
-		p[6] = node->GetWorldTransformation() * mesh->triangles[2].p3;
-		p[7] = node->GetWorldTransformation() * mesh->triangles[3].p3;
+		p[0] = node->GetWorldTransformation() * collisionMesh->triangles[0].p1;
+		p[1] = node->GetWorldTransformation() * collisionMesh->triangles[0].p2;
+		p[2] = node->GetWorldTransformation() * collisionMesh->triangles[0].p3;
+		p[3] = node->GetWorldTransformation() * collisionMesh->triangles[1].p3;
+		p[4] = node->GetWorldTransformation() * collisionMesh->triangles[2].p1;
+		p[5] = node->GetWorldTransformation() * collisionMesh->triangles[2].p2;
+		p[6] = node->GetWorldTransformation() * collisionMesh->triangles[2].p3;
+		p[7] = node->GetWorldTransformation() * collisionMesh->triangles[3].p3;
 		debugRenderer->AddLine(p[0], p[1], vec3(0, 1, 0));
 		debugRenderer->AddLine(p[1], p[2], vec3(0, 1, 0));
 		debugRenderer->AddLine(p[2], p[3], vec3(0, 1, 0));
@@ -176,7 +184,7 @@ void CollisionShape::RenderDebugGeometry(DebugRenderer *debugRenderer)
 	}
 	else if (type == CollisionShapeType::TRIANGLE_MESH)
 	{
-		for (auto &t : mesh->triangles)
+		for (auto &t : collisionMesh->triangles)
 		{
 			vec3 p1 = node->GetWorldTransformation() * t.p1;
 			vec3 p2 = node->GetWorldTransformation() * t.p2;
@@ -226,7 +234,7 @@ void CollisionShape::UpdateWorldBoundingBox()
 	switch (type)
 	{
 	case CollisionShapeType::TRIANGLE_MESH:
-		boundingBox = mesh->boundingBox;
+		boundingBox = collisionMesh->boundingBox;
 		break;
 	case CollisionShapeType::PLANE:
 		boundingBox = BoundingBox(vec3(-10e6), vec3(10e6)); // In case of a plane, return a large bounding box
@@ -256,4 +264,9 @@ bool CollisionShape::IsTrigger() const
 void CollisionShape::SetIsTrigger(bool isTrigger)
 { 
 	this->isTrigger = isTrigger;
+}
+
+BoundingBox CollisionShape::GetBox() const
+{
+	return shapeBoundingBox;
 }
