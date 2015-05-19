@@ -80,6 +80,10 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	addCollisionShapeMenuItem = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("CollisionShape") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu1->Append( addCollisionShapeMenuItem );
 	
+	wxMenuItem* addCharacterControllerMenuItem;
+	addCharacterControllerMenuItem = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("CharacterController") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( addCharacterControllerMenuItem );
+	
 	addMenu->Append( m_menu1Item );
 	
 	menuBar->Append( addMenu, wxT("Add") ); 
@@ -162,6 +166,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( addLightMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddLightClicked ) );
 	this->Connect( addLuaScriptMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddLuaScriptClicked ) );
 	this->Connect( addCollisionShapeMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddCollisionShapeClicked ) );
+	this->Connect( addCharacterControllerMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddCharacterControllerClicked ) );
 	this->Connect( viewSceneHierarchyMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Connect( viewInspectorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( MainFrame::SceneTreeBeginDrag ), NULL, this );
@@ -187,6 +192,7 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddLightClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddLuaScriptClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddCollisionShapeClicked ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddCharacterControllerClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( MainFrame::SceneTreeBeginDrag ), NULL, this );
@@ -801,5 +807,75 @@ CollisionShapePanel::~CollisionShapePanel()
 	bboxMaxYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxYChanged ), NULL, this );
 	bboxMaxZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxZChanged ), NULL, this );
 	meshFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CollisionShapePanel::MeshFileChanged ), NULL, this );
+	
+}
+
+CharacterControllerPanel::CharacterControllerPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer22;
+	bSizer22 = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer2;
+	fgSizer2 = new wxFlexGridSizer( 4, 2, 0, 0 );
+	fgSizer2->AddGrowableCol( 0 );
+	fgSizer2->SetFlexibleDirection( wxHORIZONTAL );
+	fgSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText3 = new wxStaticText( this, wxID_ANY, wxT("Radius"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText3->Wrap( -1 );
+	fgSizer2->Add( m_staticText3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	wxBoxSizer* bSizer9;
+	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText4 = new wxStaticText( this, wxID_ANY, wxT("X"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText4->Wrap( -1 );
+	bSizer9->Add( m_staticText4, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	radiusXTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	radiusXTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &radiusXText ) );
+	
+	bSizer9->Add( radiusXTextCtrl, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	m_staticText5 = new wxStaticText( this, wxID_ANY, wxT("Y"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText5->Wrap( -1 );
+	bSizer9->Add( m_staticText5, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	radiusYTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	radiusYTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &radiusYText ) );
+	
+	bSizer9->Add( radiusYTextCtrl, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	m_staticText6 = new wxStaticText( this, wxID_ANY, wxT("Z"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText6->Wrap( -1 );
+	bSizer9->Add( m_staticText6, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	radiusZTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	radiusZTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &radiusZText ) );
+	
+	bSizer9->Add( radiusZTextCtrl, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	fgSizer2->Add( bSizer9, 1, wxEXPAND, 5 );
+	
+	
+	bSizer22->Add( fgSizer2, 1, wxEXPAND, 0 );
+	
+	
+	this->SetSizer( bSizer22 );
+	this->Layout();
+	
+	// Connect Events
+	radiusXTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusXChanged ), NULL, this );
+	radiusYTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusYChanged ), NULL, this );
+	radiusZTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusZChanged ), NULL, this );
+}
+
+CharacterControllerPanel::~CharacterControllerPanel()
+{
+	// Disconnect Events
+	radiusXTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusXChanged ), NULL, this );
+	radiusYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusYChanged ), NULL, this );
+	radiusZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusZChanged ), NULL, this );
 	
 }

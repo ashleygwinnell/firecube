@@ -86,6 +86,7 @@ class MainFrame : public wxFrame
 		virtual void AddLightClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddLuaScriptClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddCollisionShapeClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void AddCharacterControllerClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewSceneHierarchyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewInspectorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SceneTreeBeginDrag( wxTreeEvent& event ) { event.Skip(); }
@@ -338,6 +339,38 @@ class CollisionShapePanel : public wxPanel
 		
 		CollisionShapePanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~CollisionShapePanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class CharacterControllerPanel
+///////////////////////////////////////////////////////////////////////////////
+class CharacterControllerPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_staticText3;
+		wxStaticText* m_staticText4;
+		wxTextCtrl* radiusXTextCtrl;
+		wxStaticText* m_staticText5;
+		wxTextCtrl* radiusYTextCtrl;
+		wxStaticText* m_staticText6;
+		wxTextCtrl* radiusZTextCtrl;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void RadiusXChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RadiusYChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RadiusZChanged( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		wxString radiusXText; 
+		wxString radiusYText; 
+		wxString radiusZText; 
+		
+		CharacterControllerPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 357,-1 ), long style = wxTAB_TRAVERSAL ); 
+		~CharacterControllerPanel();
 	
 };
 

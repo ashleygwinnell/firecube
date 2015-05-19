@@ -37,6 +37,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void AddLightClicked(wxCommandEvent& event);
 		virtual void AddLuaScriptClicked(wxCommandEvent& event);
 		virtual void AddCollisionShapeClicked(wxCommandEvent& event);
+		virtual void AddCharacterControllerClicked(wxCommandEvent& event);
 		virtual void AddNodeClicked(wxCommandEvent& event);
 		void ComponentAdded(FireCube::Component *component);
 		void ComponentRemoved(FireCube::Component *component);

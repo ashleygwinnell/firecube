@@ -18,6 +18,7 @@
 #include "NodePropertiesPanelImpl.h"
 #include "LuaScriptPanelImpl.h"
 #include "CollisionShapePanelImpl.h"
+#include "CharacterControllerPanelImpl.h"
 
 using namespace FireCube;
 
@@ -151,6 +152,22 @@ void MainFrameImpl::AddCollisionShapeClicked(wxCommandEvent& event)
 			collisionShape->SetBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
 			collisionShape->SetPlane(Plane(vec3(0.0f, 1.0f, 0.0f), 0.0f));
 			return collisionShape;
+		});
+
+		editorState->ExecuteCommand(addComponentCommand);
+	}
+}
+
+void MainFrameImpl::AddCharacterControllerClicked(wxCommandEvent& event)
+{
+	auto node = editorState->GetSelectedNode();
+	if (node)
+	{
+		auto addComponentCommand = new AddComponentCommand(editorState, node, [](Engine *engine, Node *node) -> Component *
+		{
+			CharacterController *characterController = node->CreateComponent<CharacterController>();
+			characterController->SetRadius(vec3(0.5));			
+			return characterController;
 		});
 
 		editorState->ExecuteCommand(addComponentCommand);
@@ -452,6 +469,15 @@ void MainFrameImpl::AddComponentPanel(Component *component)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, component);
 		t->AddControl(new CollisionShapePanelImpl(t));
+
+		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
+
+		currentComponentPanels.push_back(t);
+	}
+	else if (component->GetType() == CharacterController::GetTypeStatic())
+	{
+		auto t = new BaseComponentPanelImpl(componentsList, component);
+		t->AddControl(new CharacterControllerPanelImpl(t));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 

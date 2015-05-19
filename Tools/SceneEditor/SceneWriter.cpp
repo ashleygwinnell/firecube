@@ -154,6 +154,16 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 			break;
 		}
 	}
+	else if (component->GetType() == CharacterController::GetTypeStatic())
+	{
+		TiXmlElement *element = new TiXmlElement("component");
+		parent->LinkEndChild(element);
+
+		element->SetAttribute("type", component->GetTypeName());
+
+		auto characterController = static_cast<CharacterController *>(component);
+		element->SetAttribute("radius", ToString(characterController->GetRadius()));		
+	}
 
 }
 

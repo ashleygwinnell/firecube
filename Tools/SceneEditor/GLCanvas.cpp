@@ -126,6 +126,13 @@ void GLCanvas::RenderDebugGeometry(FireCube::Node *node, DebugRenderer *debugRen
 			c->RenderDebugGeometry(debugRenderer);
 		}
 
+		std::vector<CharacterController *> characterControllers;
+		node->GetComponents(characterControllers);
+		for (auto c : characterControllers)
+		{
+			c->RenderDebugGeometry(debugRenderer);
+		}
+
 		for (auto child : node->GetChildren())
 		{
 			RenderDebugGeometry(child, debugRenderer);
