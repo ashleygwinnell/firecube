@@ -47,8 +47,7 @@ bool App::Prepare()
 	camera = cameraNode->CreateComponent<Camera>();	
 	cameraNode->SetTranslation(vec3(0, 2, 0));
 	camera->SetPerspectiveProjectionParameters(60.0f, (float)GetWidth() / (float)GetHeight(), 0.1f, 200.0f);
-	scene.SetCamera(camera);
-
+	
 	Node *node = root->CreateChild();
 	node->Move(vec3(5, 5, 5));	
 	node->CreateComponent<StaticModel>()->CreateFromMesh(resourceCache->GetResource<Mesh>("../Assets/Models/teapot.3ds"));
@@ -73,6 +72,8 @@ bool App::Prepare()
 		
 	text = engine->GetUI()->GetRoot()->CreateChild<UIText>();
 	text->SetFontFace(resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18));
+
+	renderer->SetSceneView(0, new SceneView(engine, &scene, camera));
 
 	return true;
 }
@@ -104,10 +105,7 @@ void App::Render(float time)
 	rot.RotateY(ang.y);
 	rot.RotateX(ang.x);	
 	rot.RotateZ(angSpeed.z);
-	cameraNode->SetRotation(rot);
-	
-	Frame frame(engine, &scene);
-	frame.Render(renderer);	
+	cameraNode->SetRotation(rot);		
 }
 
 void App::HandleInput(float time, const MappedInput &input)

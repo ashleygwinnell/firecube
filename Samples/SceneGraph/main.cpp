@@ -36,8 +36,7 @@ bool App::Prepare()
 	Node *cameraNode = root->CreateChild("cameraNode");	
 	camera = cameraNode->CreateComponent<Camera>();
 	cameraNode->Move(vec3(0, 0, 10));	
-	scene.SetCamera(camera);
-
+	
 	Node *nn = root->CreateChild("Ln");	
 	Node *lightNode = nn->CreateChild("LightNode1");	
 	Light *light = lightNode->CreateComponent<Light>();		
@@ -80,6 +79,8 @@ bool App::Prepare()
 	text = engine->GetUI()->GetRoot()->CreateChild<UIText>();
 	text->SetFontFace(resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18));
 
+	renderer->SetSceneView(0, new SceneView(engine, &scene, camera));
+
 	return true;
 }
 
@@ -94,8 +95,7 @@ void App::Update(float t)
 }
 void App::Render(float t)
 {		
-	Frame frame(engine, &scene);
-	frame.Render(renderer);	
+	
 }
 void App::HandleInput(float t, const MappedInput &input)
 {

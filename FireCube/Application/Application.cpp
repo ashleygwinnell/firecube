@@ -162,7 +162,8 @@ void Application::Run()
 		Events::Update(this, deltaTime);
 		Update(deltaTime);
 		// Render the scene
-		renderer->ResetNumberOfPrimitivesRendered();
+		renderer->ResetNumberOfPrimitivesRendered();		
+		renderer->Render();
 		Render(deltaTime);
 		// Render UI
 		ui->Render(renderer);

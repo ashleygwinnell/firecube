@@ -20,6 +20,7 @@
 #include "Core/ResourceCache.h"
 #include "Utils/Logger.h"
 #include "Rendering/RenderSurface.h"
+#include "Rendering/Frame.h"
 
 using namespace FireCube;
 
@@ -58,7 +59,7 @@ void Renderer::Initialize()
 
 	glGenVertexArrays(1, &dummyVao);
 
-	currentRenderPath = engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/Forward.xml");
+	defaultRenderPath = engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/Forward.xml");
 
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	blendMode = BlendMode::REPLACE;
@@ -69,7 +70,7 @@ void Renderer::Initialize()
 
 void Renderer::Destroy()
 {	
-	delete quadVertexBuffer;
+	delete quadVertexBuffer;	
 	
 	glDeleteVertexArrays(1, &quadVao);
 	glDeleteSamplers(16, textureSampler);
@@ -465,14 +466,9 @@ void Renderer::UpdateFrameBuffer()
 	}
 }
 
-void Renderer::SetCurrentRenderPath(RenderPath *renderPath)
+RenderPath *Renderer::GetDefaultRenderPath()
 {
-	currentRenderPath = renderPath;
-}
-
-RenderPath *Renderer::GetCurrentRenderPath()
-{
-	return currentRenderPath;
+	return defaultRenderPath;
 }
 
 void Renderer::RenderFullscreenQuad()
@@ -640,4 +636,31 @@ void Renderer::SetBuffer(VertexBuffer *vertexBuffer)
 
 	glBindVertexArray(dummyVao);	
 	vertexBuffer->ApplyAttributes();
+}
+
+void Renderer::SetSceneView(unsigned int index, SceneView *sceneView)
+{
+	if (index + 1 > sceneViews.size())
+	{
+		sceneViews.resize(index + 1);
+	}
+
+	sceneViews[index] = sceneView;
+}
+
+void Renderer::Render()
+{
+	for (auto i = sceneViews.rbegin(); i != sceneViews.rend(); ++i)
+	{
+		SceneView *sceneView = *i;
+		Frame frame(engine, sceneView->GetScene(), sceneView->GetCamera(), sceneView->GetRenderSurface(), sceneView->GetRenderPath());
+		frame.Render(this);
+		
+		RenderSurface *renderSurface = sceneView->GetRenderSurface();
+		if (renderSurface && renderSurface->GetLinkedTexture())
+		{
+			renderSurface->GetLinkedTexture()->GenerateMipMaps();	
+		}
+
+	}
 }

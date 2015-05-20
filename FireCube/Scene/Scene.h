@@ -21,8 +21,7 @@ public:
 	void AddRenderable(Renderable *renderable);
 	void RemoveRenderable(Renderable *renderable);
 	void AddLight(Light *light);
-	void RemoveLight(Light *light);	
-	void SetCamera(Camera *camera);
+	void RemoveLight(Light *light);		
 	void SetAmbientColor(vec3 color);
 	void IntersectRay(RayQuery &rayQuery, unsigned int collisionQueryMask = 0xFFFFFFFF);
 	void SetFogEnabled(bool fogEnabled);
@@ -31,8 +30,7 @@ public:
 	vec3 GetFogColor() const;
 	Node *GetRootNode();	
 	std::vector<Renderable *> &GetRenderables();
-	std::vector<Light *> &GetLights();
-	Camera *GetCamera() const;
+	std::vector<Light *> &GetLights();	
 	void UpdateRenderables();
 	bool GetFogEnabled() const;	
 	vec3 GetFogParameters() const;
@@ -42,8 +40,7 @@ public:
 	Node *ClonePrefab(const StringHash &nameHash);
 private:		
 	
-	Node rootNode;
-	Camera *camera;
+	Node rootNode;	
 	std::vector<Renderable *> renderables;
 	std::vector<Light *> lights;	
 	vec3 ambientColor;

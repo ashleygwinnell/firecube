@@ -60,6 +60,7 @@
     <ClCompile Include="Rendering\RenderingTypes.cpp" />
     <ClCompile Include="Rendering\RenderPath.cpp" />
     <ClCompile Include="Rendering\RenderSurface.cpp" />
+    <ClCompile Include="Rendering\SceneView.cpp" />
     <ClCompile Include="Rendering\ShaderTemplate.cpp" />
     <ClCompile Include="Rendering\Technique.cpp" />
     <ClCompile Include="Rendering\VertexBuffer.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Rendering\RenderingTypes.h" />
     <ClInclude Include="Rendering\RenderPath.h" />
     <ClInclude Include="Rendering\RenderSurface.h" />
+    <ClInclude Include="Rendering\SceneView.h" />
     <ClInclude Include="Rendering\ShaderTemplate.h" />
     <ClInclude Include="Rendering\Technique.h" />
     <ClInclude Include="Rendering\VertexBuffer.h" />

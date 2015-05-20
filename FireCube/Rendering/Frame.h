@@ -11,12 +11,13 @@ namespace FireCube
 class Scene;
 class Renderer;
 class RenderSurface;
+class Camera;
 
 class FIRECUBE_API Frame : public Object
 {
 	OBJECT(Frame)
 public:
-	Frame(Engine *engine, Scene *scene);
+	Frame(Engine *engine, Scene *scene, Camera *camera, RenderSurface *renderSurface, RenderPath *renderPath);
 	void Render(Renderer *renderer);
 	void RenderDebugGeometry(DebugRenderer *debugRenderer);
 	void SetRenderTarget(SharedPtr<RenderSurface> renderSurface);
@@ -29,7 +30,9 @@ private:
 	void RenderShadowMap(Renderer *renderer, Light *light, RenderQueue &queue);	
 
 	Scene *scene;
-	SharedPtr<RenderSurface> renderSurface;
+	Camera *camera;
+	RenderSurface *renderSurface;
+	RenderPath *renderPath;
 	std::vector<std::pair<Light *, std::map<StringHash, RenderQueue>>> lightQueues;
 	std::map<StringHash, RenderQueue> baseQueues;
 };

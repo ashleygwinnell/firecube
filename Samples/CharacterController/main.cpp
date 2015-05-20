@@ -71,8 +71,7 @@ bool App::Prepare()
 
 	childNode = playerNode->CreateChild("Camera");
 	camera = childNode->CreateComponent<Camera>();		
-	childNode->LookAt(vec3(0, 5, 5), vec3(0.0f), vec3(0.0f, 1.0f, 0.0f));
-	scene.SetCamera(camera);
+	childNode->LookAt(vec3(0, 5, 5), vec3(0.0f), vec3(0.0f, 1.0f, 0.0f));	
 	
 
 	childNode = root->CreateChild("LightNode");
@@ -87,6 +86,8 @@ bool App::Prepare()
 	text = engine->GetUI()->GetRoot()->CreateChild<UIText>();
 	text->SetFontFace(resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18));
 
+	renderer->SetSceneView(0, new SceneView(engine, &scene, camera));
+
 	return true;
 }
 void App::Update(float t)
@@ -97,8 +98,6 @@ void App::Update(float t)
 }
 void App::Render(float t)
 {
-	Frame frame(engine, &scene);
-	frame.Render(renderer);
 	root->GetComponent<PhysicsWorld>()->RenderDebugGeometry(debugRenderer);
 	debugRenderer->Render(camera);
 }

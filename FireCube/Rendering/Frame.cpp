@@ -17,7 +17,8 @@
 
 using namespace FireCube;
 
-Frame::Frame(Engine *engine, Scene *scene) : Object(engine), scene(scene)
+Frame::Frame(Engine *engine, Scene *scene, Camera *camera, RenderSurface *renderSurface, RenderPath *renderPath) : Object(engine), scene(scene), camera(camera), renderSurface(renderSurface), 
+																												   renderPath(renderPath)
 {
 
 }
@@ -25,8 +26,7 @@ Frame::Frame(Engine *engine, Scene *scene) : Object(engine), scene(scene)
 void Frame::Render(Renderer *renderer)
 {
 	renderer->ResetCachedShaderParameters();
-
-	Camera *camera = scene->GetCamera();
+	
 	vec3 fogColor = scene->GetFogColor();
 	vec3 ambientColor = scene->GetAmbientColor();
 	bool fogEnabled = scene->GetFogEnabled();
@@ -41,8 +41,8 @@ void Frame::Render(Renderer *renderer)
 	UpdateBaseQueue();
 	UpdateLightQueues();
 
-	renderer->GetCurrentRenderPath()->AllocateRenderSurfaces();
-	const std::vector<RenderPathCommand> commands = renderer->GetCurrentRenderPath()->GetCommands();
+	renderPath->AllocateRenderSurfaces();
+	const std::vector<RenderPathCommand> commands = renderPath->GetCommands();
 
 	for (auto &command : commands)
 	{
@@ -174,10 +174,9 @@ void Frame::Render(Renderer *renderer)
 void Frame::UpdateBaseQueue()
 {
 	baseQueues.clear();
-	const std::vector<RenderPathCommand> commands = engine->GetRenderer()->GetCurrentRenderPath()->GetCommands();
+	const std::vector<RenderPathCommand> commands = renderPath->GetCommands();
 	
-	auto &renderables = scene->GetRenderables();
-	Camera *camera = scene->GetCamera();
+	auto &renderables = scene->GetRenderables();	
 	bool fogEnabled = scene->GetFogEnabled();
 
 	for (auto renderable : renderables)
@@ -228,11 +227,10 @@ void Frame::UpdateBaseQueue()
 
 void Frame::UpdateLightQueues()
 {
-	const std::vector<RenderPathCommand> commands = engine->GetRenderer()->GetCurrentRenderPath()->GetCommands();
+	const std::vector<RenderPathCommand> commands = renderPath->GetCommands();
 
 	auto &renderables = scene->GetRenderables();
-	auto &lights = scene->GetLights();
-	Camera *camera = scene->GetCamera();
+	auto &lights = scene->GetLights();	
 	bool fogEnabled = scene->GetFogEnabled();
 
 	lightQueues.clear();
@@ -478,7 +476,7 @@ void Frame::RenderShadowMap(Renderer *renderer, Light *light, RenderQueue &queue
 void Frame::RenderDebugGeometry(DebugRenderer *debugRenderer)
 {
 	RenderDebugGeometry(debugRenderer, scene->GetRootNode());
-	debugRenderer->Render(scene->GetCamera());
+	debugRenderer->Render(camera);
 }
 
 void Frame::RenderDebugGeometry(DebugRenderer *debugRenderer, Node *node)

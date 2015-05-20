@@ -13,6 +13,7 @@
 #include "Core/Object.h"
 #include "Core/Memory.h"
 #include "Rendering/RenderingTypes.h"
+#include "Rendering/SceneView.h"
 
 namespace FireCube
 {
@@ -128,9 +129,8 @@ public:
 	void SetRenderTarget(unsigned int index, RenderSurface *renderTarget);
 
 	void SetDepthSurface(RenderSurface *depthSurface);
-
-	void SetCurrentRenderPath(RenderPath *renderPath);
-	RenderPath *GetCurrentRenderPath();
+	
+	RenderPath *GetDefaultRenderPath();
 
 	void UpdateFrameBuffer();
 
@@ -151,6 +151,8 @@ public:
 	float GetTimeStep() const;
 	RenderSurface *GetShadowMap();
 	void SetBuffer(VertexBuffer *vertexBuffer);
+	void SetSceneView(unsigned int index, SceneView *sceneView);
+	void Render();
 private:
 
 	/**
@@ -177,13 +179,14 @@ private:
 	std::map<long long int, SharedPtr<RenderSurface>> renderSurfaces;
 	FrameBuffer *currentFrameBuffer;
 	RenderSurface *shadowMap;
-	bool fboDirty;
-	SharedPtr<RenderPath> currentRenderPath;
+	bool fboDirty;	
+	SharedPtr<RenderPath> defaultRenderPath;
 	int width, height;
 	BlendMode blendMode;
 	bool depthWrite;
 	DepthTest depthTest;
 	float timeStep;
+	std::vector<SharedPtr<SceneView>> sceneViews;
 };
 
 }

@@ -48,9 +48,7 @@ void GLCanvas::Init()
 	Node *cameraNode = root->CreateChild("Camera");
 	renderingParameters.camera = cameraNode->CreateComponent<OrbitCamera>();
 	renderingParameters.camera->SetDistance(5.0f);
-	renderingParameters.camera->SetMaxDistance(10000.0f);
-	
-	scene->SetCamera(renderingParameters.camera);
+	renderingParameters.camera->SetMaxDistance(10000.0f);		
 	
 	theApp->GetDocument().CreateGrid(2, 20);
 
@@ -61,6 +59,8 @@ void GLCanvas::Init()
 	l->SetLightType(LightType::DIRECTIONAL);
 	l->SetColor(vec4(0.7f, 0.7f, 0.7f, 1.0f));	
 	lightNode->Rotate(vec3((float)PI / 4.0f, (float)PI / 4.0f, 0));
+
+	engine->GetRenderer()->SetSceneView(0, new SceneView(engine, scene, renderingParameters.camera));
 }
 void GLCanvas::Render()
 {    
@@ -82,9 +82,8 @@ void GLCanvas::Render()
 
 	glPolygonMode(GL_FRONT_AND_BACK, renderingParameters.renderingMode);
 
-	Frame frame(engine, scene);
-	frame.Render(engine->GetRenderer());
-	
+	engine->GetRenderer()->Render();
+
 	SwapBuffers();
 }
 

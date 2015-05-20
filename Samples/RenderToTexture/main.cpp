@@ -23,7 +23,7 @@ bool App::Prepare()
 	Node *root = scene2.GetRootNode();
 	camera2 = root->CreateComponent<Camera>();
 	camera2->SetPerspectiveProjectionParameters(90.0f, (float)renderSurface->GetWidth() / (float)renderSurface->GetHeight(), 0.1f, 1000.0f);
-	scene2.SetCamera(camera2);
+
 	scene2.SetFogColor(vec3(0.2f, 0.4f, 0.4f));
 	Node *lightNode = root->CreateChild("LightNode");
 	Light *light = lightNode->CreateComponent<Light>();   
@@ -42,7 +42,7 @@ bool App::Prepare()
 	camera = cameraNode->CreateComponent<Camera>();
 	camera->SetPerspectiveProjectionParameters(90.0f, (float)GetWidth() / (float)GetHeight(), 0.1f, 1000.0f);
 	cameraNode->Move(vec3(0, 0, 1.5f));
-	scene.SetCamera(camera);
+	
 	Node *node3 = root->CreateChild("Plane");
 	StaticModel *staticModel = node3->CreateComponent<StaticModel>();
 	material = new Material(engine);
@@ -65,6 +65,9 @@ bool App::Prepare()
 	text = engine->GetUI()->GetRoot()->CreateChild<UIText>();
 	text->SetFontFace(resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18));
 
+	renderer->SetSceneView(0, new SceneView(engine, &scene, camera));
+	renderer->SetSceneView(1, new SceneView(engine, &scene2, camera2, renderSurface));
+
     return true;
 }
 void App::Update(float time)
@@ -77,16 +80,8 @@ void App::Update(float time)
 	node2->Rotate(vec3(time * 1.5f, time * 1.5f, 0));	
 }
 void App::Render(float time)
-{	
-	mat4 projection;	
-	Frame frame(engine, &scene);
-	Frame frame2(engine, &scene2);
-	
-	frame2.SetRenderTarget(renderSurface);
-	frame2.Render(renderer);	
-	renderSurface->GetLinkedTexture()->GenerateMipMaps();
-
-	frame.Render(renderer);	
+{			
+	//renderSurface->GetLinkedTexture()->GenerateMipMaps();	
 }
 void App::HandleInput(float time, const MappedInput &input)
 {

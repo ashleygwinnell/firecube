@@ -46,9 +46,7 @@ void GLCanvas::Init()
 {	
 	Filesystem::AddSearchPath("../Tools/SceneEditor");
 	
-	theApp->fcApp.InitializeNoWindow();	
-	
-	engine->GetRenderer()->SetCurrentRenderPath(engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/ForwardWithOverlay.xml"));
+	theApp->fcApp.InitializeNoWindow();			
 	
 	editorState = theApp->GetEditorState();
 	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &GLCanvas::SelectedNodeChanged);
@@ -66,8 +64,7 @@ void GLCanvas::Init()
 	cameraTarget = root->CreateChild("Editor_CameraTarget");
 	Node *cameraNode = cameraTarget->CreateChild("Camera");
 	camera = cameraNode->CreateComponent<OrbitCamera>();
-	camera->SetFarPlane(2000.0f);
-	scene->SetCamera(camera);
+	camera->SetFarPlane(2000.0f);	
 	camera->SetDistance(5.0f);
 	camera->SetMaxDistance(10000.0f);
 
@@ -94,6 +91,8 @@ void GLCanvas::Init()
 	engine->GetRenderer()->SetWidth(w);
 	engine->GetRenderer()->SetHeight(h);
 	engine->GetRenderer()->SetViewport(0, 0, w, h);
+
+	engine->GetRenderer()->SetSceneView(0, new SceneView(engine, scene, camera, nullptr, engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/ForwardWithOverlay.xml")));
 }
 
 void GLCanvas::SelectedNodeChanged(Node *node)
@@ -151,8 +150,9 @@ void GLCanvas::Render()
 		Init();
 	}
 	
-	FireCube::Frame frame(engine, scene);
-	frame.Render(engine->GetRenderer());
+	
+	engine->GetRenderer()->Render();
+	
 	if (editorState->GetSelectedNode())
 	{
 		RenderDebugGeometry(editorState->GetSelectedNode(), engine->GetDebugRenderer());

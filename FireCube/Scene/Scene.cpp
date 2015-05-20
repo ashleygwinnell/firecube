@@ -75,11 +75,6 @@ void Scene::RemoveLight(Light *light)
 	}
 }
 
-void Scene::SetCamera(Camera *camera)
-{	
-	this->camera = camera;
-}
-
 void Scene::SetAmbientColor(vec3 color)
 {
 	ambientColor = color;
@@ -133,11 +128,6 @@ std::vector<Renderable *> &Scene::GetRenderables()
 std::vector<Light *> &Scene::GetLights()
 {
 	return lights;
-}
-
-Camera *Scene::GetCamera() const
-{
-	return camera;
 }
 
 bool Scene::GetFogEnabled() const

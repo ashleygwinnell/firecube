@@ -345,6 +345,9 @@
     <ClCompile Include="Scene\SceneReader.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\SceneView.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -656,6 +659,9 @@
     </ClInclude>
     <ClInclude Include="Scene\SceneReader.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\SceneView.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -22,8 +22,7 @@ App::App() : scene(engine)
 
 bool App::Prepare()
 {	
-	SetTitle(std::string("FireCube Test Application"));
-	//GetInputManager().AddInputListener(this);
+	SetTitle(std::string("FireCube Test Application"));	
 	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
 	GetInputManager().AddMapping(Key::Q, InputMappingType::ACTION, "Test");
 	SubscribeToEvent(Events::HandleInput, &App::HandleInput);
@@ -35,19 +34,18 @@ bool App::Prepare()
 	camera = childNode->CreateComponent<OrbitCamera>(inputManager);	
 	camera->SetMaxAngX(0);
 	camera->SetZoomFactor(1000.0f);	
-	scene.SetCamera(camera);	
-	//camera->SetOrthographicProjectionParameters(-10, 10, -10, 10, -2, 20);
-	//camera->GetNode()->Rotate(vec3(PI * 0.25f, 0.0f, 0.0f));	
 	childNode = root->CreateChild("Model");	
 	StaticModel *staticModel = childNode->CreateComponent<StaticModel>(resourceCache->GetResource<Mesh>("scene.3ds"));	
 	auto luaScript = childNode->CreateComponent<LuaScript>();
 	luaScript->CreateObject(resourceCache->GetResource<LuaFile>("../Samples/FireCubeTest/test.lua"), "Rotator");	
-	luaScript->CallMemberFunction("SetRotationSpeed", vec3(0.0f, 5.0f, 0.0f));		
-	//childNode->Scale(vec3(0.05f));
-	//childNode->Move(vec3(0, 0.0251f, 0));
+	luaScript->CallMemberFunction("SetRotationSpeed", vec3(0.0f, 0.0f, 0.0f));		
+	
 	childNode = root->CreateChild("Model");
 	AnimatedModel *animatedModel = childNode->CreateComponent<AnimatedModel>(rr);	
 	childNode->Scale(vec3(0.05f));
+
+	childNode = childNode->Clone();
+	childNode->Move(vec3(5, 0, 0));
 
 	/*childNode = root->CreateChild("Particles");
 	childNode->CreateComponent<ParticleEmitter>(1000, engine->GetResourceCache()->GetResource<Material>("Materials/ParticleNoTexture.xml"));*/
@@ -72,6 +70,12 @@ bool App::Prepare()
 	//renderer->SetCurrentRenderPath(resourceCache->GetResource<RenderPath>("RenderPaths/ForwardGrayscale.xml"));
 	text = engine->GetUI()->GetRoot()->CreateChild<UIText>();
 	text->SetFontFace(resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18));	
+	
+	/*SceneReader reader(engine);
+	reader.Read(scene, "../Samples/FireCubeTest/scene.xml");*/
+
+	renderer->SetSceneView(0, new SceneView(engine, &scene, camera));
+
 	return true;
 }
 
@@ -84,10 +88,7 @@ void App::Update(float t)
 }
 
 void App::Render(float t)
-{    		
-	Frame frame(engine, &scene);
-	frame.Render(renderer);
-
+{    			
 	//frame.RenderDebugGeometry(engine->GetDebugRenderer());
 }
 
