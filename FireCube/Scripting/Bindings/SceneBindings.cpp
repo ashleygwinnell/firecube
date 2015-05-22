@@ -105,7 +105,7 @@ int CreateComponent(lua_State *L)
 		if (lua_gettop(L) == 3)
 		{
 			LuaRef param3 = LuaRef::fromStack(L, 3);
-			component = node->CreateComponent<AnimatedModel>(param3.cast<AnimatedMesh *>());
+			component = node->CreateComponent<AnimatedModel>(param3.cast<Mesh *>());
 		}
 		else
 		{

@@ -121,9 +121,8 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		{
 			auto component = node->CreateComponent<StaticModel>();
 			vec3 size = Variant::FromString(e->Attribute("size")).GetVec3();			
-			Mesh mesh(engine);
-			mesh.SetBoundingBox(BoundingBox(-size, size));
-			mesh.AddGeometry(GeometryGenerator::GenerateBox(engine, size), material);
+			Mesh mesh(engine);			
+			mesh.AddGeometry(GeometryGenerator::GenerateBox(engine, size), BoundingBox(-size, size), material);
 			component->CreateFromMesh(&mesh);
 		}
 	}
@@ -151,8 +150,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			}
 
 			Mesh mesh(engine);
-			mesh.AddGeometry(GeometryGenerator::GenerateSphere(engine, radius, rings, columns), material);
-			mesh.SetBoundingBox(BoundingBox(-vec3(radius), vec3(radius)));
+			mesh.AddGeometry(GeometryGenerator::GenerateSphere(engine, radius, rings, columns), BoundingBox(-vec3(radius), vec3(radius)), material);			
 			component->CreateFromMesh(&mesh);
 		}
 	}

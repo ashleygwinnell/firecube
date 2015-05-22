@@ -20,28 +20,29 @@ using namespace FireCube;
 
 Mesh::Mesh(Engine *engine) : Resource(engine)
 {
-
+	skeletonRoot.transformation.Identity();
 }
 
 bool Mesh::Load(const std::string &filename)
-{	
+{
 	Assimp::Importer importer;
-	
+
 	const aiScene* scene = importer.ReadFile(filename,
 		aiProcess_Triangulate |
 		aiProcess_GenSmoothNormals |
 		aiProcess_FlipUVs |
 		aiProcess_CalcTangentSpace |
-		aiProcess_JoinIdenticalVertices);
-	
+		aiProcess_JoinIdenticalVertices | 
+		aiProcess_LimitBoneWeights);
+
 	if (!scene)
 	{
-		//DoTheErrorLogging(importer.GetErrorString());
+		LOGERROR("Failed loading model: ", filename);
 		return false;
 	}
-	
+
 	ProcessAssimpScene(scene);
-	
+
 	return true;
 }
 
@@ -55,14 +56,35 @@ void Mesh::ProcessAssimpScene(const aiScene *aScene)
 		materialList.push_back(material);
 	}
 
-	ProcessAssimpNode(aScene, aScene->mRootNode, materialList, mat4::IDENTITY);
+	meshBoneWeights.resize(aScene->mNumMeshes);
+	meshBones.resize(aScene->mNumMeshes);
+	boundingBoxes.resize(aScene->mNumMeshes);
+
+	for (unsigned int i = 0; i < aScene->mNumMeshes; ++i)
+	{
+		auto aMesh = aScene->mMeshes[i];
+		auto geometry = ProcessAssimpMesh(aMesh, i);
+		geometries.push_back(geometry);
+		materials.push_back(materialList[aMesh->mMaterialIndex]);
+	}
+
+	ReadSkeleton(aScene, aScene->mRootNode, skeletonRoot);
+
+	ReadAnimations(aScene);	
+
+	// Assign each node in the skeleton an index
+	unsigned int index = 0;
+	BuildTreeIndices(skeletonRoot, index);
+	numberOfTreeNodes = CountTreeNodes(skeletonRoot);
+
+	LinkBonesToTree();	
 }
 
 SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
-{	
+{
 	SharedPtr<Material> material = new Material(engine);
-	
-	aiColor3D aColor;	
+
+	aiColor3D aColor;
 	float value;
 	aiString file;
 
@@ -136,8 +158,60 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	return material;
 }
 
-SharedPtr<Geometry> Mesh::ProcessAssimpMesh(const aiMesh *aMesh, mat4 transformation)
+SharedPtr<Geometry> Mesh::ProcessAssimpMesh(const aiMesh *aMesh, unsigned int meshIndex)
 {
+	if (aMesh->mNumBones > 0)
+	{
+		auto &bones = meshBones[meshIndex];
+		bones.resize(aMesh->mNumBones);
+
+		auto &boneWeights = meshBoneWeights[meshIndex];
+		boneWeights.resize(aMesh->mNumVertices);		
+
+		for (unsigned int i = 0; i < aMesh->mNumBones; ++i)
+		{
+			auto aBone = aMesh->mBones[i];
+			Bone &bone = bones[i];
+			bone.name = aBone->mName.C_Str();
+										
+			bone.offsetMarix = mat4(aBone->mOffsetMatrix.a1, aBone->mOffsetMatrix.b1, aBone->mOffsetMatrix.c1, aBone->mOffsetMatrix.d1,
+				aBone->mOffsetMatrix.a2, aBone->mOffsetMatrix.b2, aBone->mOffsetMatrix.c2, aBone->mOffsetMatrix.d2,
+				aBone->mOffsetMatrix.a3, aBone->mOffsetMatrix.b3, aBone->mOffsetMatrix.c3, aBone->mOffsetMatrix.d3,
+				aBone->mOffsetMatrix.a4, aBone->mOffsetMatrix.b4, aBone->mOffsetMatrix.c4, aBone->mOffsetMatrix.d4);			 
+
+
+			for (unsigned int j = 0; j < aBone->mNumWeights; ++j)
+			{
+				unsigned int vertexIndex = aBone->mWeights[j].mVertexId;
+				float weight = aBone->mWeights[j].mWeight;
+				BoneWeights &bw = boneWeights[vertexIndex];
+				unsigned int l = 0;
+				while (l < NUM_BONES_PER_VEREX)
+				{
+					if (bw.boneWeight[l] == 0.0f)
+					{
+						bw.boneIndex[l] = i;
+						bw.boneWeight[l] = weight;
+						break;
+					}
+					++l;
+				}
+
+				if (l == NUM_BONES_PER_VEREX)
+				{
+					LOGWARNING("Number of bones per vertex exceeds maximum of ", NUM_BONES_PER_VEREX);					
+				}
+
+				if (weight > 0)
+				{
+					vec3 vertexBoneSpace = bone.offsetMarix * vec3(aMesh->mVertices[vertexIndex].x, aMesh->mVertices[vertexIndex].y, aMesh->mVertices[vertexIndex].z);
+					bone.boundingBox.Expand(vertexBoneSpace);
+				}
+			}
+
+		}
+	}
+
 	SharedPtr<Geometry> geometry = new Geometry(engine->GetRenderer());
 	auto vertexBuffer = new VertexBuffer(engine->GetRenderer());
 	auto indexBuffer = new IndexBuffer(engine->GetRenderer());
@@ -147,7 +221,7 @@ SharedPtr<Geometry> Mesh::ProcessAssimpMesh(const aiMesh *aMesh, mat4 transforma
 
 	vertexBuffer->SetShadowed(true);
 	indexBuffer->SetShadowed(true);
-	
+
 	std::vector<unsigned int> indexData;
 	for (unsigned int i = 0; i < aMesh->mNumFaces; ++i)
 	{
@@ -163,58 +237,80 @@ SharedPtr<Geometry> Mesh::ProcessAssimpMesh(const aiMesh *aMesh, mat4 transforma
 	indexBuffer->LoadData(indexData.data(), indexData.size(), BufferType::STATIC);
 
 	VertexAttributeType vertexAttributes = VertexAttributeType::POSITION;
-	unsigned int vertexSize = 3;
+	unsigned int vertexSize = 3 * sizeof(float);
 	if (aMesh->HasNormals())
 	{
 		vertexAttributes |= VertexAttributeType::NORMAL;
-		vertexSize += 3;
+		vertexSize += 3 * sizeof(float);
 	}
 	if (aMesh->HasTextureCoords(0))
 	{
 		vertexAttributes |= VertexAttributeType::TEXCOORD0;
-		vertexSize += 2;
+		vertexSize += 2 * sizeof(float);
 	}
 	if (aMesh->HasTangentsAndBitangents())
 	{
 		vertexAttributes |= VertexAttributeType::TANGENT;
-		vertexSize += 3;
+		vertexSize += 3 * sizeof(float);
 	}
 
-	std::vector<float> vertexData(vertexSize * aMesh->mNumVertices);
+	if (aMesh->mNumBones > 0)
+	{
+		vertexAttributes |= VertexAttributeType::BONE_WEIGHTS | VertexAttributeType::BONE_INDICES;
+		vertexSize += NUM_BONES_PER_VEREX * (sizeof(float) + sizeof(unsigned char));
+	}
+
+	std::vector<unsigned char> vertexData(vertexSize * aMesh->mNumVertices);
 	for (unsigned int i = 0; i < aMesh->mNumVertices; ++i)
 	{
-		vec3 position(aMesh->mVertices[i].x, aMesh->mVertices[i].y, aMesh->mVertices[i].z);
-		position = transformation * position;
-		vertexData[i * vertexSize + 0] = position.x;
-		vertexData[i * vertexSize + 1] = position.y;
-		vertexData[i * vertexSize + 2] = position.z;
+		vec3 position(aMesh->mVertices[i].x, aMesh->mVertices[i].y, aMesh->mVertices[i].z);		
+		*((float *) &vertexData[i * vertexSize + 0]) = position.x;
+		*((float *) &vertexData[i * vertexSize + 4]) = position.y;
+		*((float *) &vertexData[i * vertexSize + 8]) = position.z;
 
-		boundingBox.Expand(position);
+		boundingBoxes[meshIndex].Expand(position);
 
-		unsigned int currentOffset = 3;
+		unsigned int currentOffset = 12;
 
 		if (aMesh->HasNormals())
 		{
-			vec3 normal(aMesh->mNormals[i].x, aMesh->mNormals[i].y, aMesh->mNormals[i].z);
-			normal = normal.TransformNormal(transformation);
-			vertexData[i * vertexSize + currentOffset++] = normal.x;
-			vertexData[i * vertexSize + currentOffset++] = normal.y;
-			vertexData[i * vertexSize + currentOffset++] = normal.z;
+			vec3 normal(aMesh->mNormals[i].x, aMesh->mNormals[i].y, aMesh->mNormals[i].z);			
+			
+			*((float *)&vertexData[i * vertexSize + currentOffset]) = normal.x;
+			*((float *)&vertexData[i * vertexSize + currentOffset + 4]) = normal.y;
+			*((float *)&vertexData[i * vertexSize + currentOffset + 8]) = normal.z;
+			currentOffset += 12;
 		}
 
 		if (aMesh->HasTextureCoords(0))
 		{
-			vertexData[i * vertexSize + currentOffset++] = aMesh->mTextureCoords[0][i].x;
-			vertexData[i * vertexSize + currentOffset++] = aMesh->mTextureCoords[0][i].y;			
+			*((float *)&vertexData[i * vertexSize + currentOffset]) = aMesh->mTextureCoords[0][i].x;
+			*((float *)&vertexData[i * vertexSize + currentOffset + 4]) = aMesh->mTextureCoords[0][i].y;
+			currentOffset += 8;
 		}
 
 		if (aMesh->HasTangentsAndBitangents())
 		{
-			vec3 tangent(aMesh->mTangents[i].x, aMesh->mTangents[i].y, aMesh->mTangents[i].z);
-			tangent = tangent.TransformNormal(transformation);
-			vertexData[i * vertexSize + currentOffset++] = aMesh->mTangents[i].x;
-			vertexData[i * vertexSize + currentOffset++] = aMesh->mTangents[i].y;
-			vertexData[i * vertexSize + currentOffset++] = aMesh->mTangents[i].z;
+			vec3 tangent(aMesh->mTangents[i].x, aMesh->mTangents[i].y, aMesh->mTangents[i].z);			
+			*((float *)&vertexData[i * vertexSize + currentOffset]) = aMesh->mTangents[i].x;
+			*((float *)&vertexData[i * vertexSize + currentOffset + 4]) = aMesh->mTangents[i].y;
+			*((float *)&vertexData[i * vertexSize + currentOffset + 8]) = aMesh->mTangents[i].z;
+			currentOffset += 12;
+		}
+
+		if (aMesh->mNumBones > 0)
+		{
+			for (unsigned int j = 0; j < NUM_BONES_PER_VEREX; ++j)
+			{
+				*((float *)&vertexData[i * vertexSize + currentOffset]) = meshBoneWeights[meshIndex][i].boneWeight[j];
+				currentOffset += 4;
+			}
+
+			for (unsigned int j = 0; j < NUM_BONES_PER_VEREX; ++j)
+			{
+				*((unsigned char *)&vertexData[i * vertexSize + currentOffset]) = meshBoneWeights[meshIndex][i].boneIndex[j];
+				currentOffset += 1;
+			}			
 		}
 	}
 
@@ -222,32 +318,10 @@ SharedPtr<Geometry> Mesh::ProcessAssimpMesh(const aiMesh *aMesh, mat4 transforma
 
 	geometry->SetPrimitiveType(FireCube::PrimitiveType::TRIANGLES);
 	geometry->SetPrimitiveCount(indexData.size() / 3);
-	geometry->Update();
+	geometry->SetGeometryType(aMesh->mNumBones > 0 ? GeometryType::SKINNED : GeometryType::STATIC);
+	geometry->Update();	
 
 	return geometry;
-}
-
-void Mesh::ProcessAssimpNode(const aiScene *aScene, const aiNode *aNode, const std::vector<SharedPtr<Material>> &materialList, mat4 parentTransformation)
-{
-	mat4 localTransformation(aNode->mTransformation.a1, aNode->mTransformation.b1, aNode->mTransformation.c1, aNode->mTransformation.d1,
-							 aNode->mTransformation.a2, aNode->mTransformation.b2, aNode->mTransformation.c2, aNode->mTransformation.d2,
-							 aNode->mTransformation.a3, aNode->mTransformation.b3, aNode->mTransformation.c3, aNode->mTransformation.d3,
-							 aNode->mTransformation.a4, aNode->mTransformation.b4, aNode->mTransformation.c4, aNode->mTransformation.d4);	
-
-	mat4 transformation = parentTransformation * localTransformation;
-
-	for (unsigned int i = 0; i < aNode->mNumMeshes; ++i)
-	{
-		auto aMesh = aScene->mMeshes[aNode->mMeshes[i]];
-		auto geometry = ProcessAssimpMesh(aMesh, transformation);
-		geometries.push_back(geometry);
-		materials.push_back(materialList[aMesh->mMaterialIndex]);
-	}
-
-	for (unsigned int i = 0; i < aNode->mNumChildren; ++i)
-	{
-		ProcessAssimpNode(aScene, aNode->mChildren[i], materialList, transformation);
-	}
 }
 
 const std::vector<SharedPtr<Geometry>> &Mesh::GetGeometries() const
@@ -260,18 +334,157 @@ const std::vector<SharedPtr<Material>> &Mesh::GetMaterials() const
 	return materials;
 }
 
-void Mesh::AddGeometry(Geometry *geometry, Material *material)
+void Mesh::AddGeometry(Geometry *geometry, BoundingBox boundingBox, Material *material)
 {
 	geometries.push_back(geometry);
 	materials.push_back(material);
+	boundingBoxes.push_back(boundingBox);
+	skeletonRoot.meshes.push_back(geometries.size() - 1);
 }
 
-const BoundingBox &Mesh::GetBoundingBox() const
+const std::vector<BoundingBox> &Mesh::GetBoundingBoxes() const
 {
-	return boundingBox;
+	return boundingBoxes;
 }
 
-void Mesh::SetBoundingBox(BoundingBox boundingBox)
+void Mesh::ReadSkeleton(const aiScene *aScene, const aiNode *aNode, SkeletonNode &node)
 {
-	this->boundingBox = boundingBox;
+	mat4 localTransformation(aNode->mTransformation.a1, aNode->mTransformation.b1, aNode->mTransformation.c1, aNode->mTransformation.d1,
+		aNode->mTransformation.a2, aNode->mTransformation.b2, aNode->mTransformation.c2, aNode->mTransformation.d2,
+		aNode->mTransformation.a3, aNode->mTransformation.b3, aNode->mTransformation.c3, aNode->mTransformation.d3,
+		aNode->mTransformation.a4, aNode->mTransformation.b4, aNode->mTransformation.c4, aNode->mTransformation.d4);
+	node.transformation = localTransformation;
+
+	node.name = aNode->mName.C_Str();	
+	
+	for (unsigned int i = 0; i < aNode->mNumMeshes; ++i)
+	{
+		node.meshes.push_back(aNode->mMeshes[i]);
+	}
+
+	for (unsigned int i = 0; i < aNode->mNumChildren; ++i)
+	{
+		node.children.push_back(SkeletonNode());
+		ReadSkeleton(aScene, aNode->mChildren[i], node.children.back());
+	}
 }
+
+void Mesh::ReadAnimations(const aiScene *aScene)
+{
+	for (unsigned int i = 0; i < aScene->mNumAnimations; ++i)
+	{
+		auto aAnimation = aScene->mAnimations[i];
+		animations.push_back(Animation());
+		auto &animation = animations.back();
+		animation.name = aAnimation->mName.C_Str();
+		animation.duration = (float) aAnimation->mDuration;
+		animation.ticksPerSecond = (float) aAnimation->mTicksPerSecond;
+		for (unsigned int j = 0; j < aAnimation->mNumChannels; ++j)
+		{
+			auto &aNodeAnim = aAnimation->mChannels[j];
+			animation.nodeAnimations.push_back(NodeAnimation());
+			auto &nodeAnimation = animation.nodeAnimations.back();
+			nodeAnimation.lastPositionIndex = 0;
+			nodeAnimation.lastRotationIndex = 0;
+			nodeAnimation.lastScaleIndex = 0;
+			nodeAnimation.nodeName = aNodeAnim->mNodeName.C_Str();
+			for (unsigned int k = 0; k < aNodeAnim->mNumPositionKeys; ++k)
+			{
+				nodeAnimation.positionAnimation.push_back(std::make_pair((float) aNodeAnim->mPositionKeys[k].mTime, vec3(aNodeAnim->mPositionKeys[k].mValue.x,
+					aNodeAnim->mPositionKeys[k].mValue.y, aNodeAnim->mPositionKeys[k].mValue.z)));
+			}
+
+			for (unsigned int k = 0; k < aNodeAnim->mNumScalingKeys; ++k)
+			{
+				nodeAnimation.scaleAnimation.push_back(std::make_pair((float) aNodeAnim->mScalingKeys[k].mTime, vec3(aNodeAnim->mScalingKeys[k].mValue.x,
+					aNodeAnim->mScalingKeys[k].mValue.y, aNodeAnim->mScalingKeys[k].mValue.z)));
+			}
+
+			for (unsigned int k = 0; k < aNodeAnim->mNumRotationKeys; ++k)
+			{
+				nodeAnimation.rotationAnimation.push_back(std::make_pair((float) aNodeAnim->mRotationKeys[k].mTime, quat(aNodeAnim->mRotationKeys[k].mValue.x,
+					aNodeAnim->mRotationKeys[k].mValue.y, aNodeAnim->mRotationKeys[k].mValue.z, aNodeAnim->mRotationKeys[k].mValue.w)));
+			}
+		}
+	}
+}
+
+unsigned int Mesh::GetNodeIndex(SkeletonNode &node, const std::string name)
+{
+	if (node.name == name)
+		return node.nodeIndex;
+
+	for (auto &c : node.children)
+	{
+		unsigned int childIndex = GetNodeIndex(c, name);
+		if (childIndex != std::numeric_limits<unsigned int>::max())
+			return childIndex;
+	}
+
+	return std::numeric_limits<unsigned int>::max();
+}
+
+void Mesh::LinkBonesToTree()
+{
+	for (auto &bones : meshBones)
+	{
+		for (auto &bone : bones)
+		{
+			bone.nodeIndex = GetNodeIndex(skeletonRoot, bone.name);
+		}
+	}
+}
+
+void Mesh::BuildTreeIndices(SkeletonNode &node, unsigned int &index)
+{
+	node.nodeIndex = index++;
+	for (auto &c : node.children)
+	{
+		BuildTreeIndices(c, index);
+	}
+}
+
+unsigned int Mesh::CountTreeNodes(SkeletonNode &node)
+{
+	unsigned int count = 1;
+	for (auto &c : node.children)
+	{
+		count += CountTreeNodes(c);
+	}
+
+	return count;
+}
+
+unsigned int Mesh::GetNumberOfTreeNodes() const
+{
+	return numberOfTreeNodes;
+}
+
+SkeletonNode &Mesh::GetSkeletonRoot()
+{
+	return skeletonRoot;
+}
+
+std::vector<Animation> &Mesh::GetAnimations()
+{
+	return animations;
+}
+
+std::vector<std::vector<BoneWeights>> &Mesh::GetBoneWeights()
+{
+	return meshBoneWeights;
+}
+std::vector<std::vector<Bone>> &Mesh::GetBones()
+{
+	return meshBones;
+}
+
+BoneWeights::BoneWeights()
+{
+	for (unsigned int i = 0; i < NUM_BONES_PER_VEREX; ++i)
+	{
+		boneWeight[i] = 0.0f;
+		boneIndex[i] = 0;
+	}
+}
+

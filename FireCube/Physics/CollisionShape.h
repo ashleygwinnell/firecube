@@ -11,6 +11,7 @@ namespace FireCube
 
 class PhysicsWorld;
 class Mesh;
+class SkeletonNode;
 
 enum class CollisionShapeType
 {
@@ -66,6 +67,7 @@ private:
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
 	void UpdateWorldBoundingBox();
+	void SetMesh(SkeletonNode &skeletonNode, mat4 transformation);
 
 	BoundingBox worldBoundingBox;
 	bool worldBoundingBoxChanged;

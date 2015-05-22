@@ -10,6 +10,6 @@ public:
 	UIText *text;
     Node *root;	
 	Camera *camera;
-	Mesh *lightMarker, *earthMesh;	
+	
 	Scene scene;
 };

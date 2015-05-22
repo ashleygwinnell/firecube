@@ -6,7 +6,6 @@
 #include "Core/ResourceCache.h"
 #include "Rendering/Material.h"
 #include "Geometry/Mesh.h"
-#include "Geometry/AnimatedMesh.h"
 #include "Scripting/LuaFile.h"
 #include "Audio/Sound.h"
 
@@ -69,19 +68,7 @@ int GetResource(lua_State *L)
 		{
 			lua_pushnil(L);
 		}
-	}
-	else if (type == "AnimatedMesh")
-	{
-		auto resource = resrouceCahce->GetResource<AnimatedMesh>(path);
-		if (resource)
-		{
-			UserdataPtr::push(L, resource);
-		}
-		else
-		{
-			lua_pushnil(L);
-		}
-	}
+	}	
 	else
 	{
 		lua_pushnil(L);

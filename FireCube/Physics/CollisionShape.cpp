@@ -84,9 +84,17 @@ void CollisionShape::SetMesh(Mesh *mesh)
 	if (!mesh)
 		return;
 
-	auto geometries = mesh->GetGeometries();
-	for (auto geometry : geometries)
-	{
+	SetMesh(mesh->GetSkeletonRoot(), mat4::IDENTITY);
+	
+	worldBoundingBoxChanged = true;
+}
+
+void CollisionShape::SetMesh(SkeletonNode &skeletonNode, mat4 transformation)
+{
+	mat4 modelTransformation = transformation * skeletonNode.transformation;
+	for (auto meshIndex : skeletonNode.meshes)
+	{				
+		Geometry *geometry = mesh->GetGeometries()[meshIndex];
 		VertexBuffer *vertexBuffer = geometry->GetVertexBuffer();
 		IndexBuffer *indexBuffer = geometry->GetIndexBuffer();
 		auto &vertexData = vertexBuffer->GetShadowData();
@@ -96,13 +104,13 @@ void CollisionShape::SetMesh(Mesh *mesh)
 			unsigned int positionOffset = vertexBuffer->GetVertexAttributeOffset(VertexAttributeType::POSITION);
 			for (unsigned int i = 0; i < indexData.size() / sizeof(unsigned int); i += 3)
 			{
-				unsigned int i0 = *((unsigned int *) &indexData[(i + 0) * sizeof(unsigned int)]);
-				unsigned int i1 = *((unsigned int *) &indexData[(i + 1) * sizeof(unsigned int)]);
-				unsigned int i2 = *((unsigned int *) &indexData[(i + 2) * sizeof(unsigned int)]);
+				unsigned int i0 = *((unsigned int *)&indexData[(i + 0) * sizeof(unsigned int)]);
+				unsigned int i1 = *((unsigned int *)&indexData[(i + 1) * sizeof(unsigned int)]);
+				unsigned int i2 = *((unsigned int *)&indexData[(i + 2) * sizeof(unsigned int)]);
 
-				vec3 pos0 = *((vec3 *)&vertexData[i0 * vertexBuffer->GetVertexSize() + positionOffset]);
-				vec3 pos1 = *((vec3 *)&vertexData[i1 * vertexBuffer->GetVertexSize() + positionOffset]);
-				vec3 pos2 = *((vec3 *)&vertexData[i2 * vertexBuffer->GetVertexSize() + positionOffset]);
+				vec3 pos0 = modelTransformation * *((vec3 *)&vertexData[i0 * vertexBuffer->GetVertexSize() + positionOffset]);
+				vec3 pos1 = modelTransformation * *((vec3 *)&vertexData[i1 * vertexBuffer->GetVertexSize() + positionOffset]);
+				vec3 pos2 = modelTransformation * *((vec3 *)&vertexData[i2 * vertexBuffer->GetVertexSize() + positionOffset]);
 
 				collisionMesh->triangles.push_back(CollisionTriangle(pos0, pos1, pos2));
 				collisionMesh->boundingBox.Expand(pos0);
@@ -110,10 +118,14 @@ void CollisionShape::SetMesh(Mesh *mesh)
 				collisionMesh->boundingBox.Expand(pos2);
 			}
 		}
-	}	
-	
-	worldBoundingBoxChanged = true;
+	}
+
+	for (auto &c : skeletonNode.children)
+	{
+		SetMesh(c, modelTransformation);
+	}
 }
+
 
 void CollisionShape::SetPlane(const Plane &plane)
 {

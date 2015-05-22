@@ -5,7 +5,7 @@
 #include "Geometry/GeometryGenerator.h"
 #include "Geometry/Mesh.h"
 #include "Geometry/CollisionQuery.h"
-#include "Geometry/AnimatedMesh.h"
+#include "Geometry/Mesh.h"
 
 using namespace FireCube;
 using namespace luabridge;
@@ -21,18 +21,10 @@ void LuaBindings::InitGeometry(lua_State *luaState)
 			.addFunction("GenerateBox", &GeometryGenerator::GenerateBox)
 			.addFunction("GeneratePlane", &GeometryGenerator::GeneratePlane)
 			.addFunction("GenerateSphere", &GeometryGenerator::GenerateSphere)
-		.endNamespace()
+		.endNamespace()		
 		.deriveClass<Mesh, Resource>("Mesh")
-			.addConstructor<void(*) (Engine *)>()
-			.addFunction("GetBoundingBox", &Mesh::GetBoundingBox)
-			.addProperty("boundingBox", &Mesh::GetBoundingBox)
-			.addFunction("AddGeometry", &Mesh::AddGeometry)
-			.addFunction("SetBoundingBox", &Mesh::SetBoundingBox)
-			.addFunction("GetBoundingBox", &Mesh::GetBoundingBox)
-			.addProperty("boundingBox", &Mesh::GetBoundingBox, &Mesh::SetBoundingBox)
-		.endClass()
-		.deriveClass<AnimatedMesh, Resource>("AnimatedMesh")
 			.addConstructor<void(*) (Engine *)>()			
+			.addFunction("AddGeometry", &Mesh::AddGeometry)
 		.endClass()
 		.beginClass<RayQueryResult>("RayQueryResult")
 			.addData("distance", &RayQueryResult::distance)

@@ -21,11 +21,10 @@ App::App() : scene(engine)
 
 App::~App()
 {		
-	delete lightMarker;
-	delete earthMesh;	
+	
 }
 bool App::Prepare()
-{
+{	
 	Filesystem::AddSearchPath("../Assets/Textures");
 	Filesystem::AddSearchPath("../Assets/Models");
 	SetTitle("SceneGraph Test Application");	
@@ -44,14 +43,14 @@ bool App::Prepare()
 	light->SetLightType(FireCube::LightType::POINT);
 	lightNode->Move(vec3(0, 0, 4.0f));	
 	StaticModel *staticModel = lightNode->CreateComponent<StaticModel>();
-	lightMarker = new Mesh(engine);
+	SharedPtr<Mesh> mesh;
+	mesh = new Mesh(engine);
 	Material *mat = engine->GetResourceCache()->GetResource<Material>("./Materials/TerrainNoTexture.xml")->Clone();
 	mat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("./Techniques/Unlit.xml"));
-	lightMarker->AddGeometry(GeometryGenerator::GenerateSphere(engine, 0.1f, 10, 10), mat);
-	lightMarker->SetBoundingBox(BoundingBox(vec3(-0.05f), vec3(0.05f)));
-	staticModel->CreateFromMesh(lightMarker);	
+	mesh->AddGeometry(GeometryGenerator::GenerateSphere(engine, 0.1f, 10, 10), BoundingBox(vec3(-0.05f), vec3(0.05f)), mat);
+	staticModel->CreateFromMesh(mesh);
 
-	earthMesh = new Mesh(engine);
+	mesh = new Mesh(engine);
 	mat = new Material(engine);
 	mat->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(0.3f, 0.3f, 0.3f, 1.0f));
 	mat->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(0.7f, 0.7f, 0.7f, 1.0f));
@@ -62,16 +61,15 @@ bool App::Prepare()
 
 	Node *n = root->CreateChild("Earth");
 	staticModel = n->CreateComponent<StaticModel>();	
-	earthMesh->AddGeometry(GeometryGenerator::GenerateSphere(engine, 2.0f, 32, 32), mat);
-	earthMesh->SetBoundingBox(BoundingBox(vec3(-2.0f), vec3(2.0f)));
-	staticModel->CreateFromMesh(earthMesh);		
+	mesh->AddGeometry(GeometryGenerator::GenerateSphere(engine, 2.0f, 32, 32), BoundingBox(vec3(-2.0f), vec3(2.0f)), mat);
+	staticModel->CreateFromMesh(mesh);
 			
 	Node *n2 = root->CreateChild("Teapot");
 	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>("../Assets/Models/teapot.3ds"));
 	n2->Move(vec3(5, -2, 0));
 
 	n2 = root->CreateChild("Duck");	
-	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>("../Assets/Models/duck.dae"));	
+	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>("../Assets/Models/duck.dae"));
 	n2->Move(vec3(-5, -2, 0));	
 	
 	scene.SetFogColor(vec3(0.2f, 0.2f, 0.6f));

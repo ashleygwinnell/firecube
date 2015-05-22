@@ -42,7 +42,7 @@ bool App::Prepare()
 	childNode->Move(vec3(0, -5, 0));
 	childNode->Scale(vec3(2.0f));
 	StaticModel *staticModel = childNode->CreateComponent<StaticModel>();
-	staticModel->CreateFromMesh(resourceCache->GetResource<Mesh>("level1.dae"));	
+	staticModel->CreateFromMesh(resourceCache->GetResource<Mesh>("level1.dae"));
 	collisionShape = childNode->CreateComponent<CollisionShape>();
 	collisionShape->SetMesh(resourceCache->GetResource<Mesh>("level1.dae"));
 	collisionShape = childNode->CreateComponent<CollisionShape>();
@@ -54,9 +54,8 @@ bool App::Prepare()
 
 	Node *playerNode = root->CreateChild("Player");
 	staticModel = playerNode->CreateComponent<StaticModel>();
-	SharedPtr<Mesh> mesh = new Mesh(engine);	
-	mesh->AddGeometry(GeometryGenerator::GenerateSphere(engine, 0.5f, 20, 20), resourceCache->GetResource<Material>("./Materials/TerrainNoTexture.xml"));
-	mesh->SetBoundingBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));	
+	SharedPtr<Mesh> mesh = new Mesh(engine);
+	mesh->AddGeometry(GeometryGenerator::GenerateSphere(engine, 0.5f, 20, 20), BoundingBox(vec3(-0.5f), vec3(0.5f)), resourceCache->GetResource<Material>("./Materials/TerrainNoTexture.xml"));	
 	staticModel->CreateFromMesh(mesh);
 	playerNode->Move(vec3(3.0f, 5.7f, -2.0f));
 	characterController = playerNode->CreateComponent<CharacterController>();
@@ -64,8 +63,7 @@ bool App::Prepare()
 	childNode = playerNode->CreateChild("Gun");
 	staticModel = childNode->CreateComponent<StaticModel>();
 	mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.2f, 0.2f, 1.0f)), resourceCache->GetResource<Material>("./Materials/TerrainNoTexture.xml"));
-	mesh->SetBoundingBox(BoundingBox(vec3(-1.0f), vec3(1.0f)));
+	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.2f, 0.2f, 1.0f)), BoundingBox(vec3(-1.0f), vec3(1.0f)), resourceCache->GetResource<Material>("./Materials/TerrainNoTexture.xml"));	
 	staticModel->CreateFromMesh(mesh);
 	childNode->Move(vec3(0.3f, 0.0f, -0.5f));
 

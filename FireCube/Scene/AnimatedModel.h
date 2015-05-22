@@ -1,20 +1,20 @@
 #pragma once
 
 #include "Scene/Renderable.h"
-#include "Geometry/AnimatedMesh.h"
+#include "Geometry/Mesh.h"
 
 namespace FireCube
 {
 
-class AnimatedMesh;
+class Mesh;
 
 class AnimatedModel : public Renderable
 {
 	OBJECT(AnimatedModel)
 public:
 	AnimatedModel(Engine *engine);
-	AnimatedModel(Engine *engine, AnimatedMesh *mesh);
-	void CreateFromMesh(AnimatedMesh *mesh);
+	AnimatedModel(Engine *engine, Mesh *mesh);
+	void CreateFromMesh(Mesh *mesh);
 	virtual void IntersectRay(RayQuery &rayQuery);
 	virtual void UpdateRenderableParts();
 	void Update(float time);

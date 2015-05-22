@@ -52,8 +52,7 @@ bool App::Prepare()
 	material->SetTechnique(resourceCache->GetResource<Technique>("./Techniques/DiffuseMap.xml"));
 	Geometry *plane = GeometryGenerator::GeneratePlane(engine, vec2(2, 2));
 	SharedPtr<Mesh> mesh = new Mesh(engine);
-	mesh->AddGeometry(plane, material);
-	mesh->SetBoundingBox(BoundingBox(vec3(-2), vec3(2)));
+	mesh->AddGeometry(plane, BoundingBox(vec3(-2), vec3(2)), material);	
 	staticModel->CreateFromMesh(mesh);	
 	
 	node3->Rotate(vec3(-(float)PI / 2.0f, 0, 0));

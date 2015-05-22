@@ -26,7 +26,7 @@ bool App::Prepare()
 	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
 	GetInputManager().AddMapping(Key::Q, InputMappingType::ACTION, "Test");
 	SubscribeToEvent(Events::HandleInput, &App::HandleInput);
-	auto rr = resourceCache->GetResource<AnimatedMesh>("../Assets/Models/AnimationTest.fbx");
+	auto rr = resourceCache->GetResource<Mesh>("../Assets/Models/AnimationTest.fbx");
 
 	root = scene.GetRootNode();
 	Node *childNode = root->CreateChild("Camera");
@@ -35,7 +35,7 @@ bool App::Prepare()
 	camera->SetMaxAngX(0);
 	camera->SetZoomFactor(1000.0f);	
 	childNode = root->CreateChild("Model");	
-	StaticModel *staticModel = childNode->CreateComponent<StaticModel>(resourceCache->GetResource<Mesh>("scene.3ds"));	
+	StaticModel *staticModel = childNode->CreateComponent<StaticModel>(resourceCache->GetResource<Mesh>("scene.3ds"));
 	auto luaScript = childNode->CreateComponent<LuaScript>();
 	luaScript->CreateObject(resourceCache->GetResource<LuaFile>("../Samples/FireCubeTest/test.lua"), "Rotator");	
 	luaScript->CallMemberFunction("SetRotationSpeed", vec3(0.0f, 0.0f, 0.0f));		

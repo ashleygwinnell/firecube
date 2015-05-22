@@ -3,7 +3,7 @@
 #include "Scene/AnimatedModel.h"
 #include "Scene/Node.h"
 #include "Geometry/Geometry.h"
-#include "Geometry/AnimatedMesh.h"
+#include "Geometry/Mesh.h"
 #include "Core/Events.h"
 using namespace FireCube;
 
@@ -24,12 +24,12 @@ AnimatedModel::AnimatedModel(const AnimatedModel &other) : Renderable(other), bo
 	SubscribeToEvent(Events::Update, &AnimatedModel::Update);
 }
 
-AnimatedModel::AnimatedModel(Engine *engine, AnimatedMesh *mesh) : AnimatedModel(engine)
+AnimatedModel::AnimatedModel(Engine *engine, Mesh *mesh) : AnimatedModel(engine)
 {
 	CreateFromMesh(mesh);
 }
 
-void AnimatedModel::CreateFromMesh(AnimatedMesh *mesh)
+void AnimatedModel::CreateFromMesh(Mesh *mesh)
 {
 	this->skeletonRoot = mesh->GetSkeletonRoot();
 	this->meshBoneWeights = mesh->GetBoneWeights();

@@ -32,10 +32,9 @@
     <ClCompile Include="Core\Resource.cpp" />
     <ClCompile Include="Core\ResourceCache.cpp" />
     <ClCompile Include="Core\Variant.cpp" />
-    <ClCompile Include="Geometry\AnimatedMesh.cpp" />
+    <ClCompile Include="Geometry\Mesh.cpp" />
     <ClCompile Include="Geometry\Geometry.cpp" />
     <ClCompile Include="Geometry\GeometryGenerator.cpp" />
-    <ClCompile Include="Geometry\Mesh.cpp" />
     <ClCompile Include="Geometry\CollisionQuery.cpp" />
     <ClCompile Include="Math\BoundingBox.cpp" />
     <ClCompile Include="Math\Frustum.cpp" />
@@ -130,10 +129,9 @@
     <ClInclude Include="Core\ResourceCache.h" />
     <ClInclude Include="Core\Variant.h" />
     <ClInclude Include="FireCube.h" />
-    <ClInclude Include="Geometry\AnimatedMesh.h" />
+    <ClInclude Include="Geometry\Mesh.h" />
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\GeometryGenerator.h" />
-    <ClInclude Include="Geometry\Mesh.h" />
     <ClInclude Include="Geometry\CollisionQuery.h" />
     <ClInclude Include="Math\BoundingBox.h" />
     <ClInclude Include="Math\Frustum.h" />
