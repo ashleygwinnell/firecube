@@ -78,13 +78,14 @@ public:
 	virtual bool Load(const std::string &filename);
 	const std::vector<SharedPtr<Geometry>> &GetGeometries() const;
 	const std::vector<SharedPtr<Material>> &GetMaterials() const;
-	void AddGeometry(Geometry *geometry, BoundingBox boundingBox, Material *material);
+	void AddGeometry(Geometry *geometry, const BoundingBox &boundingBox, Material *material);
 	const std::vector<BoundingBox> &GetBoundingBoxes() const;	
 	unsigned int GetNumberOfTreeNodes() const;
 	SkeletonNode &GetSkeletonRoot();
 	std::vector<Animation> &GetAnimations();
 	std::vector<std::vector<BoneWeights>> &GetBoneWeights();
 	std::vector<std::vector<Bone>> &GetBones();
+	BoundingBox GetBoundingBox() const;
 private:
 	void ReadAnimations(const aiScene *aScene);
 	void ReadSkeleton(const aiScene *aScene, const aiNode *aNode, SkeletonNode &node);
@@ -95,6 +96,7 @@ private:
 	void LinkBonesToTree();
 	void BuildTreeIndices(SkeletonNode &node, unsigned int &index);
 	unsigned int CountTreeNodes(SkeletonNode &node);	
+	void CalcBoundingBox(SkeletonNode &node, mat4 transformation);
 
 	std::vector<BoundingBox> boundingBoxes;
 	std::vector<SharedPtr<Geometry>> geometries;
@@ -105,6 +107,8 @@ private:
 	std::vector<std::vector<Bone>> meshBones;
 	std::vector<Animation> animations;
 	unsigned int numberOfTreeNodes;
+	
+	BoundingBox boundingBox;
 };
 
 }

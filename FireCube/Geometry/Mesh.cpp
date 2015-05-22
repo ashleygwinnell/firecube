@@ -78,6 +78,7 @@ void Mesh::ProcessAssimpScene(const aiScene *aScene)
 	numberOfTreeNodes = CountTreeNodes(skeletonRoot);
 
 	LinkBonesToTree();	
+	CalcBoundingBox(skeletonRoot, mat4::IDENTITY);
 }
 
 SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
@@ -334,11 +335,12 @@ const std::vector<SharedPtr<Material>> &Mesh::GetMaterials() const
 	return materials;
 }
 
-void Mesh::AddGeometry(Geometry *geometry, BoundingBox boundingBox, Material *material)
+void Mesh::AddGeometry(Geometry *geometry, const BoundingBox &boundingBox, Material *material)
 {
 	geometries.push_back(geometry);
 	materials.push_back(material);
 	boundingBoxes.push_back(boundingBox);
+	this->boundingBox.Expand(boundingBox);
 	skeletonRoot.meshes.push_back(geometries.size() - 1);
 }
 
@@ -488,3 +490,23 @@ BoneWeights::BoneWeights()
 	}
 }
 
+BoundingBox Mesh::GetBoundingBox() const
+{
+	return boundingBox;
+}
+
+void Mesh::CalcBoundingBox(SkeletonNode &node, mat4 transformation)
+{
+	mat4 modelTransformation = transformation * node.transformation;
+	for (auto meshIndex : node.meshes)
+	{				
+		BoundingBox box = boundingBoxes[meshIndex];
+		box.Transform(modelTransformation);
+		boundingBox.Expand(box);
+	}
+
+	for (auto &c : node.children)
+	{
+		CalcBoundingBox(c, modelTransformation);
+	}
+}
