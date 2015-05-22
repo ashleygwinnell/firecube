@@ -113,7 +113,7 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(1.0f));
+		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	}
 
 	if (aMaterial->Get(AI_MATKEY_SHININESS, value) == AI_SUCCESS)
