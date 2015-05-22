@@ -57,6 +57,7 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 		std::string file = fileName.GetFullPath();
 
 		element->SetAttribute("mesh", file);
+		element->SetAttribute("cast_shadow", staticModel->GetCastShadow() ? "true" : "false");
 	}
 	else if (component->GetType() == Light::GetTypeStatic())
 	{

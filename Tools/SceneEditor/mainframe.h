@@ -37,11 +37,11 @@
 #include <wx/button.h>
 #include <wx/statline.h>
 #include <wx/filepicker.h>
+#include <wx/checkbox.h>
 #include <wx/textctrl.h>
 #include <wx/valtext.h>
 #include <wx/choice.h>
 #include <wx/clrpicker.h>
-#include <wx/checkbox.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -133,9 +133,11 @@ class StaticModelPanel : public wxPanel
 	
 	protected:
 		wxFilePickerCtrl* meshFilePicker;
+		wxCheckBox* castShadowCheckBox;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void FileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
+		virtual void CastShadowChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

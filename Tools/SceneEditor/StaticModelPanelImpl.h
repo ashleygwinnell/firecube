@@ -11,6 +11,7 @@ public:
 	~StaticModelPanelImpl();
 private:
 	virtual void FileChanged(wxFileDirPickerEvent& event);
+	virtual void CastShadowChanged(wxCommandEvent& event);
 	void RemoveComponentClicked(wxCommandEvent& event);
 
 	BaseComponentPanelImpl *parent;

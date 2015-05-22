@@ -14,6 +14,8 @@ StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent) : Sta
 	wxFileName filename(staticModel->GetMesh()->GetFileName());
 	meshFilePicker->SetFileName(filename);
 
+	castShadowCheckBox->SetValue(staticModel->GetCastShadow());
+
 	parent->removeComponent->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StaticModelPanelImpl::RemoveComponentClicked), NULL, this);
 }
 
@@ -44,6 +46,32 @@ void StaticModelPanelImpl::FileChanged(wxFileDirPickerEvent& event)
 	});
 
 	
+	theApp->GetEditorState()->ExecuteCommand(command);
+	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+}
+
+void StaticModelPanelImpl::CastShadowChanged(wxCommandEvent& event)
+{
+	StaticModel *staticModel = static_cast<StaticModel *>(parent->GetComponent());
+
+	MyApp *theApp = ((MyApp *)wxTheApp);
+	auto engine = theApp->fcApp.GetEngine();
+	Node *node = staticModel->GetNode();
+	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), staticModel));
+
+	bool oldShadow = staticModel->GetCastShadow();
+	bool newShadow = event.IsChecked();
+
+	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newShadow, engine]()
+	{
+		StaticModel *staticModel = static_cast<StaticModel *>(node->GetComponents()[componentIndex]);
+		staticModel->SetCastShadow(newShadow);
+	}, [componentIndex, node, oldShadow, engine]()
+	{
+		StaticModel *staticModel = static_cast<StaticModel *>(node->GetComponents()[componentIndex]);
+		staticModel->SetCastShadow(oldShadow);
+	});
+
 	theApp->GetEditorState()->ExecuteCommand(command);
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }

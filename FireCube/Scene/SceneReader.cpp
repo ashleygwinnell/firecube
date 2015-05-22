@@ -107,6 +107,11 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		{
 			component->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>(basePath + e->Attribute("mesh")));
 		}		
+
+		if (e->Attribute("cast_shadow"))
+		{
+			component->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
+		}
 	}
 	else if (type == "box")
 	{		

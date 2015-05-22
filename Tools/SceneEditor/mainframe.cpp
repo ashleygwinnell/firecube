@@ -245,6 +245,9 @@ BaseComponentPanel::~BaseComponentPanel()
 
 StaticModelPanel::StaticModelPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
+	wxBoxSizer* bSizer24;
+	bSizer24 = new wxBoxSizer( wxVERTICAL );
+	
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
 	
@@ -257,18 +260,26 @@ StaticModelPanel::StaticModelPanel( wxWindow* parent, wxWindowID id, const wxPoi
 	bSizer8->Add( meshFilePicker, 1, wxALIGN_CENTER|wxALL, 5 );
 	
 	
-	this->SetSizer( bSizer8 );
+	bSizer24->Add( bSizer8, 1, wxEXPAND, 5 );
+	
+	castShadowCheckBox = new wxCheckBox( this, wxID_ANY, wxT("Cast Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer24->Add( castShadowCheckBox, 0, wxALL, 5 );
+	
+	
+	this->SetSizer( bSizer24 );
 	this->Layout();
-	bSizer8->Fit( this );
+	bSizer24->Fit( this );
 	
 	// Connect Events
 	meshFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( StaticModelPanel::FileChanged ), NULL, this );
+	castShadowCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( StaticModelPanel::CastShadowChanged ), NULL, this );
 }
 
 StaticModelPanel::~StaticModelPanel()
 {
 	// Disconnect Events
 	meshFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( StaticModelPanel::FileChanged ), NULL, this );
+	castShadowCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( StaticModelPanel::CastShadowChanged ), NULL, this );
 	
 }
 
