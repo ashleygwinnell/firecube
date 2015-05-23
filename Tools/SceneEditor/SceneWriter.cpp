@@ -61,6 +61,10 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 
 		element->SetAttribute("mesh", file);
 		element->SetAttribute("cast_shadow", staticModel->GetCastShadow() ? "true" : "false");
+
+		std::stringstream stream;
+		stream << std::hex << staticModel->GetLightMask();
+		element->SetAttribute("light_mask", stream.str());
 	}
 	else if (component->GetType() == Light::GetTypeStatic())
 	{
@@ -94,6 +98,10 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 		element->SetDoubleAttribute("spot_cutoff", light->GetSpotCutOff());
 		element->SetDoubleAttribute("shadow_intensity", light->GetShadowIntensity());
 		element->SetAttribute("cast_shadow", light->GetCastShadow() ? "true" : "false");
+		
+		std::stringstream stream;
+		stream << std::hex << light->GetLightMask();
+		element->SetAttribute("mask", stream.str());		
 	}
 	else if (component->GetType() == LuaScript::GetTypeStatic())
 	{

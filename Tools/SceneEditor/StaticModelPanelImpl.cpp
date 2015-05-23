@@ -16,6 +16,10 @@ StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent) : Sta
 
 	castShadowCheckBox->SetValue(staticModel->GetCastShadow());
 
+	std::stringstream stream;
+	stream << std::hex << staticModel->GetLightMask();
+	lightMaskTextCtrl->SetLabel(stream.str());
+
 	parent->removeComponent->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StaticModelPanelImpl::RemoveComponentClicked), NULL, this);
 }
 
@@ -91,4 +95,30 @@ void StaticModelPanelImpl::RemoveComponentClicked(wxCommandEvent& event)
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(removeComponentCommand);
+}
+
+void StaticModelPanelImpl::LightMaskChanged(wxCommandEvent& event)
+{
+	StaticModel *staticModel = static_cast<StaticModel *>(parent->GetComponent());
+
+	MyApp *theApp = ((MyApp *)wxTheApp);
+	auto engine = theApp->fcApp.GetEngine();
+	Node *node = staticModel->GetNode();
+	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), staticModel));
+
+	unsigned int newValue = std::stoul(event.GetString().ToStdString(), 0, 16);
+	unsigned int oldValue = staticModel->GetLightMask();
+
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [componentIndex, node, newValue, engine]()
+	{
+		StaticModel *staticModel = static_cast<StaticModel *>(node->GetComponents()[componentIndex]);
+		staticModel->SetLightMask(newValue);
+	}, [componentIndex, node, oldValue, engine]()
+	{
+		StaticModel *staticModel = static_cast<StaticModel *>(node->GetComponents()[componentIndex]);
+		staticModel->SetLightMask(oldValue);
+	});
+
+	theApp->GetEditorState()->ExecuteCommand(command);
+	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }

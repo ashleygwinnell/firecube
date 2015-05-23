@@ -12,6 +12,7 @@ public:
 private:
 	virtual void FileChanged(wxFileDirPickerEvent& event);
 	virtual void CastShadowChanged(wxCommandEvent& event);
+	virtual void LightMaskChanged(wxCommandEvent& event);
 	void RemoveComponentClicked(wxCommandEvent& event);
 
 	BaseComponentPanelImpl *parent;

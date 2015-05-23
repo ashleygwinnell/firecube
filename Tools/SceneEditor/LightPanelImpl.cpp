@@ -36,6 +36,10 @@ LightPanelImpl::LightPanelImpl(BaseComponentPanelImpl* parent) : LightPanel(pare
 	shadowIntensityTextCtrl->SetLabel(wxString::FromDouble(light->GetShadowIntensity()));
 	rangeTextCtrl->SetLabel(wxString::FromDouble(light->GetRange()));
 	spotCutoffTextCtrl->SetLabel(wxString::FromDouble(light->GetSpotCutOff() / PI * 180.0f));
+
+	std::stringstream stream;
+	stream << std::hex << light->GetLightMask();
+	maskTextCtrl->SetLabel(stream.str());	
 }
 
 LightPanelImpl::~LightPanelImpl()
@@ -267,6 +271,32 @@ void LightPanelImpl::SpotCutoffChanged(wxCommandEvent& event)
 	{
 		Light *light = static_cast<Light *>(node->GetComponents()[componentIndex]);
 		light->SetSpotCutOff(oldValue);
+	});
+
+	theApp->GetEditorState()->ExecuteCommand(command);
+	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+}
+
+void LightPanelImpl::MaskChanged(wxCommandEvent& event)
+{	
+	FireCube::Light *light = static_cast<FireCube::Light *>(parent->GetComponent());
+
+	MyApp *theApp = ((MyApp *)wxTheApp);
+	auto engine = theApp->fcApp.GetEngine();
+	Node *node = light->GetNode();
+	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), light));
+
+	unsigned int newValue = std::stoul(event.GetString().ToStdString(), 0, 16);		
+	unsigned int oldValue = light->GetLightMask();
+
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [componentIndex, node, newValue, engine]()
+	{
+		Light *light = static_cast<Light *>(node->GetComponents()[componentIndex]);
+		light->SetLightMask(newValue);
+	}, [componentIndex, node, oldValue, engine]()
+	{
+		Light *light = static_cast<Light *>(node->GetComponents()[componentIndex]);
+		light->SetLightMask(oldValue);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);

@@ -112,6 +112,11 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		{
 			component->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
 		}
+
+		if (e->Attribute("light_mask"))
+		{
+			component->SetLightMask(std::stoul(e->Attribute("light_mask"), 0, 16));
+		}
 	}
 	else if (type == "box")
 	{		
@@ -221,6 +226,11 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		if (e->Attribute("cast_shadow"))
 		{
 			light->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
+		}
+
+		if (e->Attribute("mask"))
+		{
+			light->SetLightMask(std::stoul(e->Attribute("mask"), 0, 16));
 		}
 	}
 	else if (type == "PhysicsWorld")

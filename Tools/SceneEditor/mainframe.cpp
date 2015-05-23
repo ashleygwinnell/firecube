@@ -265,6 +265,21 @@ StaticModelPanel::StaticModelPanel( wxWindow* parent, wxWindowID id, const wxPoi
 	castShadowCheckBox = new wxCheckBox( this, wxID_ANY, wxT("Cast Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer24->Add( castShadowCheckBox, 0, wxALL, 5 );
 	
+	wxBoxSizer* bSizer26;
+	bSizer26 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText42 = new wxStaticText( this, wxID_ANY, wxT("Light Mask"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText42->Wrap( -1 );
+	bSizer26->Add( m_staticText42, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	lightMaskTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	lightMaskTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &lightMaskText ) );
+	
+	bSizer26->Add( lightMaskTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer24->Add( bSizer26, 1, wxEXPAND, 5 );
+	
 	
 	this->SetSizer( bSizer24 );
 	this->Layout();
@@ -273,6 +288,7 @@ StaticModelPanel::StaticModelPanel( wxWindow* parent, wxWindowID id, const wxPoi
 	// Connect Events
 	meshFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( StaticModelPanel::FileChanged ), NULL, this );
 	castShadowCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( StaticModelPanel::CastShadowChanged ), NULL, this );
+	lightMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( StaticModelPanel::LightMaskChanged ), NULL, this );
 }
 
 StaticModelPanel::~StaticModelPanel()
@@ -280,6 +296,7 @@ StaticModelPanel::~StaticModelPanel()
 	// Disconnect Events
 	meshFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( StaticModelPanel::FileChanged ), NULL, this );
 	castShadowCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( StaticModelPanel::CastShadowChanged ), NULL, this );
+	lightMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( StaticModelPanel::LightMaskChanged ), NULL, this );
 	
 }
 
@@ -489,6 +506,24 @@ LightPanel::LightPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, con
 	
 	fgSizer2->Add( bSizer14, 1, wxEXPAND, 5 );
 	
+	wxBoxSizer* bSizer25;
+	bSizer25 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText41 = new wxStaticText( this, wxID_ANY, wxT("Mask"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText41->Wrap( -1 );
+	bSizer25->Add( m_staticText41, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	maskTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	maskTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &maskText ) );
+	
+	bSizer25->Add( maskTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	fgSizer2->Add( bSizer25, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer2->Add( 0, 0, 1, wxEXPAND, 5 );
+	
 	wxBoxSizer* bSizer15;
 	bSizer15 = new wxBoxSizer( wxHORIZONTAL );
 	
@@ -559,6 +594,7 @@ LightPanel::LightPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, con
 	// Connect Events
 	lightTypeChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( LightPanel::LightTypeChanged ), NULL, this );
 	lightColorPicker->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( LightPanel::LightColorChanged ), NULL, this );
+	maskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::MaskChanged ), NULL, this );
 	castShadowCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LightPanel::CastShadowChanged ), NULL, this );
 	shadowIntensityTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::ShadowIntensityChanged ), NULL, this );
 	rangeTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::RangeChanged ), NULL, this );
@@ -570,6 +606,7 @@ LightPanel::~LightPanel()
 	// Disconnect Events
 	lightTypeChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( LightPanel::LightTypeChanged ), NULL, this );
 	lightColorPicker->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( LightPanel::LightColorChanged ), NULL, this );
+	maskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::MaskChanged ), NULL, this );
 	castShadowCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LightPanel::CastShadowChanged ), NULL, this );
 	shadowIntensityTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::ShadowIntensityChanged ), NULL, this );
 	rangeTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::RangeChanged ), NULL, this );

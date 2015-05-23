@@ -136,13 +136,17 @@ class StaticModelPanel : public wxPanel
 	protected:
 		wxFilePickerCtrl* meshFilePicker;
 		wxCheckBox* castShadowCheckBox;
+		wxStaticText* m_staticText42;
+		wxTextCtrl* lightMaskTextCtrl;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void FileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void CastShadowChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void LightMaskChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
+		wxString lightMaskText; 
 		
 		StaticModelPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~StaticModelPanel();
@@ -223,6 +227,8 @@ class LightPanel : public wxPanel
 		wxChoice* lightTypeChoice;
 		wxStaticText* m_staticText17;
 		wxColourPickerCtrl* lightColorPicker;
+		wxStaticText* m_staticText41;
+		wxTextCtrl* maskTextCtrl;
 		wxCheckBox* castShadowCheckBox;
 		wxStaticText* m_staticText19;
 		wxTextCtrl* shadowIntensityTextCtrl;
@@ -236,6 +242,7 @@ class LightPanel : public wxPanel
 		// Virtual event handlers, overide them in your derived class
 		virtual void LightTypeChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void LightColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
+		virtual void MaskChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void CastShadowChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ShadowIntensityChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void RangeChanged( wxCommandEvent& event ) { event.Skip(); }
@@ -243,6 +250,7 @@ class LightPanel : public wxPanel
 		
 	
 	public:
+		wxString maskText; 
 		wxString shadowIntensityText; 
 		wxString rangeText; 
 		wxString spotCutoffText; 

@@ -17,6 +17,7 @@ private:
 	virtual void ShadowIntensityChanged(wxCommandEvent& event);
 	virtual void RangeChanged(wxCommandEvent& event);
 	virtual void SpotCutoffChanged(wxCommandEvent& event);
+	virtual void MaskChanged(wxCommandEvent& event);
 	void UpdatePanelsVisibility(FireCube::LightType type);
 	BaseComponentPanelImpl *parent;
 };
