@@ -1,7 +1,7 @@
 #include "AddNodeCommand.h"
 #include "../EditorState.h"
 
-AddNodeCommand::AddNodeCommand(EditorState *editorState, FireCube::Node *node, FireCube::Node *parent) : Command(editorState), node(node), parent(parent)
+AddNodeCommand::AddNodeCommand(EditorState *editorState, const std::string &description, FireCube::Node *node, FireCube::Node *parent) : Command(editorState, description), node(node), parent(parent)
 {
 
 }

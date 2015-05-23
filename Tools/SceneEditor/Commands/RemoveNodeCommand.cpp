@@ -1,7 +1,7 @@
 #include "RemoveNodeCommand.h"
 #include "../EditorState.h"
 
-RemoveNodeCommand::RemoveNodeCommand(EditorState *editorState, FireCube::Node *node) : Command(editorState), node(node), parent(node->GetParent())
+RemoveNodeCommand::RemoveNodeCommand(EditorState *editorState, const std::string &description, FireCube::Node *node) : Command(editorState, description), node(node), parent(node->GetParent())
 {
 
 }

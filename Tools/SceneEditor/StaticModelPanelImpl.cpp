@@ -35,7 +35,7 @@ void StaticModelPanelImpl::FileChanged(wxFileDirPickerEvent& event)
 	std::string newMeshFileName = event.GetPath().ToStdString();
 	std::string oldMeshFileName = staticModel->GetMesh()->GetFileName();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newMeshFileName, engine]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mesh", [componentIndex, node, newMeshFileName, engine]()
 	{
 		StaticModel *staticModel = static_cast<StaticModel *>(node->GetComponents()[componentIndex]);
 		staticModel->CreateFromMesh(engine->GetResourceCache()->GetResource<FireCube::Mesh>(newMeshFileName));
@@ -62,7 +62,7 @@ void StaticModelPanelImpl::CastShadowChanged(wxCommandEvent& event)
 	bool oldShadow = staticModel->GetCastShadow();
 	bool newShadow = event.IsChecked();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newShadow, engine]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Cast Shadow", [componentIndex, node, newShadow, engine]()
 	{
 		StaticModel *staticModel = static_cast<StaticModel *>(node->GetComponents()[componentIndex]);
 		staticModel->SetCastShadow(newShadow);
@@ -83,7 +83,7 @@ void StaticModelPanelImpl::RemoveComponentClicked(wxCommandEvent& event)
 
 	std::string currentMeshFile = staticModel->GetMesh()->GetFileName();
 
-	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), staticModel, [currentMeshFile](Engine *engine, Node *node) -> Component *
+	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), "Remove Component", staticModel, [currentMeshFile](Engine *engine, Node *node) -> Component *
 	{
 		StaticModel *model = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(currentMeshFile));
 		model->SetCollisionQueryMask(USER_GEOMETRY);

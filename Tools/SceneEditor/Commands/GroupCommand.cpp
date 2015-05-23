@@ -1,7 +1,7 @@
 #include "GroupCommand.h"
 #include "../EditorState.h"
 
-GroupCommand::GroupCommand(EditorState *editorState, const std::vector<Command *> &commands) : Command(editorState), commands(commands)
+GroupCommand::GroupCommand(EditorState *editorState, const std::string &description, const std::vector<Command *> &commands) : Command(editorState, description), commands(commands)
 {
 	
 }

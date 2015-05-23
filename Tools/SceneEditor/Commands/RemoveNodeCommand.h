@@ -6,7 +6,7 @@
 class RemoveNodeCommand : public Command
 {
 public:
-	RemoveNodeCommand(EditorState *editorState, FireCube::Node *node);
+	RemoveNodeCommand(EditorState *editorState, const std::string &description, FireCube::Node *node);
 	~RemoveNodeCommand();
 	virtual void Do();
 	virtual void Undo();

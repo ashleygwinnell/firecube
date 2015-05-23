@@ -340,7 +340,7 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 		if (node)
 		{
 			auto clonedNode = node->Clone();
-			auto command = new AddNodeCommand(editorState, clonedNode, clonedNode->GetParent());
+			auto command = new AddNodeCommand(editorState, "Clone", clonedNode, clonedNode->GetParent());
 			editorState->ExecuteCommand(command);
 			editorState->SetSelectedNode(clonedNode);
 			UpdateGizmo();			
@@ -361,7 +361,7 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 					bbox.Expand(m->GetWorldBoundingBox());
 				vec3 newPos = editorState->GetSelectedNode()->GetWorldPosition();
 				newPos.y += -bbox.GetMin().y;				
-				editorState->ExecuteCommand(new SetTranslationCommand(editorState, editorState->GetSelectedNode(), editorState->GetSelectedNode()->GetWorldPosition(), newPos));
+				editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", editorState->GetSelectedNode(), editorState->GetSelectedNode()->GetWorldPosition(), newPos));
 				UpdateGizmo();
 				this->Refresh(false);
 			}
@@ -379,7 +379,7 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 	{
 		if (editorState->GetSelectedNode())
 		{							
-			editorState->ExecuteCommand(new RemoveNodeCommand(editorState, editorState->GetSelectedNode()));			
+			editorState->ExecuteCommand(new RemoveNodeCommand(editorState, "Remove Node", editorState->GetSelectedNode()));			
 			editorState->SetSelectedNode(nullptr);			
 		}
 	}

@@ -8,7 +8,7 @@
 class RemoveComponentCommand : public Command
 {
 public:
-	RemoveComponentCommand(EditorState *editorState, FireCube::Component *component, std::function<FireCube::Component *(FireCube::Engine *, FireCube::Node *)> creationFunction);
+	RemoveComponentCommand(EditorState *editorState, const std::string &description, FireCube::Component *component, std::function<FireCube::Component *(FireCube::Engine *, FireCube::Node *)> creationFunction);
 	~RemoveComponentCommand();
 	virtual void Do();
 	virtual void Undo();

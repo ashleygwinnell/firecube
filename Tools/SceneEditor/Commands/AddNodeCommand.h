@@ -6,7 +6,7 @@
 class AddNodeCommand : public Command
 {
 public:
-	AddNodeCommand(EditorState *editorState, FireCube::Node *node, FireCube::Node *parent);
+	AddNodeCommand(EditorState *editorState, const std::string &description, FireCube::Node *node, FireCube::Node *parent);
 	~AddNodeCommand();
 	virtual void Do();
 	virtual void Undo();

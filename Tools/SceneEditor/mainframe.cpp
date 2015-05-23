@@ -32,13 +32,13 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	menuBar->Append( fileMenu, wxT("File") ); 
 	
 	editMenu = new wxMenu();
-	wxMenuItem* undoMenuItem;
 	undoMenuItem = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Undo") ) + wxT('\t') + wxT("Ctrl+Z"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( undoMenuItem );
+	undoMenuItem->Enable( false );
 	
-	wxMenuItem* redoMenuItem;
 	redoMenuItem = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Redo") ) + wxT('\t') + wxT("Ctrl+Y"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( redoMenuItem );
+	redoMenuItem->Enable( false );
 	
 	menuBar->Append( editMenu, wxT("Edit") ); 
 	

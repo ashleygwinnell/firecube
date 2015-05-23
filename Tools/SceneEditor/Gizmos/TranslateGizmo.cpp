@@ -151,5 +151,5 @@ void TranslateGizmo::SetScale(float scale)
 
 Command *TranslateGizmo::GetCommand(EditorState *editorState, Node *node)
 {
-	return new SetTranslationCommand(editorState, node, startPosition, endPosition);
+	return new SetTranslationCommand(editorState, "Translate", node, startPosition, endPosition);
 }

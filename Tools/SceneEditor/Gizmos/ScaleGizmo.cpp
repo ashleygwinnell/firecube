@@ -144,5 +144,5 @@ void ScaleGizmo::SetScale(float scale)
 
 Command *ScaleGizmo::GetCommand(EditorState *editorState, Node *node)
 {
-	return new SetScaleCommand(editorState, node, startScale, endScale);
+	return new SetScaleCommand(editorState, "Scale", node, startScale, endScale);
 }

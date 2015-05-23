@@ -6,7 +6,7 @@
 class SetTranslationCommand : public Command
 {
 public:
-	SetTranslationCommand(EditorState *editorState, FireCube::Node *target, FireCube::vec3 oldTranslation, FireCube::vec3 newTranslation);
+	SetTranslationCommand(EditorState *editorState, const std::string &description, FireCube::Node *target, FireCube::vec3 oldTranslation, FireCube::vec3 newTranslation);
 	virtual void Do();
 	virtual void Undo();
 
@@ -19,7 +19,7 @@ private:
 class SetRotationCommand : public Command
 {
 public:
-	SetRotationCommand(EditorState *editorState, FireCube::Node *target, FireCube::mat4 oldRotation, FireCube::mat4 newRotation);
+	SetRotationCommand(EditorState *editorState, const std::string &description, FireCube::Node *target, FireCube::mat4 oldRotation, FireCube::mat4 newRotation);
 	virtual void Do();
 	virtual void Undo();
 
@@ -32,7 +32,7 @@ private:
 class SetScaleCommand : public Command
 {
 public:
-	SetScaleCommand(EditorState *editorState, FireCube::Node *target, FireCube::vec3 oldScale, FireCube::vec3 newScale);
+	SetScaleCommand(EditorState *editorState, const std::string &description, FireCube::Node *target, FireCube::vec3 oldScale, FireCube::vec3 newScale);
 	virtual void Do();
 	virtual void Undo();
 

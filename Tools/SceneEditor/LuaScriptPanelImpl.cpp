@@ -37,7 +37,7 @@ void LuaScriptPanelImpl::FileChanged(wxFileDirPickerEvent& event)
 	std::string newLuaFileName = event.GetPath().ToStdString();
 	std::string oldLuaFileName = luaScript->GetLuaFile() ? luaScript->GetLuaFile()->GetFileName() : "";
 
-	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newLuaFileName, engine]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Script", [componentIndex, node, newLuaFileName, engine]()
 	{
 		LuaScript *luaScript = static_cast<LuaScript *>(node->GetComponents()[componentIndex]);
 		luaScript->CreateObject(engine->GetResourceCache()->GetResource<FireCube::LuaFile>(newLuaFileName), luaScript->GetObjectName());		
@@ -59,7 +59,7 @@ void LuaScriptPanelImpl::RemoveComponentClicked(wxCommandEvent& event)
 	std::string currentScriptFile = luaScript->GetLuaFile() ? luaScript->GetLuaFile()->GetFileName() : "";
 	std::string currentObjectName = luaScript->GetObjectName();
 
-	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), luaScript, [currentScriptFile, currentObjectName](Engine *engine, Node *node) -> Component *
+	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), "Remove Component", luaScript, [currentScriptFile, currentObjectName](Engine *engine, Node *node) -> Component *
 	{
 		LuaScript *luaScript = node->CreateComponent<LuaScript>();
 		luaScript->SetEnabled(false);
@@ -89,7 +89,7 @@ void LuaScriptPanelImpl::ObjectNameChanged(wxCommandEvent& event)
 	std::string newObjectName = event.GetString().ToStdString();
 	std::string oldObjectName = luaScript->GetObjectName();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newObjectName, engine]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Object", [componentIndex, node, newObjectName, engine]()
 	{
 		LuaScript *luaScript = static_cast<LuaScript *>(node->GetComponents()[componentIndex]);
 		luaScript->CreateObject(newObjectName);

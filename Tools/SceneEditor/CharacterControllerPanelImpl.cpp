@@ -31,7 +31,7 @@ void CharacterControllerPanelImpl::RemoveComponentClicked(wxCommandEvent& event)
 	Engine *engine = theApp->fcApp.GetEngine();
 	
 	vec3 radius = characterController->GetRadius();
-	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), characterController, [radius](Engine *engine, Node *node) -> Component *
+	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), "Remove Component", characterController, [radius](Engine *engine, Node *node) -> Component *
 	{
 		CharacterController *characterController = node->CreateComponent<CharacterController>();
 		characterController->SetRadius(radius);		
@@ -54,7 +54,7 @@ void CharacterControllerPanelImpl::RadiusXChanged(wxCommandEvent& event)
 	vec3 oldRadius = characterController->GetRadius();
 	vec3 newRadius(val, oldRadius.y, oldRadius.z);		
 
-	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newRadius]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Radius", [componentIndex, node, newRadius]()
 	{		
 		CharacterController *characterController = static_cast<CharacterController *>(node->GetComponents()[componentIndex]);
 		characterController->SetRadius(newRadius);
@@ -80,7 +80,7 @@ void CharacterControllerPanelImpl::RadiusYChanged(wxCommandEvent& event)
 	vec3 oldRadius = characterController->GetRadius();
 	vec3 newRadius(oldRadius.x, val, oldRadius.z);
 
-	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newRadius]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Radius", [componentIndex, node, newRadius]()
 	{
 		CharacterController *characterController = static_cast<CharacterController *>(node->GetComponents()[componentIndex]);
 		characterController->SetRadius(newRadius);
@@ -106,7 +106,7 @@ void CharacterControllerPanelImpl::RadiusZChanged(wxCommandEvent& event)
 	vec3 oldRadius = characterController->GetRadius();
 	vec3 newRadius(oldRadius.x, oldRadius.y, val);
 
-	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newRadius]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Radius", [componentIndex, node, newRadius]()
 	{
 		CharacterController *characterController = static_cast<CharacterController *>(node->GetComponents()[componentIndex]);
 		characterController->SetRadius(newRadius);

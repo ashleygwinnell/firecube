@@ -57,6 +57,8 @@ class MainFrame : public wxFrame
 		wxMenuBar* menuBar;
 		wxMenu* fileMenu;
 		wxMenu* editMenu;
+		wxMenuItem* undoMenuItem;
+		wxMenuItem* redoMenuItem;
 		wxMenu* optionsMenu;
 		wxMenu* addMenu;
 		wxMenu* m_menu1;

@@ -141,5 +141,5 @@ void RotateGizmo::SetScale(float scale)
 
 Command *RotateGizmo::GetCommand(EditorState *editorState, Node *node)
 {
-	return new SetRotationCommand(editorState, node, startRotation, endRotation);
+	return new SetRotationCommand(editorState, "Rotate", node, startRotation, endRotation);
 }

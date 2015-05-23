@@ -19,6 +19,10 @@ public:
 	void SetCurrentSceneFile(const std::string &currentSceneFile);
 	std::string GetCurrentSceneFile() const;
 	void ClearCommands();
+	bool HasUndo() const;
+	bool HasRedo() const;
+	Command *GetCurrentUndoCommand() const;
+	Command *GetCurrentRedoCommand() const;
 
 	FireCube::Event<FireCube::Node *> selectedNodeChanged;
 	FireCube::Event<FireCube::Node *> nodeAdded;
@@ -29,6 +33,9 @@ public:
 	FireCube::Event<> nodeChanged;
 	FireCube::Event<FireCube::Component *> componentRemoved;
 	FireCube::Event<FireCube::Component *> componentAdded;
+	FireCube::Event<Command *> commandExecuted;
+	FireCube::Event<Command *> undoPerformed;
+	FireCube::Event<Command *> redoPerformed;
 private:
 	
 	FireCube::Node *selectedNode;

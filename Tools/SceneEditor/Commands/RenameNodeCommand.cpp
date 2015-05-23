@@ -1,7 +1,7 @@
 #include "RenameNodeCommand.h"
 #include "../EditorState.h"
 
-RenameNodeCommand::RenameNodeCommand(EditorState *editorState, FireCube::Node *node, const std::string &newName) : Command(editorState), node(node), newName(newName), oldName(node->GetName())
+RenameNodeCommand::RenameNodeCommand(EditorState *editorState, const std::string &description, FireCube::Node *node, const std::string &newName) : Command(editorState, description), node(node), newName(newName), oldName(node->GetName())
 {
 
 }

@@ -81,7 +81,7 @@ void LightPanelImpl::RemoveComponentClicked(wxCommandEvent& event)
 	std::tuple<LightType, vec4, float, float, bool, float> lightProperties(light->GetLightType(), light->GetColor(), light->GetRange(), light->GetSpotCutOff(), 
 		light->GetCastShadow(), light->GetShadowIntensity());
 
-	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), light, [lightProperties](Engine *engine, Node *node) -> Component *
+	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), "Remove Component", light, [lightProperties](Engine *engine, Node *node) -> Component *
 	{
 		Light *light = node->CreateComponent<Light>();
 		light->SetLightType(std::get<0>(lightProperties));
@@ -125,7 +125,7 @@ void LightPanelImpl::LightTypeChanged(wxCommandEvent& event)
 
 	UpdatePanelsVisibility(newLightType);
 
-	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newLightType, engine]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Light Type", [componentIndex, node, newLightType, engine]()
 	{
 		Light *light = static_cast<Light *>(node->GetComponents()[componentIndex]);
 		light->SetLightType(newLightType);
@@ -151,7 +151,7 @@ void LightPanelImpl::LightColorChanged(wxColourPickerEvent& event)
 	vec4 oldColor = light->GetColor();
 	vec4 newColor = vec4((float)event.GetColour().Red() / 255.0f, (float)event.GetColour().Green() / 255.0f, (float)event.GetColour().Blue() / 255.0f, 1.0f);
 		
-	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newColor, engine]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Light Color", [componentIndex, node, newColor, engine]()
 	{
 		Light *light = static_cast<Light *>(node->GetComponents()[componentIndex]);
 		light->SetColor(newColor);
@@ -177,7 +177,7 @@ void LightPanelImpl::CastShadowChanged(wxCommandEvent& event)
 	bool oldShadow = light->GetCastShadow();
 	bool newShadow = event.IsChecked();
 	
-	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newShadow, engine]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Cast Shadow", [componentIndex, node, newShadow, engine]()
 	{
 		Light *light = static_cast<Light *>(node->GetComponents()[componentIndex]);
 		light->SetCastShadow(newShadow);
@@ -204,7 +204,7 @@ void LightPanelImpl::ShadowIntensityChanged(wxCommandEvent& event)
 	event.GetString().ToDouble(&newIntensity);	
 	float oldIntensity = light->GetShadowIntensity();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newIntensity, engine]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Shadow Intensity", [componentIndex, node, newIntensity, engine]()
 	{
 		Light *light = static_cast<Light *>(node->GetComponents()[componentIndex]);
 		light->SetShadowIntensity(newIntensity);
@@ -231,7 +231,7 @@ void LightPanelImpl::RangeChanged(wxCommandEvent& event)
 	event.GetString().ToDouble(&newValue);
 	float oldValue = light->GetRange();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newValue, engine]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Range", [componentIndex, node, newValue, engine]()
 	{
 		Light *light = static_cast<Light *>(node->GetComponents()[componentIndex]);
 		light->SetRange(newValue);
@@ -259,7 +259,7 @@ void LightPanelImpl::SpotCutoffChanged(wxCommandEvent& event)
 	newValue = newValue / 180.0f * PI;
 	float oldValue = light->GetSpotCutOff();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), [componentIndex, node, newValue, engine]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Spot Cutoff", [componentIndex, node, newValue, engine]()
 	{
 		Light *light = static_cast<Light *>(node->GetComponents()[componentIndex]);
 		light->SetSpotCutOff(newValue);

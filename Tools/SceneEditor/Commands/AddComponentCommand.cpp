@@ -3,7 +3,7 @@
 
 using namespace FireCube;
 
-AddComponentCommand::AddComponentCommand(EditorState *editorState, FireCube::Node *node, std::function<FireCube::Component *(Engine *, Node *)> creationFunction) : Command(editorState), node(node), creationFunction(creationFunction)
+AddComponentCommand::AddComponentCommand(EditorState *editorState, const std::string &description, FireCube::Node *node, std::function<FireCube::Component *(Engine *, Node *)> creationFunction) : Command(editorState, description), node(node), creationFunction(creationFunction)
 {
 
 }

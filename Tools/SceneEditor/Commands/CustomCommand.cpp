@@ -3,7 +3,7 @@
 
 using namespace FireCube;
 
-CustomCommand::CustomCommand(EditorState *editorState, std::function<void()> doFunction, std::function<void()> undoFunction) : Command(editorState), doFunction(doFunction), undoFunction(undoFunction)
+CustomCommand::CustomCommand(EditorState *editorState, const std::string &description, std::function<void()> doFunction, std::function<void()> undoFunction) : Command(editorState, description), doFunction(doFunction), undoFunction(undoFunction)
 {
 
 }

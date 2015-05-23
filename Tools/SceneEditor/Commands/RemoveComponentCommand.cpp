@@ -3,7 +3,7 @@
 
 using namespace FireCube;
 
-RemoveComponentCommand::RemoveComponentCommand(EditorState *editorState, FireCube::Component *component, std::function<FireCube::Component *(Engine *, Node *)> creationFunction) : Command(editorState), component(component), creationFunction(creationFunction), node(component->GetNode())
+RemoveComponentCommand::RemoveComponentCommand(EditorState *editorState, const std::string &description, FireCube::Component *component, std::function<FireCube::Component *(Engine *, Node *)> creationFunction) : Command(editorState, description), component(component), creationFunction(creationFunction), node(component->GetNode())
 {
 
 }

@@ -31,6 +31,9 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	SubscribeToEvent(editorState, editorState->nodeAdded, &MainFrameImpl::NodeAdded);
 	SubscribeToEvent(editorState, editorState->nodeRemoved, &MainFrameImpl::NodeRemoved);	
 	SubscribeToEvent(editorState, editorState->nodeRenamed, &MainFrameImpl::NodeRenamed);
+	SubscribeToEvent(editorState, editorState->commandExecuted, &MainFrameImpl::UpdateUndoRedoMenu);
+	SubscribeToEvent(editorState, editorState->undoPerformed, &MainFrameImpl::UpdateUndoRedoMenu);
+	SubscribeToEvent(editorState, editorState->redoPerformed, &MainFrameImpl::UpdateUndoRedoMenu);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);	
 }
 
@@ -51,7 +54,7 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 void MainFrameImpl::AddNodeClicked(wxCommandEvent& event)
 {
 	Node *node = new Node(engine, "Node");
-	auto addNodeCommand = new AddNodeCommand(editorState, node, root);
+	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", node, root);
 	editorState->ExecuteCommand(addNodeCommand);
 	this->glCanvas->SetFocus();	
 }
@@ -66,16 +69,16 @@ void MainFrameImpl::AddMeshClicked(wxCommandEvent& event)
 	std::string sfile = openFileDialog.GetPath();
 	
 	Node *node = new Node(engine, "Node");
-	auto addNodeCommand = new AddNodeCommand(editorState, node, root);
+	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", node, root);
 	
-	auto addComponentCommand = new AddComponentCommand(editorState, node, [sfile](Engine *engine, Node *node) -> Component *
+	auto addComponentCommand = new AddComponentCommand(editorState, "Add Component", node, [sfile](Engine *engine, Node *node) -> Component *
 	{
 		StaticModel *model = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(sfile));
 		model->SetCollisionQueryMask(USER_GEOMETRY);
 		return model;
 	});
 
-	GroupCommand *groupCommand = new GroupCommand(editorState, {addNodeCommand, addComponentCommand});
+	GroupCommand *groupCommand = new GroupCommand(editorState, "Add Mesh", {addNodeCommand, addComponentCommand});
 	editorState->ExecuteCommand(groupCommand);		
 	wxString path;
 	wxFileName::SplitPath(openFileDialog.GetPath(), &path, nullptr, nullptr, wxPATH_NATIVE);
@@ -94,7 +97,7 @@ void MainFrameImpl::AddStaticModelClicked(wxCommandEvent& event)
 
 		std::string sfile = openFileDialog.GetPath();
 		
-		auto addComponentCommand = new AddComponentCommand(editorState, node, [sfile](Engine *engine, Node *node) -> Component *
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel",  node, [sfile](Engine *engine, Node *node) -> Component *
 		{
 			StaticModel *model = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(sfile));
 			model->SetCollisionQueryMask(USER_GEOMETRY);
@@ -113,7 +116,7 @@ void MainFrameImpl::AddLightClicked(wxCommandEvent& event)
 	auto node = editorState->GetSelectedNode();
 	if (node)
 	{
-		auto addComponentCommand = new AddComponentCommand(editorState, node, [](Engine *engine, Node *node) -> Component *
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add Light", node, [](Engine *engine, Node *node) -> Component *
 		{
 			Light *light = node->CreateComponent<Light>();
 			light->SetLightType(LightType::DIRECTIONAL);
@@ -130,7 +133,7 @@ void MainFrameImpl::AddLuaScriptClicked(wxCommandEvent& event)
 	auto node = editorState->GetSelectedNode();
 	if (node)
 	{
-		auto addComponentCommand = new AddComponentCommand(editorState, node, [](Engine *engine, Node *node) -> Component *
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add LuaScript", node, [](Engine *engine, Node *node) -> Component *
 		{
 			LuaScript *script = node->CreateComponent<LuaScript>();
 			script->SetEnabled(false);
@@ -146,7 +149,7 @@ void MainFrameImpl::AddCollisionShapeClicked(wxCommandEvent& event)
 	auto node = editorState->GetSelectedNode();
 	if (node)
 	{
-		auto addComponentCommand = new AddComponentCommand(editorState, node, [](Engine *engine, Node *node) -> Component *
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add CollisionShape", node, [](Engine *engine, Node *node) -> Component *
 		{
 			CollisionShape *collisionShape = node->CreateComponent<CollisionShape>();			
 			collisionShape->SetBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
@@ -163,7 +166,7 @@ void MainFrameImpl::AddCharacterControllerClicked(wxCommandEvent& event)
 	auto node = editorState->GetSelectedNode();
 	if (node)
 	{
-		auto addComponentCommand = new AddComponentCommand(editorState, node, [](Engine *engine, Node *node) -> Component *
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add CharacterController", node, [](Engine *engine, Node *node) -> Component *
 		{
 			CharacterController *characterController = node->CreateComponent<CharacterController>();
 			characterController->SetRadius(vec3(0.5));			
@@ -268,6 +271,8 @@ void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 	sceneTreeCtrl->DeleteAllItems();
 	nodeToTreeItem.clear();
 	treeItemToNode.clear();
+
+	scene->GetRootNode()->RemoveAllComponents();
 	
 	if (sceneReader.Read(*scene, openFileDialog.GetPath().ToStdString()))
 	{
@@ -354,7 +359,7 @@ void MainFrameImpl::SceneTreeSelectionChanged(wxTreeEvent& event)
 
 void MainFrameImpl::SceneTreeEndLabelEdit(wxTreeEvent& event)
 {
-	auto renameNodeCommand = new RenameNodeCommand(editorState, treeItemToNode[event.GetItem()], event.GetLabel().ToStdString());
+	auto renameNodeCommand = new RenameNodeCommand(editorState, "Rename", treeItemToNode[event.GetItem()], event.GetLabel().ToStdString());
 	editorState->ExecuteCommand(renameNodeCommand);
 }
 
@@ -378,9 +383,9 @@ void MainFrameImpl::SceneTreeEndDrag(wxTreeEvent& event)
 	auto newParentNode = treeItemToNode[newParent];
 	auto node = treeItemToNode[dragItem];
 	
-	auto removeNodeCommand = new RemoveNodeCommand(editorState, node);
-	auto addNodeCommand = new AddNodeCommand(editorState, node, newParentNode);
-	auto groupCommand = new GroupCommand(editorState, { removeNodeCommand, addNodeCommand });
+	auto removeNodeCommand = new RemoveNodeCommand(editorState, "Remove Node", node);
+	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", node, newParentNode);
+	auto groupCommand = new GroupCommand(editorState, "Reparent", { removeNodeCommand, addNodeCommand });
 
 	editorState->ExecuteCommand(groupCommand);
 }
@@ -552,5 +557,30 @@ void MainFrameImpl::ComponentRemoved(Component *component)
 		componentsList->Freeze();
 		RemoveComponentPanel(component);
 		componentsList->Thaw();
+	}
+}
+
+void MainFrameImpl::UpdateUndoRedoMenu(Command *command)
+{
+	if (editorState->HasUndo())
+	{
+		undoMenuItem->SetItemLabel(wxString(wxT("Undo \"")) + editorState->GetCurrentUndoCommand()->GetDescription() + wxT("\"\t") + wxT("Ctrl+Z"));
+		undoMenuItem->Enable(true);
+	}
+	else
+	{
+		undoMenuItem->Enable(false);
+		undoMenuItem->SetItemLabel(wxString(wxT("Undo")) + wxT('\t') + wxT("Ctrl+Z"));
+	}
+	
+	if (editorState->HasRedo())
+	{
+		redoMenuItem->SetItemLabel(wxString(wxT("Redo \"")) + editorState->GetCurrentRedoCommand()->GetDescription() + wxT("\"\t") + wxT("Ctrl+Y"));
+		redoMenuItem->Enable(true);
+	}
+	else
+	{
+		redoMenuItem->Enable(false);
+		redoMenuItem->SetItemLabel(wxString(wxT("Redo")) + wxT('\t') + wxT("Ctrl+Y"));
 	}
 }

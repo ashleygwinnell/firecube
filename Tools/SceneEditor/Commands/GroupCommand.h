@@ -6,7 +6,7 @@
 class GroupCommand : public Command
 {
 public:
-	GroupCommand(EditorState *editorState, const std::vector<Command *> &commands);
+	GroupCommand(EditorState *editorState, const std::string &description, const std::vector<Command *> &commands);
 	~GroupCommand();
 	virtual void Do();
 	virtual void Undo();

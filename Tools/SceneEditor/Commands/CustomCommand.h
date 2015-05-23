@@ -8,7 +8,7 @@
 class CustomCommand : public Command
 {
 public:
-	CustomCommand(EditorState *editorState, std::function<void ()> doFunction, std::function<void ()> undoFunction);
+	CustomCommand(EditorState *editorState, const std::string &description, std::function<void()> doFunction, std::function<void()> undoFunction);
 	~CustomCommand();
 	virtual void Do();
 	virtual void Undo();

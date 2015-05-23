@@ -53,7 +53,10 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 		auto staticModel = static_cast<StaticModel *>(component);
 
 		wxFileName fileName(staticModel->GetMesh()->GetFileName());
-		fileName.MakeRelativeTo(basePath);
+		if (fileName.IsAbsolute())
+		{
+			fileName.MakeRelativeTo(basePath);
+		}
 		std::string file = fileName.GetFullPath();
 
 		element->SetAttribute("mesh", file);
@@ -104,7 +107,10 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 		if (luaScript->GetLuaFile())
 		{
 			wxFileName fileName(luaScript->GetLuaFile()->GetFileName());
-			fileName.MakeRelativeTo(basePath);
+			if (fileName.IsAbsolute())
+			{
+				fileName.MakeRelativeTo(basePath);
+			}
 			std::string file = fileName.GetFullPath();
 
 			element->SetAttribute("script", file);
@@ -145,7 +151,10 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 		{
 			element->SetAttribute("shape_type", "triangle_mesh");
 			wxFileName fileName(collisionShape->GetMesh()->GetFileName());
-			fileName.MakeRelativeTo(basePath);
+			if (fileName.IsAbsolute())
+			{
+				fileName.MakeRelativeTo(basePath);
+			}
 			std::string file = fileName.GetFullPath();
 
 			element->SetAttribute("mesh", file);

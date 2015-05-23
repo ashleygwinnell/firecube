@@ -23,6 +23,8 @@ void EditorState::ExecuteCommand(Command *command)
 	command->Do();
 	commands.push_back(command);	
 	lastExecutedCommand = commands.size() - 1;
+
+	commandExecuted(this, command);
 }
 
 void EditorState::Undo()
@@ -31,6 +33,7 @@ void EditorState::Undo()
 	{
 		commands[lastExecutedCommand]->Undo();
 		lastExecutedCommand--;
+		undoPerformed(this, commands[lastExecutedCommand + 1]);
 	}
 
 	stateChanged(this);
@@ -42,6 +45,7 @@ void EditorState::Redo()
 	{
 		lastExecutedCommand++;
 		commands[lastExecutedCommand]->Do();		
+		redoPerformed(this, commands[lastExecutedCommand]);
 	}
 
 	stateChanged(this);
@@ -77,4 +81,37 @@ void EditorState::ClearCommands()
 {
 	commands.clear();
 	lastExecutedCommand = -1;
+}
+
+bool EditorState::HasUndo() const
+{
+	return lastExecutedCommand != -1;	
+}
+bool EditorState::HasRedo() const
+{
+	return lastExecutedCommand < ((int)commands.size()) - 1 && commands.empty() == false;
+}
+
+Command *EditorState::GetCurrentUndoCommand() const
+{
+	if (lastExecutedCommand != -1)
+	{
+		return commands[lastExecutedCommand];		
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+Command *EditorState::GetCurrentRedoCommand() const
+{
+	if (lastExecutedCommand < ((int)commands.size()) - 1 && commands.empty() == false)
+	{		
+		return commands[lastExecutedCommand + 1];
+	}
+	else
+	{
+		return nullptr;
+	}
 }

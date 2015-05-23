@@ -6,7 +6,7 @@
 class RenameNodeCommand : public Command
 {
 public:
-	RenameNodeCommand(EditorState *editorState, FireCube::Node *node, const std::string &newName);
+	RenameNodeCommand(EditorState *editorState, const std::string &description, FireCube::Node *node, const std::string &newName);
 	~RenameNodeCommand();
 	virtual void Do();
 	virtual void Undo();

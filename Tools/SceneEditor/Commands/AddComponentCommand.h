@@ -8,7 +8,7 @@
 class AddComponentCommand : public Command
 {
 public:
-	AddComponentCommand(EditorState *editorState, FireCube::Node *node, std::function<FireCube::Component *(FireCube::Engine *, FireCube::Node *)> creationFunction);
+	AddComponentCommand(EditorState *editorState, const std::string &description, FireCube::Node *node, std::function<FireCube::Component *(FireCube::Engine *, FireCube::Node *)> creationFunction);
 	~AddComponentCommand();
 	virtual void Do();
 	virtual void Undo();
