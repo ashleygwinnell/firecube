@@ -8,12 +8,12 @@
 using namespace FireCube;
 using namespace luabridge;
 
-LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState()), luaFile(nullptr)
+LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState()), luaFile(nullptr), awakeCalled(false)
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 }
 
-LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState()), luaFile(other.luaFile)
+LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState()), luaFile(other.luaFile), awakeCalled(false)
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 	CreateObject(objectName);
@@ -23,8 +23,28 @@ LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(othe
 
 void LuaScript::Update(float time)
 {	
+	if (awakeCalled == false)
+	{		
+		awakeCalled = true;
+
+		auto awakeFunction = scriptFunctions[ScriptFunction::AWAKE];
+		if (scene && objectName.empty() == false && IsEnabled() && awakeFunction)
+		{				
+			// Call awake function	
+			try
+			{
+				(*awakeFunction)(object);
+			}
+			catch (LuaException &e)
+			{
+				(void)e; // Disable warning about e not being used
+				LOGERROR(e.what());
+			}
+		}
+	}
+
 	auto updateFunction = scriptFunctions[ScriptFunction::UPDATE];
-	if (IsEnabled() && updateFunction)
+	if (awakeCalled && IsEnabled() && updateFunction)
 	{
 		// Call update function	
 		try
@@ -67,20 +87,7 @@ void LuaScript::NodeChanged()
 
 void LuaScript::SceneChanged(Scene *oldScene)
 {
-	auto awakeFunction = scriptFunctions[ScriptFunction::AWAKE];
-	if (scene && objectName.empty() == false && IsEnabled() && awakeFunction)
-	{
-		// Call awake function	
-		try
-		{
-			(*awakeFunction)(object);
-		}
-		catch (LuaException &e)
-		{
-			(void)e; // Disable warning about e not being used
-			LOGERROR(e.what());
-		}		
-	}
+	
 }
 
 void LuaScript::CreateObject(const std::string &objectName)
@@ -120,22 +127,7 @@ void LuaScript::CreateObject(const std::string &objectName)
 			(void)e; // Disable warning about e not being used
 			LOGERROR(e.what());
 		}
-	}
-
-	auto awakeFunction = scriptFunctions[ScriptFunction::AWAKE];
-	if (scene && awakeFunction)
-	{
-		try
-		{
-			(*awakeFunction)(object);
-		}
-		catch (LuaException &e)
-		{
-			(void)e; // Disable warning about e not being used
-			LOGERROR(e.what());
-		}		
-	}
-	
+	}		
 }
 
 void LuaScript::CreateObject(LuaFile *luaFile, const std::string &objectName)
@@ -178,28 +170,34 @@ void LuaScript::SubscribeToEventFromLua(const std::string &eventName, LuaRef par
 
 void LuaScript::HandleInput(float time, const MappedInput &input)
 {
-	try
+	if (awakeCalled)
 	{
-		(*scriptFunctions[ScriptFunction::HANDLE_INPUT])(object, time, input);		
+		try
+		{
+			(*scriptFunctions[ScriptFunction::HANDLE_INPUT])(object, time, input);
+		}
+		catch (LuaException &e)
+		{
+			(void)e; // Disable warning about e not being used
+			LOGERROR(e.what());
+		}
 	}
-	catch (LuaException &e)
-	{
-		(void)e; // Disable warning about e not being used
-		LOGERROR(e.what());
-	}	
 }
 
 void LuaScript::CharacterControllerCollision(CharacterController *characterController, CollisionShape *collisionShape)
 {
-	try
+	if (awakeCalled)
 	{
-		(*scriptFunctions[ScriptFunction::CHARACTER_CONTROLLER_COLLISION])(object, characterController, collisionShape);		
+		try
+		{
+			(*scriptFunctions[ScriptFunction::CHARACTER_CONTROLLER_COLLISION])(object, characterController, collisionShape);
+		}
+		catch (LuaException &e)
+		{
+			(void)e; // Disable warning about e not being used
+			LOGERROR(e.what());
+		}
 	}
-	catch (LuaException &e)
-	{
-		(void)e; // Disable warning about e not being used
-		LOGERROR(e.what());
-	}	
 }
 
 LuaFile *LuaScript::GetLuaFile()

@@ -77,6 +77,7 @@ private:
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
 
+	bool awakeCalled;
 	LuaFile *luaFile;
 	std::string objectName;
 	luabridge::LuaRef object;
