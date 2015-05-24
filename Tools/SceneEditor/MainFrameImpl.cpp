@@ -73,8 +73,7 @@ void MainFrameImpl::AddMeshClicked(wxCommandEvent& event)
 	
 	auto addComponentCommand = new AddComponentCommand(editorState, "Add Component", node, [sfile](Engine *engine, Node *node) -> Component *
 	{
-		StaticModel *model = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(sfile));
-		model->SetCollisionQueryMask(USER_GEOMETRY);
+		StaticModel *model = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(sfile));		
 		return model;
 	});
 
@@ -99,8 +98,7 @@ void MainFrameImpl::AddStaticModelClicked(wxCommandEvent& event)
 		
 		auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel",  node, [sfile](Engine *engine, Node *node) -> Component *
 		{
-			StaticModel *model = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(sfile));
-			model->SetCollisionQueryMask(USER_GEOMETRY);
+			StaticModel *model = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(sfile));			
 			return model;
 		});
 		
@@ -228,7 +226,7 @@ void MainFrameImpl::UpdateNode(Node *node)
 		node->GetComponents(staticModels);
 		for (auto staticModel : staticModels)
 		{
-			staticModel->SetCollisionQueryMask(USER_GEOMETRY);
+			//staticModel->SetCollisionQueryMask(USER_GEOMETRY);
 		}
 
 		for (auto component : node->GetComponents())

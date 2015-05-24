@@ -5,7 +5,7 @@
 
 using namespace FireCube;
 
-Renderable::Renderable(Engine *engine) : Component(engine), worldBoundingBoxChanged(false), collisionQueryMask(1), castShadow(true), receiveShadow(true), lightMask(0xFFFFFFFF)
+Renderable::Renderable(Engine *engine) : Component(engine), worldBoundingBoxChanged(false), collisionQueryMask(0xFFFFFFFF), castShadow(true), receiveShadow(true), lightMask(0xFFFFFFFF)
 {
 }
 

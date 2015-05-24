@@ -16,9 +16,13 @@ StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent) : Sta
 
 	castShadowCheckBox->SetValue(staticModel->GetCastShadow());
 
-	std::stringstream stream;
-	stream << std::hex << staticModel->GetLightMask();
-	lightMaskTextCtrl->SetLabel(stream.str());
+	std::stringstream lightMaskStream;
+	lightMaskStream << std::hex << staticModel->GetLightMask();
+	lightMaskTextCtrl->SetLabel(lightMaskStream.str());
+
+	std::stringstream collisionQueryMaskStream;
+	collisionQueryMaskStream << std::hex << staticModel->GetCollisionQueryMask();
+	collisionQueryMaskTextCtrl->SetLabel(collisionQueryMaskStream.str());
 
 	parent->removeComponent->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StaticModelPanelImpl::RemoveComponentClicked), NULL, this);
 }
@@ -86,11 +90,14 @@ void StaticModelPanelImpl::RemoveComponentClicked(wxCommandEvent& event)
 	MyApp *theApp = ((MyApp *)wxTheApp);
 
 	std::string currentMeshFile = staticModel->GetMesh()->GetFileName();
+	unsigned int currentLightMask = staticModel->GetLightMask();
+	unsigned int currentCollisionQueryMask = staticModel->GetCollisionQueryMask();
 
-	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), "Remove Component", staticModel, [currentMeshFile](Engine *engine, Node *node) -> Component *
+	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), "Remove Component", staticModel, [currentMeshFile, currentLightMask, currentCollisionQueryMask](Engine *engine, Node *node) -> Component *
 	{
 		StaticModel *model = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(currentMeshFile));
-		model->SetCollisionQueryMask(USER_GEOMETRY);
+		model->SetLightMask(currentLightMask);		
+		model->SetCollisionQueryMask(currentCollisionQueryMask);
 		return model;
 	});
 
@@ -117,6 +124,32 @@ void StaticModelPanelImpl::LightMaskChanged(wxCommandEvent& event)
 	{
 		StaticModel *staticModel = static_cast<StaticModel *>(node->GetComponents()[componentIndex]);
 		staticModel->SetLightMask(oldValue);
+	});
+
+	theApp->GetEditorState()->ExecuteCommand(command);
+	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+}
+
+void StaticModelPanelImpl::CollisionQueryMaskChanged(wxCommandEvent& event)
+{
+	StaticModel *staticModel = static_cast<StaticModel *>(parent->GetComponent());
+
+	MyApp *theApp = ((MyApp *)wxTheApp);
+	auto engine = theApp->fcApp.GetEngine();
+	Node *node = staticModel->GetNode();
+	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), staticModel));
+
+	unsigned int newValue = std::stoul(event.GetString().ToStdString(), 0, 16);
+	unsigned int oldValue = staticModel->GetCollisionQueryMask();
+
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [componentIndex, node, newValue, engine]()
+	{
+		StaticModel *staticModel = static_cast<StaticModel *>(node->GetComponents()[componentIndex]);
+		staticModel->SetCollisionQueryMask(newValue);
+	}, [componentIndex, node, oldValue, engine]()
+	{
+		StaticModel *staticModel = static_cast<StaticModel *>(node->GetComponents()[componentIndex]);
+		staticModel->SetCollisionQueryMask(oldValue);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);

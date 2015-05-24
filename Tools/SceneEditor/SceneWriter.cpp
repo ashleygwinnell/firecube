@@ -62,9 +62,13 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 		element->SetAttribute("mesh", file);
 		element->SetAttribute("cast_shadow", staticModel->GetCastShadow() ? "true" : "false");
 
-		std::stringstream stream;
-		stream << std::hex << staticModel->GetLightMask();
-		element->SetAttribute("light_mask", stream.str());
+		std::stringstream ligtMaskStream;
+		ligtMaskStream << std::hex << staticModel->GetLightMask();
+		element->SetAttribute("light_mask", ligtMaskStream.str());
+
+		std::stringstream collisionQueryMaskStream;
+		collisionQueryMaskStream << std::hex << staticModel->GetCollisionQueryMask();
+		element->SetAttribute("collision_query_mask", collisionQueryMaskStream.str());		
 	}
 	else if (component->GetType() == Light::GetTypeStatic())
 	{

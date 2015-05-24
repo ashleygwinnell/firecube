@@ -271,12 +271,18 @@ void GLCanvas::OnLeftUp(wxMouseEvent& event)
 					
 		if (currentOperation == Operation::NONE)
 		{			
-			scene->IntersectRay(query, USER_GEOMETRY);
+			scene->IntersectRay(query);
 			if (query.results.empty() == false)
 			{
-				auto &result = query.results.front();
-				auto node = result.renderable->GetNode();	
-				editorState->SetSelectedNode(node);
+				for (auto &result : query.results)
+				{					
+					auto node = result.renderable->GetNode();
+					if (node->GetName().substr(0, 7) != "Editor_")
+					{
+						editorState->SetSelectedNode(node);
+						break;
+					}
+				}
 			}
 			else
 			{

@@ -117,6 +117,11 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		{
 			component->SetLightMask(std::stoul(e->Attribute("light_mask"), 0, 16));
 		}
+
+		if (e->Attribute("collision_query_mask"))
+		{
+			component->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
+		}
 	}
 	else if (type == "box")
 	{		

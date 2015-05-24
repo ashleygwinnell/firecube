@@ -280,6 +280,21 @@ StaticModelPanel::StaticModelPanel( wxWindow* parent, wxWindowID id, const wxPoi
 	
 	bSizer24->Add( bSizer26, 1, wxEXPAND, 5 );
 	
+	wxBoxSizer* bSizer261;
+	bSizer261 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText421 = new wxStaticText( this, wxID_ANY, wxT("Collision Query Mask"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText421->Wrap( -1 );
+	bSizer261->Add( m_staticText421, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	collisionQueryMaskTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	collisionQueryMaskTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &collisionQueryMaskText ) );
+	
+	bSizer261->Add( collisionQueryMaskTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer24->Add( bSizer261, 1, wxEXPAND, 5 );
+	
 	
 	this->SetSizer( bSizer24 );
 	this->Layout();
@@ -289,6 +304,7 @@ StaticModelPanel::StaticModelPanel( wxWindow* parent, wxWindowID id, const wxPoi
 	meshFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( StaticModelPanel::FileChanged ), NULL, this );
 	castShadowCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( StaticModelPanel::CastShadowChanged ), NULL, this );
 	lightMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( StaticModelPanel::LightMaskChanged ), NULL, this );
+	collisionQueryMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( StaticModelPanel::CollisionQueryMaskChanged ), NULL, this );
 }
 
 StaticModelPanel::~StaticModelPanel()
@@ -297,6 +313,7 @@ StaticModelPanel::~StaticModelPanel()
 	meshFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( StaticModelPanel::FileChanged ), NULL, this );
 	castShadowCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( StaticModelPanel::CastShadowChanged ), NULL, this );
 	lightMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( StaticModelPanel::LightMaskChanged ), NULL, this );
+	collisionQueryMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( StaticModelPanel::CollisionQueryMaskChanged ), NULL, this );
 	
 }
 

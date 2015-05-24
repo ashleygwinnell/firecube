@@ -138,15 +138,19 @@ class StaticModelPanel : public wxPanel
 		wxCheckBox* castShadowCheckBox;
 		wxStaticText* m_staticText42;
 		wxTextCtrl* lightMaskTextCtrl;
+		wxStaticText* m_staticText421;
+		wxTextCtrl* collisionQueryMaskTextCtrl;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void FileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void CastShadowChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void LightMaskChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void CollisionQueryMaskChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		wxString lightMaskText; 
+		wxString collisionQueryMaskText; 
 		
 		StaticModelPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~StaticModelPanel();
