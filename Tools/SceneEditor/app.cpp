@@ -19,6 +19,11 @@ FireCube::Scene *MyApp::GetScene()
 	return scene;
 }
 
+FireCube::Scene *MyApp::GetEditorScene()
+{
+	return editorScene;
+}
+
 EditorState *MyApp::GetEditorState()
 {
 	return editorState;
@@ -28,6 +33,7 @@ void MyApp::InitScene()
 {
 	scene = new FireCube::Scene(fcApp.GetEngine());	
 	scene->GetRootNode()->CreateComponent<FireCube::PhysicsWorld>();
+	editorScene = new FireCube::Scene(fcApp.GetEngine());
 }
 
 MyApp::~MyApp()

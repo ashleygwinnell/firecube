@@ -6,7 +6,7 @@ using namespace FireCube;
 
 ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Object(engine), snapToGrid(false)
 {
-	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/Gizmo.xml")->Clone();
+	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml")->Clone();
 	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
 	SharedPtr<Mesh> mesh = new Mesh(engine);

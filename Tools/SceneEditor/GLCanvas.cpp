@@ -55,7 +55,9 @@ void GLCanvas::Init()
 	
 	theApp->InitScene();
 	scene = theApp->GetScene();
+	editorScene = theApp->GetEditorScene();
 	root = scene->GetRootNode();
+	editorRoot = editorScene->GetRootNode();
 	root->SetName("Root");
 	editorState->nodeAdded(editorState, scene->GetRootNode());
 
@@ -75,9 +77,9 @@ void GLCanvas::Init()
 	light->SetLightType(LightType::DIRECTIONAL);
 	light->SetColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));		*/
 
-	translateGizmo = new TranslateGizmo(engine, root);
-	rotateGizmo = new RotateGizmo(engine, root);
-	scaleGizmo = new ScaleGizmo(engine, root);
+	translateGizmo = new TranslateGizmo(engine, editorRoot);
+	rotateGizmo = new RotateGizmo(engine, editorRoot);
+	scaleGizmo = new ScaleGizmo(engine, editorRoot);
 	transformGizmo = translateGizmo.Get();
 	
 	gridMaterial = FireCube::SharedPtr<FireCube::Material>(new Material(engine));
@@ -92,7 +94,8 @@ void GLCanvas::Init()
 	engine->GetRenderer()->SetHeight(h);
 	engine->GetRenderer()->SetViewport(0, 0, w, h);
 
-	engine->GetRenderer()->SetSceneView(0, new SceneView(engine, scene, camera, nullptr, engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/ForwardWithOverlay.xml")));
+	engine->GetRenderer()->SetSceneView(1, new SceneView(engine, scene, camera, nullptr));
+	engine->GetRenderer()->SetSceneView(0, new SceneView(engine, editorScene, camera, nullptr, engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/ForwardNoClear.xml")));
 }
 
 void GLCanvas::SelectedNodeChanged(Node *node)
@@ -227,7 +230,7 @@ void GLCanvas::OnMotion(wxMouseEvent& event)
 
 		if (currentOperation == Operation::NONE && editorState->GetSelectedNode())
 		{							
-			bool startTransaform = transformGizmo->CheckOperationStart(scene, editorState->GetSelectedNode(), ray, vec2(mousePos.x, mousePos.y));
+			bool startTransaform = transformGizmo->CheckOperationStart(editorScene, editorState->GetSelectedNode(), ray, vec2(mousePos.x, mousePos.y));
 			if (startTransaform)
 			{							
 				currentOperation = Operation::OBJECT_TRANSFORM;

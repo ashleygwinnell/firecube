@@ -17,6 +17,7 @@ public:
 	~MyApp();
 	virtual bool OnInit();
 	FireCube::Scene *GetScene();
+	FireCube::Scene *GetEditorScene();
 	EditorState *GetEditorState();
 	SceneSettings *GetSceneSettings();
 	void InitScene();
@@ -25,6 +26,7 @@ public:
 private:	
 	MainFrameImpl *frame;
 	FireCube::Scene *scene;
+	FireCube::Scene *editorScene;
 	EditorState *editorState;
 	SceneSettings sceneSettings;
 };

@@ -46,9 +46,9 @@ private:
 	bool init;
 	MyApp *theApp;
 	wxGLContext *context;	
-	FireCube::Scene *scene;
+	FireCube::Scene *scene, *editorScene;
 	FireCube::OrbitCamera *camera;
-	FireCube::Node *root, *gridNode, *cameraTarget;
+	FireCube::Node *root, *gridNode, *cameraTarget, *editorRoot;
 	FireCube::SharedPtr<TranslateGizmo> translateGizmo;
 	FireCube::SharedPtr<RotateGizmo> rotateGizmo;
 	FireCube::SharedPtr<ScaleGizmo> scaleGizmo;
