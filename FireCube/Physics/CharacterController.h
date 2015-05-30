@@ -43,8 +43,7 @@ private:
 	vec3 velocity;
 	vec3 radius;
 	vec3 transformedPosition;
-	vec3 transformedVelocity;
-	vec3 normalizedTransformedVelocity;
+	vec3 transformedVelocity;	
 	mat4 inverseTransposedTransform;
 	mat4 scaleMatrix;
 
@@ -53,7 +52,7 @@ private:
 	float nearestDistance;
 	vec3 nearestNormal;
 	vec3 nearestIntersectionPoint;
-	std::vector<CollisionEntry> collisions;
+	std::vector<CollisionContact> contacts;
 	bool onGround;
 	bool finishedMovement;
 	WeakPtr<PhysicsWorld> physicsWorld;

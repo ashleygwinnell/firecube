@@ -50,21 +50,17 @@ void PhysicsWorld::RemoveRigidBody(RigidBody *rigidBody)
 	rigidBodies.erase(std::remove(rigidBodies.begin(), rigidBodies.end(), rigidBody), rigidBodies.end());
 }
 
-void PhysicsWorld::Update(float deltaTime)
-{
+void PhysicsWorld::UpdateCharacterControllers(float deltaTime)
+{	
 	for (auto characterController : characterControllers)
 	{
 		characterController->UpdateTransformedState();
-	}
-	
-	for (auto characterController : characterControllers)
-	{
+
 		std::set<CollisionShape *> triggeredCollisionShapes;
 		for (int iter = 0; iter < 3; ++iter)
 		{
 			if (characterController->finishedMovement == false && (characterController->transformedVelocity * characterController->radius).Length2() > 0.001f * 0.001f)
-			{
-				characterController->normalizedTransformedVelocity = characterController->transformedVelocity.Normalized();
+			{				
 				characterController->collisionFound = false;
 				BoundingBox characterControllerBoundingBox = BoundingBox(characterController->transformedPosition * characterController->GetRadius() - characterController->GetRadius(), characterController->transformedPosition * characterController->GetRadius() + characterController->GetRadius());
 				characterControllerBoundingBox.Expand(characterControllerBoundingBox.GetMin() + characterController->transformedVelocity * characterController->GetRadius());
@@ -77,20 +73,20 @@ void PhysicsWorld::Update(float deltaTime)
 					if ((collisionShape->IsTrigger() && triggeredCollisionShapes.find(collisionShape) == triggeredCollisionShapes.end()) || characterControllerBoundingBox.Intersects(collisionShape->GetWorldBoundingBox()))
 					{
 						CollisionResult result;
-						
+
 						if (collisionShape->GetShapeType() == CollisionShapeType::TRIANGLE_MESH || collisionShape->GetShapeType() == CollisionShapeType::BOX)
 						{
 							CollisionMesh *mesh = collisionShape->GetCollisionMesh();
-							characterController->CheckCollisionWithMesh(*mesh, collisionShape->GetNode()->GetWorldTransformation(), result);							
+							characterController->CheckCollisionWithMesh(*mesh, collisionShape->GetNode()->GetWorldTransformation(), result);
 						}
 						else if (collisionShape->GetShapeType() == CollisionShapeType::PLANE)
-						{													
-							characterController->CheckCollisionWithPlane(collisionShape->GetPlane(), collisionShape->GetNode()->GetWorldTransformation(), result);							
+						{
+							characterController->CheckCollisionWithPlane(collisionShape->GetPlane(), collisionShape->GetNode()->GetWorldTransformation(), result);
 						}
 
 						if (collisionShape->IsTrigger() == false)
 						{
-							characterController->collisions.insert(characterController->collisions.end(), result.collisions.begin(), result.collisions.end());
+							characterController->contacts.insert(characterController->contacts.end(), result.contacts.begin(), result.contacts.end());
 							if (result.collisionFound && ((characterController->collisionFound == false) || (result.nearestDistance < characterController->nearestDistance)))
 							{
 								characterController->nearestTime = result.nearestTime;
@@ -114,7 +110,7 @@ void PhysicsWorld::Update(float deltaTime)
 				}
 				else
 				{
-					characterController->transformedPosition += (characterController->normalizedTransformedVelocity * (characterController->nearestDistance - 0.001f));
+					characterController->transformedPosition += (characterController->transformedVelocity.Normalized() * (characterController->nearestDistance - 0.001f));
 					vec3 normal = characterController->nearestNormal.Normalized();
 					characterController->transformedVelocity -= normal * normal.Dot(characterController->transformedVelocity);
 				}
@@ -125,15 +121,12 @@ void PhysicsWorld::Update(float deltaTime)
 		{
 			Events::CharacterControllerCollision(characterController, characterController, triggeredCollisionShape);
 		}
-	}
 
-	for (auto characterController : characterControllers)
-	{
 		characterController->onGround = false;
-		for (auto &col : characterController->collisions)
+		for (auto &contact : characterController->contacts)
 		{
-			if (Dot(col.normal, vec3(0, 1, 0)) > 1.0f - 0.01f)
-			{			
+			if (Dot(contact.normal, vec3(0, 1, 0)) > 1.0f - 0.01f)
+			{
 				characterController->onGround = true;
 				break;
 			}
@@ -146,11 +139,20 @@ void PhysicsWorld::Update(float deltaTime)
 		}
 		characterController->velocity += vec3(0, -0.2f, 0) * deltaTime;
 	}	
+}
 
+void PhysicsWorld::UpdateRigidBodies(float deltaTime)
+{
 	for (auto rigidBody : rigidBodies)
 	{
 		rigidBody->node->Move(rigidBody->velocity * deltaTime);
 	}
+}
+
+void PhysicsWorld::Update(float deltaTime)
+{	
+	UpdateCharacterControllers(deltaTime);
+	UpdateRigidBodies(deltaTime);	
 }
 
 void PhysicsWorld::MarkedDirty()

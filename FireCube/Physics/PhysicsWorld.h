@@ -10,10 +10,9 @@ class CollisionShape;
 class CharacterController;
 class RigidBody;
 
-class CollisionEntry
+class CollisionContact
 {
-public:
-	bool operator < (const CollisionEntry &entry);
+public:	
 	float time;
 	float distance;
 	vec3 normal;
@@ -30,7 +29,7 @@ public:
 	float nearestDistance;
 	vec3 nearestNormal;
 	vec3 nearestIntersectionPoint;
-	std::vector<CollisionEntry> collisions;
+	std::vector<CollisionContact> contacts;
 };
 
 class FIRECUBE_API PhysicsWorld : public Component
@@ -54,6 +53,8 @@ private:
 	PhysicsWorld(const PhysicsWorld &other);
 
 	void Update(float deltaTime);
+	void UpdateCharacterControllers(float deltaTime);
+	void UpdateRigidBodies(float deltaTime);
 	void MarkedDirty();
 	void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
