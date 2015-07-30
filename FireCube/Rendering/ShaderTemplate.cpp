@@ -2,6 +2,7 @@
 #include <sstream>
 #include <algorithm>
 #include <numeric>
+#include <iterator>
 #include "Rendering/ShaderTemplate.h"
 #include "Utils/Filesystem.h"
 #include "Rendering/Shader.h"
