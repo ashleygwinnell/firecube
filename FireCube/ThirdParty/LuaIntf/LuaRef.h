@@ -1180,6 +1180,17 @@ public:
         return LuaTableIterator(L, m_ref, false);
     }
 
+	std::string className() const
+	{
+		lua_rawgeti(L, LUA_REGISTRYINDEX, m_ref);
+		lua_getmetatable(L, -1);
+		lua_pushstring(L, "___type");
+		lua_rawget(L, -2);
+		std::string type = lua_tostring(L, -1);
+		lua_pop(L, 3);
+		return type;
+	}
+
 private:
     /**
      * Special constructor for popFromStack.
