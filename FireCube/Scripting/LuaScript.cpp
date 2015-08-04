@@ -6,14 +6,14 @@
 #include "Scripting/LuaState.h"
 
 using namespace FireCube;
-using namespace luabridge;
+using namespace LuaIntf;
 
-LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState()), luaFile(nullptr), awakeCalled(false)
+LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState(), nullptr), luaFile(nullptr), awakeCalled(false)
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 }
 
-LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState()), luaFile(other.luaFile), awakeCalled(false)
+LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState(), nullptr), luaFile(other.luaFile), awakeCalled(false)
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 	CreateObject(objectName);
@@ -93,21 +93,21 @@ void LuaScript::SceneChanged(Scene *oldScene)
 void LuaScript::CreateObject(const std::string &objectName)
 {	
 	lua_State *state = engine->GetLuaState()->GetState();
-	LuaRef objectTable = getGlobal(state, objectName.c_str());
+	LuaRef objectTable = Lua::getGlobal(state, objectName.c_str());
 	if (objectTable.isTable() == false)
 	{
 		LOGERROR("Can't init script object: ", objectName, " is not a table");
 		return;
 	}
 		
-	this->objectName = objectName;
-	object = newTable(state);
-	object.push(state);
-	LuaRef metatable = newTable(state);
+	this->objectName = objectName;	
+	object = LuaRef::createTable(state);
+	object.pushToStack();
+	LuaRef metatable = LuaRef::createTable(state);
 	metatable["__index"] = objectTable;
-	metatable.push(state);
+	metatable.pushToStack();
 	lua_setmetatable(state, -2);
-	lua_pop(state, 1);
+	lua_pop(state, 1); // TODO: Use  setMetatable
 	
 	object["script"] = this;
 	scriptFunctions[ScriptFunction::INIT] = GetMemberFunction("Init");	
@@ -152,8 +152,8 @@ void LuaScript::SubscribeToEventFromLua(const std::string &eventName, LuaRef par
 	Object *sender = nullptr;
 	int functionIndex = -1;
 	if (param.isFunction() == false)
-	{
-		sender = param.cast<Object *>();
+	{		
+		sender = param.toValue<Object *>();
 	}	
 
 	if (eventName == "HandleInput")

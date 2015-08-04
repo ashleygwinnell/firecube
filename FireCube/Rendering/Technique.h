@@ -59,8 +59,7 @@ public:
 private:
 	static BlendMode GetBlendModeFromString(const std::string &str);
 	static DepthTest GetDepthTestFromString(const std::string &str);
-	std::map<StringHash, Pass *> passes;	
-	Renderer *renderer;
+	std::map<StringHash, Pass *> passes;		
 };
 
 }

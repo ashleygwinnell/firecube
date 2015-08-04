@@ -2,12 +2,11 @@
 #include "Scripting/LuaFunction.h"
 #include "Utils/Logger.h"
 #include "lua.hpp"
-#include "LuaBridge.h"
+#include "LuaIntf.h"
 #include "Scripting/LuaBindings.h"
 #include "Scripting/LuaFile.h"
 
 using namespace FireCube;
-using namespace luabridge;
 
 LuaState::LuaState(Engine *engine) : Object(engine)
 {
@@ -121,7 +120,7 @@ LuaFunction *LuaState::GetFunction(const std::string &functionName)
 	}
 
 	auto fields = Split(functionName, '.');
-	LuaRef ref = getGlobal(luaState, fields[0].c_str());
+	LuaIntf::LuaRef ref = LuaIntf::Lua::getGlobal(luaState, fields[0].c_str());
 
 	if (fields.size() > 1)
 	{
@@ -133,7 +132,7 @@ LuaFunction *LuaState::GetFunction(const std::string &functionName)
 				LOGERROR(fields[i - 1], " is not a table, when getting function: ", functionName);
 				return nullptr;
 			}
-			LuaRef fieldRef = ref[fields[i++]];
+			LuaIntf::LuaRef fieldRef = ref[fields[i++]];
 			ref = fieldRef;
 		}
 	}
@@ -151,7 +150,7 @@ LuaFunction *LuaState::GetFunction(const std::string &functionName)
 
 LuaFunction *LuaState::GetFunction(int index)
 {
-	LuaRef ref = LuaRef::fromStack(luaState, index);
+	LuaIntf::LuaRef ref(luaState, index);
 
 	if (ref.isFunction() == false)
 	{

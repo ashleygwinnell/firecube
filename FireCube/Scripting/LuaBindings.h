@@ -31,21 +31,23 @@ public:
 
 }
 
-namespace luabridge
+namespace LuaIntf
 {
 
 template <>
-struct Stack < std::vector<FireCube::RayQueryResult> >
+struct LuaTypeMapping < std::vector<FireCube::RayQueryResult> >
 {
 	static void push(lua_State* L, const std::vector<FireCube::RayQueryResult> &results)
 	{
-		LuaRef ret = LuaRef::newTable(L);
+		LuaRef ret = LuaRef::createTable(L);
+		
+		int idx = 1;
 		for (auto &result : results)
 		{
-			ret.append(result);
+			ret[idx++] = result;
 		}
 
-		ret.push(L);
+		ret.pushToStack();
 	}
 
 	static std::vector<FireCube::RayQueryResult> get(lua_State* L, int index)
@@ -55,7 +57,7 @@ struct Stack < std::vector<FireCube::RayQueryResult> >
 };
 
 template <>
-struct Stack < FireCube::PrimitiveType >
+struct LuaTypeMapping < FireCube::PrimitiveType >
 {
 	static void push(lua_State* L, FireCube::PrimitiveType type)
 	{
@@ -70,7 +72,7 @@ struct Stack < FireCube::PrimitiveType >
 };
 
 template <>
-struct Stack < FireCube::LightType >
+struct LuaTypeMapping < FireCube::LightType >
 {
 	static void push(lua_State* L, FireCube::LightType type)
 	{
@@ -86,34 +88,36 @@ struct Stack < FireCube::LightType >
 
 
 template <>
-struct Stack < std::vector<FireCube::SharedPtr<FireCube::Node>> >
+struct LuaTypeMapping < std::vector<FireCube::SharedPtr<FireCube::Node>> >
 {
 	static void push(lua_State* L, const std::vector<FireCube::SharedPtr<FireCube::Node>> &nodes)
 	{
-		LuaRef ret = LuaRef::newTable(L);
+		LuaRef ret = LuaRef::createTable(L);
 
+		int idx = 1;
 		for (auto &n : nodes)
 		{
-			ret.append(n.Get());
+			ret[idx++] = n.Get();
 		}
 
-		ret.push(L);
+		ret.pushToStack();
 	}
 };
 
 template <>
-struct Stack < std::vector<std::string> >
+struct LuaTypeMapping < std::vector<std::string> >
 {
 	static void push(lua_State* L, const std::vector<std::string> &strings)
 	{
-		LuaRef ret = LuaRef::newTable(L);
+		LuaRef ret = LuaRef::createTable(L);
 
+		int idx = 1;
 		for (auto &str : strings)
 		{
-			ret.append(str);
+			ret[idx++] = str;
 		}
 
-		ret.push(L);
+		ret.pushToStack();
 	}
 };
 

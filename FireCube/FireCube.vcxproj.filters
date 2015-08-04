@@ -55,14 +55,14 @@
     <Filter Include="Scripting">
       <UniqueIdentifier>{7412e3da-e8bf-4814-9ed1-8c1e38581b12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ThirdParty\LuaBridge">
-      <UniqueIdentifier>{96a62362-69c0-43ae-90db-b95027404a93}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scripting\Bindings">
       <UniqueIdentifier>{c1d8b1c3-d331-4447-8d80-4966f75cf604}</UniqueIdentifier>
     </Filter>
     <Filter Include="Audio">
       <UniqueIdentifier>{69e533eb-1c94-4e4a-bf09-2b4c3dcdb178}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\LuaIntf">
+      <UniqueIdentifier>{464c9f56-aa96-4488-9209-737a34a9f7c2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -588,57 +588,6 @@
     <ClInclude Include="Scripting\LuaFunction.h">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\LuaBridge.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\RefCountedObject.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\RefCountedPtr.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\CFunctions.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\ClassInfo.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\Constructor.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\dump.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\FuncTraits.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\Iterator.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\LuaException.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\LuaHelpers.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\LuaRef.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\Namespace.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\Stack.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\TypeList.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\TypeTraits.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaBridge\detail\Userdata.h">
-      <Filter>ThirdParty\LuaBridge</Filter>
-    </ClInclude>
     <ClInclude Include="Audio\Audio.h">
       <Filter>Audio</Filter>
     </ClInclude>
@@ -656,6 +605,24 @@
     </ClInclude>
     <ClInclude Include="Geometry\Mesh.h">
       <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaIntf\LuaCompat.h">
+      <Filter>ThirdParty\LuaIntf</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaIntf\LuaContext.h">
+      <Filter>ThirdParty\LuaIntf</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaIntf\LuaIntf.h">
+      <Filter>ThirdParty\LuaIntf</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaIntf\LuaRef.h">
+      <Filter>ThirdParty\LuaIntf</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaIntf\LuaState.h">
+      <Filter>ThirdParty\LuaIntf</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\LuaIntf\QtLuaIntf.h">
+      <Filter>ThirdParty\LuaIntf</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

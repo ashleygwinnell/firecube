@@ -1,5 +1,5 @@
 #include "lua.hpp"
-#include "LuaBridge.h"
+#include "LuaIntf.h"
 #include "Scripting/LuaBindings.h"
 #include "Core/Object.h"
 #include "Core/Engine.h"
@@ -10,23 +10,16 @@
 #include "Audio/Sound.h"
 
 using namespace FireCube;
-using namespace luabridge;
+using namespace LuaIntf;
 
-int GetResource(lua_State *L)
+int GetResource(ResourceCache *resourceCache, lua_State *L, const std::string &type, const std::string &path)
 {
-	LuaRef param1 = LuaRef::fromStack(L, -3);
-	LuaRef param2 = LuaRef::fromStack(L, -2);
-	LuaRef param3 = LuaRef::fromStack(L, -1);
-	ResourceCache *resrouceCahce = param1.cast<ResourceCache*>();
-	std::string type = param2;
-	std::string path = param3;
-
 	if (type == "Material")
 	{
-		auto resource = resrouceCahce->GetResource<Material>(path);
+		auto resource = resourceCache->GetResource<Material>(path);
 		if (resource)
 		{
-			UserdataPtr::push(L, resource);
+			Lua::push(L, resource);
 		}
 		else
 		{
@@ -35,10 +28,10 @@ int GetResource(lua_State *L)
 	}
 	else if (type == "Mesh")
 	{
-		auto resource = resrouceCahce->GetResource<Mesh>(path);
+		auto resource = resourceCache->GetResource<Mesh>(path);
 		if (resource)
 		{
-			UserdataPtr::push(L, resource);
+			Lua::push(L, resource);
 		}
 		else
 		{
@@ -47,10 +40,10 @@ int GetResource(lua_State *L)
 	}
 	else if (type == "LuaFile")
 	{
-		auto resource = resrouceCahce->GetResource<LuaFile>(path);
+		auto resource = resourceCache->GetResource<LuaFile>(path);
 		if (resource)
 		{
-			UserdataPtr::push(L, resource);
+			Lua::push(L, resource);
 		}
 		else
 		{
@@ -59,10 +52,10 @@ int GetResource(lua_State *L)
 	}
 	else if (type == "Sound")
 	{
-		auto resource = resrouceCahce->GetResource<Sound>(path);
+		auto resource = resourceCache->GetResource<Sound>(path);
 		if (resource)
 		{
-			UserdataPtr::push(L, resource);
+			Lua::push(L, resource);
 		}
 		else
 		{
@@ -79,7 +72,7 @@ int GetResource(lua_State *L)
 
 void LuaBindings::InitCore(lua_State *luaState, Engine *engine)
 {
-	getGlobalNamespace(luaState)
+	LuaBinding(luaState)
 		.beginClass<Object>("Object")
 		.endClass()
 		.beginClass<Engine>("Engine")
@@ -89,9 +82,9 @@ void LuaBindings::InitCore(lua_State *luaState, Engine *engine)
 		.beginClass<Resource>("Resource")
 		.endClass()
 		.beginClass<ResourceCache>("ResourceCache")
-			.addCFunctionFree("GetResource", &GetResource)
+			.addFunction("GetResource", &GetResource)
 		.endClass();
 
-	luabridge::setGlobal(luaState, engine, "engine");
+	Lua::setGlobal(luaState, "engine", engine);
 }
 

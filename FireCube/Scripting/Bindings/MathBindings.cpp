@@ -1,36 +1,45 @@
 #include "lua.hpp"
-#include "LuaBridge.h"
+#include "LuaIntf.h"
 #include "Scripting/LuaBindings.h"
 #include "Math/Math.h"
 #include "Math/Ray.h"
 
 using namespace FireCube;
-using namespace luabridge;
+using namespace LuaIntf;
 
 template <typename T>
-T vec_mul(LuaRef a, LuaRef b)
-{
-	if (a.isUserdata())
+int vec_mul(T *a, lua_State *L, LuaRef b)
+{	 
+	T res(0.0f);
+	
+	if (b.type() == LuaTypeID::USERDATA)
 	{
-		T av = a.cast<T>();
-		if (b.isUserdata())
-		{
-			T bv = b.cast<T>();
-			return av * bv;
-		}
-		else if (b.isNumber())
-		{
-			return av * ((float)b);
-		}
+		T bv = b.toValue<T>();
+		res = *a * bv;
 	}
-	else if (a.isNumber())
+	else if (b.type() == LuaTypeID::NUMBER)
 	{
-		T bv = b.cast<T>();
-		return ((float)a) * bv;
+		res = *a * b.toValue<float>();
 	}
-
-	return T(0.0f);
+		
+	Lua::push(L, res);
+	return 1;
 }
+
+template <typename T>
+int vec_add(T *a, lua_State *L, const T &b)
+{
+	Lua::push(L, *a + b);
+	return 1;
+}
+
+template <typename T>
+int vec_sub(T *a, lua_State *L, const T &b)
+{
+	Lua::push(L, *a - b);
+	return 1;
+}
+
 
 template <typename T>
 struct MatHelper
@@ -49,63 +58,63 @@ struct MatHelper
 };
 
 void LuaBindings::InitMath(lua_State *luaState)
-{
-	getGlobalNamespace(luaState)
+{	
+	LuaBinding(luaState)
 		.beginClass<vec4>("vec4")
-			.addConstructor<void(*) (float, float, float, float)>()
-			.addData("x", &vec4::x)
-			.addData("y", &vec4::y)
-			.addData("z", &vec4::z)
-			.addData("w", &vec4::w)
+			.addConstructor(LUA_ARGS(float, float, float, float))
+			.addVariable("x", &vec4::x)
+			.addVariable("y", &vec4::y)
+			.addVariable("z", &vec4::z)
+			.addVariable("w", &vec4::w)
 			.addFunction("Length", &vec4::Length)
 			.addFunction("Length2", &vec4::Length2)
 			.addFunction("Normalized", &vec4::Normalized)
 			.addStaticFunction("Dot", (float(*)(const vec4 &, const vec4 &)) &FireCube::Dot)
-			.addFunctionFree("__add", (vec4(*)(const vec4 &, const vec4 &)) &FireCube::operator+)
-			.addFunctionFree("__sub", (vec4(*)(const vec4 &, const vec4 &)) &FireCube::operator-)
-			.addFunctionFree("__mul", &vec_mul<vec4>)
+			.addFunction("__add", &vec_add<vec4>)
+			.addFunction("__sub", &vec_sub<vec4>)
+			.addFunction("__mul", &vec_mul<vec4>)
 			.addFunction("__unm", (vec4(vec4::*)()) &vec4::operator-)
 			.addStaticFunction("Cross", (vec4(*)(const vec4 &, const vec4 &)) &FireCube::Cross)
 		.endClass()
 		.beginClass<vec3>("vec3")
-			.addConstructor<void(*) (float, float, float)>()
-			.addData("x", &vec3::x)
-			.addData("y", &vec3::y)
-			.addData("z", &vec3::z)
+			.addConstructor(LUA_ARGS(float, float, float))
+			.addVariable("x", &vec3::x)
+			.addVariable("y", &vec3::y)
+			.addVariable("z", &vec3::z)
 			.addFunction("Length", &vec3::Length)
 			.addFunction("Length2", &vec3::Length2)
 			.addFunction("Normalized", &vec3::Normalized)
 			.addStaticFunction("Dot", (float(*)(const vec3 &, const vec3 &)) &FireCube::Dot)
-			.addFunctionFree("__add", (vec3(*)(const vec3 &, const vec3 &)) &FireCube::operator+)
-			.addFunctionFree("__sub", (vec3(*)(const vec3 &, const vec3 &)) &FireCube::operator-)
-			.addFunctionFree("__mul", &vec_mul<vec3>)
+			.addFunction("__add", &vec_add<vec3>)
+			.addFunction("__sub", &vec_sub<vec3>)
+			.addFunction("__mul", &vec_mul<vec3>)
 			.addFunction("__unm", (vec3(vec3::*)()) &vec3::operator-)
 			.addStaticFunction("Cross", (vec3(*)(const vec3 &, const vec3 &)) &FireCube::Cross)
 		.endClass()
 		.beginClass<vec2>("vec2")
-			.addConstructor<void(*) (float, float)>()
-			.addData("x", &vec2::x)
-			.addData("y", &vec2::y)
+			.addConstructor(LUA_ARGS(float, float))
+			.addVariable("x", &vec2::x)
+			.addVariable("y", &vec2::y)
 			.addFunction("Length", &vec2::Length)
 			.addFunction("Length2", &vec2::Length2)
-			.addFunctionFree("__add", (vec2(*)(const vec2 &, const vec2 &)) &FireCube::operator+)
-			.addFunctionFree("__sub", (vec2(*)(const vec2 &, const vec2 &)) &FireCube::operator-)
-			.addFunctionFree("__mul", &vec_mul<vec2>)
+			.addFunction("__add", &vec_add<vec2>)
+			.addFunction("__sub", &vec_sub<vec2>)
+			.addFunction("__mul", &vec_mul<vec2>)
 			.addFunction("__unm", (vec2(vec2::*)()) &vec2::operator-)
 			.addStaticFunction("Cross", (float(*)(const vec2 &, const vec2 &)) &FireCube::Cross)
 		.endClass()
 		.beginClass<Ray>("Ray")
-			.addConstructor<void(*) (const vec3 &, const vec3 &)>()
-			.addData("origin", &Ray::origin)
-			.addData("direction", &Ray::direction)
+			.addConstructor(LUA_ARGS(const vec3 &, const vec3 &))
+			.addVariable("origin", &Ray::origin)
+			.addVariable("direction", &Ray::direction)
 		.endClass()
 		.beginClass<Plane>("Plane")
-		.addConstructor<void(*) (const vec3 &, float)>()
+		.addConstructor(LUA_ARGS(const vec3 &, float))
 			.addProperty("normal", &Plane::GetNormal)
-			.addProperty("distance", &Plane::GetDistance)
+			.addProperty("distance", (float(Plane::*)() const) &Plane::GetDistance)
 		.endClass()
 		.beginClass<BoundingBox>("BoundingBox")
-			.addConstructor<void(*) ()>()
+			.addConstructor(LUA_ARGS())
 			.addProperty("min", &BoundingBox::GetMin, &BoundingBox::SetMin)
 			.addProperty("max", &BoundingBox::GetMax, &BoundingBox::SetMax)
 			.addFunction("Expand", (void(BoundingBox::*)(const vec3 &)) &BoundingBox::Expand)
@@ -115,7 +124,7 @@ void LuaBindings::InitMath(lua_State *luaState)
 			.addProperty("center", &BoundingBox::GetCenter)
 		.endClass()
 		.beginClass<mat4>("mat4")
-			.addConstructor<void(*) ()>()
+			.addConstructor(LUA_ARGS())
 			.addFunction("RotateX", &mat4::RotateX)
 			.addFunction("RotateY", &mat4::RotateY)
 			.addFunction("RotateZ", &mat4::RotateZ)

@@ -1,17 +1,17 @@
 #include "lua.hpp"
-#include "LuaBridge.h"
+#include "LuaIntf.h"
 #include "Scripting/LuaBindings.h"
 #include "Utils/StringHash.h"
 #include "Application/Input.h"
 
 using namespace FireCube;
-using namespace luabridge;
+using namespace LuaIntf;
 
 void LuaBindings::InitUtils(lua_State *luaState)
 {
-	getGlobalNamespace(luaState)
+	LuaBinding(luaState)
 		.beginClass<StringHash>("StringHash")
-			.addConstructor<void(*) (const std::string &)>()
+			.addConstructor(LUA_ARGS(const std::string &))
 		.endClass()
 		.beginClass<MappedInput>("MappedInput")
 			.addFunction("IsStateOn", &MappedInput::IsStateOn)

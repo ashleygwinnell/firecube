@@ -3,7 +3,7 @@
 #include "Core/Memory.h"
 #include "Utils/utils.h"
 #include "ThirdParty/Lua/src/lua.hpp"
-#include "ThirdParty/LuaBridge/LuaBridge.h"
+#include "ThirdParty/LuaIntf/LuaIntf.h"
 
 namespace FireCube
 {
@@ -11,7 +11,7 @@ namespace FireCube
 class FIRECUBE_API LuaFunction : public RefCounted
 {
 public:
-	LuaFunction(const luabridge::LuaRef &ref);
+	LuaFunction(const LuaIntf::LuaRef &ref);
 	template<class... Args>
 	void operator ()(Args&&... args)
 	{
@@ -19,7 +19,7 @@ public:
 		{
 			ref(std::forward<Args>(args)...);
 		}
-		catch (luabridge::LuaException &e)
+		catch (LuaIntf::LuaException &e)
 		{
 			(void)e; // Disable warning about e not being used
 			LOGERROR(e.what());
@@ -27,7 +27,7 @@ public:
 	}
 	
 private:
-	luabridge::LuaRef ref;
+	LuaIntf::LuaRef ref;
 };
 
 }

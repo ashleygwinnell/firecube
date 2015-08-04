@@ -1,9 +1,9 @@
 #include "Scripting/LuaFunction.h"
 
 using namespace FireCube;
-using namespace luabridge;
+using namespace LuaIntf;
 
-LuaFunction::LuaFunction(const luabridge::LuaRef &ref) : ref(ref)
+LuaFunction::LuaFunction(const LuaRef &ref) : ref(ref)
 {
 
 }

@@ -1,18 +1,18 @@
 #include "lua.hpp"
-#include "LuaBridge.h"
+#include "LuaIntf.h"
 #include "Scripting/LuaBindings.h"
 #include "Scripting/LuaFile.h"
 #include "Scripting/LuaScript.h"
 
 using namespace FireCube;
-using namespace luabridge;
+using namespace LuaIntf;
 
 void LuaBindings::InitScripting(lua_State *luaState)
 {
-	getGlobalNamespace(luaState)
-		.deriveClass<LuaFile, Resource>("LuaFile")
+	LuaBinding(luaState)
+		.beginExtendClass<LuaFile, Resource>("LuaFile")
 		.endClass()
-		.deriveClass <LuaScript, Component>("LuaScript")
+		.beginExtendClass <LuaScript, Component>("LuaScript")
 			.addFunction("SubscribeToEvent", &LuaScript::SubscribeToEventFromLua)
 			.addFunction("CreateObject", (void(LuaScript::*)(LuaFile *, const std::string &)) &LuaScript::CreateObject)
 		.endClass();

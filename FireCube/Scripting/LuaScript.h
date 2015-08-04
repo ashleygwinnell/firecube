@@ -6,7 +6,7 @@
 #include "Scripting/LuaFunction.h"
 #include "Core/Component.h"
 #include "ThirdParty/Lua/src/lua.hpp"
-#include "ThirdParty/LuaBridge/LuaBridge.h"
+#include "ThirdParty/LuaIntf/LuaIntf.h"
 
 namespace FireCube
 {
@@ -29,7 +29,7 @@ public:
 	void CreateObject(LuaFile *luaFile, const std::string &objectName);
 	LuaFunction *GetFunction(const std::string &functionName);
 	LuaFunction *GetMemberFunction(const std::string &functionName);
-	void SubscribeToEventFromLua(const std::string &eventName, luabridge::LuaRef param);
+	void SubscribeToEventFromLua(const std::string &eventName, LuaIntf::LuaRef param);
 	LuaFile *GetLuaFile();
 	std::string GetObjectName() const;
 
@@ -80,7 +80,7 @@ private:
 	bool awakeCalled;
 	LuaFile *luaFile;
 	std::string objectName;
-	luabridge::LuaRef object;
+	LuaIntf::LuaRef object;
 	std::map<ScriptFunction, LuaFunction *> scriptFunctions;	
 };
 

@@ -1,49 +1,50 @@
 #include "lua.hpp"
-#include "LuaBridge.h"
+#include "LuaIntf.h"
 #include "Scripting/LuaBindings.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Material.h"
 #include "Rendering/RenderingTypes.h"
 
 using namespace FireCube;
-using namespace luabridge;
+using namespace LuaIntf;
 
-void SetParameter(Material *mat, const StringHash &paramName, LuaRef b)
+void SetParameter(Material *mat, lua_State *L, const StringHash &paramName, LuaRef b)
 {	
-	if (b.isUserdata())
+	if (b.type() == LuaTypeID::USERDATA)
 	{
-		if (b.className() == "vec2")
+		auto bClassName = b.className();
+		if (bClassName == "class<vec2>")
 		{
-			mat->SetParameter(paramName, b.cast<vec2>());
+			mat->SetParameter(paramName, b.toValue<vec2>());
 		}
-		else if (b.className() == "vec3")
+		else if (bClassName == "class<vec3>")
 		{
-			mat->SetParameter(paramName, b.cast<vec3>());
+			mat->SetParameter(paramName, b.toValue<vec3>());
 		}
-		else if (b.className() == "vec4")
+		else if (bClassName == "class<vec4>")
 		{
-			mat->SetParameter(paramName, b.cast<vec4>());
+			mat->SetParameter(paramName, b.toValue<vec4>());
 		}
 	}
-	else if (b.isNumber())
+	else if (b.type() == LuaTypeID::NUMBER)
 	{
-		mat->SetParameter(paramName, (float)b);
+		mat->SetParameter(paramName, b.toValue<float>());
 	}	
 }
 
 void LuaBindings::InitRendering(lua_State *luaState)
 {
-	getGlobalNamespace(luaState)
+	LuaBinding(luaState)
 		.beginClass<Renderer>("Renderer")
 			.addProperty("width", &Renderer::GetWidth)
 			.addProperty("height", &Renderer::GetHeight)
 		.endClass()
-		.deriveClass<Material, Resource>("Material")
-			.addFunctionFree("SetParameter", &SetParameter)
+		.beginExtendClass<Material, Resource>("Material")
+			.addFunction("SetParameter", &SetParameter)
 			.addFunction("Clone", &Material::Clone)
 		.endClass();
 
-	setGlobal(luaState, PARAM_MATERIAL_DIFFUSE, "PARAM_MATERIAL_DIFFUSE");
-	setGlobal(luaState, PARAM_MATERIAL_SPECULAR, "PARAM_MATERIAL_SPECULAR");
-	setGlobal(luaState, PARAM_MATERIAL_SHININESS, "PARAM_MATERIAL_SHININESS");	
+	Lua::setGlobal(luaState, "PARAM_MATERIAL_DIFFUSE", PARAM_MATERIAL_DIFFUSE);
+	Lua::setGlobal(luaState, "PARAM_MATERIAL_SPECULAR", PARAM_MATERIAL_SPECULAR);
+	Lua::setGlobal(luaState, "PARAM_MATERIAL_SHININESS", PARAM_MATERIAL_SHININESS);
 }
