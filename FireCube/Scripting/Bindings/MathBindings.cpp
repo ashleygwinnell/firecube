@@ -8,22 +8,28 @@ using namespace FireCube;
 using namespace LuaIntf;
 
 template <typename T>
-int vec_mul(T *a, lua_State *L, LuaRef b)
-{	 
-	T res(0.0f);
-	
-	if (b.type() == LuaTypeID::USERDATA)
+T vec_mul(LuaRef a, LuaRef b)
+{	 	
+	if (a.type() == LuaTypeID::USERDATA)
+	{
+		T av = a.toValue<T>();
+		if (b.type() == LuaTypeID::USERDATA)
+		{
+			T bv = b.toValue<T>();
+			return av * bv;
+		}
+		else if (b.type() == LuaTypeID::NUMBER)
+		{
+			return av * b.toValue<float>();
+		}		
+	}
+	else if (a.type() == LuaTypeID::NUMBER)
 	{
 		T bv = b.toValue<T>();
-		res = *a * bv;
+		return a.toValue<float>() * bv;
 	}
-	else if (b.type() == LuaTypeID::NUMBER)
-	{
-		res = *a * b.toValue<float>();
-	}
-		
-	Lua::push(L, res);
-	return 1;
+
+	return T(0.0f);
 }
 
 template <typename T>
@@ -72,7 +78,7 @@ void LuaBindings::InitMath(lua_State *luaState)
 			.addStaticFunction("Dot", (float(*)(const vec4 &, const vec4 &)) &FireCube::Dot)
 			.addFunction("__add", &vec_add<vec4>)
 			.addFunction("__sub", &vec_sub<vec4>)
-			.addFunction("__mul", &vec_mul<vec4>)
+			.addMetaFunction("__mul", &vec_mul<vec4>)
 			.addFunction("__unm", (vec4(vec4::*)()) &vec4::operator-)
 			.addStaticFunction("Cross", (vec4(*)(const vec4 &, const vec4 &)) &FireCube::Cross)
 		.endClass()
@@ -87,7 +93,7 @@ void LuaBindings::InitMath(lua_State *luaState)
 			.addStaticFunction("Dot", (float(*)(const vec3 &, const vec3 &)) &FireCube::Dot)
 			.addFunction("__add", &vec_add<vec3>)
 			.addFunction("__sub", &vec_sub<vec3>)
-			.addFunction("__mul", &vec_mul<vec3>)
+			.addMetaFunction("__mul", &vec_mul<vec3>)
 			.addFunction("__unm", (vec3(vec3::*)()) &vec3::operator-)
 			.addStaticFunction("Cross", (vec3(*)(const vec3 &, const vec3 &)) &FireCube::Cross)
 		.endClass()
@@ -99,7 +105,7 @@ void LuaBindings::InitMath(lua_State *luaState)
 			.addFunction("Length2", &vec2::Length2)
 			.addFunction("__add", &vec_add<vec2>)
 			.addFunction("__sub", &vec_sub<vec2>)
-			.addFunction("__mul", &vec_mul<vec2>)
+			.addMetaFunction("__mul", &vec_mul<vec2>)
 			.addFunction("__unm", (vec2(vec2::*)()) &vec2::operator-)
 			.addStaticFunction("Cross", (float(*)(const vec2 &, const vec2 &)) &FireCube::Cross)
 		.endClass()
