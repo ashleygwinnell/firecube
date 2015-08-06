@@ -12,18 +12,21 @@ void SetParameter(Material *mat, lua_State *L, const StringHash &paramName, LuaR
 {	
 	if (b.type() == LuaTypeID::USERDATA)
 	{
-		auto bClassName = b.className();
-		if (bClassName == "class<vec2>")
+		vec2 *v2;
+		vec3 *v3;
+		vec4 *v4;
+		
+		if (v2 = Lua::objectCast<vec2>(b))
 		{
-			mat->SetParameter(paramName, b.toValue<vec2>());
+			mat->SetParameter(paramName, *v2);
 		}
-		else if (bClassName == "class<vec3>")
+		else if (v3 = Lua::objectCast<vec3>(b))
 		{
-			mat->SetParameter(paramName, b.toValue<vec3>());
+			mat->SetParameter(paramName, *v3);
 		}
-		else if (bClassName == "class<vec4>")
+		else if (v4 = Lua::objectCast<vec4>(b))
 		{
-			mat->SetParameter(paramName, b.toValue<vec4>());
+			mat->SetParameter(paramName, *v4);
 		}
 	}
 	else if (b.type() == LuaTypeID::NUMBER)
