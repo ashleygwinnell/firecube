@@ -49,6 +49,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Assimp", "FireCube\ThirdParty\Assimp\assimp.vcxproj", "{A4542E1C-AA8D-4797-B2BB-E81DBBE55285}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelViewer", "Tools\ModelViewer\ModelViewer.vcxproj", "{D947BB6C-C25B-4F04-9C0A-D495CAB7FDFA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SceneEditor", "Tools\SceneEditor\SceneEditor.vcxproj", "{902B23A0-5ADD-4183-A0E3-9B5E3E1F998E}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -191,8 +194,8 @@ Global
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Singlethreaded|Win32.Build.0 = Release Static|Win32
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Singlethreaded|x64.ActiveCfg = Release Static|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Singlethreaded|x64.Build.0 = Release Static|x64
-		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|Win32.ActiveCfg = Release|Win32
-		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|Win32.Build.0 = Release|Win32
+		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|Win32.ActiveCfg = Release Static|Win32
+		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|Win32.Build.0 = Release Static|Win32
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|x64.ActiveCfg = Release Static|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|x64.Build.0 = Release Static|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release|Win32.ActiveCfg = Release|Win32
