@@ -101,13 +101,10 @@ void LuaScript::CreateObject(const std::string &objectName)
 	}
 		
 	this->objectName = objectName;	
-	object = LuaRef::createTable(state);
-	object.pushToStack();
+	object = LuaRef::createTable(state);	
 	LuaRef metatable = LuaRef::createTable(state);
-	metatable["__index"] = objectTable;
-	metatable.pushToStack();
-	lua_setmetatable(state, -2);
-	lua_pop(state, 1); // TODO: Use  setMetatable
+	metatable["__index"] = objectTable;	
+	object.setMetaTable(metatable);
 	
 	object["script"] = this;
 	scriptFunctions[ScriptFunction::INIT] = GetMemberFunction("Init");	
