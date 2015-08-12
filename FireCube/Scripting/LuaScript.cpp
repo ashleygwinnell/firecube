@@ -146,8 +146,7 @@ LuaFunction *LuaScript::GetMemberFunction(const std::string &functionName)
 
 void LuaScript::SubscribeToEventFromLua(const std::string &eventName, LuaRef param)
 {
-	Object *sender = nullptr;
-	int functionIndex = -1;
+	Object *sender = nullptr;	
 	if (param.isFunction() == false)
 	{		
 		sender = param.toValue<Object *>();

@@ -118,28 +118,12 @@ LuaFunction *LuaState::GetFunction(const std::string &functionName)
 	{
 		return functionIter->second;
 	}
-
-	auto fields = Split(functionName, '.');
-	LuaIntf::LuaRef ref = LuaIntf::Lua::getGlobal(luaState, fields[0].c_str());
-
-	if (fields.size() > 1)
-	{
-		unsigned int i = 1;
-		while (i < fields.size())
-		{
-			if (ref.isTable() == false)
-			{
-				LOGERROR(fields[i - 1], " is not a table, when getting function: ", functionName);
-				return nullptr;
-			}
-			LuaIntf::LuaRef fieldRef = ref[fields[i++]];
-			ref = fieldRef;
-		}
-	}
+	
+	LuaIntf::LuaRef ref(luaState, functionName.c_str());
 
 	if (ref.isFunction() == false)
 	{
-		LOGERROR(fields.back(), " is not a function, when getting function: ", functionName);
+		LOGERROR(functionName, " is not a function");
 		return nullptr;
 	}
 	

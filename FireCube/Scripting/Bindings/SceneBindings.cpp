@@ -54,7 +54,7 @@ int CreateComponent(Node *node, lua_State *L, const std::string &type)
 	else if (type == "StaticModel")
 	{
 		StaticModel *component;
-		if (lua_gettop(L) == 3)
+		if (n == 3)
 		{
 			LuaRef param3 = Lua::pop(L);
 			component = node->CreateComponent<StaticModel>(param3.toValue<Mesh *>());
@@ -79,7 +79,7 @@ int CreateComponent(Node *node, lua_State *L, const std::string &type)
 	else if (type == "SoundEmitter")
 	{
 		SoundEmitter *component;
-		if (lua_gettop(L) == 3)
+		if (n == 3)
 		{
 			LuaRef param3 = Lua::pop(L);
 			component = node->CreateComponent<SoundEmitter>(param3.toValue<Sound *>());
@@ -94,7 +94,7 @@ int CreateComponent(Node *node, lua_State *L, const std::string &type)
 	else if (type == "AnimatedModel")
 	{
 		AnimatedModel *component;
-		if (lua_gettop(L) == 3)
+		if (n == 3)
 		{
 			LuaRef param3 = Lua::pop(L);
 			component = node->CreateComponent<AnimatedModel>(param3.toValue<Mesh *>());
