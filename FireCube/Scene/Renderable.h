@@ -11,6 +11,8 @@
 namespace FireCube
 {
 
+template <class T>
+class OctreeNode;
 class Geometry;
 class Scene;
 class DebugRenderer;
@@ -63,6 +65,10 @@ public:
 	virtual void EnabledChanged();
 	virtual void MarkedDirty();
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
+	
+	OctreeNode<Renderable> *GetOctreeNode();
+	void SetOctreeNode(OctreeNode<Renderable> *octreeNode);
+	void SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate);
 protected:
 
 	Renderable(const Renderable &other);
@@ -76,6 +82,9 @@ protected:
 	unsigned int lightMask;
 	bool castShadow;
 	bool receiveShadow;
+
+	OctreeNode<Renderable> *octreeNode;
+	bool octreeNodeNeedsUpdate;
 private:
 
 };

@@ -219,9 +219,6 @@
     <ClCompile Include="Rendering\RenderSurface.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\Octree.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Memory.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -504,9 +501,6 @@
     <ClInclude Include="Rendering\RenderSurface.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\Octree.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Memory.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -623,6 +617,9 @@
     </ClInclude>
     <ClInclude Include="ThirdParty\LuaIntf\QtLuaIntf.h">
       <Filter>ThirdParty\LuaIntf</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Octree.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@
 #include "Geometry/CollisionQuery.h"
 #include "Core/Object.h"
 #include "Rendering/RenderPath.h"
+#include "Math/Octree.h"
 
 namespace FireCube
 {
@@ -38,6 +39,8 @@ public:
 	void SetPrefab(const StringHash &nameHash, Node *prefab);
 	Node *GetPrefab(const StringHash &nameHash);
 	Node *ClonePrefab(const StringHash &nameHash);
+	Octree<Renderable> &GetOctree();
+	
 private:		
 	
 	Node rootNode;	
@@ -49,6 +52,8 @@ private:
 	vec3 fogColor;	
 
 	std::map<StringHash, Node *> prefabs;
+
+	Octree<Renderable> octree;	
 };
 
 }

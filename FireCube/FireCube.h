@@ -10,6 +10,7 @@
 #include "Math/Plane.h"
 #include "Math/Frustum.h"
 #include "Math/Ray.h"
+#include "Math/Octree.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/GeometryGenerator.h"
 #include "Geometry/Mesh.h"

@@ -176,7 +176,10 @@ void Frame::UpdateBaseQueue()
 	baseQueues.clear();
 	const std::vector<RenderPathCommand> commands = renderPath->GetCommands();
 	
-	auto &renderables = scene->GetRenderables();	
+	std::vector<Renderable *> renderables;	
+	auto &octree = scene->GetOctree();
+	octree.GetObjects(camera->GetFrustum(), renderables);
+
 	bool fogEnabled = scene->GetFogEnabled();
 
 	for (auto renderable : renderables)
@@ -229,7 +232,10 @@ void Frame::UpdateLightQueues()
 {
 	const std::vector<RenderPathCommand> commands = renderPath->GetCommands();
 
-	auto &renderables = scene->GetRenderables();
+	std::vector<Renderable *> renderables;	
+	auto &octree = scene->GetOctree();
+	octree.GetObjects(camera->GetFrustum(), renderables);
+
 	auto &lights = scene->GetLights();	
 	bool fogEnabled = scene->GetFogEnabled();
 
