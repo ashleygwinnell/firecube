@@ -7,7 +7,7 @@
 #include "Core/Events.h"
 using namespace FireCube;
 
-AnimatedModel::AnimatedModel(Engine *engine) : Renderable(engine), currentTime(0.0f), prevTime(0.0f)
+AnimatedModel::AnimatedModel(Engine *engine) : Renderable(engine), currentTime(0.0f), prevTime(0.0f), numNonSkinnedRenderableParts(0)
 {
 	SubscribeToEvent(Events::Update, &AnimatedModel::Update);
 }
