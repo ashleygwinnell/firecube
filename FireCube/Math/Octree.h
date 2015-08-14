@@ -126,6 +126,25 @@ public:
 		}
 	}
 
+	void GetObjects(const BoundingBox &boundingBox, std::vector<T *> &objects)
+	{
+		if (this == root || boundingBox.Intersects(cullingBox))
+		{
+			for (auto object : this->objects)
+			{
+				objects.push_back(object);
+			}
+
+			for (auto child : children)
+			{
+				if (child)
+				{
+					child->GetObjects(boundingBox, objects);
+				}
+			}
+		}
+	}
+
 	Octree<T> *GetOctree()
 	{
 		return octree;
@@ -187,6 +206,11 @@ public:
 	void GetObjects(const Ray &ray, std::vector<T *> &objects)
 	{
 		root->GetObjects(ray, objects);
+	}
+
+	void GetObjects(const BoundingBox &boundingBox, std::vector<T *> &objects)
+	{
+		root->GetObjects(boundingBox, objects);
 	}
 
 	void QueueUpdate(T *object)

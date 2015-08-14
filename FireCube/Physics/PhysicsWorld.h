@@ -2,11 +2,12 @@
 
 #include "Core/Component.h"
 #include "Math/Math.h"
+#include "Math/Octree.h"
+#include "Physics/CollisionShape.h"
 
 namespace FireCube
 {
 
-class CollisionShape;
 class CharacterController;
 class RigidBody;
 
@@ -62,6 +63,8 @@ private:
 	std::vector<CollisionShape *> collisionShapes;
 	std::vector<CharacterController *> characterControllers;
 	std::vector<RigidBody *> rigidBodies;
+
+	Octree<CollisionShape> octree;
 };
 
 }

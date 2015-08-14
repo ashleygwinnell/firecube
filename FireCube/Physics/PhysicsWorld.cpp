@@ -10,12 +10,12 @@
 
 using namespace FireCube;
 
-PhysicsWorld::PhysicsWorld(Engine *engine) : Component(engine)
+PhysicsWorld::PhysicsWorld(Engine *engine) : Component(engine), octree(engine, vec3(10000), 10)
 {
 	SubscribeToEvent(Events::Update, &PhysicsWorld::Update);
 }
 
-PhysicsWorld::PhysicsWorld(const PhysicsWorld &other) : Component(other), collisionShapes(other.collisionShapes), characterControllers(other.characterControllers), rigidBodies(other.rigidBodies)
+PhysicsWorld::PhysicsWorld(const PhysicsWorld &other) : Component(other), collisionShapes(other.collisionShapes), characterControllers(other.characterControllers), rigidBodies(other.rigidBodies), octree(engine, vec3(10000), 10)
 {
 	SubscribeToEvent(Events::Update, &PhysicsWorld::Update);
 }
@@ -23,11 +23,16 @@ PhysicsWorld::PhysicsWorld(const PhysicsWorld &other) : Component(other), collis
 void PhysicsWorld::AddCollisionShape(CollisionShape *collisionShape)
 {
 	collisionShapes.push_back(collisionShape);
+	octree.Insert(collisionShape);
 }
 
 void PhysicsWorld::RemoveCollisionShape(CollisionShape *collisionShape)
 {
 	collisionShapes.erase(std::remove(collisionShapes.begin(), collisionShapes.end(), collisionShape), collisionShapes.end());	
+	if (collisionShape->GetOctreeNode())
+	{
+		octree.Remove(collisionShape);
+	}
 }
 
 void PhysicsWorld::AddCharacterController(CharacterController *characterController)
@@ -68,7 +73,10 @@ void PhysicsWorld::UpdateCharacterControllers(float deltaTime)
 				characterControllerBoundingBox.Expand(characterControllerBoundingBox.GetMax() + characterController->transformedVelocity * characterController->GetRadius());
 				characterControllerBoundingBox.Expand(characterControllerBoundingBox.GetMax() - characterController->transformedVelocity * characterController->GetRadius());
 
-				for (auto collisionShape : collisionShapes)
+				std::vector<CollisionShape *> closeCollisionShapes;				
+				octree.GetObjects(characterControllerBoundingBox, closeCollisionShapes);
+
+				for (auto collisionShape : closeCollisionShapes)
 				{
 					if ((collisionShape->IsTrigger() && triggeredCollisionShapes.find(collisionShape) == triggeredCollisionShapes.end()) || characterControllerBoundingBox.Intersects(collisionShape->GetWorldBoundingBox()))
 					{
@@ -151,6 +159,7 @@ void PhysicsWorld::UpdateRigidBodies(float deltaTime)
 
 void PhysicsWorld::Update(float deltaTime)
 {	
+	octree.Update();
 	UpdateCharacterControllers(deltaTime);
 	UpdateRigidBodies(deltaTime);	
 }

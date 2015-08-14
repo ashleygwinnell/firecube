@@ -17,13 +17,14 @@ CollisionTriangle::CollisionTriangle(vec3 p1, vec3 p2, vec3 p3) : p1(p1), p2(p2)
 
 }
 
-CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld(nullptr), worldBoundingBoxChanged(false), isTrigger(false), collisionMesh(nullptr), mesh(nullptr)
+CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld(nullptr), worldBoundingBoxChanged(false), isTrigger(false), collisionMesh(nullptr), mesh(nullptr),
+	octreeNode(nullptr), octreeNodeNeedsUpdate(false)
 {
 
 }
 
 CollisionShape::CollisionShape(const CollisionShape &other) : Component(other), worldBoundingBoxChanged(true), type(other.type), physicsWorld(other.physicsWorld), collisionMesh(other.collisionMesh), mesh(other.mesh), plane(other.plane),
-															  shapeBoundingBox(other.shapeBoundingBox), isTrigger(other.isTrigger)
+															  shapeBoundingBox(other.shapeBoundingBox), isTrigger(other.isTrigger), octreeNode(nullptr), octreeNodeNeedsUpdate(false)
 {
 	
 }
@@ -41,6 +42,10 @@ CollisionShapeType CollisionShape::GetShapeType() const
 void CollisionShape::MarkedDirty()
 {
 	// Update shape (if scale changed)
+	if (!octreeNodeNeedsUpdate && octreeNode)
+	{
+		octreeNode->GetOctree()->QueueUpdate(this);
+	}
 	worldBoundingBoxChanged = true;
 }
 
@@ -86,7 +91,7 @@ void CollisionShape::SetMesh(Mesh *mesh)
 
 	SetMesh(mesh->GetSkeletonRoot(), mat4::IDENTITY);
 	
-	worldBoundingBoxChanged = true;
+	MarkedDirty();
 }
 
 void CollisionShape::SetMesh(SkeletonNode &skeletonNode, mat4 transformation)
@@ -130,8 +135,8 @@ void CollisionShape::SetMesh(SkeletonNode &skeletonNode, mat4 transformation)
 void CollisionShape::SetPlane(const Plane &plane)
 {
 	type = CollisionShapeType::PLANE;
-	this->plane = plane;
-	worldBoundingBoxChanged = true;
+	this->plane = plane;	
+	MarkedDirty();
 }
 
 Plane CollisionShape::GetPlane() const
@@ -165,7 +170,7 @@ void CollisionShape::SetBox(BoundingBox bbox)
 	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmin.x, bmin.y, bmin.z), vec3(bmax.x, bmin.y, bmin.z)));
 	collisionMesh->triangles.push_back(CollisionTriangle(vec3(bmin.x, bmin.y, bmax.z), vec3(bmax.x, bmin.y, bmin.z), vec3(bmax.x, bmin.y, bmax.z)));
 
-	worldBoundingBoxChanged = true;
+	MarkedDirty();
 }
 
 void CollisionShape::RenderDebugGeometry(DebugRenderer *debugRenderer)
@@ -281,4 +286,24 @@ void CollisionShape::SetIsTrigger(bool isTrigger)
 BoundingBox CollisionShape::GetBox() const
 {
 	return shapeBoundingBox;
+}
+
+OctreeNode<CollisionShape> *CollisionShape::GetOctreeNode()
+{
+	return octreeNode;
+}
+
+void CollisionShape::SetOctreeNode(OctreeNode<CollisionShape> *octreeNode)
+{
+	this->octreeNode = octreeNode;
+}
+
+bool CollisionShape::GetOctreeNodeNeedsUpdate() const
+{
+	return octreeNodeNeedsUpdate;
+}
+
+void CollisionShape::SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate)
+{
+	this->octreeNodeNeedsUpdate = octreeNodeNeedsUpdate;
 }

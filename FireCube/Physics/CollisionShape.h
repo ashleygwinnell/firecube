@@ -9,6 +9,8 @@
 namespace FireCube
 {
 
+template <class T>
+class OctreeNode;
 class PhysicsWorld;
 class Mesh;
 class SkeletonNode;
@@ -59,6 +61,11 @@ public:
 	bool IsTrigger() const;
 	void SetIsTrigger(bool isTrigger);
 
+	OctreeNode<CollisionShape> *GetOctreeNode();
+	void SetOctreeNode(OctreeNode<CollisionShape> *octreeNode);
+	bool GetOctreeNodeNeedsUpdate() const;
+	void SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate);
+
 private:
 	
 	CollisionShape(const CollisionShape &other);
@@ -80,6 +87,9 @@ private:
 	Mesh *mesh;
 	Plane plane;
 	BoundingBox shapeBoundingBox;
+
+	OctreeNode<CollisionShape> *octreeNode;
+	bool octreeNodeNeedsUpdate;
 	
 };
 
