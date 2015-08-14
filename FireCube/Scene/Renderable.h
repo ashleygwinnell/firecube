@@ -68,6 +68,7 @@ public:
 	
 	OctreeNode<Renderable> *GetOctreeNode();
 	void SetOctreeNode(OctreeNode<Renderable> *octreeNode);
+	bool GetOctreeNodeNeedsUpdate() const;
 	void SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate);
 protected:
 

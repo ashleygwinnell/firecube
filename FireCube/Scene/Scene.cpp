@@ -48,6 +48,7 @@ void Scene::RemoveRenderable(Renderable *renderable)
 		if (*i == renderable)
 		{
 			renderables.erase(i);
+			octree.Remove(renderable);
 			break;
 		}
 	}

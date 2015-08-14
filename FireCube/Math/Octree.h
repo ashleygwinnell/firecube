@@ -18,6 +18,7 @@ class FIRECUBE_API Octree;
 template <class T>
 class FIRECUBE_API OctreeNode
 {
+	friend class Octree<T>;
 public:
 	OctreeNode(Octree<T> *octree, OctreeNode<T> *root, const BoundingBox &boundingBox) : worldBoundingBox(boundingBox), 
 		children({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }), root(root), octree(octree)
@@ -158,6 +159,21 @@ public:
 	void Insert(T *object)
 	{
 		root->Insert(object, object->GetWorldBoundingBox());
+	}
+
+	void Remove(T *object)
+	{
+		if (object->GetOctreeNode()->GetOctree() == this)
+		{
+			object->GetOctreeNode()->objects.erase(std::remove(object->GetOctreeNode()->objects.begin(), object->GetOctreeNode()->objects.end(), object), object->GetOctreeNode()->objects.end());
+			object->SetOctreeNode(nullptr);			
+			if (object->GetOctreeNodeNeedsUpdate())
+			{
+				object->SetOctreeNodeNeedsUpdate(false);
+				pendingUpdate.erase(std::remove(pendingUpdate.begin(), pendingUpdate.end(), object), pendingUpdate.end());
+			}
+
+		}
 	}
 
 	void GetObjects(const Frustum &frustum, std::vector<T *> &objects)

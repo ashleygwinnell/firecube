@@ -156,6 +156,11 @@ void Renderable::SetOctreeNode(OctreeNode<Renderable> *octreeNode)
 	this->octreeNode = octreeNode;
 }
 
+bool Renderable::GetOctreeNodeNeedsUpdate() const
+{
+	return octreeNodeNeedsUpdate;
+}
+
 void Renderable::SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate)
 {
 	this->octreeNodeNeedsUpdate = octreeNodeNeedsUpdate;
