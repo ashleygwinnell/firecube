@@ -6,7 +6,7 @@
 #include "Geometry/Mesh.h"
 using namespace FireCube;
 
-StaticModel::StaticModel(Engine *engine) : Renderable(engine)
+StaticModel::StaticModel(Engine *engine) : Renderable(engine), boundingBox(vec3(0), vec3(0))
 {
 	
 }

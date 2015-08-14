@@ -17,7 +17,7 @@
 
 using namespace FireCube;
 
-Scene::Scene(Engine *engine) : Object(engine), ambientColor(0.1f), fogEnabled(false), rootNode(engine), fogColor(1.0f), octree(engine, vec3(10000))
+Scene::Scene(Engine *engine) : Object(engine), ambientColor(0.1f), fogEnabled(false), rootNode(engine), fogColor(1.0f), octree(engine, vec3(10000), 10)
 {
 	rootNode.SetScene(this);
 }
@@ -48,7 +48,10 @@ void Scene::RemoveRenderable(Renderable *renderable)
 		if (*i == renderable)
 		{
 			renderables.erase(i);
-			octree.Remove(renderable);
+			if (renderable->GetOctreeNode())
+			{
+				octree.Remove(renderable);
+			}
 			break;
 		}
 	}

@@ -20,8 +20,8 @@ class FIRECUBE_API OctreeNode
 {
 	friend class Octree<T>;
 public:
-	OctreeNode(Octree<T> *octree, OctreeNode<T> *root, const BoundingBox &boundingBox) : worldBoundingBox(boundingBox), 
-		children({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }), root(root), octree(octree)
+	OctreeNode(Octree<T> *octree, unsigned int level, OctreeNode<T> *root, const BoundingBox &boundingBox) : worldBoundingBox(boundingBox), 
+		children({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }), root(root), octree(octree), level(level)
 	{
 		halfSize = boundingBox.GetSize() * 0.5f;
 		center = boundingBox.GetCenter();
@@ -29,7 +29,7 @@ public:
 		cullingBox.SetMax(boundingBox.GetMax() + halfSize);
 	}
 
-	OctreeNode(Octree<T> *octree, const BoundingBox &boundingBox) : OctreeNode(octree, this, boundingBox)
+	OctreeNode(Octree<T> *octree, unsigned int level, const BoundingBox &boundingBox) : OctreeNode(octree, level, this, boundingBox)
 	{
 	}
 
@@ -51,7 +51,7 @@ public:
 	{
 		bool addedToChild = false;
 		auto size = boundingBox.GetSize();
-		if (size.x < halfSize.x * 0.5f && size.y < halfSize.y * 0.5f && size.z < halfSize.z * 0.5f)
+		if (level < octree->GetMaxLevel() && size.x < halfSize.x * 0.5f && size.y < halfSize.y * 0.5f && size.z < halfSize.z * 0.5f)
 		{
 			auto boxCenter = boundingBox.GetCenter();
 			unsigned int x = boxCenter.x < center.x ? 0 : 1;
@@ -63,7 +63,7 @@ public:
 			{
 				vec3 childMin(x == 0 ? worldBoundingBox.GetMin().x : center.x, y == 0 ? worldBoundingBox.GetMin().y : center.y, z == 0 ? worldBoundingBox.GetMin().z : center.z);
 				vec3 childMax(x == 0 ? center.x : worldBoundingBox.GetMax().x, y == 0 ? center.y : worldBoundingBox.GetMax().y, z == 0 ? center.z : worldBoundingBox.GetMax().z);
-				child = children[x + y + z] = new OctreeNode(octree, root, BoundingBox(childMin, childMax));
+				child = children[x + y + z] = new OctreeNode(octree, level + 1, root, BoundingBox(childMin, childMax));
 			}
 
 			addedToChild = child->Insert(object, boundingBox);
@@ -139,6 +139,7 @@ private:
 	std::array<OctreeNode<T> *, 8> children;
 	OctreeNode *root;
 	Octree<T> *octree;
+	unsigned int level;
 };
 
 template <class T>
@@ -146,9 +147,9 @@ class FIRECUBE_API Octree : public Object
 {
 	OBJECT(Octree)
 public:
-	Octree(Engine *engine, vec3 initialSize) : Object(engine)
+	Octree(Engine *engine, vec3 initialSize, unsigned int maxLevel) : Object(engine), maxLevel(maxLevel)
 	{
-		root = new OctreeNode<T>(this, BoundingBox(-initialSize * 0.5f, initialSize * 0.5f));
+		root = new OctreeNode<T>(this, 0, BoundingBox(-initialSize * 0.5f, initialSize * 0.5f));
 	}
 
 	~Octree()
@@ -158,6 +159,8 @@ public:
 
 	void Insert(T *object)
 	{
+		auto boundingBox = object->GetWorldBoundingBox();
+		auto size = boundingBox.GetSize();
 		root->Insert(object, object->GetWorldBoundingBox());
 	}
 
@@ -202,9 +205,16 @@ public:
 
 		pendingUpdate.clear();
 	}
+
+	unsigned int GetMaxLevel() const
+	{
+		return maxLevel;
+	}
+
 private:
 	OctreeNode<T> *root;
 	std::vector<T *> pendingUpdate;
+	unsigned int maxLevel;
 };
 
 }

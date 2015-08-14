@@ -19,8 +19,8 @@ public:
 	virtual Component *Clone() const;
 	void SetMaterial(Material *material);
 	Material *GetMaterial() const;
-protected:
 	void SetBoundingBox(BoundingBox boundingBox);
+protected:	
 	virtual void UpdateWorldBoundingBox();
 	virtual void UpdateRenderableParts();
 private:
