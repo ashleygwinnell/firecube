@@ -23,6 +23,7 @@ public:
 	void AddLine(const vec3 &start, const vec3 &end, const vec3 &color);
 	void AddBoundingBox(const BoundingBox &boundingBox, const vec3 &color);	
 	void AddSphere(vec3 center, float radius, unsigned int rings, unsigned int columns, const vec3 &color);
+	void AddCapsule(vec3 p0, vec3 p1, float radius, unsigned int rings, unsigned int columns, const vec3 &color);
 private:
 	struct LineVertex
 	{
