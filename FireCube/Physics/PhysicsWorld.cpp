@@ -10,7 +10,7 @@
 
 using namespace FireCube;
 
-PhysicsWorld::PhysicsWorld(Engine *engine) : Component(engine), octree(engine, vec3(10000), 10)
+PhysicsWorld::PhysicsWorld(Engine *engine) : Component(engine), octree(engine, vec3(2000), 8)
 {
 	SubscribeToEvent(Events::Update, &PhysicsWorld::Update);
 }
@@ -181,6 +181,8 @@ void PhysicsWorld::SceneChanged(Scene *oldScene)
 
 void PhysicsWorld::RenderDebugGeometry(DebugRenderer *debugRenderer)
 {
+	octree.RenderDebugGeometry(debugRenderer);
+
 	for (auto s : collisionShapes)
 	{
 		s->RenderDebugGeometry(debugRenderer);

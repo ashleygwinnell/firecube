@@ -8,6 +8,7 @@
 #include "Math/Math.h"
 #include "Math/Frustum.h"
 #include "Math/Ray.h"
+#include "Rendering/DebugRenderer.h"
 
 namespace FireCube
 {
@@ -149,6 +150,32 @@ public:
 	{
 		return octree;
 	}
+
+	void RenderDebugGeometry(DebugRenderer *debugRenderer)
+	{
+		bool hasChildren = false;
+
+		for (auto child : children)
+		{
+			if (child)
+			{
+				hasChildren = true;
+			}
+		}
+
+		if (hasChildren || objects.empty() == false)
+		{
+			debugRenderer->AddBoundingBox(worldBoundingBox, vec3(0, 1, 0));
+		}
+
+		for (auto child : children)
+		{
+			if (child)
+			{
+				child->RenderDebugGeometry(debugRenderer);
+			}
+		}
+	}
 private:
 	BoundingBox worldBoundingBox;
 	BoundingBox cullingBox;
@@ -233,6 +260,11 @@ public:
 	unsigned int GetMaxLevel() const
 	{
 		return maxLevel;
+	}
+
+	void RenderDebugGeometry(DebugRenderer *debugRenderer)
+	{
+		root->RenderDebugGeometry(debugRenderer);
 	}
 
 private:
