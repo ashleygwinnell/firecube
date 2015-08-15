@@ -70,3 +70,33 @@ void DebugRenderer::AddBoundingBox(const BoundingBox &boundingBox, const vec3 &c
 	AddLine(vec3(max.x, min.y, max.z), vec3(max.x, max.y, max.z), color);
 	AddLine(vec3(min.x, min.y, max.z), vec3(min.x, max.y, max.z), color);
 }
+
+void DebugRenderer::AddSphere(vec3 center, float radius, unsigned int rings, unsigned int columns, const vec3 &color)
+{	
+	const float fDeltaRingAngle = (float)PI / rings;
+	const float fDeltacolumnAngle = 2 * (float)PI / columns;
+	
+	for (unsigned int ring = 0; ring < rings; ring++)
+	{
+		const float r0 = std::sin(ring * fDeltaRingAngle);
+		const float y0 = std::cos(ring * fDeltaRingAngle);
+		const float r1 = std::sin((ring + 1) * fDeltaRingAngle);
+		const float y1 = std::cos((ring + 1) * fDeltaRingAngle);
+
+		for (unsigned column = 0; column < columns; column++)
+		{
+			vec3 pos00(-r0 * std::sin(column * fDeltacolumnAngle), y0, -r0 * std::cos(column * fDeltacolumnAngle));
+			vec3 pos10(-r0 * std::sin((column + 1) * fDeltacolumnAngle), y0, -r0 * std::cos((column + 1) * fDeltacolumnAngle));
+			vec3 pos01(-r1 * std::sin(column * fDeltacolumnAngle), y1, -r1 * std::cos(column * fDeltacolumnAngle));
+			vec3 pos11(-r1 * std::sin((column + 1) * fDeltacolumnAngle), y1, -r1 * std::cos((column + 1) * fDeltacolumnAngle));
+			pos00.Normalize();
+			pos10.Normalize();
+			pos01.Normalize();
+			pos11.Normalize();
+			AddLine(center + pos00 * radius, center + pos10 * radius, color);
+			AddLine(center + pos10 * radius, center + pos11 * radius, color);
+			AddLine(center + pos11 * radius, center + pos01 * radius, color);
+			AddLine(center + pos01 * radius, center + pos00 * radius, color);
+		}
+	}	
+}
