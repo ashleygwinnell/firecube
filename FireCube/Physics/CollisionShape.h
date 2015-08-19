@@ -23,9 +23,10 @@ enum class CollisionShapeType
 class CollisionTriangle
 {
 public:
-	CollisionTriangle(vec3 p1, vec3 p2, vec3 p3);
+	CollisionTriangle();
+	CollisionTriangle(vec3 p0, vec3 p1, vec3 p2);
 
-	vec3 p1, p2, p3;
+	vec3 p0, p1, p2;
 };
 
 class CollisionMesh : public RefCounted

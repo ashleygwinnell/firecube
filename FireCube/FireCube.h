@@ -11,6 +11,8 @@
 #include "Math/Frustum.h"
 #include "Math/Ray.h"
 #include "Math/Octree.h"
+#include "Math/MathUtils.h"
+#include "Math/CollisionUtils.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/GeometryGenerator.h"
 #include "Geometry/Mesh.h"

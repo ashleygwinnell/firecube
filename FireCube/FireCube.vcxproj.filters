@@ -342,6 +342,9 @@
     <ClCompile Include="Geometry\Mesh.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Math\CollisionUtils.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -619,6 +622,9 @@
       <Filter>ThirdParty\LuaIntf</Filter>
     </ClInclude>
     <ClInclude Include="Math\Octree.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\CollisionUtils.h">
       <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>

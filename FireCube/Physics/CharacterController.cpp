@@ -6,6 +6,7 @@
 #include "Rendering/DebugRenderer.h"
 #include "Math/MathUtils.h"
 #include "Scene/Scene.h"
+#include "Math/CollisionUtils.h"
 
 using namespace FireCube;
 
@@ -53,7 +54,7 @@ void CharacterController::SceneChanged(Scene *oldScene)
 void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionMesh, mat4 transform, CollisionResult &result) const
 {	
 	transform = scaleMatrix * transform;
-	MathUtils::SweepEllipsoidMesh(transformedPosition, transformedVelocity, collisionMesh, transform, result);	
+	CollisionUtils::SweepEllipsoidMesh(transformedPosition, transformedVelocity, collisionMesh, transform, result);	
 }
 
 void CharacterController::CheckCollisionWithPlane(const Plane &plane, mat4 transform, CollisionResult &result) const

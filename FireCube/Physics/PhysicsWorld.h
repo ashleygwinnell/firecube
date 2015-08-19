@@ -30,6 +30,7 @@ public:
 	float nearestDistance;
 	vec3 nearestNormal;
 	vec3 nearestIntersectionPoint;
+	vec3 nearestTriNormal;
 	std::vector<CollisionContact> contacts;
 };
 

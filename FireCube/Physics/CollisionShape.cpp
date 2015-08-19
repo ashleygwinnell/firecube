@@ -12,7 +12,12 @@
 
 using namespace FireCube;
 
-CollisionTriangle::CollisionTriangle(vec3 p1, vec3 p2, vec3 p3) : p1(p1), p2(p2), p3(p3)
+CollisionTriangle::CollisionTriangle()
+{
+
+}
+
+CollisionTriangle::CollisionTriangle(vec3 p0, vec3 p1, vec3 p2) : p0(p0), p1(p1), p2(p2)
 {
 
 }
@@ -178,14 +183,14 @@ void CollisionShape::RenderDebugGeometry(DebugRenderer *debugRenderer)
 	if (type == CollisionShapeType::BOX)
 	{
 		vec3 p[8];
-		p[0] = node->GetWorldTransformation() * collisionMesh->triangles[0].p1;
-		p[1] = node->GetWorldTransformation() * collisionMesh->triangles[0].p2;
-		p[2] = node->GetWorldTransformation() * collisionMesh->triangles[0].p3;
-		p[3] = node->GetWorldTransformation() * collisionMesh->triangles[1].p3;
-		p[4] = node->GetWorldTransformation() * collisionMesh->triangles[2].p1;
-		p[5] = node->GetWorldTransformation() * collisionMesh->triangles[2].p2;
-		p[6] = node->GetWorldTransformation() * collisionMesh->triangles[2].p3;
-		p[7] = node->GetWorldTransformation() * collisionMesh->triangles[3].p3;
+		p[0] = node->GetWorldTransformation() * collisionMesh->triangles[0].p0;
+		p[1] = node->GetWorldTransformation() * collisionMesh->triangles[0].p1;
+		p[2] = node->GetWorldTransformation() * collisionMesh->triangles[0].p2;
+		p[3] = node->GetWorldTransformation() * collisionMesh->triangles[1].p2;
+		p[4] = node->GetWorldTransformation() * collisionMesh->triangles[2].p0;
+		p[5] = node->GetWorldTransformation() * collisionMesh->triangles[2].p1;
+		p[6] = node->GetWorldTransformation() * collisionMesh->triangles[2].p2;
+		p[7] = node->GetWorldTransformation() * collisionMesh->triangles[3].p2;
 		debugRenderer->AddLine(p[0], p[1], vec3(0, 1, 0));
 		debugRenderer->AddLine(p[1], p[2], vec3(0, 1, 0));
 		debugRenderer->AddLine(p[2], p[3], vec3(0, 1, 0));
@@ -203,12 +208,12 @@ void CollisionShape::RenderDebugGeometry(DebugRenderer *debugRenderer)
 	{
 		for (auto &t : collisionMesh->triangles)
 		{
+			vec3 p0 = node->GetWorldTransformation() * t.p0;
 			vec3 p1 = node->GetWorldTransformation() * t.p1;
 			vec3 p2 = node->GetWorldTransformation() * t.p2;
-			vec3 p3 = node->GetWorldTransformation() * t.p3;
+			debugRenderer->AddLine(p0, p1, vec3(0, 1, 0));
 			debugRenderer->AddLine(p1, p2, vec3(0, 1, 0));
-			debugRenderer->AddLine(p2, p3, vec3(0, 1, 0));
-			debugRenderer->AddLine(p3, p1, vec3(0, 1, 0));
+			debugRenderer->AddLine(p2, p0, vec3(0, 1, 0));
 		}		
 	}
 	else if (type == CollisionShapeType::PLANE)

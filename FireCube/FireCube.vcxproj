@@ -37,6 +37,7 @@
     <ClCompile Include="Geometry\GeometryGenerator.cpp" />
     <ClCompile Include="Geometry\CollisionQuery.cpp" />
     <ClCompile Include="Math\BoundingBox.cpp" />
+    <ClCompile Include="Math\CollisionUtils.cpp" />
     <ClCompile Include="Math\Frustum.cpp" />
     <ClCompile Include="Math\mat3.cpp" />
     <ClCompile Include="Math\mat4.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="Geometry\GeometryGenerator.h" />
     <ClInclude Include="Geometry\CollisionQuery.h" />
     <ClInclude Include="Math\BoundingBox.h" />
+    <ClInclude Include="Math\CollisionUtils.h" />
     <ClInclude Include="Math\Frustum.h" />
     <ClInclude Include="Math\mat3.h" />
     <ClInclude Include="Math\mat4.h" />
