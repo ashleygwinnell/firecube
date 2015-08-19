@@ -38,7 +38,7 @@ void DebugRenderer::Render(Camera *camera)
 		renderer->SetShaders(vs, fs);
 		renderer->UseCamera(camera);
 		linesVertexBuffer->LoadData(lines.data(), lines.size(), VertexAttributeType::POSITION | VertexAttributeType::COLOR, BufferType::DYNAMIC);
-		linesGeometry->SetPrimitiveCount(lines.size() / 4);
+		linesGeometry->SetPrimitiveCount(lines.size() / 2);
 		linesGeometry->Update();
 		linesGeometry->Render();
 		lines.clear();
