@@ -2,6 +2,8 @@
 #include "MathUtils.h"
 #include "Physics/CollisionShape.h"
 #include "Physics/PhysicsWorld.h"
+#include "Math/Plane.h"
+#include "Math/Ray.h"
 
 using namespace FireCube;
 
@@ -196,16 +198,9 @@ void CollisionUtils::SweepEllipsoidMesh(vec3 transformedPosition, vec3 transform
 
 			if (foundCollision == true)
 			{
-				float distToCollision = t*transformedVelocity.Length();
-				result.contacts.push_back(CollisionContact());
-				CollisionContact &e = result.contacts.back();
-				e.time = t;
-				e.distance = distToCollision;
-				e.intersectionPoint = collisionPoint;
-				e.normal = nearestNormal;
+				float distToCollision = t*transformedVelocity.Length();				
 				if ((result.collisionFound == false) || (distToCollision < result.nearestDistance))
-				{
-					result.nearestTime = t;
+				{					
 					result.nearestDistance = distToCollision;
 					result.nearestIntersectionPoint = collisionPoint;
 					result.nearestNormal = nearestNormal;
@@ -416,13 +411,14 @@ bool CollisionUtils::SweepSphereTriangle(vec3 position, vec3 velocity, float rad
 	return false;
 }
 
-void CollisionUtils::SweepSphereMesh(vec3 position, vec3 velocity, float radius, const CollisionMesh &collisionMesh, CollisionResult &result)
+void CollisionUtils::SweepSphereMesh(vec3 position, vec3 velocity, float radius, const CollisionMesh &collisionMesh, mat4 transform, CollisionResult &result)
 {
+	result.collisionFound = false;
 	for (const auto &tri : collisionMesh.triangles)
 	{
-		const vec3 &p1 = tri.p0;
-		const vec3 &p2 = tri.p1;
-		const vec3 &p3 = tri.p2;
+		const vec3 &p1 = transform * tri.p0;
+		const vec3 &p2 = transform * tri.p1;
+		const vec3 &p3 = transform * tri.p2;
 		const Plane &trianglePlane = Plane(p1, p2, p3);
 
 		if (trianglePlane.IsFrontFacingTo(velocity))
@@ -607,15 +603,8 @@ void CollisionUtils::SweepSphereMesh(vec3 position, vec3 velocity, float radius,
 			if (foundCollision == true)
 			{
 				float distToCollision = t * velocity.Length();
-				result.contacts.push_back(CollisionContact());
-				CollisionContact &e = result.contacts.back();
-				e.time = t;
-				e.distance = distToCollision;
-				e.intersectionPoint = collisionPoint;
-				e.normal = nearestNormal;
 				if ((result.collisionFound == false) || (distToCollision < result.nearestDistance))
 				{
-					result.nearestTime = t;
 					result.nearestDistance = distToCollision;
 					result.nearestIntersectionPoint = collisionPoint;
 					result.nearestNormal = nearestNormal;
@@ -654,8 +643,9 @@ inline void CalcNormal(const vec3 &p0, const vec3 &p1, const vec3 &p2, vec3 &nor
 	normal = Cross(p1 - p0, p2 - p0);
 }
 
-bool CollisionUtils::SweepCapsuleMesh(vec3 dir, float distance, vec3 capsuleP0, vec3 capsuleP1, float radius, const CollisionMesh &collisionMesh, CollisionResult &result)
+bool CollisionUtils::SweepCapsuleMesh(vec3 dir, float distance, vec3 capsuleP0, vec3 capsuleP1, float radius, const CollisionMesh &collisionMesh, mat4 transform, CollisionResult &result)
 {
+	result.collisionFound = false;
 	vec3 center = (capsuleP0 + capsuleP1) * 0.5f;
 	vec3 extrusionDir = (capsuleP0 - capsuleP1) * 0.5f;
 	float halfHeight = extrusionDir.Length();
@@ -670,7 +660,7 @@ bool CollisionUtils::SweepCapsuleMesh(vec3 dir, float distance, vec3 capsuleP0, 
 	if (!mustExtrude)
 	{
 		vec3 sphereCenter = center + dir * halfHeight;
-		SweepSphereMesh(sphereCenter, dir * distance, radius, collisionMesh, result);
+		SweepSphereMesh(sphereCenter, dir * distance, radius, collisionMesh, transform, result);		
 		return result.collisionFound;
 	}
 
@@ -690,8 +680,20 @@ bool CollisionUtils::SweepCapsuleMesh(vec3 dir, float distance, vec3 capsuleP0, 
 		vec3 p0 = tri.p0;
 		vec3 p1 = tri.p1;
 		vec3 p2 = tri.p2;
+		
+		vec3 originalTriNormal;
+		CalcNormal(p0, p1, p2, originalTriNormal);
+		originalTriNormal.Normalize();
+
 		vec3 triNormal;
+		p0 = transform * p0;
+		p1 = transform * p1;
+		p2 = transform * p2;
 		CalcNormal(p0, p1, p2, triNormal);
+
+		if (triNormal.Dot(dir) > 0.0f)
+			continue;
+
 
 		vec3 p0b = p0 + extrusionDir;
 		vec3 p1b = p1 + extrusionDir;
@@ -752,7 +754,7 @@ bool CollisionUtils::SweepCapsuleMesh(vec3 dir, float distance, vec3 capsuleP0, 
 				nearestDistance = intersectionDistance;
 				nearestTriangle = extrudedTri;
 				nearestSrcTriangleIndex = i;
-				nearestTriNormal = triNormal;
+				nearestTriNormal = originalTriNormal;
 			}
 
 		}
@@ -846,4 +848,30 @@ bool CollisionUtils::SweepCapsulePlane(vec3 dir, float distance, vec3 capsuleP0,
 		return false;
 	}
 	
+}
+
+bool CollisionUtils::SweepSpherePlane(vec3 position, vec3 velocity, float radius, const Plane &plane, mat4 transform, CollisionResult &result)
+{
+	vec4 p(plane.GetNormal(), -plane.GetDistance());
+	transform.Inverse();
+	transform.Transpose();
+	p = transform * p;
+	vec3 n = vec3(p.x, p.y, p.z);
+	float l = n.Length();
+	n = n / l;
+	float d = -p.w / l;
+	float t = (radius + d - n.Dot(position)) / n.Dot(velocity);
+	if (t >= 0.0f && t <= 1.0f)
+	{
+		float distToCollision = t * velocity.Length();
+		if ((result.collisionFound == false) || (distToCollision < result.nearestDistance))
+		{
+			result.nearestDistance = distToCollision;
+			result.nearestIntersectionPoint = position + t * velocity - n;
+			result.nearestNormal = n;
+			result.collisionFound = true;
+		}
+	}
+
+	return result.collisionFound;
 }

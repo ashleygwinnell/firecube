@@ -276,8 +276,13 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		auto component = node->CreateComponent<CharacterController>();
 		if (e->Attribute("radius"))
 		{
-			component->SetRadius(Variant::FromString(e->Attribute("radius")).GetVec3());
-		}		
+			component->SetRadius(Variant::FromString(e->Attribute("radius")).GetFloat());
+		}
+
+		if (e->Attribute("height"))
+		{
+			component->SetRadius(Variant::FromString(e->Attribute("height")).GetFloat());
+		}
 	}
 	else
 	{

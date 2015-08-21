@@ -24,8 +24,10 @@ public:
 	void CheckCollisionWithPlane(const Plane &plane, mat4 transform, CollisionResult &result) const;
 	void UpdateTransformedState();
 	void UpdateFromTransformedState();
-	void SetRadius(vec3 radius);
-	vec3 GetRadius() const;
+	void SetRadius(float radius);
+	float GetRadius() const;
+	void SetHeight(float height);
+	float GetHeight() const;
 	void SetVelocity(vec3 velocity);
 	vec3 GetVelocity() const;
 	bool IsOnGround() const;
@@ -40,12 +42,10 @@ private:
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
 	
+	vec3 position;
 	vec3 velocity;
-	vec3 radius;
-	vec3 transformedPosition;
-	vec3 transformedVelocity;	
-	mat4 inverseTransposedTransform;
-	mat4 scaleMatrix;
+	float radius;
+	float height;
 
 	bool collisionFound;
 	float nearestTime;

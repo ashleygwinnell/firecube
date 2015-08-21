@@ -25,13 +25,11 @@ class CollisionResult
 public:
 	CollisionResult();
 
-	bool collisionFound;
-	float nearestTime;
+	bool collisionFound;	
 	float nearestDistance;
 	vec3 nearestNormal;
 	vec3 nearestIntersectionPoint;
-	vec3 nearestTriNormal;
-	std::vector<CollisionContact> contacts;
+	vec3 nearestTriNormal;	
 };
 
 class FIRECUBE_API PhysicsWorld : public Component

@@ -64,14 +64,12 @@ void PhysicsWorld::UpdateCharacterControllers(float deltaTime)
 		std::set<CollisionShape *> triggeredCollisionShapes;
 		for (int iter = 0; iter < 3; ++iter)
 		{
-			if (characterController->finishedMovement == false && (characterController->transformedVelocity * characterController->radius).Length2() > 0.001f * 0.001f)
+			if (characterController->finishedMovement == false && characterController->velocity.Length2() > 0.001f * 0.001f)
 			{				
 				characterController->collisionFound = false;
-				BoundingBox characterControllerBoundingBox = BoundingBox(characterController->transformedPosition * characterController->GetRadius() - characterController->GetRadius(), characterController->transformedPosition * characterController->GetRadius() + characterController->GetRadius());
-				characterControllerBoundingBox.Expand(characterControllerBoundingBox.GetMin() + characterController->transformedVelocity * characterController->GetRadius());
-				characterControllerBoundingBox.Expand(characterControllerBoundingBox.GetMin() - characterController->transformedVelocity * characterController->GetRadius());
-				characterControllerBoundingBox.Expand(characterControllerBoundingBox.GetMax() + characterController->transformedVelocity * characterController->GetRadius());
-				characterControllerBoundingBox.Expand(characterControllerBoundingBox.GetMax() - characterController->transformedVelocity * characterController->GetRadius());
+				BoundingBox characterControllerBoundingBox = BoundingBox(characterController->position - vec3(characterController->GetRadius(), characterController->GetHeight() * 0.5f + characterController->GetRadius(), characterController->GetRadius()), characterController->position + vec3(characterController->GetRadius(), characterController->GetHeight() * 0.5f + characterController->GetRadius(), characterController->GetRadius()));
+				BoundingBox characterControllerBoundingBoxAtTarget = BoundingBox(characterController->position + characterController->velocity - vec3(characterController->GetRadius(), characterController->GetHeight() * 0.5f + characterController->GetRadius(), characterController->GetRadius()), characterController->position + characterController->velocity + vec3(characterController->GetRadius(), characterController->GetHeight() * 0.5f + characterController->GetRadius(), characterController->GetRadius()));				
+				characterControllerBoundingBox.Expand(characterControllerBoundingBoxAtTarget);
 
 				std::vector<CollisionShape *> closeCollisionShapes;				
 				octree.GetObjects(characterControllerBoundingBox, closeCollisionShapes);
@@ -93,15 +91,14 @@ void PhysicsWorld::UpdateCharacterControllers(float deltaTime)
 						}
 
 						if (collisionShape->IsTrigger() == false)
-						{
-							characterController->contacts.insert(characterController->contacts.end(), result.contacts.begin(), result.contacts.end());
+						{							
 							if (result.collisionFound && ((characterController->collisionFound == false) || (result.nearestDistance < characterController->nearestDistance)))
-							{
-								characterController->nearestTime = result.nearestTime;
+							{						
 								characterController->nearestDistance = result.nearestDistance;
 								characterController->nearestIntersectionPoint = result.nearestIntersectionPoint;
 								characterController->nearestNormal = result.nearestNormal;
 								characterController->collisionFound = true;
+								// TODO: Add contact to character controller
 							}
 						}
 						else if (result.collisionFound)
@@ -113,14 +110,14 @@ void PhysicsWorld::UpdateCharacterControllers(float deltaTime)
 
 				if (characterController->collisionFound == false)
 				{
-					characterController->transformedPosition += characterController->transformedVelocity;
+					characterController->position += characterController->velocity;
 					characterController->finishedMovement = true;
 				}
 				else
 				{
-					characterController->transformedPosition += (characterController->transformedVelocity.Normalized() * (characterController->nearestDistance - 0.001f));
+					characterController->position += (characterController->velocity.Normalized() * (characterController->nearestDistance - 0.001f));
 					vec3 normal = characterController->nearestNormal.Normalized();
-					characterController->transformedVelocity -= normal * normal.Dot(characterController->transformedVelocity);
+					characterController->velocity -= normal * normal.Dot(characterController->velocity);
 				}
 			}
 		}
