@@ -794,3 +794,56 @@ bool CollisionUtils::SweepCapsuleMesh(vec3 dir, float distance, vec3 capsuleP0, 
 	}
 	return foundCollision;
 }
+
+bool CollisionUtils::SweepCapsulePlane(vec3 dir, float distance, vec3 capsuleP0, vec3 capsuleP1, float radius, const Plane &plane, mat4 transform, CollisionResult &result)
+{
+	vec4 p(plane.GetNormal(), -plane.GetDistance());
+	transform.Inverse();
+	transform.Transpose();
+	p = transform * p;
+	vec3 n = vec3(p.x, p.y, p.z);
+	float l = n.Length();
+	n = n / l;
+	float d = -p.w / l;
+	
+	unsigned int index = 0;
+	vec3 pts[2];
+
+	float minDp = 10e6;
+	
+	pts[0] = capsuleP0;
+	pts[1] = capsuleP1;
+	for (unsigned int i = 0; i < 2; i++)
+	{
+		const float dp = pts[i].Dot(n);
+		if (dp < minDp)
+		{
+			minDp = dp;
+			index = i;
+		}
+	}
+
+	// test if the capsule initially overlaps with plane
+	if (minDp <= radius + d)
+	{
+		result.nearestDistance = 0.0f;
+		result.nearestNormal = -dir;
+		result.collisionFound = true;
+		return true;
+	}
+	
+	const vec3 ptOnCapsule = pts[index] - n * radius;	
+	bool hitPlane = Ray(ptOnCapsule, dir).IntersectPlane(Plane(n, d), result.nearestDistance);
+	if (hitPlane && result.nearestDistance > 0 && result.nearestDistance <= distance)
+	{
+		result.nearestNormal = n;
+		result.collisionFound = true;
+		return true;
+	}
+	else
+	{
+		result.collisionFound = false;
+		return false;
+	}
+	
+}
