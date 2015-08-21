@@ -234,7 +234,7 @@ bool CollisionUtils::SweepSphereTriangle(vec3 position, vec3 velocity, float rad
 
 		if (normalDotVelocity == 0)
 		{
-			if (fabs(signedDistToTrianglePlane) >= 1.0f)
+			if (fabs(signedDistToTrianglePlane) >= radius)
 			{
 				return false;
 			}
@@ -274,7 +274,7 @@ bool CollisionUtils::SweepSphereTriangle(vec3 position, vec3 velocity, float rad
 
 		if (!embeddedInPlane)
 		{
-			vec3 planeIntersectionPoint = (position - trianglePlane.GetNormal()) + velocity*t0;
+			vec3 planeIntersectionPoint = (position - trianglePlane.GetNormal() * radius) + velocity*t0;
 			if (MathUtils::PointTri(p1, p2, p3, planeIntersectionPoint))
 			{
 				foundCollision = true;
@@ -436,7 +436,7 @@ void CollisionUtils::SweepSphereMesh(vec3 position, vec3 velocity, float radius,
 
 			if (normalDotVelocity == 0)
 			{
-				if (fabs(signedDistToTrianglePlane) >= 1.0f)
+				if (fabs(signedDistToTrianglePlane) >= radius)
 				{
 					continue;
 				}
@@ -476,7 +476,7 @@ void CollisionUtils::SweepSphereMesh(vec3 position, vec3 velocity, float radius,
 
 			if (!embeddedInPlane)
 			{
-				vec3 planeIntersectionPoint = (position - trianglePlane.GetNormal()) + velocity*t0;
+				vec3 planeIntersectionPoint = (position - trianglePlane.GetNormal() * radius) + velocity*t0;
 				if (MathUtils::PointTri(p1, p2, p3, planeIntersectionPoint))
 				{
 					foundCollision = true;
