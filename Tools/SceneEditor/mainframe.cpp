@@ -880,67 +880,64 @@ CharacterControllerPanel::CharacterControllerPanel( wxWindow* parent, wxWindowID
 	wxBoxSizer* bSizer22;
 	bSizer22 = new wxBoxSizer( wxVERTICAL );
 	
-	wxFlexGridSizer* fgSizer2;
-	fgSizer2 = new wxFlexGridSizer( 4, 2, 0, 0 );
-	fgSizer2->AddGrowableCol( 0 );
-	fgSizer2->SetFlexibleDirection( wxHORIZONTAL );
-	fgSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxBoxSizer* bSizer28;
+	bSizer28 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_staticText3 = new wxStaticText( this, wxID_ANY, wxT("Radius"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText3->Wrap( -1 );
-	fgSizer2->Add( m_staticText3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	bSizer28->Add( m_staticText3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	wxBoxSizer* bSizer9;
-	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
+	radiusTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
+	radiusTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &radiusText ) );
 	
-	m_staticText4 = new wxStaticText( this, wxID_ANY, wxT("X"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText4->Wrap( -1 );
-	bSizer9->Add( m_staticText4, 0, wxALIGN_CENTER|wxALL, 5 );
-	
-	radiusXTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
-	radiusXTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &radiusXText ) );
-	
-	bSizer9->Add( radiusXTextCtrl, 0, wxALIGN_CENTER|wxALL, 5 );
-	
-	m_staticText5 = new wxStaticText( this, wxID_ANY, wxT("Y"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText5->Wrap( -1 );
-	bSizer9->Add( m_staticText5, 0, wxALIGN_CENTER|wxALL, 5 );
-	
-	radiusYTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
-	radiusYTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &radiusYText ) );
-	
-	bSizer9->Add( radiusYTextCtrl, 0, wxALIGN_CENTER|wxALL, 5 );
-	
-	m_staticText6 = new wxStaticText( this, wxID_ANY, wxT("Z"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText6->Wrap( -1 );
-	bSizer9->Add( m_staticText6, 0, wxALIGN_CENTER|wxALL, 5 );
-	
-	radiusZTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
-	radiusZTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &radiusZText ) );
-	
-	bSizer9->Add( radiusZTextCtrl, 0, wxALIGN_CENTER|wxALL, 5 );
+	bSizer28->Add( radiusTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
 	
 	
-	fgSizer2->Add( bSizer9, 1, wxEXPAND, 5 );
+	bSizer22->Add( bSizer28, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer29;
+	bSizer29 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText44 = new wxStaticText( this, wxID_ANY, wxT("Height"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText44->Wrap( -1 );
+	bSizer29->Add( m_staticText44, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	heightTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	heightTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &heightText ) );
+	
+	bSizer29->Add( heightTextCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	
-	bSizer22->Add( fgSizer2, 1, wxEXPAND, 0 );
+	bSizer22->Add( bSizer29, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer30;
+	bSizer30 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText45 = new wxStaticText( this, wxID_ANY, wxT("Contact Offset"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText45->Wrap( -1 );
+	bSizer30->Add( m_staticText45, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	contactOffsetTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	bSizer30->Add( contactOffsetTextCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	
+	bSizer22->Add( bSizer30, 1, wxEXPAND, 5 );
 	
 	
 	this->SetSizer( bSizer22 );
 	this->Layout();
 	
 	// Connect Events
-	radiusXTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusXChanged ), NULL, this );
-	radiusYTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusYChanged ), NULL, this );
-	radiusZTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusZChanged ), NULL, this );
+	radiusTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusChanged ), NULL, this );
+	heightTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::HeightChanged ), NULL, this );
+	contactOffsetTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::ContactOffsetChanged ), NULL, this );
 }
 
 CharacterControllerPanel::~CharacterControllerPanel()
 {
 	// Disconnect Events
-	radiusXTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusXChanged ), NULL, this );
-	radiusYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusYChanged ), NULL, this );
-	radiusZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusZChanged ), NULL, this );
+	radiusTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusChanged ), NULL, this );
+	heightTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::HeightChanged ), NULL, this );
+	contactOffsetTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::ContactOffsetChanged ), NULL, this );
 	
 }

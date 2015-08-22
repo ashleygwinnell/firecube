@@ -184,7 +184,9 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 		element->SetAttribute("type", component->GetTypeName());
 
 		auto characterController = static_cast<CharacterController *>(component);
-		element->SetAttribute("radius", ToString(characterController->GetRadius()));		
+		element->SetDoubleAttribute("radius", characterController->GetRadius());
+		element->SetDoubleAttribute("height", characterController->GetHeight());
+		element->SetDoubleAttribute("contact_offset", characterController->GetContactOffset());
 	}
 
 }

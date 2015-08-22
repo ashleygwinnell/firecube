@@ -31,6 +31,8 @@ public:
 	void SetVelocity(vec3 velocity);
 	vec3 GetVelocity() const;
 	bool IsOnGround() const;
+	void SetContactOffset(float contactOffset);
+	float GetContactOffset() const;
 
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
 	virtual Component *Clone() const;
@@ -46,6 +48,7 @@ private:
 	vec3 velocity;
 	float radius;
 	float height;
+	float contactOffset;
 
 	bool collisionFound;
 	float nearestTime;

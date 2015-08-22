@@ -11,9 +11,9 @@ public:
 	~CharacterControllerPanelImpl();
 private:	
 	void RemoveComponentClicked(wxCommandEvent& event);
-	virtual void RadiusXChanged(wxCommandEvent& event);
-	virtual void RadiusYChanged(wxCommandEvent& event);
-	virtual void RadiusZChanged(wxCommandEvent& event);
+	virtual void RadiusChanged(wxCommandEvent& event);
+	virtual void HeightChanged(wxCommandEvent& event);	
+	virtual void ContactOffsetChanged(wxCommandEvent& event);
 	
 	BaseComponentPanelImpl *parent;
 };

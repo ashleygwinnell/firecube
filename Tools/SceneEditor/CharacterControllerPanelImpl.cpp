@@ -11,10 +11,10 @@ using namespace FireCube;
 CharacterControllerPanelImpl::CharacterControllerPanelImpl(BaseComponentPanelImpl* parent) : CharacterControllerPanel(parent), parent(parent)
 {
 	CharacterController *characterController = static_cast<CharacterController *>(parent->GetComponent());
-	radiusXTextCtrl->SetLabel(wxString::FromDouble(characterController->GetRadius().x));
-	radiusYTextCtrl->SetLabel(wxString::FromDouble(characterController->GetRadius().y));
-	radiusZTextCtrl->SetLabel(wxString::FromDouble(characterController->GetRadius().z));
-
+	radiusTextCtrl->SetLabel(wxString::FromDouble(characterController->GetRadius()));
+	heightTextCtrl->SetLabel(wxString::FromDouble(characterController->GetHeight()));
+	contactOffsetTextCtrl->SetLabel(wxString::FromDouble(characterController->GetContactOffset()));
+	
 	parent->removeComponent->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(CharacterControllerPanelImpl::RemoveComponentClicked), NULL, this);
 }
 
@@ -30,11 +30,15 @@ void CharacterControllerPanelImpl::RemoveComponentClicked(wxCommandEvent& event)
 	MyApp *theApp = ((MyApp *)wxTheApp);
 	Engine *engine = theApp->fcApp.GetEngine();
 	
-	vec3 radius = characterController->GetRadius();
-	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), "Remove Component", characterController, [radius](Engine *engine, Node *node) -> Component *
+	float radius = characterController->GetRadius();
+	float height = characterController->GetHeight();
+	float contactOffset = characterController->GetContactOffset();
+	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), "Remove Component", characterController, [radius, height, contactOffset](Engine *engine, Node *node) -> Component *
 	{
 		CharacterController *characterController = node->CreateComponent<CharacterController>();
 		characterController->SetRadius(radius);		
+		characterController->SetHeight(height);
+		characterController->SetContactOffset(contactOffset);
 
 		return characterController;
 	});
@@ -42,7 +46,7 @@ void CharacterControllerPanelImpl::RemoveComponentClicked(wxCommandEvent& event)
 	theApp->GetEditorState()->ExecuteCommand(removeComponentCommand);
 }
 
-void CharacterControllerPanelImpl::RadiusXChanged(wxCommandEvent& event)
+void CharacterControllerPanelImpl::RadiusChanged(wxCommandEvent& event)
 {
 	CharacterController *characterController = static_cast<CharacterController *>(parent->GetComponent());
 
@@ -51,8 +55,8 @@ void CharacterControllerPanelImpl::RadiusXChanged(wxCommandEvent& event)
 	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), characterController));
 	double val;
 	event.GetString().ToDouble(&val);
-	vec3 oldRadius = characterController->GetRadius();
-	vec3 newRadius(val, oldRadius.y, oldRadius.z);		
+	float oldRadius = characterController->GetRadius();
+	float newRadius = val;
 
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Radius", [componentIndex, node, newRadius]()
 	{		
@@ -68,7 +72,7 @@ void CharacterControllerPanelImpl::RadiusXChanged(wxCommandEvent& event)
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
-void CharacterControllerPanelImpl::RadiusYChanged(wxCommandEvent& event)
+void CharacterControllerPanelImpl::HeightChanged(wxCommandEvent& event)
 {
 	CharacterController *characterController = static_cast<CharacterController *>(parent->GetComponent());
 
@@ -77,24 +81,24 @@ void CharacterControllerPanelImpl::RadiusYChanged(wxCommandEvent& event)
 	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), characterController));
 	double val;
 	event.GetString().ToDouble(&val);
-	vec3 oldRadius = characterController->GetRadius();
-	vec3 newRadius(oldRadius.x, val, oldRadius.z);
+	float oldHeight = characterController->GetHeight();
+	float newHeight = val;
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Radius", [componentIndex, node, newRadius]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Height", [componentIndex, node, newHeight]()
 	{
 		CharacterController *characterController = static_cast<CharacterController *>(node->GetComponents()[componentIndex]);
-		characterController->SetRadius(newRadius);
-	}, [componentIndex, node, oldRadius]()
+		characterController->SetHeight(newHeight);
+	}, [componentIndex, node, oldHeight]()
 	{
 		CharacterController *characterController = static_cast<CharacterController *>(node->GetComponents()[componentIndex]);
-		characterController->SetRadius(oldRadius);
+		characterController->SetHeight(oldHeight);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
-void CharacterControllerPanelImpl::RadiusZChanged(wxCommandEvent& event)
+void CharacterControllerPanelImpl::ContactOffsetChanged(wxCommandEvent& event)
 {
 	CharacterController *characterController = static_cast<CharacterController *>(parent->GetComponent());
 
@@ -103,19 +107,21 @@ void CharacterControllerPanelImpl::RadiusZChanged(wxCommandEvent& event)
 	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), characterController));
 	double val;
 	event.GetString().ToDouble(&val);
-	vec3 oldRadius = characterController->GetRadius();
-	vec3 newRadius(oldRadius.x, oldRadius.y, val);
+	float oldContactOffset = characterController->GetContactOffset();
+	float newContactOffset = val;
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Radius", [componentIndex, node, newRadius]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Contact Offset", [componentIndex, node, newContactOffset]()
 	{
 		CharacterController *characterController = static_cast<CharacterController *>(node->GetComponents()[componentIndex]);
-		characterController->SetRadius(newRadius);
-	}, [componentIndex, node, oldRadius]()
+		characterController->SetContactOffset(newContactOffset);
+	}, [componentIndex, node, oldContactOffset]()
 	{
 		CharacterController *characterController = static_cast<CharacterController *>(node->GetComponents()[componentIndex]);
-		characterController->SetRadius(oldRadius);
+		characterController->SetContactOffset(oldContactOffset);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
+
+

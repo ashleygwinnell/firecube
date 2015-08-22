@@ -1,7 +1,7 @@
 #include "MathUtils.h"
 using namespace FireCube;
 
-bool MathUtils::ClosestPointsOnTwoLines(vec3 &closestPointLine1, vec3 linePoint1, vec3 lineVec1, vec3 linePoint2, vec3 lineVec2)
+bool ::MathUtils::ClosestPointsOnTwoLines(vec3 &closestPointLine1, vec3 linePoint1, vec3 lineVec1, vec3 linePoint2, vec3 lineVec2)
 {
 	float a = Dot(lineVec1, lineVec1);
 	float b = Dot(lineVec1, lineVec2);

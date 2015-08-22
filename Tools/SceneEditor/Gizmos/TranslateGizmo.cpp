@@ -100,7 +100,7 @@ void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos
 	bool moved = false;
 	if (currentAxis == "XAxis")
 	{		
-		if (MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(1, 0, 0), ray.origin, ray.direction))
+		if (::MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(1, 0, 0), ray.origin, ray.direction))
 		{
 			translation = vec3(startPosition.x + (intersectionPoint.x - dragStart.x), startPosition.y, startPosition.z);
 			moved = true;
@@ -109,7 +109,7 @@ void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos
 	else if (currentAxis == "YAxis")
 	{
 		vec3 intersectionPoint;
-		if (MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(0, 1, 0), ray.origin, ray.direction))
+		if (::MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(0, 1, 0), ray.origin, ray.direction))
 		{
 			translation = vec3(startPosition.x, startPosition.y + (intersectionPoint.y - dragStart.y), startPosition.z);
 			moved = true;
@@ -118,7 +118,7 @@ void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos
 	else if (currentAxis == "ZAxis")
 	{
 		vec3 intersectionPoint;
-		if (MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(0, 0, 1), ray.origin, ray.direction))
+		if (::MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(0, 0, 1), ray.origin, ray.direction))
 		{
 			translation = vec3(startPosition.x, startPosition.y, startPosition.z + (intersectionPoint.z - dragStart.z));
 			moved = true;

@@ -167,7 +167,9 @@ void MainFrameImpl::AddCharacterControllerClicked(wxCommandEvent& event)
 		auto addComponentCommand = new AddComponentCommand(editorState, "Add CharacterController", node, [](Engine *engine, Node *node) -> Component *
 		{
 			CharacterController *characterController = node->CreateComponent<CharacterController>();
-			characterController->SetRadius(vec3(0.5));			
+			characterController->SetRadius(0.5f);
+			characterController->SetHeight(1.0f);
+			characterController->SetContactOffset(0.1f);
 			return characterController;
 		});
 

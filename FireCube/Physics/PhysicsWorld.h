@@ -54,6 +54,7 @@ private:
 
 	void Update(float deltaTime);
 	void UpdateCharacterControllers(float deltaTime);
+	void UpdateCharacterController(CharacterController *characterController, float deltaTime);
 	void UpdateRigidBodies(float deltaTime);
 	void MarkedDirty();
 	void NodeChanged();

@@ -10,12 +10,13 @@
 
 using namespace FireCube;
 
-CharacterController::CharacterController(Engine *engine) : Component(engine), physicsWorld(nullptr), velocity(0.0f)
+CharacterController::CharacterController(Engine *engine) : Component(engine), physicsWorld(nullptr), velocity(0.0f), contactOffset(0.1f)
 {
 
 }
 
-CharacterController::CharacterController(const CharacterController &other) : Component(other), physicsWorld(other.physicsWorld), velocity(other.velocity), radius(other.radius), height(other.height)
+CharacterController::CharacterController(const CharacterController &other) : Component(other), physicsWorld(other.physicsWorld), velocity(other.velocity), radius(other.radius), height(other.height),
+																			 contactOffset(other.contactOffset)
 {
 
 }
@@ -133,4 +134,14 @@ void CharacterController::SetHeight(float height)
 float CharacterController::GetHeight() const
 {
 	return height;
+}
+
+void CharacterController::SetContactOffset(float contactOffset)
+{
+	this->contactOffset = contactOffset;
+}
+
+float CharacterController::GetContactOffset() const
+{
+	return contactOffset;
 }

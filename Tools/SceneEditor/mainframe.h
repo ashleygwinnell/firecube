@@ -367,23 +367,21 @@ class CharacterControllerPanel : public wxPanel
 	
 	protected:
 		wxStaticText* m_staticText3;
-		wxStaticText* m_staticText4;
-		wxTextCtrl* radiusXTextCtrl;
-		wxStaticText* m_staticText5;
-		wxTextCtrl* radiusYTextCtrl;
-		wxStaticText* m_staticText6;
-		wxTextCtrl* radiusZTextCtrl;
+		wxTextCtrl* radiusTextCtrl;
+		wxStaticText* m_staticText44;
+		wxTextCtrl* heightTextCtrl;
+		wxStaticText* m_staticText45;
+		wxTextCtrl* contactOffsetTextCtrl;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void RadiusXChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void RadiusYChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void RadiusZChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RadiusChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void HeightChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ContactOffsetChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
-		wxString radiusXText; 
-		wxString radiusYText; 
-		wxString radiusZText; 
+		wxString radiusText; 
+		wxString heightText; 
 		
 		CharacterControllerPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 357,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~CharacterControllerPanel();
