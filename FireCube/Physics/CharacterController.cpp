@@ -52,24 +52,6 @@ void CharacterController::SceneChanged(Scene *oldScene)
 	}	
 }
 
-void CharacterController::CheckCollisionWithMesh(const CollisionMesh &collisionMesh, mat4 transform, CollisionResult &result) const
-{			
-	float distance = velocity.Length();
-	vec3 dir = velocity / distance;
-	vec3 p0 = position + vec3(0, height * 0.5f, 0);
-	vec3 p1 = position - vec3(0, height * 0.5f, 0);
-	CollisionUtils::SweepCapsuleMesh(dir, distance, p0, p1, radius, collisionMesh, transform, result);
-}
-
-void CharacterController::CheckCollisionWithPlane(const Plane &plane, mat4 transform, CollisionResult &result) const
-{		
-	float distance = velocity.Length();
-	vec3 dir = velocity / distance;
-	vec3 p0 = position + vec3(0, height * 0.5f, 0);
-	vec3 p1 = position - vec3(0, height * 0.5f, 0);
-	CollisionUtils::SweepCapsulePlane(dir, distance, p0, p1, radius, plane, transform, result);
-}
-
 void CharacterController::UpdateTransformedState()
 {	
 	position = node->GetWorldPosition();

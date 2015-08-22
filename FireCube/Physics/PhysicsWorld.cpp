@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <set>
 
 #include "Physics/PhysicsWorld.h"
 #include "Physics/CharacterController.h"
@@ -7,6 +6,7 @@
 #include "Physics/RigidBody.h"
 #include "Core/Events.h"
 #include "Scene/Node.h"
+#include "Math/CollisionUtils.h"
 
 using namespace FireCube;
 
@@ -55,70 +55,93 @@ void PhysicsWorld::RemoveRigidBody(RigidBody *rigidBody)
 	rigidBodies.erase(std::remove(rigidBodies.begin(), rigidBodies.end(), rigidBody), rigidBodies.end());
 }
 
-void PhysicsWorld::UpdateCharacterController(CharacterController *characterController, float deltaTime)
+void PhysicsWorld::CollideCharacterController(CharacterController *characterController, vec3 direction, float distance, const BoundingBox &characterControllerBoundingBox, std::vector<CollisionShape *> &collisionShapes, std::set<CollisionShape *> &triggeredCollisionShapes, float deltaTime, CollisionResult &result)
 {
-	characterController->UpdateTransformedState();
+	vec3 p0 = characterController->position + vec3(0, characterController->height * 0.5f, 0);
+	vec3 p1 = characterController->position - vec3(0, characterController->height * 0.5f, 0);
 
-	std::set<CollisionShape *> triggeredCollisionShapes;
-	for (int iter = 0; iter < 3; ++iter)
+	for (auto collisionShape : collisionShapes)
+	{
+		if (characterControllerBoundingBox.Intersects(collisionShape->GetWorldBoundingBox()) &&
+			(collisionShape->IsTrigger() == false || triggeredCollisionShapes.find(collisionShape) == triggeredCollisionShapes.end()))
+		{
+			CollisionResult currentResult;
+
+			if (collisionShape->GetShapeType() == CollisionShapeType::TRIANGLE_MESH || collisionShape->GetShapeType() == CollisionShapeType::BOX)
+			{
+				CollisionMesh *mesh = collisionShape->GetCollisionMesh();				
+				CollisionUtils::SweepCapsuleMesh(direction, distance, p0, p1, characterController->radius, *mesh, collisionShape->GetNode()->GetWorldTransformation(), currentResult);
+			}
+			else if (collisionShape->GetShapeType() == CollisionShapeType::PLANE)
+			{				
+				CollisionUtils::SweepCapsulePlane(direction, distance, p0, p1, characterController->radius, collisionShape->GetPlane(), collisionShape->GetNode()->GetWorldTransformation(), result);
+			}
+
+			if (currentResult.collisionFound)
+			{
+				if (collisionShape->IsTrigger() == false)
+				{
+					if (result.collisionFound == false || result.nearestDistance > currentResult.nearestDistance)
+					{
+						result = currentResult;
+					}					
+				}
+				else
+				{
+					triggeredCollisionShapes.insert(collisionShape);
+				}
+			}
+		}
+	}
+}
+
+void PhysicsWorld::SweepCharacterController(CharacterController *characterController, vec3 velocity, std::set<CollisionShape *> &triggeredCollisionShapes, float deltaTime)
+{
+	if (velocity.Length2() < 0.001f * 0.001f)
+	{
+		return;
+	}
+
+	const unsigned maxIterations = 3;
+	characterController->velocity = velocity;
+	for (int iter = 0; iter < maxIterations; ++iter)
 	{
 		if (characterController->finishedMovement == false && characterController->velocity.Length2() > 0.001f * 0.001f)
 		{
-			characterController->collisionFound = false;
-			BoundingBox characterControllerBoundingBox = BoundingBox(characterController->position - vec3(characterController->GetRadius(), characterController->GetHeight() * 0.5f + characterController->GetRadius(), characterController->GetRadius()), characterController->position + vec3(characterController->GetRadius(), characterController->GetHeight() * 0.5f + characterController->GetRadius(), characterController->GetRadius()));
-			BoundingBox characterControllerBoundingBoxAtTarget = BoundingBox(characterController->position + characterController->velocity - vec3(characterController->GetRadius(), characterController->GetHeight() * 0.5f + characterController->GetRadius(), characterController->GetRadius()), characterController->position + characterController->velocity + vec3(characterController->GetRadius(), characterController->GetHeight() * 0.5f + characterController->GetRadius(), characterController->GetRadius()));
+			vec3 characterControllerExtents(characterController->GetRadius() + characterController->GetContactOffset(), characterController->GetHeight() * 0.5f + characterController->GetRadius() + characterController->GetContactOffset(), characterController->GetRadius() + characterController->GetContactOffset());
+			BoundingBox characterControllerBoundingBox = BoundingBox(characterController->position - characterControllerExtents, characterController->position + characterControllerExtents);
+			BoundingBox characterControllerBoundingBoxAtTarget = BoundingBox(characterController->position + characterController->velocity - characterControllerExtents, characterController->position + characterController->velocity + characterControllerExtents);
 			characterControllerBoundingBox.Expand(characterControllerBoundingBoxAtTarget);
 
 			std::vector<CollisionShape *> closeCollisionShapes;
 			octree.GetObjects(characterControllerBoundingBox, closeCollisionShapes);
+			CollisionResult result;
+			CollideCharacterController(characterController, characterController->velocity.Normalized(), characterController->velocity.Length() + characterController->GetContactOffset(), characterControllerBoundingBox, closeCollisionShapes, triggeredCollisionShapes, deltaTime, result);
 
-			for (auto collisionShape : closeCollisionShapes)
-			{
-				if ((collisionShape->IsTrigger() && triggeredCollisionShapes.find(collisionShape) == triggeredCollisionShapes.end()) || characterControllerBoundingBox.Intersects(collisionShape->GetWorldBoundingBox()))
-				{
-					CollisionResult result;
-
-					if (collisionShape->GetShapeType() == CollisionShapeType::TRIANGLE_MESH || collisionShape->GetShapeType() == CollisionShapeType::BOX)
-					{
-						CollisionMesh *mesh = collisionShape->GetCollisionMesh();
-						characterController->CheckCollisionWithMesh(*mesh, collisionShape->GetNode()->GetWorldTransformation(), result);
-					}
-					else if (collisionShape->GetShapeType() == CollisionShapeType::PLANE)
-					{
-						characterController->CheckCollisionWithPlane(collisionShape->GetPlane(), collisionShape->GetNode()->GetWorldTransformation(), result);
-					}
-
-					if (collisionShape->IsTrigger() == false)
-					{
-						if (result.collisionFound && ((characterController->collisionFound == false) || (result.nearestDistance < characterController->nearestDistance)))
-						{
-							characterController->nearestDistance = result.nearestDistance;
-							characterController->nearestIntersectionPoint = result.nearestIntersectionPoint;
-							characterController->nearestNormal = result.nearestNormal;
-							characterController->collisionFound = true;
-							// TODO: Add contact to character controller
-						}
-					}
-					else if (result.collisionFound)
-					{
-						triggeredCollisionShapes.insert(collisionShape);
-					}
-				}
-			}
-
-			if (characterController->collisionFound == false)
+			if (result.collisionFound == false)
 			{
 				characterController->position += characterController->velocity;
 				characterController->finishedMovement = true;
 			}
 			else
-			{
-				characterController->position += (characterController->velocity.Normalized() * (characterController->nearestDistance - 0.001f));
-				vec3 normal = characterController->nearestNormal.Normalized();
+			{				
+				if (result.nearestDistance > characterController->contactOffset)
+				{
+					characterController->position += (characterController->velocity.Normalized() * (result.nearestDistance - characterController->contactOffset));
+				}
+				vec3 normal = result.nearestNormal.Normalized();
 				characterController->velocity -= normal * normal.Dot(characterController->velocity);
 			}
 		}
 	}
+}
+
+void PhysicsWorld::UpdateCharacterController(CharacterController *characterController, float deltaTime)
+{
+	characterController->UpdateTransformedState();
+
+	std::set<CollisionShape *> triggeredCollisionShapes;
+	SweepCharacterController(characterController, characterController->velocity, triggeredCollisionShapes, deltaTime);
 
 	for (auto triggeredCollisionShape : triggeredCollisionShapes)
 	{
@@ -135,7 +158,7 @@ void PhysicsWorld::UpdateCharacterController(CharacterController *characterContr
 		}
 	}
 	characterController->UpdateFromTransformedState();
-	if (characterController->onGround || characterController->collisionFound == false)
+	if (characterController->onGround || true/*characterController->collisionFound == false*/)
 	{
 		characterController->velocity.x *= 0.7f;
 		characterController->velocity.z *= 0.7f;

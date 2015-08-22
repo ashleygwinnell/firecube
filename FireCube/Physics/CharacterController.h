@@ -20,8 +20,6 @@ class CharacterController : public Component
 public:
 	CharacterController(Engine *engine);
 	~CharacterController();
-	void CheckCollisionWithMesh(const CollisionMesh &collisionMesh, mat4 transform, CollisionResult &result) const;
-	void CheckCollisionWithPlane(const Plane &plane, mat4 transform, CollisionResult &result) const;
 	void UpdateTransformedState();
 	void UpdateFromTransformedState();
 	void SetRadius(float radius);
@@ -49,12 +47,7 @@ private:
 	float radius;
 	float height;
 	float contactOffset;
-
-	bool collisionFound;
-	float nearestTime;
-	float nearestDistance;
-	vec3 nearestNormal;
-	vec3 nearestIntersectionPoint;
+	
 	std::vector<CollisionContact> contacts;
 	bool onGround;
 	bool finishedMovement;
