@@ -55,7 +55,7 @@ void PhysicsWorld::RemoveRigidBody(RigidBody *rigidBody)
 	rigidBodies.erase(std::remove(rigidBodies.begin(), rigidBodies.end(), rigidBody), rigidBodies.end());
 }
 
-void PhysicsWorld::CollideCharacterController(CharacterController *characterController, vec3 direction, float distance, const BoundingBox &characterControllerBoundingBox, std::vector<CollisionShape *> &collisionShapes, std::set<CollisionShape *> &triggeredCollisionShapes, float deltaTime, CollisionResult &result)
+void PhysicsWorld::CollideCharacterController(const CharacterController *characterController, vec3 direction, float distance, const BoundingBox &characterControllerBoundingBox, std::vector<CollisionShape *> &collisionShapes, std::set<CollisionShape *> &triggeredCollisionShapes, float deltaTime, CollisionResult &result)
 {
 	vec3 p0 = characterController->position + vec3(0, characterController->height * 0.5f, 0);
 	vec3 p1 = characterController->position - vec3(0, characterController->height * 0.5f, 0);

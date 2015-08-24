@@ -57,7 +57,7 @@ private:
 	void Update(float deltaTime);
 	void UpdateCharacterControllers(float deltaTime);
 	void SweepCharacterController(CharacterController *characterController, vec3 velocity, std::set<CollisionShape *> &triggeredCollisionShapes, float deltaTime);
-	static void CollideCharacterController(CharacterController *characterController, vec3 direction, float distance, const BoundingBox &characterControllerBoundingBox, std::vector<CollisionShape *> &collisionShapes, std::set<CollisionShape *> &triggeredCollisionShapes, float deltaTime, CollisionResult &result);
+	static void CollideCharacterController(const CharacterController *characterController, vec3 direction, float distance, const BoundingBox &characterControllerBoundingBox, std::vector<CollisionShape *> &collisionShapes, std::set<CollisionShape *> &triggeredCollisionShapes, float deltaTime, CollisionResult &result);
 	void UpdateCharacterController(CharacterController *characterController, float deltaTime);
 	void UpdateRigidBodies(float deltaTime);
 	void MarkedDirty();

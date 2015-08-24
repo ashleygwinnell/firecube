@@ -281,7 +281,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 
 		if (e->Attribute("height"))
 		{
-			component->SetRadius(Variant::FromString(e->Attribute("height")).GetFloat());
+			component->SetHeight(Variant::FromString(e->Attribute("height")).GetFloat());
 		}
 	}
 	else
