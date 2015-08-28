@@ -120,13 +120,13 @@ void App::HandleInput(float t, const MappedInput &input)
 	if (input.IsStateOn("Forward"))
 	{
 		vec3 dir = characterController->GetNode()->GetWorldTransformation().GetDirection().Normalized();
-		characterController->SetVelocity(characterController->GetVelocity() + dir * 5.0f * t);
+		characterController->SetVelocity(characterController->GetVelocity() + dir * 2.0f * t);
 	}
 
 	if (input.IsStateOn("Backward"))
 	{
 		vec3 dir = characterController->GetNode()->GetWorldTransformation().GetDirection().Normalized();
-		characterController->SetVelocity(characterController->GetVelocity() - dir * 5.0f * t);
+		characterController->SetVelocity(characterController->GetVelocity() - dir * 2.0f * t);
 	}
 
 	if (input.IsStateOn("RotateLeft"))

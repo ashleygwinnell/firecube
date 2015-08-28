@@ -95,8 +95,9 @@ void PhysicsWorld::CollideCharacterController(const CharacterController *charact
 	}
 }
 
-bool PhysicsWorld::SweepCharacterController(CharacterController *characterController, vec3 velocity, std::set<CollisionShape *> &triggeredCollisionShapes, unsigned int maxIterations)
+bool PhysicsWorld::SweepCharacterController(CharacterController *characterController, vec3 velocity, std::set<CollisionShape *> &triggeredCollisionShapes, unsigned int maxIterations, bool &collided)
 {
+	collided = false;
 	if (velocity.Length2() < 0.001f * 0.001f)
 	{
 		return false;
@@ -123,6 +124,7 @@ bool PhysicsWorld::SweepCharacterController(CharacterController *characterContro
 			}
 			else
 			{				
+				collided = true;
 				if (result.nearestDistance > characterController->contactOffset)
 				{
 					characterController->position += (velocity.Normalized() * (result.nearestDistance - characterController->contactOffset));
@@ -147,7 +149,8 @@ void PhysicsWorld::UpdateCharacterController(CharacterController *characterContr
 	characterController->position = characterController->GetNode()->GetWorldPosition();
 	characterController->contacts.clear();
 	
-	characterController->velocity += vec3(0, -9.8f, 0) * deltaTime;
+	characterController->velocity += vec3(0, -0.5f, 0) * deltaTime;
+
 	std::set<CollisionShape *> triggeredCollisionShapes;
 	unsigned int maxIterations = 3;
 	float stepOffset = characterController->stepOffset;
@@ -168,7 +171,8 @@ void PhysicsWorld::UpdateCharacterController(CharacterController *characterContr
 
 	float startHeight = characterController->position.Dot(up);
 
-	if (SweepCharacterController(characterController, upDirection, triggeredCollisionShapes, maxIterations))
+	bool collided;
+	if (SweepCharacterController(characterController, upDirection, triggeredCollisionShapes, maxIterations, collided))
 	{
 		float heightDiff = characterController->position.Dot(up) - startHeight;
 		if (heightDiff < stepOffset)
@@ -178,37 +182,32 @@ void PhysicsWorld::UpdateCharacterController(CharacterController *characterContr
 
 	}
 
-	SweepCharacterController(characterController, sideDirection, triggeredCollisionShapes, maxIterations);
+	SweepCharacterController(characterController, sideDirection, triggeredCollisionShapes, maxIterations, collided);
 
 	if (haveSideMovement)
 	{
 		downDirection -= up * stepOffset;
 	}
 
-	SweepCharacterController(characterController, downDirection, triggeredCollisionShapes, 1);
+	characterController->onGround = false;
+
+	if (SweepCharacterController(characterController, downDirection, triggeredCollisionShapes, 1, collided))
+	{
+		if (collided)
+		{			
+			characterController->velocity.y = 0;
+			characterController->onGround = true;
+		}
+	}
+
+	characterController->velocity.x *= 0.7f;
+	characterController->velocity.z *= 0.7f;
+	
 
 	for (auto triggeredCollisionShape : triggeredCollisionShapes)
 	{
 		Events::CharacterControllerCollision(characterController, characterController, triggeredCollisionShape);
-	}
-
-	characterController->onGround = false;
-	for (auto &contact : characterController->contacts)
-	{
-		if (Dot(contact.normal, vec3(0, 1, 0)) > 1.0f - 0.01f)
-		{
-			characterController->onGround = true;
-			break;
-		}
-	}
-	
-	if (characterController->onGround || true)
-	{
-		characterController->velocity.x *= 0.7f;
-		characterController->velocity.z *= 0.7f;
-	}
-	
-	characterController->velocity = vec3::ZERO;
+	}	
 
 	characterController->GetNode()->SetTranslation(characterController->position);
 }
