@@ -87,6 +87,18 @@ bool App::Prepare()
 
 	renderer->SetSceneView(0, new SceneView(engine, &scene, camera));
 
+	float startY = -5;
+	float stepHeight = 0.5f;
+	float stepDepth = 1;
+	float stepWidth = 5;
+	for (int i = 0; i < 5; ++i)
+	{
+		childNode = root->CreateChild();
+		collisionShape = childNode->CreateComponent<CollisionShape>();
+		collisionShape->SetBox(BoundingBox(vec3(-stepWidth * 0.5f, 0, 0), vec3(stepWidth * 0.5f, stepHeight, stepDepth)));
+		childNode->SetTranslation(vec3(10, startY + (float)i * stepHeight, (float)i * stepDepth));
+	}
+
 	return true;
 }
 void App::Update(float t)
@@ -108,13 +120,13 @@ void App::HandleInput(float t, const MappedInput &input)
 	if (input.IsStateOn("Forward"))
 	{
 		vec3 dir = characterController->GetNode()->GetWorldTransformation().GetDirection().Normalized();
-		characterController->SetVelocity(characterController->GetVelocity() + dir * 2.0f * t);
+		characterController->SetVelocity(characterController->GetVelocity() + dir * 5.0f * t);
 	}
 
 	if (input.IsStateOn("Backward"))
 	{
 		vec3 dir = characterController->GetNode()->GetWorldTransformation().GetDirection().Normalized();
-		characterController->SetVelocity(characterController->GetVelocity() - dir * 2.0f * t);
+		characterController->SetVelocity(characterController->GetVelocity() - dir * 5.0f * t);
 	}
 
 	if (input.IsStateOn("RotateLeft"))

@@ -20,8 +20,6 @@ class CharacterController : public Component
 public:
 	CharacterController(Engine *engine);
 	~CharacterController();
-	void UpdateTransformedState();
-	void UpdateFromTransformedState();
 	void SetRadius(float radius);
 	float GetRadius() const;
 	void SetHeight(float height);
@@ -31,6 +29,8 @@ public:
 	bool IsOnGround() const;
 	void SetContactOffset(float contactOffset);
 	float GetContactOffset() const;
+	void SetStepOffset(float stepOffset);
+	float GetStepOffset() const;
 
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
 	virtual Component *Clone() const;
@@ -47,10 +47,10 @@ private:
 	float radius;
 	float height;
 	float contactOffset;
+	float stepOffset;
 	
 	std::vector<CollisionContact> contacts;
-	bool onGround;
-	bool finishedMovement;
+	bool onGround;	
 	WeakPtr<PhysicsWorld> physicsWorld;
 };
 

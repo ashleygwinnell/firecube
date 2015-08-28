@@ -10,7 +10,7 @@
 
 using namespace FireCube;
 
-CharacterController::CharacterController(Engine *engine) : Component(engine), physicsWorld(nullptr), velocity(0.0f), contactOffset(0.1f)
+CharacterController::CharacterController(Engine *engine) : Component(engine), physicsWorld(nullptr), velocity(0.0f), contactOffset(0.1f), radius(0.5f), height(1.0f), stepOffset(0.3f)
 {
 
 }
@@ -50,18 +50,6 @@ void CharacterController::SceneChanged(Scene *oldScene)
 		physicsWorld = scene->GetRootNode()->GetComponent<PhysicsWorld>();
 		physicsWorld->AddCharacterController(this);
 	}	
-}
-
-void CharacterController::UpdateTransformedState()
-{	
-	position = node->GetWorldPosition();
-	contacts.clear();
-	finishedMovement = false;
-}
-
-void CharacterController::UpdateFromTransformedState()
-{
-	node->SetTranslation(position);		
 }
 
 void CharacterController::SetRadius(float radius)
@@ -126,4 +114,14 @@ void CharacterController::SetContactOffset(float contactOffset)
 float CharacterController::GetContactOffset() const
 {
 	return contactOffset;
+}
+
+void CharacterController::SetStepOffset(float stepOffset)
+{
+	this->stepOffset = stepOffset;
+}
+
+float CharacterController::GetStepOffset() const
+{
+	return stepOffset;
 }
