@@ -5,7 +5,7 @@
 namespace FireCube
 {
 
-	class Mesh;
+class Mesh;
 class SkeletonNode;
 
 class StaticModel : public Renderable

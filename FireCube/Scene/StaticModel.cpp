@@ -44,21 +44,7 @@ void StaticModel::CreateFromMesh(Mesh *mesh)
 	MarkedDirty();
 	
 	
-	CreateRenderableParts(mesh->GetSkeletonRoot(), renderableParts, mat4::IDENTITY);
-	
-	/*for (unsigned int i = 0; i < mesh->GetGeometries().size(); ++i)
-	{					
-		RenderablePart part;
-		Geometry *geometry = mesh->GetGeometries()[i];
-		Material *material = mesh->GetMaterials()[i];
-		part.geometry = geometry;
-		part.material = material;
-
-		renderableParts.push_back(part);
-		geometries.push_back(geometry);
-		materials.push_back(material);
-	}
-	SetBoundingBox(mesh->GetBoundingBox());*/
+	CreateRenderableParts(mesh->GetSkeletonRoot(), renderableParts, mat4::IDENTITY);		
 }
 
 void StaticModel::CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<RenderablePart> &renderableParts, mat4 transformation)
