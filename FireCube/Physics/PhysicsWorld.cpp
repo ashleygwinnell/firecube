@@ -110,7 +110,7 @@ bool PhysicsWorld::SweepCharacterController(CharacterController *characterContro
 	{
 		if (velocity.Length2() > 0.001f * 0.001f)
 		{
-			// If going in the other direction of the original direction, stop to prevent stuttering in corners
+			// If going in the other direction of the original direction, stop to prevent shakings in corners
 			if ((velocity.Dot(originalVelocity)) <= 0.0f)
 				break;
 

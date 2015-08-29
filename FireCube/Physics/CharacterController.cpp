@@ -76,8 +76,7 @@ void CharacterController::RenderDebugGeometry(DebugRenderer *debugRenderer)
 {
 	vec3 p0 = node->GetWorldPosition() - vec3(0, height * 0.5f, 0);
 	vec3 p1 = node->GetWorldPosition() + vec3(0, height * 0.5f, 0);
-	debugRenderer->AddCapsule(p0, p1, radius, 8, 16, vec3(0, 1, 0));	
-	//debugRenderer->AddSphere(node->GetWorldPosition(), radius, 16, 16, vec3(0, 1, 0));
+	debugRenderer->AddCapsule(p0, p1, radius, 8, 16, vec3(0, 1, 0));
 
 	for (auto &c : contacts)
 	{
