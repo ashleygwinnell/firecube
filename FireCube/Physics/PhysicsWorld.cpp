@@ -98,15 +98,22 @@ void PhysicsWorld::CollideCharacterController(const CharacterController *charact
 bool PhysicsWorld::SweepCharacterController(CharacterController *characterController, vec3 velocity, std::set<CollisionShape *> &triggeredCollisionShapes, unsigned int maxIterations, bool &collided)
 {
 	collided = false;
+	bool moved = false;
 	if (velocity.Length2() < 0.001f * 0.001f)
 	{
 		return false;
 	}
+
+	vec3 originalVelocity = velocity;
 	
 	for (unsigned int iter = 0; iter < maxIterations; ++iter)
 	{
 		if (velocity.Length2() > 0.001f * 0.001f)
 		{
+			// If going in the other direction of the original direction, stop to prevent stuttering in corners
+			if ((velocity.Dot(originalVelocity)) <= 0.0f)
+				break;
+
 			vec3 characterControllerExtents(characterController->GetRadius() + characterController->GetContactOffset(), characterController->GetHeight() * 0.5f + characterController->GetRadius() + characterController->GetContactOffset(), characterController->GetRadius() + characterController->GetContactOffset());
 			BoundingBox characterControllerBoundingBox = BoundingBox(characterController->position - characterControllerExtents, characterController->position + characterControllerExtents);
 			BoundingBox characterControllerBoundingBoxAtTarget = BoundingBox(characterController->position + velocity - characterControllerExtents, characterController->position + velocity + characterControllerExtents);
@@ -117,6 +124,7 @@ bool PhysicsWorld::SweepCharacterController(CharacterController *characterContro
 			CollisionResult result;
 			CollideCharacterController(characterController, velocity.Normalized(), velocity.Length() + characterController->GetContactOffset(), characterControllerBoundingBox, closeCollisionShapes, triggeredCollisionShapes, result);
 			
+			moved = true;
 			if (result.collisionFound == false)
 			{
 				characterController->position += velocity;
@@ -135,7 +143,7 @@ bool PhysicsWorld::SweepCharacterController(CharacterController *characterContro
 		}
 	}
 
-	return true;
+	return moved;
 }
 
 void DecomposeVector(vec3 dir, vec3 up, vec3 &tangentComponent, vec3 &normalComponent)
