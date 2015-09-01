@@ -108,9 +108,10 @@ public:
 		}
 	}
 
-	void GetObjects(const Ray &ray, std::vector<T *> &objects)
+	void GetObjects(const Ray &ray, float maxDistance, std::vector<T *> &objects)
 	{
-		if (ray.IntersectBoundingBox(cullingBox))
+		float distance;
+		if (ray.IntersectBoundingBox(cullingBox, distance) && distance < maxDistance)
 		{
 			for (auto object : this->objects)
 			{
@@ -121,7 +122,7 @@ public:
 			{
 				if (child)
 				{
-					child->GetObjects(ray, objects);
+					child->GetObjects(ray, maxDistance, objects);
 				}
 			}
 		}
@@ -230,9 +231,9 @@ public:
 		root->GetObjects(frustum, objects);
 	}
 
-	void GetObjects(const Ray &ray, std::vector<T *> &objects)
+	void GetObjects(const Ray &ray, float maxDistance, std::vector<T *> &objects)
 	{
-		root->GetObjects(ray, objects);
+		root->GetObjects(ray, maxDistance, objects);
 	}
 
 	void GetObjects(const BoundingBox &boundingBox, std::vector<T *> &objects)

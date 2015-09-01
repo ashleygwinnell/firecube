@@ -91,7 +91,9 @@ void Scene::SetAmbientColor(vec3 color)
 
 void Scene::IntersectRay(RayQuery &rayQuery, unsigned int collisionQueryMask)
 {
-	for (auto renderable : renderables)
+	std::vector<Renderable *> closeRenderables;
+	octree.GetObjects(rayQuery.ray, rayQuery.maxDistance, closeRenderables);
+	for (auto renderable : closeRenderables)
 	{
 		if (renderable->GetCollisionQueryMask() & collisionQueryMask)
 			renderable->IntersectRay(rayQuery);
