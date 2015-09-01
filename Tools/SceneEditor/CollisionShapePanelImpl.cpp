@@ -61,6 +61,8 @@ void CollisionShapePanelImpl::UpdateUI()
 		wxFileName filename(collisionShape->GetMesh()->GetFileName());
 		meshFilePicker->SetFileName(filename);
 	}
+
+	triggerCheckBox->SetValue(collisionShape->IsTrigger());
 }
 
 void CollisionShapePanelImpl::UpdateVisibility(CollisionShapeType type)
