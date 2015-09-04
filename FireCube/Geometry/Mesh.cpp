@@ -88,6 +88,12 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	aiColor3D aColor;
 	float value;
 	aiString file;
+	aiString materialName;
+
+	if (aMaterial->Get(AI_MATKEY_NAME, materialName) == AI_SUCCESS)
+	{
+		material->SetName(materialName.C_Str());
+	}
 
 	if (aMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aColor) == AI_SUCCESS)
 	{
