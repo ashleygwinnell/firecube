@@ -289,7 +289,9 @@ void GLCanvas::OnLeftUp(wxMouseEvent& event)
 			}
 			else
 			{
-				editorState->SetSelectedNode(nullptr);				
+				editorState->SetSelectedNode(nullptr);
+				UpdateGizmo();				
+				this->Refresh(false);
 			}			
 		}
 		else if (currentOperation == Operation::OBJECT_TRANSFORM)
@@ -428,5 +430,5 @@ void GLCanvas::CreateGrid(float size, unsigned int numberOfCells)
 	gridGeometry->SetPrimitiveType(PrimitiveType::LINES);
 	gridGeometry->SetMaterial(gridMaterial);	
 	gridGeometry->UpdateGeometry();
-	gridGeometry->SetCollisionQueryMask(AUX_GEOMETRY);
+	gridGeometry->SetCollisionQueryMask(0);
 }
