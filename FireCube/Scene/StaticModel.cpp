@@ -29,22 +29,23 @@ void StaticModel::CreateFromMesh(Mesh *mesh)
 	renderablePartsTransformations.clear();
 	geometries.clear();
 	materials.clear();
-	boundingBox = BoundingBox();
+	boundingBox = BoundingBox(vec3(0), vec3(0));
 
-	
-	for (unsigned int i = 0; i < mesh->GetGeometries().size(); ++i)
+	if (mesh)
 	{
-		Geometry *geometry = mesh->GetGeometries()[i];
-		Material *material = mesh->GetMaterials()[i];
+		for (unsigned int i = 0; i < mesh->GetGeometries().size(); ++i)
+		{
+			Geometry *geometry = mesh->GetGeometries()[i];
+			Material *material = mesh->GetMaterials()[i];
 
-		geometries.push_back(geometry);
-		materials.push_back(material);		
-	}	
+			geometries.push_back(geometry);
+			materials.push_back(material);
+		}
 
-	MarkedDirty();
-	
-	
-	CreateRenderableParts(mesh->GetSkeletonRoot(), renderableParts, mat4::IDENTITY);		
+		MarkedDirty();
+
+		CreateRenderableParts(mesh->GetSkeletonRoot(), renderableParts, mat4::IDENTITY);
+	}
 }
 
 void StaticModel::CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<RenderablePart> &renderableParts, mat4 transformation)
