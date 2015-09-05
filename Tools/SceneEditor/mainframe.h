@@ -59,7 +59,6 @@ class MainFrame : public wxFrame
 		wxMenu* editMenu;
 		wxMenuItem* undoMenuItem;
 		wxMenuItem* redoMenuItem;
-		wxMenu* optionsMenu;
 		wxMenu* addMenu;
 		wxMenu* m_menu1;
 		wxMenu* viewMenu;
@@ -81,7 +80,6 @@ class MainFrame : public wxFrame
 		virtual void SaveAsClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UndoClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void RedoClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void SetBasePathClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddNodeClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddMeshClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddStaticModelClicked( wxCommandEvent& event ) { event.Skip(); }

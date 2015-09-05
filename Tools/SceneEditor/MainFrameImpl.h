@@ -24,8 +24,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void SaveClicked(wxCommandEvent& event);
 		virtual void SaveAsClicked(wxCommandEvent& event);
 		virtual void OpenClicked(wxCommandEvent& event);
-		virtual void NewClicked(wxCommandEvent& event);
-		virtual void SetBasePathClicked(wxCommandEvent& event);		
+		virtual void NewClicked(wxCommandEvent& event);		
 		virtual void AddMeshClicked(wxCommandEvent& event);		
 		virtual void SceneTreeSelectionChanged(wxTreeEvent& event);
 		virtual void SceneTreeEndLabelEdit(wxTreeEvent& event);

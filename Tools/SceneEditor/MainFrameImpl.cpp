@@ -11,7 +11,6 @@
 #include "Commands/GroupCommand.h"
 #include "Commands/TransformCommands.h"
 #include "SceneWriter.h"
-#include "SceneSettings.h"
 #include "BaseComponentPanelImpl.h"
 #include "StaticModelPanelImpl.h"
 #include "LightPanelImpl.h"
@@ -19,11 +18,11 @@
 #include "LuaScriptPanelImpl.h"
 #include "CollisionShapePanelImpl.h"
 #include "CharacterControllerPanelImpl.h"
+#include "AssetUtils.h"
 
 using namespace FireCube;
 
-MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState()), 
-												 sceneSettings(theApp->GetSceneSettings())
+MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState())										 
 {
 	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &MainFrameImpl::SelectedNodeChanged);	
 	SubscribeToEvent(editorState, editorState->componentAdded, &MainFrameImpl::ComponentAdded);
@@ -54,18 +53,29 @@ void MainFrameImpl::AddMeshClicked(wxCommandEvent& event)
 		return;
 	
 	std::string sfile = openFileDialog.GetPath().ToStdString();
-	
+
+	if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), sfile))
+	{
+		sfile = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), sfile);		
+	}
+	else
+	{
+		AssetUtils::ImportMesh(engine, sfile);
+		sfile = "Models" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);		
+	}
+
 	Node *node = new Node(engine, "Node");
 	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", node, root);
-	
+
 	auto addComponentCommand = new AddComponentCommand(editorState, "Add Component", node, [sfile](Engine *engine, Node *node) -> Component *
 	{
-		StaticModel *model = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(sfile));		
+		StaticModel *model = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(sfile));
 		return model;
 	});
 
-	GroupCommand *groupCommand = new GroupCommand(editorState, "Add Mesh", {addNodeCommand, addComponentCommand});
-	editorState->ExecuteCommand(groupCommand);		
+	GroupCommand *groupCommand = new GroupCommand(editorState, "Add Mesh", { addNodeCommand, addComponentCommand });
+	editorState->ExecuteCommand(groupCommand);
+
 	wxString path;
 	wxFileName::SplitPath(openFileDialog.GetPath(), &path, nullptr, nullptr, wxPATH_NATIVE);
 	lastPath = path;
@@ -82,6 +92,15 @@ void MainFrameImpl::AddStaticModelClicked(wxCommandEvent& event)
 			return;
 
 		std::string sfile = openFileDialog.GetPath().ToStdString();
+		if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), sfile))
+		{
+			sfile = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), sfile);
+		}
+		else
+		{
+			AssetUtils::ImportMesh(engine, sfile);
+			sfile = "Models" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);
+		}
 		
 		auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel",  node, [sfile](Engine *engine, Node *node) -> Component *
 		{
@@ -191,18 +210,18 @@ void MainFrameImpl::SaveClicked(wxCommandEvent& event)
 	else
 	{
 		SceneWriter sceneWriter;
-		sceneWriter.Serialize(scene, sceneSettings, editorState->GetCurrentSceneFile());		
+		sceneWriter.Serialize(scene, editorState->GetCurrentSceneFile());		
 	}
 }
 
 void MainFrameImpl::SaveAsClicked(wxCommandEvent& event)
 {
-	wxFileDialog saveFileDialog(this, "Save Scene file", sceneSettings->basePath, "", "Scene files (*.xml)|*.xml", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+	wxFileDialog saveFileDialog(this, "Save Scene file", Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scenes", "", "Scene files (*.xml)|*.xml", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 	if (saveFileDialog.ShowModal() == wxID_CANCEL)
 		return;
 
 	SceneWriter sceneWriter;
-	sceneWriter.Serialize(scene, sceneSettings, saveFileDialog.GetPath().ToStdString());
+	sceneWriter.Serialize(scene, saveFileDialog.GetPath().ToStdString());
 	editorState->SetCurrentSceneFile(saveFileDialog.GetPath().ToStdString());
 }
 
@@ -232,20 +251,17 @@ void MainFrameImpl::UpdateNode(Node *node)
 
 void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 {	
-	wxFileDialog openFileDialog(this, "Open Scene file", sceneSettings->basePath, "", "Scene files (*.xml)|*.xml", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	wxFileDialog openFileDialog(this, "Open Scene file", "", "", "Scene files (*.xml)|*.xml", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return;
 
 	SetAllPanelsVisibility(true);
 
-	wxString path;
-	wxFileName::SplitPath(openFileDialog.GetPath(), &path, nullptr, nullptr, wxPATH_NATIVE);
-
-	editorState->SetCurrentSceneFile(openFileDialog.GetPath().ToStdString());
-
-	sceneSettings->basePath = path;
-
-	Filesystem::SetAssetsFolder(Filesystem::GetDirectoryName(path.ToStdString()));
+	std::string path = openFileDialog.GetPath().ToStdString();
+	
+	editorState->SetCurrentSceneFile(path);
+	
+	Filesystem::SetAssetsFolder(Filesystem::GetDirectoryName(Filesystem::GetDirectoryName(path)));
 
 	SceneReader sceneReader(engine);
 	
@@ -266,17 +282,17 @@ void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 
 void MainFrameImpl::NewClicked(wxCommandEvent& event)
 {
-	SetAllPanelsVisibility(true);
-}
+	wxDirDialog dirDialog(this, "Choose root assets directory", "", wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
 
-void MainFrameImpl::SetBasePathClicked(wxCommandEvent& event)
-{
-	wxDirDialog dirDialog(this, "Choose base directory", "", wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
-	
 	if (dirDialog.ShowModal() == wxID_CANCEL)
 		return;
 
-	sceneSettings->basePath = dirDialog.GetPath().ToStdString();		
+	std::string path = dirDialog.GetPath().ToStdString();
+	Filesystem::SetAssetsFolder(path);
+
+	Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Scenes");
+
+	SetAllPanelsVisibility(true);
 }
 
 void MainFrameImpl::SelectedNodeChanged(FireCube::Node *node)

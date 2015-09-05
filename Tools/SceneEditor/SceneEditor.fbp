@@ -233,26 +233,6 @@
                         <event name="OnUpdateUI"></event>
                     </object>
                 </object>
-                <object class="wxMenu" expanded="1">
-                    <property name="label">Options</property>
-                    <property name="name">optionsMenu</property>
-                    <property name="permission">protected</property>
-                    <object class="wxMenuItem" expanded="0">
-                        <property name="bitmap"></property>
-                        <property name="checked">0</property>
-                        <property name="enabled">1</property>
-                        <property name="help"></property>
-                        <property name="id">wxID_ANY</property>
-                        <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Set Base Dir</property>
-                        <property name="name">setBasePathMenuItem</property>
-                        <property name="permission">none</property>
-                        <property name="shortcut"></property>
-                        <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection">SetBasePathClicked</event>
-                        <event name="OnUpdateUI"></event>
-                    </object>
-                </object>
                 <object class="wxMenu" expanded="0">
                     <property name="label">Add</property>
                     <property name="name">addMenu</property>

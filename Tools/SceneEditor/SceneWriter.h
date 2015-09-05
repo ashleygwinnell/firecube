@@ -9,7 +9,7 @@ class SceneSettings;
 class SceneWriter
 {
 public:
-	void Serialize(FireCube::Scene *scene, SceneSettings *sceneSettings, const std::string &filename);
+	void Serialize(FireCube::Scene *scene, const std::string &filename);
 private:
 	std::string ToString(FireCube::vec3 v) const;
 	std::string ToString(FireCube::vec4 v) const;	

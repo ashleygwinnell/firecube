@@ -111,6 +111,9 @@
     <ClCompile Include="CharacterControllerPanelImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AssetUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -170,9 +173,6 @@
     <ClInclude Include="SceneWriter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SceneSettings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Commands\RenameNodeCommand.h">
       <Filter>Commands</Filter>
     </ClInclude>
@@ -201,6 +201,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CharacterControllerPanelImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

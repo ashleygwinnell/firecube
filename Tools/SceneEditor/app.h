@@ -1,5 +1,4 @@
 #include "EditorState.h"
-#include "SceneSettings.h"
 
 class MainFrameImpl;
 
@@ -19,7 +18,6 @@ public:
 	FireCube::Scene *GetScene();
 	FireCube::Scene *GetEditorScene();
 	EditorState *GetEditorState();
-	SceneSettings *GetSceneSettings();
 	void InitScene();
 	MainFrameImpl *GetMainFrame();
 	FireCubeApp fcApp;
@@ -27,6 +25,5 @@ private:
 	MainFrameImpl *frame;
 	FireCube::Scene *scene;
 	FireCube::Scene *editorScene;
-	EditorState *editorState;
-	SceneSettings sceneSettings;
+	EditorState *editorState;	
 };

@@ -1,11 +1,10 @@
 #include "SceneWriter.h"
 #include "tinyxml.h"
-#include "SceneSettings.h"
 #include "wx/filename.h"
 
 using namespace FireCube;
 
-void SceneWriter::Serialize(FireCube::Scene *scene, SceneSettings *sceneSettings, const std::string &filename)
+void SceneWriter::Serialize(FireCube::Scene *scene, const std::string &filename)
 {
 	wxString path;
 	wxFileName::SplitPath(filename, &path, nullptr, nullptr, wxPATH_NATIVE);

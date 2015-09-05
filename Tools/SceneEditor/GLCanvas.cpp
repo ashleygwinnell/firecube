@@ -45,7 +45,6 @@ GLCanvas::~GLCanvas()
 void GLCanvas::Init()
 {	
 	Filesystem::SetCoreDataFolder("../../FireCube");
-	Filesystem::SetAssetsFolder("../../Assets");
 
 	theApp->fcApp.InitializeNoWindow();			
 	

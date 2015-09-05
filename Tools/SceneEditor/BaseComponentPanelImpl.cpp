@@ -10,7 +10,6 @@
 #include "Commands/AddComponentCommand.h"
 #include "Commands/GroupCommand.h"
 #include "SceneWriter.h"
-#include "SceneSettings.h"
 
 BaseComponentPanelImpl::BaseComponentPanelImpl(wxWindow* parent, FireCube::Component *component) : BaseComponentPanel(parent), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState()), component(component)
 {
@@ -25,8 +24,7 @@ void BaseComponentPanelImpl::SetComponent(FireCube::Component *component)
 
 void BaseComponentPanelImpl::AddControl(wxWindow *control)
 {
-	customComponentsSizer->Add(control, 0, wxALL | wxEXPAND, 1);
-	
+	customComponentsSizer->Add(control, 0, wxALL | wxEXPAND, 1);	
 }
 
 FireCube::Component *BaseComponentPanelImpl::GetComponent()

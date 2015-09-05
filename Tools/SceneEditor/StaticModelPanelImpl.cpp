@@ -5,6 +5,7 @@
 #include "Commands/RemoveComponentCommand.h"
 #include "Commands/CustomCommand.h"
 #include "Types.h"
+#include "AssetUtils.h"
 
 using namespace FireCube;
 
@@ -40,7 +41,18 @@ void StaticModelPanelImpl::FileChanged(wxFileDirPickerEvent& event)
 	auto engine = theApp->fcApp.GetEngine();
 	Node *node = staticModel->GetNode();
 	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), staticModel));
-	std::string newMeshFileName = event.GetPath().ToStdString();
+	std::string newMeshFileName = event.GetPath().ToStdString();	
+
+	if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), newMeshFileName))
+	{
+		newMeshFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), newMeshFileName);
+	}
+	else
+	{
+		AssetUtils::ImportMesh(engine, newMeshFileName);
+		newMeshFileName = "Models" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(newMeshFileName);
+	}
+
 	std::string oldMeshFileName = staticModel->GetMesh()->GetFileName();
 
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mesh", [componentIndex, node, newMeshFileName, engine]()
