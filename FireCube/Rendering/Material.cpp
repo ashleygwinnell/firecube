@@ -171,6 +171,22 @@ TextureUnit Material::ParseTextureUnitName(const std::string &name)
 	return ret;
 }
 
+std::string Material::GetTextureUnitName(TextureUnit unit)
+{
+	switch (unit)
+	{
+	case FireCube::TextureUnit::DIFFUSE:
+		return "diffuse";
+		break;
+	case FireCube::TextureUnit::NORMAL:
+		return "normal";
+		break;	
+	default:
+		return "";
+		break;
+	}
+}
+
 bool Material::HasParameter(const StringHash &nameHash) const
 {
 	return parameters.find(nameHash) != parameters.end();

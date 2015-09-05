@@ -74,6 +74,7 @@ public:
 	Material *Clone();
 	
 	static TextureUnit ParseTextureUnitName(const std::string &name);
+	static std::string GetTextureUnitName(TextureUnit unit);
 private:
 	
 	
