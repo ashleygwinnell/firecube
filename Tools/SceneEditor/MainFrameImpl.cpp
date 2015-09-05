@@ -85,33 +85,14 @@ void MainFrameImpl::AddStaticModelClicked(wxCommandEvent& event)
 {
 	auto node = editorState->GetSelectedNode();
 	if (node)
-	{
-		static std::string lastPath = "";
-		wxFileDialog openFileDialog(this, "Open", lastPath, "", "Mesh files  (*.3ds,*.dae,*.obj,*.fbx)|*.3ds;*.dae;*.obj;*.fbx", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-		if (openFileDialog.ShowModal() == wxID_CANCEL)
-			return;
-
-		std::string sfile = openFileDialog.GetPath().ToStdString();
-		if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), sfile))
+	{				
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel",  node, [](Engine *engine, Node *node) -> Component *
 		{
-			sfile = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), sfile);
-		}
-		else
-		{
-			AssetUtils::ImportMesh(engine, sfile);
-			sfile = "Models" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);
-		}
-		
-		auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel",  node, [sfile](Engine *engine, Node *node) -> Component *
-		{
-			StaticModel *model = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(sfile));			
+			StaticModel *model = node->CreateComponent<StaticModel>();			
 			return model;
 		});
 		
-		editorState->ExecuteCommand(addComponentCommand);		
-		wxString path;
-		wxFileName::SplitPath(openFileDialog.GetPath(), &path, nullptr, nullptr, wxPATH_NATIVE);
-		lastPath = path;
+		editorState->ExecuteCommand(addComponentCommand);				
 	}
 }
 

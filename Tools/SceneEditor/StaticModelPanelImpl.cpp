@@ -12,8 +12,10 @@ using namespace FireCube;
 StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent) : StaticModelPanel(parent), parent(parent)
 {
 	FireCube::StaticModel *staticModel = static_cast<FireCube::StaticModel *>(parent->GetComponent());
-	wxFileName filename(staticModel->GetMesh()->GetFileName());
-	meshFilePicker->SetFileName(filename);
+	if (staticModel->GetMesh())
+	{		
+		meshFilePicker->SetPath(staticModel->GetMesh()->GetFileName());
+	}
 
 	castShadowCheckBox->SetValue(staticModel->GetCastShadow());
 
@@ -53,8 +55,8 @@ void StaticModelPanelImpl::FileChanged(wxFileDirPickerEvent& event)
 		newMeshFileName = "Models" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(newMeshFileName);
 	}
 
-	std::string oldMeshFileName = staticModel->GetMesh()->GetFileName();
-
+	std::string oldMeshFileName = staticModel->GetMesh() ? staticModel->GetMesh()->GetFileName() : "";
+	meshFilePicker->SetPath(newMeshFileName);
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mesh", [componentIndex, node, newMeshFileName, engine]()
 	{
 		StaticModel *staticModel = static_cast<StaticModel *>(node->GetComponents()[componentIndex]);
@@ -62,7 +64,14 @@ void StaticModelPanelImpl::FileChanged(wxFileDirPickerEvent& event)
 	}, [componentIndex, node, oldMeshFileName, engine]()
 	{
 		StaticModel *staticModel = static_cast<StaticModel *>(node->GetComponents()[componentIndex]);
-		staticModel->CreateFromMesh(engine->GetResourceCache()->GetResource<FireCube::Mesh>(oldMeshFileName));
+		if (oldMeshFileName.empty() == false)
+		{
+			staticModel->CreateFromMesh(engine->GetResourceCache()->GetResource<FireCube::Mesh>(oldMeshFileName));
+		}
+		else
+		{
+			staticModel->CreateFromMesh(nullptr);
+		}
 	});
 
 	
