@@ -8,6 +8,8 @@ using namespace FireCube;
 
 std::string assetsFolder = "";
 std::string coreDataFolder = "";
+const char Filesystem::PATH_SEPARATOR_CHAR = '\\';
+const std::string Filesystem::PATH_SEPARATOR = "\\";
 
 std::string Filesystem::GetFullPath(const std::string &filename)
 {
@@ -51,8 +53,8 @@ std::string Filesystem::GetCoreDataFolder()
 
 std::string Filesystem::FindResourceByName(const std::string &name)
 {
-	std::string resourceInCoreData = coreDataFolder + "/" + name;
-	std::string resourceInAssets = assetsFolder + "/" + name;
+	std::string resourceInCoreData = coreDataFolder + PATH_SEPARATOR + name;
+	std::string resourceInAssets = assetsFolder + PATH_SEPARATOR + name;
 
 	if (FileExists(resourceInAssets))
 		return resourceInAssets;
@@ -66,17 +68,7 @@ std::string Filesystem::FindResourceByName(const std::string &name)
 
 std::string Filesystem::GetFileName(const std::string &name)
 {
-	auto i0 = name.find_last_of('\\');
-	auto i1 = name.find_last_of('/');
-	auto i = i0;
-	if (i0 == std::string::npos)
-	{
-		i = i1;
-	}
-	else if (i1 != std::string::npos)
-	{
-		i = max(i0, i1);
-	}
+	auto i = name.find_last_of(PATH_SEPARATOR_CHAR);
 
 	if (i != std::string::npos)
 	{
@@ -90,7 +82,7 @@ std::string Filesystem::GetFileName(const std::string &name)
 
 std::string Filesystem::RemoveLastSeparator(const std::string &path)
 {
-	if (path.back() == '/' || path.back() == '\\')
+	if (path.back() == PATH_SEPARATOR_CHAR)
 	{
 		return path.substr(0, path.size() - 1);
 	}
@@ -117,17 +109,7 @@ std::string Filesystem::GetDirectoryName(const std::string &path)
 
 unsigned int Filesystem::FindLastSeparator(const std::string &path)
 {
-	auto i0 = path.find_last_of('\\');
-	auto i1 = path.find_last_of('/');
-	auto i = i0;
-	if (i0 == std::string::npos)
-	{
-		i = i1;
-	}
-	else if (i1 != std::string::npos)
-	{
-		i = max(i0, i1);
-	}
+	auto i = path.find_last_of(PATH_SEPARATOR_CHAR);
 
 	if (i == std::string::npos)
 	{

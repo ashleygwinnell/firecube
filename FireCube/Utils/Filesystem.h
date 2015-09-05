@@ -42,5 +42,8 @@ namespace Filesystem
 	std::string FIRECUBE_API GetDirectoryName(const std::string &path);
 	
 	unsigned int FIRECUBE_API FindLastSeparator(const std::string &path);
+
+	extern const char PATH_SEPARATOR_CHAR;
+	extern const std::string PATH_SEPARATOR;
 }
 }
