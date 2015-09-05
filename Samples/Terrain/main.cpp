@@ -8,6 +8,9 @@ using namespace FireCube;
 App app;
 int main(int argc, char *argv[])
 {
+	Filesystem::SetCoreDataFolder("../../FireCube");
+	Filesystem::SetAssetsFolder("../../Assets");
+
 	if (!app.Initialize())
 		return 0;
 	app.Run();
@@ -20,8 +23,7 @@ App::App() : ang(0, (float)PI, 0), scene(engine)
 }
 
 bool App::Prepare()
-{
-	Filesystem::AddSearchPath("../Assets/Textures");
+{	
 	SetTitle("Terrain");	
 	GetInputManager().AddMapping(AnalogInput::MOUSE_AXIS_X_RELATIVE, "mouseX");
 	GetInputManager().AddMapping(AnalogInput::MOUSE_AXIS_Y_RELATIVE, "mouseY");
@@ -50,14 +52,14 @@ bool App::Prepare()
 	
 	Node *node = root->CreateChild();
 	node->Move(vec3(5, 5, 5));	
-	node->CreateComponent<StaticModel>()->CreateFromMesh(resourceCache->GetResource<Mesh>("../Assets/Models/teapot.3ds"));
+	node->CreateComponent<StaticModel>()->CreateFromMesh(resourceCache->GetResource<Mesh>("Models/teapot.3ds"));
 
 	node = root->CreateChild("Terrain");
 	terrain = node->CreateComponent<Terrain>();
 	terrain->SetPatchSize(64);
 	terrain->SetVerticesSpacing(vec3(1.0f, 50.0f, 1.0f));
 	terrain->SetGenerateHardNormals(true);
-	terrain->CreateFromHeightMap(resourceCache->GetResource<Image>("../Assets/Textures/heightmap.bmp"));
+	terrain->CreateFromHeightMap(resourceCache->GetResource<Image>("Textures/heightmap.bmp"));
 	terrain->SetMaterial(resourceCache->GetResource<Material>("Materials/TerrainNoTexture.xml"));
 		
 	Node *lightNode = root->CreateChild("Light");

@@ -44,8 +44,9 @@ GLCanvas::~GLCanvas()
 
 void GLCanvas::Init()
 {	
-	Filesystem::AddSearchPath("../Tools/SceneEditor");
-	
+	Filesystem::SetCoreDataFolder("../../FireCube");
+	Filesystem::SetAssetsFolder("../../Assets");
+
 	theApp->fcApp.InitializeNoWindow();			
 	
 	editorState = theApp->GetEditorState();

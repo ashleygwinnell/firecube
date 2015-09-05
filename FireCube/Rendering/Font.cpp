@@ -8,6 +8,7 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/privateFont.h"
 #include "Utils/Logger.h"
+#include "Utils/Filesystem.h"
 
 using namespace FireCube;
 
@@ -33,7 +34,11 @@ void Font::Init()
 bool Font::Load(const std::string &filename)
 {
 	LOGINFO("Loading font with name:" + filename);
-	std::ifstream file(filename, std::ios::binary);
+	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
+	if (resolvedFileName.empty())
+		return false;
+
+	std::ifstream file(resolvedFileName, std::ios::binary);
 	if (!file)
 		return false;
 	this->filename = filename;

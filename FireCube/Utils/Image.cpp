@@ -26,23 +26,23 @@ void Image::Create(int width, int height, int bytesPerPixel)
 
 bool Image::Load(const std::string &filename)
 {
-	std::string fname = Filesystem::SearchForFileName(filename);
-	if (fname.empty())
+	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
+	if (resolvedFileName.empty())
 		return false;
-
-	unsigned int pos = fname.find_last_of('.');
+	
+	unsigned int pos = resolvedFileName.find_last_of('.');
 	std::string ext;
 	bool loadedUsingStb = false;
 	if (pos != std::string::npos)
 	{
-		ext = fname.substr(pos + 1);
+		ext = resolvedFileName.substr(pos + 1);
 		std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 	}
 	unsigned char *pixels;
 	if (pos == std::string::npos || ext != "jpg")
 	{
 		loadedUsingStb = true;
-		pixels = stbi_load(fname.c_str(), &width, &height, &bytesPerPixel, 0);
+		pixels = stbi_load(resolvedFileName.c_str(), &width, &height, &bytesPerPixel, 0);
 		if (!pixels)
 		{			
 			LOGERROR("Failed loading image: ", filename, " reason: ", stbi_failure_reason());
@@ -51,7 +51,7 @@ bool Image::Load(const std::string &filename)
 	}
 	else
 	{		
-		pixels = jpgd::decompress_jpeg_image_from_file(fname.c_str(), &width, &height, &bytesPerPixel, 3);
+		pixels = jpgd::decompress_jpeg_image_from_file(resolvedFileName.c_str(), &width, &height, &bytesPerPixel, 3);
 		if (!pixels)
 			return false;
 	}

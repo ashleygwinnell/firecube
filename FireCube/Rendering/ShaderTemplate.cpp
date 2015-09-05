@@ -23,9 +23,10 @@ ShaderTemplate::~ShaderTemplate()
 
 bool ShaderTemplate::Load(const std::string &filename)
 {
-	std::string name = Filesystem::SearchForFileName(filename);
-	if (name.empty())
-		return false;	
+	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
+	if (resolvedFileName.empty())
+		return false;
+	
 	std::string::size_type d;
 	d = filename.find_last_of(".");
 	if (d != std::string::npos)
@@ -41,7 +42,7 @@ bool ShaderTemplate::Load(const std::string &filename)
 	else
 		return false;
 
-	std::ifstream f(name.c_str());
+	std::ifstream f(resolvedFileName.c_str());
 	if (!f.is_open())
 		return false;
 

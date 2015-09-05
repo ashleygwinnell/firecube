@@ -12,26 +12,7 @@ namespace FireCube
 * A namespace containing various functions to interact with the file system.
 */
 namespace Filesystem
-{
-	/**
-	* Add a search path for resources.
-	* @param path The path to add.
-	*/
-	void FIRECUBE_API AddSearchPath(const std::string &path);
-
-	/**
-	* Gets the list of search paths.
-	* @return The list of search paths.
-	*/
-	const FIRECUBE_API std::vector<std::string> &GetSearchPaths();
-
-	/**
-	* Searches for file name using the search paths.
-	* @param filename The file name to search.
-	* @return A path to the file if it was found or an empty string if it wasn't.
-	*/
-	std::string FIRECUBE_API SearchForFileName(const std::string &filename);
-
+{	
 	/**
 	* Returns the full path of the given file.	
 	* @param filename The file name (can be relative or absolute).
@@ -45,5 +26,15 @@ namespace Filesystem
 	* @return True if the file exists, false otherwise.
 	*/
 	bool FIRECUBE_API FileExists(const std::string &filename);
+
+	void FIRECUBE_API SetAssetsFolder(const std::string &folder);
+	std::string FIRECUBE_API GetAssetsFolder();
+
+	void FIRECUBE_API SetCoreDataFolder(const std::string &folder);
+	std::string FIRECUBE_API GetCoreDataFolder();
+
+	std::string FIRECUBE_API FindResourceByName(const std::string &name);
+
+	std::string FIRECUBE_API GetFileName(const std::string &name);
 }
 }

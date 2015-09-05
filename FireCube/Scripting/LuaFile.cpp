@@ -13,12 +13,12 @@ LuaFile::LuaFile(Engine *engine) : Resource(engine), hasExecuted(false)
 
 bool LuaFile::Load(const std::string &filename)
 {
-	std::string name = Filesystem::SearchForFileName(filename);
-	if (name.empty())
+	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
+	if (resolvedFileName.empty())
 		return false;
 
-	this->filename = name;
-	std::ifstream t(name);
+	this->filename = resolvedFileName;
+	std::ifstream t(resolvedFileName);
 	code = std::string((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
 	return true;
 }

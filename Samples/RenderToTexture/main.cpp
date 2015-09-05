@@ -8,13 +8,11 @@ App app;
 
 App::App() : scene(engine), scene2(engine)
 {
-
+	
 }
 
 bool App::Prepare()
-{
-    Filesystem::AddSearchPath("../Assets/Textures");
-    Filesystem::AddSearchPath("../Assets/Models");	
+{    
 	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
 	SubscribeToEvent(Events::HandleInput, &App::HandleInput);
     SetTitle("RenderToTexture Example");
@@ -31,10 +29,10 @@ bool App::Prepare()
 	light->SetLightType(LightType::DIRECTIONAL);
     
 	node = root->CreateChild("Mesh");
-	node->CreateComponent<StaticModel>()->CreateFromMesh(resourceCache->GetResource<Mesh>("../Assets/Models/1.3ds"));
+	node->CreateComponent<StaticModel>()->CreateFromMesh(resourceCache->GetResource<Mesh>("Models/1.3ds"));
 	node->Move(vec3(1.3f, 0, -3));    	
 	node2 = root->CreateChild("Mesh2");
-	node2->CreateComponent<StaticModel>()->CreateFromMesh(resourceCache->GetResource<Mesh>("../Assets/Models/teapot2.3ds"));
+	node2->CreateComponent<StaticModel>()->CreateFromMesh(resourceCache->GetResource<Mesh>("Models/teapot2.3ds"));
     node2->Move(vec3(-1.3f, 0, -3));	
 
 	root = scene.GetRootNode();
@@ -49,7 +47,7 @@ bool App::Prepare()
 	material->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0));
-	material->SetTechnique(resourceCache->GetResource<Technique>("./Techniques/DiffuseMap.xml"));
+	material->SetTechnique(resourceCache->GetResource<Technique>("Techniques/DiffuseMap.xml"));
 	Geometry *plane = GeometryGenerator::GeneratePlane(engine, vec2(2, 2));
 	SharedPtr<Mesh> mesh = new Mesh(engine);
 	mesh->AddGeometry(plane, BoundingBox(vec3(-2), vec3(2)), material);	
@@ -89,6 +87,9 @@ void App::HandleInput(float time, const MappedInput &input)
 }
 int main(int argc, char *argv[])
 {
+	Filesystem::SetCoreDataFolder("../../FireCube");
+	Filesystem::SetAssetsFolder("../../Assets");
+
     if (app.Initialize())
         app.Run();
 }

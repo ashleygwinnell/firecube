@@ -91,10 +91,10 @@ void MyMainFrame::Button1Clicked( wxCommandEvent& event )
 
 void MyMainFrame::Button2Clicked( wxCommandEvent& event )
 {
-	std::string dir = wxDirSelector();
-	if (dir != "")
+	std::string dir = wxDirSelector().ToStdString();
+	if (dir.empty() == false)
 	{
-		Filesystem::AddSearchPath(dir);
+		//Filesystem::AddSearchPath(dir);
 	}
 }
 

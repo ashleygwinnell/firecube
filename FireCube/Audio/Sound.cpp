@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include "Audio/Sound.h"
 #include "Utils/Logger.h"
+#include "Utils/Filesystem.h"
 
 using namespace FireCube;
 
@@ -11,6 +12,10 @@ Sound::Sound(Engine *engine) : Resource(engine)
 
 bool Sound::Load(const std::string &filename)
 {	
+	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
+	if (resolvedFileName.empty())
+		return false;
+
 	SDL_AudioSpec desired, *obtained;
 	Uint32 wavLength;
 	Uint8 *wavBuffer;
@@ -21,7 +26,7 @@ bool Sound::Load(const std::string &filename)
 	desired.channels = 2;
 		
 	// Load the WAV
-	if ((obtained = SDL_LoadWAV(filename.c_str(), &desired, &wavBuffer, &wavLength)) == nullptr)
+	if ((obtained = SDL_LoadWAV(resolvedFileName.c_str(), &desired, &wavBuffer, &wavLength)) == nullptr)
 	{
 		LOGERROR("Could not open wav file: ", SDL_GetError());
 		return false;

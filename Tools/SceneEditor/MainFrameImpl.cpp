@@ -255,7 +255,7 @@ void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 	editorState->SetCurrentSceneFile(openFileDialog.GetPath().ToStdString());
 
 	sceneSettings->basePath = path;
-	Filesystem::AddSearchPath(sceneSettings->basePath);
+	//Filesystem::AddSearchPath(sceneSettings->basePath);
 
 	SceneReader sceneReader(engine);
 	sceneReader.ReadSettings(openFileDialog.GetPath().ToStdString());
@@ -264,7 +264,7 @@ void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 	for (const auto &resourcePath : sceneSettings->resourcePaths)
 	{
 		std::string resourceFullpath = sceneSettings->basePath + (sceneSettings->basePath.back() == '/' || sceneSettings->basePath.back() == '\\' ? "" : "\\") + resourcePath;
-		Filesystem::AddSearchPath(resourceFullpath);
+		//Filesystem::AddSearchPath(resourceFullpath);
 	}
 	
 	editorState->ClearCommands();
@@ -290,7 +290,7 @@ void MainFrameImpl::SetBasePathClicked(wxCommandEvent& event)
 		return;
 
 	sceneSettings->basePath = dirDialog.GetPath().ToStdString();	
-	Filesystem::AddSearchPath(sceneSettings->basePath);
+	//Filesystem::AddSearchPath(sceneSettings->basePath);
 }
 
 void MainFrameImpl::AddResourcePathClicked(wxCommandEvent& event)
@@ -302,7 +302,7 @@ void MainFrameImpl::AddResourcePathClicked(wxCommandEvent& event)
 	
 	sceneSettings->resourcePaths.push_back(dirDialog.GetPath().ToStdString());
 	
-	Filesystem::AddSearchPath(dirDialog.GetPath().ToStdString());
+	//Filesystem::AddSearchPath(dirDialog.GetPath().ToStdString());
 }
 
 void MainFrameImpl::SelectedNodeChanged(FireCube::Node *node)

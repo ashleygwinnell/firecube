@@ -20,22 +20,18 @@ public:
 
 	template <class T> T *GetResource(const std::string &filename)
 	{	
-		std::string name = Filesystem::SearchForFileName(filename);
-		if (name.empty())
-			return nullptr;
-
-		auto i = resources.find(name);
+		auto i = resources.find(filename);
 		if (i != resources.end())
 			return (T *) i->second.Get();
 
 		SharedPtr<T> resource = SharedPtr<T>(new T(engine));
-		if (!resource->Load(name))
+		if (!resource->Load(filename))
 			return nullptr;
 
 		resource->SetFileName(filename);
 		SharedPtr<Resource> resourcePtr;
 		resourcePtr.StaticCast(resource);
-		resources[name] = resourcePtr;
+		resources[filename] = resourcePtr;
 		return resource;
 	}
 

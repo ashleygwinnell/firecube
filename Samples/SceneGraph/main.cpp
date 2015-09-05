@@ -8,6 +8,9 @@ using namespace FireCube;
 App app;
 int main(int argc, char *argv[])
 {
+	Filesystem::SetCoreDataFolder("../../FireCube");
+	Filesystem::SetAssetsFolder("../../Assets");
+
 	if (!app.Initialize(1024, 768, 0, false))
 		return 0;
 	app.Run();
@@ -25,8 +28,6 @@ App::~App()
 }
 bool App::Prepare()
 {	
-	Filesystem::AddSearchPath("../Assets/Textures");
-	Filesystem::AddSearchPath("../Assets/Models");
 	SetTitle("SceneGraph Test Application");	
 	GetInputManager().AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Close");
 	SubscribeToEvent(Events::HandleInput, &App::HandleInput);
@@ -45,8 +46,8 @@ bool App::Prepare()
 	StaticModel *staticModel = lightNode->CreateComponent<StaticModel>();
 	SharedPtr<Mesh> mesh;
 	mesh = new Mesh(engine);
-	Material *mat = engine->GetResourceCache()->GetResource<Material>("./Materials/TerrainNoTexture.xml")->Clone();
-	mat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("./Techniques/Unlit.xml"));
+	Material *mat = engine->GetResourceCache()->GetResource<Material>("Materials/TerrainNoTexture.xml")->Clone();
+	mat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));
 	mesh->AddGeometry(GeometryGenerator::GenerateSphere(engine, 0.1f, 10, 10), BoundingBox(vec3(-0.05f), vec3(0.05f)), mat);
 	staticModel->CreateFromMesh(mesh);
 
@@ -56,8 +57,8 @@ bool App::Prepare()
 	mat->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(0.7f, 0.7f, 0.7f, 1.0f));
 	mat->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0.3f, 0.3f, 0.3f, 1.0f));
 	mat->SetParameter(PARAM_MATERIAL_SHININESS, 20.0f);
-	mat->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>("earthmap1k.jpg"));
-	mat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("./Techniques/DiffuseMap.xml"));
+	mat->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>("Textures/earthmap1k.jpg"));
+	mat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
 
 	Node *n = root->CreateChild("Earth");
 	staticModel = n->CreateComponent<StaticModel>();	
@@ -65,11 +66,11 @@ bool App::Prepare()
 	staticModel->CreateFromMesh(mesh);
 			
 	Node *n2 = root->CreateChild("Teapot");
-	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>("../Assets/Models/teapot.3ds"));
+	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>("Models/teapot.3ds"));
 	n2->Move(vec3(5, -2, 0));
 
 	n2 = root->CreateChild("Duck");	
-	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>("../Assets/Models/duck.dae"));
+	n2->CreateComponent<StaticModel>()->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>("Models/duck.dae"));
 	n2->Move(vec3(-5, -2, 0));	
 	
 	scene.SetFogColor(vec3(0.2f, 0.2f, 0.6f));

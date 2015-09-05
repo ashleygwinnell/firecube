@@ -32,7 +32,9 @@ GLCanvas::~GLCanvas()
 }
 void GLCanvas::Init()
 {
-	Filesystem::AddSearchPath("../Assets/Textures");
+	Filesystem::SetCoreDataFolder("../../FireCube");
+	Filesystem::SetAssetsFolder("../../Assets");
+
 	theApp->fcApp.InitializeNoWindow();
 	engine = theApp->fcApp.GetEngine();
 	renderingParameters.bgColor = vec3(0.249f, 0.521f, 1.0f);

@@ -159,8 +159,12 @@ Technique::~Technique()
 
 bool Technique::Load(const std::string &filename)
 {
+	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
+	if (resolvedFileName.empty())
+		return false;
+
 	TiXmlDocument xmlDocument;
-	if (!xmlDocument.LoadFile(Filesystem::SearchForFileName(filename)))
+	if (!xmlDocument.LoadFile(resolvedFileName))
 		return false;
 	
 	TiXmlElement *e = xmlDocument.FirstChildElement("technique");

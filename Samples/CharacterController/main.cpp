@@ -6,8 +6,8 @@ using namespace FireCube;
 App app;
 int main(int argc, char *argv[])
 {
-	Filesystem::AddSearchPath("../Assets/Textures");
-	Filesystem::AddSearchPath("../Assets/Models");
+	Filesystem::SetCoreDataFolder("../../FireCube");
+	Filesystem::SetAssetsFolder("../../Assets");
 
 	if (!app.Initialize())
 		return 0;
@@ -42,9 +42,9 @@ bool App::Prepare()
 	childNode->Move(vec3(0, -5, 0));
 	childNode->Scale(vec3(2.0f));
 	staticModel = childNode->CreateComponent<StaticModel>();
-	staticModel->CreateFromMesh(resourceCache->GetResource<Mesh>("level1.dae"));
+	staticModel->CreateFromMesh(resourceCache->GetResource<Mesh>("Models/level1.dae"));
 	collisionShape = childNode->CreateComponent<CollisionShape>();
-	collisionShape->SetMesh(resourceCache->GetResource<Mesh>("level1.dae"));
+	collisionShape->SetMesh(resourceCache->GetResource<Mesh>("Models/level1.dae"));
 	collisionShape = childNode->CreateComponent<CollisionShape>();
 	collisionShape->SetPlane(Plane(vec3(0, 1, 0), 0));
 	childNode2 = childNode->CreateChild();	
@@ -55,7 +55,7 @@ bool App::Prepare()
 	Node *playerNode = root->CreateChild("Player");
 	staticModel = playerNode->CreateComponent<StaticModel>();
 	SharedPtr<Mesh> mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateSphere(engine, 0.5f, 20, 20), BoundingBox(vec3(-0.5f), vec3(0.5f)), resourceCache->GetResource<Material>("./Materials/TerrainNoTexture.xml"));	
+	mesh->AddGeometry(GeometryGenerator::GenerateSphere(engine, 0.5f, 20, 20), BoundingBox(vec3(-0.5f), vec3(0.5f)), resourceCache->GetResource<Material>("Materials/TerrainNoTexture.xml"));	
 	staticModel->CreateFromMesh(mesh);
 	playerNode->Move(vec3(2.0f, 10.0f, -2.0f));
 	characterController = playerNode->CreateComponent<CharacterController>();
@@ -64,7 +64,7 @@ bool App::Prepare()
 	childNode = playerNode->CreateChild("Gun");
 	staticModel = childNode->CreateComponent<StaticModel>();
 	mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.2f, 0.2f, 1.0f)), BoundingBox(vec3(-1.0f), vec3(1.0f)), resourceCache->GetResource<Material>("./Materials/TerrainNoTexture.xml"));	
+	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.2f, 0.2f, 1.0f)), BoundingBox(vec3(-1.0f), vec3(1.0f)), resourceCache->GetResource<Material>("Materials/TerrainNoTexture.xml"));	
 	staticModel->CreateFromMesh(mesh);
 	childNode->Move(vec3(0.3f, 0.0f, -0.5f));
 
@@ -89,7 +89,7 @@ bool App::Prepare()
 
 	float startY = -5;
 	float stepHeight = 0.5f;
-	float stepDepth = 1;
+	float stepDepth = 5;
 	float stepWidth = 5;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -98,6 +98,18 @@ bool App::Prepare()
 		collisionShape->SetBox(BoundingBox(vec3(-stepWidth * 0.5f, 0, 0), vec3(stepWidth * 0.5f, stepHeight, stepDepth)));
 		childNode->SetTranslation(vec3(10, startY + (float)i * stepHeight, (float)i * stepDepth));
 	}
+
+
+	childNode = root->CreateChild();
+	collisionShape = childNode->CreateComponent<CollisionShape>();
+	collisionShape->SetBox(BoundingBox(vec3(0), vec3(5)));
+	childNode->SetTranslation(vec3(-10, -5, 0));
+	childNode->Rotate(vec3(0, 0.1f, 0));
+	
+	childNode = root->CreateChild();
+	collisionShape = childNode->CreateComponent<CollisionShape>();
+	collisionShape->SetBox(BoundingBox(vec3(0), vec3(5)));
+	childNode->SetTranslation(vec3(-15, -5, 5));
 
 	return true;
 }

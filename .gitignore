@@ -37,3 +37,8 @@ Tools/ModelViewer/Release/
 Tools/SceneEditor/Release/
 FireCube/ThirdParty/SDL/Debug Static/
 .vs/FireCube/v14/.suo
+Samples/CharacterController/log.txt
+Samples/RenderToTexture/log.txt
+Samples/SceneGraph/log.txt
+Tools/ModelViewer/log.txt
+Tools/SceneEditor/log.txt

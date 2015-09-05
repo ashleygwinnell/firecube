@@ -24,8 +24,12 @@ SceneReader::SceneReader(Engine *engine) : Object(engine)
 
 bool SceneReader::Read(Scene &scene, const std::string &filename)
 {
+	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
+	if (resolvedFileName.empty())
+		return false;
+
 	TiXmlDocument xmlDocument;
-	if (!xmlDocument.LoadFile(Filesystem::SearchForFileName(filename)))
+	if (!xmlDocument.LoadFile(resolvedFileName))
 		return false;	
 
 	TiXmlElement *e = xmlDocument.FirstChildElement("scene");
@@ -328,8 +332,12 @@ void SceneReader::ReadSettings(TiXmlElement *e)
 
 void SceneReader::ReadSettings(const std::string &filename)
 {
+	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
+	if (resolvedFileName.empty())
+		return;
+
 	TiXmlDocument xmlDocument;
-	if (!xmlDocument.LoadFile(Filesystem::SearchForFileName(filename)))
+	if (!xmlDocument.LoadFile(resolvedFileName))
 		return;
 
 	TiXmlElement *settingsElement = xmlDocument.FirstChildElement("settings");

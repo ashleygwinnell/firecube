@@ -25,9 +25,13 @@ Mesh::Mesh(Engine *engine) : Resource(engine)
 
 bool Mesh::Load(const std::string &filename)
 {
+	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
+	if (resolvedFileName.empty())
+		return false;
+
 	Assimp::Importer importer;
 
-	const aiScene* scene = importer.ReadFile(filename,
+	const aiScene* scene = importer.ReadFile(resolvedFileName,
 		aiProcess_Triangulate |
 		aiProcess_GenSmoothNormals |
 		aiProcess_FlipUVs |
@@ -83,17 +87,24 @@ void Mesh::ProcessAssimpScene(const aiScene *aScene)
 
 SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 {
-	SharedPtr<Material> material = new Material(engine);
+	aiString materialName;
+	std::string matName;
+
+	if (aMaterial->Get(AI_MATKEY_NAME, materialName) == AI_SUCCESS)
+	{
+		matName = materialName.C_Str();
+	}
+	
+	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/" + matName + ".xml");
+	if (material)
+		return material;
+
+	material = new Material(engine);
 
 	aiColor3D aColor;
 	float value;
 	aiString file;
-	aiString materialName;
-
-	if (aMaterial->Get(AI_MATKEY_NAME, materialName) == AI_SUCCESS)
-	{
-		material->SetName(materialName.C_Str());
-	}
+	
 
 	if (aMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aColor) == AI_SUCCESS)
 	{
@@ -136,13 +147,29 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	if (aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &file) == AI_SUCCESS)
 	{
 		hasDiffuseTexture = true;
-		material->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(file.C_Str()));
+		std::string resourceName = "Textures/" + Filesystem::GetFileName(file.C_Str());
+		if (Filesystem::FindResourceByName(resourceName).empty())
+		{
+			material->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(file.C_Str()));
+		}
+		else
+		{
+			material->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(resourceName));
+		}
 	}
 
 	if (aMaterial->GetTexture(aiTextureType_NORMALS, 0, &file) == AI_SUCCESS)
 	{
 		hasNormalTexture = true;
-		material->SetTexture(TextureUnit::NORMAL, engine->GetResourceCache()->GetResource<Texture>(file.C_Str()));
+		std::string resourceName = "Textures/" + Filesystem::GetFileName(file.C_Str());		
+		if (Filesystem::FindResourceByName(resourceName).empty())
+		{
+			material->SetTexture(TextureUnit::NORMAL, engine->GetResourceCache()->GetResource<Texture>(file.C_Str()));
+		}
+		else
+		{
+			material->SetTexture(TextureUnit::NORMAL, engine->GetResourceCache()->GetResource<Texture>(resourceName));
+		}
 	}
 
 	if (hasDiffuseTexture && hasNormalTexture)

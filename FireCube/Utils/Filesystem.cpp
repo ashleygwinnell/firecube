@@ -1,43 +1,13 @@
+#include "Utils/Logger.h"
 #include <fstream>
-
+#include <algorithm>
 #include <Windows.h>
 #include "Utils/Filesystem.h"
 
 using namespace FireCube;
 
-std::vector<std::string> searchPaths;
-
-void Filesystem::AddSearchPath(const std::string &path)
-{
-	std::string npath = path;
-	if ((npath[npath.size() - 1] == '\\') || (npath[npath.size() - 1] == '/'))
-		npath = npath.substr(0, npath.size() - 1);
-	searchPaths.push_back(npath);
-}
-
-const std::vector<std::string> &Filesystem::GetSearchPaths()
-{
-	return searchPaths;
-}
-
-std::string Filesystem::SearchForFileName(const std::string &filename)
-{	
-	std::string ret;
-	if (!FileExists(filename))
-	{
-		const std::vector<std::string> &searchPaths = Filesystem::GetSearchPaths();
-		for (unsigned int i = 0; i < searchPaths.size(); i++)
-		{
-			ret = searchPaths[i] + "\\" + filename;
-			if (FileExists(ret))
-				return ret;
-		}
-	}
-	else
-		return filename;
-
-	return "";
-}
+std::string assetsFolder = "";
+std::string coreDataFolder = "";
 
 std::string Filesystem::GetFullPath(const std::string &filename)
 {
@@ -57,4 +27,63 @@ bool Filesystem::FileExists(const std::string &filename)
 		return true;
 	}
 	return false;
+}
+
+void Filesystem::SetAssetsFolder(const std::string &folder)
+{
+	assetsFolder = folder;
+}
+
+std::string Filesystem::GetAssetsFolder()
+{
+	return assetsFolder;
+}
+
+void Filesystem::SetCoreDataFolder(const std::string &folder)
+{
+	coreDataFolder = folder;
+}
+
+std::string Filesystem::GetCoreDataFolder()
+{
+	return coreDataFolder;
+}
+
+std::string Filesystem::FindResourceByName(const std::string &name)
+{
+	std::string resourceInCoreData = coreDataFolder + "/" + name;
+	std::string resourceInAssets = assetsFolder + "/" + name;
+
+	if (FileExists(resourceInAssets))
+		return resourceInAssets;
+	if (FileExists(resourceInCoreData))
+		return resourceInCoreData;
+	if (FileExists(name))
+		return name;
+
+	return "";
+}
+
+std::string Filesystem::GetFileName(const std::string &name)
+{
+	auto i0 = name.find_last_of('\\');
+	auto i1 = name.find_last_of('/');
+	auto i = i0;
+	if (i0 == std::string::npos)
+	{
+		i = i1;
+	}
+	else if (i1 != std::string::npos)
+	{
+		i = max(i0, i1);
+	}
+
+	if (i != std::string::npos)
+	{
+		return name.substr(i + 1);
+	}
+	else
+	{
+		return name;
+	}
 }
