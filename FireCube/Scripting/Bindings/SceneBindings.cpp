@@ -207,8 +207,6 @@ void LuaBindings::InitScene(lua_State *luaState)
 		.beginClass<SceneReader>("SceneReader")
 			.addConstructor(LUA_ARGS(Engine *))
 			.addFunction("Read", &SceneReader::Read)
-			.addFunction("ReadSettings", (void(SceneReader::*)(const std::string &)) &SceneReader::ReadSettings)
-			.addProperty("resroucePaths", &SceneReader::GetResroucePaths)		
 		.endClass();
 
 	LuaRef t = LuaRef::createTable(luaState);

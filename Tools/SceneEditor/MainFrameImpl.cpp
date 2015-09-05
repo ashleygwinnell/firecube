@@ -255,17 +255,10 @@ void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 	editorState->SetCurrentSceneFile(openFileDialog.GetPath().ToStdString());
 
 	sceneSettings->basePath = path;
-	//Filesystem::AddSearchPath(sceneSettings->basePath);
+
+	Filesystem::SetAssetsFolder(Filesystem::GetDirectoryName(path.ToStdString()));
 
 	SceneReader sceneReader(engine);
-	sceneReader.ReadSettings(openFileDialog.GetPath().ToStdString());
-	sceneSettings->resourcePaths = sceneReader.GetResroucePaths();
-
-	for (const auto &resourcePath : sceneSettings->resourcePaths)
-	{
-		std::string resourceFullpath = sceneSettings->basePath + (sceneSettings->basePath.back() == '/' || sceneSettings->basePath.back() == '\\' ? "" : "\\") + resourcePath;
-		//Filesystem::AddSearchPath(resourceFullpath);
-	}
 	
 	editorState->ClearCommands();
 	sceneTreeCtrl->DeleteAllItems();

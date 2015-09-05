@@ -87,3 +87,54 @@ std::string Filesystem::GetFileName(const std::string &name)
 		return name;
 	}
 }
+
+std::string Filesystem::RemoveLastSeparator(const std::string &path)
+{
+	if (path.back() == '/' || path.back() == '\\')
+	{
+		return path.substr(0, path.size() - 1);
+	}
+	else
+	{
+		return path;
+	}
+	
+}
+
+std::string Filesystem::GetDirectoryName(const std::string &path)
+{
+	std::string p = RemoveLastSeparator(path);
+	unsigned int i = FindLastSeparator(p);
+	if (i != -1)
+	{
+		return p.substr(0, i);
+	}
+	else
+	{
+		return p;
+	}
+}
+
+unsigned int Filesystem::FindLastSeparator(const std::string &path)
+{
+	auto i0 = path.find_last_of('\\');
+	auto i1 = path.find_last_of('/');
+	auto i = i0;
+	if (i0 == std::string::npos)
+	{
+		i = i1;
+	}
+	else if (i1 != std::string::npos)
+	{
+		i = max(i0, i1);
+	}
+
+	if (i == std::string::npos)
+	{
+		return -1;
+	}
+	else
+	{
+		return i;
+	}
+}

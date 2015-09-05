@@ -36,5 +36,11 @@ namespace Filesystem
 	std::string FIRECUBE_API FindResourceByName(const std::string &name);
 
 	std::string FIRECUBE_API GetFileName(const std::string &name);
+
+	std::string FIRECUBE_API RemoveLastSeparator(const std::string &path);
+
+	std::string FIRECUBE_API GetDirectoryName(const std::string &path);
+	
+	unsigned int FIRECUBE_API FindLastSeparator(const std::string &path);
 }
 }

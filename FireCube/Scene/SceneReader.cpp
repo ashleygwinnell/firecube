@@ -39,23 +39,6 @@ bool SceneReader::Read(Scene &scene, const std::string &filename)
 	e = e->FirstChildElement("node");
 	if (e == nullptr)
 		return false;
-
-	auto i0 = filename.find_last_of('\\');
-	auto i1 = filename.find_last_of('/');
-	auto i = i0;
-	if (i0 == std::string::npos)
-	{
-		i = i1;
-	}
-	else if (i1 != std::string::npos)
-	{
-		i = std::max(i0, i1);
-	}
-
-	if (i != std::string::npos)
-	{
-		basePath = filename.substr(0, i + 1);
-	}
 	
 	Node *node = scene.GetRootNode();
 	ReadNode(e, node);
@@ -109,7 +92,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		
 		if (e->Attribute("mesh"))
 		{
-			component->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>(basePath + e->Attribute("mesh")));
+			component->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>(e->Attribute("mesh")));
 		}		
 
 		if (e->Attribute("cast_shadow"))
@@ -317,37 +300,4 @@ void SceneReader::ReadTransformation(TiXmlElement *e, Node *node)
 		rotationMat.RotateZ(rotation.z);
 		node->SetRotation(rotationMat);
 	}
-}
-
-void SceneReader::ReadSettings(TiXmlElement *e)
-{
-	for (TiXmlElement *element = e->FirstChildElement(); element != nullptr; element = element->NextSiblingElement())
-	{
-		if (element->ValueStr() == "resource_path")
-		{
-			resourcePaths.push_back(element->GetText());
-		}
-	}
-}
-
-void SceneReader::ReadSettings(const std::string &filename)
-{
-	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
-	if (resolvedFileName.empty())
-		return;
-
-	TiXmlDocument xmlDocument;
-	if (!xmlDocument.LoadFile(resolvedFileName))
-		return;
-
-	TiXmlElement *settingsElement = xmlDocument.FirstChildElement("settings");
-	if (settingsElement)
-	{
-		ReadSettings(settingsElement);
-	}
-}
-
-const std::vector<std::string> &SceneReader::GetResroucePaths() const
-{
-	return resourcePaths;
 }
