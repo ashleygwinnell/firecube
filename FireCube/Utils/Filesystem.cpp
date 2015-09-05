@@ -153,3 +153,22 @@ std::string Filesystem::GetLastPathComponent(const std::string &path)
 		return p;
 	}
 }
+
+bool Filesystem::CopyPath(const std::string &source, const std::string &destination)
+{
+	return CopyFileA(source.c_str(), destination.c_str(), 0) == TRUE;	
+}
+
+bool Filesystem::CreateFolder(const std::string &path)
+{
+	BOOL b = CreateDirectoryA(path.c_str(), nullptr);
+
+	if (b != TRUE && GetLastError() != ERROR_ALREADY_EXISTS)
+	{
+		return false;		
+	}
+	else
+	{
+		return true;
+	}
+}

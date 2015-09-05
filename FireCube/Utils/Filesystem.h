@@ -51,5 +51,9 @@ namespace Filesystem
 	std::string FIRECUBE_API MakeRelativeTo(const std::string &base, const std::string &path);
 
 	std::string FIRECUBE_API GetLastPathComponent(const std::string &path);
+
+	bool FIRECUBE_API CopyPath(const std::string &source, const std::string &destination);	
+
+	bool FIRECUBE_API CreateFolder(const std::string &path);
 }
 }
