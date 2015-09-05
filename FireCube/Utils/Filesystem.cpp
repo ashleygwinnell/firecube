@@ -136,7 +136,7 @@ std::string Filesystem::MakeRelativeTo(const std::string &base, const std::strin
 
 	std::string baseFull = GetFullPath(base);
 	std::string pathFull = GetFullPath(path);
-	std::string pathRelative = pathFull.substr(baseFull.size());
+	std::string pathRelative = pathFull.substr(baseFull.size() + 1);
 	return pathRelative;
 }
 
