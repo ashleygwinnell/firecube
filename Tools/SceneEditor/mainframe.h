@@ -75,13 +75,13 @@ class MainFrame : public wxFrame
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void PaneClose( wxAuiManagerEvent& event ) { event.Skip(); }
+		virtual void NewClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OpenClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SaveClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SaveAsClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UndoClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void RedoClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SetBasePathClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void AddResourcePathClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddNodeClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddMeshClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddStaticModelClicked( wxCommandEvent& event ) { event.Skip(); }

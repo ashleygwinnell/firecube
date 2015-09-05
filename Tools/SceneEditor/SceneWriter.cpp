@@ -57,7 +57,7 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 		{
 			fileName.MakeRelativeTo(basePath);
 		}
-		std::string file = fileName.GetFullPath();
+		std::string file = fileName.GetFullPath().ToStdString();
 
 		element->SetAttribute("mesh", file);
 		element->SetAttribute("cast_shadow", staticModel->GetCastShadow() ? "true" : "false");
@@ -123,7 +123,7 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 			{
 				fileName.MakeRelativeTo(basePath);
 			}
-			std::string file = fileName.GetFullPath();
+			std::string file = fileName.GetFullPath().ToStdString();
 
 			element->SetAttribute("script", file);
 		}
@@ -167,7 +167,7 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 			{
 				fileName.MakeRelativeTo(basePath);
 			}
-			std::string file = fileName.GetFullPath();
+			std::string file = fileName.GetFullPath().ToStdString();
 
 			element->SetAttribute("mesh", file);
 			break;

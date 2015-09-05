@@ -24,9 +24,9 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void SaveClicked(wxCommandEvent& event);
 		virtual void SaveAsClicked(wxCommandEvent& event);
 		virtual void OpenClicked(wxCommandEvent& event);
+		virtual void NewClicked(wxCommandEvent& event);
 		virtual void SetBasePathClicked(wxCommandEvent& event);		
-		virtual void AddMeshClicked(wxCommandEvent& event);
-		virtual void AddResourcePathClicked(wxCommandEvent& event);
+		virtual void AddMeshClicked(wxCommandEvent& event);		
 		virtual void SceneTreeSelectionChanged(wxTreeEvent& event);
 		virtual void SceneTreeEndLabelEdit(wxTreeEvent& event);
 		virtual void ViewSceneHierarchyClicked(wxCommandEvent& event);
@@ -50,7 +50,8 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		void NodeRenamed(FireCube::Node *node);
 		void UpdateInpsectorPane();
 		void UpdateNode(FireCube::Node *node);		
-		void UpdateUndoRedoMenu(Command *command);
+		void UpdateUndoRedoMenu(Command *command);		
+		void SetAllPanelsVisibility(bool visible);
 
 		MyApp *theApp;
 		FireCube::Engine *engine;

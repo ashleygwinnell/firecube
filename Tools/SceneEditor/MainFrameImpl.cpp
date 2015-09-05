@@ -35,21 +35,8 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	SubscribeToEvent(editorState, editorState->undoPerformed, &MainFrameImpl::UpdateUndoRedoMenu);
 	SubscribeToEvent(editorState, editorState->redoPerformed, &MainFrameImpl::UpdateUndoRedoMenu);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);	
+	SetAllPanelsVisibility(false);
 }
-
-/*void MainFrameImpl::MyButtonClicked( wxCommandEvent& event )
-{
-	NodeDescriptor *nodeDescriptor = new NodeDescriptor(engine, sceneDescriptor, "TestNode");	
-	StaticModel *model = nodeDescriptor->GetNode()->CreateComponent<StaticModel>();
-	SharedPtr<Mesh> mesh(new Mesh(engine));
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(1.0f)), engine->GetResourceCache()->GetResource<Material>("Materials/TerrainNoTexture.xml"));
-	mesh->SetBoundingBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
-	model->CreateFromMesh(mesh);
-	model->SetCollisionQueryMask(USER_GEOMETRY);	
-	editorState->ExecuteCommand(new AddNodeCommand(editorState, nodeDescriptor, rootDescriptor));
-	this->glCanvas->Refresh(false);
-	this->glCanvas->SetFocus();
-}*/
 
 void MainFrameImpl::AddNodeClicked(wxCommandEvent& event)
 {
@@ -66,7 +53,7 @@ void MainFrameImpl::AddMeshClicked(wxCommandEvent& event)
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return;
 	
-	std::string sfile = openFileDialog.GetPath();
+	std::string sfile = openFileDialog.GetPath().ToStdString();
 	
 	Node *node = new Node(engine, "Node");
 	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", node, root);
@@ -94,7 +81,7 @@ void MainFrameImpl::AddStaticModelClicked(wxCommandEvent& event)
 		if (openFileDialog.ShowModal() == wxID_CANCEL)
 			return;
 
-		std::string sfile = openFileDialog.GetPath();
+		std::string sfile = openFileDialog.GetPath().ToStdString();
 		
 		auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel",  node, [sfile](Engine *engine, Node *node) -> Component *
 		{
@@ -249,6 +236,8 @@ void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return;
 
+	SetAllPanelsVisibility(true);
+
 	wxString path;
 	wxFileName::SplitPath(openFileDialog.GetPath(), &path, nullptr, nullptr, wxPATH_NATIVE);
 
@@ -272,7 +261,12 @@ void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 		UpdateNode(scene->GetRootNode());
 	}	
 
-	editorState->sceneChanged(editorState);
+	editorState->sceneChanged(editorState);	
+}
+
+void MainFrameImpl::NewClicked(wxCommandEvent& event)
+{
+	SetAllPanelsVisibility(true);
 }
 
 void MainFrameImpl::SetBasePathClicked(wxCommandEvent& event)
@@ -282,20 +276,7 @@ void MainFrameImpl::SetBasePathClicked(wxCommandEvent& event)
 	if (dirDialog.ShowModal() == wxID_CANCEL)
 		return;
 
-	sceneSettings->basePath = dirDialog.GetPath().ToStdString();	
-	//Filesystem::AddSearchPath(sceneSettings->basePath);
-}
-
-void MainFrameImpl::AddResourcePathClicked(wxCommandEvent& event)
-{
-	wxDirDialog dirDialog(this, "Choose resource directory", "", wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
-
-	if (dirDialog.ShowModal() == wxID_CANCEL)
-		return;
-	
-	sceneSettings->resourcePaths.push_back(dirDialog.GetPath().ToStdString());
-	
-	//Filesystem::AddSearchPath(dirDialog.GetPath().ToStdString());
+	sceneSettings->basePath = dirDialog.GetPath().ToStdString();		
 }
 
 void MainFrameImpl::SelectedNodeChanged(FireCube::Node *node)
@@ -576,4 +557,39 @@ void MainFrameImpl::UpdateUndoRedoMenu(Command *command)
 		redoMenuItem->Enable(false);
 		redoMenuItem->SetItemLabel(wxString(wxT("Redo")) + wxT('\t') + wxT("Ctrl+Y"));
 	}
+}
+
+void MainFrameImpl::SetAllPanelsVisibility(bool visible)
+{
+	auto &canvasPane = m_mgr.GetPane("canvasPane");
+	if (visible)
+	{
+		canvasPane.Show();
+	}
+	else
+	{
+		canvasPane.Hide();
+	}
+
+	auto &sceneHierarchyPane = m_mgr.GetPane("sceneHierarchyPane");
+	if (visible)
+	{
+		sceneHierarchyPane.Show();
+	}
+	else
+	{
+		sceneHierarchyPane.Hide();
+	}
+
+	auto &inspectorPane = m_mgr.GetPane("inspectorPane");
+	if (visible)
+	{
+		inspectorPane.Show();
+	}
+	else
+	{
+		inspectorPane.Hide();
+	}	
+
+	m_mgr.Update();
 }
