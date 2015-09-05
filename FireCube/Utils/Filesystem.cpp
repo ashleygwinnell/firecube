@@ -120,3 +120,36 @@ unsigned int Filesystem::FindLastSeparator(const std::string &path)
 		return i;
 	}
 }
+
+bool Filesystem::IsSubPathOf(const std::string &base, const std::string &path)
+{
+	std::string baseFull = GetFullPath(base);
+	std::string pathFull = GetFullPath(path);
+
+	return pathFull.size() >= baseFull.size() && _strnicmp(baseFull.c_str(), pathFull.c_str(), baseFull.size()) == 0;
+}
+
+std::string Filesystem::MakeRelativeTo(const std::string &base, const std::string &path)
+{
+	if (!IsSubPathOf(base, path))
+		return "";
+
+	std::string baseFull = GetFullPath(base);
+	std::string pathFull = GetFullPath(path);
+	std::string pathRelative = pathFull.substr(baseFull.size());
+	return pathRelative;
+}
+
+std::string Filesystem::GetLastPathComponent(const std::string &path)
+{
+	std::string p = RemoveLastSeparator(path);
+	unsigned int i = FindLastSeparator(p);
+	if (i != -1)
+	{
+		return p.substr(i + 1);
+	}
+	else
+	{
+		return p;
+	}
+}

@@ -13,6 +13,9 @@ namespace FireCube
 */
 namespace Filesystem
 {	
+	extern const char PATH_SEPARATOR_CHAR;
+	extern const std::string PATH_SEPARATOR;
+
 	/**
 	* Returns the full path of the given file.	
 	* @param filename The file name (can be relative or absolute).
@@ -43,7 +46,10 @@ namespace Filesystem
 	
 	unsigned int FIRECUBE_API FindLastSeparator(const std::string &path);
 
-	extern const char PATH_SEPARATOR_CHAR;
-	extern const std::string PATH_SEPARATOR;
+	bool FIRECUBE_API IsSubPathOf(const std::string &base, const std::string &path);
+
+	std::string FIRECUBE_API MakeRelativeTo(const std::string &base, const std::string &path);
+
+	std::string FIRECUBE_API GetLastPathComponent(const std::string &path);
 }
 }
