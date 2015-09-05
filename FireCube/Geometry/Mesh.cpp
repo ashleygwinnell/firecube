@@ -28,6 +28,8 @@ bool Mesh::Load(const std::string &filename)
 	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
 	if (resolvedFileName.empty())
 		return false;
+	
+	this->filename = filename;
 
 	Assimp::Importer importer;
 
@@ -43,7 +45,7 @@ bool Mesh::Load(const std::string &filename)
 	{
 		LOGERROR("Failed loading model: ", filename);
 		return false;
-	}
+	}	
 
 	ProcessAssimpScene(scene);
 
@@ -100,11 +102,11 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 		return material;
 
 	material = new Material(engine);
+	material->SetName(matName);
 
 	aiColor3D aColor;
 	float value;
-	aiString file;
-	
+	aiString file;	
 
 	if (aMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aColor) == AI_SUCCESS)
 	{
@@ -144,13 +146,24 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 
 	bool hasDiffuseTexture = false;
 	bool hasNormalTexture = false;
+	std::string meshBaseDirectory = Filesystem::GetDirectoryName(filename);
 	if (aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &file) == AI_SUCCESS)
-	{
+	{		
 		hasDiffuseTexture = true;
-		std::string resourceName = "Textures/" + Filesystem::GetFileName(file.C_Str());
+		std::string resourceName = "Textures/" + Filesystem::GetFileName(file.C_Str());		
 		if (Filesystem::FindResourceByName(resourceName).empty())
 		{
-			material->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(file.C_Str()));
+			// Try relative to mesh file
+			std::string relativeToMeshFile = meshBaseDirectory + Filesystem::PATH_SEPARATOR + std::string(file.C_Str());
+			if (Filesystem::FileExists(relativeToMeshFile))
+			{
+				material->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(relativeToMeshFile));
+			}
+			else
+			{
+				// Try as absolute path
+				material->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(file.C_Str()));
+			}			
 		}
 		else
 		{
@@ -164,7 +177,17 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 		std::string resourceName = "Textures/" + Filesystem::GetFileName(file.C_Str());		
 		if (Filesystem::FindResourceByName(resourceName).empty())
 		{
-			material->SetTexture(TextureUnit::NORMAL, engine->GetResourceCache()->GetResource<Texture>(file.C_Str()));
+			// Try relative to mesh file
+			std::string relativeToMeshFile = meshBaseDirectory + Filesystem::PATH_SEPARATOR + std::string(file.C_Str());
+			if (Filesystem::FileExists(relativeToMeshFile))
+			{
+				material->SetTexture(TextureUnit::NORMAL, engine->GetResourceCache()->GetResource<Texture>(relativeToMeshFile));
+			}
+			else
+			{
+				// Try as absolute path
+				material->SetTexture(TextureUnit::NORMAL, engine->GetResourceCache()->GetResource<Texture>(file.C_Str()));
+			}
 		}
 		else
 		{

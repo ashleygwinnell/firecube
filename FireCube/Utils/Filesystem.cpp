@@ -33,7 +33,7 @@ bool Filesystem::FileExists(const std::string &filename)
 
 void Filesystem::SetAssetsFolder(const std::string &folder)
 {
-	assetsFolder = folder;
+	assetsFolder = Filesystem::RemoveLastSeparator(folder);
 }
 
 std::string Filesystem::GetAssetsFolder()
@@ -43,7 +43,7 @@ std::string Filesystem::GetAssetsFolder()
 
 void Filesystem::SetCoreDataFolder(const std::string &folder)
 {
-	coreDataFolder = folder;
+	coreDataFolder = Filesystem::RemoveLastSeparator(folder);
 }
 
 std::string Filesystem::GetCoreDataFolder()

@@ -28,6 +28,11 @@ bool Material::Load(const std::string &filename)
 		return false;
 	this->filename = filename;
 
+	if (e->Attribute("name"))
+	{
+		name = e->Attribute("name");
+	}
+
 	for (TiXmlElement *element = e->FirstChildElement(); element != nullptr; element = element->NextSiblingElement())
 	{
 		if (element->ValueStr() == "technique")
