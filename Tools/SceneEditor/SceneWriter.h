@@ -12,8 +12,7 @@ public:
 	void Serialize(FireCube::Scene *scene, SceneSettings *sceneSettings, const std::string &filename);
 private:
 	std::string ToString(FireCube::vec3 v) const;
-	std::string ToString(FireCube::vec4 v) const;
-	void SerializeSettings(SceneSettings *sceneSettings, TiXmlNode *parent);
+	std::string ToString(FireCube::vec4 v) const;	
 	void Serialize(FireCube::Node *node, TiXmlElement *parent);
 	void Serialize(FireCube::Component *component, TiXmlElement *parent);
 	void SerializeNodeTransformation(FireCube::Node *node, TiXmlElement *parent);

@@ -11,8 +11,7 @@ void SceneWriter::Serialize(FireCube::Scene *scene, SceneSettings *sceneSettings
 	wxFileName::SplitPath(filename, &path, nullptr, nullptr, wxPATH_NATIVE);
 
 	basePath = path;
-	TiXmlDocument doc;
-	SerializeSettings(sceneSettings, &doc);
+	TiXmlDocument doc;	
 	TiXmlElement *element = new TiXmlElement("scene");	
 	doc.LinkEndChild(element);
 	Serialize(scene->GetRootNode(), element);
@@ -200,24 +199,6 @@ void SceneWriter::SerializeNodeTransformation(FireCube::Node *node, TiXmlElement
 	transformation->SetAttribute("translation", ToString(node->GetTranslation()));
 	transformation->SetAttribute("scale", ToString(node->GetScale()));
 	transformation->SetAttribute("rotation", ToString(eulerAngles));
-}
-
-void SceneWriter::SerializeSettings(SceneSettings *sceneSettings, TiXmlNode *parent)
-{
-	TiXmlElement *settings = new TiXmlElement("settings");
-	parent->LinkEndChild(settings);
-	
-	for (const auto &resourcePath : sceneSettings->resourcePaths)
-	{
-		TiXmlElement *element = new TiXmlElement("resource_path");
-		settings->LinkEndChild(element);
-
-		wxFileName resourcePathRelative(basePath + "\\" + resourcePath, "");
-		resourcePathRelative.MakeRelativeTo(basePath);		
-
-		TiXmlText *text = new TiXmlText(resourcePathRelative.GetFullPath().ToStdString());
-		element->LinkEndChild(text);
-	}	
 }
 
 std::string SceneWriter::ToString(vec3 v) const
