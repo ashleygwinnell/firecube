@@ -12,6 +12,7 @@ class VertexBuffer;
 class Engine;
 class Geometry;
 class Camera;
+class Frustum;
 
 class FIRECUBE_API DebugRenderer
 {
@@ -24,6 +25,8 @@ public:
 	void AddBoundingBox(const BoundingBox &boundingBox, const vec3 &color);	
 	void AddSphere(vec3 center, float radius, unsigned int rings, unsigned int columns, const vec3 &color);
 	void AddCapsule(vec3 p0, vec3 p1, float radius, unsigned int rings, unsigned int columns, const vec3 &color);
+	void AddFrustum(const Frustum &frustum, const vec3 &color);
+	void AddFrustum(const mat4 &viewMatrix, const mat4 &projectionMatrix, const vec3 &color);
 private:
 	struct LineVertex
 	{

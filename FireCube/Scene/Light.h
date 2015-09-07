@@ -71,6 +71,7 @@ public:
 	unsigned int GetLightMask() const;
 	void SetShadowIntensity(float shadowIntensity);
 	float GetShadowIntensity() const;
+	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
 	virtual Component *Clone() const;
 protected:
 	virtual void MarkedDirty() {}

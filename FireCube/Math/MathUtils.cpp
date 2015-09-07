@@ -1,6 +1,7 @@
 #include "MathUtils.h"
 #include "Physics/CollisionShape.h"
 #include "Physics/PhysicsWorld.h"
+#include "Math/Plane.h"
 
 using namespace FireCube;
 
@@ -608,4 +609,22 @@ vec3 MathUtils::ClosestPointTriangle(const vec3 &p, const vec3 &a, const vec3 &b
 	s = v;
 	t = w;
 	return a + ab*v + ac*w;
+}
+
+bool MathUtils::Intersect3Planes(const Plane &plane1, const Plane &plane2, const Plane &plane3, vec3 &intersectionPoint)
+{
+	float denom = Dot(plane1.GetNormal(), Cross(plane2.GetNormal(), plane3.GetNormal()));
+
+	if (denom != 0)
+	{
+		vec3 v0 = plane1.GetDistance() * Cross(plane2.GetNormal(), plane3.GetNormal());
+		vec3 v1 = plane2.GetDistance() * Cross(plane3.GetNormal(), plane1.GetNormal());
+		vec3 v2 = plane3.GetDistance() * Cross(plane1.GetNormal(), plane2.GetNormal());
+		intersectionPoint =  (v0 + v1 + v2) / denom;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

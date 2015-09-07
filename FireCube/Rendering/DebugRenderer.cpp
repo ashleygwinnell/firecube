@@ -5,6 +5,9 @@
 #include "Rendering/Renderer.h"
 #include "Geometry/Geometry.h"
 #include "Rendering/VertexBuffer.h"
+#include "Math/Frustum.h"
+#include "Math/MathUtils.h"
+
 using namespace FireCube;
 
 DebugRenderer::DebugRenderer(Engine *engine) : engine(engine)
@@ -186,4 +189,74 @@ void DebugRenderer::AddCapsule(vec3 p0, vec3 p1, float radius, unsigned int ring
 		AddLine(p0 + transformation * pos10p0 * radius, p0 + transformation * pos00p0 * radius, color);
 		AddLine(p0 + transformation * pos00p0 * radius, p1 + transformation * pos00 * radius, color);
 	}
+}
+
+void DebugRenderer::AddFrustum(const Frustum &frustum, const vec3 &color)
+{
+	vec3 near0, near1, near2, near3;
+	vec3 far0, far1, far2, far3;
+	MathUtils::Intersect3Planes(frustum.GetNearPlane(), frustum.GetLeftPlane(), frustum.GetBottomPlane(), near0);
+	MathUtils::Intersect3Planes(frustum.GetNearPlane(), frustum.GetRightPlane(), frustum.GetBottomPlane(), near1);
+	MathUtils::Intersect3Planes(frustum.GetNearPlane(), frustum.GetRightPlane(), frustum.GetTopPlane(), near2);
+	MathUtils::Intersect3Planes(frustum.GetNearPlane(), frustum.GetLeftPlane(), frustum.GetTopPlane(), near3);
+	MathUtils::Intersect3Planes(frustum.GetFarPlane(), frustum.GetLeftPlane(), frustum.GetBottomPlane(), far0);
+	MathUtils::Intersect3Planes(frustum.GetFarPlane(), frustum.GetRightPlane(), frustum.GetBottomPlane(), far1);
+	MathUtils::Intersect3Planes(frustum.GetFarPlane(), frustum.GetRightPlane(), frustum.GetTopPlane(), far2);
+	MathUtils::Intersect3Planes(frustum.GetFarPlane(), frustum.GetLeftPlane(), frustum.GetTopPlane(), far3);
+
+	AddLine(near0, near1, color);
+	AddLine(near1, near2, color);
+	AddLine(near2, near3, color);
+	AddLine(near3, near0, color);
+
+	AddLine(far0, far1, color);
+	AddLine(far1, far2, color);
+	AddLine(far2, far3, color);
+	AddLine(far3, far0, color);
+
+	AddLine(near0, far0, color);
+	AddLine(near1, far1, color);
+	AddLine(near2, far2, color);
+	AddLine(near3, far3, color);
+}
+
+void DebugRenderer::AddFrustum(const mat4 &viewMatrix, const mat4 &projectionMatrix, const vec3 &color)
+{
+	mat4 invViewProjection = projectionMatrix * viewMatrix;
+	invViewProjection.Inverse();
+
+	vec4 near0t = invViewProjection * vec4(-1, -1, -1, 1);
+	vec4 near1t = invViewProjection * vec4(1, -1, -1, 1);
+	vec4 near2t = invViewProjection * vec4(1, 1, -1, 1);
+	vec4 near3t = invViewProjection * vec4(-1, 1, -1, 1);
+
+	vec4 far0t = invViewProjection * vec4(-1, -1, 1, 1);
+	vec4 far1t = invViewProjection * vec4(1, -1, 1, 1);
+	vec4 far2t = invViewProjection * vec4(1, 1, 1, 1);
+	vec4 far3t = invViewProjection * vec4(-1, 1, 1, 1);
+
+	vec3 near0 = (near0t / near0t.w).ToVec3();
+	vec3 near1 = (near1t / near1t.w).ToVec3();
+	vec3 near2 = (near2t / near2t.w).ToVec3();
+	vec3 near3 = (near3t / near3t.w).ToVec3();
+
+	vec3 far0 = (far0t / far0t.w).ToVec3();
+	vec3 far1 = (far1t / far1t.w).ToVec3();
+	vec3 far2 = (far2t / far2t.w).ToVec3();
+	vec3 far3 = (far3t / far3t.w).ToVec3();
+
+	AddLine(near0, near1, color);
+	AddLine(near1, near2, color);
+	AddLine(near2, near3, color);
+	AddLine(near3, near0, color);
+
+	AddLine(far0, far1, color);
+	AddLine(far1, far2, color);
+	AddLine(far2, far3, color);
+	AddLine(far3, far0, color);
+
+	AddLine(near0, far0, color);
+	AddLine(near1, far1, color);
+	AddLine(near2, far2, color);
+	AddLine(near3, far3, color);
 }

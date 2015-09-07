@@ -110,3 +110,33 @@ bool Frustum::Contains(const BoundingBox &boundingBox) const
 	}
 	return true;
 }
+
+const Plane &Frustum::GetRightPlane() const
+{
+	return rightPlane;
+}
+
+const Plane &Frustum::GetLeftPlane() const
+{
+	return leftPlane;
+}
+
+const Plane &Frustum::GetBottomPlane() const
+{
+	return bottomPlane;
+}
+
+const Plane &Frustum::GetTopPlane() const
+{
+	return topPlane;
+}
+
+const Plane &Frustum::GetFarPlane() const
+{
+	return farPlane;
+}
+
+const Plane &Frustum::GetNearPlane() const
+{
+	return nearPlane;
+}

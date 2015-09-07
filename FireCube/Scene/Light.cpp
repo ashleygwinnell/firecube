@@ -120,6 +120,53 @@ float Light::GetShadowIntensity() const
 	return shadowIntensity;
 }
 
+void Light::RenderDebugGeometry(DebugRenderer *debugRenderer)
+{
+	switch (type)
+	{
+	case FireCube::LightType::DIRECTIONAL:
+	{
+		mat4 rotationMat = node->GetWorldRotation();
+		vec3 right(rotationMat.m[0], rotationMat.m[1], rotationMat.m[2]);
+		vec3 up(rotationMat.m[4], rotationMat.m[5], rotationMat.m[6]);
+		vec3 dir(rotationMat.m[8], rotationMat.m[9], rotationMat.m[10]);
+		vec3 origin = node->GetWorldPosition();
+		const unsigned int countX = 5;
+		const unsigned int countY = 5;
+		const float spacing = 1.5f;
+		const float length = 3;
+		float width = (countX - 1) * spacing;
+		float height = (countX - 1) * spacing;
+		for (unsigned int y = 0; y < countY; ++y)
+		{
+			for (unsigned int x = 0; x < countX; ++x)
+			{
+				vec3 p0 = origin + (-width * 0.5f + x * spacing) * right + (-height * 0.5f + y * spacing) * up;
+				vec3 p1 = p0 - dir * length;
+				debugRenderer->AddLine(p0, p1, vec3(0, 1, 0));
+				debugRenderer->AddLine(p1, p1 - right * spacing * 0.3f - up * spacing * 0.3f + dir * spacing * 0.7f, vec3(1, 0, 0));
+				debugRenderer->AddLine(p1, p1 + right * spacing * 0.3f - up * spacing * 0.3f + dir * spacing * 0.7f, vec3(1, 0, 0));
+				debugRenderer->AddLine(p1, p1 + right * spacing * 0.3f + up * spacing * 0.3f + dir * spacing * 0.7f, vec3(1, 0, 0));
+				debugRenderer->AddLine(p1, p1 - right * spacing * 0.3f + up * spacing * 0.3f + dir * spacing * 0.7f, vec3(1, 0, 0));
+			}
+		}
+	}
+	break;
+	case FireCube::LightType::POINT:
+		debugRenderer->AddSphere(node->GetWorldPosition(), range, 16, 16, vec3(0, 1, 0));
+		break;
+	case FireCube::LightType::SPOT:
+	{
+		Frustum frustum;
+		frustum.Extract(camera->GetViewMatrix(), camera->GetProjectionMatrix());
+		debugRenderer->AddFrustum(frustum, vec3(0, 1, 0));
+		break;
+	}
+	default:
+		break;
+	}
+}
+
 Component *Light::Clone() const
 {
 	Light *clone = new Light(*this);

@@ -42,3 +42,4 @@ Samples/RenderToTexture/log.txt
 Samples/SceneGraph/log.txt
 Tools/ModelViewer/log.txt
 Tools/SceneEditor/log.txt
+Tools/SceneEditor/SceneEditor.vcxproj.user

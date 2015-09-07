@@ -35,6 +35,12 @@ public:
 	*/
 	bool Contains(const BoundingBox &boundingBox) const;
 
+	const Plane &GetRightPlane() const;
+	const Plane &GetLeftPlane() const;
+	const Plane &GetBottomPlane() const;
+	const Plane &GetTopPlane() const;
+	const Plane &GetFarPlane() const;
+	const Plane &GetNearPlane() const;
 private:
 	Plane rightPlane, leftPlane, bottomPlane, topPlane,farPlane, nearPlane;	
 };
