@@ -64,6 +64,12 @@ public:
 			(*function)(std::forward<Args>(args)...);
 		}
 	}
+
+	template<class T>
+	void SetField(const std::string &name, T value)
+	{
+		object[name] = value;
+	}
 	
 	virtual Component *Clone() const;
 private:

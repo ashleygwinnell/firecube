@@ -13,7 +13,7 @@ namespace FireCube
 class vec3;
 
 /**
-* A class representing a plane.
+* A class representing a plane. The plane is defined by the equation ax + by + cz = d.
 */
 class FIRECUBE_API Plane
 {
