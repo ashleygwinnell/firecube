@@ -357,7 +357,18 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 		auto node = editorState->GetSelectedNode();
 		if (node)
 		{
+			auto auxDataMap = ((MyApp*)wxTheApp)->GetAuxDataMap();
 			auto clonedNode = node->Clone();
+			std::vector<LuaScript *> oldScriptComponents;
+			std::vector<LuaScript *> newScriptComponents;
+			clonedNode->GetComponents(newScriptComponents, true);
+			node->GetComponents(oldScriptComponents, true);
+			for (unsigned int i = 0; i < oldScriptComponents.size(); ++i)
+			{
+				auto &srcMap = auxDataMap->GetMap(oldScriptComponents[i]);
+				auto &dstMap = auxDataMap->GetMap(newScriptComponents[i]);
+				dstMap = srcMap;
+			}
 			auto command = new AddNodeCommand(editorState, "Clone", clonedNode, clonedNode->GetParent());
 			editorState->ExecuteCommand(command);
 			editorState->SetSelectedNode(clonedNode);
