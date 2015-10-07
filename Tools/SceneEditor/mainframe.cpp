@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  5 2014)
+// C++ code generated with wxFormBuilder (version Jun 17 2015)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -95,7 +95,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->SetMenuBar( menuBar );
 	
 	m_panel1 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( 150,-1 ), wxTAB_TRAVERSAL );
-	m_mgr.AddPane( m_panel1, wxAuiPaneInfo() .Name( wxT("sceneHierarchyPane") ).Left() .Caption( wxT("Scene") ).PinButton( true ).Dock().Resizable().FloatingSize( wxSize( -1,-1 ) ).DockFixed( false ) );
+	m_mgr.AddPane( m_panel1, wxAuiPaneInfo() .Name( wxT("sceneHierarchyPane") ).Left() .Caption( wxT("Scene") ).PinButton( true ).Dock().Resizable().FloatingSize( wxSize( -1,-1 ) ) );
 	
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -109,7 +109,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_panel1->SetSizer( bSizer2 );
 	m_panel1->Layout();
 	m_panel2 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_mgr.AddPane( m_panel2, wxAuiPaneInfo() .Name( wxT("canvasPane") ).Left() .CaptionVisible( false ).CloseButton( false ).PinButton( true ).Float().FloatingPosition( wxPoint( 628,556 ) ).Resizable().FloatingSize( wxSize( 42,59 ) ).DockFixed( false ).CentrePane() );
+	m_mgr.AddPane( m_panel2, wxAuiPaneInfo() .Name( wxT("canvasPane") ).Left() .CaptionVisible( false ).CloseButton( false ).PinButton( true ).Float().FloatingPosition( wxPoint( 628,556 ) ).Resizable().FloatingSize( wxSize( 42,59 ) ).CentrePane() );
 	
 	wxBoxSizer* bSizer11;
 	bSizer11 = new wxBoxSizer( wxVERTICAL );
@@ -122,7 +122,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_panel2->Layout();
 	bSizer11->Fit( m_panel2 );
 	inspectorPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( 400,-1 ), wxTAB_TRAVERSAL );
-	m_mgr.AddPane( inspectorPanel, wxAuiPaneInfo() .Name( wxT("inspectorPane") ).Right() .Caption( wxT("Inspector") ).PinButton( true ).Dock().Resizable().FloatingSize( wxSize( 42,59 ) ).DockFixed( false ).Layer( 1 ) );
+	m_mgr.AddPane( inspectorPanel, wxAuiPaneInfo() .Name( wxT("inspectorPane") ).Right() .Caption( wxT("Inspector") ).PinButton( true ).Dock().Resizable().FloatingSize( wxSize( 42,59 ) ).Layer( 1 ) );
 	
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
@@ -655,6 +655,24 @@ LuaScriptPanel::LuaScriptPanel( wxWindow* parent, wxWindowID id, const wxPoint& 
 	
 	bSizer20->Add( bSizer81, 1, wxEXPAND, 5 );
 	
+	wxBoxSizer* bSizer30;
+	bSizer30 = new wxBoxSizer( wxHORIZONTAL );
+	
+	addProperty = new wxButton( this, wxID_ANY, wxT("Add Property"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer30->Add( addProperty, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	removeProperty = new wxButton( this, wxID_ANY, wxT("Remove Property"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer30->Add( removeProperty, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	renameProperty = new wxButton( this, wxID_ANY, wxT("Rename Property"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer30->Add( renameProperty, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer20->Add( bSizer30, 1, wxEXPAND, 5 );
+	
+	propertyGrid = new wxPropertyGrid(this, wxID_ANY, wxDefaultPosition, wxSize( -1,200 ), wxPG_DEFAULT_STYLE|wxPG_HIDE_MARGIN);
+	bSizer20->Add( propertyGrid, 0, wxALL|wxEXPAND, 5 );
+	
 	
 	this->SetSizer( bSizer20 );
 	this->Layout();
@@ -663,6 +681,10 @@ LuaScriptPanel::LuaScriptPanel( wxWindow* parent, wxWindowID id, const wxPoint& 
 	// Connect Events
 	scriptFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LuaScriptPanel::FileChanged ), NULL, this );
 	objectNameTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LuaScriptPanel::ObjectNameChanged ), NULL, this );
+	addProperty->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LuaScriptPanel::AddPropertyClicked ), NULL, this );
+	removeProperty->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LuaScriptPanel::RemovePropertyClicked ), NULL, this );
+	renameProperty->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LuaScriptPanel::RenamePropertyClicked ), NULL, this );
+	propertyGrid->Connect( wxEVT_PG_CHANGED, wxPropertyGridEventHandler( LuaScriptPanel::PropertyGridChanged ), NULL, this );
 }
 
 LuaScriptPanel::~LuaScriptPanel()
@@ -670,6 +692,10 @@ LuaScriptPanel::~LuaScriptPanel()
 	// Disconnect Events
 	scriptFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LuaScriptPanel::FileChanged ), NULL, this );
 	objectNameTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LuaScriptPanel::ObjectNameChanged ), NULL, this );
+	addProperty->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LuaScriptPanel::AddPropertyClicked ), NULL, this );
+	removeProperty->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LuaScriptPanel::RemovePropertyClicked ), NULL, this );
+	renameProperty->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LuaScriptPanel::RenamePropertyClicked ), NULL, this );
+	propertyGrid->Disconnect( wxEVT_PG_CHANGED, wxPropertyGridEventHandler( LuaScriptPanel::PropertyGridChanged ), NULL, this );
 	
 }
 

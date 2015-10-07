@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  5 2014)
+// C++ code generated with wxFormBuilder (version Jun 17 2015)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -42,6 +42,8 @@
 #include <wx/valtext.h>
 #include <wx/choice.h>
 #include <wx/clrpicker.h>
+#include <wx/propgrid/propgrid.h>
+#include <wx/propgrid/advprops.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -272,10 +274,18 @@ class LuaScriptPanel : public wxPanel
 	protected:
 		wxFilePickerCtrl* scriptFilePicker;
 		wxTextCtrl* objectNameTextCtrl;
+		wxButton* addProperty;
+		wxButton* removeProperty;
+		wxButton* renameProperty;
+		wxPropertyGrid* propertyGrid;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void FileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void ObjectNameChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void AddPropertyClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RemovePropertyClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RenamePropertyClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void PropertyGridChanged( wxPropertyGridEvent& event ) { event.Skip(); }
 		
 	
 	public:

@@ -90,6 +90,7 @@
     <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlparser.cpp" />
     <ClCompile Include="AssetUtils.cpp" />
+    <ClCompile Include="AuxDataMap.cpp" />
     <ClCompile Include="BaseComponentPanelImpl.cpp" />
     <ClCompile Include="CharacterControllerPanelImpl.cpp" />
     <ClCompile Include="CollisionShapePanelImpl.cpp" />
@@ -113,6 +114,7 @@
     <ClCompile Include="MainFrameImpl.cpp" />
     <ClCompile Include="MathUtils.cpp" />
     <ClCompile Include="NodePropertiesPanelImpl.cpp" />
+    <ClCompile Include="SceneReader.cpp" />
     <ClCompile Include="SceneWriter.cpp" />
     <ClCompile Include="StaticModelPanelImpl.cpp" />
   </ItemGroup>
@@ -120,6 +122,7 @@
     <ClInclude Include="..\..\FireCube\ThirdParty\TinyXML\tinyxml.h" />
     <ClInclude Include="app.h" />
     <ClInclude Include="AssetUtils.h" />
+    <ClInclude Include="AuxDataMap.h" />
     <ClInclude Include="BaseComponentPanelImpl.h" />
     <ClInclude Include="CharacterControllerPanelImpl.h" />
     <ClInclude Include="CollisionShapePanelImpl.h" />
@@ -144,6 +147,7 @@
     <ClInclude Include="MainFrameImpl.h" />
     <ClInclude Include="MathUtils.h" />
     <ClInclude Include="NodePropertiesPanelImpl.h" />
+    <ClInclude Include="SceneReader.h" />
     <ClInclude Include="SceneWriter.h" />
     <ClInclude Include="StaticModelPanelImpl.h" />
     <ClInclude Include="Types.h" />

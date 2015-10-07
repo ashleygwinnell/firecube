@@ -19,6 +19,7 @@
 #include "CollisionShapePanelImpl.h"
 #include "CharacterControllerPanelImpl.h"
 #include "AssetUtils.h"
+#include "SceneReader.h"
 
 using namespace FireCube;
 
@@ -244,12 +245,15 @@ void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 	
 	Filesystem::SetAssetsFolder(Filesystem::GetDirectoryName(Filesystem::GetDirectoryName(path)));
 
-	SceneReader sceneReader(engine);
+	auto auxDataMap = ((MyApp*)wxTheApp)->GetAuxDataMap();
+
+	::SceneReader sceneReader(engine, auxDataMap);
 	
 	editorState->ClearCommands();
 	sceneTreeCtrl->DeleteAllItems();
 	nodeToTreeItem.clear();
 	treeItemToNode.clear();
+	auxDataMap->Clear();
 
 	scene->GetRootNode()->RemoveAllComponents();
 	

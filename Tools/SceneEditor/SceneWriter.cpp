@@ -1,6 +1,8 @@
 #include "SceneWriter.h"
 #include "tinyxml.h"
 #include "wx/filename.h"
+#include "wx/wx.h"
+#include "app.h"
 
 using namespace FireCube;
 
@@ -126,7 +128,18 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 			element->SetAttribute("script", file);
 		}
 
-		element->SetAttribute("object", luaScript->GetObjectName());		
+		element->SetAttribute("object", luaScript->GetObjectName());
+
+		MyApp *theApp = ((MyApp *)wxTheApp);
+		auto &properties = theApp->GetAuxDataMap()->GetMap(component);
+		for (auto &property : properties)
+		{
+			TiXmlElement *propertyElement = new TiXmlElement("property");
+			element->LinkEndChild(propertyElement);
+
+			propertyElement->SetAttribute("name", property.first);
+			propertyElement->SetAttribute("value", property.second);
+		}		
 	}
 	else if (component->GetType() == PhysicsWorld::GetTypeStatic())
 	{
