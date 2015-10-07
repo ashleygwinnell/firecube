@@ -35,6 +35,18 @@ void LuaScriptPanelImpl::FileChanged(wxFileDirPickerEvent& event)
 	Node *node = luaScript->GetNode();
 	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), luaScript));
 	std::string newLuaFileName = event.GetPath().ToStdString();
+	if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), newLuaFileName))
+	{
+		newLuaFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), newLuaFileName);
+	}
+	else
+	{
+		std::string filename = Filesystem::GetLastPathComponent(newLuaFileName);
+		std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts";
+		Filesystem::CreateFolder(targetPath);
+		Filesystem::CopyPath(newLuaFileName, targetPath + Filesystem::PATH_SEPARATOR + filename);
+		newLuaFileName = "Scripts" + Filesystem::PATH_SEPARATOR + filename;
+	}
 	std::string oldLuaFileName = luaScript->GetLuaFile() ? luaScript->GetLuaFile()->GetFileName() : "";
 
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Script", [componentIndex, node, newLuaFileName, engine]()
