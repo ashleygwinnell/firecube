@@ -42,7 +42,7 @@ private:
 	void SelectedNodeChanged(NodeDescriptor *nodeDesc);
 	void StateChanged();
 	void SceneChanged();
-	void RenderDebugGeometry(FireCube::Node *node, FireCube::DebugRenderer *debugRenderer);
+	void RenderDebugGeometry(NodeDescriptor *nodeDesc, FireCube::DebugRenderer *debugRenderer);
 	
 	bool init;
 	MyApp *theApp;

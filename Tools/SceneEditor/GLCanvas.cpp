@@ -117,35 +117,33 @@ void GLCanvas::SceneChanged()
 }
 
 
-void GLCanvas::RenderDebugGeometry(FireCube::Node *node, DebugRenderer *debugRenderer)
+void GLCanvas::RenderDebugGeometry(NodeDescriptor *nodeDesc, DebugRenderer *debugRenderer)
 {
-	if (node->GetName().substr(0, 7) != "Editor_")
+	auto node = nodeDesc->GetNode();
+	std::vector<CollisionShape *> collisionShapes;
+	node->GetComponents(collisionShapes);
+	for (auto c : collisionShapes)
 	{
-		std::vector<CollisionShape *> collisionShapes;
-		node->GetComponents(collisionShapes);
-		for (auto c : collisionShapes)
-		{
-			c->RenderDebugGeometry(debugRenderer);
-		}
+		c->RenderDebugGeometry(debugRenderer);
+	}
 
-		std::vector<CharacterController *> characterControllers;
-		node->GetComponents(characterControllers);
-		for (auto c : characterControllers)
-		{
-			c->RenderDebugGeometry(debugRenderer);
-		}
+	std::vector<CharacterController *> characterControllers;
+	node->GetComponents(characterControllers);
+	for (auto c : characterControllers)
+	{
+		c->RenderDebugGeometry(debugRenderer);
+	}
 
-		std::vector<Light *> lights;
-		node->GetComponents(lights);
-		for (auto l : lights)
-		{
-			l->RenderDebugGeometry(debugRenderer);
-		}
+	std::vector<Light *> lights;
+	node->GetComponents(lights);
+	for (auto l : lights)
+	{
+		l->RenderDebugGeometry(debugRenderer);
+	}
 
-		for (auto child : node->GetChildren())
-		{
-			RenderDebugGeometry(child, debugRenderer);
-		}
+	for (auto child : nodeDesc->GetChildren())
+	{
+		RenderDebugGeometry(child, debugRenderer);
 	}
 }
 
@@ -158,14 +156,13 @@ void GLCanvas::Render()
 	{
 		init = true;
 		Init();
-	}
-	
+	}	
 	
 	engine->GetRenderer()->Render();
 	
 	if (editorState->GetSelectedNode())
 	{
-		RenderDebugGeometry(editorState->GetSelectedNode()->GetNode(), engine->GetDebugRenderer());
+		RenderDebugGeometry(editorState->GetSelectedNode(), engine->GetDebugRenderer());
 	}
 	engine->GetDebugRenderer()->Render(camera);
 
