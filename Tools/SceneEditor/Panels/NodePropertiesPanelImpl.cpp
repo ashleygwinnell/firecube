@@ -1,9 +1,9 @@
 #include "NodePropertiesPanelImpl.h"
-#include "app.h"
-#include "EditorState.h"
-#include "Commands/TransformCommands.h"
-#include "Commands/RenameNodeCommand.h"
-#include "Descriptors/NodeDescriptor.h"
+#include "../app.h"
+#include "../EditorState.h"
+#include "../Commands/TransformCommands.h"
+#include "../Commands/RenameNodeCommand.h"
+#include "../Descriptors/NodeDescriptor.h"
 
 using namespace FireCube;
 

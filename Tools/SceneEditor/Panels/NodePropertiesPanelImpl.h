@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mainframe.h"
+#include "../mainframe.h"
 #include "FireCube.h"
 
 class EditorState;

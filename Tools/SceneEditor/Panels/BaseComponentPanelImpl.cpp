@@ -2,15 +2,8 @@
 #include <wx/msgdlg.h>
 #include "wx/filedlg.h"
 #include "wx/dirdlg.h"
-#include "app.h"
-#include "Types.h"
-#include "Commands/AddNodeCommand.h"
-#include "Commands/RemoveNodeCommand.h"
-#include "Commands/RenameNodeCommand.h"
-#include "Commands/AddComponentCommand.h"
-#include "Commands/GroupCommand.h"
-#include "Commands/RemoveComponentCommand.h"
-#include "SceneWriter.h"
+#include "../app.h"
+#include "../Commands/RemoveComponentCommand.h"
 
 BaseComponentPanelImpl::BaseComponentPanelImpl(wxWindow* parent, ComponentDescriptor *componentDesc) : BaseComponentPanel(parent), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState()), componentDesc(componentDesc)
 {

@@ -1,11 +1,10 @@
 #include "BaseComponentPanelImpl.h"
 #include "CollisionShapePanelImpl.h"
-#include "app.h"
+#include "../app.h"
 #include "wx/msgdlg.h"
-#include "Commands/RemoveComponentCommand.h"
-#include "Commands/CustomCommand.h"
-#include "Types.h"
-#include "Descriptors/CollisionShapeDescriptor.h"
+#include "../Commands/CustomCommand.h"
+#include "../Types.h"
+#include "../Descriptors/CollisionShapeDescriptor.h"
 
 using namespace FireCube;
 

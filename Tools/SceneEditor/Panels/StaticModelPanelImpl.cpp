@@ -1,12 +1,11 @@
 #include "BaseComponentPanelImpl.h"
 #include "StaticModelPanelImpl.h"
-#include "app.h"
+#include "../app.h"
 #include "wx/msgdlg.h"
-#include "Commands/RemoveComponentCommand.h"
-#include "Commands/CustomCommand.h"
-#include "Types.h"
-#include "AssetUtils.h"
-#include "Descriptors/StaticModelDescriptor.h"
+#include "../Commands/CustomCommand.h"
+#include "../Types.h"
+#include "../AssetUtils.h"
+#include "../Descriptors/StaticModelDescriptor.h"
 
 using namespace FireCube;
 

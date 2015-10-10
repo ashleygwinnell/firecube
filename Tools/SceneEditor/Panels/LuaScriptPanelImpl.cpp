@@ -1,12 +1,11 @@
 #include "BaseComponentPanelImpl.h"
 #include "LuaScriptPanelImpl.h"
-#include "app.h"
+#include "../app.h"
 #include "wx/msgdlg.h"
 #include "wx/textdlg.h"
-#include "Commands/RemoveComponentCommand.h"
-#include "Commands/CustomCommand.h"
-#include "Types.h"
-#include "Descriptors/LuaScriptDescriptor.h"
+#include "../Commands/CustomCommand.h"
+#include "../Types.h"
+#include "../Descriptors/LuaScriptDescriptor.h"
 
 using namespace FireCube;
 

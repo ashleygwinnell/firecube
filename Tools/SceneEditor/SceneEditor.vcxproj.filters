@@ -28,6 +28,9 @@
     <Filter Include="Descriptors">
       <UniqueIdentifier>{1e243b83-a830-4f2b-80d7-808c93945ba9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Panels">
+      <UniqueIdentifier>{19719083-1bf8-4cb2-ade8-5836fcb9f6b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mainframe.cpp">
@@ -87,32 +90,11 @@
     <ClCompile Include="Commands\RenameNodeCommand.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
-    <ClCompile Include="BaseComponentPanelImpl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StaticModelPanelImpl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Commands\RemoveComponentCommand.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
     <ClCompile Include="Commands\CustomCommand.cpp">
       <Filter>Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="NodePropertiesPanelImpl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LightPanelImpl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LuaScriptPanelImpl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionShapePanelImpl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CharacterControllerPanelImpl.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AssetUtils.cpp">
       <Filter>Source Files</Filter>
@@ -143,6 +125,27 @@
     </ClCompile>
     <ClCompile Include="Descriptors\StaticModelDescriptor.cpp">
       <Filter>Descriptors</Filter>
+    </ClCompile>
+    <ClCompile Include="Panels\BaseComponentPanelImpl.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Panels\CharacterControllerPanelImpl.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Panels\CollisionShapePanelImpl.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Panels\LightPanelImpl.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Panels\LuaScriptPanelImpl.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Panels\NodePropertiesPanelImpl.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Panels\StaticModelPanelImpl.cpp">
+      <Filter>Panels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,32 +209,11 @@
     <ClInclude Include="Commands\RenameNodeCommand.h">
       <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="BaseComponentPanelImpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticModelPanelImpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Commands\RemoveComponentCommand.h">
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="Commands\CustomCommand.h">
       <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="NodePropertiesPanelImpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LightPanelImpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LuaScriptPanelImpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionShapePanelImpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CharacterControllerPanelImpl.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AssetUtils.h">
       <Filter>Header Files</Filter>
@@ -262,6 +244,27 @@
     </ClInclude>
     <ClInclude Include="Descriptors\StaticModelDescriptor.h">
       <Filter>Descriptors</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels\BaseComponentPanelImpl.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels\CharacterControllerPanelImpl.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels\CollisionShapePanelImpl.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels\LightPanelImpl.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels\LuaScriptPanelImpl.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels\NodePropertiesPanelImpl.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels\StaticModelPanelImpl.h">
+      <Filter>Panels</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

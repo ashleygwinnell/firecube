@@ -1,11 +1,10 @@
 #include "BaseComponentPanelImpl.h"
 #include "CharacterControllerPanelImpl.h"
-#include "app.h"
+#include "../app.h"
 #include "wx/msgdlg.h"
-#include "Commands/RemoveComponentCommand.h"
-#include "Commands/CustomCommand.h"
-#include "Types.h"
-#include "Descriptors/CharacterControllerDescriptor.h"
+#include "../Commands/CustomCommand.h"
+#include "../Types.h"
+#include "../Descriptors/CharacterControllerDescriptor.h"
 
 using namespace FireCube;
 

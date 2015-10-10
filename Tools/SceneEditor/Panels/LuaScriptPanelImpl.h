@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mainframe.h"
+#include "../mainframe.h"
 
 class BaseComponentPanelImpl;
 
