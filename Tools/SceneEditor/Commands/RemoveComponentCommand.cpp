@@ -1,28 +1,42 @@
 #include "RemoveComponentCommand.h"
 #include "../EditorState.h"
+#include "../NodeDescriptor.h"
+#include "../ComponentDescriptor.h"
 
 using namespace FireCube;
 
-RemoveComponentCommand::RemoveComponentCommand(EditorState *editorState, const std::string &description, FireCube::Component *component, std::function<FireCube::Component *(Engine *, Node *)> creationFunction) : Command(editorState, description), component(component), creationFunction(creationFunction), node(component->GetNode())
+RemoveComponentCommand::RemoveComponentCommand(EditorState *editorState, const std::string &description, NodeDescriptor *nodeDesc, ComponentDescriptor *componentDesc, FireCube::Engine *engine) : Command(editorState, description), nodeDesc(nodeDesc), componentDesc(componentDesc), engine(engine), shouldDelete(false)
 {
 
 }
 
 RemoveComponentCommand::~RemoveComponentCommand()
 {
-
+	if (shouldDelete)
+	{
+		delete componentDesc;
+	}
 }
 
 void RemoveComponentCommand::Do()
 {
-	editorState->componentRemoved(editorState, component);
-	node->RemoveComponent(component);	
+	editorState->componentRemoved(editorState, componentDesc);
+	nodeDesc->RemoveComponent(componentDesc);
+	if (componentDesc->GetComponent())
+	{
+		nodeDesc->GetNode()->RemoveComponent(componentDesc->GetComponent());
+	}
+	componentDesc->SetParent(nullptr);
+	shouldDelete = true;
 	editorState->sceneChanged(editorState);
 }
 
 void RemoveComponentCommand::Undo()
 {
-	component = creationFunction(editorState->GetEngine(), node);
-	editorState->componentAdded(editorState, component);
+	nodeDesc->AddComponent(componentDesc);
+	componentDesc->CreateComponent(nodeDesc->GetNode(), engine);
+	componentDesc->SetParent(nodeDesc);
+	shouldDelete = false;
+	editorState->componentAdded(editorState, componentDesc);
 	editorState->sceneChanged(editorState);
 }

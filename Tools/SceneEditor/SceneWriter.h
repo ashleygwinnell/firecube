@@ -5,16 +5,17 @@
 class TiXmlElement;
 class TiXmlNode;
 class SceneSettings;
+class NodeDescriptor;
+class ComponentDescriptor;
 
 class SceneWriter
 {
 public:
-	void Serialize(FireCube::Scene *scene, const std::string &filename);
+	void Serialize(NodeDescriptor *root, const std::string &filename);
 private:
 	std::string ToString(FireCube::vec3 v) const;
 	std::string ToString(FireCube::vec4 v) const;	
-	void Serialize(FireCube::Node *node, TiXmlElement *parent);
-	void Serialize(FireCube::Component *component, TiXmlElement *parent);
-	void SerializeNodeTransformation(FireCube::Node *node, TiXmlElement *parent);
-	std::string basePath;
+	void Serialize(NodeDescriptor *nodeDesc, TiXmlElement *parent);
+	void Serialize(ComponentDescriptor *componentDesc, TiXmlElement *parent);
+	void SerializeNodeTransformation(NodeDescriptor *nodeDesc, TiXmlElement *parent);	
 };

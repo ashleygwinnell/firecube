@@ -1,5 +1,4 @@
 #include "EditorState.h"
-#include "AuxDataMap.h"
 class MainFrameImpl;
 
 class FireCubeApp : public FireCube::Application
@@ -20,12 +19,11 @@ public:
 	EditorState *GetEditorState();
 	void InitScene();
 	MainFrameImpl *GetMainFrame();
-	FireCubeApp fcApp;
-	AuxDataMap *GetAuxDataMap();
+	FireCubeApp fcApp;	
+	
 private:	
 	MainFrameImpl *frame;
 	FireCube::Scene *scene;
 	FireCube::Scene *editorScene;
-	EditorState *editorState;	
-	AuxDataMap auxDataMap;
+	EditorState *editorState;		
 };

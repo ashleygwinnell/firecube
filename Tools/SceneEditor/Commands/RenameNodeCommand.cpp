@@ -1,7 +1,8 @@
 #include "RenameNodeCommand.h"
 #include "../EditorState.h"
+#include "../NodeDescriptor.h"
 
-RenameNodeCommand::RenameNodeCommand(EditorState *editorState, const std::string &description, FireCube::Node *node, const std::string &newName) : Command(editorState, description), node(node), newName(newName), oldName(node->GetName())
+RenameNodeCommand::RenameNodeCommand(EditorState *editorState, const std::string &description, NodeDescriptor *nodeDesc, const std::string &newName) : Command(editorState, description), nodeDesc(nodeDesc), newName(newName), oldName(nodeDesc->GetNode()->GetName())
 {
 
 }
@@ -13,12 +14,12 @@ RenameNodeCommand::~RenameNodeCommand()
 
 void RenameNodeCommand::Do()
 {
-	node->SetName(newName);
-	editorState->nodeRenamed(editorState, node);	
+	nodeDesc->SetName(newName);
+	editorState->nodeRenamed(editorState, nodeDesc);
 }
 
 void RenameNodeCommand::Undo()
 {
-	node->SetName(oldName);
-	editorState->nodeRenamed(editorState, node);
+	nodeDesc->SetName(oldName);
+	editorState->nodeRenamed(editorState, nodeDesc);
 }

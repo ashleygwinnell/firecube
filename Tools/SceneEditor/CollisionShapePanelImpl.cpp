@@ -5,17 +5,16 @@
 #include "Commands/RemoveComponentCommand.h"
 #include "Commands/CustomCommand.h"
 #include "Types.h"
+#include "CollisionShapeDescriptor.h"
 
 using namespace FireCube;
 
 CollisionShapePanelImpl::CollisionShapePanelImpl(BaseComponentPanelImpl* parent) : CollisionShapePanel(parent), parent(parent)
 {	
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
-
-	UpdateUI();
-	UpdateVisibility(collisionShape->GetShapeType());
-
-	parent->removeComponent->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(CollisionShapePanelImpl::RemoveComponentClicked), NULL, this);
+ 	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
+ 
+ 	UpdateUI();
+ 	UpdateVisibility(collisionShape->GetShapeType());
 }
 
 CollisionShapePanelImpl::~CollisionShapePanelImpl()
@@ -25,13 +24,13 @@ CollisionShapePanelImpl::~CollisionShapePanelImpl()
 
 void CollisionShapePanelImpl::UpdateUI()
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	CollisionShapeType type = collisionShape->GetShapeType();
 	switch (type)
 	{
 	case CollisionShapeType::BOX:
-			shapeTypeChoice->SetSelection(0);
+		shapeTypeChoice->SetSelection(0);
 		break;
 	case CollisionShapeType::PLANE:
 		shapeTypeChoice->SetSelection(1);
@@ -56,9 +55,9 @@ void CollisionShapePanelImpl::UpdateUI()
 	bboxMaxYTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetBox().GetMax().y));
 	bboxMaxZTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetBox().GetMax().z));
 
-	if (collisionShape->GetMesh())
+	if (collisionShape->GetMeshFilename().empty() == false)
 	{
-		wxFileName filename(collisionShape->GetMesh()->GetFileName());
+		wxFileName filename(collisionShape->GetMeshFilename());
 		meshFilePicker->SetFileName(filename);
 	}
 
@@ -103,73 +102,12 @@ void CollisionShapePanelImpl::UpdateVisibility(CollisionShapeType type)
 	parent->GetParent()->Thaw();
 }
 
-void CollisionShapePanelImpl::RemoveComponentClicked(wxCommandEvent& event)
-{
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	Engine *engine = theApp->fcApp.GetEngine();
-
-	bool isTrigger = collisionShape->IsTrigger();
-
-	switch (collisionShape->GetShapeType())
-	{
-	case CollisionShapeType::BOX:
-	{
-		BoundingBox bbox = collisionShape->GetBox();
-		auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), "Remove Component", collisionShape, [isTrigger, bbox](Engine *engine, Node *node) -> Component *
-		{
-			CollisionShape *collisionShape = node->CreateComponent<CollisionShape>();
-			collisionShape->SetIsTrigger(isTrigger);
-			collisionShape->SetBox(bbox);
-
-			return collisionShape;
-		});
-
-		theApp->GetEditorState()->ExecuteCommand(removeComponentCommand);
-		break;
-	}
-	case CollisionShapeType::PLANE:
-	{
-		Plane plane = collisionShape->GetPlane();
-		auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), "Remove Component", collisionShape, [isTrigger, plane](Engine *engine, Node *node) -> Component *
-		{
-			CollisionShape *collisionShape = node->CreateComponent<CollisionShape>();
-			collisionShape->SetIsTrigger(isTrigger);
-			collisionShape->SetPlane(plane);
-
-			return collisionShape;
-		});
-
-		theApp->GetEditorState()->ExecuteCommand(removeComponentCommand);
-		break;
-	}
-	case CollisionShapeType::TRIANGLE_MESH:
-	{
-		Mesh *mesh = collisionShape->GetMesh();
-		auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), "Remove Component", collisionShape, [isTrigger, mesh](Engine *engine, Node *node) -> Component *
-		{
-			CollisionShape *collisionShape = node->CreateComponent<CollisionShape>();
-			collisionShape->SetIsTrigger(isTrigger);
-			collisionShape->SetMesh(mesh);
-
-			return collisionShape;
-		});
-
-		theApp->GetEditorState()->ExecuteCommand(removeComponentCommand);
-		break;
-	}
-	default:
-		break;
-	}		
-}
-
 void CollisionShapePanelImpl::ShapeTypeChanged(wxCommandEvent& event)
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
-	Node *node = collisionShape->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), collisionShape));
+	auto engine = theApp->fcApp.GetEngine();
 
 	CollisionShapeType newType;
 
@@ -191,17 +129,16 @@ void CollisionShapePanelImpl::ShapeTypeChanged(wxCommandEvent& event)
 	UpdateVisibility(newType);
 
 	CollisionShapeType oldType = collisionShape->GetShapeType();
-	Mesh *oldMesh = collisionShape->GetMesh();
+	std::string oldMesh = collisionShape->GetMeshFilename();
 	Plane oldPlane = collisionShape->GetPlane();
 	BoundingBox oldBoundingBox = collisionShape->GetBox();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Shape Type", [componentIndex, node, newType, oldPlane, oldBoundingBox, oldMesh]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Shape Type", [collisionShape, newType, oldPlane, oldBoundingBox, oldMesh, engine]()
+	{		
 		switch (newType)
 		{
 		case CollisionShapeType::TRIANGLE_MESH:
-			collisionShape->SetMesh(oldMesh);
+			collisionShape->SetMesh(oldMesh, engine);
 			break;
 		case CollisionShapeType::PLANE:
 			collisionShape->SetPlane(oldPlane);
@@ -212,13 +149,12 @@ void CollisionShapePanelImpl::ShapeTypeChanged(wxCommandEvent& event)
 		default:
 			break;
 		}
-	}, [componentIndex, node, oldType, oldPlane, oldBoundingBox, oldMesh]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	}, [collisionShape, oldType, oldPlane, oldBoundingBox, oldMesh, engine]()
+	{		
 		switch (oldType)
 		{
 		case CollisionShapeType::TRIANGLE_MESH:
-			collisionShape->SetMesh(oldMesh);
+			collisionShape->SetMesh(oldMesh, engine);
 			break;
 		case CollisionShapeType::PLANE:
 			collisionShape->SetPlane(oldPlane);
@@ -237,11 +173,9 @@ void CollisionShapePanelImpl::ShapeTypeChanged(wxCommandEvent& event)
 
 void CollisionShapePanelImpl::PlaneXChanged(wxCommandEvent& event)
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 	
 	MyApp *theApp = ((MyApp *)wxTheApp);	
-	Node *node = collisionShape->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), collisionShape));
 	double x, y, z, w;		
 	event.GetString().ToDouble(&x);
 	planeYTextCtrl->GetValue().ToDouble(&y);
@@ -250,13 +184,11 @@ void CollisionShapePanelImpl::PlaneXChanged(wxCommandEvent& event)
 	Plane oldPlane = collisionShape->GetPlane();
 	Plane newPlane(vec3(x, y, z).Normalized(), w);
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [componentIndex, node, newPlane]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [collisionShape, newPlane]()
+	{		
 		collisionShape->SetPlane(newPlane);
-	}, [componentIndex, node, oldPlane]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	}, [collisionShape, oldPlane]()
+	{		
 		collisionShape->SetPlane(oldPlane);
 	});
 
@@ -266,11 +198,9 @@ void CollisionShapePanelImpl::PlaneXChanged(wxCommandEvent& event)
 
 void CollisionShapePanelImpl::PlaneYChanged(wxCommandEvent& event)
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
-	Node *node = collisionShape->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), collisionShape));
 	double x, y, z, w;
 	event.GetString().ToDouble(&y);
 	planeXTextCtrl->GetValue().ToDouble(&x);
@@ -279,13 +209,11 @@ void CollisionShapePanelImpl::PlaneYChanged(wxCommandEvent& event)
 	Plane oldPlane = collisionShape->GetPlane();
 	Plane newPlane(vec3(x, y, z).Normalized(), w);
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [componentIndex, node, newPlane]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [collisionShape, newPlane]()
+	{		
 		collisionShape->SetPlane(newPlane);
-	}, [componentIndex, node, oldPlane]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	}, [collisionShape, oldPlane]()
+	{		
 		collisionShape->SetPlane(oldPlane);
 	});
 
@@ -295,11 +223,9 @@ void CollisionShapePanelImpl::PlaneYChanged(wxCommandEvent& event)
 
 void CollisionShapePanelImpl::PlaneZChanged(wxCommandEvent& event)
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
-	Node *node = collisionShape->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), collisionShape));
 	double x, y, z, w;
 	event.GetString().ToDouble(&z);
 	planeXTextCtrl->GetValue().ToDouble(&x);
@@ -308,13 +234,11 @@ void CollisionShapePanelImpl::PlaneZChanged(wxCommandEvent& event)
 	Plane oldPlane = collisionShape->GetPlane();
 	Plane newPlane(vec3(x, y, z).Normalized(), w);
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [componentIndex, node, newPlane]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [collisionShape, newPlane]()
+	{		
 		collisionShape->SetPlane(newPlane);
-	}, [componentIndex, node, oldPlane]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	}, [collisionShape, oldPlane]()
+	{		
 		collisionShape->SetPlane(oldPlane);
 	});
 
@@ -324,11 +248,9 @@ void CollisionShapePanelImpl::PlaneZChanged(wxCommandEvent& event)
 
 void CollisionShapePanelImpl::PlaneWChanged(wxCommandEvent& event)
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
-	Node *node = collisionShape->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), collisionShape));
 	double x, y, z, w;
 	event.GetString().ToDouble(&w);
 	planeXTextCtrl->GetValue().ToDouble(&x);
@@ -337,13 +259,11 @@ void CollisionShapePanelImpl::PlaneWChanged(wxCommandEvent& event)
 	Plane oldPlane = collisionShape->GetPlane();
 	Plane newPlane(vec3(x, y, z).Normalized(), w);
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [componentIndex, node, newPlane]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [collisionShape, newPlane]()
+	{		
 		collisionShape->SetPlane(newPlane);
-	}, [componentIndex, node, oldPlane]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	}, [collisionShape, oldPlane]()
+	{		
 		collisionShape->SetPlane(oldPlane);
 	});
 
@@ -353,11 +273,9 @@ void CollisionShapePanelImpl::PlaneWChanged(wxCommandEvent& event)
 
 void CollisionShapePanelImpl::BBoxMinXChanged(wxCommandEvent& event)
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
-	Node *node = collisionShape->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), collisionShape));
 	double minX, minY, minZ, maxX, maxY, maxZ;
 	event.GetString().ToDouble(&minX);
 	bboxMinYTextCtrl->GetValue().ToDouble(&minY);
@@ -368,13 +286,11 @@ void CollisionShapePanelImpl::BBoxMinXChanged(wxCommandEvent& event)
 	BoundingBox oldBox = collisionShape->GetBox();
 	BoundingBox newBox(vec3(minX, minY, minZ), vec3(maxX, maxY, maxZ));
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [componentIndex, node, newBox]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
+	{		
 		collisionShape->SetBox(newBox);
-	}, [componentIndex, node, oldBox]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	}, [collisionShape, oldBox]()
+	{		
 		collisionShape->SetBox(oldBox);
 	});
 
@@ -384,11 +300,9 @@ void CollisionShapePanelImpl::BBoxMinXChanged(wxCommandEvent& event)
 
 void CollisionShapePanelImpl::BBoxMinYChanged(wxCommandEvent& event)
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
-	Node *node = collisionShape->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), collisionShape));
 	double minX, minY, minZ, maxX, maxY, maxZ;
 	event.GetString().ToDouble(&minY);
 	bboxMinXTextCtrl->GetValue().ToDouble(&minX);
@@ -399,13 +313,11 @@ void CollisionShapePanelImpl::BBoxMinYChanged(wxCommandEvent& event)
 	BoundingBox oldBox = collisionShape->GetBox();
 	BoundingBox newBox(vec3(minX, minY, minZ), vec3(maxX, maxY, maxZ));
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [componentIndex, node, newBox]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
 	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
 		collisionShape->SetBox(newBox);
-	}, [componentIndex, node, oldBox]()
+	}, [collisionShape, oldBox]()
 	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
 		collisionShape->SetBox(oldBox);
 	});
 
@@ -415,11 +327,9 @@ void CollisionShapePanelImpl::BBoxMinYChanged(wxCommandEvent& event)
 
 void CollisionShapePanelImpl::BBoxMinZChanged(wxCommandEvent& event)
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
-	Node *node = collisionShape->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), collisionShape));
 	double minX, minY, minZ, maxX, maxY, maxZ;
 	event.GetString().ToDouble(&minZ);
 	bboxMinXTextCtrl->GetValue().ToDouble(&minX);
@@ -430,13 +340,11 @@ void CollisionShapePanelImpl::BBoxMinZChanged(wxCommandEvent& event)
 	BoundingBox oldBox = collisionShape->GetBox();
 	BoundingBox newBox(vec3(minX, minY, minZ), vec3(maxX, maxY, maxZ));
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [componentIndex, node, newBox]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
 	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
 		collisionShape->SetBox(newBox);
-	}, [componentIndex, node, oldBox]()
+	}, [collisionShape, oldBox]()
 	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
 		collisionShape->SetBox(oldBox);
 	});
 
@@ -446,11 +354,9 @@ void CollisionShapePanelImpl::BBoxMinZChanged(wxCommandEvent& event)
 
 void CollisionShapePanelImpl::BBoxMaxXChanged(wxCommandEvent& event)
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
-	Node *node = collisionShape->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), collisionShape));
 	double minX, minY, minZ, maxX, maxY, maxZ;
 	event.GetString().ToDouble(&maxX);
 	bboxMinXTextCtrl->GetValue().ToDouble(&minX);
@@ -461,13 +367,11 @@ void CollisionShapePanelImpl::BBoxMaxXChanged(wxCommandEvent& event)
 	BoundingBox oldBox = collisionShape->GetBox();
 	BoundingBox newBox(vec3(minX, minY, minZ), vec3(maxX, maxY, maxZ));
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [componentIndex, node, newBox]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
 	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
 		collisionShape->SetBox(newBox);
-	}, [componentIndex, node, oldBox]()
+	}, [collisionShape, oldBox]()
 	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
 		collisionShape->SetBox(oldBox);
 	});
 
@@ -477,11 +381,9 @@ void CollisionShapePanelImpl::BBoxMaxXChanged(wxCommandEvent& event)
 
 void CollisionShapePanelImpl::BBoxMaxYChanged(wxCommandEvent& event)
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
-	Node *node = collisionShape->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), collisionShape));
 	double minX, minY, minZ, maxX, maxY, maxZ;
 	event.GetString().ToDouble(&maxY);
 	bboxMinXTextCtrl->GetValue().ToDouble(&minX);
@@ -492,13 +394,11 @@ void CollisionShapePanelImpl::BBoxMaxYChanged(wxCommandEvent& event)
 	BoundingBox oldBox = collisionShape->GetBox();
 	BoundingBox newBox(vec3(minX, minY, minZ), vec3(maxX, maxY, maxZ));
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [componentIndex, node, newBox]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
 	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
 		collisionShape->SetBox(newBox);
-	}, [componentIndex, node, oldBox]()
+	}, [collisionShape, oldBox]()
 	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
 		collisionShape->SetBox(oldBox);
 	});
 
@@ -508,11 +408,9 @@ void CollisionShapePanelImpl::BBoxMaxYChanged(wxCommandEvent& event)
 
 void CollisionShapePanelImpl::BBoxMaxZChanged(wxCommandEvent& event)
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
-	Node *node = collisionShape->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), collisionShape));
 	double minX, minY, minZ, maxX, maxY, maxZ;
 	event.GetString().ToDouble(&maxZ);
 	bboxMinXTextCtrl->GetValue().ToDouble(&minX);
@@ -523,13 +421,11 @@ void CollisionShapePanelImpl::BBoxMaxZChanged(wxCommandEvent& event)
 	BoundingBox oldBox = collisionShape->GetBox();
 	BoundingBox newBox(vec3(minX, minY, minZ), vec3(maxX, maxY, maxZ));
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [componentIndex, node, newBox]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
 	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
 		collisionShape->SetBox(newBox);
-	}, [componentIndex, node, oldBox]()
+	}, [collisionShape, oldBox]()
 	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
 		collisionShape->SetBox(oldBox);
 	});
 
@@ -539,21 +435,17 @@ void CollisionShapePanelImpl::BBoxMaxZChanged(wxCommandEvent& event)
 
 void CollisionShapePanelImpl::TriggerChanged(wxCommandEvent& event)
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
-	Node *node = collisionShape->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), collisionShape));
 	bool oldTrigger = collisionShape->IsTrigger();
 	bool newTrigger = event.IsChecked();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Trigger", [componentIndex, node, newTrigger]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Trigger", [collisionShape, newTrigger]()
+	{	
 		collisionShape->SetIsTrigger(newTrigger);
-	}, [componentIndex, node, oldTrigger]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
+	}, [collisionShape, oldTrigger]()
+	{		
 		collisionShape->SetIsTrigger(oldTrigger);
 	});
 
@@ -563,24 +455,20 @@ void CollisionShapePanelImpl::TriggerChanged(wxCommandEvent& event)
 
 void CollisionShapePanelImpl::MeshFileChanged(wxFileDirPickerEvent& event)
 {
-	CollisionShape *collisionShape = static_cast<CollisionShape *>(parent->GetComponent());
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
 	auto engine = theApp->fcApp.GetEngine();
-	Node *node = collisionShape->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), collisionShape));
-
+	
 	std::string newMeshFileName = event.GetPath().ToStdString();
-	std::string oldMeshFileName = collisionShape->GetMesh() ? collisionShape->GetMesh()->GetFileName() : "";
+	std::string oldMeshFileName = collisionShape->GetMeshFilename();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mesh", [componentIndex, node, newMeshFileName, engine]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
-		collisionShape->SetMesh(engine->GetResourceCache()->GetResource<Mesh>(newMeshFileName));
-	}, [componentIndex, node, oldMeshFileName, engine]()
-	{
-		CollisionShape *collisionShape = static_cast<CollisionShape *>(node->GetComponents()[componentIndex]);
-		collisionShape->SetMesh(oldMeshFileName.empty() ? nullptr : engine->GetResourceCache()->GetResource<Mesh>(oldMeshFileName));
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mesh", [collisionShape, newMeshFileName, engine]()
+	{		
+		collisionShape->SetMesh(newMeshFileName, engine);
+	}, [collisionShape, oldMeshFileName, engine]()
+	{		
+		collisionShape->SetMesh(oldMeshFileName, engine);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);

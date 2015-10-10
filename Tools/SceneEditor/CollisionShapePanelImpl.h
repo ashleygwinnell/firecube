@@ -11,8 +11,7 @@ public:
 	~CollisionShapePanelImpl();
 private:
 	void UpdateUI();
-	void UpdateVisibility(FireCube::CollisionShapeType type);
-	void RemoveComponentClicked(wxCommandEvent& event);
+	void UpdateVisibility(FireCube::CollisionShapeType type);	
 	virtual void ShapeTypeChanged(wxCommandEvent& event);
 	virtual void PlaneXChanged(wxCommandEvent& event);
 	virtual void PlaneYChanged(wxCommandEvent& event);

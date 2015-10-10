@@ -1,9 +1,10 @@
 #include "TransformCommands.h"
 #include "../EditorState.h"
+#include "../NodeDescriptor.h"
 
 using namespace FireCube;
 
-SetTranslationCommand::SetTranslationCommand(EditorState *editorState, const std::string &description, Node *target, vec3 oldTranslation, vec3 newTranslation) : Command(editorState, description), target(target), oldTranslation(oldTranslation), newTranslation(newTranslation)
+SetTranslationCommand::SetTranslationCommand(EditorState *editorState, const std::string &description, NodeDescriptor *target, vec3 oldTranslation, vec3 newTranslation) : Command(editorState, description), target(target), oldTranslation(oldTranslation), newTranslation(newTranslation)
 {
 
 }
@@ -20,7 +21,7 @@ void SetTranslationCommand::Undo()
 	editorState->nodeChanged(editorState);
 }
 
-SetRotationCommand::SetRotationCommand(EditorState *editorState, const std::string &description, Node *target, mat4 oldRotation, mat4 newRotation) : Command(editorState, description), target(target), oldRotation(oldRotation), newRotation(newRotation)
+SetRotationCommand::SetRotationCommand(EditorState *editorState, const std::string &description, NodeDescriptor *target, vec3 oldRotation, vec3 newRotation) : Command(editorState, description), target(target), oldRotation(oldRotation), newRotation(newRotation)
 {
 
 }
@@ -37,7 +38,7 @@ void SetRotationCommand::Undo()
 	editorState->nodeChanged(editorState);
 }
 
-SetScaleCommand::SetScaleCommand(EditorState *editorState, const std::string &description, Node *target, vec3 oldScale, vec3 newScale) : Command(editorState, description), target(target), oldScale(oldScale), newScale(newScale)
+SetScaleCommand::SetScaleCommand(EditorState *editorState, const std::string &description, NodeDescriptor *target, vec3 oldScale, vec3 newScale) : Command(editorState, description), target(target), oldScale(oldScale), newScale(newScale)
 {
 
 }

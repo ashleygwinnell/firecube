@@ -1,19 +1,22 @@
 #include "mainframe.h"
 #include "FireCube.h"
+#include "ComponentDescriptor.h"
 
 class MyApp;
+class ComponentDescriptor;
 
 class BaseComponentPanelImpl : public BaseComponentPanel
 {	
 protected:
-	
+	virtual void RemoveComponentClicked(wxCommandEvent& event);
+
 	MyApp *theApp;
 	FireCube::Engine *engine;
 	EditorState *editorState;	
-	FireCube::Component *component;
+	ComponentDescriptor *componentDesc;
 public:	
-	BaseComponentPanelImpl(wxWindow* parent, FireCube::Component *component);
-	void SetComponent(FireCube::Component *component);
-	FireCube::Component *GetComponent();
+	BaseComponentPanelImpl(wxWindow* parent, ComponentDescriptor *componentDesc);
+	void SetComponent(ComponentDescriptor *componentDesc);
+	ComponentDescriptor *GetComponent();
 	void AddControl(wxWindow *control);
 };

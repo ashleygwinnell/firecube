@@ -2,6 +2,8 @@
 #include "../Types.h"
 #include "../MathUtils.h"
 #include "../Commands/TransformCommands.h"
+#include "../NodeDescriptor.h"
+
 using namespace FireCube;
 
 ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Object(engine), snapToGrid(false)
@@ -86,7 +88,7 @@ void ScaleGizmo::Hide()
 	}
 }
 
-bool ScaleGizmo::CheckOperationStart(FireCube::Scene *scene, FireCube::Node *currentNode, FireCube::Ray ray, vec2 mousePos)
+bool ScaleGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor *currentNode, FireCube::Ray ray, vec2 mousePos)
 {
 	RayQuery query(ray, 10e4);
 
@@ -104,7 +106,7 @@ bool ScaleGizmo::CheckOperationStart(FireCube::Scene *scene, FireCube::Node *cur
 	return false;
 }
 
-void ScaleGizmo::PerformOperation(FireCube::Ray ray, vec2 mousePos, FireCube::Node *currentNode)
+void ScaleGizmo::PerformOperation(FireCube::Ray ray, vec2 mousePos, NodeDescriptor *currentNode)
 {
 	vec3 axis;
 	if (currentAxis == "XAxis")
@@ -142,7 +144,7 @@ void ScaleGizmo::SetScale(float scale)
 	node->SetScale(vec3(scale));
 }
 
-Command *ScaleGizmo::GetCommand(EditorState *editorState, Node *node)
+Command *ScaleGizmo::GetCommand(EditorState *editorState, NodeDescriptor *nodeDesc)
 {
-	return new SetScaleCommand(editorState, "Scale", node, startScale, endScale);
+	return new SetScaleCommand(editorState, "Scale", nodeDesc, startScale, endScale);
 }

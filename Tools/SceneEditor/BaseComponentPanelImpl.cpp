@@ -9,17 +9,18 @@
 #include "Commands/RenameNodeCommand.h"
 #include "Commands/AddComponentCommand.h"
 #include "Commands/GroupCommand.h"
+#include "Commands/RemoveComponentCommand.h"
 #include "SceneWriter.h"
 
-BaseComponentPanelImpl::BaseComponentPanelImpl(wxWindow* parent, FireCube::Component *component) : BaseComponentPanel(parent), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState()), component(component)
+BaseComponentPanelImpl::BaseComponentPanelImpl(wxWindow* parent, ComponentDescriptor *componentDesc) : BaseComponentPanel(parent), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState()), componentDesc(componentDesc)
 {
-	componentTypeLabel->SetLabelText(component->GetTypeName());
+	componentTypeLabel->SetLabelText(componentDesc->GetTypeName());
 }
 
-void BaseComponentPanelImpl::SetComponent(FireCube::Component *component)
+void BaseComponentPanelImpl::SetComponent(ComponentDescriptor *componentDesc)
 {
-	this->component = component;
-	componentTypeLabel->SetLabelText(component->GetTypeName());
+	this->componentDesc = componentDesc;
+	componentTypeLabel->SetLabelText(componentDesc->GetComponent()->GetTypeName());
 }
 
 void BaseComponentPanelImpl::AddControl(wxWindow *control)
@@ -27,7 +28,14 @@ void BaseComponentPanelImpl::AddControl(wxWindow *control)
 	customComponentsSizer->Add(control, 0, wxALL | wxEXPAND, 1);	
 }
 
-FireCube::Component *BaseComponentPanelImpl::GetComponent()
+ComponentDescriptor *BaseComponentPanelImpl::GetComponent()
 {
-	return component;
+	return componentDesc;
+}
+
+void BaseComponentPanelImpl::RemoveComponentClicked(wxCommandEvent& event)
+{	
+	MyApp *theApp = ((MyApp *)wxTheApp);
+	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), "Remove Component", componentDesc->GetParent(), componentDesc, theApp->fcApp.GetEngine());
+	theApp->GetEditorState()->ExecuteCommand(removeComponentCommand);
 }

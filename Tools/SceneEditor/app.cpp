@@ -31,8 +31,7 @@ EditorState *MyApp::GetEditorState()
 
 void MyApp::InitScene()
 {
-	scene = new FireCube::Scene(fcApp.GetEngine());	
-	scene->GetRootNode()->CreateComponent<FireCube::PhysicsWorld>();
+	scene = new FireCube::Scene(fcApp.GetEngine());			
 	editorScene = new FireCube::Scene(fcApp.GetEngine());
 
 }
@@ -45,9 +44,4 @@ MyApp::~MyApp()
 MainFrameImpl *MyApp::GetMainFrame()
 {
 	return frame;
-}
-
-AuxDataMap *MyApp::GetAuxDataMap()
-{
-	return &auxDataMap;
 }

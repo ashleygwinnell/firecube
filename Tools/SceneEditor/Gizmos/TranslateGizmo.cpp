@@ -2,6 +2,8 @@
 #include "../Types.h"
 #include "../MathUtils.h"
 #include "../Commands/TransformCommands.h"
+#include "../NodeDescriptor.h"
+
 using namespace FireCube;
 
 TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Object(engine), snapToGrid(false)
@@ -75,7 +77,7 @@ void TranslateGizmo::Hide()
 	}
 }
 
-bool TranslateGizmo::CheckOperationStart(FireCube::Scene *scene, FireCube::Node *currentNode, FireCube::Ray ray, FireCube::vec2 mousePos)
+bool TranslateGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor *currentNode, FireCube::Ray ray, FireCube::vec2 mousePos)
 {
 	RayQuery query(ray, 10e4);
 
@@ -93,7 +95,7 @@ bool TranslateGizmo::CheckOperationStart(FireCube::Scene *scene, FireCube::Node 
 	return false;
 }
 
-void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos, FireCube::Node *currentNode)
+void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos, NodeDescriptor *currentNode)
 {
 	vec3 intersectionPoint;
 	vec3 translation;
@@ -135,7 +137,7 @@ void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos
 		}
 		currentNode->SetTranslation(translation);
 		endPosition = translation;
-		this->SetPosition(currentNode->GetWorldPosition());
+		this->SetPosition(currentNode->GetNode()->GetWorldPosition());
 	}
 }
 
@@ -149,7 +151,7 @@ void TranslateGizmo::SetScale(float scale)
 	node->SetScale(vec3(scale));
 }
 
-Command *TranslateGizmo::GetCommand(EditorState *editorState, Node *node)
+Command *TranslateGizmo::GetCommand(EditorState *editorState, NodeDescriptor *nodeDesc)
 {
-	return new SetTranslationCommand(editorState, "Translate", node, startPosition, endPosition);
+	return new SetTranslationCommand(editorState, "Translate", nodeDesc, startPosition, endPosition);
 }

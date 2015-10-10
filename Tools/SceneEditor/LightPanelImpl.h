@@ -10,7 +10,7 @@ public:
 	LightPanelImpl(BaseComponentPanelImpl* parent);
 	~LightPanelImpl();
 private:	
-	void RemoveComponentClicked(wxCommandEvent& event);
+	
 	virtual void LightTypeChanged(wxCommandEvent& event);
 	virtual void LightColorChanged(wxColourPickerEvent& event);
 	virtual void CastShadowChanged(wxCommandEvent& event);

@@ -20,6 +20,12 @@
 #include "CharacterControllerPanelImpl.h"
 #include "AssetUtils.h"
 #include "SceneReader.h"
+#include "ComponentDescriptor.h"
+#include "StaticModelDescriptor.h"
+#include "LightDescriptor.h"
+#include "CollisionShapeDescriptor.h"
+#include "CharacterControllerDescriptor.h"
+#include "LuaScriptDescriptor.h"
 
 using namespace FireCube;
 
@@ -39,9 +45,9 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 }
 
 void MainFrameImpl::AddNodeClicked(wxCommandEvent& event)
-{
-	Node *node = new Node(engine, "Node");
-	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", node, root);
+{	
+	auto nodeDesc = new NodeDescriptor("Node");
+	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, &rootDesc);
 	editorState->ExecuteCommand(addNodeCommand);
 	this->glCanvas->SetFocus();	
 }
@@ -65,14 +71,12 @@ void MainFrameImpl::AddMeshClicked(wxCommandEvent& event)
 		sfile = "Models" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);		
 	}
 
-	Node *node = new Node(engine, "Node");
-	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", node, root);
+	auto nodeDesc = new NodeDescriptor("Node");
+	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, &rootDesc);
+	auto staticModelDescriptor = new StaticModelDescriptor();
+	staticModelDescriptor->SetMeshFilename(sfile, engine);
 
-	auto addComponentCommand = new AddComponentCommand(editorState, "Add Component", node, [sfile](Engine *engine, Node *node) -> Component *
-	{
-		StaticModel *model = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(sfile));
-		return model;
-	});
+	auto addComponentCommand = new AddComponentCommand(editorState, "Add Component", nodeDesc, staticModelDescriptor, engine);
 
 	GroupCommand *groupCommand = new GroupCommand(editorState, "Add Mesh", { addNodeCommand, addComponentCommand });
 	editorState->ExecuteCommand(groupCommand);
@@ -84,47 +88,35 @@ void MainFrameImpl::AddMeshClicked(wxCommandEvent& event)
 
 void MainFrameImpl::AddStaticModelClicked(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
-	{				
-		auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel",  node, [](Engine *engine, Node *node) -> Component *
-		{
-			StaticModel *model = node->CreateComponent<StaticModel>();			
-			return model;
-		});
-		
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{	
+		auto staticModelDescriptor = new StaticModelDescriptor();
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel", nodeDesc, staticModelDescriptor, engine);
 		editorState->ExecuteCommand(addComponentCommand);				
 	}
 }
 
 void MainFrameImpl::AddLightClicked(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
 	{
-		auto addComponentCommand = new AddComponentCommand(editorState, "Add Light", node, [](Engine *engine, Node *node) -> Component *
-		{
-			Light *light = node->CreateComponent<Light>();
-			light->SetLightType(LightType::DIRECTIONAL);
-			light->SetColor(vec4(1.0f));
-			return light;
-		});
-
+		auto lightDescriptor = new LightDescriptor();
+		lightDescriptor->SetLightType(LightType::DIRECTIONAL);
+		lightDescriptor->SetColor(vec4(1.0f));		
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add Light", nodeDesc, lightDescriptor, engine);
 		editorState->ExecuteCommand(addComponentCommand);
 	}
 }
 
 void MainFrameImpl::AddLuaScriptClicked(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
 	{
-		auto addComponentCommand = new AddComponentCommand(editorState, "Add LuaScript", node, [](Engine *engine, Node *node) -> Component *
-		{
-			LuaScript *script = node->CreateComponent<LuaScript>();
-			script->SetEnabled(false);
-			return script;
-		});
+		auto luaScriptDescriptor = new LuaScriptDescriptor();
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add LuaScript", nodeDesc, luaScriptDescriptor, engine);
 
 		editorState->ExecuteCommand(addComponentCommand);
 	}
@@ -132,16 +124,13 @@ void MainFrameImpl::AddLuaScriptClicked(wxCommandEvent& event)
 
 void MainFrameImpl::AddCollisionShapeClicked(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
 	{
-		auto addComponentCommand = new AddComponentCommand(editorState, "Add CollisionShape", node, [](Engine *engine, Node *node) -> Component *
-		{
-			CollisionShape *collisionShape = node->CreateComponent<CollisionShape>();			
-			collisionShape->SetBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
-			collisionShape->SetPlane(Plane(vec3(0.0f, 1.0f, 0.0f), 0.0f));
-			return collisionShape;
-		});
+		auto collisionShapeDescriptor = new CollisionShapeDescriptor();
+		collisionShapeDescriptor->SetBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
+		collisionShapeDescriptor->SetPlane(Plane(vec3(0.0f, 1.0f, 0.0f), 0.0f));
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add CollisionShape", nodeDesc, collisionShapeDescriptor, engine);
 
 		editorState->ExecuteCommand(addComponentCommand);
 	}
@@ -149,17 +138,14 @@ void MainFrameImpl::AddCollisionShapeClicked(wxCommandEvent& event)
 
 void MainFrameImpl::AddCharacterControllerClicked(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
 	{
-		auto addComponentCommand = new AddComponentCommand(editorState, "Add CharacterController", node, [](Engine *engine, Node *node) -> Component *
-		{
-			CharacterController *characterController = node->CreateComponent<CharacterController>();
-			characterController->SetRadius(0.5f);
-			characterController->SetHeight(1.0f);
-			characterController->SetContactOffset(0.1f);
-			return characterController;
-		});
+		auto characterControllerDescriptor = new CharacterControllerDescriptor();
+		characterControllerDescriptor->SetRadius(0.5f);
+		characterControllerDescriptor->SetHeight(1.0f);
+		characterControllerDescriptor->SetContactOffset(0.1f);
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add CharacterController", nodeDesc, characterControllerDescriptor, engine);
 
 		editorState->ExecuteCommand(addComponentCommand);
 	}
@@ -171,6 +157,8 @@ void MainFrameImpl::SetScene(FireCube::Scene *scene)
 	engine = theApp->fcApp.GetEngine();
 	this->scene = scene;
 	root = scene->GetRootNode();
+	rootDesc.SetNode(root);
+	editorState->GetNodeMap()[root] = &rootDesc;
 }
 
 void MainFrameImpl::UndoClicked(wxCommandEvent& event)
@@ -192,7 +180,7 @@ void MainFrameImpl::SaveClicked(wxCommandEvent& event)
 	else
 	{
 		SceneWriter sceneWriter;
-		sceneWriter.Serialize(scene, editorState->GetCurrentSceneFile());		
+		sceneWriter.Serialize(&rootDesc, editorState->GetCurrentSceneFile());		
 	}
 }
 
@@ -203,31 +191,18 @@ void MainFrameImpl::SaveAsClicked(wxCommandEvent& event)
 		return;
 
 	SceneWriter sceneWriter;
-	sceneWriter.Serialize(scene, saveFileDialog.GetPath().ToStdString());
+	sceneWriter.Serialize(&rootDesc, saveFileDialog.GetPath().ToStdString());
 	editorState->SetCurrentSceneFile(saveFileDialog.GetPath().ToStdString());
 }
 
-void MainFrameImpl::UpdateNode(Node *node)
+void MainFrameImpl::UpdateNode(NodeDescriptor *nodeDesc)
 {
-	if (node->GetName().substr(0, 7) != "Editor_")
-	{		
-		editorState->nodeAdded(editorState, node);
-		std::vector<StaticModel *> staticModels;
-		node->GetComponents(staticModels);
-		for (auto staticModel : staticModels)
-		{
-			//staticModel->SetCollisionQueryMask(USER_GEOMETRY);
-		}
+	editorState->nodeAdded(editorState, nodeDesc);
+	editorState->GetNodeMap()[nodeDesc->GetNode()] = nodeDesc;
 
-		for (auto component : node->GetComponents())
-		{
-			editorState->componentAdded(editorState, component);
-		}
-
-		for (auto child : node->GetChildren())
-		{
-			UpdateNode(child);
-		}
+	for (auto child : nodeDesc->GetChildren())
+	{
+		UpdateNode(child);
 	}
 }
 
@@ -245,21 +220,20 @@ void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 	
 	Filesystem::SetAssetsFolder(Filesystem::GetDirectoryName(Filesystem::GetDirectoryName(path)));
 
-	auto auxDataMap = ((MyApp*)wxTheApp)->GetAuxDataMap();
-
-	::SceneReader sceneReader(engine, auxDataMap);
+	::SceneReader sceneReader(engine, editorState);
 	
 	editorState->ClearCommands();
 	sceneTreeCtrl->DeleteAllItems();
 	nodeToTreeItem.clear();
-	treeItemToNode.clear();
-	auxDataMap->Clear();
+	treeItemToNode.clear();	
+	editorState->GetNodeMap().clear();
 
 	scene->GetRootNode()->RemoveAllComponents();
+	rootDesc.RemoveAllComponents();
 	
-	if (sceneReader.Read(*scene, openFileDialog.GetPath().ToStdString()))
+	if (sceneReader.Read(&rootDesc, openFileDialog.GetPath().ToStdString()))
 	{
-		UpdateNode(scene->GetRootNode());
+		UpdateNode(&rootDesc);
 	}	
 
 	editorState->sceneChanged(editorState);	
@@ -280,11 +254,11 @@ void MainFrameImpl::NewClicked(wxCommandEvent& event)
 	SetAllPanelsVisibility(true);
 }
 
-void MainFrameImpl::SelectedNodeChanged(FireCube::Node *node)
+void MainFrameImpl::SelectedNodeChanged(NodeDescriptor *nodeDesc)
 {
-	if (node)
+	if (nodeDesc)
 	{
-		sceneTreeCtrl->SelectItem(nodeToTreeItem[node]);		
+		sceneTreeCtrl->SelectItem(nodeToTreeItem[nodeDesc]);
 	}
 	else
 	{		
@@ -294,30 +268,30 @@ void MainFrameImpl::SelectedNodeChanged(FireCube::Node *node)
 	UpdateInpsectorPane();
 }
 
-void MainFrameImpl::NodeAdded(FireCube::Node *node)
+void MainFrameImpl::NodeAdded(NodeDescriptor *nodeDesc)
 {
-	if (node->GetParent() == nullptr)
+	if (nodeDesc->GetParent() == nullptr)
 	{
-		auto id = sceneTreeCtrl->AddRoot(node->GetName());
-		nodeToTreeItem[node] = id;
-		treeItemToNode[id] = node;
+		auto id = sceneTreeCtrl->AddRoot(nodeDesc->GetName());
+		nodeToTreeItem[nodeDesc] = id;
+		treeItemToNode[id] = nodeDesc;
 	}
-	else if (nodeToTreeItem.find(node->GetParent()) != nodeToTreeItem.end())
+	else if (nodeToTreeItem.find(nodeDesc->GetParent()) != nodeToTreeItem.end())
 	{
-		wxTreeItemId parentId = nodeToTreeItem[node->GetParent()];
-		auto id = sceneTreeCtrl->AppendItem(parentId, node->GetName());
-		nodeToTreeItem[node] = id;
-		treeItemToNode[id] = node;
+		wxTreeItemId parentId = nodeToTreeItem[nodeDesc->GetParent()];
+		auto id = sceneTreeCtrl->AppendItem(parentId, nodeDesc->GetName());
+		nodeToTreeItem[nodeDesc] = id;
+		treeItemToNode[id] = nodeDesc;
 	}
 	
 }
 
-void MainFrameImpl::NodeRemoved(FireCube::Node *node)
+void MainFrameImpl::NodeRemoved(NodeDescriptor *nodeDesc)
 {
-	if (nodeToTreeItem.find(node) != nodeToTreeItem.end())
+	if (nodeToTreeItem.find(nodeDesc) != nodeToTreeItem.end())
 	{
-		wxTreeItemId id = nodeToTreeItem[node];
-		nodeToTreeItem.erase(node);
+		wxTreeItemId id = nodeToTreeItem[nodeDesc];
+		nodeToTreeItem.erase(nodeDesc);
 		treeItemToNode.erase(id);
 		sceneTreeCtrl->Delete(id);		
 	}
@@ -365,10 +339,10 @@ void MainFrameImpl::SceneTreeEndDrag(wxTreeEvent& event)
 	editorState->ExecuteCommand(groupCommand);
 }
 
-void MainFrameImpl::NodeRenamed(FireCube::Node *node)
+void MainFrameImpl::NodeRenamed(NodeDescriptor *nodeDesc)
 {
-	auto itemId = nodeToTreeItem[node];
-	sceneTreeCtrl->SetItemText(itemId, node->GetName());
+	auto itemId = nodeToTreeItem[nodeDesc];
+	sceneTreeCtrl->SetItemText(itemId, nodeDesc->GetNode()->GetName());
 }
 
 void MainFrameImpl::ViewSceneHierarchyClicked(wxCommandEvent& event)
@@ -416,47 +390,47 @@ void MainFrameImpl::PaneClose(wxAuiManagerEvent& event)
 	}
 }
 
-void MainFrameImpl::AddComponentPanel(Component *component)
+void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 {
-	if (component->GetType() == StaticModel::GetTypeStatic())
+	if (componentDesc->GetType() == ComponentType::STATIC_MODEL)
 	{
-		auto t = new BaseComponentPanelImpl(componentsList, component);
+		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
 		t->AddControl(new StaticModelPanelImpl(t));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
 		currentComponentPanels.push_back(t);
 	}
-	else if (component->GetType() == Light::GetTypeStatic())
+	else if (componentDesc->GetType() == ComponentType::LIGHT)
 	{
-		auto t = new BaseComponentPanelImpl(componentsList, component);
+		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
 		t->AddControl(new LightPanelImpl(t));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
 		currentComponentPanels.push_back(t);
 	}
-	else if (component->GetType() == LuaScript::GetTypeStatic())
+	else if (componentDesc->GetType() == ComponentType::LUA_SCRIPT)
 	{
-		auto t = new BaseComponentPanelImpl(componentsList, component);
+		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
 		t->AddControl(new LuaScriptPanelImpl(t));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
 		currentComponentPanels.push_back(t);
 	}
-	else if (component->GetType() == CollisionShape::GetTypeStatic())
+	else if (componentDesc->GetType() == ComponentType::COLLISION_SHAPE)
 	{
-		auto t = new BaseComponentPanelImpl(componentsList, component);
+		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
 		t->AddControl(new CollisionShapePanelImpl(t));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
 		currentComponentPanels.push_back(t);
 	}
-	else if (component->GetType() == CharacterController::GetTypeStatic())
+	else if (componentDesc->GetType() == ComponentType::CHARACTER_CONTROLLER)
 	{
-		auto t = new BaseComponentPanelImpl(componentsList, component);
+		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
 		t->AddControl(new CharacterControllerPanelImpl(t));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
@@ -468,11 +442,11 @@ void MainFrameImpl::AddComponentPanel(Component *component)
 	componentsList->Layout();
 }
 
-void MainFrameImpl::RemoveComponentPanel(Component *component)
+void MainFrameImpl::RemoveComponentPanel(ComponentDescriptor *componentDesc)
 {
 	for (auto i = currentComponentPanels.begin(); i != currentComponentPanels.end(); ++i)
 	{
-		if ((*i)->GetComponent() == component)
+		if ((*i)->GetComponent() == componentDesc)
 		{
 			(*i)->Destroy();
 			currentComponentPanels.erase(i);
@@ -483,16 +457,16 @@ void MainFrameImpl::RemoveComponentPanel(Component *component)
 
 void MainFrameImpl::UpdateInpsectorPane()
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
-	{				
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{					
 		componentsList->Freeze();
 		componentsList->DestroyChildren();
 		currentComponentPanels.clear();
 
 		componentsSizer->Add(new NodePropertiesPanelImpl(componentsList), 0, wxALL | wxEXPAND, 1);
 
-		auto components = node->GetComponents();		
+		auto components = nodeDesc->GetComponents();
 		for (auto component : components)
 		{
 			AddComponentPanel(component);
@@ -515,22 +489,22 @@ void MainFrameImpl::UpdateInpsectorPane()
 	}
 }
 
-void MainFrameImpl::ComponentAdded(Component *component)
+void MainFrameImpl::ComponentAdded(ComponentDescriptor *componentDesc)
 {
 	if (editorState->GetSelectedNode())
 	{
 		componentsList->Freeze();
-		AddComponentPanel(component);
+		AddComponentPanel(componentDesc);
 		componentsList->Thaw();
 	}
 }
 
-void MainFrameImpl::ComponentRemoved(Component *component)
+void MainFrameImpl::ComponentRemoved(ComponentDescriptor *componentDesc)
 {
 	if (editorState->GetSelectedNode())
 	{
 		componentsList->Freeze();
-		RemoveComponentPanel(component);
+		RemoveComponentPanel(componentDesc);
 		componentsList->Thaw();
 	}
 }

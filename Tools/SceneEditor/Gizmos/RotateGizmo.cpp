@@ -2,6 +2,8 @@
 #include "../Types.h"
 #include "../MathUtils.h"
 #include "../Commands/TransformCommands.h"
+#include "../NodeDescriptor.h"
+
 using namespace FireCube;
 
 RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Object(engine), snapToGrid(false)
@@ -83,7 +85,7 @@ float GetAng(vec3 n, vec3 v1, vec3 v2)
 	return std::atan2(dot, det);
 }
 
-bool RotateGizmo::CheckOperationStart(FireCube::Scene *scene, FireCube::Node *currentNode, FireCube::Ray ray, vec2 mousePos)
+bool RotateGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor *currentNode, FireCube::Ray ray, vec2 mousePos)
 {
 	RayQuery query(ray, 10e4);
 
@@ -101,7 +103,7 @@ bool RotateGizmo::CheckOperationStart(FireCube::Scene *scene, FireCube::Node *cu
 	return false;
 }
 
-void RotateGizmo::PerformOperation(FireCube::Ray ray, vec2 mousePos, FireCube::Node *currentNode)
+void RotateGizmo::PerformOperation(FireCube::Ray ray, vec2 mousePos, NodeDescriptor *currentNode)
 {
 	vec3 axis;
 	if (currentAxis == "XAxis")
@@ -117,12 +119,10 @@ void RotateGizmo::PerformOperation(FireCube::Ray ray, vec2 mousePos, FireCube::N
 		axis = vec3(0.0f, 0.0f, 1.0f);
 	}
 	
-	mat3 rotMat = currentNode->GetRotation().ToMat3();
+	mat3 rotMat = currentNode->GetNode()->GetRotation().ToMat3();
 	rotMat.Inverse();	
-	axis = (rotMat * axis).Normalized();	
-	mat4 rotationMatrix = mat4::IDENTITY;
-	rotationMatrix.Rotate(axis, (lastMousePos.x - mousePos.x) * 0.01f);
-	endRotation = currentNode->GetRotation() * rotationMatrix;
+	//axis = (rotMat * axis).Normalized();		
+	endRotation = currentNode->GetRotation() + axis * (lastMousePos.x - mousePos.x) * 0.01f;
 	currentNode->SetRotation(endRotation);
 	lastMousePos = mousePos;
 	
@@ -139,7 +139,7 @@ void RotateGizmo::SetScale(float scale)
 	node->SetScale(vec3(scale));
 }
 
-Command *RotateGizmo::GetCommand(EditorState *editorState, Node *node)
+Command *RotateGizmo::GetCommand(EditorState *editorState, NodeDescriptor *nodeDesc)
 {
-	return new SetRotationCommand(editorState, "Rotate", node, startRotation, endRotation);
+	return new SetRotationCommand(editorState, "Rotate", nodeDesc, startRotation, endRotation);
 }

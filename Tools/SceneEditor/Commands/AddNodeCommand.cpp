@@ -1,27 +1,35 @@
 #include "AddNodeCommand.h"
 #include "../EditorState.h"
+#include "../NodeDescriptor.h"
 
-AddNodeCommand::AddNodeCommand(EditorState *editorState, const std::string &description, FireCube::Node *node, FireCube::Node *parent) : Command(editorState, description), node(node), parent(parent)
+AddNodeCommand::AddNodeCommand(EditorState *editorState, const std::string &description, NodeDescriptor *nodeDesc, NodeDescriptor *parent) : Command(editorState, description), nodeDesc(nodeDesc), parent(parent), shouldDelete(true)
 {
-
+	nodeDesc->Instantiate(nullptr, editorState->GetEngine(), editorState->GetNodeMap());
+	node = nodeDesc->GetNode();
 }
 
 AddNodeCommand::~AddNodeCommand()
 {
-	
+	if (shouldDelete)
+	{		
+		delete nodeDesc;		
+		//TODO: delete node inside nodeDesc
+	}
 }
 
 void AddNodeCommand::Do()
 {
-	node->SetParent(parent);
-	editorState->nodeAdded(editorState, node);
-	editorState->SetSelectedNode(node);
+	nodeDesc->SetParent(parent);
+	shouldDelete = false;
+	editorState->nodeAdded(editorState, nodeDesc);
+	editorState->SetSelectedNode(nodeDesc);
 	
 }
 
 void AddNodeCommand::Undo()
 {
-	node->Remove();
-	editorState->nodeRemoved(editorState, node);
+	nodeDesc->Remove();
+	shouldDelete = true;
+	editorState->nodeRemoved(editorState, nodeDesc);
 	editorState->SetSelectedNode(nullptr);	
 }

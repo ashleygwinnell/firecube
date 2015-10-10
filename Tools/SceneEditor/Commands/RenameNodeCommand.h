@@ -3,15 +3,17 @@
 #include "FireCube.h"
 #include "Command.h"
 
+class NodeDescriptor;
+
 class RenameNodeCommand : public Command
 {
 public:
-	RenameNodeCommand(EditorState *editorState, const std::string &description, FireCube::Node *node, const std::string &newName);
+	RenameNodeCommand(EditorState *editorState, const std::string &description, NodeDescriptor *nodeDesc, const std::string &newName);
 	~RenameNodeCommand();
 	virtual void Do();
 	virtual void Undo();
 private:
-	FireCube::SharedPtr<FireCube::Node> node;
+	NodeDescriptor *nodeDesc;
 	std::string newName;
 	std::string oldName;
 };

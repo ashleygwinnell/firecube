@@ -14,6 +14,7 @@ using namespace FireCube;
 #include "Commands/TransformCommands.h"
 #include "Commands/RemoveNodeCommand.h"
 #include "Commands/AddNodeCommand.h"
+#include "PhysicsWorldDescriptor.h"
 
 GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()),
@@ -59,9 +60,13 @@ void GLCanvas::Init()
 	root = scene->GetRootNode();
 	editorRoot = editorScene->GetRootNode();
 	root->SetName("Root");
-	editorState->nodeAdded(editorState, scene->GetRootNode());
-
+	
 	theApp->GetMainFrame()->SetScene(scene);
+	auto physicsWorldDescriptor = new PhysicsWorldDescriptor();
+	editorState->GetNodeMap()[root]->AddComponent(physicsWorldDescriptor);
+	physicsWorldDescriptor->SetParent(editorState->GetNodeMap()[root]);
+	physicsWorldDescriptor->CreateComponent(root, engine);
+	editorState->nodeAdded(editorState, editorState->GetNodeMap()[root]);
 	
 	cameraTarget = root->CreateChild("Editor_CameraTarget");
 	Node *cameraNode = cameraTarget->CreateChild("Camera");
@@ -70,12 +75,7 @@ void GLCanvas::Init()
 	camera->SetDistance(5.0f);
 	camera->SetMaxDistance(10000.0f);
 
-	scene->SetFogColor(vec3(0.2f, 0.2f, 0.2f));
-	
-	/*Node *lightNode = cameraNode->CreateChild("lightNode");
-	Light *light = lightNode->CreateComponent<Light>();
-	light->SetLightType(LightType::DIRECTIONAL);
-	light->SetColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));		*/
+	scene->SetFogColor(vec3(0.2f, 0.2f, 0.2f));		
 
 	translateGizmo = new TranslateGizmo(engine, editorRoot);
 	rotateGizmo = new RotateGizmo(engine, editorRoot);
@@ -98,7 +98,7 @@ void GLCanvas::Init()
 	engine->GetRenderer()->SetSceneView(0, new SceneView(engine, editorScene, camera, nullptr, engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/ForwardNoClear.xml")));
 }
 
-void GLCanvas::SelectedNodeChanged(Node *node)
+void GLCanvas::SelectedNodeChanged(NodeDescriptor *nodeDesc)
 {
 	UpdateGizmo();
 	this->Refresh(false);
@@ -165,7 +165,7 @@ void GLCanvas::Render()
 	
 	if (editorState->GetSelectedNode())
 	{
-		RenderDebugGeometry(editorState->GetSelectedNode(), engine->GetDebugRenderer());
+		RenderDebugGeometry(editorState->GetSelectedNode()->GetNode(), engine->GetDebugRenderer());
 	}
 	engine->GetDebugRenderer()->Render(camera);
 
@@ -289,7 +289,7 @@ void GLCanvas::OnLeftUp(wxMouseEvent& event)
 					auto node = result.renderable->GetNode();
 					if (node->GetName().substr(0, 7) != "Editor_")
 					{
-						editorState->SetSelectedNode(node);
+						editorState->SetSelectedNode(editorState->GetNodeMap()[node]);
 						break;
 					}
 				}
@@ -354,22 +354,12 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 	}
 	else if (event.GetKeyCode() == WXK_SPACE)
 	{
-		auto node = editorState->GetSelectedNode();
-		if (node)
-		{
-			auto auxDataMap = ((MyApp*)wxTheApp)->GetAuxDataMap();
-			auto clonedNode = node->Clone();
-			std::vector<LuaScript *> oldScriptComponents;
-			std::vector<LuaScript *> newScriptComponents;
-			clonedNode->GetComponents(newScriptComponents, true);
-			node->GetComponents(oldScriptComponents, true);
-			for (unsigned int i = 0; i < oldScriptComponents.size(); ++i)
-			{
-				auto &srcMap = auxDataMap->GetMap(oldScriptComponents[i]);
-				auto &dstMap = auxDataMap->GetMap(newScriptComponents[i]);
-				dstMap = srcMap;
-			}
-			auto command = new AddNodeCommand(editorState, "Clone", clonedNode, clonedNode->GetParent());
+		auto nodeDesc = editorState->GetSelectedNode();
+		if (nodeDesc)
+		{			
+			auto clonedNode = nodeDesc->Clone();
+			
+			auto command = new AddNodeCommand(editorState, "Clone", clonedNode, nodeDesc->GetParent());
 			editorState->ExecuteCommand(command);
 			editorState->SetSelectedNode(clonedNode);
 			UpdateGizmo();			
@@ -382,15 +372,15 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 		if (editorState->GetSelectedNode())
 		{		
 			std::vector<StaticModel *> models;
-			editorState->GetSelectedNode()->GetComponents<StaticModel>(models, true);
+			editorState->GetSelectedNode()->GetNode()->GetComponents<StaticModel>(models, true);
 			if (models.empty() == false)
 			{
 				BoundingBox bbox;
 				for (auto &m : models)
 					bbox.Expand(m->GetWorldBoundingBox());
-				vec3 newPos = editorState->GetSelectedNode()->GetWorldPosition();
+				vec3 newPos = editorState->GetSelectedNode()->GetNode()->GetWorldPosition();
 				newPos.y += -bbox.GetMin().y;				
-				editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", editorState->GetSelectedNode(), editorState->GetSelectedNode()->GetWorldPosition(), newPos));
+				editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", editorState->GetSelectedNode(), editorState->GetSelectedNode()->GetNode()->GetWorldPosition(), newPos));
 				UpdateGizmo();
 				this->Refresh(false);
 			}
@@ -400,7 +390,7 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 	{
 		if (editorState->GetSelectedNode())
 		{
-			cameraTarget->SetTranslation(editorState->GetSelectedNode()->GetWorldPosition());
+			cameraTarget->SetTranslation(editorState->GetSelectedNode()->GetNode()->GetWorldPosition());
 			this->Refresh(false);
 		}
 	}
@@ -408,7 +398,7 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 	{
 		if (editorState->GetSelectedNode())
 		{							
-			editorState->ExecuteCommand(new RemoveNodeCommand(editorState, "Remove Node", editorState->GetSelectedNode()));			
+			editorState->ExecuteCommand(new RemoveNodeCommand(editorState, "Remove Node", editorState->GetSelectedNode()));
 			editorState->SetSelectedNode(nullptr);			
 		}
 	}
@@ -418,8 +408,8 @@ void GLCanvas::UpdateGizmo()
 {
 	if (transformGizmo && editorState->GetSelectedNode())
 	{
-		transformGizmo->SetPosition(editorState->GetSelectedNode()->GetWorldPosition());
-		transformGizmo->SetScale((camera->GetNode()->GetWorldPosition() - editorState->GetSelectedNode()->GetWorldPosition()).Length() * 0.1f);
+		transformGizmo->SetPosition(editorState->GetSelectedNode()->GetNode()->GetWorldPosition());
+		transformGizmo->SetScale((camera->GetNode()->GetWorldPosition() - editorState->GetSelectedNode()->GetNode()->GetWorldPosition()).Length() * 0.1f);
 		transformGizmo->Show();
 	}
 	else if (transformGizmo && editorState->GetSelectedNode() == nullptr)

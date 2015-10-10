@@ -3,63 +3,57 @@
 #include "wx/filename.h"
 #include "wx/wx.h"
 #include "app.h"
+#include "NodeDescriptor.h"
+#include "ComponentDescriptor.h"
+#include "StaticModelDescriptor.h"
+#include "LightDescriptor.h"
+#include "PhysicsWorldDescriptor.h"
+#include "CollisionShapeDescriptor.h"
+#include "CharacterControllerDescriptor.h"
+#include "LuaScriptDescriptor.h"
 
 using namespace FireCube;
 
-void SceneWriter::Serialize(FireCube::Scene *scene, const std::string &filename)
-{
-	wxString path;
-	wxFileName::SplitPath(filename, &path, nullptr, nullptr, wxPATH_NATIVE);
-
-	basePath = path;
+void SceneWriter::Serialize(NodeDescriptor *root, const std::string &filename)
+{	
 	TiXmlDocument doc;	
 	TiXmlElement *element = new TiXmlElement("scene");	
 	doc.LinkEndChild(element);
-	Serialize(scene->GetRootNode(), element);
+	Serialize(root, element);
 	doc.SaveFile(filename);
 }
 
-void SceneWriter::Serialize(FireCube::Node *node, TiXmlElement *parent)
+void SceneWriter::Serialize(NodeDescriptor *nodeDesc, TiXmlElement *parent)
 {
-	if (node->GetName().substr(0, 7) != "Editor_")
+	TiXmlElement *element = new TiXmlElement("node");
+	parent->LinkEndChild(element);
+
+	element->SetAttribute("name", nodeDesc->GetName());
+	SerializeNodeTransformation(nodeDesc, element);
+
+	for (auto component : nodeDesc->GetComponents())
 	{
-		TiXmlElement *element = new TiXmlElement("node");
-		parent->LinkEndChild(element);
+		Serialize(component, element);
+	}
 
-		element->SetAttribute("name", node->GetName());
-		SerializeNodeTransformation(node, element);
-
-		for (auto component : node->GetComponents())
-		{
-			Serialize(component, element);
-		}
-
-		for (auto child : node->GetChildren())
-		{
-			Serialize(child, element);
-		}
-	}	
+	for (auto child : nodeDesc->GetChildren())
+	{
+		Serialize(child, element);
+	}
 }
 
-void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent)
+void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlElement *parent)
 {
-	if (component->GetType() == StaticModel::GetTypeStatic())
+	if (componentDesc->GetType() == ComponentType::STATIC_MODEL)
 	{
 		TiXmlElement *element = new TiXmlElement("component");
 		parent->LinkEndChild(element);
 
-		element->SetAttribute("type", component->GetTypeName());
+		element->SetAttribute("type", componentDesc->GetTypeName());
 
-		auto staticModel = static_cast<StaticModel *>(component);
-
-		wxFileName fileName(staticModel->GetMesh()->GetFileName());
-		if (fileName.IsAbsolute())
-		{
-			fileName.MakeRelativeTo(basePath);
-		}
-		std::string file = fileName.GetFullPath().ToStdString();
-
-		element->SetAttribute("mesh", file);
+		auto staticModel = static_cast<StaticModelDescriptor *>(componentDesc);
+		
+		element->SetAttribute("mesh", staticModel->GetMeshFilename());
 		element->SetAttribute("cast_shadow", staticModel->GetCastShadow() ? "true" : "false");
 
 		std::stringstream ligtMaskStream;
@@ -70,14 +64,14 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 		collisionQueryMaskStream << std::hex << staticModel->GetCollisionQueryMask();
 		element->SetAttribute("collision_query_mask", collisionQueryMaskStream.str());		
 	}
-	else if (component->GetType() == Light::GetTypeStatic())
+	else if (componentDesc->GetType() == ComponentType::LIGHT)
 	{
 		TiXmlElement *element = new TiXmlElement("component");
 		parent->LinkEndChild(element);
 
-		element->SetAttribute("type", component->GetTypeName());
+		element->SetAttribute("type", componentDesc->GetTypeName());
 
-		auto light = static_cast<Light *>(component);		
+		auto light = static_cast<LightDescriptor *>(componentDesc);		
 
 		std::string lightTypeStr;
 
@@ -107,31 +101,23 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 		stream << std::hex << light->GetLightMask();
 		element->SetAttribute("mask", stream.str());		
 	}
-	else if (component->GetType() == LuaScript::GetTypeStatic())
+	else if (componentDesc->GetType() == ComponentType::LUA_SCRIPT)
 	{
 		TiXmlElement *element = new TiXmlElement("component");
 		parent->LinkEndChild(element);
 
-		element->SetAttribute("type", component->GetTypeName());
+		element->SetAttribute("type", componentDesc->GetTypeName());
 
-		auto luaScript = static_cast<LuaScript *>(component);
+		auto luaScript = static_cast<LuaScriptDescriptor *>(componentDesc);
 
-		if (luaScript->GetLuaFile())
-		{
-			wxFileName fileName(luaScript->GetLuaFile()->GetFileName());
-			if (fileName.IsAbsolute())
-			{
-				fileName.MakeRelativeTo(basePath);
-			}
-			std::string file = fileName.GetFullPath().ToStdString();
-
-			element->SetAttribute("script", file);
+		if (luaScript->GetScriptFilename().empty() == false)
+		{		
+			element->SetAttribute("script", luaScript->GetScriptFilename());
 		}
 
 		element->SetAttribute("object", luaScript->GetObjectName());
-
-		MyApp *theApp = ((MyApp *)wxTheApp);
-		auto &properties = theApp->GetAuxDataMap()->GetMap(component);
+		
+		auto &properties = luaScript->GetProperties();
 		for (auto &property : properties)
 		{
 			TiXmlElement *propertyElement = new TiXmlElement("property");
@@ -141,21 +127,21 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 			propertyElement->SetAttribute("value", property.second);
 		}		
 	}
-	else if (component->GetType() == PhysicsWorld::GetTypeStatic())
+	else if (componentDesc->GetType() == ComponentType::PHYSICS_WORLD)
 	{
 		TiXmlElement *element = new TiXmlElement("component");
 		parent->LinkEndChild(element);
 
-		element->SetAttribute("type", component->GetTypeName());
+		element->SetAttribute("type", componentDesc->GetComponent()->GetTypeName());
 	}
-	else if (component->GetType() == CollisionShape::GetTypeStatic())
+	else if (componentDesc->GetType() == ComponentType::COLLISION_SHAPE)
 	{
 		TiXmlElement *element = new TiXmlElement("component");
 		parent->LinkEndChild(element);
 
-		element->SetAttribute("type", component->GetTypeName());
+		element->SetAttribute("type", componentDesc->GetTypeName());
 
-		auto collisionShape = static_cast<CollisionShape *>(component);
+		auto collisionShape = static_cast<CollisionShapeDescriptor *>(componentDesc);
 
 		element->SetAttribute("is_trigger", collisionShape->IsTrigger() ? "true" : "false");
 
@@ -172,45 +158,38 @@ void SceneWriter::Serialize(FireCube::Component *component, TiXmlElement *parent
 			break;
 		case CollisionShapeType::TRIANGLE_MESH:
 		{
-			element->SetAttribute("shape_type", "triangle_mesh");
-			wxFileName fileName(collisionShape->GetMesh()->GetFileName());
-			if (fileName.IsAbsolute())
-			{
-				fileName.MakeRelativeTo(basePath);
-			}
-			std::string file = fileName.GetFullPath().ToStdString();
-
-			element->SetAttribute("mesh", file);
+			element->SetAttribute("shape_type", "triangle_mesh");			
+			element->SetAttribute("mesh", collisionShape->GetMeshFilename());
 			break;
 		}
 		default:
 			break;
 		}
 	}
-	else if (component->GetType() == CharacterController::GetTypeStatic())
+	else if (componentDesc->GetType() == ComponentType::CHARACTER_CONTROLLER)
 	{
 		TiXmlElement *element = new TiXmlElement("component");
 		parent->LinkEndChild(element);
 
-		element->SetAttribute("type", component->GetTypeName());
+		element->SetAttribute("type", componentDesc->GetTypeName());
 
-		auto characterController = static_cast<CharacterController *>(component);
+		auto characterController = static_cast<CharacterControllerDescriptor *>(componentDesc);
 		element->SetDoubleAttribute("radius", characterController->GetRadius());
 		element->SetDoubleAttribute("height", characterController->GetHeight());
 		element->SetDoubleAttribute("contact_offset", characterController->GetContactOffset());
+		element->SetDoubleAttribute("step_offset", characterController->GetStepOffset());
 	}
 
 }
 
-void SceneWriter::SerializeNodeTransformation(FireCube::Node *node, TiXmlElement *parent)
+void SceneWriter::SerializeNodeTransformation(NodeDescriptor *nodeDesc, TiXmlElement *parent)
 {	
 	TiXmlElement *transformation = new TiXmlElement("transformation");
 	parent->LinkEndChild(transformation);	
-
-	vec3 eulerAngles = node->GetRotation().ExtractEulerAngles();
-	transformation->SetAttribute("translation", ToString(node->GetTranslation()));
-	transformation->SetAttribute("scale", ToString(node->GetScale()));
-	transformation->SetAttribute("rotation", ToString(eulerAngles));
+		
+	transformation->SetAttribute("translation", ToString(nodeDesc->GetTranslation()));
+	transformation->SetAttribute("scale", ToString(nodeDesc->GetScale()));
+	transformation->SetAttribute("rotation", ToString(nodeDesc->GetRotation()));
 }
 
 std::string SceneWriter::ToString(vec3 v) const

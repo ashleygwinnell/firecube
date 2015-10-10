@@ -1,16 +1,23 @@
 #include "SceneReader.h"
-#include "AuxDataMap.h"
 #include "tinyxml.h"
 #include <iostream>
+#include "NodeDescriptor.h"
+#include "EditorState.h"
+#include "StaticModelDescriptor.h"
+#include "LightDescriptor.h"
+#include "PhysicsWorldDescriptor.h"
+#include "CollisionShapeDescriptor.h"
+#include "CharacterControllerDescriptor.h"
+#include "LuaScriptDescriptor.h"
 
 using namespace FireCube;
 
-::SceneReader::SceneReader(Engine *engine, AuxDataMap *auxDataMap) : Object(engine), auxDataMap(auxDataMap)
+::SceneReader::SceneReader(Engine *engine, EditorState *editorState) : Object(engine), editorState(editorState)
 {
 
 }
 
-bool ::SceneReader::Read(Scene &scene, const std::string &filename)
+bool ::SceneReader::Read(NodeDescriptor *root, const std::string &filename)
 {
 	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
 	if (resolvedFileName.empty())
@@ -18,7 +25,7 @@ bool ::SceneReader::Read(Scene &scene, const std::string &filename)
 
 	TiXmlDocument xmlDocument;
 	if (!xmlDocument.LoadFile(resolvedFileName))
-		return false;	
+		return false;
 
 	TiXmlElement *e = xmlDocument.FirstChildElement("scene");
 	if (e == nullptr)
@@ -28,9 +35,8 @@ bool ::SceneReader::Read(Scene &scene, const std::string &filename)
 	if (e == nullptr)
 		return false;
 	
-	Node *node = scene.GetRootNode();
-	ReadNode(e, node);
-	
+	ReadNode(e, root);	
+
 	if (e->NextSiblingElement())
 	{
 		LOGWARNING("Ignoring sibling nodes of root node when reading scene file: ", filename);
@@ -39,7 +45,7 @@ bool ::SceneReader::Read(Scene &scene, const std::string &filename)
 	return true;
 }
 
-void ::SceneReader::ReadNode(TiXmlElement *e, Node *node)
+void ::SceneReader::ReadNode(TiXmlElement *e, NodeDescriptor *node)
 {
 	if (e->Attribute("name"))
 	{
@@ -47,10 +53,12 @@ void ::SceneReader::ReadNode(TiXmlElement *e, Node *node)
 	}
 
 	for (TiXmlElement *element = e->FirstChildElement(); element != nullptr; element = element->NextSiblingElement())
-	{	
+	{
 		if (element->ValueStr() == "node")
 		{
-			Node *child = node->CreateChild();
+			NodeDescriptor *child = new NodeDescriptor();
+			child->Instantiate(node, engine, editorState->GetNodeMap());			
+			child->SetParent(node);
 			ReadNode(element, child);
 		}
 		else if (element->ValueStr() == "component")
@@ -64,7 +72,7 @@ void ::SceneReader::ReadNode(TiXmlElement *e, Node *node)
 	}
 }
 
-void ::SceneReader::ReadComponent(TiXmlElement *e, Node *node)
+void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 {
 	if (e->Attribute("type") == nullptr)
 	{
@@ -73,33 +81,33 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 	}
 
 	std::string  type = e->Attribute("type");
-	
+	ComponentDescriptor *addedComponent = nullptr;
 	if (type == "StaticModel")
 	{
-		auto component = node->CreateComponent<StaticModel>();
-		
+		StaticModelDescriptor *staticModelDescriptor = new StaticModelDescriptor();
+		addedComponent = staticModelDescriptor;
 		if (e->Attribute("mesh"))
 		{
-			component->CreateFromMesh(engine->GetResourceCache()->GetResource<Mesh>(e->Attribute("mesh")));
-		}		
+			staticModelDescriptor->SetMeshFilename(e->Attribute("mesh"), engine);
+		}
 
 		if (e->Attribute("cast_shadow"))
 		{
-			component->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
+			staticModelDescriptor->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());			
 		}
 
 		if (e->Attribute("light_mask"))
 		{
-			component->SetLightMask(std::stoul(e->Attribute("light_mask"), 0, 16));
+			staticModelDescriptor->SetLightMask(std::stoul(e->Attribute("light_mask"), 0, 16));			
 		}
 
 		if (e->Attribute("collision_query_mask"))
 		{
-			component->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
-		}
+			staticModelDescriptor->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));			
+		}		
 	}
-	else if (type == "box")
-	{		
+	/*else if (type == "box")
+	{
 		Material *material = nullptr;
 
 		if (e->Attribute("material"))
@@ -110,14 +118,14 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		if (e->Attribute("size") && material)
 		{
 			auto component = node->CreateComponent<StaticModel>();
-			vec3 size = Variant::FromString(e->Attribute("size")).GetVec3();			
-			Mesh mesh(engine);			
+			vec3 size = Variant::FromString(e->Attribute("size")).GetVec3();
+			Mesh mesh(engine);
 			mesh.AddGeometry(GeometryGenerator::GenerateBox(engine, size), BoundingBox(-size, size), material);
 			component->CreateFromMesh(&mesh);
 		}
 	}
 	else if (type == "sphere")
-	{		
+	{
 		Material *material = nullptr;
 
 		if (e->Attribute("material"))
@@ -129,73 +137,42 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		{
 			auto component = node->CreateComponent<StaticModel>();
 			float radius = Variant::FromString(e->Attribute("radius")).GetFloat();
-			
+
 			unsigned int rings = 16;
 			unsigned int columns = 16;
 			if (e->Attribute("tessellation"))
 			{
 				vec2 t = Variant::FromString(e->Attribute("tessellation")).GetVec2();
-				rings = (unsigned int) t.x;
-				columns = (unsigned int) t.y;
+				rings = (unsigned int)t.x;
+				columns = (unsigned int)t.y;
 			}
 
 			Mesh mesh(engine);
-			mesh.AddGeometry(GeometryGenerator::GenerateSphere(engine, radius, rings, columns), BoundingBox(-vec3(radius), vec3(radius)), material);			
+			mesh.AddGeometry(GeometryGenerator::GenerateSphere(engine, radius, rings, columns), BoundingBox(-vec3(radius), vec3(radius)), material);
 			component->CreateFromMesh(&mesh);
 		}
-	}
+	}*/
 	else if (type == "LuaScript")
-	{		
+	{
 		if (e->Attribute("object"))
 		{
-			auto component = node->CreateComponent<LuaScript>();
-			auto &map = auxDataMap->GetMap(component);
+			auto luaScriptDescriptor = new LuaScriptDescriptor();
+			addedComponent = luaScriptDescriptor;
+
+			luaScriptDescriptor->SetObjectName(e->Attribute("object"));
 			if (e->Attribute("script"))
 			{
-				component->CreateObject(engine->GetResourceCache()->GetResource<LuaFile>(e->Attribute("script")), e->Attribute("object"));
-			}
-			else
-			{
-				component->CreateObject(e->Attribute("object"));
-			}
+				luaScriptDescriptor->SetScriptFilename(e->Attribute("script"));				
+			}			
 
 			for (TiXmlElement *propertyElement = e->FirstChildElement("property"); propertyElement != nullptr; propertyElement = propertyElement->NextSiblingElement("property"))
 			{
 				if (propertyElement->Attribute("name") && propertyElement->Attribute("value"))
 				{
-					Variant v = Variant::FromString(propertyElement->Attribute("value"));
-
-					switch (v.GetType())
-					{
-					case VariantType::BOOL:
-						component->SetField(propertyElement->Attribute("name"), v.GetBool());
-						break;
-					case VariantType::FLOAT:
-						component->SetField(propertyElement->Attribute("name"), v.GetFloat());
-						break;
-					case VariantType::INT:
-						component->SetField(propertyElement->Attribute("name"), v.GetInt());
-						break;
-					case VariantType::VEC2:
-						component->SetField(propertyElement->Attribute("name"), v.GetVec2());
-						break;
-					case VariantType::VEC3:
-						component->SetField(propertyElement->Attribute("name"), v.GetVec3());
-						break;
-					case VariantType::VEC4:
-						component->SetField(propertyElement->Attribute("name"), v.GetVec4());
-						break;
-					case VariantType::NONE:
-						component->SetField(propertyElement->Attribute("name"), propertyElement->Attribute("value"));
-						break;
-					default:
-						break;
-					}										
-
-					map[propertyElement->Attribute("name")] = propertyElement->Attribute("value");
+					luaScriptDescriptor->SetProperty(propertyElement->Attribute("name"), propertyElement->Attribute("value"));					
 				}
 			}
-			
+
 		}
 		else
 		{
@@ -204,114 +181,136 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 	}
 	else if (type == "Light")
 	{
-		auto light = node->CreateComponent<Light>();
+		auto lightDescriptor = new LightDescriptor();
+		addedComponent = lightDescriptor;
 		if (e->Attribute("light_type"))
 		{
 			std::string lightTypeStr = e->Attribute("light_type");
 			if (lightTypeStr == "directional")
 			{
-				light->SetLightType(LightType::DIRECTIONAL);
+				lightDescriptor->SetLightType(LightType::DIRECTIONAL);
 			}
 			else if (lightTypeStr == "point")
 			{
-				light->SetLightType(LightType::POINT);
+				lightDescriptor->SetLightType(LightType::POINT);
 			}
 			else if (lightTypeStr == "spot")
 			{
-				light->SetLightType(LightType::SPOT);
+				lightDescriptor->SetLightType(LightType::SPOT);
 			}
-		}		
+		}
 
 		if (e->Attribute("color"))
 		{
-			light->SetColor(Variant::FromString(e->Attribute("color")).GetVec4());			
+			lightDescriptor->SetColor(Variant::FromString(e->Attribute("color")).GetVec4());
 		}
 
 		if (e->Attribute("range"))
 		{
-			light->SetRange(Variant::FromString(e->Attribute("range")).GetFloat());
+			lightDescriptor->SetRange(Variant::FromString(e->Attribute("range")).GetFloat());
 		}
 
 		if (e->Attribute("spot_cutoff"))
 		{
-			light->SetSpotCutOff(Variant::FromString(e->Attribute("spot_cutoff")).GetFloat());
+			lightDescriptor->SetSpotCutOff(Variant::FromString(e->Attribute("spot_cutoff")).GetFloat());
 		}
 
 		if (e->Attribute("shadow_intensity"))
 		{
-			light->SetShadowIntensity(Variant::FromString(e->Attribute("shadow_intensity")).GetFloat());
+			lightDescriptor->SetShadowIntensity(Variant::FromString(e->Attribute("shadow_intensity")).GetFloat());
 		}
 
 		if (e->Attribute("cast_shadow"))
 		{
-			light->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
+			lightDescriptor->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
 		}
 
 		if (e->Attribute("mask"))
 		{
-			light->SetLightMask(std::stoul(e->Attribute("mask"), 0, 16));
-		}
+			lightDescriptor->SetLightMask(std::stoul(e->Attribute("mask"), 0, 16));
+		}		
 	}
 	else if (type == "PhysicsWorld")
-	{		
-		node->CreateComponent<PhysicsWorld>();		
+	{
+		auto physicsWorldDescriptor = new PhysicsWorldDescriptor();
+		addedComponent = physicsWorldDescriptor;
 	}
 	else if (type == "CollisionShape")
 	{
-		auto component = node->CreateComponent<CollisionShape>();
+		auto collisionShapeDescriptor = new CollisionShapeDescriptor();
+		addedComponent = collisionShapeDescriptor;
+
 		if (e->Attribute("shape_type"))
 		{
 			std::string shapeTypeStr = e->Attribute("shape_type");
 			if (shapeTypeStr == "triangle_mesh")
 			{
-				component->SetMesh(engine->GetResourceCache()->GetResource<Mesh>(e->Attribute("mesh")));
+				collisionShapeDescriptor->SetMesh(e->Attribute("mesh"), engine);
 			}
 			else if (shapeTypeStr == "box")
 			{
 				vec3 bboxMin = Variant::FromString(e->Attribute("bbox_min")).GetVec3();
 				vec3 bboxMax = Variant::FromString(e->Attribute("bbox_max")).GetVec3();
-				component->SetBox(BoundingBox(bboxMin, bboxMax));
+				collisionShapeDescriptor->SetBox(BoundingBox(bboxMin, bboxMax));
 			}
 			else if (shapeTypeStr == "plane")
 			{
 				vec4 planeParams = Variant::FromString(e->Attribute("plane")).GetVec4();
 				Plane plane(planeParams.ToVec3(), planeParams.w);
-				component->SetPlane(plane);
+				collisionShapeDescriptor->SetPlane(plane);
 			}
-		}	
+		}
 
 		if (e->Attribute("is_trigger"))
 		{
-			component->SetIsTrigger(Variant::FromString(e->Attribute("is_trigger")).GetBool());
+			collisionShapeDescriptor->SetIsTrigger(Variant::FromString(e->Attribute("is_trigger")).GetBool());
 		}
 	}
 	else if (type == "CharacterController")
 	{
-		auto component = node->CreateComponent<CharacterController>();
+		auto characterControllerDescriptor = new CharacterControllerDescriptor();
+		addedComponent = characterControllerDescriptor;
 		if (e->Attribute("radius"))
 		{
-			component->SetRadius(Variant::FromString(e->Attribute("radius")).GetFloat());
+			characterControllerDescriptor->SetRadius(Variant::FromString(e->Attribute("radius")).GetFloat());
 		}
 
 		if (e->Attribute("height"))
 		{
-			component->SetHeight(Variant::FromString(e->Attribute("height")).GetFloat());
+			characterControllerDescriptor->SetHeight(Variant::FromString(e->Attribute("height")).GetFloat());
+		}
+
+		if (e->Attribute("contact_offset"))
+		{
+			characterControllerDescriptor->SetContactOffset(Variant::FromString(e->Attribute("contact_offset")).GetFloat());
+		}
+
+		if (e->Attribute("step_offset"))
+		{
+			characterControllerDescriptor->SetStepOffset(Variant::FromString(e->Attribute("step_offset")).GetFloat());
 		}
 	}
 	else
 	{
-		LOGERROR("Unknow component type: ", type);
+		LOGERROR("Unknown component type: ", type);
+	}
+
+	if (addedComponent)
+	{
+		node->AddComponent(addedComponent);
+		addedComponent->SetParent(node);
+		addedComponent->CreateComponent(node->GetNode(), engine);
 	}
 }
 
-void ::SceneReader::ReadTransformation(TiXmlElement *e, Node *node)
+void ::SceneReader::ReadTransformation(TiXmlElement *e, NodeDescriptor *node)
 {
 	if (e->Attribute("translation"))
 	{
 		vec3 translation = Variant::FromString(e->Attribute("translation")).GetVec3();
 		node->SetTranslation(translation);
 	}
-	
+
 	if (e->Attribute("scale"))
 	{
 		vec3 scale = Variant::FromString(e->Attribute("scale")).GetVec3();
@@ -321,10 +320,6 @@ void ::SceneReader::ReadTransformation(TiXmlElement *e, Node *node)
 	if (e->Attribute("rotation"))
 	{
 		vec3 rotation = Variant::FromString(e->Attribute("rotation")).GetVec3();		
-		mat4 rotationMat = mat4::IDENTITY;
-		rotationMat.RotateX(rotation.x);
-		rotationMat.RotateY(rotation.y);
-		rotationMat.RotateZ(rotation.z);
-		node->SetRotation(rotationMat);
+		node->SetRotation(rotation);
 	}
 }

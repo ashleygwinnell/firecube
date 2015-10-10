@@ -51,13 +51,13 @@ void EditorState::Redo()
 	stateChanged(this);
 }
 
-void EditorState::SetSelectedNode(FireCube::Node *selectedNode)
+void EditorState::SetSelectedNode(NodeDescriptor *selectedNode)
 {
 	this->selectedNode = selectedNode;
 	selectedNodeChanged(this, selectedNode);
 }
 
-FireCube::Node *EditorState::GetSelectedNode()
+NodeDescriptor *EditorState::GetSelectedNode()
 {
 	return selectedNode;
 }
@@ -114,4 +114,9 @@ Command *EditorState::GetCurrentRedoCommand() const
 	{
 		return nullptr;
 	}
+}
+
+std::map<FireCube::Node *, NodeDescriptor *> &EditorState::GetNodeMap()
+{
+	return nodeMap;
 }

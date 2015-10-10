@@ -12,7 +12,6 @@ public:
 private:
 	virtual void FileChanged(wxFileDirPickerEvent& event);
 	virtual void ObjectNameChanged(wxCommandEvent& event);
-	void RemoveComponentClicked(wxCommandEvent& event);
 	virtual void AddPropertyClicked(wxCommandEvent& event);
 	virtual void RenamePropertyClicked(wxCommandEvent& event);
 	virtual void RemovePropertyClicked(wxCommandEvent& event);

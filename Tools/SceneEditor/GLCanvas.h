@@ -8,6 +8,7 @@ class RotateGizmo;
 class TransformGizmo;
 class ScaleGizmo;
 class EditorState;
+class NodeDescriptor;
 
 enum class Operation
 {
@@ -38,7 +39,7 @@ public:
 	void UpdateGizmo();		
 private:	
 	void CreateGrid(float size, unsigned int numberOfCells);
-	void SelectedNodeChanged(FireCube::Node *node);
+	void SelectedNodeChanged(NodeDescriptor *nodeDesc);
 	void StateChanged();
 	void SceneChanged();
 	void RenderDebugGeometry(FireCube::Node *node, FireCube::DebugRenderer *debugRenderer);

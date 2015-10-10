@@ -4,6 +4,7 @@
 #include "FireCube.h"
 
 class EditorState;
+class NodeDescriptor;
 
 class NodePropertiesPanelImpl : public NodePropertiesPanel, public FireCube::Object
 {
@@ -22,7 +23,7 @@ public:
 	virtual void ScaleYChanged(wxCommandEvent& event);
 	virtual void ScaleZChanged(wxCommandEvent& event);
 	virtual void NameChanged(wxCommandEvent& event);
-	void NodeRenamed(FireCube::Node *node);
+	void NodeRenamed(NodeDescriptor *node);
 
 private:
 	void UpdateUI();

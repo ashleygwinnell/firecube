@@ -6,23 +6,20 @@
 #include "Commands/RemoveComponentCommand.h"
 #include "Commands/CustomCommand.h"
 #include "Types.h"
+#include "LuaScriptDescriptor.h"
 
 using namespace FireCube;
 
 LuaScriptPanelImpl::LuaScriptPanelImpl(BaseComponentPanelImpl* parent) : LuaScriptPanel(parent), parent(parent)
 {
-	FireCube::LuaScript *luaScript = static_cast<FireCube::LuaScript *>(parent->GetComponent());
-	if (luaScript->GetLuaFile())
-	{
-		wxFileName filename(luaScript->GetLuaFile()->GetFileName());
-		scriptFilePicker->SetFileName(filename);
-	}
+	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());
+	wxFileName filename(luaScript->GetScriptFilename());
+	scriptFilePicker->SetFileName(filename);
+	
 	objectNameTextCtrl->SetLabel(luaScript->GetObjectName());
-	parent->removeComponent->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(LuaScriptPanelImpl::RemoveComponentClicked), NULL, this);
 
-	propertyGrid->Freeze();
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	auto &properties = theApp->GetAuxDataMap()->GetMap(parent->GetComponent());
+	propertyGrid->Freeze();	
+	auto &properties = luaScript->GetProperties();
 	for (auto &property : properties)
 	{
 		propertyGrid->Append(new wxStringProperty(property.first, wxPG_LABEL, property.second));
@@ -38,12 +35,9 @@ LuaScriptPanelImpl::~LuaScriptPanelImpl()
 
 void LuaScriptPanelImpl::FileChanged(wxFileDirPickerEvent& event)
 {
-	LuaScript *luaScript = static_cast<FireCube::LuaScript *>(parent->GetComponent());
+	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());
 
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	auto engine = theApp->fcApp.GetEngine();
-	Node *node = luaScript->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), luaScript));
+	MyApp *theApp = ((MyApp *)wxTheApp);	
 	std::string newLuaFileName = event.GetPath().ToStdString();
 	if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), newLuaFileName))
 	{
@@ -57,71 +51,34 @@ void LuaScriptPanelImpl::FileChanged(wxFileDirPickerEvent& event)
 		Filesystem::CopyPath(newLuaFileName, targetPath + Filesystem::PATH_SEPARATOR + filename);
 		newLuaFileName = "Scripts" + Filesystem::PATH_SEPARATOR + filename;
 	}
-	std::string oldLuaFileName = luaScript->GetLuaFile() ? luaScript->GetLuaFile()->GetFileName() : "";
+	std::string oldLuaFileName = luaScript->GetScriptFilename();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Script", [componentIndex, node, newLuaFileName, engine]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Script", [luaScript, newLuaFileName]()
 	{
-		LuaScript *luaScript = static_cast<LuaScript *>(node->GetComponents()[componentIndex]);
-		luaScript->CreateObject(engine->GetResourceCache()->GetResource<FireCube::LuaFile>(newLuaFileName), luaScript->GetObjectName());		
-	}, [componentIndex, node, oldLuaFileName, engine]()
-	{
-		LuaScript *luaScript = static_cast<LuaScript *>(node->GetComponents()[componentIndex]);
-		luaScript->CreateObject(oldLuaFileName.empty() ? nullptr : engine->GetResourceCache()->GetResource<FireCube::LuaFile>(oldLuaFileName), luaScript->GetObjectName());
+		luaScript->SetScriptFilename(newLuaFileName);		
+	}, [luaScript, oldLuaFileName]()
+	{		
+		luaScript->SetScriptFilename(oldLuaFileName);		
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
-void LuaScriptPanelImpl::RemoveComponentClicked(wxCommandEvent& event)
-{
-	LuaScript *luaScript = static_cast<LuaScript *>(parent->GetComponent());
-	MyApp *theApp = ((MyApp *)wxTheApp);
-
-	std::string currentScriptFile = luaScript->GetLuaFile() ? luaScript->GetLuaFile()->GetFileName() : "";
-	std::string currentObjectName = luaScript->GetObjectName();
-	std::map<std::string, std::string> currentProperties = theApp->GetAuxDataMap()->GetMap(parent->GetComponent());
-	auto removeComponentCommand = new RemoveComponentCommand(theApp->GetEditorState(), "Remove Component", luaScript, [currentScriptFile, currentObjectName, currentProperties](Engine *engine, Node *node) -> Component *
-	{
-		LuaScript *luaScript = node->CreateComponent<LuaScript>();
-		luaScript->SetEnabled(false);
-		if (currentScriptFile.empty() == false)
-		{
-			luaScript->CreateObject(engine->GetResourceCache()->GetResource<LuaFile>(currentScriptFile), currentObjectName);
-		}
-		else
-		{
-			luaScript->CreateObject(currentObjectName);
-		}
-		
-		MyApp *theApp = ((MyApp *)wxTheApp);
-		theApp->GetAuxDataMap()->GetMap(luaScript) = currentProperties;
-
-		return luaScript;
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(removeComponentCommand);
-}
-
 void LuaScriptPanelImpl::ObjectNameChanged(wxCommandEvent& event)
 {
-	LuaScript *luaScript = static_cast<FireCube::LuaScript *>(parent->GetComponent());
+	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
-	auto engine = theApp->fcApp.GetEngine();
-	Node *node = luaScript->GetNode();
-	unsigned int componentIndex = std::distance(node->GetComponents().begin(), std::find(node->GetComponents().begin(), node->GetComponents().end(), luaScript));
 	std::string newObjectName = event.GetString().ToStdString();
 	std::string oldObjectName = luaScript->GetObjectName();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Object", [componentIndex, node, newObjectName, engine]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Object", [luaScript, newObjectName]()
 	{
-		LuaScript *luaScript = static_cast<LuaScript *>(node->GetComponents()[componentIndex]);
-		luaScript->CreateObject(newObjectName);
-	}, [componentIndex, node, oldObjectName, engine]()
+		luaScript->SetObjectName(newObjectName);
+	}, [luaScript, oldObjectName]()
 	{
-		LuaScript *luaScript = static_cast<LuaScript *>(node->GetComponents()[componentIndex]);
-		luaScript->CreateObject(oldObjectName);
+		luaScript->SetObjectName(oldObjectName);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -130,13 +87,13 @@ void LuaScriptPanelImpl::ObjectNameChanged(wxCommandEvent& event)
 
 void LuaScriptPanelImpl::AddPropertyClicked(wxCommandEvent& event)
 {
-	MyApp *theApp = ((MyApp *)wxTheApp);	
+	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());
+	
 	auto propertyName = wxGetTextFromUser("Enter property name", "Add Property");
 	if (propertyName.empty() == false)
 	{
 		propertyGrid->Append(new wxStringProperty(propertyName, wxPG_LABEL));
-		auto &properties = theApp->GetAuxDataMap()->GetMap(parent->GetComponent());
-		properties[propertyName.ToStdString()] = "";
+		luaScript->SetProperty(propertyName.ToStdString(), "");		
 	}
 }
 
@@ -155,20 +112,20 @@ void LuaScriptPanelImpl::RemovePropertyClicked(wxCommandEvent& event)
 
 void LuaScriptPanelImpl::PropertyGridChanged(wxPropertyGridEvent& event)
 {
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	auto &properties = theApp->GetAuxDataMap()->GetMap(parent->GetComponent());
-	properties[event.GetProperty()->GetLabel().ToStdString()] = event.GetPropertyValue().GetString().ToStdString();	
+	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());
+	luaScript->SetProperty(event.GetProperty()->GetLabel().ToStdString(), event.GetPropertyValue().GetString().ToStdString());	
 }
 
 void LuaScriptPanelImpl::PropertyGridLabelChanged(wxPropertyGridEvent& event)
 {	
-	MyApp *theApp = ((MyApp *)wxTheApp);	
+	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());
+	
 	const wxString &newLabel = propertyGrid->GetLabelEditor()->GetValue();	
 	const wxString &oldLabel = event.GetProperty()->GetLabel();
 	auto oldProperty = oldLabel.ToStdString();
 	auto newProperty = newLabel.ToStdString();
-	auto &properties = theApp->GetAuxDataMap()->GetMap(parent->GetComponent());
-	properties[newProperty] = properties[oldProperty];
-	properties.erase(oldProperty);
+	
+	luaScript->SetProperty(newProperty, luaScript->GetProperty(oldProperty));
+	luaScript->RemoveProperty(oldProperty);	
 	event.GetProperty()->SetLabel(newLabel);
 }

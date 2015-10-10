@@ -228,10 +228,16 @@ BaseComponentPanel::BaseComponentPanel( wxWindow* parent, wxWindowID id, const w
 	this->SetSizer( bSizer5 );
 	this->Layout();
 	bSizer5->Fit( this );
+	
+	// Connect Events
+	removeComponent->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseComponentPanel::RemoveComponentClicked ), NULL, this );
 }
 
 BaseComponentPanel::~BaseComponentPanel()
 {
+	// Disconnect Events
+	removeComponent->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseComponentPanel::RemoveComponentClicked ), NULL, this );
+	
 }
 
 StaticModelPanel::StaticModelPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )

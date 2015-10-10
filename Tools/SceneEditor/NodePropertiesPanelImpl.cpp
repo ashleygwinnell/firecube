@@ -3,6 +3,7 @@
 #include "EditorState.h"
 #include "Commands/TransformCommands.h"
 #include "Commands/RenameNodeCommand.h"
+#include "NodeDescriptor.h"
 
 using namespace FireCube;
 
@@ -20,9 +21,10 @@ NodePropertiesPanelImpl::~NodePropertiesPanelImpl()
 
 void NodePropertiesPanelImpl::UpdateUI()
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
 	{
+		auto node = nodeDesc->GetNode();
 		nameTextCtrl->SetLabelText(node->GetName());
 
 		positionXTextCtrl->SetLabelText(wxString::FromDouble(node->GetTranslation().x));
@@ -42,153 +44,141 @@ void NodePropertiesPanelImpl::UpdateUI()
 
 void NodePropertiesPanelImpl::PositionXChanged(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
-	{
-		vec3 translation = node->GetTranslation();
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{		
+		vec3 translation = nodeDesc->GetTranslation();
 		double newCoordinate;
 		event.GetString().ToDouble(&newCoordinate);
 		translation.x = newCoordinate;
-		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", node, node->GetTranslation(), translation));
+		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", nodeDesc, nodeDesc->GetTranslation(), translation));
 		editorState->sceneChanged(editorState);
 	}
 }
 
 void NodePropertiesPanelImpl::PositionYChanged(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
-	{
-		vec3 translation = node->GetTranslation();
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{		
+		vec3 translation = nodeDesc->GetTranslation();
 		double newCoordinate;
 		event.GetString().ToDouble(&newCoordinate);
 		translation.y = newCoordinate;
-		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", node, node->GetTranslation(), translation));
+		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", nodeDesc, nodeDesc->GetTranslation(), translation));
 		editorState->sceneChanged(editorState);
 	}
 }
 
 void NodePropertiesPanelImpl::PositionZChanged(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
-	{
-		vec3 translation = node->GetTranslation();
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{		
+		vec3 translation = nodeDesc->GetTranslation();
 		double newCoordinate;
 		event.GetString().ToDouble(&newCoordinate);
 		translation.z = newCoordinate;
-		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", node, node->GetTranslation(), translation));
+		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", nodeDesc, nodeDesc->GetTranslation(), translation));
 		editorState->sceneChanged(editorState);
 	}
 }
 
 void NodePropertiesPanelImpl::RotationXChanged(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
-	{
-		vec3 rotation = node->GetRotation().ExtractEulerAngles();
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{		
+		vec3 rotation = nodeDesc->GetRotation();
 		double ang;
 		event.GetString().ToDouble(&ang);
 		rotation.x = ang / 180.0f * PI;
-		mat4 rotationMatrix = mat4::IDENTITY;
-		rotationMatrix.RotateX(rotation.x);
-		rotationMatrix.RotateY(rotation.y);
-		rotationMatrix.RotateZ(rotation.z);
-		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", node, node->GetRotation(), rotationMatrix));
+		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", nodeDesc, nodeDesc->GetRotation(), rotation));
 		editorState->sceneChanged(editorState);
 	}
 }
 
 void NodePropertiesPanelImpl::RotationYChanged(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
-	{
-		vec3 rotation = node->GetRotation().ExtractEulerAngles();
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{		
+		vec3 rotation = nodeDesc->GetRotation();
 		double ang;
 		event.GetString().ToDouble(&ang);
 		rotation.y = ang / 180.0f * PI;
-		mat4 rotationMatrix = mat4::IDENTITY;
-		rotationMatrix.RotateX(rotation.x);
-		rotationMatrix.RotateY(rotation.y);
-		rotationMatrix.RotateZ(rotation.z);
-		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", node, node->GetRotation(), rotationMatrix));
+		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", nodeDesc, nodeDesc->GetRotation(), rotation));
 		editorState->sceneChanged(editorState);
 	}
 }
 
 void NodePropertiesPanelImpl::RotationZChanged(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
-	{
-		vec3 rotation = node->GetRotation().ExtractEulerAngles();
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{		
+		vec3 rotation = nodeDesc->GetRotation();
 		double ang;
 		event.GetString().ToDouble(&ang);
 		rotation.z = ang / 180.0f * PI;
-		mat4 rotationMatrix = mat4::IDENTITY;
-		rotationMatrix.RotateX(rotation.x);
-		rotationMatrix.RotateY(rotation.y);
-		rotationMatrix.RotateZ(rotation.z);
-		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", node, node->GetRotation(), rotationMatrix));
+		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", nodeDesc, nodeDesc->GetRotation(), rotation));
 		editorState->sceneChanged(editorState);
 	}
 }
 
 void NodePropertiesPanelImpl::ScaleXChanged(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
-	{
-		vec3 scale = node->GetScale();
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{		
+		vec3 scale = nodeDesc->GetScale();
 		double newScale;
 		event.GetString().ToDouble(&newScale);
 		scale.x = newScale;
-		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", node, node->GetScale(), scale));
+		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", nodeDesc, nodeDesc->GetScale(), scale));
 		editorState->sceneChanged(editorState);
 	}
 }
 
 void NodePropertiesPanelImpl::ScaleYChanged(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
-	{
-		vec3 scale = node->GetScale();
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{		
+		vec3 scale = nodeDesc->GetScale();
 		double newScale;
 		event.GetString().ToDouble(&newScale);
 		scale.y = newScale;
-		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", node, node->GetScale(), scale));
+		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", nodeDesc, nodeDesc->GetScale(), scale));
 		editorState->sceneChanged(editorState);
 	}
 }
 
 void NodePropertiesPanelImpl::ScaleZChanged(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
-	{
-		vec3 scale = node->GetScale();
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{		
+		vec3 scale = nodeDesc->GetScale();
 		double newScale;
 		event.GetString().ToDouble(&newScale);
 		scale.z = newScale;
-		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", node, node->GetScale(), scale));
+		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", nodeDesc, nodeDesc->GetScale(), scale));
 		editorState->sceneChanged(editorState);
 	}
 }
 
 void NodePropertiesPanelImpl::NameChanged(wxCommandEvent& event)
 {
-	auto node = editorState->GetSelectedNode();
-	if (node)
-	{
-		auto command = new RenameNodeCommand(editorState, "Rename", node, event.GetString().ToStdString());
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{		
+		auto command = new RenameNodeCommand(editorState, "Rename", nodeDesc, event.GetString().ToStdString());
 		editorState->ExecuteCommand(command);
 	}
 }
 
-void NodePropertiesPanelImpl::NodeRenamed(FireCube::Node *node)
+void NodePropertiesPanelImpl::NodeRenamed(NodeDescriptor *node)
 {
-	nameTextCtrl->ChangeValue(node->GetName());
+	nameTextCtrl->ChangeValue(node->GetNode()->GetName());
 }
