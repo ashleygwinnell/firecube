@@ -306,6 +306,16 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		{
 			component->SetHeight(Variant::FromString(e->Attribute("height")).GetFloat());
 		}
+
+		if (e->Attribute("contact_offset"))
+		{
+			component->SetContactOffset(Variant::FromString(e->Attribute("contact_offset")).GetFloat());
+		}
+
+		if (e->Attribute("step_offset"))
+		{
+			component->SetStepOffset(Variant::FromString(e->Attribute("step_offset")).GetFloat());
+		}
 	}
 	else
 	{
