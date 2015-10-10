@@ -5,7 +5,7 @@
 #include "Commands/RemoveComponentCommand.h"
 #include "Commands/CustomCommand.h"
 #include "Types.h"
-#include "CollisionShapeDescriptor.h"
+#include "Descriptors/CollisionShapeDescriptor.h"
 
 using namespace FireCube;
 

@@ -1,14 +1,14 @@
 #include "SceneReader.h"
 #include "tinyxml.h"
 #include <iostream>
-#include "NodeDescriptor.h"
+#include "Descriptors/NodeDescriptor.h"
 #include "EditorState.h"
-#include "StaticModelDescriptor.h"
-#include "LightDescriptor.h"
-#include "PhysicsWorldDescriptor.h"
-#include "CollisionShapeDescriptor.h"
-#include "CharacterControllerDescriptor.h"
-#include "LuaScriptDescriptor.h"
+#include "Descriptors/StaticModelDescriptor.h"
+#include "Descriptors/LightDescriptor.h"
+#include "Descriptors/PhysicsWorldDescriptor.h"
+#include "Descriptors/CollisionShapeDescriptor.h"
+#include "Descriptors/CharacterControllerDescriptor.h"
+#include "Descriptors/LuaScriptDescriptor.h"
 
 using namespace FireCube;
 

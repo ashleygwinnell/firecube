@@ -1,7 +1,7 @@
 #include "AddComponentCommand.h"
 #include "../EditorState.h"
-#include "../NodeDescriptor.h"
-#include "../ComponentDescriptor.h"
+#include "../Descriptors/NodeDescriptor.h"
+#include "../Descriptors/ComponentDescriptor.h"
 using namespace FireCube;
 
 AddComponentCommand::AddComponentCommand(EditorState *editorState, const std::string &description, NodeDescriptor *nodeDesc, ComponentDescriptor *componentDesc, Engine *engine) : Command(editorState, description), nodeDesc(nodeDesc), componentDesc(componentDesc), engine(engine), shouldDelete(true)

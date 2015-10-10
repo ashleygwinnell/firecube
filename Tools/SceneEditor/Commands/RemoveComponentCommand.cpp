@@ -1,7 +1,7 @@
 #include "RemoveComponentCommand.h"
 #include "../EditorState.h"
-#include "../NodeDescriptor.h"
-#include "../ComponentDescriptor.h"
+#include "../Descriptors/NodeDescriptor.h"
+#include "../Descriptors/ComponentDescriptor.h"
 
 using namespace FireCube;
 

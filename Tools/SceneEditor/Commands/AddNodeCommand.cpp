@@ -1,6 +1,6 @@
 #include "AddNodeCommand.h"
 #include "../EditorState.h"
-#include "../NodeDescriptor.h"
+#include "../Descriptors/NodeDescriptor.h"
 
 AddNodeCommand::AddNodeCommand(EditorState *editorState, const std::string &description, NodeDescriptor *nodeDesc, NodeDescriptor *parent) : Command(editorState, description), nodeDesc(nodeDesc), parent(parent), shouldDelete(true)
 {

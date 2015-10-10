@@ -3,7 +3,7 @@
 #include "EditorState.h"
 #include "Commands/TransformCommands.h"
 #include "Commands/RenameNodeCommand.h"
-#include "NodeDescriptor.h"
+#include "Descriptors/NodeDescriptor.h"
 
 using namespace FireCube;
 

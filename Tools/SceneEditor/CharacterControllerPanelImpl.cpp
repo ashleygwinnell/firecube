@@ -5,7 +5,7 @@
 #include "Commands/RemoveComponentCommand.h"
 #include "Commands/CustomCommand.h"
 #include "Types.h"
-#include "CharacterControllerDescriptor.h"
+#include "Descriptors/CharacterControllerDescriptor.h"
 
 using namespace FireCube;
 

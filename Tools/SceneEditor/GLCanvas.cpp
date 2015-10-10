@@ -14,7 +14,7 @@ using namespace FireCube;
 #include "Commands/TransformCommands.h"
 #include "Commands/RemoveNodeCommand.h"
 #include "Commands/AddNodeCommand.h"
-#include "PhysicsWorldDescriptor.h"
+#include "Descriptors/PhysicsWorldDescriptor.h"
 
 GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()),

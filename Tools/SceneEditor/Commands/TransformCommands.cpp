@@ -1,6 +1,6 @@
 #include "TransformCommands.h"
 #include "../EditorState.h"
-#include "../NodeDescriptor.h"
+#include "../Descriptors/NodeDescriptor.h"
 
 using namespace FireCube;
 

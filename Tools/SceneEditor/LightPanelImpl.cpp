@@ -5,7 +5,7 @@
 #include "Commands/RemoveComponentCommand.h"
 #include "Commands/CustomCommand.h"
 #include "Types.h"
-#include "LightDescriptor.h"
+#include "Descriptors/LightDescriptor.h"
 
 using namespace FireCube;
 

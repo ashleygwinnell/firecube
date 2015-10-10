@@ -1,6 +1,6 @@
 #include "mainframe.h"
 #include "FireCube.h"
-#include "ComponentDescriptor.h"
+#include "Descriptors/ComponentDescriptor.h"
 
 class MyApp;
 class ComponentDescriptor;

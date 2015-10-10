@@ -6,7 +6,7 @@
 #include "Commands/RemoveComponentCommand.h"
 #include "Commands/CustomCommand.h"
 #include "Types.h"
-#include "LuaScriptDescriptor.h"
+#include "Descriptors/LuaScriptDescriptor.h"
 
 using namespace FireCube;
 

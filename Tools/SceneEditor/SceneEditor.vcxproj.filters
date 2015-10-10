@@ -25,6 +25,9 @@
     <Filter Include="ThirdParty\TinyXml">
       <UniqueIdentifier>{a42d150d-ce21-4dbb-87ad-aa076e6c349f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Descriptors">
+      <UniqueIdentifier>{1e243b83-a830-4f2b-80d7-808c93945ba9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mainframe.cpp">
@@ -117,29 +120,29 @@
     <ClCompile Include="SceneReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NodeDescriptor.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Descriptors\CharacterControllerDescriptor.cpp">
+      <Filter>Descriptors</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentDescriptor.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Descriptors\CollisionShapeDescriptor.cpp">
+      <Filter>Descriptors</Filter>
     </ClCompile>
-    <ClCompile Include="StaticModelDescriptor.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Descriptors\ComponentDescriptor.cpp">
+      <Filter>Descriptors</Filter>
     </ClCompile>
-    <ClCompile Include="LightDescriptor.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Descriptors\LightDescriptor.cpp">
+      <Filter>Descriptors</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsWorldDescriptor.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Descriptors\LuaScriptDescriptor.cpp">
+      <Filter>Descriptors</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionShapeDescriptor.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Descriptors\NodeDescriptor.cpp">
+      <Filter>Descriptors</Filter>
     </ClCompile>
-    <ClCompile Include="CharacterControllerDescriptor.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Descriptors\PhysicsWorldDescriptor.cpp">
+      <Filter>Descriptors</Filter>
     </ClCompile>
-    <ClCompile Include="LuaScriptDescriptor.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Descriptors\StaticModelDescriptor.cpp">
+      <Filter>Descriptors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -236,29 +239,29 @@
     <ClInclude Include="SceneReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NodeDescriptor.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Descriptors\CharacterControllerDescriptor.h">
+      <Filter>Descriptors</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentDescriptor.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Descriptors\CollisionShapeDescriptor.h">
+      <Filter>Descriptors</Filter>
     </ClInclude>
-    <ClInclude Include="StaticModelDescriptor.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Descriptors\ComponentDescriptor.h">
+      <Filter>Descriptors</Filter>
     </ClInclude>
-    <ClInclude Include="LightDescriptor.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Descriptors\LightDescriptor.h">
+      <Filter>Descriptors</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsWorldDescriptor.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Descriptors\LuaScriptDescriptor.h">
+      <Filter>Descriptors</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionShapeDescriptor.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Descriptors\NodeDescriptor.h">
+      <Filter>Descriptors</Filter>
     </ClInclude>
-    <ClInclude Include="CharacterControllerDescriptor.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Descriptors\PhysicsWorldDescriptor.h">
+      <Filter>Descriptors</Filter>
     </ClInclude>
-    <ClInclude Include="LuaScriptDescriptor.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Descriptors\StaticModelDescriptor.h">
+      <Filter>Descriptors</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

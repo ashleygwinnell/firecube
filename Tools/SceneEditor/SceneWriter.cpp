@@ -3,14 +3,14 @@
 #include "wx/filename.h"
 #include "wx/wx.h"
 #include "app.h"
-#include "NodeDescriptor.h"
-#include "ComponentDescriptor.h"
-#include "StaticModelDescriptor.h"
-#include "LightDescriptor.h"
-#include "PhysicsWorldDescriptor.h"
-#include "CollisionShapeDescriptor.h"
-#include "CharacterControllerDescriptor.h"
-#include "LuaScriptDescriptor.h"
+#include "Descriptors/NodeDescriptor.h"
+#include "Descriptors/ComponentDescriptor.h"
+#include "Descriptors/StaticModelDescriptor.h"
+#include "Descriptors/LightDescriptor.h"
+#include "Descriptors/PhysicsWorldDescriptor.h"
+#include "Descriptors/CollisionShapeDescriptor.h"
+#include "Descriptors/CharacterControllerDescriptor.h"
+#include "Descriptors/LuaScriptDescriptor.h"
 
 using namespace FireCube;
 

@@ -1,6 +1,6 @@
 #include "RemoveNodeCommand.h"
 #include "../EditorState.h"
-#include "../NodeDescriptor.h"
+#include "../Descriptors/NodeDescriptor.h"
 
 RemoveNodeCommand::RemoveNodeCommand(EditorState *editorState, const std::string &description, NodeDescriptor *nodeDesc) : Command(editorState, description), nodeDesc(nodeDesc), parent(nodeDesc->GetParent()), shouldDelete(false)
 {

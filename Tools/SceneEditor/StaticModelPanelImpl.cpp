@@ -6,7 +6,7 @@
 #include "Commands/CustomCommand.h"
 #include "Types.h"
 #include "AssetUtils.h"
-#include "StaticModelDescriptor.h"
+#include "Descriptors/StaticModelDescriptor.h"
 
 using namespace FireCube;
 

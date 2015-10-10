@@ -2,7 +2,7 @@
 #include "../Types.h"
 #include "../MathUtils.h"
 #include "../Commands/TransformCommands.h"
-#include "../NodeDescriptor.h"
+#include "../Descriptors/NodeDescriptor.h"
 
 using namespace FireCube;
 
