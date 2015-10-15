@@ -28,12 +28,12 @@ LightType Light::GetLightType() const
 	return type;
 }
 
-void Light::SetColor(const vec4 &color)
+void Light::SetColor(const vec3 &color)
 {
 	this->color = color;
 }
 
-vec4 Light::GetColor() const
+vec3 Light::GetColor() const
 {
 	return color;
 }

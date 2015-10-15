@@ -104,7 +104,7 @@ void MainFrameImpl::AddLightClicked(wxCommandEvent& event)
 	{
 		auto lightDescriptor = new LightDescriptor();
 		lightDescriptor->SetLightType(LightType::DIRECTIONAL);
-		lightDescriptor->SetColor(vec4(1.0f));		
+		lightDescriptor->SetColor(vec3(1.0f));		
 		auto addComponentCommand = new AddComponentCommand(editorState, "Add Light", nodeDesc, lightDescriptor, engine);
 		editorState->ExecuteCommand(addComponentCommand);
 	}

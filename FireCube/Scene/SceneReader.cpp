@@ -233,7 +233,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 
 		if (e->Attribute("color"))
 		{
-			light->SetColor(Variant::FromString(e->Attribute("color")).GetVec4());			
+			light->SetColor(Variant::FromString(e->Attribute("color")).GetVec3());			
 		}
 
 		if (e->Attribute("range"))

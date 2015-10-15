@@ -56,6 +56,13 @@ std::string ToString(vec4 v)
 	return str.str();
 }
 
+std::string ToString(vec3 v)
+{
+	std::ostringstream str;
+	str << v.x << " " << v.y << " " << v.z;
+	return str.str();
+}
+
 bool AssetUtils::SerializeMaterial(FireCube::Material *material, const std::string &path)
 {
 	TiXmlDocument doc;
@@ -69,18 +76,9 @@ bool AssetUtils::SerializeMaterial(FireCube::Material *material, const std::stri
 	element->SetAttribute("name", material->GetTechnique()->GetFileName());
 	rootElement->LinkEndChild(element);
 
-	if (material->HasParameter(PARAM_MATERIAL_AMBIENT))
-	{
-		vec4 color = material->GetParameter(PARAM_MATERIAL_AMBIENT).GetVec4();
-		element = new TiXmlElement("parameter");
-		element->SetAttribute("name", "materialAmbient");
-		element->SetAttribute("value", ToString(color));
-		rootElement->LinkEndChild(element);
-	}
-
 	if (material->HasParameter(PARAM_MATERIAL_DIFFUSE))
 	{
-		vec4 color = material->GetParameter(PARAM_MATERIAL_DIFFUSE).GetVec4();
+		vec3 color = material->GetParameter(PARAM_MATERIAL_DIFFUSE).GetVec3();
 		element = new TiXmlElement("parameter");
 		element->SetAttribute("name", "materialDiffuse");
 		element->SetAttribute("value", ToString(color));
@@ -89,7 +87,7 @@ bool AssetUtils::SerializeMaterial(FireCube::Material *material, const std::stri
 
 	if (material->HasParameter(PARAM_MATERIAL_SPECULAR))
 	{
-		vec4 color = material->GetParameter(PARAM_MATERIAL_SPECULAR).GetVec4();
+		vec3 color = material->GetParameter(PARAM_MATERIAL_SPECULAR).GetVec3();
 		element = new TiXmlElement("parameter");
 		element->SetAttribute("name", "materialSpecular");
 		element->SetAttribute("value", ToString(color));
@@ -101,6 +99,15 @@ bool AssetUtils::SerializeMaterial(FireCube::Material *material, const std::stri
 		float value = material->GetParameter(PARAM_MATERIAL_SHININESS).GetFloat();
 		element = new TiXmlElement("parameter");
 		element->SetAttribute("name", "materialShininess");
+		element->SetDoubleAttribute("value", value);
+		rootElement->LinkEndChild(element);
+	}
+
+	if (material->HasParameter(PARAM_MATERIAL_OPACITY))
+	{
+		float value = material->GetParameter(PARAM_MATERIAL_OPACITY).GetFloat();
+		element = new TiXmlElement("parameter");
+		element->SetAttribute("name", "materialOpacity");
 		element->SetDoubleAttribute("value", value);
 		rootElement->LinkEndChild(element);
 	}

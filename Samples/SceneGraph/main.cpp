@@ -40,7 +40,7 @@ bool App::Prepare()
 	Node *nn = root->CreateChild("Ln");	
 	Node *lightNode = nn->CreateChild("LightNode1");	
 	Light *light = lightNode->CreateComponent<Light>();		
-	light->SetColor(vec4(1.0f, 1.0f, 1.0f, 1));	
+	light->SetColor(vec3(1.0f));	
 	light->SetLightType(FireCube::LightType::POINT);
 	lightNode->Move(vec3(0, 0, 4.0f));	
 	StaticModel *staticModel = lightNode->CreateComponent<StaticModel>();
@@ -52,10 +52,9 @@ bool App::Prepare()
 	staticModel->CreateFromMesh(mesh);
 
 	mesh = new Mesh(engine);
-	mat = new Material(engine);
-	mat->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(0.3f, 0.3f, 0.3f, 1.0f));
-	mat->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(0.7f, 0.7f, 0.7f, 1.0f));
-	mat->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0.3f, 0.3f, 0.3f, 1.0f));
+	mat = new Material(engine);	
+	mat->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.7f));
+	mat->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.3f));
 	mat->SetParameter(PARAM_MATERIAL_SHININESS, 20.0f);
 	mat->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>("Textures/earthmap1k.jpg"));
 	mat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseMap.xml"));

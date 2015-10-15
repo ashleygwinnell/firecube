@@ -25,7 +25,7 @@ bool App::Prepare()
 	scene2.SetFogColor(vec3(0.2f, 0.4f, 0.4f));
 	Node *lightNode = root->CreateChild("LightNode");
 	Light *light = lightNode->CreateComponent<Light>();   
-	light->SetColor(vec4(0.8f, 0.8f, 0.8f, 1.0f));    
+	light->SetColor(vec3(0.8f, 0.8f, 0.8f));
 	light->SetLightType(LightType::DIRECTIONAL);
     
 	node = root->CreateChild("Mesh");
@@ -43,10 +43,9 @@ bool App::Prepare()
 	
 	Node *node3 = root->CreateChild("Plane");
 	StaticModel *staticModel = node3->CreateComponent<StaticModel>();
-	material = new Material(engine);
-	material->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0));
+	material = new Material(engine);	
+	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 1.0f));
+	material->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0));
 	material->SetTechnique(resourceCache->GetResource<Technique>("Techniques/DiffuseMap.xml"));
 	Geometry *plane = GeometryGenerator::GeneratePlane(engine, vec2(2, 2));
 	SharedPtr<Mesh> mesh = new Mesh(engine);

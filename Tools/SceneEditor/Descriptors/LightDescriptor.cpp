@@ -52,7 +52,7 @@ FireCube::LightType LightDescriptor::GetLightType() const
 {
 	return lightType;
 }
-void LightDescriptor::SetColor(FireCube::vec4 color)
+void LightDescriptor::SetColor(FireCube::vec3 color)
 {
 	this->color = color;
 	if (component)
@@ -61,7 +61,7 @@ void LightDescriptor::SetColor(FireCube::vec4 color)
 	}
 }
 
-FireCube::vec4 LightDescriptor::GetColor() const
+FireCube::vec3 LightDescriptor::GetColor() const
 {
 	return color;
 }

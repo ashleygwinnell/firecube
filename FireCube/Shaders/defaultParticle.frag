@@ -1,7 +1,7 @@
 out vec4 outputColor;
 
 #if defined(DIRECTIONAL_LIGHT) || defined(POINT_LIGHT) || defined(SPOT_LIGHT)
-	uniform vec4 lightColor;	
+	uniform vec3 lightColor;	
 	smooth in vec3 lightDir;
 	smooth in vec3 eyeVec;
 #endif
@@ -18,19 +18,19 @@ out vec4 outputColor;
 	uniform vec3 fogColor;
 #endif
 uniform vec3 ambientColor;
-uniform vec4 materialAmbient;
-uniform vec4 materialDiffuse;
-uniform vec4 materialSpecular;
+uniform vec3 materialDiffuse;
+uniform vec3 materialSpecular;
 uniform float materialShininess;
+uniform float materialOpacity;
 void main()
 {
 	float alpha = 1.0;
 	#ifdef DIFFUSE_MAPPING
 		vec4 textureColor = texture(diffuseMap, gl_PointCoord);
-		vec3 diffColor = materialDiffuse.rgb * textureColor.rgb;
+		vec3 diffColor = materialDiffuse * textureColor.rgb;
 		alpha = textureColor.a;
 	#else			
-		vec3 diffColor = materialDiffuse.rgb;			
+		vec3 diffColor = materialDiffuse;			
 	#endif
 	
 	#ifdef PER_PIXEL_LIGHTING

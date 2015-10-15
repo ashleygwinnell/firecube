@@ -12,8 +12,8 @@ public:
 
 	void SetLightType(FireCube::LightType lightType);
 	FireCube::LightType GetLightType() const;
-	void SetColor(FireCube::vec4 color);
-	FireCube::vec4 GetColor() const;
+	void SetColor(FireCube::vec3 color);
+	FireCube::vec3 GetColor() const;
 	bool GetCastShadow() const;
 	void SetCastShadow(bool castShadow);
 	void SetShadowIntensity(float shadowIntensity);
@@ -27,7 +27,7 @@ public:
 	
 private:
 	FireCube::LightType lightType;
-	FireCube::vec4 color;
+	FireCube::vec3 color;
 	bool castShadow;
 	float shadowIntensity;
 	float range;

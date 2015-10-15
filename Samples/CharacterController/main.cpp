@@ -76,7 +76,7 @@ bool App::Prepare()
 	childNode = root->CreateChild("LightNode");
 	Light *light = childNode->CreateComponent<Light>();
 	light->SetLightType(FireCube::LightType::DIRECTIONAL);
-	light->SetColor(vec4(1, 1, 1, 1));	
+	light->SetColor(vec3(1.0f));	
 	childNode->Rotate(vec3(PI * 0.5f, 0.0f, 0.0f));	
 
 	scene.SetFogColor(vec3(44, 80, 222) / 255.0f);

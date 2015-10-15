@@ -64,7 +64,7 @@ bool App::Prepare()
 	childNode = root->CreateChild("LightNode");	
 	Light *light = childNode->CreateComponent<Light>();
 	light->SetLightType(FireCube::LightType::DIRECTIONAL);
-	light->SetColor(vec4(1, 1, 1, 1));	
+	light->SetColor(vec3(1.0f));
 	light->SetCastShadow(true);
 	childNode->Rotate(vec3(PI * 0.25f, 0.0f, 0.0f));
 		

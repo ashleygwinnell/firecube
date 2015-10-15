@@ -41,13 +41,13 @@ public:
 	* Sets the color of this light.
 	* @param color The color to set.
 	*/
-	void SetColor(const vec4 &color);
+	void SetColor(const vec3 &color);
 
 	/**
 	* Gets the color of this light.
 	* @return The color of this light.
 	*/
-	vec4 GetColor() const;
+	vec3 GetColor() const;
 	
 	void SetRange(float range);
 
@@ -82,7 +82,7 @@ private:
 	Light(const Light &other);
 
 	LightType type;	
-	vec4 color;	
+	vec3 color;	
 	float range;
 	float spotCutOff;	
 	SharedPtr<Node> cameraNode;

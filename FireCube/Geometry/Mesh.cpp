@@ -106,35 +106,26 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 
 	aiColor3D aColor;
 	float value;
-	aiString file;	
-
-	if (aMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aColor) == AI_SUCCESS)
-	{
-		material->SetParameter(PARAM_MATERIAL_AMBIENT, vec4(aColor.r, aColor.g, aColor.b, 1.0f));
-	}
-	else
-	{
-		material->SetParameter(PARAM_MATERIAL_AMBIENT, vec4::ZERO);
-	}
+	aiString file;		
 
 	if (aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aColor) == AI_SUCCESS)
 	{
-		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(aColor.r, aColor.g, aColor.b, 1.0f));
+		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(aColor.r, aColor.g, aColor.b));
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f));
+		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
 	}
 
 	if (aMaterial->Get(AI_MATKEY_COLOR_SPECULAR, aColor) == AI_SUCCESS)
 	{
-		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(aColor.r, aColor.g, aColor.b, 1.0f));
+		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(aColor.r, aColor.g, aColor.b));
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.0f));
 	}
-
+	
 	if (aMaterial->Get(AI_MATKEY_SHININESS, value) == AI_SUCCESS)
 	{
 		material->SetParameter(PARAM_MATERIAL_SHININESS, value);
@@ -142,6 +133,15 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	else
 	{
 		material->SetParameter(PARAM_MATERIAL_SHININESS, 15.0f);
+	}
+
+	if (aMaterial->Get(AI_MATKEY_OPACITY, value) == AI_SUCCESS)
+	{
+		material->SetParameter(PARAM_MATERIAL_OPACITY, value);
+	}
+	else
+	{
+		material->SetParameter(PARAM_MATERIAL_OPACITY, 1.0f);
 	}
 
 	bool hasDiffuseTexture = false;

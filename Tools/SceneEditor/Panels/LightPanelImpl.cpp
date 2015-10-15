@@ -119,8 +119,8 @@ void LightPanelImpl::LightColorChanged(wxColourPickerEvent& event)
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
 	
-	vec4 oldColor = light->GetColor();
-	vec4 newColor = vec4((float)event.GetColour().Red() / 255.0f, (float)event.GetColour().Green() / 255.0f, (float)event.GetColour().Blue() / 255.0f, 1.0f);
+	vec3 oldColor = light->GetColor();
+	vec3 newColor = vec3((float)event.GetColour().Red() / 255.0f, (float)event.GetColour().Green() / 255.0f, (float)event.GetColour().Blue() / 255.0f);
 		
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Light Color", [light, newColor]()
 	{		

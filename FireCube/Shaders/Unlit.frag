@@ -5,14 +5,15 @@ smooth in vec2 texcoord;
 	uniform sampler2D diffuseMap;
 #endif
 
-uniform vec4 materialDiffuse;
+uniform vec3 materialDiffuse;
+uniform float materialOpacity;
 
 void main()
 {
 	#ifdef DIFFUSE_MAPPING
-		vec3 diffColor = materialDiffuse.rgb * texture(diffuseMap, texcoord.xy).rgb;
+		vec3 diffColor = materialDiffuse * texture(diffuseMap, texcoord.xy).rgb;
 	#else			
-		vec3 diffColor = materialDiffuse.rgb;			
+		vec3 diffColor = materialDiffuse;			
 	#endif
-	outputColor = vec4(diffColor, 1.0);
+	outputColor = vec4(diffColor, materialOpacity);
 }

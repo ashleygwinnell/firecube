@@ -174,23 +174,16 @@ bool MyMainFrame::AddMaterial(DWORD id, Material *mat)
 	ossName << "Name" << id;
 	propertyGrid1->Append(new wxStringProperty("Name", ossName.str(), mat->GetName()));
 
-	if (mat->HasParameter(PARAM_MATERIAL_AMBIENT))
-	{
-		vec4 color = mat->GetParameter(PARAM_MATERIAL_AMBIENT).GetVec4();
-		std::ostringstream ossAmbient;
-		ossAmbient << "Ambient" << id;
-		propertyGrid1->Append(new wxColourProperty("Ambient", ossAmbient.str(), wxColor(color.x * 255, color.y * 255, color.z * 255)));
-	}	
 	if (mat->HasParameter(PARAM_MATERIAL_DIFFUSE))
 	{
-		vec4 color = mat->GetParameter(PARAM_MATERIAL_DIFFUSE).GetVec4();
+		vec3 color = mat->GetParameter(PARAM_MATERIAL_DIFFUSE).GetVec3();
 		std::ostringstream ossDiffuse;
 		ossDiffuse << "Diffuse" << id;
 		propertyGrid1->Append(new wxColourProperty("Diffuse", ossDiffuse.str(), wxColor(color.x * 255, color.y * 255, color.z * 255)));
 	}
 	if (mat->HasParameter(PARAM_MATERIAL_SPECULAR))
 	{
-		vec4 color = mat->GetParameter(PARAM_MATERIAL_SPECULAR).GetVec4();
+		vec3 color = mat->GetParameter(PARAM_MATERIAL_SPECULAR).GetVec3();
 		std::ostringstream ossSpecular;
 		ossSpecular << "Specular" << id;
 		propertyGrid1->Append(new wxColourProperty("Specular", ossSpecular.str(), wxColor(color.x * 255, color.y * 255, color.z * 255)));
@@ -202,6 +195,13 @@ bool MyMainFrame::AddMaterial(DWORD id, Material *mat)
 		ossShininess << "Shininess" << id;
 		propertyGrid1->Append(new wxFloatProperty("Shininess", ossShininess.str(), value) );
 	}				
+	if (mat->HasParameter(PARAM_MATERIAL_OPACITY))
+	{
+		float value = mat->GetParameter(PARAM_MATERIAL_OPACITY).GetFloat();
+		std::ostringstream ossOpacity;
+		ossOpacity << "Opacity" << id;
+		propertyGrid1->Append(new wxFloatProperty("Opacity", ossOpacity.str(), value));
+	}
 	std::ostringstream ossDiffuseTexture;
 	ossDiffuseTexture << "TextureDiffuse" << id;
 	propertyGrid1->Append(new wxFileProperty("Diffuse texture", ossDiffuseTexture.str(), mat->GetTexture(TextureUnit::DIFFUSE) ? mat->GetTexture(TextureUnit::DIFFUSE)->GetFileName() : ""));
@@ -231,17 +231,6 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		
 		mat->SetName(evt->GetPropertyValue().GetString().c_str().AsChar());
 	}
-	if (properyName.substr(0, 7) == "Ambient")
-	{
-		DWORD id;
-		std::istringstream idss(properyName.substr(7));
-		idss >> id;
-		mat = materialMap[id];
-		wxColor col = ((wxColourProperty*)evt->GetProperty())->GetVal().m_colour;
-		auto i = mat->GetParameters().find(PARAM_MATERIAL_AMBIENT);
-		if (i != mat->GetParameters().end())
-			i->second = vec4(col.Red() / 255.0f, col.Green() / 255.0f, col.Blue() / 255.0f, 1.0f);
-	}
 	if (properyName.substr(0, 7) == "Diffuse")
 	{
 		DWORD id;
@@ -251,7 +240,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		wxColor col = ((wxColourProperty*)evt->GetProperty())->GetVal().m_colour;
 		auto i = mat->GetParameters().find(PARAM_MATERIAL_DIFFUSE);
 		if (i != mat->GetParameters().end())
-			i->second = vec4(col.Red() / 255.0f, col.Green() / 255.0f, col.Blue() / 255.0f, 1.0f);
+			i->second = vec3(col.Red() / 255.0f, col.Green() / 255.0f, col.Blue() / 255.0f);
 	}
 	if (properyName.substr(0, 8) == "Specular")
 	{
@@ -262,7 +251,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		wxColor col = ((wxColourProperty*)evt->GetProperty())->GetVal().m_colour;
 		auto i = mat->GetParameters().find(PARAM_MATERIAL_SPECULAR);
 		if (i != mat->GetParameters().end())
-			i->second = vec4(col.Red() / 255.0f, col.Green() / 255.0f, col.Blue() / 255.0f, 1.0f);
+			i->second = vec3(col.Red() / 255.0f, col.Green() / 255.0f, col.Blue() / 255.0f);
 	}
 	if (properyName.substr(0, 9) == "Shininess")
 	{
@@ -273,6 +262,16 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		auto i = mat->GetParameters().find(PARAM_MATERIAL_SHININESS);
 		if (i != mat->GetParameters().end())
 			i->second = (float) evt->GetPropertyValue().GetDouble();		
+	}
+	if (properyName.substr(0, 7) == "Opacity")
+	{
+		DWORD id;
+		std::istringstream idss(properyName.substr(7));
+		idss >> id;
+		mat = materialMap[id];
+		auto i = mat->GetParameters().find(PARAM_MATERIAL_OPACITY);
+		if (i != mat->GetParameters().end())
+			i->second = (float)evt->GetPropertyValue().GetDouble();
 	}
 	if (properyName.substr(0, 14) == "TextureDiffuse")
 	{

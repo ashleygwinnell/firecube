@@ -59,7 +59,7 @@ void GLCanvas::Init()
 	Node *lightNode = root->CreateChild("Light");
 	Light *l = lightNode->CreateComponent<Light>();
 	l->SetLightType(LightType::DIRECTIONAL);
-	l->SetColor(vec4(0.7f, 0.7f, 0.7f, 1.0f));	
+	l->SetColor(vec3(0.7f));	
 	lightNode->Rotate(vec3((float)PI / 4.0f, (float)PI / 4.0f, 0));
 
 	engine->GetRenderer()->SetSceneView(0, new SceneView(engine, scene, renderingParameters.camera));

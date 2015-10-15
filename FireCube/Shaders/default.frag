@@ -6,7 +6,7 @@ smooth in vec2 texcoord;
 #endif
 
 #if defined(DIRECTIONAL_LIGHT) || defined(POINT_LIGHT) || defined(SPOT_LIGHT)	
-	uniform vec4 lightColor;	
+	uniform vec3 lightColor;	
 	smooth in vec3 lightDir;
 	smooth in vec3 eyeVec;
 #endif
@@ -33,18 +33,19 @@ smooth in vec2 texcoord;
 #ifndef PER_PIXEL_LIGHTING
 	uniform vec3 ambientColor;
 #endif
-uniform vec4 materialDiffuse;
-uniform vec4 materialSpecular;
+uniform vec3 materialDiffuse;
+uniform vec3 materialSpecular;
 uniform float materialShininess;
+uniform float materialOpacity;
 void main()
 {
-	float alpha = materialDiffuse.a;
+	float alpha = materialOpacity;
 	#ifdef DIFFUSE_MAPPING
 		vec4 textureColor = texture(diffuseMap, texcoord.xy);
-		vec3 diffColor = materialDiffuse.rgb * textureColor.rgb;
+		vec3 diffColor = materialDiffuse * textureColor.rgb;
 		alpha *= textureColor.a;
 	#else			
-		vec3 diffColor = materialDiffuse.rgb;			
+		vec3 diffColor = materialDiffuse;			
 	#endif
 	
 	
@@ -90,7 +91,7 @@ void main()
 			#endif
 		#endif
 		
-		color = distanceAtten * lightColor.rgb * lambertTerm * (diffColor +  materialSpecular.rgb * specular);
+		color = distanceAtten * lightColor * lambertTerm * (diffColor +  materialSpecular * specular);
 		
 		#ifdef FOG
 			/*const float LOG2 = 1.442695;

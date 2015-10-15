@@ -81,10 +81,10 @@ ClearBufferType operator | (const ClearBufferType &lhs, const ClearBufferType &r
 ClearBufferType operator |= (ClearBufferType &lhs, const ClearBufferType &rhs);
 ClearBufferType operator & (const ClearBufferType &lhs, const ClearBufferType &rhs);
 
-extern StringHash PARAM_MATERIAL_AMBIENT;
 extern StringHash PARAM_MATERIAL_DIFFUSE;
 extern StringHash PARAM_MATERIAL_SPECULAR;
 extern StringHash PARAM_MATERIAL_SHININESS;
+extern StringHash PARAM_MATERIAL_OPACITY;
 extern StringHash PARAM_AMBIENT_COLOR;
 extern StringHash PARAM_MODEL_MATRIX;
 extern StringHash PARAM_VIEW_PROJECTION_MATRIX;

@@ -9,7 +9,7 @@ using namespace FireCube;
 TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Object(engine), snapToGrid(false)
 {
 	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml")->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(1.0f, 0.0f, 0.0f, 1.0f));
+	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
 
 	SharedPtr<Mesh> mesh = new Mesh(engine);
 	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.1f, 1.0f, 0.1f)), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);	
@@ -25,7 +25,7 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 	staticModel->SetEnabled(false);
 
 	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(0.0f, 1.0f, 0.0f, 1.0f));
+	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
 	mesh = new Mesh(engine);
 	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.1f, 1.0f, 0.1f)), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);	
 	child = node->CreateChild("YAxis");
@@ -36,7 +36,7 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 	staticModel->SetEnabled(false);
 
 	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec4(0.0f, 0.0f, 1.0f, 1.0f));
+	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
 	mesh = new Mesh(engine);
 	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.1f, 1.0f, 0.1f)), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);	
 	child = node->CreateChild("ZAxis");
