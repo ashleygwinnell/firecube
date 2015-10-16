@@ -23,7 +23,7 @@ void MyMainFrame::MenuItem1Clicked( wxCommandEvent& event )
 
 void MyMainFrame::MenuItem2Clicked( wxCommandEvent& event )
 {
-	wxString file = wxFileSelector(wxT("Open"), "", "", wxT("3ds,dae,obj"), wxT("*.3ds;*.dae;*.obj"));    
+	wxString file = wxFileSelector(wxT("Open"), "", "", wxT("3ds,dae,obj,fbx"), wxT("*.3ds;*.dae;*.obj;*.fbx"));
 	std::string sfile = file;
 	if (sfile == "")
 		return;

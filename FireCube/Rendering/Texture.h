@@ -73,6 +73,8 @@ public:
 
 	void SetWrapMode(TextureWrapMode wrapMode);
 private:		
+	bool LoadDDS(const std::string &filename);
+
 	TextureFilter filter;
 	TextureWrapMode wrapMode;
 
