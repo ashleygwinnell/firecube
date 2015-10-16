@@ -29,17 +29,12 @@ bool Image::Load(const std::string &filename)
 	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
 	if (resolvedFileName.empty())
 		return false;
-	
-	unsigned int pos = resolvedFileName.find_last_of('.');
-	std::string ext;
+		
+	std::string ext = Filesystem::GetFileExtension(resolvedFileName);
 	bool loadedUsingStb = false;
-	if (pos != std::string::npos)
-	{
-		ext = resolvedFileName.substr(pos + 1);
-		std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-	}
+	
 	unsigned char *pixels;
-	if (pos == std::string::npos || ext != "jpg")
+	if (ext != "jpg")
 	{
 		loadedUsingStb = true;
 		pixels = stbi_load(resolvedFileName.c_str(), &width, &height, &bytesPerPixel, 0);

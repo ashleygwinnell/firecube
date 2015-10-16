@@ -172,3 +172,18 @@ bool Filesystem::CreateFolder(const std::string &path)
 		return true;
 	}
 }
+
+std::string Filesystem::GetFileExtension(const std::string &filename)
+{
+	unsigned int pos = filename.find_last_of('.');
+	if (pos != std::string::npos)
+	{
+		auto ext = filename.substr(pos + 1);		
+		std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+		return ext;
+	}
+	else
+	{
+		return "";
+	}
+}
