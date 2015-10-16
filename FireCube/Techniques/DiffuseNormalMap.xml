@@ -1,5 +1,5 @@
 <technique>
 	<pass name = "base_opaque" vs= "Shaders/default.vert" fs = "Shaders/default.frag" defines = "DIFFUSE_MAPPING" />
-	<pass name = "light_opaque" vs= "Shaders/default.vert" fs = "Shaders/default.frag"  blend = "add" depth_write = "false" depth_test = "equal" defines = "PER_PIXEL_LIGHTING DIFFUSE_MAPPING NORMAL_MAPPING" />
+	<pass name = "light_opaque" vs= "Shaders/default.vert" fs = "Shaders/default.frag" blend = "add" depth_write = "false" depth_test = "equal" defines = "PER_PIXEL_LIGHTING DIFFUSE_MAPPING NORMAL_MAPPING" />
 	<pass name = "shadow" vs= "Shaders/shadow.vert" fs = "Shaders/shadow.frag" />
 </technique>

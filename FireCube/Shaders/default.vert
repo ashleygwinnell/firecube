@@ -10,6 +10,13 @@
 	uniform vec3 directionalLightDir;
 #endif
 
+#ifdef SPOT_LIGHT
+	uniform vec4 spotLightDir;
+	#ifdef NORMAL_MAPPING
+		smooth out vec3 spotLightDirTangnetSpace;
+	#endif
+#endif
+
 layout (location = 0) in vec3 atrPosition;
 layout (location = 1) in vec3 atrNormal;
 layout (location = 2) in vec2 atrTexCoord;
@@ -63,8 +70,11 @@ void  main()
 		mat3 tbn = mat3(normalize(normalMatrix * atrTangent), normalize(normalMatrix * bitangent), normalize(normalMatrix * norm));
 		eyeVec = eyeVec * tbn;
 		lightDir = lightDir * tbn;
+		#ifdef SPOT_LIGHT
+			spotLightDirTangnetSpace = spotLightDir.xyz * tbn;		
+		#endif
 	#else
-		normal = normalMatrix * norm;
+		normal = normalMatrix * norm;		
 	#endif
 
 	#ifdef SHADOW

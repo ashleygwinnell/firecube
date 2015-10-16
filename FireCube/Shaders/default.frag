@@ -13,6 +13,9 @@ smooth in vec2 texcoord;
 
 #ifdef SPOT_LIGHT
 	uniform vec4 spotLightDir;
+	#ifdef NORMAL_MAPPING
+		smooth in vec3 spotLightDirTangnetSpace;
+	#endif
 #endif
 
 #ifdef DIFFUSE_MAPPING
@@ -66,7 +69,11 @@ void main()
 		#ifdef POINT_LIGHT
 			distanceAtten = 1.0 - pow(clamp(lightDirLength, 0.0, 1.0), 3);			
 		#elif defined(SPOT_LIGHT)
-			float spotCos = dot(l, normalize(spotLightDir.xyz));
+			#ifdef NORMAL_MAPPING
+				float spotCos = dot(l, normalize(spotLightDirTangnetSpace));
+			#else
+				float spotCos = dot(l, normalize(spotLightDir.xyz));
+			#endif
 			if (spotCos > spotLightDir.w)
 			{				
 				distanceAtten = 1.0 - pow(clamp(lightDirLength, 0.0, 1.0), 3);
