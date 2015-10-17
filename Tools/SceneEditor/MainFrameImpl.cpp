@@ -287,6 +287,8 @@ void MainFrameImpl::NewClicked(wxCommandEvent& event)
 	Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Scenes");
 
 	SetAllPanelsVisibility(true);
+
+	Reset();
 }
 
 void MainFrameImpl::SelectedNodeChanged(NodeDescriptor *nodeDesc)
@@ -692,7 +694,9 @@ void MainFrameImpl::OnExitClicked(wxCommandEvent& event)
 void MainFrameImpl::Reset()
 {
 	editorState->ClearCommands();
+	sceneTreeCtrl->Freeze();
 	sceneTreeCtrl->DeleteAllItems();
+	sceneTreeCtrl->Thaw();
 	nodeToTreeItem.clear();
 	treeItemToNode.clear();
 	editorState->GetNodeMap().clear();
@@ -700,4 +704,6 @@ void MainFrameImpl::Reset()
 	scene->GetRootNode()->RemoveAllComponents();
 	rootDesc.RemoveAllComponents();
 	rootDesc.RemoveAllChildren();	
+
+	editorState->SetSelectedNode(nullptr);
 }
