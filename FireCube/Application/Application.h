@@ -140,6 +140,7 @@ private:
 	float passedTime;
 	int width, height;
 	InputManager inputManager;
+	bool appInitialized;
 
 	SDL_Window *mainWindow;
 	SDL_GLContext *context;

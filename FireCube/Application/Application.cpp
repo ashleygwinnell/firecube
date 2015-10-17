@@ -14,7 +14,7 @@
 
 using namespace FireCube;
 
-Application::Application() : Object(new Engine), running(false), frameCount(0), fpsTime(0), fps(0), context(nullptr), mainWindow(nullptr)
+Application::Application() : Object(new Engine), running(false), frameCount(0), fpsTime(0), fps(0), context(nullptr), mainWindow(nullptr), appInitialized(false)
 {
 	
 }
@@ -64,6 +64,7 @@ bool Application::Initialize(int width, int height, int multisample, bool fullsc
 
 bool Application::InitializeNoWindow()
 {	
+	appInitialized = true;
 	renderer = new Renderer(engine);
 	engine->SetRenderer(renderer);
 	resourceCache = new ResourceCache(engine);
@@ -99,6 +100,13 @@ bool Application::InitializeNoWindow()
 
 void Application::Destroy()
 {
+	delete engine;
+
+	if (!appInitialized)
+	{
+		return;
+	}
+
 	LOGINFO("Destroying application");
 	delete resourceCache;
 	renderer->Destroy();
@@ -109,10 +117,18 @@ void Application::Destroy()
 	delete audio;
 
 	if (context)
+	{
 		SDL_GL_DeleteContext(*context);
+	}
 	if (mainWindow)
-		SDL_DestroyWindow(mainWindow);	
-	SDL_Quit();
+	{
+		SDL_DestroyWindow(mainWindow);
+	}
+
+	if (mainWindow)
+	{
+		SDL_Quit();
+	}
 }
 
 bool Application::Close()
