@@ -8,6 +8,8 @@ wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
+	scene = nullptr;
+	editorScene = nullptr;
 	editorState = new EditorState(fcApp.GetEngine());
 	frame = new MainFrameImpl(nullptr);
 	frame->Show(true);
@@ -33,12 +35,12 @@ void MyApp::InitScene()
 {
 	scene = new FireCube::Scene(fcApp.GetEngine());			
 	editorScene = new FireCube::Scene(fcApp.GetEngine());
-
 }
 
 MyApp::~MyApp()
 {
 	delete scene;
+	delete editorScene;
 }
 
 MainFrameImpl *MyApp::GetMainFrame()

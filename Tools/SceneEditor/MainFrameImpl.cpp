@@ -26,6 +26,7 @@
 #include "Descriptors/CollisionShapeDescriptor.h"
 #include "Descriptors/CharacterControllerDescriptor.h"
 #include "Descriptors/LuaScriptDescriptor.h"
+#include "tinyxml.h"
 
 using namespace FireCube;
 
@@ -42,6 +43,8 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	SubscribeToEvent(editorState, editorState->redoPerformed, &MainFrameImpl::UpdateUndoRedoMenu);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);	
 	SetAllPanelsVisibility(false);
+
+	LoadSettingsFile();
 }
 
 void MainFrameImpl::AddNodeClicked(wxCommandEvent& event)
@@ -206,37 +209,69 @@ void MainFrameImpl::UpdateNode(NodeDescriptor *nodeDesc)
 	}
 }
 
+void MainFrameImpl::OpenSceneFile(const std::string &filename)
+{
+	SetAllPanelsVisibility(true);	
+
+	editorState->SetCurrentSceneFile(filename);
+
+	Filesystem::SetAssetsFolder(Filesystem::GetDirectoryName(Filesystem::GetDirectoryName(filename)));
+
+	::SceneReader sceneReader(engine, editorState);
+
+	Reset();
+
+	if (sceneReader.Read(&rootDesc, filename))
+	{
+		UpdateNode(&rootDesc);
+	}
+
+	editorState->sceneChanged(editorState);
+}
+
 void MainFrameImpl::OpenClicked(wxCommandEvent& event)
 {	
 	wxFileDialog openFileDialog(this, "Open Scene file", "", "", "Scene files (*.xml)|*.xml", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return;
-
-	SetAllPanelsVisibility(true);
-
+	
 	std::string path = openFileDialog.GetPath().ToStdString();
-	
-	editorState->SetCurrentSceneFile(path);
-	
-	Filesystem::SetAssetsFolder(Filesystem::GetDirectoryName(Filesystem::GetDirectoryName(path)));
 
-	::SceneReader sceneReader(engine, editorState);
-	
-	editorState->ClearCommands();
-	sceneTreeCtrl->DeleteAllItems();
-	nodeToTreeItem.clear();
-	treeItemToNode.clear();	
-	editorState->GetNodeMap().clear();
+	OpenSceneFile(path);	
 
-	scene->GetRootNode()->RemoveAllComponents();
-	rootDesc.RemoveAllComponents();
-	
-	if (sceneReader.Read(&rootDesc, openFileDialog.GetPath().ToStdString()))
+	const unsigned int maxRecentFiles = 10;
+
+	auto i = std::find(recentSceneFiles.begin(), recentSceneFiles.end(), path);
+	if (i == recentSceneFiles.end())
 	{
-		UpdateNode(&rootDesc);
+		if (recentSceneFiles.empty())
+		{
+			fileMenu->InsertSeparator(4);
+		}
+		recentSceneFiles.insert(recentSceneFiles.begin(), path);
+		auto menuItem = fileMenu->Insert(5, wxID_ANY, path);
+		recentSceneFilesMenuItems.insert(recentSceneFilesMenuItems.begin(), menuItem);
+		this->Connect(menuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrameImpl::RecentFileClicked));
+		if (recentSceneFiles.size() > maxRecentFiles)
+		{
+			recentSceneFiles.pop_back();
+			auto menuItem = recentSceneFilesMenuItems.back();
+			recentSceneFilesMenuItems.pop_back();
+			this->Disconnect(menuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrameImpl::RecentFileClicked));
+			fileMenu->Delete(menuItem);
+		}
+	}
+	else
+	{
+		auto index = std::distance(recentSceneFiles.begin(), i);
+		auto menuItem = recentSceneFilesMenuItems[index];		
+		recentSceneFiles.erase(i);
+		recentSceneFiles.insert(recentSceneFiles.begin(), path);
+		recentSceneFilesMenuItems.erase(recentSceneFilesMenuItems.begin() + index);
+		recentSceneFilesMenuItems.insert(recentSceneFilesMenuItems.begin(), menuItem);
+		fileMenu->Remove(menuItem);
+		fileMenu->Insert(4, menuItem);
 	}	
-
-	editorState->sceneChanged(editorState);	
 }
 
 void MainFrameImpl::NewClicked(wxCommandEvent& event)
@@ -567,4 +602,102 @@ void MainFrameImpl::SetAllPanelsVisibility(bool visible)
 	}	
 
 	m_mgr.Update();
+}
+
+void MainFrameImpl::LoadSettingsFile()
+{
+	TiXmlDocument xmlDocument;
+	if (!xmlDocument.LoadFile("settings.xml"))
+		return;
+
+	TiXmlElement *e = xmlDocument.FirstChildElement("settings");
+	if (e == nullptr)
+		return;
+
+	e = e->FirstChildElement("recent");
+	if (e)
+	{
+		unsigned int itemLocation = 5;
+		for (TiXmlElement *element = e->FirstChildElement("file"); element != nullptr; element = element->NextSiblingElement("file"))
+		{
+			std::string filename = element->Attribute("name");
+			recentSceneFiles.push_back(filename);
+			
+			if (itemLocation == 5)
+			{
+				fileMenu->InsertSeparator(4);
+			}
+
+			auto menuItem = fileMenu->Insert(itemLocation++, wxID_ANY, filename);
+			recentSceneFilesMenuItems.push_back(menuItem);
+			this->Connect(menuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrameImpl::RecentFileClicked));
+		}
+	}
+}
+void MainFrameImpl::WriteSettingsFile()
+{
+	TiXmlDocument doc;
+	TiXmlElement *settingsElement = new TiXmlElement("settings");
+	doc.LinkEndChild(settingsElement);
+	
+	TiXmlElement *recentFilesElement = new TiXmlElement("recent");
+	settingsElement->LinkEndChild(recentFilesElement);
+
+	for (auto &sceneFile : recentSceneFiles)
+	{
+		TiXmlElement *element = new TiXmlElement("file");
+		recentFilesElement->LinkEndChild(element);
+		element->SetAttribute("name", sceneFile);
+	}
+
+	doc.SaveFile("settings.xml");
+}
+
+void MainFrameImpl::RecentFileClicked(wxCommandEvent& event)
+{
+	auto menuItem = fileMenu->FindItem(event.GetId());
+	
+	auto index = std::distance(recentSceneFilesMenuItems.begin(), std::find(recentSceneFilesMenuItems.begin(), recentSceneFilesMenuItems.end(), menuItem));	
+	auto filename = recentSceneFiles[index];
+
+	if (filename != editorState->GetCurrentSceneFile())
+	{
+		recentSceneFiles.erase(recentSceneFiles.begin() + index);
+		recentSceneFiles.insert(recentSceneFiles.begin(), filename);
+		recentSceneFilesMenuItems.erase(recentSceneFilesMenuItems.begin() + index);
+		recentSceneFilesMenuItems.insert(recentSceneFilesMenuItems.begin(), menuItem);
+		fileMenu->Remove(menuItem);
+		fileMenu->Insert(5, menuItem);
+
+		OpenSceneFile(filename);
+	}
+}
+
+void MainFrameImpl::OnClose(wxCloseEvent& event)
+{
+	WriteSettingsFile();
+	event.Skip();
+}
+
+void MainFrameImpl::OnExitClicked(wxCommandEvent& event)
+{	
+	Reset();
+
+	// Prevent destructor of NodeDescriptor from deleting the node itself since it is owned by the Scene
+	rootDesc.SetNode(nullptr);
+
+	Close();
+}
+
+void MainFrameImpl::Reset()
+{
+	editorState->ClearCommands();
+	sceneTreeCtrl->DeleteAllItems();
+	nodeToTreeItem.clear();
+	treeItemToNode.clear();
+	editorState->GetNodeMap().clear();
+
+	scene->GetRootNode()->RemoveAllComponents();
+	rootDesc.RemoveAllComponents();
+	rootDesc.RemoveAllChildren();	
 }

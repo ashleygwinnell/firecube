@@ -14,7 +14,12 @@ NodeDescriptor::NodeDescriptor(const std::string &name) : NodeDescriptor()
 }
 
 NodeDescriptor::~NodeDescriptor()
-{
+{	
+	if (node.Expired() == false)
+	{
+		node->Remove();
+	}
+
 	for (auto component : components)
 	{
 		delete component;
@@ -23,7 +28,7 @@ NodeDescriptor::~NodeDescriptor()
 	for (auto child : children)
 	{
 		delete child;
-	}
+	}	
 }
 
 Node *NodeDescriptor::GetNode()
@@ -155,6 +160,16 @@ void NodeDescriptor::RemoveAllComponents()
 	}
 
 	components.clear();
+}
+
+void NodeDescriptor::RemoveAllChildren()
+{
+	for (auto child : children)
+	{
+		delete child;
+	}
+
+	children.clear();
 }
 
 void NodeDescriptor::SetTranslation(vec3 translation)

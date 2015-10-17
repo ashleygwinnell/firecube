@@ -25,6 +25,7 @@ public:
 	void AddChild(NodeDescriptor *child);
 	void RemoveChild(NodeDescriptor *child);
 	void RemoveAllComponents();
+	void RemoveAllChildren();
 
 	void SetTranslation(FireCube::vec3 translation);
 	FireCube::vec3 GetTranslation() const;
@@ -35,7 +36,7 @@ public:
 	void SetName(const std::string &name);
 	std::string GetName() const;
 private:
-	FireCube::Node *node;
+	FireCube::WeakPtr<FireCube::Node> node;
 	NodeDescriptor *parent;
 	std::vector<ComponentDescriptor *> components;
 	std::vector<NodeDescriptor *> children;

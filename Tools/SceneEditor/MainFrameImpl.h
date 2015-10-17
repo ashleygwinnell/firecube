@@ -53,6 +53,13 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		void UpdateNode(NodeDescriptor *nodeDesc);
 		void UpdateUndoRedoMenu(Command *command);		
 		void SetAllPanelsVisibility(bool visible);
+		void LoadSettingsFile();
+		void WriteSettingsFile();
+		void RecentFileClicked(wxCommandEvent& event);		
+		virtual void OnClose(wxCloseEvent& event);
+		void OpenSceneFile(const std::string &filename);
+		virtual void OnExitClicked(wxCommandEvent& event);
+		void Reset();
 
 		MyApp *theApp;
 		FireCube::Engine *engine;
@@ -67,6 +74,8 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		
 		wxTreeItemId dragItem;		
 		std::vector<BaseComponentPanelImpl *> currentComponentPanels;
+		std::vector<std::string> recentSceneFiles;
+		std::vector<wxMenuItem *> recentSceneFilesMenuItems;
 	public:
 		/** Constructor */
 		MainFrameImpl( wxWindow* parent );	
