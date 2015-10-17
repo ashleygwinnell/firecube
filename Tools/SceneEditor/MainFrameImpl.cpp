@@ -193,9 +193,12 @@ void MainFrameImpl::SaveAsClicked(wxCommandEvent& event)
 	if (saveFileDialog.ShowModal() == wxID_CANCEL)
 		return;
 
+	std::string filename = saveFileDialog.GetPath().ToStdString();
+
 	SceneWriter sceneWriter;
-	sceneWriter.Serialize(&rootDesc, saveFileDialog.GetPath().ToStdString());
-	editorState->SetCurrentSceneFile(saveFileDialog.GetPath().ToStdString());
+	sceneWriter.Serialize(&rootDesc, filename);
+	editorState->SetCurrentSceneFile(filename);
+	SetTitle("SceneEditor - " + filename);
 }
 
 void MainFrameImpl::UpdateNode(NodeDescriptor *nodeDesc)
@@ -225,6 +228,8 @@ void MainFrameImpl::OpenSceneFile(const std::string &filename)
 	{
 		UpdateNode(&rootDesc);
 	}
+
+	SetTitle("SceneEditor - " + filename);
 
 	editorState->sceneChanged(editorState);
 }
