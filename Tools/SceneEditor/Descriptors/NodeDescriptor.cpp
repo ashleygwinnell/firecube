@@ -52,7 +52,10 @@ void NodeDescriptor::SetParent(NodeDescriptor *parent)
 
 		this->parent = parent;
 		parent->children.push_back(this);
-		node->SetParent(parent->GetNode());
+		if (node)
+		{
+			node->SetParent(parent->GetNode());
+		}
 	}
 }
 
@@ -95,7 +98,8 @@ NodeDescriptor *NodeDescriptor::Clone()
 
 	for (auto child : children)
 	{
-		ret->children.push_back(child->Clone());
+		auto clone = child->Clone();
+		clone->SetParent(ret);		
 	}
 
 	return ret;

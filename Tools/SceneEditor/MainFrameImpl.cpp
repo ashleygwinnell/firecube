@@ -10,6 +10,7 @@
 #include "Commands/AddComponentCommand.h"
 #include "Commands/GroupCommand.h"
 #include "Commands/TransformCommands.h"
+#include "Commands/ReparentNodeCommand.h"
 #include "SceneWriter.h"
 #include "Panels/BaseComponentPanelImpl.h"
 #include "Panels/StaticModelPanelImpl.h"
@@ -374,11 +375,9 @@ void MainFrameImpl::SceneTreeEndDrag(wxTreeEvent& event)
 	auto newParentNode = treeItemToNode[newParent];
 	auto node = treeItemToNode[dragItem];
 	
-	auto removeNodeCommand = new RemoveNodeCommand(editorState, "Remove Node", node);
-	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", node, newParentNode);
-	auto groupCommand = new GroupCommand(editorState, "Reparent", { removeNodeCommand, addNodeCommand });
-
-	editorState->ExecuteCommand(groupCommand);
+	auto reparentNodeCommand = new ReparentNodeCommand(editorState, "Reparent", node, newParentNode);
+	
+	editorState->ExecuteCommand(reparentNodeCommand);
 }
 
 void MainFrameImpl::NodeRenamed(NodeDescriptor *nodeDesc)

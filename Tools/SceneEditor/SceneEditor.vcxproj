@@ -97,6 +97,7 @@
     <ClCompile Include="Commands\RemoveComponentCommand.cpp" />
     <ClCompile Include="Commands\RemoveNodeCommand.cpp" />
     <ClCompile Include="Commands\RenameNodeCommand.cpp" />
+    <ClCompile Include="Commands\ReparentNodeCommand.cpp" />
     <ClCompile Include="Commands\TransformCommands.cpp" />
     <ClCompile Include="Descriptors\CharacterControllerDescriptor.cpp" />
     <ClCompile Include="Descriptors\CollisionShapeDescriptor.cpp" />
@@ -137,6 +138,7 @@
     <ClInclude Include="Commands\RemoveComponentCommand.h" />
     <ClInclude Include="Commands\RemoveNodeCommand.h" />
     <ClInclude Include="Commands\RenameNodeCommand.h" />
+    <ClInclude Include="Commands\ReparentNodeCommand.h" />
     <ClInclude Include="Commands\TransformCommands.h" />
     <ClInclude Include="Descriptors\CharacterControllerDescriptor.h" />
     <ClInclude Include="Descriptors\CollisionShapeDescriptor.h" />

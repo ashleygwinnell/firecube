@@ -147,6 +147,9 @@
     <ClCompile Include="Panels\StaticModelPanelImpl.cpp">
       <Filter>Panels</Filter>
     </ClCompile>
+    <ClCompile Include="Commands\ReparentNodeCommand.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -265,6 +268,9 @@
     </ClInclude>
     <ClInclude Include="Panels\StaticModelPanelImpl.h">
       <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Commands\ReparentNodeCommand.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

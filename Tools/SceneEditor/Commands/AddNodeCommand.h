@@ -13,6 +13,8 @@ public:
 	virtual void Do();
 	virtual void Undo();
 private:
+	void FireNodeAddedEvent(NodeDescriptor *nodeDesc);
+	void FireNodeRemovedEvent(NodeDescriptor *nodeDesc);
 	FireCube::SharedPtr<FireCube::Node> node;
 	NodeDescriptor *nodeDesc;
 	NodeDescriptor *parent;

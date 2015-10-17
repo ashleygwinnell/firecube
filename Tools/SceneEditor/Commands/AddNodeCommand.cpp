@@ -20,8 +20,8 @@ AddNodeCommand::~AddNodeCommand()
 void AddNodeCommand::Do()
 {
 	nodeDesc->SetParent(parent);
-	shouldDelete = false;
-	editorState->nodeAdded(editorState, nodeDesc);
+	shouldDelete = false;	
+	FireNodeAddedEvent(nodeDesc);
 	editorState->SetSelectedNode(nodeDesc);
 	
 }
@@ -29,7 +29,27 @@ void AddNodeCommand::Do()
 void AddNodeCommand::Undo()
 {
 	nodeDesc->Remove();
-	shouldDelete = true;
-	editorState->nodeRemoved(editorState, nodeDesc);
+	shouldDelete = true;	
+	FireNodeRemovedEvent(nodeDesc);
 	editorState->SetSelectedNode(nullptr);	
+}
+
+void AddNodeCommand::FireNodeAddedEvent(NodeDescriptor *nodeDesc)
+{
+	editorState->nodeAdded(editorState, nodeDesc);
+
+	for (auto child : nodeDesc->GetChildren())
+	{
+		FireNodeAddedEvent(child);
+	}
+}
+
+void AddNodeCommand::FireNodeRemovedEvent(NodeDescriptor *nodeDesc)
+{
+	editorState->nodeRemoved(editorState, nodeDesc);
+
+	for (auto child : nodeDesc->GetChildren())
+	{
+		FireNodeRemovedEvent(child);
+	}
 }
