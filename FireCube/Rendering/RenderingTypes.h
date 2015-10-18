@@ -20,8 +20,9 @@ enum class TextureUnit
 {
 	DIFFUSE,
 	NORMAL,
+	SPECULAR,
 	MAX_TEXTURE_UNITS,
-	SHADOWMAP = 2,	
+	SHADOWMAP = 3,
 };
 
 enum VertexShaderLightPermutation

@@ -18,6 +18,17 @@
 
 using namespace FireCube;
 
+std::vector<std::string> techniqueNames = {
+	"NoTexture",
+	"DiffuseMap",
+	"NormalMap",
+	"DiffuseNormalMap",
+	"SpecularMap",
+	"DiffuseSpecularMap",
+	"NormalSpecularMap",
+	"DiffuseNormalSpecularMap"
+};
+
 Mesh::Mesh(Engine *engine) : Resource(engine)
 {
 	skeletonRoot.transformation.Identity();
@@ -106,8 +117,7 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 
 	aiColor3D aColor;
 	float value;
-	aiString file;		
-
+	
 	if (aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aColor) == AI_SUCCESS)
 	{
 		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(aColor.r, aColor.g, aColor.b));
@@ -143,76 +153,60 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	{
 		material->SetParameter(PARAM_MATERIAL_OPACITY, 1.0f);
 	}
-
-	bool hasDiffuseTexture = false;
-	bool hasNormalTexture = false;
-	std::string meshBaseDirectory = Filesystem::GetDirectoryName(filename);
-	if (aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &file) == AI_SUCCESS)
-	{		
-		hasDiffuseTexture = true;
-		std::string resourceName = "Textures/" + Filesystem::GetFileName(file.C_Str());		
-		if (Filesystem::FindResourceByName(resourceName).empty())
-		{
-			// Try relative to mesh file
-			std::string relativeToMeshFile = meshBaseDirectory + Filesystem::PATH_SEPARATOR + std::string(file.C_Str());
-			if (Filesystem::FileExists(relativeToMeshFile))
-			{
-				material->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(relativeToMeshFile));
-			}
-			else
-			{
-				// Try as absolute path
-				material->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(file.C_Str()));
-			}			
-		}
-		else
-		{
-			material->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(resourceName));
-		}
+	
+	bool hasDiffuseTexture = ProcessAssimpMaterialTexture(aMaterial, material, aiTextureType_DIFFUSE, TextureUnit::DIFFUSE);
+	bool hasNormalTexture = ProcessAssimpMaterialTexture(aMaterial, material, aiTextureType_NORMALS, TextureUnit::NORMAL);
+	bool hasSpecularTexture = ProcessAssimpMaterialTexture(aMaterial, material, aiTextureType_SPECULAR, TextureUnit::SPECULAR);
+		
+	unsigned int techniqueIndex = 0;
+	if (hasDiffuseTexture)
+	{
+		techniqueIndex += 1;
+	}
+	if (hasNormalTexture)
+	{
+		techniqueIndex += 2;
+	}
+	if (hasSpecularTexture)
+	{
+		techniqueIndex += 4;
 	}
 
-	if (aMaterial->GetTexture(aiTextureType_NORMALS, 0, &file) == AI_SUCCESS)
-	{
-		hasNormalTexture = true;
-		std::string resourceName = "Textures/" + Filesystem::GetFileName(file.C_Str());		
-		if (Filesystem::FindResourceByName(resourceName).empty())
-		{
-			// Try relative to mesh file
-			std::string relativeToMeshFile = meshBaseDirectory + Filesystem::PATH_SEPARATOR + std::string(file.C_Str());
-			if (Filesystem::FileExists(relativeToMeshFile))
-			{
-				material->SetTexture(TextureUnit::NORMAL, engine->GetResourceCache()->GetResource<Texture>(relativeToMeshFile));
-			}
-			else
-			{
-				// Try as absolute path
-				material->SetTexture(TextureUnit::NORMAL, engine->GetResourceCache()->GetResource<Texture>(file.C_Str()));
-			}
-		}
-		else
-		{
-			material->SetTexture(TextureUnit::NORMAL, engine->GetResourceCache()->GetResource<Texture>(resourceName));
-		}
-	}
-
-	if (hasDiffuseTexture && hasNormalTexture)
-	{
-		material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseNormalMap.xml"));
-	}
-	else if (hasDiffuseTexture)
-	{
-		material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
-	}
-	else if (hasNormalTexture)
-	{
-		material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NormalMap.xml"));
-	}
-	else
-	{
-		material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
-	}
+	material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/" + techniqueNames[techniqueIndex] + ".xml"));	
 
 	return material;
+}
+
+bool Mesh::ProcessAssimpMaterialTexture(const aiMaterial *aMaterial, Material *material, const aiTextureType &textureType, TextureUnit unit)
+{
+	aiString file;
+	std::string meshBaseDirectory = Filesystem::GetDirectoryName(filename);
+	if (aMaterial->GetTexture(textureType, 0, &file) == AI_SUCCESS)
+	{		
+		std::string resourceName = "Textures/" + Filesystem::GetFileName(file.C_Str());
+		if (Filesystem::FindResourceByName(resourceName).empty())
+		{
+			// Try relative to mesh file
+			std::string relativeToMeshFile = meshBaseDirectory + Filesystem::PATH_SEPARATOR + std::string(file.C_Str());
+			if (Filesystem::FileExists(relativeToMeshFile))
+			{
+				material->SetTexture(unit, engine->GetResourceCache()->GetResource<Texture>(relativeToMeshFile));
+			}
+			else
+			{
+				// Try as absolute path
+				material->SetTexture(unit, engine->GetResourceCache()->GetResource<Texture>(file.C_Str()));
+			}
+		}
+		else
+		{
+			material->SetTexture(unit, engine->GetResourceCache()->GetResource<Texture>(resourceName));
+		}
+
+		return true;
+	}
+
+	return false;
 }
 
 SharedPtr<Geometry> Mesh::ProcessAssimpMesh(const aiMesh *aMesh, unsigned int meshIndex)

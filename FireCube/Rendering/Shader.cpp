@@ -210,6 +210,7 @@ void Program::Link()
 	glUseProgram(objectId);
 	SetUniform(StringHash("diffuseMap"), static_cast<int>(TextureUnit::DIFFUSE));		
 	SetUniform(StringHash("normalMap"), static_cast<int>(TextureUnit::NORMAL));
+	SetUniform(StringHash("specularMap"), static_cast<int>(TextureUnit::SPECULAR));
 	SetUniform(StringHash("shadowMap"), static_cast<int>(TextureUnit::SHADOWMAP));
 }
 

@@ -172,6 +172,8 @@ TextureUnit Material::ParseTextureUnitName(const std::string &name)
 		ret = TextureUnit::DIFFUSE;
 	else if (name == "normal")
 		ret = TextureUnit::NORMAL;
+	else if (name == "specular")
+		ret = TextureUnit::SPECULAR;
 
 	return ret;
 }
@@ -186,6 +188,9 @@ std::string Material::GetTextureUnitName(TextureUnit unit)
 	case FireCube::TextureUnit::NORMAL:
 		return "normal";
 		break;	
+	case FireCube::TextureUnit::SPECULAR:
+		return "specular";
+		break;
 	default:
 		return "";
 		break;

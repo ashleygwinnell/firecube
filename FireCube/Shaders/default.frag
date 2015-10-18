@@ -24,6 +24,9 @@ smooth in vec2 texcoord;
 #ifdef NORMAL_MAPPING
 	uniform sampler2D normalMap;
 #endif
+#ifdef SPECULAR_MAPPING
+	uniform sampler2D specularMap;
+#endif
 #ifdef SHADOW
 	uniform sampler2D shadowMap;
 	smooth in vec4 shadowCoord;
@@ -65,6 +68,9 @@ void main()
 		vec3 E = normalize(eyeVec);
 		vec3 R = reflect(-l, n);
 		float specular = max(pow(max(dot(R, E), 0.0), materialShininess), 0.0);
+		#ifdef SPECULAR_MAPPING
+			specular *= texture(specularMap, texcoord.xy).r;
+		#endif
 		float distanceAtten = 1.0;
 		#ifdef POINT_LIGHT
 			distanceAtten = 1.0 - pow(clamp(lightDirLength, 0.0, 1.0), 3);			

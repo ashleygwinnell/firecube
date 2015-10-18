@@ -9,6 +9,7 @@ struct aiScene;
 struct aiMaterial;
 struct aiMesh;
 struct aiNode;
+enum aiTextureType;
 
 namespace FireCube
 {
@@ -91,6 +92,7 @@ private:
 	void ReadSkeleton(const aiScene *aScene, const aiNode *aNode, SkeletonNode &node);
 	void ProcessAssimpScene(const aiScene *aScene);
 	SharedPtr<Material> ProcessAssimpMaterial(const aiMaterial *aMaterial);
+	bool ProcessAssimpMaterialTexture(const aiMaterial *aMaterial, Material *material, const aiTextureType &textureType, TextureUnit unit);
 	SharedPtr<Geometry> ProcessAssimpMesh(const aiMesh *aMesh, unsigned int meshIndex);
 	unsigned int GetNodeIndex(SkeletonNode &node, const std::string name);
 	void LinkBonesToTree();
