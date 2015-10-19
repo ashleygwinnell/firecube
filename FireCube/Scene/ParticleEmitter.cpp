@@ -8,6 +8,7 @@
 #include "Core/Engine.h"
 #include "Core/ResourceCache.h"
 #include "Rendering/VertexBuffer.h"
+#include "Rendering/Material.h"
 
 using namespace FireCube;
 
@@ -105,6 +106,8 @@ void ParticleEmitter::UpdateRenderableParts()
 	{
 		i.transformation = node->GetWorldTransformation();
 	}
+
+	renderableParts[0].material->SetParameter(StringHash("particleLifeTime"), lifeTime);
 }
 
 void ParticleEmitter::Reset()

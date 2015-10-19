@@ -1,7 +1,8 @@
 <material>
 	<technique name = "Techniques/ParticleNoTexture.xml" />
-	<parameter name = "materialDiffuse" value = "0.7 0.7 0.7" />
-	<parameter name = "materialSpecular" value = "0.0 0.0 0.0" />
-	<parameter name = "materialShininess" value = "0.0" />
+	<parameter name = "startColor" value = "1.0 0.0 0.0" />
+	<parameter name = "endColor" value = "0.0 1.0 0.0" />
+	<parameter name = "startOpacity" value = "1.0" />
+	<parameter name = "endOpacity" value = "0.0" />
 	<parameter name = "particleSize" value = "10.0" />
 </material>

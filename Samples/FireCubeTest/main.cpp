@@ -47,10 +47,10 @@ bool App::Prepare()
 	childNode->Scale(vec3(0.05f));
 
 	childNode = childNode->Clone();
-	childNode->Move(vec3(5, 0, 0));
+	childNode->Move(vec3(5, 0, 0));*/
 
 	childNode = root->CreateChild("Particles");
-	childNode->CreateComponent<ParticleEmitter>(1000, engine->GetResourceCache()->GetResource<Material>("Materials/ParticleNoTexture.xml"));*/
+	childNode->CreateComponent<ParticleEmitter>(1000, engine->GetResourceCache()->GetResource<Material>("Materials/ParticleNoTexture.xml"));
 
 	/*childNode = root->CreateChild("Terrain");	
 	Terrain *terrain = childNode->CreateComponent<Terrain>();
@@ -91,7 +91,7 @@ void App::Update(float t)
 
 void App::Render(float t)
 {    			
-	auto debugRenderer = engine->GetDebugRenderer();
+	/*auto debugRenderer = engine->GetDebugRenderer();
 
 	float radius = 0.1f;
 	float height = 0.5f;
@@ -136,7 +136,7 @@ void App::Render(float t)
 	debugRenderer->AddCapsule(newEndPoint - vec3(0, height * 0.5f, 0), newEndPoint + vec3(0, height * 0.5f, 0), radius, 4, 8, vec3(0, 1, 0));
 
 	debugRenderer->AddLine(initialPos, targetPos, vec3(1, 1, 0));
-	engine->GetDebugRenderer()->Render(camera);
+	engine->GetDebugRenderer()->Render(camera);*/
 }
 
 void App::HandleInput(float t, const MappedInput &input)
