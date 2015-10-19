@@ -5,6 +5,8 @@
 #include "LuaIntf.h"
 #include "Scripting/LuaBindings.h"
 #include "Scripting/LuaFile.h"
+#include "Core/Engine.h"
+#include "Core/ResourceCache.h"
 
 using namespace FireCube;
 
@@ -24,6 +26,8 @@ LuaState::LuaState(Engine *engine) : Object(engine)
 	lua_getglobal(luaState, "_G");
 	luaL_setfuncs(luaState, reg, 0);	
 	lua_pop(luaState, 1);
+
+	ExecuteFile(engine->GetResourceCache()->GetResource<LuaFile>("Scripts/core.lua"));
 
 	LuaBindings::Init(luaState, engine);	
 }
