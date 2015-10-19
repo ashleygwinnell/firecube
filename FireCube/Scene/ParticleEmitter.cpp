@@ -9,6 +9,7 @@
 #include "Core/ResourceCache.h"
 #include "Rendering/VertexBuffer.h"
 #include "Rendering/Material.h"
+#include "Core/Events.h"
 
 using namespace FireCube;
 
@@ -36,6 +37,8 @@ ParticleEmitter::ParticleEmitter(Engine *engine, unsigned int numberOfParticles,
 	renderableParts[0].geometry = geometry;
 	renderableParts[0].material = material;
 	castShadow = false;
+
+	SubscribeToEvent(Events::Update, &ParticleEmitter::Update);
 }
 
 ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : Renderable(other), lifeTime(other.lifeTime), numberOfParticles(other.numberOfParticles)
@@ -88,20 +91,7 @@ void ParticleEmitter::IntersectRay(RayQuery &rayQuery)
 }
 
 void ParticleEmitter::UpdateRenderableParts()
-{
-	Program *program = engine->GetRenderer()->SetShaders(updateShader, nullptr);
-	program->SetUniform(PARAM_TIME_STEP, engine->GetRenderer()->GetTimeStep());
-	program->SetUniform(PARAM_LIFE_TIME, lifeTime);
-	glEnable(GL_RASTERIZER_DISCARD);
-	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, particleBuffers[1]->GetObjectId());
-	glBeginTransformFeedback(GL_POINTS);		
-	geometry->Render();
-	glEndTransformFeedback();
-	glDisable(GL_RASTERIZER_DISCARD);
-	std::swap(particleBuffers[0], particleBuffers[1]);
-	geometry->SetVertexBuffer(particleBuffers[0]);
-	geometry->Update();
-
+{	
 	for (auto &i : renderableParts)
 	{
 		i.transformation = node->GetWorldTransformation();
@@ -144,4 +134,20 @@ void ParticleEmitter::SetMaterial(Material *material)
 Material *ParticleEmitter::GetMaterial() const
 {
 	return renderableParts[0].material;
+}
+
+void ParticleEmitter::Update(float time)
+{
+	Program *program = engine->GetRenderer()->SetShaders(updateShader, nullptr);
+	program->SetUniform(PARAM_TIME_STEP, engine->GetRenderer()->GetTimeStep());
+	program->SetUniform(PARAM_LIFE_TIME, lifeTime);
+	glEnable(GL_RASTERIZER_DISCARD);
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, particleBuffers[1]->GetObjectId());
+	glBeginTransformFeedback(GL_POINTS);
+	geometry->Render();
+	glEndTransformFeedback();
+	glDisable(GL_RASTERIZER_DISCARD);
+	std::swap(particleBuffers[0], particleBuffers[1]);
+	geometry->SetVertexBuffer(particleBuffers[0]);
+	geometry->Update();
 }

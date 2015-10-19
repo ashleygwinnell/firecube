@@ -26,6 +26,7 @@ protected:
 private:
 
 	ParticleEmitter(const ParticleEmitter &other);
+	void Update(float time);
 
 	BoundingBox boundingBox;
 	Shader *updateShader;
