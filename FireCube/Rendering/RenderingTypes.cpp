@@ -20,7 +20,6 @@ StringHash PARAM_CAMERA_POS("cameraPos");
 StringHash PARAM_FOG_PARAMETERS("fogParameters");
 StringHash PARAM_FOG_COLOR("fogColor");
 StringHash PARAM_TIME_STEP("timeStep");
-StringHash PARAM_LIFE_TIME("lifeTime");
 StringHash PARAM_SKIN_MATRICES("skinMatrices");
 StringHash PARAM_LIGHT_BIAS_MVP_MATRIX("lightBiasMVPMatrix");
 StringHash PARAM_SHAODW_INTENSITY("shadowIntensity");

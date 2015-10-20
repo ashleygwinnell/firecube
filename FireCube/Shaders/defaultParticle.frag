@@ -45,7 +45,6 @@ void main()
 		color = mix(color, fogColor, fogFactor );
 	#endif
 	
-	
 	vec2 d = gl_PointCoord - vec2(0.5, 0.5);
 	if (d.x * d.x + d.y * d.y > 0.5 * 0.5)
 		discard;

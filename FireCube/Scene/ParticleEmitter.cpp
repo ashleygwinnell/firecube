@@ -16,13 +16,14 @@ using namespace FireCube;
 ParticleEmitter::ParticleEmitter(Engine *engine, unsigned int numberOfParticles, Material *material) : Renderable(engine), lifeTime(2.0f), numberOfParticles(numberOfParticles)
 {
 	updateShader = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/particleUpdate.vert")->GenerateShader("");
-	updateShader->SetOutputAttributes({"outPosition", "outVelocity", "outAge"});		
+	updateShader->SetOutputAttributes({"outPosition", "outVelocity", "outAge", "outLifeTime"});
 	for (int i = 0; i < 2; ++i)
 	{
 		particleBuffers[i] = new VertexBuffer(engine->GetRenderer());
 		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::POSITION, VertexAttributeDataType::FLOAT, 3); // Position
 		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 3);   // Velocity
-		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 1);	  // Age		
+		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 1);	  // Age
+		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 1);	  // Life time
 	}
 
 	Reset();
@@ -44,13 +45,14 @@ ParticleEmitter::ParticleEmitter(Engine *engine, unsigned int numberOfParticles,
 ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : Renderable(other), lifeTime(other.lifeTime), numberOfParticles(other.numberOfParticles)
 {
 	updateShader = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/particleUpdate.vert")->GenerateShader("");
-	updateShader->SetOutputAttributes({ "outPosition", "outVelocity", "outAge" });
+	updateShader->SetOutputAttributes({"outPosition", "outVelocity", "outAge", "outLifeTime"});
 	for (int i = 0; i < 2; ++i)
 	{
 		particleBuffers[i] = new VertexBuffer(engine->GetRenderer());
 		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::POSITION, VertexAttributeDataType::FLOAT, 3); // Position
 		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 3);   // Velocity
-		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 1);	  // Age		
+		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 1);	  // Age
+		particleBuffers[i]->AddVertexAttribute(VertexAttributeType::CUSTOM, VertexAttributeDataType::FLOAT, 1);	  // Life time
 	}
 
 	Reset();
@@ -96,23 +98,22 @@ void ParticleEmitter::UpdateRenderableParts()
 	{
 		i.transformation = node->GetWorldTransformation();
 	}
-
-	renderableParts[0].material->SetParameter(StringHash("particleLifeTime"), lifeTime);
 }
 
 void ParticleEmitter::Reset()
 {
-	std::vector<float> particleData(numberOfParticles * 7);
+	std::vector<float> particleData(numberOfParticles * 8);
 	for (unsigned int i = 0; i < numberOfParticles; ++i)
 	{
-		particleData[i * 7 + 0] = 0;// RangedRandom(-1, 1.0f); // Position
-		particleData[i * 7 + 1] = 0;// RangedRandom(0, 1.0f);
-		particleData[i * 7 + 2] = 0;// RangedRandom(-1, 1.0f);
+		particleData[i * 8 + 0] = 0;// RangedRandom(-1, 1.0f); // Position
+		particleData[i * 8 + 1] = 0;// RangedRandom(0, 1.0f);
+		particleData[i * 8 + 2] = 0;// RangedRandom(-1, 1.0f);
 		vec3 velocity = vec3(RangedRandom(-1, 1), RangedRandom(-1, 1), RangedRandom(-1, 1)).Normalized() * RangedRandom(1, 1.5f);
-		particleData[i * 7 + 3] = velocity.x; // Veloctiy
-		particleData[i * 7 + 4] = velocity.y;
-		particleData[i * 7 + 5] = velocity.z;
-		particleData[i * 7 + 6] = RangedRandom(0.0f, lifeTime); // Age				
+		particleData[i * 8 + 3] = velocity.x; // Veloctiy
+		particleData[i * 8 + 4] = velocity.y;
+		particleData[i * 8 + 5] = velocity.z;
+		particleData[i * 8 + 6] = 0.0f;
+		particleData[i * 8 + 7] = RangedRandom(0.0f, lifeTime); // Life time
 	}
 	for (int i = 0; i < 2; ++i)
 	{		
@@ -139,8 +140,7 @@ Material *ParticleEmitter::GetMaterial() const
 void ParticleEmitter::Update(float time)
 {
 	Program *program = engine->GetRenderer()->SetShaders(updateShader, nullptr);
-	program->SetUniform(PARAM_TIME_STEP, engine->GetRenderer()->GetTimeStep());
-	program->SetUniform(PARAM_LIFE_TIME, lifeTime);
+	program->SetUniform(PARAM_TIME_STEP, engine->GetRenderer()->GetTimeStep());	
 	glEnable(GL_RASTERIZER_DISCARD);
 	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, particleBuffers[1]->GetObjectId());
 	glBeginTransformFeedback(GL_POINTS);

@@ -1,13 +1,14 @@
 layout (location = 0) in vec3 atrPosition;
 layout (location = 1) in vec3 atrVelocity;
 layout (location = 2) in float atrAge;
+layout (location = 3) in float atrLifeTime;
 
 out vec3 outPosition;
 out vec3 outVelocity;
 out float outAge;
+out float outLifeTime;
 
 uniform float timeStep;
-uniform float lifeTime;
 
 const float TwoPi = 6.28318530718;
 const float InverseMaxInt = 1.0 / 4294967295.0;
@@ -23,12 +24,12 @@ float randhash(uint seed, float b)
 
 void  main()
 {
-	if (atrAge > lifeTime)	
+	if (atrAge > atrLifeTime)	
 	{	
 		//uint seed = uint(atrAge * 1000.0) + uint(gl_VertexID);
 		//float x = randhash(seed++, 1.0) * 2.0 - 1.0;		
 		outPosition = vec3(0.0);
-		outAge = atrAge - lifeTime;
+		outAge = atrAge - atrLifeTime;
 	}
 	else
 	{		
@@ -37,4 +38,5 @@ void  main()
 	}		
 	
 	outVelocity = atrVelocity;
+	outLifeTime = atrLifeTime;
 }

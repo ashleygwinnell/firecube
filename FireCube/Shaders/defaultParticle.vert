@@ -12,6 +12,7 @@
 
 layout (location = 0) in vec3 atrPosition;
 layout (location = 2) in float atrAge;
+layout (location = 3) in float atrLifeTime;
 
 smooth out float ageFactor;
 
@@ -20,7 +21,7 @@ uniform mat4 viewProjectionMatrix;
 uniform mat3 normalMatrix;
 uniform vec3 cameraPos;
 uniform float particleSize;
-uniform float particleLifeTime;
+
 void  main()
 {	
 	#if defined(POINT_LIGHT) || defined(SPOT_LIGHT)
@@ -34,7 +35,7 @@ void  main()
 	#endif
 	
 	gl_PointSize = particleSize / length(vec3(modelMatrix * vec4(atrPosition, 1.0)) - cameraPos);
-	ageFactor = atrAge / particleLifeTime;
+	ageFactor = atrAge / atrLifeTime;
 	
 	gl_Position = viewProjectionMatrix * modelMatrix * vec4(atrPosition, 1.0);
 }
