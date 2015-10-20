@@ -67,6 +67,8 @@ ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : Renderable(othe
 	renderableParts[0].geometry = geometry;
 	renderableParts[0].material = other.renderableParts[0].material;
 	castShadow = false;
+
+	SubscribeToEvent(Events::Update, &ParticleEmitter::Update);
 }
 
 ParticleEmitter::~ParticleEmitter()
