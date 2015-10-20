@@ -398,6 +398,7 @@ void Node::SceneChanged(Scene *oldScene)
 
 	for (auto child : children)
 	{
+		child->scene = scene;
 		child->SceneChanged(oldScene);
 	}
 }
