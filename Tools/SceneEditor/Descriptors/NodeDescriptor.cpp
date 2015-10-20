@@ -14,12 +14,7 @@ NodeDescriptor::NodeDescriptor(const std::string &name) : NodeDescriptor()
 }
 
 NodeDescriptor::~NodeDescriptor()
-{	
-	if (node.Expired() == false)
-	{
-		node->Remove();
-	}
-
+{		
 	for (auto component : components)
 	{
 		delete component;
@@ -29,6 +24,11 @@ NodeDescriptor::~NodeDescriptor()
 	{
 		delete child;
 	}	
+
+	if (node.Expired() == false)
+	{
+		node->Remove();
+	}
 }
 
 Node *NodeDescriptor::GetNode()
