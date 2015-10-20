@@ -5,7 +5,7 @@
 
 class ScaleGizmo : public FireCube::Object, public TransformGizmo
 {
-	OBJECT(ScaleGizmo)
+	FIRECUBE_OBJECT(ScaleGizmo)
 public:
 	ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent);
 	virtual void SetPosition(FireCube::vec3 position);

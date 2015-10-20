@@ -9,7 +9,7 @@ class EditorState;
 
 class SceneReader : FireCube::Object
 {
-	OBJECT(SceneReader)
+	FIRECUBE_OBJECT(SceneReader)
 public:
 	SceneReader(FireCube::Engine *engine, EditorState *editorState);
 	bool Read(NodeDescriptor *root, const std::string &filename);

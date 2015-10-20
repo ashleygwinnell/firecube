@@ -29,7 +29,7 @@ public:
 
 class FIRECUBE_API UI : public Object
 {
-	OBJECT(UI);
+	FIRECUBE_OBJECT(UI);
 public:
 	UI(Engine *engine);
 	~UI();

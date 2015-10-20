@@ -5,7 +5,7 @@
 
 class RotateGizmo : public FireCube::Object, public TransformGizmo
 {
-	OBJECT(RotateGizmo)
+	FIRECUBE_OBJECT(RotateGizmo)
 public:
 	RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent);
 	virtual void SetPosition(FireCube::vec3 position);

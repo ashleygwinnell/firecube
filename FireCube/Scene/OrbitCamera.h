@@ -17,7 +17,7 @@ namespace FireCube
 */
 class FIRECUBE_API OrbitCamera : public Camera
 {
-	OBJECT(OrbitCamera)
+	FIRECUBE_OBJECT(OrbitCamera)
 public:
 	/**
 	* Constructs a NodeObserverCamera.

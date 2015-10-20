@@ -10,7 +10,7 @@ class Engine;
 
 class FIRECUBE_API LuaFile : public Resource
 {
-	OBJECT(LuaFile);
+	FIRECUBE_OBJECT(LuaFile);
 public:
 	LuaFile(Engine *engine);
 	virtual bool Load(const std::string &filename);

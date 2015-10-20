@@ -18,7 +18,7 @@ namespace FireCube
 */
 class FIRECUBE_API Camera : public Component
 {
-	OBJECT(Camera)
+	FIRECUBE_OBJECT(Camera)
 public:
 	/**
 	* Constructs a camera.    

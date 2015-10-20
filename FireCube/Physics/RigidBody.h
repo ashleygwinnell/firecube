@@ -11,7 +11,7 @@ class PhysicsWorld;
 class RigidBody : public Component
 {
 	friend PhysicsWorld;
-	OBJECT(RigidBody)
+	FIRECUBE_OBJECT(RigidBody)
 public:
 	RigidBody(Engine *engine);
 	~RigidBody();

@@ -13,7 +13,7 @@ class Node;
 
 class FIRECUBE_API SceneReader : Object
 {
-	OBJECT(SceneReader)
+	FIRECUBE_OBJECT(SceneReader)
 public:
 	SceneReader(Engine *engine);
 	bool Read(Scene &scene, const std::string &filename);

@@ -10,7 +10,7 @@ class SkeletonNode;
 
 class StaticModel : public Renderable
 {	
-	OBJECT(StaticModel)
+	FIRECUBE_OBJECT(StaticModel)
 public:
 	StaticModel(Engine *engine);
 	StaticModel(Engine *engine, Mesh *mesh);

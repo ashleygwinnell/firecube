@@ -39,7 +39,7 @@ public:
 
 class CollisionShape : public Component
 {
-	OBJECT(CollisionShape)
+	FIRECUBE_OBJECT(CollisionShape)
 public:
 	CollisionShape(Engine *engine);
 	~CollisionShape();

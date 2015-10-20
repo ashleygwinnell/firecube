@@ -16,7 +16,7 @@ class CollisionResult;
 class CharacterController : public Component
 {
 	friend PhysicsWorld;
-	OBJECT(CharacterController)
+	FIRECUBE_OBJECT(CharacterController)
 public:
 	CharacterController(Engine *engine);
 	~CharacterController();

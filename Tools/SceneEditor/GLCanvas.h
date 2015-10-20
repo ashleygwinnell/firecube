@@ -17,7 +17,7 @@ enum class Operation
 
 class GLCanvas : public wxGLCanvas, public FireCube::Object
 {
-	OBJECT(GLCanvas)
+	FIRECUBE_OBJECT(GLCanvas)
 public:	
 	GLCanvas(wxWindow *parent, wxWindowID id = wxID_ANY,
 		const wxPoint& pos = wxDefaultPosition,

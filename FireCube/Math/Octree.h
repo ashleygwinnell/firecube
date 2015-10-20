@@ -192,7 +192,7 @@ private:
 template <class T>
 class FIRECUBE_API Octree : public Object
 {
-	OBJECT(Octree)
+	FIRECUBE_OBJECT(Octree)
 public:
 	Octree(Engine *engine, vec3 initialSize, unsigned int maxLevel) : Object(engine), maxLevel(maxLevel)
 	{

@@ -42,7 +42,7 @@ public:
 
 class FIRECUBE_API Renderable : public Component
 {	
-	OBJECT(Renderable)
+	FIRECUBE_OBJECT(Renderable)
 public:
 	Renderable(Engine *engine);
 	virtual ~Renderable();

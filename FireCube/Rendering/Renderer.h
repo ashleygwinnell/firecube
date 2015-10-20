@@ -51,7 +51,7 @@ class RenderSurface;
 */
 class FIRECUBE_API Renderer : public Object
 {
-	OBJECT(Renderer)
+	FIRECUBE_OBJECT(Renderer)
 public:
 
 	Renderer(Engine *engine);

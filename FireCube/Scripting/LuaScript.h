@@ -22,7 +22,7 @@ enum class ScriptFunction
 
 class FIRECUBE_API LuaScript : public Component
 {
-	OBJECT(LuaScript);
+	FIRECUBE_OBJECT(LuaScript);
 public:
 	LuaScript(Engine *engine);
 	void CreateObject(const std::string &objectName);

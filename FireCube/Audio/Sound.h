@@ -8,7 +8,7 @@ namespace FireCube
 
 class FIRECUBE_API Sound : public Resource
 {
-	OBJECT(Sound)
+	FIRECUBE_OBJECT(Sound)
 public:
 	Sound(Engine *engine);
 	virtual bool Load(const std::string &filename);

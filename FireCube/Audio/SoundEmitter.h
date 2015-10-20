@@ -10,7 +10,7 @@ class Sound;
 
 class FIRECUBE_API SoundEmitter : public Component
 {
-	OBJECT(SoundEmitter)
+	FIRECUBE_OBJECT(SoundEmitter)
 public:
 	SoundEmitter(Engine *engine);
 	SoundEmitter(Engine *engine, Sound *sound);

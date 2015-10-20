@@ -18,7 +18,7 @@ class ComponentDescriptor;
 /** Implementing MainFrame */
 class MainFrameImpl : public MainFrame, public FireCube::Object
 {
-	OBJECT(MainFrameImpl)
+	FIRECUBE_OBJECT(MainFrameImpl)
 	protected:
 		// Handlers for MainFrame events.		
 		virtual void UndoClicked(wxCommandEvent& event);

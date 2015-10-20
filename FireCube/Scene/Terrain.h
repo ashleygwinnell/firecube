@@ -14,7 +14,7 @@ class IndexBuffer;
 
 class TerrainPatch : public Renderable
 {
-	OBJECT(TerrainPatch)
+	FIRECUBE_OBJECT(TerrainPatch)
 	friend class Terrain;
 public:
 	TerrainPatch(Engine *engine);
@@ -33,7 +33,7 @@ private:
 
 class Terrain : public Component
 {
-	OBJECT(Terrain)
+	FIRECUBE_OBJECT(Terrain)
 public:
 	Terrain(Engine *engine);
 	~Terrain();

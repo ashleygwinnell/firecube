@@ -9,7 +9,7 @@ class ComponentDescriptor;
 
 class EditorState : public FireCube::Object
 {
-	OBJECT(EditorState)
+	FIRECUBE_OBJECT(EditorState)
 public:
 	EditorState(FireCube::Engine *engine);
 	void ExecuteCommand(Command *command);

@@ -9,7 +9,7 @@ class Shader;
 
 class ParticleEmitter : public Renderable
 {
-	OBJECT(ParticleEmitter)
+	FIRECUBE_OBJECT(ParticleEmitter)
 public:
 	ParticleEmitter(Engine *engine, unsigned int numberOfParticles, Material *material);
 	~ParticleEmitter();

@@ -13,7 +13,7 @@ class Scene;
 
 class FIRECUBE_API Component : public Object
 {	
-	OBJECT(Component)
+	FIRECUBE_OBJECT(Component)
 	friend class Node;
 public:
 	Component(Engine *engine);

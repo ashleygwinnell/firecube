@@ -15,7 +15,7 @@ class Camera;
 
 class FIRECUBE_API Frame : public Object
 {
-	OBJECT(Frame)
+	FIRECUBE_OBJECT(Frame)
 public:
 	Frame(Engine *engine, Scene *scene, Camera *camera, RenderSurface *renderSurface, RenderPath *renderPath);
 	void Render(Renderer *renderer);

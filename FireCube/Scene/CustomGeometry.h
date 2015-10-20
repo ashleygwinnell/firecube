@@ -8,7 +8,7 @@ namespace FireCube
 
 class CustomGeometry : public Renderable
 {
-	OBJECT(CustomGeometry)
+	FIRECUBE_OBJECT(CustomGeometry)
 public:
 	CustomGeometry(Engine *engine);
 	~CustomGeometry();

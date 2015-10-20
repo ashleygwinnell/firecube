@@ -72,7 +72,7 @@ public:
 
 class FIRECUBE_API Mesh : public Resource
 {
-	OBJECT(Mesh)
+	FIRECUBE_OBJECT(Mesh)
 public:
 	Mesh(Engine *engine);
 

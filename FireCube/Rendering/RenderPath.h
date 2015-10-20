@@ -50,7 +50,7 @@ public:
 
 class FIRECUBE_API RenderPath : public Resource
 {
-	OBJECT(RenderPath)
+	FIRECUBE_OBJECT(RenderPath)
 public:
 	RenderPath(Engine *engine);
 	

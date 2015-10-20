@@ -15,7 +15,7 @@ class DebugRenderer;
 
 class Scene : public Object
 {
-	OBJECT(Scene)
+	FIRECUBE_OBJECT(Scene)
 public:
 	Scene(Engine *engine);
 	~Scene();

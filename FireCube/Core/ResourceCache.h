@@ -12,7 +12,7 @@ namespace FireCube
 
 class ResourceCache : public Object
 {
-	OBJECT(ResourceCache)
+	FIRECUBE_OBJECT(ResourceCache)
 public:
 	ResourceCache(Engine *engine);
 

@@ -35,7 +35,7 @@ protected:
 };
 
 
-#define OBJECT(typeName) \
+#define FIRECUBE_OBJECT(typeName) \
 public: \
 	virtual FireCube::StringHash GetType() const { return GetTypeStatic(); } \
 	virtual const std::string& GetTypeName() const { return GetTypeNameStatic(); } \

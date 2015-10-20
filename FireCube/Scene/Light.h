@@ -22,7 +22,7 @@ enum class LightType
 */
 class FIRECUBE_API Light : public Component
 {
-	OBJECT(Light)
+	FIRECUBE_OBJECT(Light)
 public:
 	Light(Engine *engine);
 	/**

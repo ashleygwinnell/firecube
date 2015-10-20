@@ -14,7 +14,7 @@ class RenderPath;
 
 class FIRECUBE_API SceneView : public Object
 {
-	OBJECT(SceneView);
+	FIRECUBE_OBJECT(SceneView);
 public:
 	SceneView(Engine *engine, Scene *scene, Camera *camera, SharedPtr<RenderSurface> renderSurface = nullptr, RenderPath *renderPath = nullptr);
 	Scene *GetScene();

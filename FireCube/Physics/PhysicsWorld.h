@@ -36,7 +36,7 @@ public:
 
 class FIRECUBE_API PhysicsWorld : public Component
 {
-	OBJECT(PhysicsWorld)
+	FIRECUBE_OBJECT(PhysicsWorld)
 public:
 	PhysicsWorld(Engine *engine);
 	void AddCollisionShape(CollisionShape *collisionShape);

@@ -15,7 +15,7 @@ namespace FireCube
 */
 class FIRECUBE_API Image : public Resource
 {
-	OBJECT(Image)
+	FIRECUBE_OBJECT(Image)
 public:
 	Image(Engine *engine);
 	

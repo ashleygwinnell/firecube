@@ -31,7 +31,7 @@ class Audio;
 */
 class FIRECUBE_API Application : public Object
 {
-	OBJECT(Application);
+	FIRECUBE_OBJECT(Application);
 public:
 	Application();
 	virtual ~Application();

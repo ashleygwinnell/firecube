@@ -8,7 +8,7 @@ class NodeDescriptor;
 
 class NodePropertiesPanelImpl : public NodePropertiesPanel, public FireCube::Object
 {
-	OBJECT(NodePropertiesPanelImpl)
+	FIRECUBE_OBJECT(NodePropertiesPanelImpl)
 public:
 	NodePropertiesPanelImpl(wxWindow* parent);
 	~NodePropertiesPanelImpl();

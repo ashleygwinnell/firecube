@@ -12,7 +12,7 @@ class Renderer;
 
 class FIRECUBE_API UIElement : public Object
 {
-	OBJECT(UIElement);
+	FIRECUBE_OBJECT(UIElement);
 public:
 	UIElement(Engine *engine, UIElement *parent);
 	virtual ~UIElement();

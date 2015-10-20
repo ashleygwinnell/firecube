@@ -25,7 +25,7 @@ class Renderer;
 */
 class FIRECUBE_API Material : public Resource
 {
-	OBJECT(Material)
+	FIRECUBE_OBJECT(Material)
 public:
 	Material(Engine *engine);	
 

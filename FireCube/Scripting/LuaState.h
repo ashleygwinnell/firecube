@@ -18,7 +18,7 @@ class LuaFunction;
 
 class FIRECUBE_API LuaState : public Object
 {
-	OBJECT(LuaState)
+	FIRECUBE_OBJECT(LuaState)
 public:
 	LuaState(Engine *engine);
 	~LuaState();

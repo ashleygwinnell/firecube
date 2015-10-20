@@ -10,7 +10,7 @@ class Mesh;
 
 class AnimatedModel : public Renderable
 {
-	OBJECT(AnimatedModel)
+	FIRECUBE_OBJECT(AnimatedModel)
 public:
 	AnimatedModel(Engine *engine);
 	AnimatedModel(Engine *engine, Mesh *mesh);

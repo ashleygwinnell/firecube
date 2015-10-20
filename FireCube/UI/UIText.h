@@ -9,7 +9,7 @@ class FontFace;
 
 class FIRECUBE_API UIText : public UIElement
 {
-	OBJECT(UIText);
+	FIRECUBE_OBJECT(UIText);
 public:
 	UIText(Engine *engine, UIElement *parent);
 	~UIText();	

@@ -6,7 +6,7 @@ class EditorState;
 
 class TranslateGizmo : public FireCube::Object, public TransformGizmo
 {
-	OBJECT(TranslateGizmo)
+	FIRECUBE_OBJECT(TranslateGizmo)
 public:
 	TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent);
 	virtual void SetPosition(FireCube::vec3 position);
