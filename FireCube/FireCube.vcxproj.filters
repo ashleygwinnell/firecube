@@ -40,9 +40,6 @@
     <Filter Include="ThirdParty\STB">
       <UniqueIdentifier>{20a1424f-5694-442a-9d8e-ee180d5114d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ThirdParty\jpgd">
-      <UniqueIdentifier>{4740ac9f-080a-457d-8b95-c62c912f7b56}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{d3823a06-0aea-4a4e-af95-ceb9ac7b58bc}</UniqueIdentifier>
     </Filter>
@@ -155,9 +152,6 @@
     </ClCompile>
     <ClCompile Include="ThirdParty\STB\stb_image.c">
       <Filter>ThirdParty\STB</Filter>
-    </ClCompile>
-    <ClCompile Include="ThirdParty\jpgd\jpgd.cpp">
-      <Filter>ThirdParty\jpgd</Filter>
     </ClCompile>
     <ClCompile Include="Math\MathUtils.cpp">
       <Filter>Math</Filter>
@@ -436,9 +430,6 @@
     </ClInclude>
     <ClInclude Include="ThirdParty\STB\stb_image.h">
       <Filter>ThirdParty\STB</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\jpgd\jpgd.h">
-      <Filter>ThirdParty\jpgd</Filter>
     </ClInclude>
     <ClInclude Include="FireCube.h" />
     <ClInclude Include="Math\MathUtils.h">

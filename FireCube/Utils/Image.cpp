@@ -6,7 +6,6 @@
 #include "Utils/Image.h"
 #include "stb_image.h"
 #include "stb_image_write.h"
-#include "jpgd.h"
 
 using namespace FireCube;
 
@@ -30,35 +29,19 @@ bool Image::Load(const std::string &filename)
 	if (resolvedFileName.empty())
 		return false;
 		
-	std::string ext = Filesystem::GetFileExtension(resolvedFileName);
-	bool loadedUsingStb = false;
-	
-	unsigned char *pixels;
-	if (ext != "jpg")
+	unsigned char *pixels = stbi_load(resolvedFileName.c_str(), &width, &height, &bytesPerPixel, 0);
+	if (!pixels)
 	{
-		loadedUsingStb = true;
-		pixels = stbi_load(resolvedFileName.c_str(), &width, &height, &bytesPerPixel, 0);
-		if (!pixels)
-		{			
-			LOGERROR("Failed loading image: ", filename, " reason: ", stbi_failure_reason());
-			return false;
-		}
-	}
-	else
-	{		
-		pixels = jpgd::decompress_jpeg_image_from_file(resolvedFileName.c_str(), &width, &height, &bytesPerPixel, 3);
-		if (!pixels)
-			return false;
+		LOGERROR("Failed loading image: ", filename, " reason: ", stbi_failure_reason());
+		return false;
 	}
 	
 	data.resize(width * height * bytesPerPixel);
 	for (unsigned int i = 0; i < data.size(); ++i)
 		data[i] = pixels[i];
-	if (loadedUsingStb)
-		stbi_image_free(pixels);
-	else
-		free(pixels);
-
+	
+	stbi_image_free(pixels);
+	
 	return true;		
 }
 

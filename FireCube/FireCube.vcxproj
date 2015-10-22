@@ -97,7 +97,6 @@
     <ClCompile Include="Scripting\LuaScript.cpp" />
     <ClCompile Include="Scripting\LuaState.cpp" />
     <ClCompile Include="ThirdParty\GLEW\glew.c" />
-    <ClCompile Include="ThirdParty\jpgd\jpgd.cpp" />
     <ClCompile Include="ThirdParty\STB\stb_image.c" />
     <ClCompile Include="ThirdParty\STB\stb_image_write.c" />
     <ClCompile Include="ThirdParty\TinyXML\tinyxml.cpp" />
@@ -189,7 +188,6 @@
     <ClInclude Include="Scripting\LuaState.h" />
     <ClInclude Include="ThirdParty\GLEW\glew.h" />
     <ClInclude Include="ThirdParty\GLEW\wglew.h" />
-    <ClInclude Include="ThirdParty\jpgd\jpgd.h" />
     <ClInclude Include="ThirdParty\LuaIntf\LuaCompat.h" />
     <ClInclude Include="ThirdParty\LuaIntf\LuaContext.h" />
     <ClInclude Include="ThirdParty\LuaIntf\LuaIntf.h" />
