@@ -31,7 +31,7 @@
 
 using namespace FireCube;
 
-MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState())										 
+MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), theApp((MyApp*)wxTheApp), editorState(theApp->GetEditorState()), scene(nullptr)
 {
 	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &MainFrameImpl::SelectedNodeChanged);	
 	SubscribeToEvent(editorState, editorState->componentAdded, &MainFrameImpl::ComponentAdded);
@@ -157,8 +157,7 @@ void MainFrameImpl::AddCharacterControllerClicked(wxCommandEvent& event)
 
 
 void MainFrameImpl::SetScene(FireCube::Scene *scene)
-{
-	engine = theApp->fcApp.GetEngine();
+{	
 	this->scene = scene;
 	root = scene->GetRootNode();
 	rootDesc.SetNode(root);
@@ -681,17 +680,17 @@ void MainFrameImpl::RecentFileClicked(wxCommandEvent& event)
 
 void MainFrameImpl::OnClose(wxCloseEvent& event)
 {
-	WriteSettingsFile();
-	event.Skip();
-}
-
-void MainFrameImpl::OnExitClicked(wxCommandEvent& event)
-{	
 	Reset();
 
 	// Prevent destructor of NodeDescriptor from deleting the node itself since it is owned by the Scene
 	rootDesc.SetNode(nullptr);
 
+	WriteSettingsFile();
+	event.Skip();
+}
+
+void MainFrameImpl::OnExitClicked(wxCommandEvent& event)
+{		
 	Close();
 }
 
@@ -705,9 +704,12 @@ void MainFrameImpl::Reset()
 	treeItemToNode.clear();
 	editorState->GetNodeMap().clear();
 
-	scene->GetRootNode()->RemoveAllComponents();
-	rootDesc.RemoveAllComponents();
-	rootDesc.RemoveAllChildren();	
+	if (scene)
+	{
+		scene->GetRootNode()->RemoveAllComponents();
+		rootDesc.RemoveAllComponents();
+		rootDesc.RemoveAllChildren();
+	}
 
 	editorState->SetSelectedNode(nullptr);
 }

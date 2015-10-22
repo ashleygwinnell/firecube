@@ -13,7 +13,6 @@ AddNodeCommand::~AddNodeCommand()
 	if (shouldDelete)
 	{		
 		delete nodeDesc;		
-		//TODO: delete node inside nodeDesc
 	}
 }
 
@@ -23,7 +22,6 @@ void AddNodeCommand::Do()
 	shouldDelete = false;	
 	FireNodeAddedEvent(nodeDesc);
 	editorState->SetSelectedNode(nodeDesc);
-	
 }
 
 void AddNodeCommand::Undo()
