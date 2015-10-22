@@ -158,6 +158,7 @@ void MainFrameImpl::AddCharacterControllerClicked(wxCommandEvent& event)
 
 void MainFrameImpl::SetScene(FireCube::Scene *scene)
 {	
+	engine = theApp->fcApp.GetEngine();
 	this->scene = scene;
 	root = scene->GetRootNode();
 	rootDesc.SetNode(root);
