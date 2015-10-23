@@ -134,6 +134,7 @@ void MainFrameImpl::AddCollisionShapeClicked(wxCommandEvent& event)
 		auto collisionShapeDescriptor = new CollisionShapeDescriptor();
 		collisionShapeDescriptor->SetBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
 		collisionShapeDescriptor->SetPlane(Plane(vec3(0.0f, 1.0f, 0.0f), 0.0f));
+		collisionShapeDescriptor->SetIsTrigger(false);
 		auto addComponentCommand = new AddComponentCommand(editorState, "Add CollisionShape", nodeDesc, collisionShapeDescriptor, engine);
 
 		editorState->ExecuteCommand(addComponentCommand);

@@ -93,7 +93,9 @@ NodeDescriptor *NodeDescriptor::Clone()
 
 	for (auto component : components)
 	{
-		ret->components.push_back(component->Clone());
+		auto clonedComponent = component->Clone();
+		clonedComponent->SetParent(ret);
+		ret->components.push_back(clonedComponent);
 	}
 
 	for (auto child : children)
