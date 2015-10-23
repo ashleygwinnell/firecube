@@ -12,6 +12,7 @@ bool MyApp::OnInit()
 	editorScene = nullptr;
 	editorState = new EditorState(fcApp.GetEngine());
 	frame = new MainFrameImpl(nullptr);
+	frame->Maximize();
 	frame->Show(true);
 	return true;
 }
