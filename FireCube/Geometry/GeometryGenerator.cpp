@@ -361,3 +361,103 @@ Geometry *GeometryGenerator::GenerateTorus(Engine *engine, float outerRadius, fl
 	ret->Update();
 	return ret;
 }
+
+Geometry *GeometryGenerator::GenerateCylinder(Engine *engine, float bottomRadius, float topRadius, float height, unsigned int heightSegments, unsigned int radialSegments)
+{
+	Geometry *ret = new Geometry(engine->GetRenderer());
+	VertexBuffer *vertexBuffer = new VertexBuffer(engine->GetRenderer());
+	IndexBuffer *indexBuffer = new IndexBuffer(engine->GetRenderer());
+	ret->SetVertexBuffer(vertexBuffer);
+	ret->SetIndexBuffer(indexBuffer);
+	vertexBuffer->SetShadowed(true);
+	indexBuffer->SetShadowed(true);
+
+	unsigned int vertexSize = 3 + 3 + 2;
+	unsigned int vertexCount = (radialSegments * heightSegments) + 2;
+	std::vector<float> vertexData(vertexCount * vertexSize);
+	std::vector<unsigned int> indexData(radialSegments * (heightSegments - 1) * 6 + 2 * radialSegments * 3);
+	unsigned int currentVertex = 0;
+	float deltaAngle = PI * 2.0f / radialSegments;
+	for (unsigned int y = 0; y < heightSegments; ++y)
+	{
+		float v = (float) y / (float) (heightSegments - 1);
+		for (unsigned int x = 0; x < radialSegments; ++x)
+		{
+			float u = (float)x / (float) radialSegments;
+			float ang = u * PI * 2.0f;
+			float radius = (1 - v) * bottomRadius + v * topRadius;
+			vec3 pos(cos(ang) * radius, v * height, sin(ang) * radius);
+			vec3 normal = (pos - vec3(0, v * height, 0)).Normalized();
+						
+			*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = pos;
+			*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = normal;
+			*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(u, v);
+			currentVertex++;
+		}
+	}
+
+	// Bottom vertex
+	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(0, 0, 0);
+	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, -1, 0);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.5f, 0.5f);
+	currentVertex++;
+
+	// Top vertex
+	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(0, height, 0);
+	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 1, 0);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.5f, 0.5f);
+	currentVertex++;
+
+	unsigned int currentIndex = 0;
+
+	for (unsigned int y = 0; y < heightSegments - 1; ++y)
+	{
+		for (unsigned int x = 0; x < radialSegments; ++x)
+		{
+			unsigned int v00 = y * radialSegments + x;
+			unsigned int v10 = y * radialSegments + ((x + 1) % radialSegments);
+			unsigned int v01 = (y + 1) * radialSegments + x;
+			unsigned int v11 = (y + 1) * radialSegments + ((x + 1) % radialSegments);
+
+			indexData[currentIndex++] = v00;
+			indexData[currentIndex++] = v11;
+			indexData[currentIndex++] = v10;
+			indexData[currentIndex++] = v00;
+			indexData[currentIndex++] = v01;
+			indexData[currentIndex++] = v11;
+		}
+	}
+
+	unsigned int bottomCapPoint = vertexCount - 2;	
+
+	for (unsigned int x = 0; x < radialSegments; ++x)
+	{
+		unsigned int v00 = x;
+		unsigned int v10 = ((x + 1) % radialSegments);
+		
+		indexData[currentIndex++] = v00;
+		indexData[currentIndex++] = v10;
+		indexData[currentIndex++] = bottomCapPoint;		
+	}
+
+	unsigned int topCapPoint = vertexCount - 1;
+
+	for (unsigned int x = 0; x < radialSegments; ++x)
+	{
+		unsigned int v00 = (heightSegments - 1) * radialSegments + x;
+		unsigned int v10 = (heightSegments - 1) * radialSegments + ((x + 1) % radialSegments);
+
+		indexData[currentIndex++] = v00;
+		indexData[currentIndex++] = topCapPoint;
+		indexData[currentIndex++] = v10;
+	}
+
+	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, BufferType::STATIC);
+	indexBuffer->LoadData(&indexData[0], indexData.size(), BufferType::STATIC);
+
+	ret->SetPrimitiveType(PrimitiveType::TRIANGLES);
+	ret->SetPrimitiveCount(indexData.size() / 3);
+
+	ret->Update();
+	return ret;
+}
