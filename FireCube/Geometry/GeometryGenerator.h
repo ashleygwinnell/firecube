@@ -42,6 +42,8 @@ Geometry *FIRECUBE_API GenerateTorus(Engine *engine, float outerRadius, float in
 
 Geometry *FIRECUBE_API GenerateCylinder(Engine *engine, float bottomRadius, float topRadius, float height, unsigned int heightSegments, unsigned int radialSegments);
 
+Geometry *FIRECUBE_API GeneratePolyline(Engine *engine, const std::vector<vec3> &polyline);
+
 }
 }
 #pragma warning(pop)

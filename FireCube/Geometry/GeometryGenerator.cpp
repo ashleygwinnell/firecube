@@ -461,3 +461,21 @@ Geometry *GeometryGenerator::GenerateCylinder(Engine *engine, float bottomRadius
 	ret->Update();
 	return ret;
 }
+
+Geometry *GeometryGenerator::GeneratePolyline(Engine *engine, const std::vector<vec3> &polyline)
+{
+	Geometry *ret = new Geometry(engine->GetRenderer());
+	VertexBuffer *vertexBuffer = new VertexBuffer(engine->GetRenderer());
+	ret->SetVertexBuffer(vertexBuffer);
+	vertexBuffer->SetShadowed(true);
+	unsigned int currentVertex = 0;
+	unsigned int vertexSize = 3;	
+
+	vertexBuffer->LoadData((float *) polyline.data(), polyline.size(), VertexAttributeType::POSITION, BufferType::STATIC);
+
+	ret->SetPrimitiveType(PrimitiveType::LINE_STRIP);
+	ret->SetPrimitiveCount(polyline.size());
+
+	ret->Update();
+	return ret;
+}

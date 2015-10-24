@@ -204,28 +204,16 @@ Command *RotateGizmo::GetCommand(EditorState *editorState, NodeDescriptor *nodeD
 }
 
 Geometry *RotateGizmo::CreateArc(float radius, float startAngle, float endAngle, unsigned int tesselation)
-{
-	Geometry *ret = new Geometry(engine->GetRenderer());
-	VertexBuffer *vertexBuffer = new VertexBuffer(engine->GetRenderer());	
-	ret->SetVertexBuffer(vertexBuffer);	
-	vertexBuffer->SetShadowed(true);		
-	unsigned int currentVertex = 0;
-	unsigned int vertexSize = 3;
-	std::vector<float> vertexData(tesselation * vertexSize);
+{	
+	std::vector<vec3> vertices(tesselation);
 	
 	for (unsigned int i = 0; i < tesselation; ++i)
 	{
 		float angle = startAngle + (float)i / (float)(tesselation - 1) * (endAngle - startAngle);
-		*((vec3 *)&vertexData[currentVertex++ * vertexSize]) = vec3(cos(angle) * radius, sin(angle) * radius, 0);
+		vertices[i] = vec3(cos(angle) * radius, sin(angle) * radius, 0);
 	}
 
-	vertexBuffer->LoadData(&vertexData[0], tesselation, VertexAttributeType::POSITION, BufferType::STATIC);
-	
-	ret->SetPrimitiveType(PrimitiveType::LINE_STRIP);
-	ret->SetPrimitiveCount(tesselation);
-
-	ret->Update();
-	return ret;
+	return GeometryGenerator::GeneratePolyline(engine, vertices);
 }
 
 void RotateGizmo::UpdateTransformation(FireCube::Camera *camera, NodeDescriptor *currentNode)
