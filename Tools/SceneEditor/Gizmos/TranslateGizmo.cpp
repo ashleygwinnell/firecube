@@ -8,42 +8,104 @@ using namespace FireCube;
 
 TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Object(engine), snapToGrid(false)
 {
-	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml")->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
+	const float lineLength = 1.0f;
+	const float cylinderRadius = 0.15f;
+	const float cylinderHeight = 0.5f;
+	const unsigned int cylinderTesselation = 8;
 
-	SharedPtr<Mesh> mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.1f, 1.0f, 0.1f)), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);	
+	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml");
+	
+	SharedPtr<Mesh> mesh;
+	SharedPtr<Mesh> meshIntersection;
+	SharedPtr<Mesh> meshLine;
+
 	StaticModel *staticModel;
 	Node *child;
 	node = parent->CreateChild("Editor_TranslateGizmo");
-	child = node->CreateChild("XAxis");
-	child->Move(vec3(0.5f, 0.0f, 0.0f));
+
+	// X Axis
+	material = material->Clone();
+	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
+	mesh = new Mesh(engine);
+	meshLine = new Mesh(engine);
+	meshIntersection = new Mesh(engine);	
+	mesh->AddGeometry(GeometryGenerator::GenerateCylinder(engine, cylinderRadius, 0.0f, cylinderHeight, 2, cylinderTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
+	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0, 0, 0), vec3(lineLength, 0 ,0) }), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
+	meshIntersection->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(lineLength + cylinderHeight, cylinderRadius * 2.0f, cylinderRadius * 2.0f)), BoundingBox(vec3(-(lineLength + cylinderHeight) * 0.5f, -cylinderRadius, -cylinderRadius), vec3((lineLength + cylinderHeight) * 0.5f, cylinderRadius, cylinderRadius)), nullptr);
+	Node *xAxis = node->CreateChild();
+	staticModel = xAxis->CreateComponent<StaticModel>();
+	staticModel->CreateFromMesh(meshLine);
+	staticModel->SetCollisionQueryMask(0);
+	staticModel->SetEnabled(false);
+	child = xAxis->CreateChild();
+	child->Move(vec3(lineLength, 0.0f, 0.0f));
 	child->Rotate(vec3(0.0f, 0.0f, PI * 0.5f));
 	staticModel = child->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(mesh);
+	staticModel->SetCollisionQueryMask(0);
+	staticModel->SetEnabled(false);
+
+	child = xAxis->CreateChild("XAxis");	
+	child->Move(vec3((lineLength + cylinderHeight) * 0.5f, 0.0f, 0.0f));	
+	staticModel = child->CreateComponent<StaticModel>();
+	staticModel->CreateFromMesh(meshIntersection);
 	staticModel->SetCollisionQueryMask(GIZMO_GEOMETRY);
 	staticModel->SetEnabled(false);
 
+	// Y Axis
 	material = material->Clone();
 	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
 	mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.1f, 1.0f, 0.1f)), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);	
-	child = node->CreateChild("YAxis");
-	child->Move(vec3(0.0f, 0.5f, 0.0f));
+	meshLine = new Mesh(engine);
+	meshIntersection = new Mesh(engine);
+	mesh->AddGeometry(GeometryGenerator::GenerateCylinder(engine, cylinderRadius, 0.0f, cylinderHeight, 2, cylinderTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
+	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0, 0, 0), vec3(0, lineLength, 0) }), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
+	meshIntersection->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(cylinderRadius * 2.0f, lineLength + cylinderHeight, cylinderRadius * 2.0f)), BoundingBox(vec3(-cylinderRadius, -(lineLength + cylinderHeight) * 0.5f, -cylinderRadius), vec3(cylinderRadius, (lineLength + cylinderHeight) * 0.5f, cylinderRadius)), nullptr);
+	Node *yAxis = node->CreateChild();
+	staticModel = yAxis->CreateComponent<StaticModel>();
+	staticModel->CreateFromMesh(meshLine);
+	staticModel->SetCollisionQueryMask(0);
+	staticModel->SetEnabled(false);
+	child = yAxis->CreateChild();
+	child->Move(vec3(0.0f, lineLength, 0.0f));	
 	staticModel = child->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(mesh);
+	staticModel->SetCollisionQueryMask(0);
+	staticModel->SetEnabled(false);
+
+	child = yAxis->CreateChild("YAxis");
+	child->Move(vec3(0.0f, (lineLength + cylinderHeight) * 0.5f, 0.0f));
+	staticModel = child->CreateComponent<StaticModel>();
+	staticModel->CreateFromMesh(meshIntersection);
 	staticModel->SetCollisionQueryMask(GIZMO_GEOMETRY);
 	staticModel->SetEnabled(false);
 
+	// Z Axis
 	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
+	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));	
 	mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(0.1f, 1.0f, 0.1f)), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);	
-	child = node->CreateChild("ZAxis");
-	child->Move(vec3(0.0f, 0.0f, -0.5f));
-	child->Rotate(vec3(PI * 0.5f, 0.0f, 0.0f));
+	meshLine = new Mesh(engine);
+	meshIntersection = new Mesh(engine);
+	mesh->AddGeometry(GeometryGenerator::GenerateCylinder(engine, cylinderRadius, 0.0f, cylinderHeight, 2, cylinderTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
+	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0, 0, 0), vec3(0, 0, lineLength) }), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
+	meshIntersection->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(cylinderRadius * 2.0f, cylinderRadius * 2.0f, lineLength + cylinderHeight)), BoundingBox(vec3(-cylinderRadius, -cylinderRadius, -(lineLength + cylinderHeight) * 0.5f), vec3(cylinderRadius, cylinderRadius, (lineLength + cylinderHeight) * 0.5f)), nullptr);
+	Node *zAxis = node->CreateChild("ZAxisMain");
+	staticModel = zAxis->CreateComponent<StaticModel>();
+	staticModel->CreateFromMesh(meshLine);
+	staticModel->SetCollisionQueryMask(0);
+	staticModel->SetEnabled(false);
+	child = zAxis->CreateChild();
+	child->Move(vec3(0.0f, 0.0f, lineLength));
+	child->Rotate(vec3(-PI * 0.5f, 0.0f, 0.0f));
 	staticModel = child->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(mesh);
+	staticModel->SetCollisionQueryMask(0);
+	staticModel->SetEnabled(false);
+
+	child = zAxis->CreateChild("ZAxis");
+	child->Move(vec3(0.0f, 0.0f, (lineLength + cylinderHeight) * 0.5f));
+	staticModel = child->CreateComponent<StaticModel>();
+	staticModel->CreateFromMesh(meshIntersection);
 	staticModel->SetCollisionQueryMask(GIZMO_GEOMETRY);
 	staticModel->SetEnabled(false);
 }

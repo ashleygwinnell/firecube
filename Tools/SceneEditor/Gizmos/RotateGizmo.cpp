@@ -26,8 +26,8 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 	meshIntersection = new Mesh(engine);
 	mesh->AddGeometry(CreateArc(arcRadius, PI * 0.5f, PI * 1.5f, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
 	meshIntersection->AddGeometry(GeometryGenerator::GenerateTorus(engine, arcRadius, tubeRadius, PI, 16, 16), BoundingBox(vec3(-(arcRadius + tubeRadius), 0, -tubeRadius), vec3(arcRadius + tubeRadius, arcRadius + tubeRadius, tubeRadius)), nullptr);
-	xAxis = node->CreateChild("XAxisMain");	 
-	child = xAxis->CreateChild("XAxisLine");
+	xAxis = node->CreateChild();	 
+	child = xAxis->CreateChild();
 	child->Rotate(vec3(0.0f, -PI * 0.5f, 0.0f));
 	staticModel = child->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(mesh);
@@ -48,8 +48,8 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 	meshIntersection = new Mesh(engine);
 	mesh->AddGeometry(CreateArc(arcRadius, 0, PI, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
 	meshIntersection->AddGeometry(GeometryGenerator::GenerateTorus(engine, arcRadius, tubeRadius, PI, 16, 16), BoundingBox(vec3(-(arcRadius + tubeRadius), 0, -tubeRadius), vec3(arcRadius + tubeRadius, arcRadius + tubeRadius, tubeRadius)), nullptr);
-	yAxis = node->CreateChild("YAxisMain");	 
-	child = yAxis->CreateChild("YAxisLine");
+	yAxis = node->CreateChild();	 
+	child = yAxis->CreateChild();
 	child->Rotate(vec3(-PI * 0.5f, 0.0f, 0.0f));
 	staticModel = child->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(mesh);
@@ -70,8 +70,8 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 	meshIntersection = new Mesh(engine);
 	mesh->AddGeometry(CreateArc(arcRadius, PI * 0.5f, PI * 1.5f, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
 	meshIntersection->AddGeometry(GeometryGenerator::GenerateTorus(engine, arcRadius, tubeRadius, PI, 16, 16), BoundingBox(vec3(-(arcRadius + tubeRadius), 0, -tubeRadius), vec3(arcRadius + tubeRadius, arcRadius + tubeRadius, tubeRadius)), nullptr);	
-	zAxis = node->CreateChild("ZAxisMain");
-	child = zAxis->CreateChild("ZAxisLine");
+	zAxis = node->CreateChild();
+	child = zAxis->CreateChild();
 	child->Rotate(vec3(0, 0, PI));
 	staticModel = child->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(mesh);
