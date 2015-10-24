@@ -45,6 +45,7 @@ void NodeDescriptor::SetParent(NodeDescriptor *parent)
 {
 	if (this->parent != parent)
 	{
+		SharedPtr<Node> nodePtr = node.Lock(); // Keep the node alive so the Remove call below won't delete the node
 		if (this->parent)
 		{
 			Remove();
