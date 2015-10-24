@@ -21,5 +21,5 @@ private:
 	std::string currentAxis;
 	FireCube::vec3 startScale, endScale;
 	bool snapToGrid;
-	FireCube::vec2 lastMousePos;
+	FireCube::vec2 startMousePos;
 };
