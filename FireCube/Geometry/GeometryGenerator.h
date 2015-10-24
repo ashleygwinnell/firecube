@@ -38,6 +38,8 @@ Geometry *FIRECUBE_API GenerateSphere(Engine *engine, float radius, unsigned int
 */
 Geometry *FIRECUBE_API GeneratePlane(Engine *engine, const vec2 &size);
 
+Geometry *FIRECUBE_API GenerateTorus(Engine *engine, float outerRadius, float innerRadius, float endAngle, unsigned int segments, unsigned int tubeSegments);
+
 }
 }
 #pragma warning(pop)

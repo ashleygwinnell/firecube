@@ -295,3 +295,69 @@ Geometry *FIRECUBE_API GeometryGenerator::GeneratePlane(Engine *engine, const ve
 	ret->Update();
 	return ret;
 }
+
+Geometry *GeometryGenerator::GenerateTorus(Engine *engine, float outerRadius, float innerRadius, float endAngle, unsigned int segments, unsigned int tubeSegments)
+{
+	Geometry *ret = new Geometry(engine->GetRenderer());
+	VertexBuffer *vertexBuffer = new VertexBuffer(engine->GetRenderer());
+	IndexBuffer *indexBuffer = new IndexBuffer(engine->GetRenderer());
+	ret->SetVertexBuffer(vertexBuffer);
+	ret->SetIndexBuffer(indexBuffer);
+	vertexBuffer->SetShadowed(true);
+	indexBuffer->SetShadowed(true);
+	
+	unsigned int vertexSize = 3 + 3 + 2;
+	unsigned int vertexCount = (segments + 1) * (tubeSegments + 1);
+	std::vector<float> vertexData(vertexCount * vertexSize);
+	std::vector<unsigned int> indexData(segments * tubeSegments * 6);
+	unsigned int currentVertex = 0;
+
+	for (unsigned int j = 0; j <= segments; j++) 
+	{
+		for (unsigned int i = 0; i <= tubeSegments; i++) 
+		{
+			float u = (float) i / (float) tubeSegments * endAngle;
+			float v = (float) j / (float) segments * PI * 2.0f;
+
+			vec3 center(cos(u) * outerRadius, sin(u) * outerRadius, 0);
+						
+			vec3 point((outerRadius + innerRadius * cos(v)) * cos(u),
+			(outerRadius + innerRadius * cos(v)) * sin(u),
+				innerRadius * sin(v));
+
+			*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = point;
+			*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = (point - center).Normalized();
+			*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2((float)i / (float)tubeSegments, (float)j / (float)segments);
+			currentVertex++;
+		}
+	}
+
+	unsigned int currentIndex = 0;
+
+	for (unsigned int j = 1; j <= segments; j++) 
+	{
+		for (unsigned int i = 1; i <= tubeSegments; i++) 
+		{
+			unsigned int a = (tubeSegments + 1) * j + i - 1;
+			unsigned int b = (tubeSegments + 1) * (j - 1) + i - 1;
+			unsigned int c = (tubeSegments + 1) * (j - 1) + i;
+			unsigned int d = (tubeSegments + 1) * j + i;
+
+			indexData[currentIndex++] = a;
+			indexData[currentIndex++] = b;
+			indexData[currentIndex++] = d;
+			indexData[currentIndex++] = b;
+			indexData[currentIndex++] = c;
+			indexData[currentIndex++] = d;			
+		}
+	}
+
+	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, BufferType::STATIC);
+	indexBuffer->LoadData(&indexData[0], indexData.size(), BufferType::STATIC);
+
+	ret->SetPrimitiveType(PrimitiveType::TRIANGLES);
+	ret->SetPrimitiveCount(indexData.size() / 3);
+
+	ret->Update();
+	return ret;
+}
