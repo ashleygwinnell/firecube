@@ -58,16 +58,6 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 	staticModel->SetEnabled(false);
 }
 
-void ScaleGizmo::SetPosition(vec3 position)
-{
-	node->SetTranslation(position);
-}
-
-void ScaleGizmo::SetRotation(mat4 rotation)
-{
-	node->SetRotation(rotation);
-}
-
 void ScaleGizmo::Show()
 {
 	std::vector<StaticModel *> components;
@@ -139,12 +129,13 @@ void ScaleGizmo::SetSnapToGrid(bool snap)
 	snapToGrid = snap;
 }
 
-void ScaleGizmo::SetScale(float scale)
-{
-	node->SetScale(vec3(scale));
-}
-
 Command *ScaleGizmo::GetCommand(EditorState *editorState, NodeDescriptor *nodeDesc)
 {
 	return new SetScaleCommand(editorState, "Scale", nodeDesc, startScale, endScale);
+}
+
+void ScaleGizmo::UpdateTransformation(FireCube::Camera *camera, NodeDescriptor *currentNode)
+{
+	node->SetTranslation(currentNode->GetNode()->GetWorldPosition());
+	node->SetScale((camera->GetNode()->GetWorldPosition() - currentNode->GetNode()->GetWorldPosition()).Length() * 0.1f);
 }

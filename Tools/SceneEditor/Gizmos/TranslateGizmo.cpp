@@ -48,15 +48,6 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 	staticModel->SetEnabled(false);
 }
 
-void TranslateGizmo::SetPosition(FireCube::vec3 position)
-{
-	node->SetTranslation(position);
-}
-
-void TranslateGizmo::SetRotation(FireCube::mat4 rotation)
-{
-
-}
 void TranslateGizmo::Show()
 {
 	std::vector<StaticModel *> components;
@@ -137,7 +128,7 @@ void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos
 		}
 		currentNode->SetTranslation(translation);
 		endPosition = translation;
-		this->SetPosition(currentNode->GetNode()->GetWorldPosition());
+		node->SetTranslation(currentNode->GetNode()->GetWorldPosition());
 	}
 }
 
@@ -146,12 +137,13 @@ void TranslateGizmo::SetSnapToGrid(bool snap)
 	snapToGrid = snap;
 }
 
-void TranslateGizmo::SetScale(float scale)
-{
-	node->SetScale(vec3(scale));
-}
-
 Command *TranslateGizmo::GetCommand(EditorState *editorState, NodeDescriptor *nodeDesc)
 {
 	return new SetTranslationCommand(editorState, "Translate", nodeDesc, startPosition, endPosition);
+}
+
+void TranslateGizmo::UpdateTransformation(FireCube::Camera *camera, NodeDescriptor *currentNode)
+{
+	node->SetTranslation(currentNode->GetNode()->GetWorldPosition());
+	node->SetScale((camera->GetNode()->GetWorldPosition() - currentNode->GetNode()->GetWorldPosition()).Length() * 0.1f);
 }

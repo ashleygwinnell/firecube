@@ -217,14 +217,23 @@ void GLCanvas::OnMotion(wxMouseEvent& event)
 	{
 		camera->RotateX(-(curpos.y - lastMousePos.y) / 60.0f);
 		camera->RotateY(-(curpos.x - lastMousePos.x) / 60.0f);
+		UpdateGizmo();
 		this->Refresh(false);
 	}
 	else if (event.MiddleIsDown())
 	{
 		if (event.ShiftDown())
+		{
 			camera->Zoom(-(curpos.y - lastMousePos.y) / 15.0f);
+			UpdateGizmo();
+			this->Refresh(false);
+		}
 		else
+		{
 			camera->Zoom(-(curpos.y - lastMousePos.y) / 30.0f);
+			UpdateGizmo();
+			this->Refresh(false);
+		}
 	}
 	else if (event.LeftIsDown() && event.ShiftDown() == false)
 	{
@@ -405,8 +414,7 @@ void GLCanvas::UpdateGizmo()
 {
 	if (transformGizmo && editorState->GetSelectedNode())
 	{
-		transformGizmo->SetPosition(editorState->GetSelectedNode()->GetNode()->GetWorldPosition());
-		transformGizmo->SetScale((camera->GetNode()->GetWorldPosition() - editorState->GetSelectedNode()->GetNode()->GetWorldPosition()).Length() * 0.1f);
+		transformGizmo->UpdateTransformation(camera, editorState->GetSelectedNode());
 		transformGizmo->Show();
 	}
 	else if (transformGizmo && editorState->GetSelectedNode() == nullptr)
