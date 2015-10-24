@@ -364,6 +364,9 @@ void MainFrameImpl::SceneTreeBeginDrag(wxTreeEvent& event)
 void MainFrameImpl::SceneTreeEndDrag(wxTreeEvent& event)
 {
 	auto newParent = event.GetItem();
+	if (dragItem == newParent)
+		return;
+
 	if (newParent.IsOk() == false)
 	{
 		newParent = sceneTreeCtrl->GetRootItem();

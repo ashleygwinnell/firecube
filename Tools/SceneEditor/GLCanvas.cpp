@@ -397,6 +397,7 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 		if (editorState->GetSelectedNode())
 		{
 			cameraTarget->SetTranslation(editorState->GetSelectedNode()->GetNode()->GetWorldPosition());
+			UpdateGizmo();
 			this->Refresh(false);
 		}
 	}
