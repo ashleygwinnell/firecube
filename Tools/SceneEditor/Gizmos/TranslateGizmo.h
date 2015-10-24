@@ -20,5 +20,6 @@ private:
 	FireCube::Node *node;
 	FireCube::vec3 startPosition, dragStart, endPosition;
 	std::string currentAxis;
-	bool snapToGrid;	
+	bool snapToGrid;
+	FireCube::mat4 parentRotationMatrix;
 };

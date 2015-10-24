@@ -77,6 +77,14 @@ bool TranslateGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor 
 	{
 		auto &result = query.results.front();
 		Node *node = result.renderable->GetNode();		
+		if (currentNode->GetNode()->GetParent())
+		{
+			parentRotationMatrix = currentNode->GetNode()->GetParent()->GetWorldRotation();
+		}
+		else
+		{
+			parentRotationMatrix.Identity();
+		}
 		currentAxis = node->GetName();
 		dragStart = query.ray.origin + query.ray.direction * result.distance;
 		startPosition = currentNode->GetTranslation();
@@ -95,7 +103,7 @@ void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos
 	{		
 		if (::MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(1, 0, 0), ray.origin, ray.direction))
 		{
-			translation = vec3(startPosition.x + (intersectionPoint.x - dragStart.x), startPosition.y, startPosition.z);
+			translation = vec3((intersectionPoint.x - dragStart.x), 0.0f, 0.0f);
 			moved = true;
 		}
 	}
@@ -104,7 +112,7 @@ void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos
 		vec3 intersectionPoint;
 		if (::MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(0, 1, 0), ray.origin, ray.direction))
 		{
-			translation = vec3(startPosition.x, startPosition.y + (intersectionPoint.y - dragStart.y), startPosition.z);
+			translation = vec3(0.0f, (intersectionPoint.y - dragStart.y), 0.0f);
 			moved = true;
 		}
 	}
@@ -113,7 +121,7 @@ void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos
 		vec3 intersectionPoint;
 		if (::MathUtils::ClosestPointsOnTwoLines(intersectionPoint, dragStart, vec3(0, 0, 1), ray.origin, ray.direction))
 		{
-			translation = vec3(startPosition.x, startPosition.y, startPosition.z + (intersectionPoint.z - dragStart.z));
+			translation = vec3(0.0f, 0.0f, (intersectionPoint.z - dragStart.z));
 			moved = true;
 		}
 	}
@@ -126,8 +134,12 @@ void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos
 			std::modf(translation.y, &translation.y);
 			std::modf(translation.z, &translation.z);
 		}
-		currentNode->SetTranslation(translation);
-		endPosition = translation;
+
+		mat4 temp = parentRotationMatrix;
+		temp.Inverse();
+		translation = temp * translation;
+		endPosition = startPosition + translation;
+		currentNode->SetTranslation(endPosition);		
 		node->SetTranslation(currentNode->GetNode()->GetWorldPosition());
 	}
 }
