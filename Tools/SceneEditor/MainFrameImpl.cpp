@@ -718,3 +718,28 @@ void MainFrameImpl::Reset()
 
 	editorState->SetSelectedNode(nullptr);
 }
+
+void MainFrameImpl::SceneTreeKeyUp(wxKeyEvent& event)
+{
+	if (event.GetKeyCode() == WXK_SPACE)
+	{
+		auto nodeDesc = editorState->GetSelectedNode();
+		if (nodeDesc)
+		{
+			auto clonedNode = nodeDesc->Clone();
+
+			auto command = new AddNodeCommand(editorState, "Clone", clonedNode, nodeDesc->GetParent());
+			editorState->ExecuteCommand(command);
+			editorState->SetSelectedNode(clonedNode);
+			editorState->sceneChanged(editorState);			
+		}
+	}
+	else if (event.GetKeyCode() == WXK_DELETE)
+	{
+		if (editorState->GetSelectedNode())
+		{
+			editorState->ExecuteCommand(new RemoveNodeCommand(editorState, "Remove Node", editorState->GetSelectedNode()));
+			editorState->SetSelectedNode(nullptr);
+		}
+	}
+}
