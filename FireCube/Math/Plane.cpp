@@ -20,6 +20,12 @@ Plane::Plane(const vec3 &p1, const vec3 &p2, const vec3 &p3)
 	distance = p1.Dot(normal);
 }
 
+Plane::Plane(const vec3 &normal, const vec3 &point)
+{
+	this->normal = normal;
+	distance = point.Dot(normal);
+}
+
 void Plane::SetNormal(const vec3 &normal)
 {
 	this->normal = normal;

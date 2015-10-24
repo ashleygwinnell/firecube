@@ -40,6 +40,13 @@ public:
 	Plane(const vec3 &p1, const vec3 &p2, const vec3 &p3);
 
 	/**
+	* Constructs a place.
+	* @param normal The normal vector of the plane.
+	* @param point A point lying on the plane.
+	*/
+	Plane(const vec3 &normal, const vec3 &point);
+
+	/**
 	* Sets the normal vector of this plane.
 	* @param normal The new normal vector.
 	*/
