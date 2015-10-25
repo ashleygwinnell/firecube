@@ -21,6 +21,8 @@ uniform mat4 modelMatrix;
 uniform mat4 viewProjectionMatrix;
 uniform mat3 normalMatrix;
 uniform vec3 cameraPos;
+uniform vec3 uOffset;
+uniform vec3 vOffset;
 void  main()
 {
 	#ifdef SKINNING
@@ -35,7 +37,7 @@ void  main()
 		vec3 worldSpacePos = vec3(modelMatrix * vec4(atrPosition, 1.0));
 		vec3 norm = atrNormal;
 	#endif
-	texcoord = atrTexCoord;	
+	texcoord = vec2(dot(atrTexCoord, uOffset.xy) + uOffset.z, dot(atrTexCoord, vOffset.xy) + vOffset.z);
 	#ifdef NORMAL_MAPPING
 		vec3 bitangent = cross(atrTangent, norm);
 		tbn = mat3(normalize(normalMatrix * atrTangent), normalize(normalMatrix * bitangent), normalize(normalMatrix * norm));		

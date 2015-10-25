@@ -11,6 +11,9 @@ Material::Material(Engine *engine) : Resource(engine)
 {
 	for (int i = 0; i < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS); ++i)
 		textures[i] = nullptr;
+
+	SetParameter(PARAM_U_OFFSET, vec3(1, 0, 0));
+	SetParameter(PARAM_V_OFFSET, vec3(0, 1, 0));
 }
 
 bool Material::Load(const std::string &filename)

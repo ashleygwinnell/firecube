@@ -42,6 +42,8 @@ uniform mat4 modelMatrix;
 uniform mat4 viewProjectionMatrix;
 uniform mat3 normalMatrix;
 uniform vec3 cameraPos;
+uniform vec3 uOffset;
+uniform vec3 vOffset;
 void  main()
 {
 	#ifdef SKINNING
@@ -56,7 +58,7 @@ void  main()
 		vec3 worldSpacePos = vec3(modelMatrix * vec4(atrPosition, 1.0));
 		vec3 norm = atrNormal;
 	#endif
-	texcoord = atrTexCoord;
+	texcoord = vec2(dot(atrTexCoord, uOffset.xy) + uOffset.z, dot(atrTexCoord, vOffset.xy) + vOffset.z);
 	#if defined(POINT_LIGHT) || defined(SPOT_LIGHT)		
 		lightDir = vec3(lightPosition.xyz - worldSpacePos) / lightPosition.w;
 		eyeVec = cameraPos - worldSpacePos;

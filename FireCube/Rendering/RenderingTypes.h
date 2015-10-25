@@ -86,6 +86,8 @@ extern StringHash PARAM_MATERIAL_DIFFUSE;
 extern StringHash PARAM_MATERIAL_SPECULAR;
 extern StringHash PARAM_MATERIAL_SHININESS;
 extern StringHash PARAM_MATERIAL_OPACITY;
+extern StringHash PARAM_U_OFFSET;
+extern StringHash PARAM_V_OFFSET;
 extern StringHash PARAM_AMBIENT_COLOR;
 extern StringHash PARAM_MODEL_MATRIX;
 extern StringHash PARAM_VIEW_PROJECTION_MATRIX;
