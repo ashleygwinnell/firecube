@@ -74,7 +74,7 @@ void PhysicsWorld::CollideCharacterController(const CharacterController *charact
 			}
 			else if (collisionShape->GetShapeType() == CollisionShapeType::PLANE)
 			{				
-				CollisionUtils::SweepCapsulePlane(direction, distance, p0, p1, characterController->radius, collisionShape->GetPlane(), collisionShape->GetNode()->GetWorldTransformation(), result);
+				CollisionUtils::SweepCapsulePlane(direction, distance, p0, p1, characterController->radius, collisionShape->GetPlane(), collisionShape->GetNode()->GetWorldTransformation(), currentResult);
 			}
 
 			if (currentResult.collisionFound)
