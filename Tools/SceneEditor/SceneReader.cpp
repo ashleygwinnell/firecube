@@ -107,7 +107,7 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 			staticModelDescriptor->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));			
 		}		
 	}
-	else if (type == "box")
+	else if (type == "Box")
 	{
 		BoxDescriptor *boxDescriptor = new BoxDescriptor();
 		addedComponent = boxDescriptor;		
