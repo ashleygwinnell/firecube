@@ -116,6 +116,7 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	material->SetName(matName);
 
 	aiColor3D aColor;
+	aiUVTransform uvTransform;
 	float value;
 	
 	if (aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aColor) == AI_SUCCESS)
@@ -152,6 +153,14 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	else
 	{
 		material->SetParameter(PARAM_MATERIAL_OPACITY, 1.0f);
+	}
+
+	if (aMaterial->Get(AI_MATKEY_UVTRANSFORM_DIFFUSE(0), uvTransform) == AI_SUCCESS)
+	{
+		vec3 uOffset(uvTransform.mScaling.x, 0.0f, uvTransform.mTranslation.x);
+		vec3 vOffset(0.0f, uvTransform.mScaling.y, uvTransform.mTranslation.y);
+		material->SetParameter(PARAM_U_OFFSET, uOffset);
+		material->SetParameter(PARAM_V_OFFSET, vOffset);
 	}
 	
 	bool hasDiffuseTexture = ProcessAssimpMaterialTexture(aMaterial, material, aiTextureType_DIFFUSE, TextureUnit::DIFFUSE);
