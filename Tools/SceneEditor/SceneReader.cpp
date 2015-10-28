@@ -117,6 +117,21 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 			vec3 size = Variant::FromString(e->Attribute("size")).GetVec3();
 			boxDescriptor->SetSize(size);
 		}
+
+		if (e->Attribute("cast_shadow"))
+		{
+			boxDescriptor->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
+		}
+
+		if (e->Attribute("light_mask"))
+		{
+			boxDescriptor->SetLightMask(std::stoul(e->Attribute("light_mask"), 0, 16));
+		}
+
+		if (e->Attribute("collision_query_mask"))
+		{
+			boxDescriptor->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
+		}
 	}
 	/*else if (type == "sphere")
 	{

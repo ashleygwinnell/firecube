@@ -110,7 +110,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			component->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
 		}
 	}
-	else if (type == "box")
+	else if (type == "Box")
 	{		
 		Material *material = nullptr;
 
@@ -119,13 +119,33 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			material = engine->GetResourceCache()->GetResource<Material>(e->Attribute("material"));
 		}
 
+		StaticModel *staticModel = nullptr;
+
 		if (e->Attribute("size") && material)
 		{
-			auto component = node->CreateComponent<StaticModel>();
+			auto staticModel = node->CreateComponent<StaticModel>();
 			vec3 size = Variant::FromString(e->Attribute("size")).GetVec3();			
 			Mesh mesh(engine);			
-			mesh.AddGeometry(GeometryGenerator::GenerateBox(engine, size), BoundingBox(-size, size), material);
-			component->CreateFromMesh(&mesh);
+			mesh.AddGeometry(GeometryGenerator::GenerateBox(engine, size), BoundingBox(-size * 0.5f, size * 0.5f), material);
+			staticModel->CreateFromMesh(&mesh);
+		}
+
+		if (staticModel)
+		{			
+			if (e->Attribute("cast_shadow"))
+			{
+				staticModel->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
+			}
+
+			if (e->Attribute("light_mask"))
+			{
+				staticModel->SetLightMask(std::stoul(e->Attribute("light_mask"), 0, 16));
+			}
+
+			if (e->Attribute("collision_query_mask"))
+			{
+				staticModel->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
+			}
 		}
 	}
 	else if (type == "sphere")
