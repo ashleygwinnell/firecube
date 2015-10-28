@@ -6,12 +6,12 @@
 #include "Geometry/Mesh.h"
 using namespace FireCube;
 
-StaticModel::StaticModel(Engine *engine) : Renderable(engine), boundingBox(vec3(0), vec3(0)), mesh(nullptr)
+StaticModel::StaticModel(Engine *engine) : Renderable(engine), boundingBox(vec3(0), vec3(0))
 {
 	
 }
 
-StaticModel::StaticModel(const StaticModel &other) : Renderable(other), boundingBox(other.boundingBox), geometries(other.geometries), materials(other.materials), mesh(other.mesh)
+StaticModel::StaticModel(const StaticModel &other) : Renderable(other), boundingBox(other.boundingBox), geometries(other.geometries), materials(other.materials)
 {
 	renderableParts = other.renderableParts;
 	renderablePartsTransformations = other.renderablePartsTransformations;
@@ -24,7 +24,6 @@ StaticModel::StaticModel(Engine *engine, Mesh *mesh) : StaticModel(engine)
 
 void StaticModel::CreateFromMesh(Mesh *mesh)
 {
-	this->mesh = mesh;
 	renderableParts.clear();
 	renderablePartsTransformations.clear();
 	geometries.clear();
@@ -44,11 +43,11 @@ void StaticModel::CreateFromMesh(Mesh *mesh)
 
 		MarkedDirty();
 
-		CreateRenderableParts(mesh->GetSkeletonRoot(), renderableParts, mat4::IDENTITY);
+		CreateRenderableParts(mesh, mesh->GetSkeletonRoot(), renderableParts, mat4::IDENTITY);
 	}
 }
 
-void StaticModel::CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<RenderablePart> &renderableParts, mat4 transformation)
+void StaticModel::CreateRenderableParts(Mesh *mesh, SkeletonNode &skeletonNode, std::vector<RenderablePart> &renderableParts, mat4 transformation)
 {
 	mat4 modelTransformation = transformation * skeletonNode.transformation;
 	for (auto meshIndex : skeletonNode.meshes)
@@ -68,7 +67,7 @@ void StaticModel::CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<
 
 	for (auto &c : skeletonNode.children)
 	{
-		CreateRenderableParts(c, renderableParts, modelTransformation);
+		CreateRenderableParts(mesh, c, renderableParts, modelTransformation);
 	}
 }
 
@@ -95,11 +94,6 @@ std::vector<SharedPtr<Geometry>> &StaticModel::GetGeometries()
 std::vector<SharedPtr<Material>> &StaticModel::GetMaterials()
 {
 	return materials;
-}
-
-Mesh *StaticModel::GetMesh()
-{
-	return mesh;
 }
 
 void StaticModel::UpdateWorldBoundingBox()

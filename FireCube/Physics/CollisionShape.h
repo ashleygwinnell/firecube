@@ -51,8 +51,7 @@ public:
 
 	Plane GetPlane() const;
 	CollisionMesh *GetCollisionMesh();
-	BoundingBox GetBox() const;
-	Mesh *GetMesh();
+	BoundingBox GetBox() const;	
 
 	BoundingBox GetWorldBoundingBox();
 
@@ -75,7 +74,7 @@ private:
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
 	void UpdateWorldBoundingBox();
-	void SetMesh(SkeletonNode &skeletonNode, mat4 transformation);
+	void SetMesh(Mesh *mesh, SkeletonNode &skeletonNode, mat4 transformation);
 
 	BoundingBox worldBoundingBox;
 	bool worldBoundingBoxChanged;
@@ -84,8 +83,7 @@ private:
 	CollisionShapeType type;
 	WeakPtr<PhysicsWorld> physicsWorld;
 
-	SharedPtr<CollisionMesh> collisionMesh;
-	Mesh *mesh;
+	SharedPtr<CollisionMesh> collisionMesh;	
 	Plane plane;
 	BoundingBox shapeBoundingBox;
 

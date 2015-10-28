@@ -22,13 +22,13 @@ CollisionTriangle::CollisionTriangle(vec3 p0, vec3 p1, vec3 p2) : p0(p0), p1(p1)
 
 }
 
-CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld(nullptr), worldBoundingBoxChanged(false), isTrigger(false), collisionMesh(nullptr), mesh(nullptr),
+CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld(nullptr), worldBoundingBoxChanged(false), isTrigger(false), collisionMesh(nullptr),
 	octreeNode(nullptr), octreeNodeNeedsUpdate(false)
 {
 
 }
 
-CollisionShape::CollisionShape(const CollisionShape &other) : Component(other), worldBoundingBoxChanged(true), type(other.type), physicsWorld(other.physicsWorld), collisionMesh(other.collisionMesh), mesh(other.mesh), plane(other.plane),
+CollisionShape::CollisionShape(const CollisionShape &other) : Component(other), worldBoundingBoxChanged(true), type(other.type), physicsWorld(other.physicsWorld), collisionMesh(other.collisionMesh), plane(other.plane),
 															  shapeBoundingBox(other.shapeBoundingBox), isTrigger(other.isTrigger), octreeNode(nullptr), octreeNodeNeedsUpdate(false)
 {
 	
@@ -81,25 +81,19 @@ CollisionMesh *CollisionShape::GetCollisionMesh()
 	return collisionMesh;
 }
 
-Mesh *CollisionShape::GetMesh()
-{
-	return mesh;
-}
-
 void CollisionShape::SetMesh(Mesh *mesh)
 {
 	type = CollisionShapeType::TRIANGLE_MESH;
 	collisionMesh = new CollisionMesh;
-	this->mesh = mesh;
 	if (!mesh)
 		return;
 
-	SetMesh(mesh->GetSkeletonRoot(), mat4::IDENTITY);
+	SetMesh(mesh, mesh->GetSkeletonRoot(), mat4::IDENTITY);
 	
 	MarkedDirty();
 }
 
-void CollisionShape::SetMesh(SkeletonNode &skeletonNode, mat4 transformation)
+void CollisionShape::SetMesh(Mesh *mesh, SkeletonNode &skeletonNode, mat4 transformation)
 {
 	mat4 modelTransformation = transformation * skeletonNode.transformation;
 	for (auto meshIndex : skeletonNode.meshes)
@@ -132,7 +126,7 @@ void CollisionShape::SetMesh(SkeletonNode &skeletonNode, mat4 transformation)
 
 	for (auto &c : skeletonNode.children)
 	{
-		SetMesh(c, modelTransformation);
+		SetMesh(mesh, c, modelTransformation);
 	}
 }
 

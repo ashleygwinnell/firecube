@@ -16,8 +16,7 @@ public:
 	StaticModel(Engine *engine, Mesh *mesh);
 	void CreateFromMesh(Mesh *mesh);
 	std::vector<SharedPtr<Geometry>> &GetGeometries();
-	std::vector<SharedPtr<Material>> &GetMaterials();	
-	Mesh *GetMesh();
+	std::vector<SharedPtr<Material>> &GetMaterials();		
 	virtual void IntersectRay(RayQuery &rayQuery);
 	virtual Component *Clone() const;
 protected:
@@ -26,9 +25,8 @@ protected:
 
 	void SetBoundingBox(BoundingBox boundingBox);
 	virtual void UpdateWorldBoundingBox();
-	void CreateRenderableParts(SkeletonNode &skeletonNode, std::vector<RenderablePart> &renderableParts, mat4 transformation);
-	virtual void UpdateRenderableParts();
-	Mesh *mesh;
+	void CreateRenderableParts(Mesh *mesh, SkeletonNode &skeletonNode, std::vector<RenderablePart> &renderableParts, mat4 transformation);
+	virtual void UpdateRenderableParts();	
 	BoundingBox boundingBox;
 	std::vector<SharedPtr<Geometry>> geometries;
 	std::vector<SharedPtr<Material>> materials;
