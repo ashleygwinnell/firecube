@@ -19,6 +19,7 @@
 #include "Panels/LuaScriptPanelImpl.h"
 #include "Panels/CollisionShapePanelImpl.h"
 #include "Panels/CharacterControllerPanelImpl.h"
+#include "Panels/BoxPanelImpl.h"
 #include "AssetUtils.h"
 #include "SceneReader.h"
 #include "Descriptors/ComponentDescriptor.h"
@@ -27,6 +28,7 @@
 #include "Descriptors/CollisionShapeDescriptor.h"
 #include "Descriptors/CharacterControllerDescriptor.h"
 #include "Descriptors/LuaScriptDescriptor.h"
+#include "Descriptors/BoxDescriptor.h"
 #include "tinyxml.h"
 
 using namespace FireCube;
@@ -42,6 +44,7 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	SubscribeToEvent(editorState, editorState->commandExecuted, &MainFrameImpl::UpdateUndoRedoMenu);
 	SubscribeToEvent(editorState, editorState->undoPerformed, &MainFrameImpl::UpdateUndoRedoMenu);
 	SubscribeToEvent(editorState, editorState->redoPerformed, &MainFrameImpl::UpdateUndoRedoMenu);
+	SubscribeToEvent(editorState, editorState->newSceneCreated, &MainFrameImpl::NewSceneCreated);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);	
 	SetAllPanelsVisibility(false);
 
@@ -156,6 +159,18 @@ void MainFrameImpl::AddCharacterControllerClicked(wxCommandEvent& event)
 	}
 }
 
+void MainFrameImpl::AddBoxClicked(wxCommandEvent& event)
+{
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{
+		auto boxDescriptor = new BoxDescriptor();
+		boxDescriptor->SetSize(vec3(1.0f));		
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add Box", nodeDesc, boxDescriptor, engine);
+
+		editorState->ExecuteCommand(addComponentCommand);
+	}
+}
 
 void MainFrameImpl::SetScene(FireCube::Scene *scene)
 {	
@@ -292,6 +307,8 @@ void MainFrameImpl::NewClicked(wxCommandEvent& event)
 	Filesystem::SetAssetsFolder(path);
 
 	Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Scenes");
+
+	Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Materials");
 
 	SetAllPanelsVisibility(true);
 
@@ -477,6 +494,15 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
 		t->AddControl(new CharacterControllerPanelImpl(t));
+
+		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
+
+		currentComponentPanels.push_back(t);
+	}
+	else if (componentDesc->GetType() == ComponentType::BOX)
+	{
+		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
+		t->AddControl(new BoxPanelImpl(t));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
@@ -742,4 +768,16 @@ void MainFrameImpl::SceneTreeKeyUp(wxKeyEvent& event)
 			editorState->SetSelectedNode(nullptr);
 		}
 	}
+}
+
+void MainFrameImpl::NewSceneCreated()
+{
+	std::string targetMaterialPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials" + Filesystem::PATH_SEPARATOR + "Default.xml";
+	SharedPtr<Material> defaultMaterial = new Material(engine);
+	defaultMaterial->SetName("Default");
+	defaultMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
+	defaultMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.7f));
+	defaultMaterial->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.0f));
+	defaultMaterial->SetParameter(PARAM_MATERIAL_SHININESS, 0.0f);
+	AssetUtils::SerializeMaterial(defaultMaterial, targetMaterialPath);
 }

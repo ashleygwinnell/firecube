@@ -11,6 +11,7 @@
 #include "Descriptors/CollisionShapeDescriptor.h"
 #include "Descriptors/CharacterControllerDescriptor.h"
 #include "Descriptors/LuaScriptDescriptor.h"
+#include "Descriptors/BoxDescriptor.h"
 
 using namespace FireCube;
 
@@ -178,6 +179,26 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlElement *pa
 		element->SetDoubleAttribute("height", characterController->GetHeight());
 		element->SetDoubleAttribute("contact_offset", characterController->GetContactOffset());
 		element->SetDoubleAttribute("step_offset", characterController->GetStepOffset());
+	}
+	else if (componentDesc->GetType() == ComponentType::BOX)
+	{
+		TiXmlElement *element = new TiXmlElement("component");
+		parent->LinkEndChild(element);
+
+		element->SetAttribute("type", componentDesc->GetTypeName());
+
+		auto box = static_cast<BoxDescriptor *>(componentDesc);
+
+		element->SetAttribute("size", ToString(box->GetSize()));
+		element->SetAttribute("cast_shadow", box->GetCastShadow() ? "true" : "false");
+
+		std::stringstream ligtMaskStream;
+		ligtMaskStream << std::hex << box->GetLightMask();
+		element->SetAttribute("light_mask", ligtMaskStream.str());
+
+		std::stringstream collisionQueryMaskStream;
+		collisionQueryMaskStream << std::hex << box->GetCollisionQueryMask();
+		element->SetAttribute("collision_query_mask", collisionQueryMaskStream.str());
 	}
 
 }

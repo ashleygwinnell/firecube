@@ -150,6 +150,12 @@
     <ClCompile Include="Commands\ReparentNodeCommand.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="Descriptors\BoxDescriptor.cpp">
+      <Filter>Descriptors</Filter>
+    </ClCompile>
+    <ClCompile Include="Panels\BoxPanelImpl.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -271,6 +277,12 @@
     </ClInclude>
     <ClInclude Include="Commands\ReparentNodeCommand.h">
       <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Descriptors\BoxDescriptor.h">
+      <Filter>Descriptors</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels\BoxPanelImpl.h">
+      <Filter>Panels</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

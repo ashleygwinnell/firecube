@@ -34,6 +34,7 @@ public:
 	FireCube::Event<> stateChanged;	
 	FireCube::Event<> sceneChanged;
 	FireCube::Event<> nodeChanged;
+	FireCube::Event<> newSceneCreated;
 	FireCube::Event<ComponentDescriptor *> componentRemoved;
 	FireCube::Event<ComponentDescriptor *> componentAdded;
 	FireCube::Event<Command *> commandExecuted;

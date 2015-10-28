@@ -9,6 +9,7 @@
 #include "Descriptors/CollisionShapeDescriptor.h"
 #include "Descriptors/CharacterControllerDescriptor.h"
 #include "Descriptors/LuaScriptDescriptor.h"
+#include "Descriptors/BoxDescriptor.h"
 
 using namespace FireCube;
 
@@ -106,25 +107,18 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 			staticModelDescriptor->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));			
 		}		
 	}
-	/*else if (type == "box")
+	else if (type == "box")
 	{
-		Material *material = nullptr;
+		BoxDescriptor *boxDescriptor = new BoxDescriptor();
+		addedComponent = boxDescriptor;		
 
-		if (e->Attribute("material"))
-		{
-			material = engine->GetResourceCache()->GetResource<Material>(e->Attribute("material"));
-		}
-
-		if (e->Attribute("size") && material)
-		{
-			auto component = node->CreateComponent<StaticModel>();
+		if (e->Attribute("size"))
+		{			
 			vec3 size = Variant::FromString(e->Attribute("size")).GetVec3();
-			Mesh mesh(engine);
-			mesh.AddGeometry(GeometryGenerator::GenerateBox(engine, size), BoundingBox(-size, size), material);
-			component->CreateFromMesh(&mesh);
+			boxDescriptor->SetSize(size);
 		}
 	}
-	else if (type == "sphere")
+	/*else if (type == "sphere")
 	{
 		Material *material = nullptr;
 

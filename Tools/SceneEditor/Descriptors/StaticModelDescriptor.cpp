@@ -80,9 +80,5 @@ unsigned int StaticModelDescriptor::GetCollisionQueryMask() const
 
 void StaticModelDescriptor::SetCollisionQueryMask(unsigned int collisionQueryMask)
 {
-	this->collisionQueryMask = collisionQueryMask;
-	if (component)
-	{
-		((StaticModel *)component)->SetCollisionQueryMask(collisionQueryMask);
-	}
+	this->collisionQueryMask = collisionQueryMask;	
 }

@@ -91,6 +91,7 @@ class MainFrame : public wxFrame
 		virtual void AddLuaScriptClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddCollisionShapeClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddCharacterControllerClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void AddBoxClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewSceneHierarchyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewInspectorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SceneTreeKeyUp( wxKeyEvent& event ) { event.Skip(); }
@@ -161,6 +162,44 @@ class StaticModelPanel : public wxPanel
 		
 		StaticModelPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~StaticModelPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class BoxPanel
+///////////////////////////////////////////////////////////////////////////////
+class BoxPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxTextCtrl* widthTextCtrl;
+		wxTextCtrl* heightTextCtrl;
+		wxTextCtrl* depthTextCtrl;
+		wxCheckBox* castShadowCheckBox;
+		wxStaticText* m_staticText42;
+		wxTextCtrl* lightMaskTextCtrl;
+		wxStaticText* m_staticText421;
+		wxTextCtrl* collisionQueryMaskTextCtrl;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void WidthChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void HeightChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void DepthChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void CastShadowChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void LightMaskChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void CollisionQueryMaskChanged( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		wxString widthText; 
+		wxString heightText; 
+		wxString depthText; 
+		wxString lightMaskText; 
+		wxString collisionQueryMaskText; 
+		
+		BoxPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
+		~BoxPanel();
 	
 };
 

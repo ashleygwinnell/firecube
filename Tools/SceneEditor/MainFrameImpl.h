@@ -40,6 +40,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void AddLuaScriptClicked(wxCommandEvent& event);
 		virtual void AddCollisionShapeClicked(wxCommandEvent& event);
 		virtual void AddCharacterControllerClicked(wxCommandEvent& event);
+		virtual void AddBoxClicked(wxCommandEvent& event);
 		virtual void AddNodeClicked(wxCommandEvent& event);
 		virtual void SceneTreeKeyUp(wxKeyEvent& event);
 		void ComponentAdded(ComponentDescriptor *componentDesc);
@@ -61,6 +62,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		void OpenSceneFile(const std::string &filename);
 		virtual void OnExitClicked(wxCommandEvent& event);
 		void Reset();
+		void NewSceneCreated();
 
 		MyApp *theApp;
 		FireCube::Engine *engine;

@@ -96,6 +96,8 @@ void GLCanvas::Init()
 
 	engine->GetRenderer()->SetSceneView(1, new SceneView(engine, scene, camera, nullptr));
 	engine->GetRenderer()->SetSceneView(0, new SceneView(engine, editorScene, camera, nullptr, engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/ForwardNoClear.xml")));
+
+	editorState->newSceneCreated(editorState);
 }
 
 void GLCanvas::SelectedNodeChanged(NodeDescriptor *nodeDesc)
@@ -430,7 +432,7 @@ void GLCanvas::CreateGrid(float size, unsigned int numberOfCells)
 		gridNode = root->CreateChild("Editor_GridNode");
 	gridNode->RemoveAllComponents();
 	gridGeometry = gridNode->CreateComponent<CustomGeometry>();
-	for (DWORD i = 0; i < numberOfCells + 1; i++)
+	for (unsigned int i = 0; i < numberOfCells + 1; i++)
 	{
 		vec3 pos1((float)i * size - size * (float)numberOfCells / 2.0f, 0, -size * (float)numberOfCells / 2.0f);
 		vec3 pos2((float)i * size - size * (float)numberOfCells / 2.0f, 0, size * (float)numberOfCells / 2.0f);
