@@ -13,6 +13,7 @@ public:
 	virtual void Hide();
 	virtual bool CheckOperationStart(FireCube::Scene *scene, NodeDescriptor *currentNode, FireCube::Ray ray, FireCube::vec2 mousePos);
 	virtual void PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos, NodeDescriptor *currentNode);
+	virtual void OperationEnd();
 	virtual void SetSnapToGrid(bool snap);
 	virtual Command *GetCommand(EditorState *editorState, NodeDescriptor *nodeDesc);
 	virtual void UpdateTransformation(FireCube::Camera *camera, NodeDescriptor *currentNode);
@@ -22,4 +23,5 @@ private:
 	std::string currentAxis;
 	bool snapToGrid;
 	FireCube::mat4 parentRotationMatrix;
+	FireCube::SharedPtr<FireCube::Material> xAxisMaterial, yAxisMaterial, zAxisMaterial;
 };

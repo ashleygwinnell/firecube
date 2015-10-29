@@ -12,8 +12,6 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 	const float cylinderRadius = 0.15f;
 	const float cylinderHeight = 0.5f;
 	const unsigned int cylinderTesselation = 8;
-
-	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml");
 	
 	SharedPtr<Mesh> mesh;
 	SharedPtr<Mesh> meshIntersection;
@@ -24,13 +22,13 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 	node = parent->CreateChild("Editor_TranslateGizmo");
 
 	// X Axis
-	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
+	xAxisMaterial = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml")->Clone();
+	xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
 	mesh = new Mesh(engine);
 	meshLine = new Mesh(engine);
 	meshIntersection = new Mesh(engine);	
-	mesh->AddGeometry(GeometryGenerator::GenerateCylinder(engine, cylinderRadius, 0.0f, cylinderHeight, 2, cylinderTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
-	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0, 0, 0), vec3(lineLength, 0 ,0) }), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
+	mesh->AddGeometry(GeometryGenerator::GenerateCylinder(engine, cylinderRadius, 0.0f, cylinderHeight, 2, cylinderTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), xAxisMaterial);
+	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0, 0, 0), vec3(lineLength, 0 ,0) }), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), xAxisMaterial);
 	meshIntersection->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(lineLength + cylinderHeight, cylinderRadius * 2.0f, cylinderRadius * 2.0f)), BoundingBox(vec3(-(lineLength + cylinderHeight) * 0.5f, -cylinderRadius, -cylinderRadius), vec3((lineLength + cylinderHeight) * 0.5f, cylinderRadius, cylinderRadius)), nullptr);
 	Node *xAxis = node->CreateChild();
 	staticModel = xAxis->CreateComponent<StaticModel>();
@@ -53,13 +51,13 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 	staticModel->SetEnabled(false);
 
 	// Y Axis
-	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
+	yAxisMaterial = xAxisMaterial->Clone();
+	yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
 	mesh = new Mesh(engine);
 	meshLine = new Mesh(engine);
 	meshIntersection = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateCylinder(engine, cylinderRadius, 0.0f, cylinderHeight, 2, cylinderTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
-	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0, 0, 0), vec3(0, lineLength, 0) }), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
+	mesh->AddGeometry(GeometryGenerator::GenerateCylinder(engine, cylinderRadius, 0.0f, cylinderHeight, 2, cylinderTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), yAxisMaterial);
+	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0, 0, 0), vec3(0, lineLength, 0) }), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), yAxisMaterial);
 	meshIntersection->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(cylinderRadius * 2.0f, lineLength + cylinderHeight, cylinderRadius * 2.0f)), BoundingBox(vec3(-cylinderRadius, -(lineLength + cylinderHeight) * 0.5f, -cylinderRadius), vec3(cylinderRadius, (lineLength + cylinderHeight) * 0.5f, cylinderRadius)), nullptr);
 	Node *yAxis = node->CreateChild();
 	staticModel = yAxis->CreateComponent<StaticModel>();
@@ -81,13 +79,13 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 	staticModel->SetEnabled(false);
 
 	// Z Axis
-	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));	
+	zAxisMaterial = xAxisMaterial->Clone();
+	zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
 	mesh = new Mesh(engine);
 	meshLine = new Mesh(engine);
 	meshIntersection = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateCylinder(engine, cylinderRadius, 0.0f, cylinderHeight, 2, cylinderTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
-	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0, 0, 0), vec3(0, 0, lineLength) }), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
+	mesh->AddGeometry(GeometryGenerator::GenerateCylinder(engine, cylinderRadius, 0.0f, cylinderHeight, 2, cylinderTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), zAxisMaterial);
+	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0, 0, 0), vec3(0, 0, lineLength) }), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), zAxisMaterial);
 	meshIntersection->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(cylinderRadius * 2.0f, cylinderRadius * 2.0f, lineLength + cylinderHeight)), BoundingBox(vec3(-cylinderRadius, -cylinderRadius, -(lineLength + cylinderHeight) * 0.5f), vec3(cylinderRadius, cylinderRadius, (lineLength + cylinderHeight) * 0.5f)), nullptr);
 	Node *zAxis = node->CreateChild("ZAxisMain");
 	staticModel = zAxis->CreateComponent<StaticModel>();
@@ -150,6 +148,20 @@ bool TranslateGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor 
 		currentAxis = node->GetName();
 		dragStart = query.ray.origin + query.ray.direction * result.distance;
 		startPosition = currentNode->GetTranslation();
+
+		if (currentAxis == "XAxis")
+		{			
+			xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
+		}
+		else if (currentAxis == "YAxis")
+		{		
+			yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
+		}
+		else if (currentAxis == "ZAxis")
+		{		
+			zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
+		}
+
 		return true;
 	}
 
@@ -220,4 +232,20 @@ void TranslateGizmo::UpdateTransformation(FireCube::Camera *camera, NodeDescript
 {
 	node->SetTranslation(currentNode->GetNode()->GetWorldPosition());
 	node->SetScale((camera->GetNode()->GetWorldPosition() - currentNode->GetNode()->GetWorldPosition()).Length() * 0.1f);
+}
+
+void TranslateGizmo::OperationEnd()
+{
+	if (currentAxis == "XAxis")
+	{
+		xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
+	}
+	else if (currentAxis == "YAxis")
+	{
+		yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
+	}
+	else if (currentAxis == "ZAxis")
+	{
+		zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
+	}
 }

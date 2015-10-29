@@ -33,6 +33,7 @@ public:
 	void OnMotion(wxMouseEvent& event);
 	void OnMouseWheel(wxMouseEvent& event);
 	void OnLeftUp(wxMouseEvent& event);
+	void OnLeftDown(wxMouseEvent& event);
 	void OnKeyUp(wxKeyEvent& event);
 	void Render();
 	void Init();	

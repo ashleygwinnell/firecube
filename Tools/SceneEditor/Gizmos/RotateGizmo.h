@@ -15,7 +15,7 @@ public:
 	virtual void SetSnapToGrid(bool snap);
 	virtual Command *GetCommand(EditorState *editorState, NodeDescriptor *nodeDesc);
 	virtual void UpdateTransformation(FireCube::Camera *camera, NodeDescriptor *currentNode);
-
+	virtual void OperationEnd();
 private:
 	FireCube::Geometry *CreateArc(float radius, float startAngle, float endAngle, unsigned int tesselation);
 	FireCube::Node *node;	
@@ -27,4 +27,5 @@ private:
 	FireCube::vec3 planeStartPoint;
 	FireCube::mat4 startRotationMatrix;
 	FireCube::mat4 parentRotationMatrix;
+	FireCube::SharedPtr<FireCube::Material> xAxisMaterial, yAxisMaterial, zAxisMaterial;
 };

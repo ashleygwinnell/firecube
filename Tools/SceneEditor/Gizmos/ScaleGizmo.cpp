@@ -13,20 +13,19 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 	SharedPtr<Mesh> mesh;
 	SharedPtr<Mesh> meshLine;
 	SharedPtr<Mesh> meshIntersection;
-
-	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml");
+	
 	node = parent->CreateChild("Editor_ScaleGizmo");
 	StaticModel *staticModel;
 	Node *child;
 
 	// X Axis
-	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
+	xAxisMaterial = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml")->Clone();
+	xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
 
 	mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(boxSize)), BoundingBox(vec3(-boxSize), vec3(boxSize)), material);
+	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(boxSize)), BoundingBox(vec3(-boxSize), vec3(boxSize)), xAxisMaterial);
 	meshLine = new Mesh(engine);
-	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0.0f), vec3(lineLength, 0.0f, 0.0f) }), BoundingBox(vec3(-boxSize), vec3(boxSize)), material);
+	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0.0f), vec3(lineLength, 0.0f, 0.0f) }), BoundingBox(vec3(-boxSize), vec3(boxSize)), xAxisMaterial);
 	meshIntersection = new Mesh(engine);
 	meshIntersection->AddGeometry(GeometryGenerator::GenerateCylinder(engine, boxSize * 0.5f, 0.0f, lineLength + boxSize, 2, 8), BoundingBox(vec3(-boxSize * 0.5f, 0.0f, -boxSize * 0.5f), vec3(boxSize * 0.5f, lineLength + boxSize, boxSize * 0.5f)), nullptr);
 	
@@ -53,13 +52,13 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 	staticModel->SetEnabled(false);
 
 	// Y Axis
-	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
+	yAxisMaterial = xAxisMaterial->Clone();
+	yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
 		
 	mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(boxSize)), BoundingBox(vec3(-boxSize), vec3(boxSize)), material);
+	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(boxSize)), BoundingBox(vec3(-boxSize), vec3(boxSize)), yAxisMaterial);
 	meshLine = new Mesh(engine);
-	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0.0f), vec3(0.0f, lineLength, 0.0f) }), BoundingBox(vec3(-boxSize), vec3(boxSize)), material);
+	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0.0f), vec3(0.0f, lineLength, 0.0f) }), BoundingBox(vec3(-boxSize), vec3(boxSize)), yAxisMaterial);
 	meshIntersection = new Mesh(engine);
 	meshIntersection->AddGeometry(GeometryGenerator::GenerateCylinder(engine, boxSize * 0.5f, 0.0f, lineLength + boxSize, 2, 8), BoundingBox(vec3(-boxSize * 0.5f, 0.0f, -boxSize * 0.5f), vec3(boxSize * 0.5f, lineLength + boxSize, boxSize * 0.5f)), nullptr);
 
@@ -85,12 +84,12 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 	staticModel->SetEnabled(false);
 
 	// Z Axis
-	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
+	zAxisMaterial = xAxisMaterial->Clone();
+	zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
 	mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(boxSize)), BoundingBox(vec3(-boxSize), vec3(boxSize)), material);
+	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(boxSize)), BoundingBox(vec3(-boxSize), vec3(boxSize)), zAxisMaterial);
 	meshLine = new Mesh(engine);
-	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0.0f), vec3(0.0f, 0.0f, lineLength) }), BoundingBox(vec3(-boxSize), vec3(boxSize)), material);
+	meshLine->AddGeometry(GeometryGenerator::GeneratePolyline(engine, { vec3(0.0f), vec3(0.0f, 0.0f, lineLength) }), BoundingBox(vec3(-boxSize), vec3(boxSize)), zAxisMaterial);
 	meshIntersection = new Mesh(engine);
 	meshIntersection->AddGeometry(GeometryGenerator::GenerateCylinder(engine, boxSize * 0.5f, 0.0f, lineLength + boxSize, 2, 8), BoundingBox(vec3(-boxSize * 0.5f, 0.0f, -boxSize * 0.5f), vec3(boxSize * 0.5f, lineLength + boxSize, boxSize * 0.5f)), nullptr);
 
@@ -117,10 +116,10 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 	staticModel->SetEnabled(false);
 
 	// All axes
-	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
+	allAxesMaterial = xAxisMaterial->Clone();
+	allAxesMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
 	mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(boxSize)), BoundingBox(vec3(-boxSize * 0.5f), vec3(boxSize * 0.5f)), material);	
+	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(boxSize)), BoundingBox(vec3(-boxSize * 0.5f), vec3(boxSize * 0.5f)), allAxesMaterial);
 	child = node->CreateChild("AllAxes");	
 	staticModel = child->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(mesh);
@@ -161,6 +160,22 @@ bool ScaleGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor *cur
 		startMousePos = mousePos;
 		dragStart = query.ray.origin + query.ray.direction * result.distance;
 		startScale = currentNode->GetScale();
+		if (currentAxis == "XAxis")
+		{			
+			xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
+		}
+		else if (currentAxis == "YAxis")
+		{		
+			yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
+		}
+		else if (currentAxis == "ZAxis")
+		{		
+			zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
+		}
+		else if (currentAxis == "AllAxes")
+		{
+			allAxesMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
+		}
 		return true;
 	}
 
@@ -228,4 +243,24 @@ void ScaleGizmo::UpdateTransformation(FireCube::Camera *camera, NodeDescriptor *
 	node->SetTranslation(currentNode->GetNode()->GetWorldPosition());
 	node->SetScale((camera->GetNode()->GetWorldPosition() - currentNode->GetNode()->GetWorldPosition()).Length() * 0.1f);
 	node->SetRotation(currentNode->GetNode()->GetWorldRotation());
+}
+
+void ScaleGizmo::OperationEnd()
+{
+	if (currentAxis == "XAxis")
+	{
+		xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
+	}
+	else if (currentAxis == "YAxis")
+	{
+		yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
+	}
+	else if (currentAxis == "ZAxis")
+	{
+		zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
+	}
+	else if (currentAxis == "AllAxes")
+	{
+		allAxesMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
+	}
 }

@@ -28,6 +28,7 @@ GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wx
 	Bind(wxEVT_MOTION, &GLCanvas::OnMotion, this);
 	Bind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
 	Bind(wxEVT_LEFT_UP, &GLCanvas::OnLeftUp, this);
+	Bind(wxEVT_LEFT_DOWN, &GLCanvas::OnLeftDown, this);
 	Bind(wxEVT_KEY_UP, &GLCanvas::OnKeyUp, this);
 }
 
@@ -40,6 +41,7 @@ GLCanvas::~GLCanvas()
 	Unbind(wxEVT_MOTION, &GLCanvas::OnMotion, this);
 	Unbind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
 	Unbind(wxEVT_LEFT_UP, &GLCanvas::OnLeftUp, this);
+	Unbind(wxEVT_LEFT_DOWN, &GLCanvas::OnLeftDown, this);
 	Unbind(wxEVT_KEY_UP, &GLCanvas::OnKeyUp, this);
 }
 
@@ -206,6 +208,36 @@ void GLCanvas::OnEraseBackground(wxEraseEvent& WXUNUSED(event))
 	// Do nothing, to avoid flashing.
 }
 
+void GLCanvas::OnLeftDown(wxMouseEvent& event)
+{
+	vec2 curpos(event.GetPosition().x, event.GetPosition().y);
+
+	if (event.ShiftDown() == false)
+	{
+		wxPoint mousePos = event.GetPosition();
+		wxSize size = this->GetSize();
+		Ray ray = camera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
+
+		if (currentOperation == Operation::NONE && editorState->GetSelectedNode())
+		{
+			bool startTransaform = transformGizmo->CheckOperationStart(editorScene, editorState->GetSelectedNode(), ray, vec2(mousePos.x, mousePos.y));
+			if (startTransaform)
+			{
+				currentOperation = Operation::OBJECT_TRANSFORM;
+			}
+		}
+
+		if (currentOperation == Operation::OBJECT_TRANSFORM)
+		{
+			transformGizmo->PerformOperation(ray, vec2(mousePos.x, mousePos.y), editorState->GetSelectedNode());
+			UpdateGizmo();
+			this->Refresh(false);
+		}
+	}
+
+	lastMousePos = curpos;
+}
+
 void GLCanvas::OnMotion(wxMouseEvent& event)
 {
 	if (!this->HasFocus())
@@ -242,15 +274,6 @@ void GLCanvas::OnMotion(wxMouseEvent& event)
 		wxPoint mousePos = event.GetPosition();
 		wxSize size = this->GetSize();
 		Ray ray = camera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
-
-		if (currentOperation == Operation::NONE && editorState->GetSelectedNode())
-		{							
-			bool startTransaform = transformGizmo->CheckOperationStart(editorScene, editorState->GetSelectedNode(), ray, vec2(mousePos.x, mousePos.y));
-			if (startTransaform)
-			{							
-				currentOperation = Operation::OBJECT_TRANSFORM;
-			}							
-		}		
 		
 		if (currentOperation == Operation::OBJECT_TRANSFORM)
 		{						
@@ -311,7 +334,9 @@ void GLCanvas::OnLeftUp(wxMouseEvent& event)
 		}
 		else if (currentOperation == Operation::OBJECT_TRANSFORM)
 		{
+			transformGizmo->OperationEnd();
 			editorState->ExecuteCommand(transformGizmo->GetCommand(editorState, editorState->GetSelectedNode()));
+			this->Refresh(false);
 		}
 		
 		currentOperation = Operation::NONE;

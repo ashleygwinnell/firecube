@@ -11,8 +11,7 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 	const float arcRadius = 2;
 	const unsigned int arcTesselation = 50;
 	const float tubeRadius = 0.2f;
-
-	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml")->Clone();	
+	
 	SharedPtr<Mesh> mesh;
 	SharedPtr<Mesh> meshIntersection;
 	
@@ -20,11 +19,12 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 	Node *child;
 	node = parent->CreateChild("Editor_RotateGizmo");
 	
-	// X Axis	
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
+	// X Axis
+	xAxisMaterial = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml")->Clone();
+	xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
 	mesh = new Mesh(engine);
 	meshIntersection = new Mesh(engine);
-	mesh->AddGeometry(CreateArc(arcRadius, PI * 0.5f, PI * 1.5f, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
+	mesh->AddGeometry(CreateArc(arcRadius, PI * 0.5f, PI * 1.5f, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), xAxisMaterial);
 	meshIntersection->AddGeometry(GeometryGenerator::GenerateTorus(engine, arcRadius, tubeRadius, PI, 16, 16), BoundingBox(vec3(-(arcRadius + tubeRadius), 0, -tubeRadius), vec3(arcRadius + tubeRadius, arcRadius + tubeRadius, tubeRadius)), nullptr);
 	xAxis = node->CreateChild();	 
 	child = xAxis->CreateChild();
@@ -42,11 +42,11 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 	staticModel->SetEnabled(false);
 
 	// Y Axis
-	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
+	yAxisMaterial = xAxisMaterial->Clone();
+	yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
 	mesh = new Mesh(engine);
 	meshIntersection = new Mesh(engine);
-	mesh->AddGeometry(CreateArc(arcRadius, 0, PI, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
+	mesh->AddGeometry(CreateArc(arcRadius, 0, PI, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), yAxisMaterial);
 	meshIntersection->AddGeometry(GeometryGenerator::GenerateTorus(engine, arcRadius, tubeRadius, PI, 16, 16), BoundingBox(vec3(-(arcRadius + tubeRadius), 0, -tubeRadius), vec3(arcRadius + tubeRadius, arcRadius + tubeRadius, tubeRadius)), nullptr);
 	yAxis = node->CreateChild();	 
 	child = yAxis->CreateChild();
@@ -64,11 +64,11 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 	staticModel->SetEnabled(false);
 
 	// Z Axis
-	material = material->Clone();
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
+	zAxisMaterial = xAxisMaterial->Clone();
+	zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
 	mesh = new Mesh(engine);
 	meshIntersection = new Mesh(engine);
-	mesh->AddGeometry(CreateArc(arcRadius, PI * 0.5f, PI * 1.5f, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), material);
+	mesh->AddGeometry(CreateArc(arcRadius, PI * 0.5f, PI * 1.5f, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), zAxisMaterial);
 	meshIntersection->AddGeometry(GeometryGenerator::GenerateTorus(engine, arcRadius, tubeRadius, PI, 16, 16), BoundingBox(vec3(-(arcRadius + tubeRadius), 0, -tubeRadius), vec3(arcRadius + tubeRadius, arcRadius + tubeRadius, tubeRadius)), nullptr);	
 	zAxis = node->CreateChild();
 	child = zAxis->CreateChild();
@@ -136,14 +136,17 @@ bool RotateGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor *cu
 		if (currentAxis == "XAxis")
 		{
 			currentPlane = Plane(vec3(1, 0, 0), node->GetWorldPosition());
+			xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
 		}
 		else if (currentAxis == "YAxis")
 		{
 			currentPlane = Plane(vec3(0, 1, 0), node->GetWorldPosition());
+			yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
 		}
 		else if (currentAxis == "ZAxis")
 		{
 			currentPlane = Plane(vec3(0, 0, 1), node->GetWorldPosition());
+			zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
 		}
 
 		float distance;
@@ -151,6 +154,7 @@ bool RotateGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor *cu
 		{
 			planeStartPoint = ray.origin + ray.direction * distance;
 		}
+
 		return true;		
 	}
 
@@ -234,4 +238,20 @@ void RotateGizmo::UpdateTransformation(FireCube::Camera *camera, NodeDescriptor 
 	rotation = mat4::IDENTITY;
 	rotation.Rotate(vec3(0, 0, 1), -atan2(eyeVector.y, eyeVector.x));
 	zAxis->SetRotation(rotation);
+}
+
+void RotateGizmo::OperationEnd()
+{
+	if (currentAxis == "XAxis")
+	{
+		xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
+	}
+	else if (currentAxis == "YAxis")
+	{
+		yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
+	}
+	else if (currentAxis == "ZAxis")
+	{
+		zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
+	}
 }
