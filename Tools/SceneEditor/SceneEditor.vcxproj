@@ -123,6 +123,7 @@
     <ClCompile Include="Panels\CollisionShapePanelImpl.cpp" />
     <ClCompile Include="Panels\LightPanelImpl.cpp" />
     <ClCompile Include="Panels\LuaScriptPanelImpl.cpp" />
+    <ClCompile Include="Panels\MaterialEditorPanelImpl.cpp" />
     <ClCompile Include="Panels\NodePropertiesPanelImpl.cpp" />
     <ClCompile Include="Panels\StaticModelPanelImpl.cpp" />
     <ClCompile Include="SceneReader.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Panels\CollisionShapePanelImpl.h" />
     <ClInclude Include="Panels\LightPanelImpl.h" />
     <ClInclude Include="Panels\LuaScriptPanelImpl.h" />
+    <ClInclude Include="Panels\MaterialEditorPanelImpl.h" />
     <ClInclude Include="Panels\NodePropertiesPanelImpl.h" />
     <ClInclude Include="Panels\StaticModelPanelImpl.h" />
     <ClInclude Include="SceneReader.h" />

@@ -20,6 +20,7 @@
 #include "Panels/CollisionShapePanelImpl.h"
 #include "Panels/CharacterControllerPanelImpl.h"
 #include "Panels/BoxPanelImpl.h"
+#include "Panels/MaterialEditorPanelImpl.h"
 #include "AssetUtils.h"
 #include "SceneReader.h"
 #include "Descriptors/ComponentDescriptor.h"
@@ -45,7 +46,13 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	SubscribeToEvent(editorState, editorState->undoPerformed, &MainFrameImpl::UpdateUndoRedoMenu);
 	SubscribeToEvent(editorState, editorState->redoPerformed, &MainFrameImpl::UpdateUndoRedoMenu);
 	SubscribeToEvent(editorState, editorState->newSceneCreated, &MainFrameImpl::NewSceneCreated);
-	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);	
+	
+	materialEditorPanel = new MaterialEditorPanelImpl(this);
+	m_mgr.AddPane(materialEditorPanel, wxAuiPaneInfo().Name(wxT("materialEditorPane")).Caption(wxT("Material Editor")).PinButton(true).Float().Resizable().FloatingSize(wxDefaultSize).Hide());
+	m_mgr.Update();
+
+	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);
+
 	SetAllPanelsVisibility(false);
 
 	LoadSettingsFile();
@@ -437,6 +444,21 @@ void MainFrameImpl::ViewInspectorClicked(wxCommandEvent& event)
 	m_mgr.Update();
 }
 
+void MainFrameImpl::ViewMaterialEditorClicked(wxCommandEvent& event)
+{
+	auto &pane = m_mgr.GetPane("materialEditorPane");
+	if (event.IsChecked())
+	{
+		pane.Show();
+	}
+	else
+	{
+		pane.Hide();
+	}
+
+	m_mgr.Update();
+}
+
 void MainFrameImpl::PaneClose(wxAuiManagerEvent& event)
 {
 	auto pane = event.GetPane();
@@ -445,10 +467,13 @@ void MainFrameImpl::PaneClose(wxAuiManagerEvent& event)
 	{
 		viewSceneHierarchyMenuItem->Check(false);
 	}
-
-	if (pane->name == "inspectorPane")
+	else if (pane->name == "inspectorPane")
 	{
 		viewInspectorMenuItem->Check(false);
+	}
+	else if (pane->name == "materialEditorPane")
+	{
+		viewMaterialEditorMenuItem->Check(false);
 	}
 }
 
@@ -620,12 +645,13 @@ void MainFrameImpl::SetAllPanelsVisibility(bool visible)
 	auto &sceneHierarchyPane = m_mgr.GetPane("sceneHierarchyPane");
 	if (visible)
 	{
-		sceneHierarchyPane.Show();
+		sceneHierarchyPane.Show();		
 	}
 	else
 	{
 		sceneHierarchyPane.Hide();
 	}
+	viewSceneHierarchyMenuItem->Check(visible);
 
 	auto &inspectorPane = m_mgr.GetPane("inspectorPane");
 	if (visible)
@@ -636,6 +662,7 @@ void MainFrameImpl::SetAllPanelsVisibility(bool visible)
 	{
 		inspectorPane.Hide();
 	}	
+	viewInspectorMenuItem->Check(visible);
 
 	m_mgr.Update();
 }

@@ -66,6 +66,7 @@ class MainFrame : public wxFrame
 		wxMenu* viewMenu;
 		wxMenuItem* viewSceneHierarchyMenuItem;
 		wxMenuItem* viewInspectorMenuItem;
+		wxMenuItem* viewMaterialEditorMenuItem;
 		wxPanel* m_panel1;
 		wxTreeCtrl* sceneTreeCtrl;
 		wxPanel* m_panel2;
@@ -94,6 +95,7 @@ class MainFrame : public wxFrame
 		virtual void AddBoxClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewSceneHierarchyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewInspectorClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ViewMaterialEditorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SceneTreeKeyUp( wxKeyEvent& event ) { event.Skip(); }
 		virtual void SceneTreeBeginDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeEndDrag( wxTreeEvent& event ) { event.Skip(); }
@@ -439,6 +441,35 @@ class CharacterControllerPanel : public wxPanel
 		
 		CharacterControllerPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 357,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~CharacterControllerPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class MaterialEditorPanel
+///////////////////////////////////////////////////////////////////////////////
+class MaterialEditorPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxButton* newButton;
+		wxButton* openButton;
+		wxButton* saveButton;
+		wxButton* saveAsButton;
+		wxPropertyGrid* propertyGrid;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void NewButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OpenButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void SaveButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void SaveAsButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void PropertyGridChanged( wxPropertyGridEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		MaterialEditorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 406,496 ), long style = wxTAB_TRAVERSAL ); 
+		~MaterialEditorPanel();
 	
 };
 

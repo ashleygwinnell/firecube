@@ -100,6 +100,9 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	viewMenu->Append( viewInspectorMenuItem );
 	viewInspectorMenuItem->Check( true );
 	
+	viewMaterialEditorMenuItem = new wxMenuItem( viewMenu, wxID_ANY, wxString( wxT("Material Editor") ) , wxEmptyString, wxITEM_CHECK );
+	viewMenu->Append( viewMaterialEditorMenuItem );
+	
 	menuBar->Append( viewMenu, wxT("View") ); 
 	
 	this->SetMenuBar( menuBar );
@@ -174,6 +177,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( addBoxMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddBoxClicked ) );
 	this->Connect( viewSceneHierarchyMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Connect( viewInspectorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
+	this->Connect( viewMaterialEditorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
 	sceneTreeCtrl->Connect( wxEVT_KEY_UP, wxKeyEventHandler( MainFrame::SceneTreeKeyUp ), NULL, this );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( MainFrame::SceneTreeBeginDrag ), NULL, this );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_END_DRAG, wxTreeEventHandler( MainFrame::SceneTreeEndDrag ), NULL, this );
@@ -203,6 +207,7 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddBoxClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
 	sceneTreeCtrl->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( MainFrame::SceneTreeKeyUp ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( MainFrame::SceneTreeBeginDrag ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_END_DRAG, wxTreeEventHandler( MainFrame::SceneTreeEndDrag ), NULL, this );
@@ -1092,5 +1097,54 @@ CharacterControllerPanel::~CharacterControllerPanel()
 	radiusTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusChanged ), NULL, this );
 	heightTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::HeightChanged ), NULL, this );
 	contactOffsetTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::ContactOffsetChanged ), NULL, this );
+	
+}
+
+MaterialEditorPanel::MaterialEditorPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer37;
+	bSizer37 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer38;
+	bSizer38 = new wxBoxSizer( wxHORIZONTAL );
+	
+	newButton = new wxButton( this, wxID_ANY, wxT("New"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer38->Add( newButton, 0, wxALL, 5 );
+	
+	openButton = new wxButton( this, wxID_ANY, wxT("Open"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer38->Add( openButton, 0, wxALL, 5 );
+	
+	saveButton = new wxButton( this, wxID_ANY, wxT("Save"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer38->Add( saveButton, 0, wxALL, 5 );
+	
+	saveAsButton = new wxButton( this, wxID_ANY, wxT("Save As"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer38->Add( saveAsButton, 0, wxALL, 5 );
+	
+	
+	bSizer37->Add( bSizer38, 0, wxEXPAND, 5 );
+	
+	propertyGrid = new wxPropertyGrid(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxPG_DEFAULT_STYLE);
+	bSizer37->Add( propertyGrid, 1, wxALL|wxEXPAND, 1 );
+	
+	
+	this->SetSizer( bSizer37 );
+	this->Layout();
+	
+	// Connect Events
+	newButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::NewButtonClicked ), NULL, this );
+	openButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::OpenButtonClicked ), NULL, this );
+	saveButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::SaveButtonClicked ), NULL, this );
+	saveAsButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::SaveAsButtonClicked ), NULL, this );
+	propertyGrid->Connect( wxEVT_PG_CHANGED, wxPropertyGridEventHandler( MaterialEditorPanel::PropertyGridChanged ), NULL, this );
+}
+
+MaterialEditorPanel::~MaterialEditorPanel()
+{
+	// Disconnect Events
+	newButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::NewButtonClicked ), NULL, this );
+	openButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::OpenButtonClicked ), NULL, this );
+	saveButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::SaveButtonClicked ), NULL, this );
+	saveAsButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::SaveAsButtonClicked ), NULL, this );
+	propertyGrid->Disconnect( wxEVT_PG_CHANGED, wxPropertyGridEventHandler( MaterialEditorPanel::PropertyGridChanged ), NULL, this );
 	
 }
