@@ -19,6 +19,7 @@ public:
 	std::vector<SharedPtr<Material>> &GetMaterials();		
 	virtual void IntersectRay(RayQuery &rayQuery);
 	virtual Component *Clone() const;
+	void SetMaterial(Material *material);
 protected:
 
 	StaticModel(const StaticModel &other);

@@ -144,6 +144,16 @@ void StaticModel::IntersectRay(RayQuery &rayQuery)
 	}	
 }
 
+void StaticModel::SetMaterial(Material *material)
+{
+	for (auto &renderablePart : renderableParts)
+	{
+		renderablePart.material = material;
+	}
+
+	materials = { material };
+}
+
 Component *StaticModel::Clone() const
 {
 	StaticModel *clone = new StaticModel(*this);	
