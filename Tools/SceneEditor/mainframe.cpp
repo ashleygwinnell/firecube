@@ -276,7 +276,7 @@ StaticModelPanel::StaticModelPanel( wxWindow* parent, wxWindowID id, const wxPoi
 	m_staticText2->Wrap( -1 );
 	bSizer8->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
 	
-	meshFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
+	meshFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_SMALL );
 	bSizer8->Add( meshFilePicker, 1, wxALIGN_CENTER|wxALL, 5 );
 	
 	
@@ -390,6 +390,19 @@ BoxPanel::BoxPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const w
 	
 	bSizer24->Add( bSizer811, 1, wxEXPAND, 5 );
 	
+	wxBoxSizer* bSizer39;
+	bSizer39 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText48 = new wxStaticText( this, wxID_ANY, wxT("Material"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText48->Wrap( -1 );
+	bSizer39->Add( m_staticText48, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	materialFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.xml"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_SMALL );
+	bSizer39->Add( materialFilePicker, 1, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer24->Add( bSizer39, 1, wxEXPAND, 5 );
+	
 	castShadowCheckBox = new wxCheckBox( this, wxID_ANY, wxT("Cast Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer24->Add( castShadowCheckBox, 0, wxALL, 5 );
 	
@@ -432,6 +445,7 @@ BoxPanel::BoxPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const w
 	widthTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::WidthChanged ), NULL, this );
 	heightTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::HeightChanged ), NULL, this );
 	depthTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::DepthChanged ), NULL, this );
+	materialFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( BoxPanel::MaterialFileChanged ), NULL, this );
 	castShadowCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( BoxPanel::CastShadowChanged ), NULL, this );
 	lightMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::LightMaskChanged ), NULL, this );
 	collisionQueryMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::CollisionQueryMaskChanged ), NULL, this );
@@ -443,6 +457,7 @@ BoxPanel::~BoxPanel()
 	widthTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::WidthChanged ), NULL, this );
 	heightTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::HeightChanged ), NULL, this );
 	depthTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::DepthChanged ), NULL, this );
+	materialFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( BoxPanel::MaterialFileChanged ), NULL, this );
 	castShadowCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( BoxPanel::CastShadowChanged ), NULL, this );
 	lightMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::LightMaskChanged ), NULL, this );
 	collisionQueryMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::CollisionQueryMaskChanged ), NULL, this );
@@ -776,7 +791,7 @@ LuaScriptPanel::LuaScriptPanel( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_staticText2->Wrap( -1 );
 	bSizer8->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
 	
-	scriptFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
+	scriptFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_SMALL );
 	bSizer8->Add( scriptFilePicker, 1, wxALIGN_CENTER|wxALL, 5 );
 	
 	
@@ -990,7 +1005,7 @@ CollisionShapePanel::CollisionShapePanel( wxWindow* parent, wxWindowID id, const
 	meshStaticText->Wrap( -1 );
 	fgSizer3->Add( meshStaticText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	meshFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
+	meshFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_SMALL );
 	fgSizer3->Add( meshFilePicker, 0, wxALL|wxEXPAND, 5 );
 	
 	

@@ -131,3 +131,69 @@ bool AssetUtils::SerializeMaterial(FireCube::Material *material, const std::stri
 
 	return doc.SaveFile(path);
 }
+
+std::string AssetUtils::ImportTextureIfNeeded(const std::string &texturePath)
+{
+	std::string sfile = texturePath;
+
+	if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), sfile))
+	{
+		sfile = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), sfile);
+	}
+	else
+	{
+		Filesystem::CreateFolder(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Textures");
+
+		std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Textures" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);
+		Filesystem::CopyPath(sfile, targetPath);
+		sfile = "Textures" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);
+	}
+
+	std::replace(sfile.begin(), sfile.end(), '\\', '/');
+	return sfile;
+}
+
+std::string AssetUtils::ImportTechniqueIfNeeded(const std::string &techniquePath)
+{
+	std::string sfile = techniquePath;
+
+	if (Filesystem::IsSubPathOf(Filesystem::GetCoreDataFolder(), sfile))
+	{
+		sfile = Filesystem::MakeRelativeTo(Filesystem::GetCoreDataFolder(), sfile);
+	}
+	else if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), sfile))
+	{
+		sfile = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), sfile);
+	}
+	else
+	{
+		Filesystem::CreateFolder(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Techniques");
+
+		std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Techniques" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);
+		Filesystem::CopyPath(sfile, targetPath);
+		sfile = "Techniques" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);
+	}
+	std::replace(sfile.begin(), sfile.end(), '\\', '/');
+	return sfile;
+}
+
+std::string AssetUtils::ImportMaterialIfNeeded(const std::string &materialPath)
+{
+	std::string sfile = materialPath;
+
+	if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), sfile))
+	{
+		sfile = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), sfile);
+	}
+	else
+	{
+		Filesystem::CreateFolder(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials");
+
+		std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);
+		Filesystem::CopyPath(sfile, targetPath);
+		sfile = "Materials" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);
+	}
+
+	std::replace(sfile.begin(), sfile.end(), '\\', '/');
+	return sfile;
+}

@@ -1,4 +1,4 @@
 <material>
 	<technique name = "Techniques/Unlit.xml" />	
-	<parameter name = "materialDiffuse" value = "0.7 0.7 0.7 1.0" />		
+	<parameter name = "materialDiffuse" value = "0.7 0.7 0.7" />		
 </material>

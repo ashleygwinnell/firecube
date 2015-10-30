@@ -10,8 +10,10 @@ public:
 	virtual ComponentDescriptor *Clone();
 	virtual ~BoxDescriptor();
 
-	void SetSize(FireCube::vec3 size);
+	void SetSize(FireCube::vec3 size, FireCube::Engine *engine);
 	FireCube::vec3 GetSize() const;
+	void SetMaterialFileName(const std::string &materialFileName, FireCube::Engine *engine);
+	std::string GetMaterialFileName();
 	bool GetCastShadow() const;
 	void SetCastShadow(bool castShadow);
 	unsigned int GetLightMask() const;
@@ -20,7 +22,7 @@ public:
 	void SetCollisionQueryMask(unsigned int collisionQueryMask);
 private:
 	FireCube::vec3 size;
-	FireCube::Engine *engine;
+	std::string materialFileName;	
 	bool castShadow;
 	unsigned int lightMask;
 	unsigned int collisionQueryMask;

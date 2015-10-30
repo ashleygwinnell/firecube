@@ -190,6 +190,7 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlElement *pa
 		auto box = static_cast<BoxDescriptor *>(componentDesc);
 
 		element->SetAttribute("size", ToString(box->GetSize()));
+		element->SetAttribute("material", box->GetMaterialFileName());
 		element->SetAttribute("cast_shadow", box->GetCastShadow() ? "true" : "false");
 
 		std::stringstream ligtMaskStream;

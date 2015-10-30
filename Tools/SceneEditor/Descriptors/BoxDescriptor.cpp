@@ -14,8 +14,7 @@ BoxDescriptor::~BoxDescriptor()
 }
 
 void BoxDescriptor::CreateComponent(Node *node, Engine *engine)
-{
-	this->engine = engine;
+{	
 	SharedPtr<Mesh> mesh = new Mesh(engine);
 	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, size), BoundingBox(-size * 0.5f, size * 0.5f), engine->GetResourceCache()->GetResource<Material>("Materials/Default.xml"));
 	auto staticModel = node->CreateComponent<StaticModel>(mesh);
@@ -35,7 +34,7 @@ ComponentDescriptor *BoxDescriptor::Clone()
 	return clone;
 }
 
-void BoxDescriptor::SetSize(vec3 size)
+void BoxDescriptor::SetSize(vec3 size, FireCube::Engine *engine)
 {
 	this->size = size;
 	if (component) 
@@ -90,3 +89,16 @@ void BoxDescriptor::SetCollisionQueryMask(unsigned int collisionQueryMask)
 	this->collisionQueryMask = collisionQueryMask;	
 }
 
+void BoxDescriptor::SetMaterialFileName(const std::string &materialFileName, FireCube::Engine *engine)
+{
+	this->materialFileName = materialFileName;
+	if (component)
+	{
+		((StaticModel *)component)->SetMaterial(engine->GetResourceCache()->GetResource<Material>(materialFileName));
+	}
+}
+
+std::string BoxDescriptor::GetMaterialFileName()
+{
+	return materialFileName;
+}

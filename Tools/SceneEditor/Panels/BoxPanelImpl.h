@@ -16,6 +16,7 @@ private:
 	virtual void CastShadowChanged(wxCommandEvent& event);
 	virtual void LightMaskChanged(wxCommandEvent& event);
 	virtual void CollisionQueryMaskChanged(wxCommandEvent& event);
+	virtual void MaterialFileChanged(wxFileDirPickerEvent& event);
 	
 	BaseComponentPanelImpl *parent;
 };

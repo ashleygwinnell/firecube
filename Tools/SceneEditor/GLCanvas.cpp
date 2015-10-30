@@ -175,6 +175,11 @@ void GLCanvas::Render()
 
 void GLCanvas::OnEnterWindow(wxMouseEvent& event)
 {
+	if (!this->HasFocus())
+	{
+		this->SetFocus();
+	}
+
 	lastMousePos = vec2(event.GetPosition().x, event.GetPosition().y);
 }
 
@@ -209,12 +214,7 @@ void GLCanvas::OnEraseBackground(wxEraseEvent& WXUNUSED(event))
 }
 
 void GLCanvas::OnLeftDown(wxMouseEvent& event)
-{
-	if (!this->HasFocus())
-	{
-		this->SetFocus();
-	}
-
+{	
 	vec2 curpos(event.GetPosition().x, event.GetPosition().y);
 
 	if (event.ShiftDown() == false)

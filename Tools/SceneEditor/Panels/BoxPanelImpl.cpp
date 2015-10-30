@@ -25,6 +25,8 @@ BoxPanelImpl::BoxPanelImpl(BaseComponentPanelImpl* parent) : BoxPanel(parent), p
 	std::stringstream collisionQueryMaskStream;
 	collisionQueryMaskStream << std::hex << box->GetCollisionQueryMask();
 	collisionQueryMaskTextCtrl->SetLabel(collisionQueryMaskStream.str());
+
+	materialFilePicker->SetPath(box->GetMaterialFileName());
 }
 
 BoxPanelImpl::~BoxPanelImpl()
@@ -37,18 +39,19 @@ void BoxPanelImpl::WidthChanged(wxCommandEvent& event)
 	BoxDescriptor *box = static_cast<BoxDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
+	auto engine = theApp->fcApp.GetEngine();
 
 	double x;
 	event.GetString().ToDouble(&x);
 	vec3 oldSize = box->GetSize();
 	vec3 newSize(x, oldSize.y, oldSize.z);	
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Width", [box, newSize]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Width", [box, newSize, engine]()
 	{
-		box->SetSize(newSize);
-	}, [box, oldSize]()
+		box->SetSize(newSize, engine);
+	}, [box, oldSize, engine]()
 	{
-		box->SetSize(oldSize);
+		box->SetSize(oldSize, engine);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -60,18 +63,19 @@ void BoxPanelImpl::HeightChanged(wxCommandEvent& event)
 	BoxDescriptor *box = static_cast<BoxDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
+	auto engine = theApp->fcApp.GetEngine();
 
 	double y;
 	event.GetString().ToDouble(&y);
 	vec3 oldSize = box->GetSize();
 	vec3 newSize(oldSize.x, y, oldSize.z);
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Height", [box, newSize]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Height", [box, newSize, engine]()
 	{
-		box->SetSize(newSize);
-	}, [box, oldSize]()
+		box->SetSize(newSize, engine);
+	}, [box, oldSize, engine]()
 	{
-		box->SetSize(oldSize);
+		box->SetSize(oldSize, engine);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -83,18 +87,19 @@ void BoxPanelImpl::DepthChanged(wxCommandEvent& event)
 	BoxDescriptor *box = static_cast<BoxDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
+	auto engine = theApp->fcApp.GetEngine();
 
 	double z;
 	event.GetString().ToDouble(&z);
 	vec3 oldSize = box->GetSize();
 	vec3 newSize(oldSize.x, oldSize.y, z);
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Depth", [box, newSize]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Depth", [box, newSize, engine]()
 	{
-		box->SetSize(newSize);
-	}, [box, oldSize]()
+		box->SetSize(newSize, engine);
+	}, [box, oldSize, engine]()
 	{
-		box->SetSize(oldSize);
+		box->SetSize(oldSize, engine);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -158,6 +163,28 @@ void BoxPanelImpl::CollisionQueryMaskChanged(wxCommandEvent& event)
 	}, [box, oldValue]()
 	{	
 		box->SetCollisionQueryMask(oldValue);
+	});
+
+	theApp->GetEditorState()->ExecuteCommand(command);
+	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+}
+
+void BoxPanelImpl::MaterialFileChanged(wxFileDirPickerEvent& event)
+{
+	BoxDescriptor *box = static_cast<BoxDescriptor *>(parent->GetComponent());
+
+	MyApp *theApp = ((MyApp *)wxTheApp);
+	auto engine = theApp->fcApp.GetEngine();
+
+	std::string newValue = AssetUtils::ImportMaterialIfNeeded(event.GetPath().ToStdString());
+	std::string oldValue = box->GetMaterialFileName();
+
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Material", [box, newValue, engine]()
+	{
+		box->SetMaterialFileName(newValue, engine);
+	}, [box, oldValue, engine]()
+	{
+		box->SetMaterialFileName(oldValue, engine);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);

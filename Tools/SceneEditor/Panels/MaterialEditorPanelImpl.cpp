@@ -108,26 +108,6 @@ void MaterialEditorPanelImpl::FillPropertyGrid(Material *material)
 	propertyGrid->Refresh();
 }
 
-std::string ImportTextureIfNeeded(const std::string &textuerPath)
-{
-	std::string sfile = textuerPath;
-
-	if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), sfile))
-	{
-		sfile = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), sfile);
-	}
-	else
-	{
-		Filesystem::CreateFolder(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Textures");
-
-		std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Textures" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);
-		Filesystem::CopyPath(sfile, targetPath);
-		sfile = "Textures" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);
-	}
-
-	return sfile;
-}
-
 void MaterialEditorPanelImpl::PropertyGridChanged(wxPropertyGridEvent& event)
 {	
 	std::string properyName = event.GetPropertyName();
@@ -157,48 +137,28 @@ void MaterialEditorPanelImpl::PropertyGridChanged(wxPropertyGridEvent& event)
 	else if (properyName == "Diffuse texture")
 	{
 		std::string sfile = event.GetPropertyValue().GetString().ToStdString();
-		sfile = ImportTextureIfNeeded(sfile);
-		std::replace(sfile.begin(), sfile.end(), '\\', '/');
+		sfile = AssetUtils::ImportTextureIfNeeded(sfile);
 		event.GetProperty()->SetValue(sfile);
 		material->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(sfile));
 	}
 	else if (properyName == "Normal texture")
 	{
 		std::string sfile = event.GetPropertyValue().GetString().ToStdString();
-		sfile = ImportTextureIfNeeded(sfile);
-		std::replace(sfile.begin(), sfile.end(), '\\', '/');
+		sfile = AssetUtils::ImportTextureIfNeeded(sfile);
 		event.GetProperty()->SetValue(sfile);
 		material->SetTexture(TextureUnit::NORMAL, engine->GetResourceCache()->GetResource<Texture>(sfile));
 	}
 	else if (properyName == "Specular texture")
 	{
 		std::string sfile = event.GetPropertyValue().GetString().ToStdString();
-		sfile = ImportTextureIfNeeded(sfile);
-		std::replace(sfile.begin(), sfile.end(), '\\', '/');
+		sfile = AssetUtils::ImportTextureIfNeeded(sfile);
 		event.GetProperty()->SetValue(sfile);
 		material->SetTexture(TextureUnit::SPECULAR, engine->GetResourceCache()->GetResource<Texture>(sfile));
 	}
 	else if (properyName == "Technique")
 	{
-		std::string sfile = event.GetPropertyValue().GetString().ToStdString();		
-
-		if (Filesystem::IsSubPathOf(Filesystem::GetCoreDataFolder(), sfile))
-		{
-			sfile = Filesystem::MakeRelativeTo(Filesystem::GetCoreDataFolder(), sfile);
-		}
-		else if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), sfile))
-		{
-			sfile = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), sfile);
-		}
-		else
-		{
-			Filesystem::CreateFolder(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Techniques");
-
-			std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Techniques" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);
-			Filesystem::CopyPath(sfile, targetPath);
-			sfile = "Techniques" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);
-		}
-		std::replace(sfile.begin(), sfile.end(), '\\', '/');
+		std::string sfile = event.GetPropertyValue().GetString().ToStdString();
+		sfile = AssetUtils::ImportTechniqueIfNeeded(sfile);
 		event.GetProperty()->SetValue(sfile);
 		material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>(sfile));
 	}	

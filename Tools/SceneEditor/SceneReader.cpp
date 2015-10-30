@@ -115,7 +115,12 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 		if (e->Attribute("size"))
 		{			
 			vec3 size = Variant::FromString(e->Attribute("size")).GetVec3();
-			boxDescriptor->SetSize(size);
+			boxDescriptor->SetSize(size, engine);
+		}
+
+		if (e->Attribute("material"))
+		{			
+			boxDescriptor->SetMaterialFileName(e->Attribute("material"), engine);
 		}
 
 		if (e->Attribute("cast_shadow"))

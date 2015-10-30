@@ -178,6 +178,8 @@ class BoxPanel : public wxPanel
 		wxTextCtrl* widthTextCtrl;
 		wxTextCtrl* heightTextCtrl;
 		wxTextCtrl* depthTextCtrl;
+		wxStaticText* m_staticText48;
+		wxFilePickerCtrl* materialFilePicker;
 		wxCheckBox* castShadowCheckBox;
 		wxStaticText* m_staticText42;
 		wxTextCtrl* lightMaskTextCtrl;
@@ -188,6 +190,7 @@ class BoxPanel : public wxPanel
 		virtual void WidthChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void HeightChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void DepthChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MaterialFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void CastShadowChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void LightMaskChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void CollisionQueryMaskChanged( wxCommandEvent& event ) { event.Skip(); }

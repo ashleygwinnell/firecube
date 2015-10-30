@@ -172,7 +172,8 @@ void MainFrameImpl::AddBoxClicked(wxCommandEvent& event)
 	if (nodeDesc)
 	{
 		auto boxDescriptor = new BoxDescriptor();
-		boxDescriptor->SetSize(vec3(1.0f));		
+		boxDescriptor->SetSize(vec3(1.0f), engine);
+		boxDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
 		auto addComponentCommand = new AddComponentCommand(editorState, "Add Box", nodeDesc, boxDescriptor, engine);
 
 		editorState->ExecuteCommand(addComponentCommand);
