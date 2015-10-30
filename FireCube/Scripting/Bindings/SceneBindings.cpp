@@ -48,7 +48,7 @@ int GetScriptObject(Node *node, lua_State *L, const std::string &objectName)
 {
 	std::vector<LuaScript *> scripts;
 
-	node->GetComponents(scripts, true);
+	node->GetComponents(scripts);
 	bool found = false;
 
 	for (auto &script : scripts)
@@ -192,6 +192,7 @@ void LuaBindings::InitScene(lua_State *luaState)
 			.addFunction("LookAt", &Node::LookAt)
 			.addFunction("GetChild", &Node::GetChild)
 			.addFunction("GetScriptObject", &GetScriptObject)
+			.addProperty("parent", &Node::GetParent, &Node::SetParent)
 		.endClass()
 		.beginExtendClass<Component, Object>("Component")
 			.addProperty("node", &Component::GetNode)
