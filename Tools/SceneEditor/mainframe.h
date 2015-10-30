@@ -459,6 +459,7 @@ class MaterialEditorPanel : public wxPanel
 		wxButton* openButton;
 		wxButton* saveButton;
 		wxButton* saveAsButton;
+		wxButton* pickMaterialButton;
 		wxPropertyGrid* propertyGrid;
 		
 		// Virtual event handlers, overide them in your derived class
@@ -466,12 +467,13 @@ class MaterialEditorPanel : public wxPanel
 		virtual void OpenButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SaveButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SaveAsButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void PickMaterialButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void PropertyGridChanged( wxPropertyGridEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		MaterialEditorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 406,496 ), long style = wxTAB_TRAVERSAL ); 
+		MaterialEditorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 507,496 ), long style = wxTAB_TRAVERSAL ); 
 		~MaterialEditorPanel();
 	
 };

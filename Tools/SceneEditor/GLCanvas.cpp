@@ -55,7 +55,8 @@ void GLCanvas::Init()
 	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &GLCanvas::SelectedNodeChanged);
 	SubscribeToEvent(editorState, editorState->stateChanged, &GLCanvas::StateChanged);
 	SubscribeToEvent(editorState, editorState->sceneChanged, &GLCanvas::SceneChanged);
-	
+	SubscribeToEvent(editorState->startMaterialPick, &GLCanvas::StartMaterialPick);
+
 	theApp->InitScene();
 	scene = theApp->GetScene();
 	editorScene = theApp->GetEditorScene();
@@ -338,7 +339,21 @@ void GLCanvas::OnLeftUp(wxMouseEvent& event)
 			editorState->ExecuteCommand(transformGizmo->GetCommand(editorState, editorState->GetSelectedNode()));
 			this->Refresh(false);
 		}
-		
+		else if (currentOperation == Operation::PICK_MATERIAL)
+		{
+			scene->IntersectRay(query);
+			if (query.results.empty() == false)
+			{
+				auto &result = query.results.front();
+				auto renderable = result.renderable;
+				if (renderable->GetType() == StaticModel::GetTypeStatic())
+				{
+					auto staticModel = (StaticModel *)renderable;
+					auto material = staticModel->GetMaterials()[0];
+					editorState->materialPicked(editorState, material);
+				}
+			}
+		}
 		currentOperation = Operation::NONE;
 	}
 }
@@ -472,4 +487,9 @@ void GLCanvas::CreateGrid(float size, unsigned int numberOfCells)
 	gridGeometry->SetMaterial(gridMaterial);	
 	gridGeometry->UpdateGeometry();
 	gridGeometry->SetCollisionQueryMask(0);
+}
+
+void GLCanvas::StartMaterialPick()
+{
+	currentOperation = Operation::PICK_MATERIAL;
 }

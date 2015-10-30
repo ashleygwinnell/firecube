@@ -12,7 +12,7 @@ class NodeDescriptor;
 
 enum class Operation
 {
-	NONE, OBJECT_TRANSFORM, CAMERA_ORBIT
+	NONE, OBJECT_TRANSFORM, CAMERA_ORBIT, PICK_MATERIAL
 };
 
 class GLCanvas : public wxGLCanvas, public FireCube::Object
@@ -44,7 +44,8 @@ private:
 	void StateChanged();
 	void SceneChanged();
 	void RenderDebugGeometry(NodeDescriptor *nodeDesc, FireCube::DebugRenderer *debugRenderer);
-	
+	void StartMaterialPick();
+
 	bool init;
 	MyApp *theApp;
 	wxGLContext *context;	

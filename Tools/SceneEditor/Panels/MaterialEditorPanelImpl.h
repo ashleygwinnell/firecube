@@ -19,8 +19,10 @@ private:
 	virtual void OpenButtonClicked(wxCommandEvent& event);
 	virtual void SaveButtonClicked(wxCommandEvent& event);
 	virtual void SaveAsButtonClicked(wxCommandEvent& event);
+	virtual void PickMaterialButtonClicked(wxCommandEvent& event);
 	virtual void PropertyGridChanged(wxPropertyGridEvent& event);
 
+	void MaterialPicked(FireCube::Material *material);
 	void FillPropertyGrid(FireCube::Material *material);
 	EditorState *editorState;
 	std::string currentFileName;

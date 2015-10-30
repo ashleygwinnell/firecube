@@ -10,7 +10,7 @@ using namespace FireCube;
 
 MaterialEditorPanelImpl::MaterialEditorPanelImpl(wxWindow* parent) : MaterialEditorPanel(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), editorState(((MyApp*)wxTheApp)->GetEditorState())
 {
-	
+	SubscribeToEvent(editorState->materialPicked, &MaterialEditorPanelImpl::MaterialPicked);
 }
 
 MaterialEditorPanelImpl::~MaterialEditorPanelImpl()
@@ -76,6 +76,11 @@ void MaterialEditorPanelImpl::SaveAsButtonClicked(wxCommandEvent& event)
 		std::replace(currentFileName.begin(), currentFileName.end(), '\\', '/');
 		AssetUtils::SerializeMaterial(material, Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentFileName);
 	}
+}
+
+void MaterialEditorPanelImpl::PickMaterialButtonClicked(wxCommandEvent& event)
+{
+	editorState->startMaterialPick(editorState);
 }
 
 void MaterialEditorPanelImpl::FillPropertyGrid(Material *material)
@@ -164,4 +169,11 @@ void MaterialEditorPanelImpl::PropertyGridChanged(wxPropertyGridEvent& event)
 	}	
 
 	editorState->sceneChanged(editorState);
+}
+
+void MaterialEditorPanelImpl::MaterialPicked(FireCube::Material *material)
+{
+	this->material = material;
+	currentFileName = material->GetFileName();
+	FillPropertyGrid(material);
 }

@@ -40,6 +40,8 @@ public:
 	FireCube::Event<Command *> commandExecuted;
 	FireCube::Event<Command *> undoPerformed;
 	FireCube::Event<Command *> redoPerformed;
+	FireCube::Event<> startMaterialPick;
+	FireCube::Event<FireCube::Material *> materialPicked;
 private:
 	
 	NodeDescriptor *selectedNode;

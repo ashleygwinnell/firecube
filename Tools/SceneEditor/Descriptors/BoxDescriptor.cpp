@@ -15,8 +15,8 @@ BoxDescriptor::~BoxDescriptor()
 
 void BoxDescriptor::CreateComponent(Node *node, Engine *engine)
 {	
-	SharedPtr<Mesh> mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, size), BoundingBox(-size * 0.5f, size * 0.5f), engine->GetResourceCache()->GetResource<Material>("Materials/Default.xml"));
+	SharedPtr<Mesh> mesh = new Mesh(engine);	
+	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, size), BoundingBox(-size * 0.5f, size * 0.5f), engine->GetResourceCache()->GetResource<Material>(materialFileName));
 	auto staticModel = node->CreateComponent<StaticModel>(mesh);
 	
 	staticModel->SetCastShadow(castShadow);
