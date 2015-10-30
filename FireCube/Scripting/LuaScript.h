@@ -70,6 +70,8 @@ public:
 	{
 		object[name] = value;
 	}
+
+	void PushObject();
 	
 	virtual Component *Clone() const;
 private:

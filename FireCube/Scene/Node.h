@@ -232,7 +232,9 @@ public:
 		{
 			GetComponentsRecursive(components);
 		}
-	}			
+	}	
+
+	void GetComponents(const StringHash &type, std::vector<Component *> &components, bool recursive = false);
 
 	Node *GetRootNode() const;
 
@@ -258,6 +260,8 @@ protected:
 			c->GetComponentsRecursive(components);
 		}
 	}
+
+	void GetComponentsRecursive(const StringHash &type, std::vector<Component *> &components);
 
 	void SetTransformationChanged();	
 	void SceneChanged(Scene *oldScene);

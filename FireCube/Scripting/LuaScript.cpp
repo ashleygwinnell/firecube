@@ -211,3 +211,8 @@ Component *LuaScript::Clone() const
 	LuaScript *clone = new LuaScript(*this);
 	return clone;
 }
+
+void LuaScript::PushObject()
+{
+	object.pushToStack();
+}

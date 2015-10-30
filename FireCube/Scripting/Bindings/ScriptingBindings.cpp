@@ -15,5 +15,6 @@ void LuaBindings::InitScripting(lua_State *luaState)
 		.beginExtendClass <LuaScript, Component>("LuaScript")
 			.addFunction("SubscribeToEvent", &LuaScript::SubscribeToEventFromLua)
 			.addFunction("CreateObject", (void(LuaScript::*)(LuaFile *, const std::string &)) &LuaScript::CreateObject)
+			.addProperty("objectName", &LuaScript::GetObjectName)
 		.endClass();
 }

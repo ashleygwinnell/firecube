@@ -23,10 +23,45 @@ int GetComponent(Node *node, lua_State *L, const std::string &type)
 	Component *component = node->GetComponent(type);
 
 	if (component)
-	{		
+	{
 		Lua::push(L, component);
 	}
 	else
+	{
+		lua_pushnil(L);
+	}
+
+	return 1;
+}
+
+int GetComponents(Node *node, lua_State *L, const std::string &type, bool recursive)
+{
+	std::vector<Component *> components;
+	node->GetComponents(type, components, recursive);
+
+	Lua::push(L, components);
+
+	return 1;
+}
+
+int GetScriptObject(Node *node, lua_State *L, const std::string &objectName)
+{
+	std::vector<LuaScript *> scripts;
+
+	node->GetComponents(scripts, true);
+	bool found = false;
+
+	for (auto &script : scripts)
+	{
+		if (script->GetObjectName() == objectName)
+		{
+			script->PushObject();
+			found = true;
+			break;
+		}
+	}
+	
+	if (!found)
 	{
 		lua_pushnil(L);
 	}
@@ -147,6 +182,7 @@ void LuaBindings::InitScene(lua_State *luaState)
 			.addFunction("GetWorldTransformation", &Node::GetWorldTransformation)
 			.addFunction("GetWorldPosition", &Node::GetWorldPosition)
 			.addFunction("GetComponent", &GetComponent)
+			.addFunction("GetComponents", &GetComponents)
 			.addFunction("CreateComponent", &CreateComponent)
 			.addFunction("Remove", &Node::Remove)
 			.addProperty("name", &Node::GetName, &Node::SetName)
@@ -155,6 +191,7 @@ void LuaBindings::InitScene(lua_State *luaState)
 			.addStaticFunction("New", &NodeNew)
 			.addFunction("LookAt", &Node::LookAt)
 			.addFunction("GetChild", &Node::GetChild)
+			.addFunction("GetScriptObject", &GetScriptObject)
 		.endClass()
 		.beginExtendClass<Component, Object>("Component")
 			.addProperty("node", &Component::GetNode)

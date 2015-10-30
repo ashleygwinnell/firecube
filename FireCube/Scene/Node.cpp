@@ -407,3 +407,37 @@ void Node::Remove()
 {
 	SetParent(nullptr);
 }
+
+void Node::GetComponents(const StringHash &type, std::vector<Component *> &components, bool recursive)
+{
+	if (!recursive)
+	{
+		for (auto c : this->components)
+		{
+			if (c->GetType() == type)
+			{
+				components.push_back(c);
+			}
+		}
+	}
+	else
+	{
+		GetComponentsRecursive(type, components);
+	}
+}
+
+void Node::GetComponentsRecursive(const StringHash &type, std::vector<Component *> &components)
+{
+	for (auto c : this->components)
+	{
+		if (c->GetType() == type)
+		{
+			components.push_back(c);
+		}
+	}
+
+	for (auto c : children)
+	{
+		c->GetComponentsRecursive(type, components);
+	}
+}

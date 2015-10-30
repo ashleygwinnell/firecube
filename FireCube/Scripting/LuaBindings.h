@@ -6,6 +6,7 @@
 #include "Core/Memory.h"
 #include "Scene/Node.h"
 #include "Scene/Light.h"
+#include "Core/Component.h"
 
 struct lua_State;
 
@@ -115,6 +116,23 @@ struct LuaTypeMapping < std::vector<std::string> >
 		for (auto &str : strings)
 		{
 			ret[idx++] = str;
+		}
+
+		ret.pushToStack();
+	}
+};
+
+template <>
+struct LuaTypeMapping < std::vector<FireCube::Component *> >
+{
+	static void push(lua_State* L, const std::vector<FireCube::Component *> &components)
+	{
+		LuaRef ret = LuaRef::createTable(L);
+
+		int idx = 1;
+		for (auto &component : components)
+		{
+			ret[idx++] = component;
 		}
 
 		ret.pushToStack();
