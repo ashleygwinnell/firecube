@@ -7,7 +7,7 @@
 #include "Rendering/Texture.h"
 
 using namespace FireCube;
-Material::Material(Engine *engine) : Resource(engine)
+Material::Material(Engine *engine) : Resource(engine), technique(nullptr)
 {
 	for (int i = 0; i < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS); ++i)
 		textures[i] = nullptr;
