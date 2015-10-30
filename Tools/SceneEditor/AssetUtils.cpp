@@ -72,9 +72,12 @@ bool AssetUtils::SerializeMaterial(FireCube::Material *material, const std::stri
 	
 	TiXmlElement *element;
 	
-	element = new TiXmlElement("technique");
-	element->SetAttribute("name", material->GetTechnique()->GetFileName());
-	rootElement->LinkEndChild(element);
+	if (material->GetTechnique())
+	{
+		element = new TiXmlElement("technique");
+		element->SetAttribute("name", material->GetTechnique()->GetFileName());
+		rootElement->LinkEndChild(element);
+	}
 
 	if (material->HasParameter(PARAM_MATERIAL_DIFFUSE))
 	{
