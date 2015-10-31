@@ -26,10 +26,10 @@ Application::~Application()
 
 bool Application::Initialize()
 {
-	return Initialize(800, 600, 0, false);
+	return Initialize(800, 600, 0, false, false);
 }
 
-bool Application::Initialize(int width, int height, int multisample, bool fullscreen)
+bool Application::Initialize(int width, int height, int multisample, bool fullscreen, bool maximized)
 {    
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 		return false;
@@ -50,7 +50,7 @@ bool Application::Initialize(int width, int height, int multisample, bool fullsc
 		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, multisample);
 	}
 	mainWindow = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		width, height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
+		width, height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | (maximized ? SDL_WINDOW_MAXIMIZED : 0) | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
 	
 	if (!mainWindow)
 		return false;
