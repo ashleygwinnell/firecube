@@ -239,3 +239,17 @@ std::string NodeDescriptor::GetName() const
 {
 	return name;
 }
+
+void NodeDescriptor::SetChildIndex(NodeDescriptor *child, unsigned int index)
+{
+	auto oldIter = std::find(children.begin(), children.end(), child);
+	if (oldIter != children.end())
+	{
+		auto oldIndex = std::distance(children.begin(), oldIter);
+		if (oldIndex != index)
+		{			
+			children.erase(oldIter);
+			children.insert(children.begin() + index, child);
+		}
+	}
+}

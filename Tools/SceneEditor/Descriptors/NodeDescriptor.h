@@ -26,6 +26,7 @@ public:
 	void RemoveChild(NodeDescriptor *child);
 	void RemoveAllComponents();
 	void RemoveAllChildren();
+	void SetChildIndex(NodeDescriptor *child, unsigned int index);
 
 	void SetTranslation(FireCube::vec3 translation);
 	FireCube::vec3 GetTranslation() const;

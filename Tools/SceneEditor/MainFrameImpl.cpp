@@ -809,6 +809,50 @@ void MainFrameImpl::SceneTreeKeyUp(wxKeyEvent& event)
 			editorState->SetSelectedNode(nullptr);
 		}
 	}
+	else if ((event.GetKeyCode() == 'U' || event.GetKeyCode() == 'D') && event.AltDown())
+	{
+		auto selectedItem = sceneTreeCtrl->GetSelection();
+		auto parent = sceneTreeCtrl->GetItemParent(selectedItem);
+		if (parent)
+		{
+			int childrenCount = sceneTreeCtrl->GetChildrenCount(parent, false);
+			wxTreeItemIdValue cookie;
+			int index = 0;
+			auto child = sceneTreeCtrl->GetFirstChild(parent, cookie);
+			while (child != selectedItem)
+			{
+				child = sceneTreeCtrl->GetNextChild(child, cookie);
+				++index;
+			}
+			
+			if ((event.GetKeyCode() == 'U' && index > 0) || (event.GetKeyCode() == 'D' && index < childrenCount - 1))
+			{
+				int newIndex;
+				if (event.GetKeyCode() == 'U')
+				{
+					newIndex = index - 1;
+				}
+				else
+				{
+					newIndex = index + 1;
+				}
+				auto node = treeItemToNode[selectedItem];
+				treeItemToNode.erase(selectedItem);
+				nodeToTreeItem.erase(node);
+				sceneTreeCtrl->Delete(selectedItem);
+				auto item = sceneTreeCtrl->InsertItem(parent, newIndex, node->GetName());
+				treeItemToNode[item] = node;
+				nodeToTreeItem[node] = item;
+				sceneTreeCtrl->SelectItem(item);				
+				auto parentNode = treeItemToNode[parent];
+				parentNode->SetChildIndex(node, newIndex);
+				for (auto &child : node->GetChildren())
+				{
+					NodeAdded(child);
+				}
+			}						
+		}
+	}
 }
 
 void MainFrameImpl::NewSceneCreated()
