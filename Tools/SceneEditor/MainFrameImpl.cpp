@@ -227,8 +227,7 @@ void MainFrameImpl::SaveAsClicked(wxCommandEvent& event)
 }
 
 void MainFrameImpl::UpdateNode(NodeDescriptor *nodeDesc)
-{
-	editorState->nodeAdded(editorState, nodeDesc);
+{	
 	editorState->GetNodeMap()[nodeDesc->GetNode()] = nodeDesc;
 
 	for (auto child : nodeDesc->GetChildren())
@@ -251,6 +250,7 @@ void MainFrameImpl::OpenSceneFile(const std::string &filename)
 
 	if (sceneReader.Read(&rootDesc, filename))
 	{
+		NodeAdded(&rootDesc);
 		UpdateNode(&rootDesc);
 	}
 
@@ -352,6 +352,11 @@ void MainFrameImpl::NodeAdded(NodeDescriptor *nodeDesc)
 		nodeToTreeItem[nodeDesc] = id;
 		treeItemToNode[id] = nodeDesc;
 	}
+
+	for (auto &child : nodeDesc->GetChildren())
+	{
+		NodeAdded(child);
+	}
 	
 }
 
@@ -362,7 +367,15 @@ void MainFrameImpl::NodeRemoved(NodeDescriptor *nodeDesc)
 		wxTreeItemId id = nodeToTreeItem[nodeDesc];
 		nodeToTreeItem.erase(nodeDesc);
 		treeItemToNode.erase(id);
-		sceneTreeCtrl->Delete(id);		
+		if (id.IsOk())
+		{
+			sceneTreeCtrl->Delete(id);
+		}
+
+		for (auto &child : nodeDesc->GetChildren())
+		{
+			NodeRemoved(child);
+		}
 	}
 }
 

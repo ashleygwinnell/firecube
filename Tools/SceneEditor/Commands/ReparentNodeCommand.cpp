@@ -14,14 +14,14 @@ ReparentNodeCommand::~ReparentNodeCommand()
 
 void ReparentNodeCommand::Do()
 {
-	nodeDesc->SetParent(newParent);
 	editorState->nodeRemoved(editorState, nodeDesc);
+	nodeDesc->SetParent(newParent);		
 	editorState->nodeAdded(editorState, nodeDesc);
 }
 
 void ReparentNodeCommand::Undo()
 {
-	nodeDesc->SetParent(oldParent);
 	editorState->nodeRemoved(editorState, nodeDesc);
+	nodeDesc->SetParent(oldParent);
 	editorState->nodeAdded(editorState, nodeDesc);
 }
