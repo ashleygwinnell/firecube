@@ -167,19 +167,38 @@ quat FireCube::operator*(const quat &a, const quat &b)
 		a.w * b.z + a.z * b.w + a.x * b.y - a.y * b.x);
 }
 
-void quat::Conjugate()
+quat quat::Conjugate()
 {
-	x = -x;
-	y = -y;
-	z = -z;	
+	quat ret;
+	ret.x = -x;
+	ret.y = -y;
+	ret.z = -z;
+	ret.w = w;
+	return ret;
 }
 
 vec3 quat::Rotate(const vec3 &v)
 {
-	quat q2(0.0f, v.x, v.y, v.z), q = *this, qinv = q;
-	q.Conjugate();
+	quat q2(0.0f, v.x, v.y, v.z), q = this->Conjugate(), qinv = q;	
 
 	q = q * q2 * qinv;
 	return vec3(q.x, q.y, q.z);
 
+}
+
+vec3 quat::operator*(const vec3 &v) const
+{
+	vec3 ret;	
+	
+	// q*v
+	float ix = w * v.x + y * v.z - z * v.y,
+		iy = w * v.y + z * v.x - x * v.z,
+		iz = w * v.z + x * v.y - y * v.x,
+		iw = -x * v.x - y * v.y - z * v.z;
+
+	ret.x = ix * w + iw * -x + iy * -z - iz * -y;
+	ret.y = iy * w + iw * -y + iz * -x - ix * -z;
+	ret.z = iz * w + iw * -z + ix * -y - iy * -x;
+
+	return ret;
 }

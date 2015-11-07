@@ -230,9 +230,18 @@ void PhysicsWorld::UpdateCharacterControllers(float deltaTime)
 
 void PhysicsWorld::UpdateRigidBodies(float deltaTime)
 {
+
 	for (auto rigidBody : rigidBodies)
 	{
-		rigidBody->node->Move(rigidBody->velocity * deltaTime);
+		rigidBody->Integrate(deltaTime);
+		rigidBody->GetNode()->SetRotation(rigidBody->GetRotation().GetMatrix().ToMat4());
+		rigidBody->GetNode()->SetTranslation(rigidBody->GetPosition());
+	}
+
+	for (auto rigidBody : rigidBodies)
+	{
+		rigidBody->SetForce(vec3::ZERO);
+		rigidBody->SetTorque(vec3::ZERO);
 	}
 }
 

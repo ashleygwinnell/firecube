@@ -44,6 +44,7 @@ public:
 
 	bool operator== (const quat &o) const;
 	bool operator!= (const quat &o) const;
+	vec3 operator*(const vec3 &v) const;
 
 	/** 
 	* Normalize the quaternion 
@@ -53,7 +54,7 @@ public:
 	/**
 	* Compute quaternion conjugate 
 	*/
-	void Conjugate();
+	quat Conjugate();
 
 	/** 
 	* Rotate a point by this quaternion 

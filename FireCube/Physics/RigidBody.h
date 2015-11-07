@@ -2,11 +2,18 @@
 
 #include "Core/Component.h"
 #include "Math/Math.h"
+#include "Math/BoundingBox.h"
 
 namespace FireCube
 {
 
 class PhysicsWorld;	
+class CollisionShape;
+
+enum class RigidBodyType
+{
+	DYNAMIC,STATIC
+};
 
 class RigidBody : public Component
 {
@@ -20,7 +27,25 @@ public:
 	
 	void SetVelocity(vec3 velocity);
 	vec3 GetVelocity() const;
+	quat GetRotation() const;
+	vec3 GetPosition() const;
 	virtual Component *Clone() const;
+	vec3 PointToLocal(vec3 p);
+	vec3 VectorToLocal(vec3 v);
+	vec3 PointToWorld(vec3 p);
+	vec3 VectorToWorld(vec3 v);
+
+	void ApplyForce(vec3 force, vec3 relativePos);
+	void ApplyLocalForce(vec3 force, vec3 v);
+	void ApplyImpulse(vec3 impulse, vec3 relativePos);
+	void ApplyLocalImpulse(vec3 impulse, vec3 v);
+	void Integrate(float t);
+	void UpdateInertiaWorld(bool force = false);
+	void UpdateWorldBoundingBox();
+	void UpdateMassProperties();
+	void SetForce(vec3 force);
+	void SetTorque(vec3 torque);
+	void SetMass(float mass);
 private:
 
 	RigidBody(const RigidBody &other);
@@ -30,7 +55,22 @@ private:
 	virtual void SceneChanged(Scene *oldScene);
 		
 	WeakPtr<PhysicsWorld> physicsWorld;
+	std::vector<CollisionShape *> shapes;
 	vec3 velocity;
+	vec3 force;
+	float mass;
+	float invMass;
+	RigidBodyType bodyType;
+	vec3 torque;
+	quat rotation;
+	vec3 angularVelocity;
+	vec3 inertia;
+	vec3 invInertia;
+	mat3 invInertiaWorld;
+	vec3 position;
+	BoundingBox worldBoundingBox;
+	bool worldBoundingBoxChanged;
+
 };
 
 }

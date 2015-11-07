@@ -191,7 +191,7 @@ void mat3::operator*=(const mat3 &src)
 
 void mat3::Scale(float x, float y, float z)
 {
-	mat3 scale;
+	mat3 scale = mat3::IDENTITY;
 	scale.m[0] = x;
 	scale.m[4] = y;
 	scale.m[8] = z;
@@ -200,7 +200,7 @@ void mat3::Scale(float x, float y, float z)
 
 void mat3::RotateX(float ang)
 {
-	mat3 rot;
+	mat3 rot = mat3::IDENTITY;
 	float cs = (float)cos(ang);
 	float sn = (float)sin(ang);
 
@@ -214,7 +214,7 @@ void mat3::RotateX(float ang)
 
 void mat3::RotateY(float ang)
 {
-	mat3 rot;
+	mat3 rot = mat3::IDENTITY;
 	float cs = (float)cos(ang);
 	float sn = (float)sin(ang);
 
@@ -227,7 +227,7 @@ void mat3::RotateY(float ang)
 
 void mat3::RotateZ(float ang)
 {
-	mat3 rot;
+	mat3 rot = mat3::IDENTITY;
 	float cs = (float)cos(ang);
 	float sn = (float)sin(ang);
 

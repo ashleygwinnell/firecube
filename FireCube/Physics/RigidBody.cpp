@@ -6,7 +6,7 @@
 
 using namespace FireCube;
 
-RigidBody::RigidBody(Engine *engine) : Component(engine), physicsWorld(nullptr), velocity(0.0f)
+RigidBody::RigidBody(Engine *engine) : Component(engine), physicsWorld(nullptr), velocity(0.0f), force(0.0f), angularVelocity(0.0f), torque(0.0f)
 {
 
 }
@@ -26,20 +26,29 @@ RigidBody::~RigidBody()
 
 void RigidBody::MarkedDirty()
 {
-	
+
 }
 
 void RigidBody::NodeChanged()
 {
-	
+	if (node)
+	{		
+		rotation = quat(node->GetWorldRotation().ToMat3());
+		position = node->GetWorldPosition();
+		node->GetComponents(shapes, false);
+		UpdateMassProperties();
+		worldBoundingBoxChanged = true;
+	}
 }
 
 void RigidBody::SceneChanged(Scene *oldScene)
 {
 	if (oldScene)
 	{
-		physicsWorld = oldScene->GetRootNode()->GetComponent<PhysicsWorld>();
-		physicsWorld->RemoveRigidBody(this);
+		if (physicsWorld.Expired() == false)
+		{			
+			physicsWorld->RemoveRigidBody(this);
+		}
 	}
 
 	if (scene)
@@ -59,8 +68,157 @@ vec3 RigidBody::GetVelocity() const
 	return velocity;
 }
 
+void RigidBody::RenderDebugGeometry(DebugRenderer *debugRenderer)
+{
+
+}
+
+vec3 RigidBody::PointToLocal(vec3 p)
+{
+	p -= position;
+	return rotation.Conjugate() * p;
+}
+
+vec3 RigidBody::VectorToLocal(vec3 v)
+{
+	return rotation.Conjugate() * v;
+}
+
+vec3 RigidBody::PointToWorld(vec3 p)
+{
+	return rotation * p + position;
+}
+vec3 RigidBody::VectorToWorld(vec3 v)
+{
+	return rotation * v;
+}
+
 Component *RigidBody::Clone() const
 {
 	RigidBody *clone = new RigidBody(*this);
 	return clone;
+}
+
+void RigidBody::ApplyForce(vec3 force, vec3 relativePos)
+{
+	vec3 rotForce = Cross(relativePos, force);
+	this->force += force;
+	this->torque += rotForce;
+}
+
+void RigidBody::ApplyLocalForce(vec3 force, vec3 v)
+{
+	vec3 worldForce = VectorToWorld(force);
+	vec3 relativePos = VectorToWorld(v);
+
+	ApplyForce(worldForce, relativePos);
+}
+
+void RigidBody::ApplyImpulse(vec3 impulse, vec3 relativePos)
+{
+	this->velocity += impulse * invMass;
+	vec3 rotVelocity = Cross(relativePos, impulse);
+	this->angularVelocity += invInertiaWorld * rotVelocity;
+}
+
+void RigidBody::ApplyLocalImpulse(vec3 impulse, vec3 v)
+{
+	vec3 worldImpulse = VectorToWorld(impulse);
+	vec3 relativePos = VectorToWorld(v);
+	ApplyImpulse(worldImpulse, relativePos);
+}
+
+void RigidBody::Integrate(float t)
+{
+	velocity += force * invMass * t;
+	angularVelocity += invInertiaWorld * torque * t;
+	position += velocity * t;
+
+	float ax = angularVelocity.x,
+		ay = angularVelocity.y,
+		az = angularVelocity.z,
+		bx = rotation.x,
+		by = rotation.y,
+		bz = rotation.z,
+		bw = rotation.w;
+	
+	float halfT = t * 0.5f;
+	rotation.x += halfT * (ax * bw + ay * bz - az * by);
+	rotation.y += halfT * (ay * bw + az * bx - ax * bz);
+	rotation.z += halfT * (az * bw + ax * by - ay * bx);
+	rotation.w += halfT * (-ax * bx - ay * by - az * bz);	
+
+	worldBoundingBoxChanged = true;
+
+	UpdateInertiaWorld();
+}
+
+void RigidBody::UpdateInertiaWorld(bool force)
+{
+	vec3 I = invInertia;
+	if (I.x == I.y && I.y == I.z && !force)
+	{
+		invInertiaWorld = mat3::IDENTITY;		
+		invInertiaWorld.Scale(I.x, I.x, I.x);
+	}
+	else
+	{
+		mat3 m = rotation.GetMatrix();
+		mat3 mt = m;
+		mt.Transpose();
+		m.Scale(I.x, I.y, I.z);
+		invInertiaWorld = m * mt;
+	}
+}
+
+void RigidBody::UpdateWorldBoundingBox()
+{
+	worldBoundingBoxChanged = false;
+
+	worldBoundingBox = BoundingBox();
+	for (auto shape : shapes)
+	{
+		auto shapeBBox = shape->GetWorldBoundingBox();
+		worldBoundingBox.Expand(shapeBBox);
+	}
+}
+
+void RigidBody::UpdateMassProperties()
+{
+	invMass = mass > 0.0f ? 1.0f / mass : 0.0f;	
+	UpdateWorldBoundingBox();
+	vec3 halfExtents = worldBoundingBox.GetSize() * 0.5f;
+	
+	inertia.x = 1.0f / 12.0f * mass * (2.0f * halfExtents.y * 2.0f * halfExtents.y + 2.0f * halfExtents.z * 2 * halfExtents.z);
+	inertia.y = 1.0f / 12.0f * mass * (2.0f * halfExtents.x * 2.0f * halfExtents.x + 2.0f * halfExtents.z * 2 * halfExtents.z);
+	inertia.z = 1.0f / 12.0f * mass * (2.0f * halfExtents.y * 2.0f * halfExtents.y + 2.0f * halfExtents.x * 2 * halfExtents.x);
+
+	invInertia = vec3(inertia.x > 0 ? 1.0f / inertia.x : 0.0f, inertia.y > 0 ? 1.0f / inertia.y : 0.0f, inertia.z > 0 ? 1.0f / inertia.z : 0.0f);
+	UpdateInertiaWorld(true);
+}
+
+void RigidBody::SetForce(vec3 force)
+{
+	this->force = force;
+}
+
+void RigidBody::SetTorque(vec3 torque)
+{
+	this->torque = torque;
+}
+
+void RigidBody::SetMass(float mass)
+{
+	this->mass = mass;
+	UpdateMassProperties();
+}
+
+quat RigidBody::GetRotation() const
+{
+	return rotation;
+}
+
+vec3 RigidBody::GetPosition() const
+{
+	return position;
 }

@@ -34,47 +34,40 @@ bool App::Prepare()
 	camera = childNode->CreateComponent<OrbitCamera>(inputManager);	
 	camera->SetMaxAngX(0);
 	camera->SetZoomFactor(1000.0f);	
+
+	root->CreateComponent<PhysicsWorld>();
+
+	Node *node;
+	CollisionShape *collisionShape;
+	RigidBody *rigidBody;
 	
-	/*childNode = root->CreateChild("Model");	
-	StaticModel *staticModel = childNode->CreateComponent<StaticModel>(resourceCache->GetResource<Mesh>("scene.3ds"));
-	auto luaScript = childNode->CreateComponent<LuaScript>();
-	luaScript->CreateObject(resourceCache->GetResource<LuaFile>("../Samples/FireCubeTest/test.lua"), "Rotator");	
-	luaScript->CallMemberFunction("SetRotationSpeed", vec3(0.0f, 0.0f, 0.0f));		
-	
-	childNode = root->CreateChild("Model");
-	AnimatedModel *animatedModel = childNode->CreateComponent<AnimatedModel>();	
-	animatedModel->CreateFromMesh(rr);
-	childNode->Scale(vec3(0.05f));
-
-	childNode = childNode->Clone();
-	childNode->Move(vec3(5, 0, 0));*/
-
-	childNode = root->CreateChild("Particles");
-	childNode->CreateComponent<ParticleEmitter>(1000, engine->GetResourceCache()->GetResource<Material>("Materials/ParticleNoTexture.xml"));
-
-	/*childNode = root->CreateChild("Terrain");	
-	Terrain *terrain = childNode->CreateComponent<Terrain>();
-	childNode->Scale(vec3(0.05f));
-	Image *image = resourceCache->GetResource<Image>("heightmap3.bmp");
-	terrain->SetPatchSize(64);
-	terrain->CreateFromHeightMap(image);
-	terrain->SetMaterial(resourceCache->GetResource<Material>("Materials/TerrainNoTexture.xml"));
-	//terrain->SetMaterial(resourceCache->GetResource<Material>("Materials/DebugNormals.xml"));*/
-
-	childNode = root->CreateChild("LightNode");	
-	Light *light = childNode->CreateComponent<Light>();
+	node = root->CreateChild("LightNode");
+	Light *light = node->CreateComponent<Light>();
 	light->SetLightType(FireCube::LightType::DIRECTIONAL);
 	light->SetColor(vec3(1.0f));
 	light->SetCastShadow(true);
-	childNode->Rotate(vec3(PI * 0.25f, 0.0f, 0.0f));
+	node->Rotate(vec3(PI * 0.25f, 0.0f, 0.0f));
+
+	node = root->CreateChild();
+	SharedPtr<Mesh> mesh = new Mesh(engine);
+	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(1.0f)), BoundingBox(vec3(-0.5f), vec3(0.5f)), resourceCache->GetResource<Material>("Materials/TerrainNoTexture.xml"));
+	node->CreateComponent<StaticModel>(mesh);
+	collisionShape = node->CreateComponent<CollisionShape>();
+	collisionShape->SetBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
+
+	rigidBody = node->CreateComponent<RigidBody>();
+	rigidBody->SetMass(1.0f);
+	rigidBody->ApplyForce(vec3(100.0f), vec3(-0.5f, 0.0f, -0.5f));
+
+	node = root->CreateChild();
+	mesh = new Mesh(engine);
+	mesh->AddGeometry(GeometryGenerator::GeneratePlane(engine, vec2(10.0f)), BoundingBox(vec3(-10.0f), vec3(10.0f)), resourceCache->GetResource<Material>("Materials/TerrainNoTexture.xml"));
+	node->CreateComponent<StaticModel>(mesh);
+	node->Move(vec3(0, -1, 0));
 		
-	scene.SetFogColor(vec3(44, 80, 222) / 255.0f);
-	//renderer->SetCurrentRenderPath(resourceCache->GetResource<RenderPath>("RenderPaths/ForwardGrayscale.xml"));
+	scene.SetFogColor(vec3(44, 80, 222) / 255.0f);	
 	text = engine->GetUI()->GetRoot()->CreateChild<UIText>();
 	text->SetFontFace(resourceCache->GetResource<Font>("c:\\windows\\fonts\\arial.ttf")->GenerateFontFace(18));	
-	
-	/*SceneReader reader(engine);
-	reader.Read(scene, "../Samples/FireCubeTest/scene.xml");*/	
 
 	renderer->SetSceneView(0, new SceneView(engine, &scene, camera));
 
@@ -85,58 +78,12 @@ void App::Update(float t)
 {		
 	std::ostringstream oss;
 	oss << "Rendered triangles: " << renderer->GetNumberOfPrimitivesRendered() << std::endl << "FPS: " << GetFps();
-	text->SetText(oss.str());
-	//root->GetChild("LightNode")->Move(vec3(0.2f, 0.0f, 0.2f) * t);
+	text->SetText(oss.str());	
 }
 
 void App::Render(float t)
 {    			
-	/*auto debugRenderer = engine->GetDebugRenderer();
-
-	float radius = 0.1f;
-	float height = 0.5f;
-	vec3 initialPos(-5, 2.0f, -0.2f);
-	vec3 targetPos(5.0f, 2.0f, -0.2f);
-	std::vector<vec3> tri = { vec3(0, -2, -2), vec3(0, -2 ,2), vec3(0, 2 ,0) };
-
 	
-	for (unsigned int i = 0; i < tri.size(); i += 3)
-	{
-		debugRenderer->AddLine(tri[i], tri[i + 1], vec3(0, 1, 0));
-		debugRenderer->AddLine(tri[i + 1], tri[i + 2], vec3(0, 1, 0));
-		debugRenderer->AddLine(tri[i + 2], tri[i], vec3(0, 1, 0));
-	}
-
-
-	CollisionMesh cm;	
-	for (unsigned int i = 0; i < tri.size(); i += 3)
-	{		
-		cm.triangles.push_back(CollisionTriangle(tri[i], tri[i + 1], tri[i + 2]));
-	}
-	
-	CollisionResult result;
-
-	auto p0 = initialPos - vec3(0, height * 0.5f, 0);
-	auto p1 = initialPos + vec3(0, height * 0.5f, 0);		
-	CollisionUtils::SweepCapsuleMesh((targetPos - initialPos).Normalized(), (targetPos - initialPos).Length(), p0, p1, radius, cm, mat4::IDENTITY, result);
-
-	vec3 newEndPoint;
-	if (result.collisionFound)
-	{
-		newEndPoint = (targetPos - initialPos).Normalized() * result.nearestDistance + initialPos;
-		debugRenderer->AddSphere(result.nearestIntersectionPoint, 0.05f, 16, 16, vec3(0));
-		debugRenderer->AddLine(result.nearestIntersectionPoint, result.nearestIntersectionPoint + result.nearestNormal * 1.0f, vec3(0, 0, 1));
-	}
-	else
-	{
-		newEndPoint = targetPos;
-	}
-
-	debugRenderer->AddCapsule(p0, p1, radius, 4, 8, vec3(0, 1, 0));
-	debugRenderer->AddCapsule(newEndPoint - vec3(0, height * 0.5f, 0), newEndPoint + vec3(0, height * 0.5f, 0), radius, 4, 8, vec3(0, 1, 0));
-
-	debugRenderer->AddLine(initialPos, targetPos, vec3(1, 1, 0));
-	engine->GetDebugRenderer()->Render(camera);*/
 }
 
 void App::HandleInput(float t, const MappedInput &input)
