@@ -87,6 +87,7 @@ void MaterialEditorPanelImpl::FillPropertyGrid(Material *material)
 {	
 	vec3 color;
 	float value;
+	std::string str;
 	propertyGrid->Clear();
 	
 	propertyGrid->Append(new wxPropertyCategory("Material"));
@@ -104,6 +105,12 @@ void MaterialEditorPanelImpl::FillPropertyGrid(Material *material)
 	
 	value = material->HasParameter(PARAM_MATERIAL_OPACITY) ? material->GetParameter(PARAM_MATERIAL_OPACITY).GetFloat() : 1.0f;
 	propertyGrid->Append(new wxFloatProperty("Opacity", wxPG_LABEL, value));
+
+	str = material->HasParameter(PARAM_U_OFFSET) ? AssetUtils::ToString(material->GetParameter(PARAM_U_OFFSET).GetVec3()) : "1 0 0";
+	propertyGrid->Append(new wxStringProperty("U Offset", wxPG_LABEL, str));
+
+	str = material->HasParameter(PARAM_V_OFFSET) ? AssetUtils::ToString(material->GetParameter(PARAM_V_OFFSET).GetVec3()) : "0 1 0";
+	propertyGrid->Append(new wxStringProperty("V Offset", wxPG_LABEL, str));
 	
 	propertyGrid->Append(new wxFileProperty("Diffuse texture", wxPG_LABEL, material->GetTexture(TextureUnit::DIFFUSE) ? material->GetTexture(TextureUnit::DIFFUSE)->GetFileName() : ""));
 	propertyGrid->Append(new wxFileProperty("Normal texture", wxPG_LABEL, material->GetTexture(TextureUnit::NORMAL) ? material->GetTexture(TextureUnit::NORMAL)->GetFileName() : ""));
@@ -138,6 +145,14 @@ void MaterialEditorPanelImpl::PropertyGridChanged(wxPropertyGridEvent& event)
 	else if (properyName == "Opacity")
 	{
 		material->SetParameter(PARAM_MATERIAL_OPACITY, (float)event.GetPropertyValue().GetDouble());		
+	}
+	else if (properyName == "U Offset")
+	{
+		material->SetParameter(PARAM_U_OFFSET, Variant::FromString(event.GetPropertyValue().GetString().ToStdString()).GetVec3());
+	}
+	else if (properyName == "V Offset")
+	{
+		material->SetParameter(PARAM_V_OFFSET, Variant::FromString(event.GetPropertyValue().GetString().ToStdString()).GetVec3());
 	}
 	else if (properyName == "Diffuse texture")
 	{

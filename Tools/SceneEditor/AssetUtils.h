@@ -10,4 +10,6 @@ namespace AssetUtils
 	std::string ImportTextureIfNeeded(const std::string &texturePath);	
 	std::string ImportTechniqueIfNeeded(const std::string &techniquePath);
 	std::string ImportMaterialIfNeeded(const std::string &materialPath);
+	std::string ToString(FireCube::vec3 v);
+	std::string ToString(FireCube::vec4 v);
 }

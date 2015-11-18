@@ -49,14 +49,14 @@ bool AssetUtils::ImportMesh(FireCube::Engine *engine, const std::string &path)
 }
 
 
-std::string ToString(vec4 v)
+std::string AssetUtils::ToString(vec4 v)
 {
 	std::ostringstream str;
 	str << v.x << " " << v.y << " " << v.z << " " << v.w;
 	return str.str();
 }
 
-std::string ToString(vec3 v)
+std::string AssetUtils::ToString(vec3 v)
 {
 	std::ostringstream str;
 	str << v.x << " " << v.y << " " << v.z;
@@ -112,6 +112,24 @@ bool AssetUtils::SerializeMaterial(FireCube::Material *material, const std::stri
 		element = new TiXmlElement("parameter");
 		element->SetAttribute("name", "materialOpacity");
 		element->SetDoubleAttribute("value", value);
+		rootElement->LinkEndChild(element);
+	}
+
+	if (material->HasParameter(PARAM_U_OFFSET))
+	{
+		vec3 value = material->GetParameter(PARAM_U_OFFSET).GetVec3();
+		element = new TiXmlElement("parameter");
+		element->SetAttribute("name", "uOffset");
+		element->SetAttribute("value", ToString(value));
+		rootElement->LinkEndChild(element);
+	}
+
+	if (material->HasParameter(PARAM_V_OFFSET))
+	{
+		vec3 value = material->GetParameter(PARAM_V_OFFSET).GetVec3();
+		element = new TiXmlElement("parameter");
+		element->SetAttribute("name", "vOffset");
+		element->SetAttribute("value", ToString(value));
 		rootElement->LinkEndChild(element);
 	}
 
