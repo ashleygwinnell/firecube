@@ -875,3 +875,294 @@ bool CollisionUtils::SweepSpherePlane(vec3 position, vec3 velocity, float radius
 
 	return result.collisionFound;
 }
+
+int CollisionUtils::IntersectRayCapsule(vec3 origin, vec3 dir, vec3 capsuleP0, vec3 capsuleP1, float radius, float t[2])
+{
+	vec3 capsDir = capsuleP1 - capsuleP0;
+
+	float fWLength = capsDir.Length();
+	vec3 kW = capsDir / fWLength;
+
+	if (fWLength < 0.0001f)
+	{
+		const float d0 = (origin - capsuleP0).Length2();
+		const float d1 = (origin - capsuleP1).Length2();
+		const float approxLength = (std::max(d0, d1) + radius) * 2.0f;
+		return CollisionUtils::IntersectRaySphere(origin, dir, approxLength, capsuleP0, radius, t[0]) ? 1 : 0;
+	}
+
+	vec3 kU(0.0f);
+
+	if (fWLength > 0.0f)
+	{
+		float fInvLength;
+		if (std::abs(kW.x) >= std::abs(kW.y))
+		{
+			// W.x or W.z is the largest magnitude component, swap them
+			fInvLength = 1.0f / std::sqrt(kW.x * kW.x + kW.z * kW.z);
+			kU.x = -kW.z * fInvLength;
+			kU.y = 0.0f;
+			kU.z = kW.x * fInvLength;
+		}
+		else
+		{
+			// W.y or W.z is the largest magnitude component, swap them
+			fInvLength = 1.0f / std::sqrt(kW.y * kW.y + kW.z * kW.z);
+			kU.x = 0.0f;
+			kU.y = kW.z * fInvLength;
+			kU.z = -kW.y * fInvLength;
+		}
+	}
+
+	vec3 kV = Cross(kW, kU);
+	kV.Normalize();
+
+	// compute intersection
+
+	vec3 kD(kU.Dot(dir), kV.Dot(dir), kW.Dot(dir));
+	const float fDLength = kD.Length();
+	kD /= fDLength;
+
+	const float fInvDLength = 1.0f / fDLength;
+	const vec3 kDiff = origin - capsuleP0;
+	const vec3 kP(kU.Dot(kDiff), kV.Dot(kDiff), kW.Dot(kDiff));
+	const float fRadiusSqr = radius * radius;
+
+	// Is the velocity parallel to the capsule direction? (or zero)
+	if (std::abs(kD.z) >= 1.0f - 0.0001f || fDLength < 0.0001f)
+	{
+		const float fAxisDir = dir.Dot(capsDir);
+
+		const float fDiscr = fRadiusSqr - kP.x*kP.x - kP.y*kP.y;
+		if (fAxisDir < 0 && fDiscr >= 0.0f)
+		{
+			// Velocity anti-parallel to the capsule direction
+			const float fRoot = std::sqrt(fDiscr);
+			t[0] = (kP.z + fRoot)*fInvDLength;
+			t[1] = -(fWLength - kP.z + fRoot)*fInvDLength;
+			return 2;
+		}
+		else if (fAxisDir > 0 && fDiscr >= 0.0f)
+		{
+			// Velocity parallel to the capsule direction
+			const float fRoot = std::sqrt(fDiscr);
+			t[0] = -(kP.z + fRoot)*fInvDLength;
+			t[1] = (fWLength - kP.z + fRoot)*fInvDLength;
+			return 2;
+		}
+		else
+		{
+			// sphere heading wrong direction, or no velocity at all
+			return 0;
+		}
+	}
+
+	// test intersection with infinite cylinder
+	float fA = kD.x*kD.x + kD.y*kD.y;
+	float fB = kP.x*kD.x + kP.y*kD.y;
+	float fC = kP.x*kP.x + kP.y*kP.y - fRadiusSqr;
+	float fDiscr = fB*fB - fA*fC;
+	if (fDiscr < 0.0f)
+	{
+		// line does not intersect infinite cylinder
+		return 0;
+	}
+
+	int iQuantity = 0;
+
+	if (fDiscr > 0.0f)
+	{
+		// line intersects infinite cylinder in two places
+		const float fRoot = std::sqrt(fDiscr);
+		const float fInv = 1.0f / fA;
+		float fT = (-fB - fRoot)*fInv;
+		float fTmp = kP.z + fT*kD.z;
+		if (0.0f <= fTmp && fTmp <= fWLength)
+			t[iQuantity++] = fT*fInvDLength;
+
+		fT = (-fB + fRoot)*fInv;
+		fTmp = kP.z + fT*kD.z;
+		if (0.0f <= fTmp && fTmp <= fWLength)
+			t[iQuantity++] = fT*fInvDLength;
+
+		if (iQuantity == 2)
+		{
+			// line intersects capsule wall in two places
+			return 2;
+		}
+	}
+	else
+	{
+		// line is tangent to infinite cylinder
+		const float fT = -fB / fA;
+		const float fTmp = kP.z + fT*kD.z;
+		if (0.0f <= fTmp && fTmp <= fWLength)
+		{
+			t[0] = fT*fInvDLength;
+			return 1;
+		}
+	}
+
+	// test intersection with bottom hemisphere
+	// fA = 1
+	fB += kP.z*kD.z;
+	fC += kP.z*kP.z;
+	fDiscr = fB*fB - fC;
+	if (fDiscr > 0.0f)
+	{
+		const float fRoot = std::sqrt(fDiscr);
+		float fT = -fB - fRoot;
+		float fTmp = kP.z + fT*kD.z;
+		if (fTmp <= 0.0f)
+		{
+			t[iQuantity++] = fT*fInvDLength;
+			if (iQuantity == 2)
+				return 2;
+		}
+
+		fT = -fB + fRoot;
+		fTmp = kP.z + fT*kD.z;
+		if (fTmp <= 0.0f)
+		{
+			t[iQuantity++] = fT*fInvDLength;
+			if (iQuantity == 2)
+				return 2;
+		}
+	}
+	else if (fDiscr == 0.0f)
+	{
+		const float fT = -fB;
+		const float fTmp = kP.z + fT*kD.z;
+		if (fTmp <= 0.0f)
+		{
+			t[iQuantity++] = fT*fInvDLength;
+			if (iQuantity == 2)
+				return 2;
+		}
+	}
+
+	// test intersection with top hemisphere
+	// fA = 1
+	fB -= kD.z*fWLength;
+	fC += fWLength*(fWLength - 2.0f*kP.z);
+
+	fDiscr = fB*fB - fC;
+	if (fDiscr > 0.0f)
+	{
+		const float fRoot = std::sqrt(fDiscr);
+		float fT = -fB - fRoot;
+		float fTmp = kP.z + fT*kD.z;
+		if (fTmp >= fWLength)
+		{
+			t[iQuantity++] = fT*fInvDLength;
+			if (iQuantity == 2)
+				return 2;
+		}
+
+		fT = -fB + fRoot;
+		fTmp = kP.z + fT*kD.z;
+		if (fTmp >= fWLength)
+		{
+			t[iQuantity++] = fT*fInvDLength;
+			if (iQuantity == 2)
+				return 2;
+		}
+	}
+	else if (fDiscr == 0.0f)
+	{
+		const float fT = -fB;
+		const float fTmp = kP.z + fT*kD.z;
+		if (fTmp >= fWLength)
+		{
+			t[iQuantity++] = fT*fInvDLength;
+			if (iQuantity == 2)
+				return 2;
+		}
+	}
+
+	return iQuantity;
+}
+
+bool CollisionUtils::IntersectRaySphere(const vec3 &origin, const vec3 &dir, float length, const vec3& center, float radius, float& dist)
+{
+	// get the offset vector
+	const vec3 offset = center - origin;
+
+	// get the distance along the ray to the center point of the sphere
+	const float ray_dist = dir.Dot(offset);
+
+	// get the squared distances
+	const float off2 = offset.Dot(offset);
+	const float rad_2 = radius * radius;
+	if (off2 <= rad_2)
+	{
+		// we're in the sphere		
+		dist = 0.0f;
+		return true;
+	}
+
+	if (ray_dist <= 0 || (ray_dist - length) > radius)
+	{
+		// moving away from object or too far away
+		return false;
+	}
+
+	// find hit distance squared
+	const float d = rad_2 - (off2 - ray_dist * ray_dist);
+	if (d < 0.0f)
+	{
+		// ray passes by sphere without hitting
+		return false;
+	}
+
+	// get the distance along the ray
+	dist = ray_dist - std::sqrt(d);
+	if (dist > length)
+	{
+		// hit point beyond length
+		return false;
+	}
+	
+	return true;
+}
+
+bool CollisionUtils::SweepSphereCapsule(const vec3& sphereCenter, float sphereRadius, const vec3& capusleP0, const vec3& capusleP1, float radius, const vec3& dir, float length, CollisionResult &result)
+{
+	const float radiusSum = radius + sphereRadius;
+
+	// Raycast against it
+	float s[2];
+	int n = CollisionUtils::IntersectRayCapsule(sphereCenter, dir, capusleP0, capusleP1, radiusSum, s);
+	if (n)
+	{
+		float t;
+		if (n == 1)
+			t = s[0];
+		else
+			t = (s[0] < s[1]) ? s[0] : s[1];
+
+		if (t >= 0.0f && t <= length)
+		{
+			result.nearestDistance = t;
+
+			// Move capsule against sphere
+			const vec3 tdir = t*dir;
+			vec3 p0 = capusleP0 - tdir;
+			vec3 p1 = capusleP1 - tdir;
+
+			// Compute closest point between moved capsule & sphere
+			MathUtils::DistancePointSegmentSquared(p0, p1, sphereCenter, &t);
+			result.nearestIntersectionPoint = (1 - t) * p0 + t * p1;
+
+			// Normal
+			result.nearestNormal = (result.nearestIntersectionPoint - sphereCenter).Normalized();
+
+			result.nearestIntersectionPoint -= result.nearestNormal * radius;
+			result.collisionFound = true;
+			return true;
+		}
+	}
+
+	result.collisionFound = false;
+	return false;
+}

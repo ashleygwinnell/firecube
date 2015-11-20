@@ -628,3 +628,33 @@ bool MathUtils::Intersect3Planes(const Plane &plane1, const Plane &plane2, const
 		return false;
 	}
 }
+
+float MathUtils::DistancePointSegmentSquared(const vec3 &p0, const vec3 &p1, const vec3 &point, float *param)
+{
+	vec3 Diff = point - p0;
+	const vec3 Dir = p1 - p0;
+	float fT = Diff.Dot(Dir);
+
+	if (fT <= 0.0f)
+	{
+		fT = 0.0f;
+	}
+	else
+	{
+		const float SqrLen = Dir.Length2();
+		if (fT >= SqrLen)
+		{
+			fT = 1.0f;
+			Diff -= Dir;
+		}
+		else
+		{
+			fT /= SqrLen;
+			Diff -= fT*Dir;
+		}
+	}
+
+	if (param)	*param = fT;
+
+	return Diff.Length2();
+}

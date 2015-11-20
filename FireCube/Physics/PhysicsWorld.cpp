@@ -76,6 +76,10 @@ void PhysicsWorld::CollideCharacterController(const CharacterController *charact
 			{				
 				CollisionUtils::SweepCapsulePlane(direction, distance, p0, p1, characterController->radius, collisionShape->GetPlane(), collisionShape->GetNode()->GetWorldTransformation(), currentResult);
 			}
+			else if (collisionShape->GetShapeType() == CollisionShapeType::SPHERE)
+			{
+				CollisionUtils::SweepSphereCapsule(collisionShape->GetNode()->GetWorldPosition(), collisionShape->GetRadius(), p0, p1, characterController->radius, -direction, distance, currentResult);				
+			}
 
 			if (currentResult.collisionFound)
 			{

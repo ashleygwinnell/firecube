@@ -30,6 +30,8 @@ void ClosestPointLineLine(const vec3 &v0, const vec3 &v10, const vec3 &v2, const
 vec3 ClosestPointLineSegmentLineSegment(const vec3 &s0, const vec3 &s1, const vec3 &l0, const vec3 &l1, float &d, float &d2);
 vec3 ClosestPointLineSegment(const vec3 &point, const vec3 &s, const vec3 &s1, float &d);
 bool Intersect3Planes(const Plane &plane1, const Plane &plane2, const Plane &plane3, vec3 &intersectionPoint);
+float DistancePointSegmentSquared(const vec3 &p0, const vec3 &p1, const vec3 &point, float *param);
+
 }
 
 }
