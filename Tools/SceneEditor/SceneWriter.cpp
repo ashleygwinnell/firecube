@@ -163,6 +163,10 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlElement *pa
 			element->SetAttribute("mesh", collisionShape->GetMeshFilename());
 			break;
 		}
+		case CollisionShapeType::SPHERE:
+			element->SetAttribute("shape_type", "sphere");
+			element->SetDoubleAttribute("radius", collisionShape->GetRadius());
+			break;
 		default:
 			break;
 		}

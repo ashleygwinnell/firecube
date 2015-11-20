@@ -383,6 +383,8 @@ class CollisionShapePanel : public wxPanel
 		wxTextCtrl* bboxMaxZTextCtrl;
 		wxStaticText* meshStaticText;
 		wxFilePickerCtrl* meshFilePicker;
+		wxStaticText* sphereStaticText;
+		wxTextCtrl* radiusTextCtrl;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void ShapeTypeChanged( wxCommandEvent& event ) { event.Skip(); }
@@ -398,6 +400,7 @@ class CollisionShapePanel : public wxPanel
 		virtual void BBoxMaxYChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void BBoxMaxZChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MeshFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
+		virtual void RadiusChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -411,6 +414,7 @@ class CollisionShapePanel : public wxPanel
 		wxString bboxMaxXText; 
 		wxString bboxMaxYText; 
 		wxString bboxMaxZText; 
+		wxString radiusText; 
 		
 		CollisionShapePanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~CollisionShapePanel();

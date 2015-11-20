@@ -18,6 +18,8 @@ public:
 	FireCube::Plane GetPlane() const;
 	void SetBox(FireCube::BoundingBox box);
 	FireCube::BoundingBox GetBox() const;
+	void SetSphere(float radius);
+	float GetRadius() const;
 	void SetIsTrigger(bool isTrigger);
 	bool IsTrigger() const;
 private:
@@ -25,5 +27,6 @@ private:
 	std::string meshFilename;
 	FireCube::Plane plane;
 	FireCube::BoundingBox box;
+	float radius;
 	bool isTrigger;
 };

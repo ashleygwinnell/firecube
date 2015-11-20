@@ -23,6 +23,7 @@ private:
 	virtual void BBoxMaxXChanged(wxCommandEvent& event);
 	virtual void BBoxMaxYChanged(wxCommandEvent& event);
 	virtual void BBoxMaxZChanged(wxCommandEvent& event);
+	virtual void RadiusChanged(wxCommandEvent& event);
 	virtual void TriggerChanged(wxCommandEvent& event);
 	virtual void MeshFileChanged(wxFileDirPickerEvent& event);
 	BaseComponentPanelImpl *parent;

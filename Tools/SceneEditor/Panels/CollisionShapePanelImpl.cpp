@@ -37,6 +37,9 @@ void CollisionShapePanelImpl::UpdateUI()
 	case CollisionShapeType::TRIANGLE_MESH:
 		shapeTypeChoice->SetSelection(2);
 		break;
+	case CollisionShapeType::SPHERE:
+		shapeTypeChoice->SetSelection(3);
+		break;
 	default:
 		break;
 	}
@@ -54,6 +57,8 @@ void CollisionShapePanelImpl::UpdateUI()
 	bboxMaxYTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetBox().GetMax().y));
 	bboxMaxZTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetBox().GetMax().z));
 
+	radiusTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetRadius()));
+
 	if (collisionShape->GetMeshFilename().empty() == false)
 	{
 		wxFileName filename(collisionShape->GetMeshFilename());
@@ -70,9 +75,11 @@ void CollisionShapePanelImpl::UpdateVisibility(CollisionShapeType type)
 	meshStaticText->Hide();
 	planeStaticText->Hide();
 	boxStaticText->Hide();
+	sphereStaticText->Hide();
 	meshFilePicker->Hide();
 	planePanel->Hide();
 	boxPanel->Hide();
+	radiusTextCtrl->Hide();
 
 	switch (type)
 	{
@@ -87,6 +94,10 @@ void CollisionShapePanelImpl::UpdateVisibility(CollisionShapeType type)
 	case CollisionShapeType::BOX:
 		boxStaticText->Show();
 		boxPanel->Show();
+		break;
+	case CollisionShapeType::SPHERE:
+		sphereStaticText->Show();
+		radiusTextCtrl->Show();
 		break;
 	default:
 		break;
@@ -121,6 +132,9 @@ void CollisionShapePanelImpl::ShapeTypeChanged(wxCommandEvent& event)
 	case 2:
 		newType = CollisionShapeType::TRIANGLE_MESH;
 		break;
+	case 3:
+		newType = CollisionShapeType::SPHERE;
+		break;
 	default:
 		break;
 	}
@@ -131,8 +145,9 @@ void CollisionShapePanelImpl::ShapeTypeChanged(wxCommandEvent& event)
 	std::string oldMesh = collisionShape->GetMeshFilename();
 	Plane oldPlane = collisionShape->GetPlane();
 	BoundingBox oldBoundingBox = collisionShape->GetBox();
+	float oldRadius = collisionShape->GetRadius();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Shape Type", [collisionShape, newType, oldPlane, oldBoundingBox, oldMesh, engine]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Shape Type", [collisionShape, newType, oldPlane, oldBoundingBox, oldMesh, oldRadius, engine]()
 	{		
 		switch (newType)
 		{
@@ -145,10 +160,13 @@ void CollisionShapePanelImpl::ShapeTypeChanged(wxCommandEvent& event)
 		case CollisionShapeType::BOX:
 			collisionShape->SetBox(oldBoundingBox);
 			break;
+		case CollisionShapeType::SPHERE:
+			collisionShape->SetSphere(oldRadius);
+			break;
 		default:
 			break;
 		}
-	}, [collisionShape, oldType, oldPlane, oldBoundingBox, oldMesh, engine]()
+	}, [collisionShape, oldType, oldPlane, oldBoundingBox, oldMesh, oldRadius, engine]()
 	{		
 		switch (oldType)
 		{
@@ -160,6 +178,9 @@ void CollisionShapePanelImpl::ShapeTypeChanged(wxCommandEvent& event)
 			break;
 		case CollisionShapeType::BOX:
 			collisionShape->SetBox(oldBoundingBox);
+			break;
+		case CollisionShapeType::SPHERE:
+			collisionShape->SetSphere(oldRadius);
 			break;
 		default:
 			break;
@@ -468,6 +489,27 @@ void CollisionShapePanelImpl::MeshFileChanged(wxFileDirPickerEvent& event)
 	}, [collisionShape, oldMeshFileName, engine]()
 	{		
 		collisionShape->SetMesh(oldMeshFileName, engine);
+	});
+
+	theApp->GetEditorState()->ExecuteCommand(command);
+	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+}
+
+void CollisionShapePanelImpl::RadiusChanged(wxCommandEvent& event)
+{
+	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
+
+	MyApp *theApp = ((MyApp *)wxTheApp);
+	double newRadius;
+	event.GetString().ToDouble(&newRadius);
+	float oldRadius = collisionShape->GetRadius();
+	
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Radius", [collisionShape, newRadius]()
+	{
+		collisionShape->SetSphere(newRadius);
+	}, [collisionShape, oldRadius]()
+	{
+		collisionShape->SetSphere(oldRadius);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);

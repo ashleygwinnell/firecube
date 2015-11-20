@@ -273,6 +273,11 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 				Plane plane(planeParams.ToVec3(), planeParams.w);
 				collisionShapeDescriptor->SetPlane(plane);
 			}
+			else if (shapeTypeStr == "sphere")
+			{
+				float radius = Variant::FromString(e->Attribute("radius")).GetFloat();
+				collisionShapeDescriptor->SetSphere(radius);
+			}
 		}
 
 		if (e->Attribute("is_trigger"))

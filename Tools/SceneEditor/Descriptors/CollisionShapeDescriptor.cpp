@@ -23,6 +23,8 @@ void CollisionShapeDescriptor::CreateComponent(FireCube::Node *node, FireCube::E
 	case FireCube::CollisionShapeType::BOX:
 		collisionShape->SetBox(box);
 		break;
+	case FireCube::CollisionShapeType::SPHERE:
+		collisionShape->SetSphere(radius);
 	default:
 		break;
 	}
@@ -95,6 +97,21 @@ void CollisionShapeDescriptor::SetBox(FireCube::BoundingBox box)
 FireCube::BoundingBox CollisionShapeDescriptor::GetBox() const
 {
 	return box;
+}
+
+void CollisionShapeDescriptor::SetSphere(float radius)
+{
+	this->radius = radius;
+	collisionShapeType = CollisionShapeType::SPHERE;
+	if (component)
+	{
+		((CollisionShape *)component)->SetSphere(radius);
+	}
+}
+
+float CollisionShapeDescriptor::GetRadius() const
+{
+	return radius;
 }
 
 void CollisionShapeDescriptor::SetIsTrigger(bool isTrigger)

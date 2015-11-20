@@ -867,7 +867,7 @@ CollisionShapePanel::CollisionShapePanel( wxWindow* parent, wxWindowID id, const
 	m_staticText25->Wrap( -1 );
 	fgSizer3->Add( m_staticText25, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	wxString shapeTypeChoiceChoices[] = { wxT("Box"), wxT("Plane"), wxT("Mesh") };
+	wxString shapeTypeChoiceChoices[] = { wxT("Box"), wxT("Plane"), wxT("Mesh"), wxT("Sphere") };
 	int shapeTypeChoiceNChoices = sizeof( shapeTypeChoiceChoices ) / sizeof( wxString );
 	shapeTypeChoice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, shapeTypeChoiceNChoices, shapeTypeChoiceChoices, 0 );
 	shapeTypeChoice->SetSelection( 0 );
@@ -1008,6 +1008,15 @@ CollisionShapePanel::CollisionShapePanel( wxWindow* parent, wxWindowID id, const
 	meshFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_SMALL );
 	fgSizer3->Add( meshFilePicker, 0, wxALL|wxEXPAND, 5 );
 	
+	sphereStaticText = new wxStaticText( this, wxID_ANY, wxT("Sphere"), wxDefaultPosition, wxDefaultSize, 0 );
+	sphereStaticText->Wrap( -1 );
+	fgSizer3->Add( sphereStaticText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	radiusTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	radiusTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &radiusText ) );
+	
+	fgSizer3->Add( radiusTextCtrl, 0, wxALL|wxEXPAND, 5 );
+	
 	
 	this->SetSizer( fgSizer3 );
 	this->Layout();
@@ -1027,6 +1036,7 @@ CollisionShapePanel::CollisionShapePanel( wxWindow* parent, wxWindowID id, const
 	bboxMaxYTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxYChanged ), NULL, this );
 	bboxMaxZTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxZChanged ), NULL, this );
 	meshFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CollisionShapePanel::MeshFileChanged ), NULL, this );
+	radiusTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::RadiusChanged ), NULL, this );
 }
 
 CollisionShapePanel::~CollisionShapePanel()
@@ -1045,6 +1055,7 @@ CollisionShapePanel::~CollisionShapePanel()
 	bboxMaxYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxYChanged ), NULL, this );
 	bboxMaxZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxZChanged ), NULL, this );
 	meshFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CollisionShapePanel::MeshFileChanged ), NULL, this );
+	radiusTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::RadiusChanged ), NULL, this );
 	
 }
 
