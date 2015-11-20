@@ -172,6 +172,14 @@ void CollisionShape::SetBox(BoundingBox bbox)
 	MarkedDirty();
 }
 
+void CollisionShape::SetSphere(float radius)
+{
+	type = CollisionShapeType::SPHERE;
+	this->radius = radius;
+
+	MarkedDirty();
+}
+
 void CollisionShape::RenderDebugGeometry(DebugRenderer *debugRenderer)
 {
 	if (type == CollisionShapeType::BOX)
@@ -231,6 +239,10 @@ void CollisionShape::RenderDebugGeometry(DebugRenderer *debugRenderer)
 			debugRenderer->AddLine(p3, p4, vec3(0, 1, 0));
 		}
 	}
+	else if (type == CollisionShapeType::SPHERE)
+	{
+		debugRenderer->AddSphere(node->GetWorldPosition(), radius, 16, 16, vec3(0.0f, 1.0f, 0.0f));
+	}
 }
 
 BoundingBox CollisionShape::GetWorldBoundingBox()
@@ -257,6 +269,9 @@ void CollisionShape::UpdateWorldBoundingBox()
 		break;
 	case CollisionShapeType::BOX:
 		boundingBox = shapeBoundingBox;
+		break;
+	case CollisionShapeType::SPHERE:
+		boundingBox = BoundingBox(vec3(-radius), vec3(radius));
 		break;
 	default:
 		break;
@@ -285,6 +300,11 @@ void CollisionShape::SetIsTrigger(bool isTrigger)
 BoundingBox CollisionShape::GetBox() const
 {
 	return shapeBoundingBox;
+}
+
+float CollisionShape::GetRadius() const
+{
+	return radius;
 }
 
 OctreeNode<CollisionShape> *CollisionShape::GetOctreeNode()

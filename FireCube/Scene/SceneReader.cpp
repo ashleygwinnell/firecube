@@ -307,6 +307,11 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 				Plane plane(planeParams.ToVec3(), planeParams.w);
 				component->SetPlane(plane);
 			}
+			else if (shapeTypeStr == "sphere")
+			{
+				float radius = Variant::FromString(e->Attribute("radius")).GetFloat();
+				component->SetSphere(radius);
+			}
 		}	
 
 		if (e->Attribute("is_trigger"))

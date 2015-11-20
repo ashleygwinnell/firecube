@@ -17,7 +17,7 @@ class SkeletonNode;
 
 enum class CollisionShapeType
 {
-	TRIANGLE_MESH, PLANE, BOX
+	TRIANGLE_MESH, PLANE, BOX, SPHERE
 };
 
 class CollisionTriangle
@@ -48,10 +48,12 @@ public:
 	CollisionShapeType GetShapeType() const;
 	void SetPlane(const Plane &plane);
 	void SetBox(BoundingBox bbox);
+	void SetSphere(float radius);
 
 	Plane GetPlane() const;
 	CollisionMesh *GetCollisionMesh();
 	BoundingBox GetBox() const;	
+	float GetRadius() const;
 
 	BoundingBox GetWorldBoundingBox();
 
@@ -86,6 +88,7 @@ private:
 	SharedPtr<CollisionMesh> collisionMesh;	
 	Plane plane;
 	BoundingBox shapeBoundingBox;
+	float radius;
 
 	OctreeNode<CollisionShape> *octreeNode;
 	bool octreeNodeNeedsUpdate;
