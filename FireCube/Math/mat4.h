@@ -2,6 +2,9 @@
 
 namespace FireCube
 {
+
+class quat;
+
 /**
 * A 4x4 matrix.
 */
@@ -260,6 +263,11 @@ public:
 	* Decomposes the matrix into a scaling vector, translation vector and rotation matrix
 	*/
 	void Decompose(vec3 &scaling, vec3 &translation, mat3 &rotation) const;
+
+	/**
+	* Decomposes the matrix into a scaling vector, translation vector and rotation quaternion
+	*/
+	void Decompose(vec3 &scaling, vec3 &translation, quat &rotation) const;
 
 	/**
 	* The elements of the matrix;

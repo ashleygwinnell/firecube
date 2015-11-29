@@ -1,4 +1,5 @@
 #include "Math/Math.h"
+#include "Math/quat.h"
 
 using namespace FireCube;
 #include <cmath>
@@ -522,4 +523,11 @@ void mat4::Decompose(vec3 &scaling, vec3 &translation, mat3 &rotation) const
 	rotation = mat3(vRows[0].x,vRows[1].x,vRows[2].x,
 		vRows[0].y,vRows[1].y,vRows[2].y,
 		vRows[0].z,vRows[1].z,vRows[2].z);	
+}
+
+void mat4::Decompose(vec3 &scaling, vec3 &translation, quat &rotation) const
+{	
+	mat3 rotMatrix;
+	Decompose(scaling, translation, rotMatrix);
+	rotation = quat(rotMatrix);
 }
