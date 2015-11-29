@@ -47,7 +47,7 @@ mat4 Node::GetLocalTransformation()
 {	
 	localTransformation.Identity();
 	localTransformation.Translate(translation);
-	localTransformation *= rotation;
+	localTransformation *= rotation.GetMatrix().ToMat4();
 	localTransformation.Scale(scale.x, scale.y, scale.z);
 	
 
@@ -64,7 +64,7 @@ mat4 Node::GetWorldTransformation()
 	return worldTransformation;	
 }
 
-mat4 Node::GetWorldRotation()
+quat Node::GetWorldRotation()
 {
 	if (transformationChanged)
 	{
@@ -100,13 +100,13 @@ vec3 Node::GetTranslation() const
 	return translation;
 }
 
-void Node::SetRotation(const mat4 &r)
+void Node::SetRotation(const quat &r)
 {
 	rotation = r;
 	SetTransformationChanged();
 }
 
-mat4 Node::GetRotation() const
+quat Node::GetRotation() const
 {
 	return rotation;
 }
@@ -130,9 +130,9 @@ void Node::Move(const vec3 &t)
 
 void Node::Rotate(const vec3 &r)
 {
-	rotation.RotateX(r.x);
-	rotation.RotateY(r.y);
-	rotation.RotateZ(r.z);
+	rotation *= quat(vec3(1, 0, 0), r.x);
+	rotation *= quat(vec3(0, 1, 0), r.y);
+	rotation *= quat(vec3(0, 0, 1), r.z);	
 	SetTransformationChanged();
 }
 
@@ -149,8 +149,8 @@ void Node::LookAt(vec3 position, vec3 at, vec3 up)
 	this->translation = position;
 	mat4 temp;
 	temp.LookAt(vec3(0, 0, 0), at - position, up);
-	rotation = temp;
-	rotation.Transpose();
+	temp.Transpose();
+	rotation = quat(temp.ToMat3());	
 	SetTransformationChanged();
 }
 

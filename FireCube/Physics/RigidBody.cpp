@@ -33,7 +33,7 @@ void RigidBody::NodeChanged()
 {
 	if (node)
 	{		
-		rotation = quat(node->GetWorldRotation().ToMat3());
+		rotation = node->GetWorldRotation();
 		position = node->GetWorldPosition();
 		node->GetComponents(shapes, false);
 		UpdateMassProperties();

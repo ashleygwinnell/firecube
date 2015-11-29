@@ -126,10 +126,10 @@ void Light::RenderDebugGeometry(DebugRenderer *debugRenderer)
 	{
 	case FireCube::LightType::DIRECTIONAL:
 	{
-		mat4 rotationMat = node->GetWorldRotation();
+		mat3 rotationMat = node->GetWorldRotation().GetMatrix();
 		vec3 right(rotationMat.m[0], rotationMat.m[1], rotationMat.m[2]);
-		vec3 up(rotationMat.m[4], rotationMat.m[5], rotationMat.m[6]);
-		vec3 dir(rotationMat.m[8], rotationMat.m[9], rotationMat.m[10]);
+		vec3 up(rotationMat.m[3], rotationMat.m[4], rotationMat.m[5]);
+		vec3 dir(rotationMat.m[6], rotationMat.m[7], rotationMat.m[8]);
 		vec3 origin = node->GetWorldPosition();
 		const unsigned int countX = 5;
 		const unsigned int countY = 5;

@@ -365,10 +365,6 @@ void SceneReader::ReadTransformation(TiXmlElement *e, Node *node)
 	if (e->Attribute("rotation"))
 	{
 		vec3 rotation = Variant::FromString(e->Attribute("rotation")).GetVec3();		
-		mat4 rotationMat = mat4::IDENTITY;
-		rotationMat.RotateX(rotation.x);
-		rotationMat.RotateY(rotation.y);
-		rotationMat.RotateZ(rotation.z);
-		node->SetRotation(rotationMat);
+		node->SetRotation(quat(rotation.x, rotation.y, rotation.z));
 	}
 }

@@ -238,7 +238,7 @@ void PhysicsWorld::UpdateRigidBodies(float deltaTime)
 	for (auto rigidBody : rigidBodies)
 	{
 		rigidBody->Integrate(deltaTime);
-		rigidBody->GetNode()->SetRotation(rigidBody->GetRotation().GetMatrix().ToMat4());
+		rigidBody->GetNode()->SetRotation(rigidBody->GetRotation());
 		rigidBody->GetNode()->SetTranslation(rigidBody->GetPosition());
 	}
 

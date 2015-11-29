@@ -70,7 +70,7 @@ public:
 	*/
 	mat4 GetWorldTransformation();
 
-	mat4 GetWorldRotation();	
+	quat GetWorldRotation();
 
 	/**
 	* Sets the translation of this node.
@@ -88,13 +88,13 @@ public:
 	* Sets the rotation of this node.
 	* @param r The rotation matrix to assign to this node.
 	*/
-	void SetRotation(const mat4 &r);
+	void SetRotation(const quat &r);
 
 	/**
 	* Gets the rotation of this node.
 	* @return The rotation matrix of this node.
 	*/
-	mat4 GetRotation() const;
+	quat GetRotation() const;
 
 	/**
 	* Sets the scale of this node.
@@ -270,12 +270,12 @@ protected:
 	std::vector<SharedPtr<Node>> children;	
 
 	vec3 translation;
-	mat4 rotation;
+	quat rotation;
 	vec3 scale;	
 	mat4 localTransformation;
 	bool transformationChanged;	
 	mat4 worldTransformation;	
-	mat4 worldRotation;
+	quat worldRotation;
 	
 	Node *parent;
 	std::string name;
