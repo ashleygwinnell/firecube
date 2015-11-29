@@ -202,6 +202,8 @@ public:
 	*/
 	vec3 ExtractEulerAngles() const;
 
+	void FromEulerAngles(vec3 euler);
+
 	/**
 	* The elements of the matrix;
 	*/

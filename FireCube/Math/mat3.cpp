@@ -205,8 +205,8 @@ void mat3::RotateX(float ang)
 	float sn = (float)sin(ang);
 
 	rot.m[4] = cs;
-	rot.m[5] = -sn;
-	rot.m[7] = sn;
+	rot.m[5] = sn;
+	rot.m[7] = -sn;
 	rot.m[8] = cs;
 	(*this) = (*this) * rot;
 
@@ -219,8 +219,8 @@ void mat3::RotateY(float ang)
 	float sn = (float)sin(ang);
 
 	rot.m[0] = cs;
-	rot.m[2] = sn;
-	rot.m[6] = -sn;
+	rot.m[2] = -sn;
+	rot.m[6] = sn;
 	rot.m[8] = cs;
 	(*this) = (*this) * rot;
 }
@@ -232,8 +232,8 @@ void mat3::RotateZ(float ang)
 	float sn = (float)sin(ang);
 
 	rot.m[0] = cs;
-	rot.m[1] = -sn;
-	rot.m[3] = sn;
+	rot.m[1] = sn;
+	rot.m[3] = -sn;
 	rot.m[4] = cs;
 	(*this) = (*this) * rot;
 }
@@ -377,4 +377,26 @@ vec3 mat3::ExtractEulerAngles() const
 		rotation.z = atan2( m[3], m[0] );
 	}	
 	return rotation;
+}
+
+void mat3::FromEulerAngles(vec3 euler)
+{
+	float x = euler.x, y = euler.y, z = euler.z;
+	float a = cos(x), b = sin(x);
+	float c = cos(y), d = sin(y);
+	float e = cos(z), f = sin(z);
+
+	float ae = a * e, af = a * f, be = b * e, bf = b * f;
+
+	m[0] = c * e;
+	m[3] = -c * f;
+	m[6] = d;
+
+	m[1] = af + be * d;
+	m[4] = ae - bf * d;
+	m[7] = -b * c;
+
+	m[2] = bf - ae * d;
+	m[5] = be + af * d;
+	m[8] = a * c;
 }

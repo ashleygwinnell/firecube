@@ -245,8 +245,8 @@ void mat4::RotateX(float ang)
 	float sn = (float)sin(ang);
 
 	rot.m[5] = cs;
-	rot.m[6] = -sn;
-	rot.m[9] = sn;
+	rot.m[6] = sn;
+	rot.m[9] = -sn;
 	rot.m[10] = cs;
 	(*this) = (*this) * rot;
 
@@ -259,8 +259,8 @@ void mat4::RotateY(float ang)
 	float sn = (float)sin(ang);
 
 	rot.m[0] = cs;
-	rot.m[2] = sn;
-	rot.m[8] = -sn;
+	rot.m[2] = -sn;
+	rot.m[8] = sn;
 	rot.m[10] = cs;
 	(*this) = (*this) * rot;
 }
@@ -272,8 +272,8 @@ void mat4::RotateZ(float ang)
 	float sn = (float)sin(ang);
 
 	rot.m[0] = cs;
-	rot.m[1] = -sn;
-	rot.m[4] = sn;
+	rot.m[1] = sn;
+	rot.m[4] = -sn;
 	rot.m[5] = cs;
 	(*this) = (*this) * rot;
 }
@@ -290,16 +290,16 @@ void mat4::Rotate(const vec3 &axis, float angle)
 
 	float tmp1 = axis.x * axis.y * t;
 	float tmp2 = axis.z * s;
-	rotm.m[4] = tmp1 + tmp2;
-	rotm.m[1] = tmp1 - tmp2;
+	rotm.m[4] = tmp1 - tmp2;
+	rotm.m[1] = tmp1 + tmp2;
 	tmp1 = axis.x * axis.z * t;
 	tmp2 = axis.y * s;
-	rotm.m[8] = tmp1 - tmp2;
-	rotm.m[2] = tmp1 + tmp2;
+	rotm.m[8] = tmp1 + tmp2;
+	rotm.m[2] = tmp1 - tmp2;
 	tmp1 = axis.y * axis.z * t;
 	tmp2 = axis.x * s;
-	rotm.m[9] = tmp1 + tmp2;
-	rotm.m[6] = tmp1 - tmp2;
+	rotm.m[9] = tmp1 - tmp2;
+	rotm.m[6] = tmp1 + tmp2;
 
 	(*this) = (*this) * rotm;
 }

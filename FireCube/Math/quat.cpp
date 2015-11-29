@@ -59,18 +59,16 @@ quat::quat(const mat3 &rotMatrix)
 
 quat::quat(float rotx, float roty, float rotz)
 {
-	const float sinPitch(sin(rotx * 0.5f));
-	const float cosPitch(cos(rotx * 0.5f));
-	const float sinYaw(sin(roty * 0.5f));
-	const float cosYaw(cos(roty * 0.5f));
-	const float sinRoll(sin(rotz * 0.5f));
-	const float cosRoll(cos(rotz * 0.5f));
-	const float cosPitchCosYaw(cosPitch * cosYaw);
-	const float sinPitchSinYaw(sinPitch * sinYaw);
-	x = sinRoll * cosPitchCosYaw - cosRoll * sinPitchSinYaw;
-	y = cosRoll * sinPitch * cosYaw + sinRoll * cosPitch * sinYaw;
-	z = cosRoll * cosPitch * sinYaw - sinRoll * sinPitch * cosYaw;
-	w = cosRoll * cosPitchCosYaw + sinRoll * sinPitchSinYaw;
+	float c1 = std::cos(rotx * 0.5f);
+	float c2 = std::cos(roty * 0.5f);
+	float c3 = std::cos(rotz * 0.5f);
+	float s1 = std::sin(rotx * 0.5f);
+	float s2 = std::sin(roty * 0.5f);
+	float s3 = std::sin(rotz * 0.5f);
+	x = s1 * c2 * c3 + c1 * s2 * s3;
+	y = c1 * s2 * c3 - s1 * c2 * s3;
+	z = c1 * c2 * s3 + s1 * s2 * c3;
+	w = c1 * c2 * c3 - s1 * s2 * s3;
 }
 
 mat3 quat::GetMatrix() const
@@ -162,10 +160,10 @@ void quat::Normalize()
 
 quat FireCube::operator*(const quat &a, const quat &b)
 {
-	return quat(a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z,
-		a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
-		a.w * b.y + a.y * b.w + a.z * b.x - a.x * b.z,
-		a.w * b.z + a.z * b.w + a.x * b.y - a.y * b.x);
+	return quat(a.x * b.w + a.w * b.x + a.y * b.z - a.z * b.y,
+		a.y * b.w + a.w * b.y + a.z * b.x - a.x * b.z,
+		a.z * b.w + a.w * b.z + a.x * b.y - a.y * b.x,
+		a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z);
 }
 
 quat quat::Conjugate()
@@ -213,8 +211,8 @@ void quat::Identity()
 void quat::operator*=(const quat &b)
 {
 	quat a = *this;
-	x = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
-	y = a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y;
-	z = a.w * b.y + a.y * b.w + a.z * b.x - a.x * b.z;
-	w = a.w * b.z + a.z * b.w + a.x * b.y - a.y * b.x;
+	x = a.x * b.w + a.w * b.x + a.y * b.z - a.z * b.y;
+	y = a.y * b.w + a.w * b.y + a.z * b.x - a.x * b.z;
+	z = a.z * b.w + a.w * b.z + a.x * b.y - a.y * b.x;
+	w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
 }
