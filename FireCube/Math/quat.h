@@ -69,7 +69,14 @@ public:
 	*/
 	static void Interpolate(quat &out, const quat &start, const quat &end, float factor);
 
+	void Identity();
+
 	float x, y, w, z;
+
+	/**
+	* An identity quaternion.
+	*/
+	static const quat IDENTITY;
 };
 
 /**

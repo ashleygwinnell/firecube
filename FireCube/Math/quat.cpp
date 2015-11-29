@@ -3,6 +3,7 @@
 using namespace FireCube;
 #include <cmath>
 
+const quat quat::IDENTITY(0, 0, 0, 1);
 
 bool quat::operator== (const quat &o) const
 {
@@ -201,4 +202,10 @@ vec3 quat::operator*(const vec3 &v) const
 	ret.z = iz * w + iw * -z + ix * -y - iy * -x;
 
 	return ret;
+}
+
+void quat::Identity()
+{
+	x = y = z = 0.0f;
+	w = 1.0f;
 }
