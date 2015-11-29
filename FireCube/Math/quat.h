@@ -46,6 +46,11 @@ public:
 	bool operator!= (const quat &o) const;
 	vec3 operator*(const vec3 &v) const;
 
+	/**
+	* Multiplies two quaternions and assign to this one.
+	*/
+	void operator*=(const quat &src);
+
 	/** 
 	* Normalize the quaternion 
 	*/
