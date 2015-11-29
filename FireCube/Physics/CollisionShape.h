@@ -87,7 +87,7 @@ private:
 
 	SharedPtr<CollisionMesh> collisionMesh;	
 	Plane plane;
-	BoundingBox shapeBoundingBox;
+	BoundingBox box;
 	float radius;
 
 	OctreeNode<CollisionShape> *octreeNode;

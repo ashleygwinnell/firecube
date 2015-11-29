@@ -29,7 +29,7 @@ CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld
 }
 
 CollisionShape::CollisionShape(const CollisionShape &other) : Component(other), worldBoundingBoxChanged(true), type(other.type), physicsWorld(other.physicsWorld), collisionMesh(other.collisionMesh), plane(other.plane),
-															  shapeBoundingBox(other.shapeBoundingBox), isTrigger(other.isTrigger), octreeNode(nullptr), octreeNodeNeedsUpdate(false)
+															  box(other.box), isTrigger(other.isTrigger), octreeNode(nullptr), octreeNodeNeedsUpdate(false)
 {
 	
 }
@@ -146,7 +146,7 @@ Plane CollisionShape::GetPlane() const
 void CollisionShape::SetBox(BoundingBox bbox)
 {
 	type = CollisionShapeType::BOX;
-	shapeBoundingBox = bbox;
+	box = bbox;
 	vec3 bmin = bbox.GetMin();
 	vec3 bmax = bbox.GetMax();	
 	collisionMesh = new CollisionMesh;
@@ -268,7 +268,7 @@ void CollisionShape::UpdateWorldBoundingBox()
 		boundingBox = BoundingBox(vec3(-10e6), vec3(10e6)); // In case of a plane, return a large bounding box
 		break;
 	case CollisionShapeType::BOX:
-		boundingBox = shapeBoundingBox;
+		boundingBox = box;
 		break;
 	case CollisionShapeType::SPHERE:
 		boundingBox = BoundingBox(vec3(-radius), vec3(radius));
@@ -299,7 +299,7 @@ void CollisionShape::SetIsTrigger(bool isTrigger)
 
 BoundingBox CollisionShape::GetBox() const
 {
-	return shapeBoundingBox;
+	return box;
 }
 
 float CollisionShape::GetRadius() const
