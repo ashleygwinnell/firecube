@@ -10,13 +10,13 @@
 
 using namespace FireCube;
 
-PhysicsWorld::PhysicsWorld(Engine *engine) : Component(engine), octree(engine, vec3(2000), 8), narrowphase(this)
+PhysicsWorld::PhysicsWorld(Engine *engine) : Component(engine), collisionShapesOctree(engine, vec3(2000), 8), rigidBodiesOctree(engine, vec3(2000), 8), narrowphase(this)
 {
 	SubscribeToEvent(Events::Update, &PhysicsWorld::Update);
 	solver.SetSpookParams(1e7f, 3, 1.0f / 60.0f);
 }
 
-PhysicsWorld::PhysicsWorld(const PhysicsWorld &other) : Component(other), narrowphase(this), collisionShapes(other.collisionShapes), characterControllers(other.characterControllers), rigidBodies(other.rigidBodies), octree(engine, vec3(10000), 10)
+PhysicsWorld::PhysicsWorld(const PhysicsWorld &other) : Component(other), narrowphase(this), collisionShapes(other.collisionShapes), characterControllers(other.characterControllers), rigidBodies(other.rigidBodies), collisionShapesOctree(engine, vec3(2000), 8), rigidBodiesOctree(engine, vec3(2000), 8)
 {
 	SubscribeToEvent(Events::Update, &PhysicsWorld::Update);
 	solver.SetSpookParams(1e7f, 3, 1.0f / 60.0f);
@@ -25,7 +25,7 @@ PhysicsWorld::PhysicsWorld(const PhysicsWorld &other) : Component(other), narrow
 void PhysicsWorld::AddCollisionShape(CollisionShape *collisionShape)
 {
 	collisionShapes.push_back(collisionShape);
-	octree.Insert(collisionShape);
+	collisionShapesOctree.Insert(collisionShape);
 }
 
 void PhysicsWorld::RemoveCollisionShape(CollisionShape *collisionShape)
@@ -33,7 +33,7 @@ void PhysicsWorld::RemoveCollisionShape(CollisionShape *collisionShape)
 	collisionShapes.erase(std::remove(collisionShapes.begin(), collisionShapes.end(), collisionShape), collisionShapes.end());	
 	if (collisionShape->GetOctreeNode())
 	{
-		octree.Remove(collisionShape);
+		collisionShapesOctree.Remove(collisionShape);
 	}
 }
 
@@ -50,11 +50,16 @@ void PhysicsWorld::RemoveCharacterController(CharacterController *characterContr
 void PhysicsWorld::AddRigidBody(RigidBody *rigidBody)
 {
 	rigidBodies.push_back(rigidBody);
+	rigidBodiesOctree.Insert(rigidBody);
 }
 
 void PhysicsWorld::RemoveRigidBody(RigidBody *rigidBody)
 {
 	rigidBodies.erase(std::remove(rigidBodies.begin(), rigidBodies.end(), rigidBody), rigidBodies.end());
+	if (rigidBody->GetOctreeNode())
+	{
+		rigidBodiesOctree.Remove(rigidBody);
+	}
 }
 
 void PhysicsWorld::CollideCharacterController(const CharacterController *characterController, vec3 direction, float distance, const BoundingBox &characterControllerBoundingBox, std::vector<CollisionShape *> &collisionShapes, std::set<CollisionShape *> &triggeredCollisionShapes, CollisionResult &result)
@@ -126,7 +131,7 @@ bool PhysicsWorld::SweepCharacterController(CharacterController *characterContro
 			characterControllerBoundingBox.Expand(characterControllerBoundingBoxAtTarget);
 
 			std::vector<CollisionShape *> closeCollisionShapes;
-			octree.GetObjects(characterControllerBoundingBox, closeCollisionShapes);
+			collisionShapesOctree.GetObjects(characterControllerBoundingBox, closeCollisionShapes);
 			CollisionResult result;
 			CollideCharacterController(characterController, velocity.Normalized(), velocity.Length() + characterController->GetContactOffset(), characterControllerBoundingBox, closeCollisionShapes, triggeredCollisionShapes, result);
 			
@@ -248,13 +253,19 @@ void PhysicsWorld::UpdateRigidBodies(float deltaTime)
 
 	std::vector<RigidBody *> p1;
 	std::vector<RigidBody *> p2;
-	for (unsigned int i = 0; i < rigidBodies.size(); ++i)
+	for (auto rigidBody : rigidBodies)
 	{
-		for (unsigned int j = i + 1; j < rigidBodies.size(); ++j)
+		std::vector<RigidBody *> closeRigidBodies;
+		rigidBodiesOctree.GetObjects(rigidBody->GetWorldBoundingBox(), closeRigidBodies);
+		for (auto &other : closeRigidBodies)
 		{
-			p1.push_back(rigidBodies[i]);
-			p2.push_back(rigidBodies[j]);
-		}
+			if (rigidBody < other)
+			{
+				p1.push_back(rigidBody);
+				p2.push_back(other);
+			}
+
+		}		
 	}
 
 	narrowphase.GetContacts(p1, p2);
@@ -292,7 +303,7 @@ void PhysicsWorld::UpdateRigidBodies(float deltaTime)
 
 		rigidBody->Integrate(deltaTime);
 		rigidBody->GetNode()->SetRotation(rigidBody->GetRotation());
-		rigidBody->GetNode()->SetTranslation(rigidBody->GetPosition());
+		rigidBody->GetNode()->SetTranslation(rigidBody->GetPosition());		
 
 		// Clear forces
 		rigidBody->SetForce(vec3::ZERO);
@@ -304,7 +315,8 @@ void PhysicsWorld::Update(float deltaTime)
 {	
 	this->deltaTime = deltaTime;
 	solver.SetSpookParams(1e7f, 3, deltaTime); // TODO: Switch to fixed time step
-	octree.Update();
+	collisionShapesOctree.Update();
+	rigidBodiesOctree.Update();
 	UpdateCharacterControllers(deltaTime);	
 	UpdateRigidBodies(this->deltaTime);	
 }
@@ -326,7 +338,7 @@ void PhysicsWorld::SceneChanged(Scene *oldScene)
 
 void PhysicsWorld::RenderDebugGeometry(DebugRenderer *debugRenderer)
 {
-	octree.RenderDebugGeometry(debugRenderer);
+	collisionShapesOctree.RenderDebugGeometry(debugRenderer);
 
 	for (auto s : collisionShapes)
 	{

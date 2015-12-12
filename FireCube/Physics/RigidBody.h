@@ -7,6 +7,8 @@
 namespace FireCube
 {
 
+template <class T>
+class OctreeNode;
 class PhysicsWorld;	
 class CollisionShape;
 
@@ -60,6 +62,12 @@ public:
 	vec3 GetVelocityAtWorldPoint(vec3 worldPoint) const;
 	std::vector<CollisionShape *> &GetCollisionShapes();
 	void UpdateCollisionShapes();
+	BoundingBox GetWorldBoundingBox();
+
+	OctreeNode<RigidBody> *GetOctreeNode();
+	void SetOctreeNode(OctreeNode<RigidBody> *octreeNode);
+	bool GetOctreeNodeNeedsUpdate() const;
+	void SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate);
 private:
 
 	RigidBody(const RigidBody &other);
@@ -84,6 +92,9 @@ private:
 	vec3 position;
 	BoundingBox worldBoundingBox;
 	bool worldBoundingBoxChanged;
+
+	OctreeNode<RigidBody> *octreeNode;
+	bool octreeNodeNeedsUpdate;
 public:
 	vec3 vlambda;
 	vec3 wlambda;

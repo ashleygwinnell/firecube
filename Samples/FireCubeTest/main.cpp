@@ -63,7 +63,7 @@ bool App::Prepare()
 	rigidBody->SetMass(10.0f);
 	node->Move(vec3(0, 10, 0));	
 
-	for (unsigned int i = 0; i < 100; ++i)
+	for (unsigned int i = 0; i < 1000; ++i)
 	{
 		node = root->CreateChild();
 
@@ -75,7 +75,7 @@ bool App::Prepare()
 
 		rigidBody = node->CreateComponent<RigidBody>();
 		rigidBody->SetMass(10.0f);
-		node->Move(vec3(1, 12 + i * 2.0f, 0));
+		node->Move(vec3(cos(i / 10.0f) * 7.0f, 12 + i * 2.0f, sin(i / 10.0f) * 7.0f));
 	}
 
 	//rigidBody->ApplyForce(vec3(100.0f), vec3(-0.5f, 0.0f, -0.5f));

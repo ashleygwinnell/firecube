@@ -6,12 +6,12 @@
 
 using namespace FireCube;
 
-RigidBody::RigidBody(Engine *engine) : Component(engine), physicsWorld(nullptr), velocity(0.0f), force(0.0f), angularVelocity(0.0f), torque(0.0f), vlambda(0.0f), wlambda(0.0f)
+RigidBody::RigidBody(Engine *engine) : Component(engine), physicsWorld(nullptr), octreeNode(nullptr), velocity(0.0f), force(0.0f), angularVelocity(0.0f), torque(0.0f)
 {
 
 }
 
-RigidBody::RigidBody(const RigidBody &other) : Component(engine), velocity(other.velocity), physicsWorld(other.physicsWorld)
+RigidBody::RigidBody(const RigidBody &other) : Component(engine), velocity(other.velocity), physicsWorld(other.physicsWorld), octreeNode(nullptr)
 {
 
 }
@@ -26,7 +26,10 @@ RigidBody::~RigidBody()
 
 void RigidBody::MarkedDirty()
 {
-
+	if (!octreeNodeNeedsUpdate && octreeNode)
+	{
+		octreeNode->GetOctree()->QueueUpdate(this);
+	}
 }
 
 void RigidBody::NodeChanged()
@@ -324,4 +327,34 @@ void RigidBody::SetRotation(quat rotation)
 void RigidBody::SetPosition(vec3 position)
 {
 	this->position = position;
+}
+
+OctreeNode<RigidBody> *RigidBody::GetOctreeNode()
+{
+	return octreeNode;
+}
+
+void RigidBody::SetOctreeNode(OctreeNode<RigidBody> *octreeNode)
+{
+	this->octreeNode = octreeNode;
+}
+
+bool RigidBody::GetOctreeNodeNeedsUpdate() const
+{
+	return octreeNodeNeedsUpdate;
+}
+
+void RigidBody::SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate)
+{
+	this->octreeNodeNeedsUpdate = octreeNodeNeedsUpdate;
+}
+
+BoundingBox RigidBody::GetWorldBoundingBox()
+{
+	if (worldBoundingBoxChanged)
+	{
+		worldBoundingBoxChanged = false;
+		UpdateWorldBoundingBox();
+	}
+	return worldBoundingBox;
 }

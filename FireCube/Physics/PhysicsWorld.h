@@ -6,6 +6,7 @@
 #include "Math/Math.h"
 #include "Math/Octree.h"
 #include "Physics/CollisionShape.h"
+#include "Physics/RigidBody.h"
 #include "Physics/Narrowphase.h"
 #include "Physics/Solver.h"
 
@@ -13,7 +14,6 @@ namespace FireCube
 {
 
 class CharacterController;
-class RigidBody;
 
 class CollisionContact
 {
@@ -81,7 +81,8 @@ private:
 	Narrowphase narrowphase;
 	Solver solver;
 
-	Octree<CollisionShape> octree;
+	Octree<CollisionShape> collisionShapesOctree;
+	Octree<RigidBody> rigidBodiesOctree;
 };
 
 }
