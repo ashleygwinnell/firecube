@@ -253,25 +253,27 @@ void mat3::Transpose()
 
 void mat3::Inverse()
 {
-	mat3 &mm = *this;
-	float d = mm(0, 0) * mm(1, 1) * mm(2, 2) + mm(0, 1) * mm(1, 2) * mm(0, 2) + mm(0, 2) * mm(1, 0) * mm(2, 1) - mm(0, 0) * mm(1, 2) * mm(2, 1) -
-			  mm(0, 2) * mm(1, 1) * mm(2, 0) - mm(0, 1) * mm(1, 0) * mm(2, 2);
+	mat3 A = *this;	
+	float determinant =   A(0, 0) * (A(1, 1) * A(2, 2) - A(2, 1) * A(1, 2))
+						- A(0, 1) * (A(1, 0) * A(2, 2) - A(1, 2) * A(2, 0))
+						+ A(0, 2) * (A(1, 0) * A(2, 1) - A(1, 1) * A(2, 0));
+	
+	if (determinant == 0.0f)
+	{
+		return;
+	}
 
-	mat3 ret;
-	if( d == 0 ) return;
-	d = 1.0f / d;
-
-	ret(0, 0) = d * (mm(1, 1) * mm(2, 2) - mm(2, 1) * mm(1, 2));
-	ret(0, 1) = d * (mm(2, 1) * mm(0, 2) - mm(0, 1) * mm(2, 2));
-	ret(0, 2) = d * (mm(0, 1) * mm(1, 2) - mm(1, 1) * mm(0, 2));
-	ret(1, 0) = d * (mm(2, 0) * mm(1, 2) - mm(1, 0) * mm(2, 2));
-	ret(1, 1) = d * (mm(0, 0) * mm(2, 2) - mm(2, 0) * mm(0, 2));
-	ret(1, 2) = d * (mm(1, 0) * mm(0, 2) - mm(0, 0) * mm(1, 2));
-	ret(2, 0) = d * (mm(1, 0) * mm(2, 1) - mm(2, 0) * mm(1, 1));
-	ret(2, 1) = d * (mm(2, 0) * mm(0, 1) - mm(0, 0) * mm(2, 1));
-	ret(2, 2) = d * (mm(0, 0) * mm(1, 1) - mm(1, 0) * mm(0, 1));
-
-	*this = ret;
+	float invdet = 1.0f / determinant;
+	
+	m[0] =  (A(1, 1) * A(2, 2) - A(2, 1) * A(1, 2)) * invdet;
+	m[3] = -(A(0, 1) * A(2, 2) - A(0, 2) * A(2, 1)) * invdet;
+	m[6] =  (A(0, 1) * A(1, 2) - A(0, 2) * A(1, 1)) * invdet;
+	m[1] = -(A(1, 0) * A(2, 2) - A(1, 2) * A(2, 0)) * invdet;
+	m[4] =  (A(0, 0) * A(2, 2) - A(0, 2) * A(2, 0)) * invdet;
+	m[7] = -(A(0, 0) * A(1, 2) - A(1, 0) * A(0, 2)) * invdet;
+	m[2] =  (A(1, 0) * A(2, 1) - A(2, 0) * A(1, 1)) * invdet;
+	m[5] = -(A(0, 0) * A(2, 1) - A(2, 0) * A(0, 1)) * invdet;
+	m[8] =  (A(0, 0) * A(1, 1) - A(1, 0) * A(0, 1)) * invdet;	
 }
 
 vec3 mat3::GetDirection() const
