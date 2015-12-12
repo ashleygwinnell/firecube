@@ -48,8 +48,7 @@ mat4 Node::GetLocalTransformation()
 	localTransformation.Identity();
 	localTransformation.Translate(translation);
 	localTransformation *= rotation.GetMatrix().ToMat4();
-	localTransformation.Scale(scale.x, scale.y, scale.z);
-	
+	localTransformation.Scale(scale.x, scale.y, scale.z);	
 
 	return localTransformation;
 }

@@ -158,7 +158,8 @@ void RigidBody::ApplyLocalImpulse(vec3 impulse, vec3 v)
 
 void RigidBody::Integrate(float t)
 {
-	if (bodyType != RigidBodyType::DYNAMIC) { // Only for dynamic
+	if (bodyType != RigidBodyType::DYNAMIC) // Only for dynamic
+	{
 		return;
 	}
 

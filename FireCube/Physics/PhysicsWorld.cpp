@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <Windows.h>
 #include "Physics/PhysicsWorld.h"
 #include "Physics/CharacterController.h"
 #include "Physics/CollisionShape.h"

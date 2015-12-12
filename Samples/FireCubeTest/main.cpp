@@ -53,16 +53,6 @@ bool App::Prepare()
 	SharedPtr<Mesh> mesh = new Mesh(engine);
 	mesh->AddGeometry(GeometryGenerator::GenerateSphere(engine, radius, 6, 6), BoundingBox(vec3(-radius), vec3(radius)), resourceCache->GetResource<Material>("Materials/TerrainNoTexture.xml"));
 
-	node2 = node->CreateChild();	
-	node2->CreateComponent<StaticModel>(mesh);
-	collisionShape = node2->CreateComponent<CollisionShape>();
-	collisionShape->SetSphere(radius);
-	node2->Move(vec3(0, 0.0f, 0)); 	
-
-	rigidBody = node->CreateComponent<RigidBody>();
-	rigidBody->SetMass(10.0f);
-	node->Move(vec3(0, 10, 0));	
-
 	for (unsigned int i = 0; i < 1000; ++i)
 	{
 		node = root->CreateChild();
@@ -70,8 +60,7 @@ bool App::Prepare()
 		node2 = node->CreateChild();
 		node2->CreateComponent<StaticModel>(mesh);
 		collisionShape = node2->CreateComponent<CollisionShape>();
-		collisionShape->SetSphere(radius);
-		node2->Move(vec3(0, 0.0f, 0));
+		collisionShape->SetSphere(radius);		
 
 		rigidBody = node->CreateComponent<RigidBody>();
 		rigidBody->SetMass(10.0f);
