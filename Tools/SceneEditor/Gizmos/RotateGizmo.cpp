@@ -35,7 +35,7 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 	staticModel->SetEnabled(false);
 	
 	child = xAxis->CreateChild("XAxis");
-	child->Rotate(vec3(0.0f, PI * 0.5f, PI * 0.5f));
+	child->Rotate(vec3(0.0f, -PI * 0.5f, PI * 0.5f));
 	staticModel = child->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(meshIntersection);
 	staticModel->SetCollisionQueryMask(GIZMO_GEOMETRY);
@@ -69,7 +69,7 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 	mesh = new Mesh(engine);
 	meshIntersection = new Mesh(engine);
 	mesh->AddGeometry(CreateArc(arcRadius, PI * 0.5f, PI * 1.5f, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), zAxisMaterial);
-	meshIntersection->AddGeometry(GeometryGenerator::GenerateTorus(engine, arcRadius, tubeRadius, PI, 16, 16), BoundingBox(vec3(-(arcRadius + tubeRadius), 0, -tubeRadius), vec3(arcRadius + tubeRadius, arcRadius + tubeRadius, tubeRadius)), nullptr);	
+	meshIntersection->AddGeometry(GeometryGenerator::GenerateTorus(engine, arcRadius, tubeRadius, PI, 16, 16), BoundingBox(vec3(-(arcRadius + tubeRadius), 0, -tubeRadius), vec3(arcRadius + tubeRadius, arcRadius + tubeRadius, tubeRadius)), nullptr);
 	zAxis = node->CreateChild();
 	child = zAxis->CreateChild();
 	child->Rotate(vec3(0, 0, PI));
@@ -79,7 +79,7 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 	staticModel->SetEnabled(false);
 	
 	child = zAxis->CreateChild("ZAxis");
-	child->Rotate(vec3(0, 0, PI * 0.5f));
+	child->Rotate(vec3(0, 0, -PI * 0.5f));
 	staticModel = child->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(meshIntersection);
 	staticModel->SetCollisionQueryMask(GIZMO_GEOMETRY);
@@ -124,15 +124,15 @@ bool RotateGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor *cu
 		Node *node = result.renderable->GetNode();
 		if (currentNode->GetNode()->GetParent())
 		{
-			parentRotationMatrix = currentNode->GetNode()->GetParent()->GetWorldRotation();
+			parentRotationQuat = currentNode->GetNode()->GetParent()->GetWorldRotation();
 		}
 		else
 		{
-			parentRotationMatrix.Identity();
+			parentRotationQuat.Identity();
 		}
 		currentAxis = node->GetName();						
 		startRotation = currentNode->GetRotation();
-		startRotationMatrix = currentNode->GetNode()->GetWorldRotation();
+		startRotationQuat = currentNode->GetNode()->GetWorldRotation();
 		if (currentAxis == "XAxis")
 		{
 			currentPlane = Plane(vec3(1, 0, 0), node->GetWorldPosition());
@@ -182,17 +182,17 @@ void RotateGizmo::PerformOperation(FireCube::Ray ray, vec2 mousePos, NodeDescrip
 	if (ray.IntersectPlane(currentPlane, distance))
 	{
 		planeCurrentPoint = ray.origin + ray.direction * distance;
-		
-		mat4 rot = mat4::IDENTITY;
+				
 		vec3 v0 = (planeCurrentPoint - currentNode->GetNode()->GetWorldPosition()).Normalized();
 		vec3 v1 = (planeStartPoint - currentNode->GetNode()->GetWorldPosition()).Normalized();
-		rot.Rotate(axis, GetAng(currentPlane.GetNormal(), v0, v1));
+		quat rot(axis, -GetAng(currentPlane.GetNormal(), v0, v1));
 
-		mat4 temp = parentRotationMatrix;
-		temp.Inverse();
-		temp = temp * rot * startRotationMatrix;
+		quat temp = parentRotationQuat;
+		temp.Conjugate();
+		temp = temp * rot * startRotationQuat;
+		temp.Normalize();
 
-		endRotation = temp.ExtractEulerAngles();
+		endRotation = temp.GetMatrix().ExtractEulerAngles();
 		currentNode->SetRotation(endRotation);		
 	}
 }
@@ -227,16 +227,15 @@ void RotateGizmo::UpdateTransformation(FireCube::Camera *camera, NodeDescriptor 
 
 	vec3 eyeVector = (camera->GetNode()->GetWorldPosition() - node->GetWorldPosition()).Normalized();
 
-	mat4 rotation = mat4::IDENTITY;	
-	rotation.Rotate(vec3(1, 0, 0), -atan2(-eyeVector.y, eyeVector.z));
+	quat rotation;
+
+	rotation = quat(vec3(1, 0, 0), atan2(eyeVector.y, -eyeVector.z));
 	xAxis->SetRotation(rotation);
-
-	rotation = mat4::IDENTITY;
-	rotation.Rotate(vec3(0, 1, 0), -atan2(eyeVector.x, eyeVector.z));
+	
+	rotation = quat(vec3(0, 1, 0), atan2(-eyeVector.x, -eyeVector.z));
 	yAxis->SetRotation(rotation);
-
-	rotation = mat4::IDENTITY;
-	rotation.Rotate(vec3(0, 0, 1), -atan2(eyeVector.y, eyeVector.x));
+	
+	rotation = quat(vec3(0, 0, 1), atan2(eyeVector.y, eyeVector.x));
 	zAxis->SetRotation(rotation);
 }
 

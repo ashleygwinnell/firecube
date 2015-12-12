@@ -25,7 +25,7 @@ private:
 	FireCube::Node *xAxis, *yAxis, *zAxis;
 	FireCube::Plane currentPlane;
 	FireCube::vec3 planeStartPoint;
-	FireCube::mat4 startRotationMatrix;
-	FireCube::mat4 parentRotationMatrix;
+	FireCube::quat startRotationQuat;
+	FireCube::quat parentRotationQuat;
 	FireCube::SharedPtr<FireCube::Material> xAxisMaterial, yAxisMaterial, zAxisMaterial;
 };

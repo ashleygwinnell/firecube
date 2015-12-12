@@ -115,11 +115,8 @@ Node *NodeDescriptor::Instantiate(NodeDescriptor *parent, Engine *engine, std::m
 	
 	node->SetTranslation(translation);
 	node->SetScale(scale);
-	mat4 rotationMat = mat4::IDENTITY;
-	rotationMat.RotateX(rotation.x);
-	rotationMat.RotateY(rotation.y);
-	rotationMat.RotateZ(rotation.z);
-	node->SetRotation(rotationMat);
+	quat rot(rotation.x, rotation.y, rotation.z);	
+	node->SetRotation(rot);
 
 	if (parent)
 	{
@@ -211,13 +208,8 @@ void NodeDescriptor::SetRotation(vec3 rotation)
 {
 	this->rotation = rotation;
 	if (node)
-	{
-		mat4 rotationMat = mat4::IDENTITY;
-		rotationMat.RotateX(rotation.x);
-		rotationMat.RotateY(rotation.y);
-		rotationMat.RotateZ(rotation.z);
-
-		node->SetRotation(rotationMat);
+	{		
+		node->SetRotation(quat(rotation.x, rotation.y, rotation.z));
 	}
 }
 

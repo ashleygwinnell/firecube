@@ -37,7 +37,7 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 	staticModel->SetEnabled(false);
 	child = xAxis->CreateChild();
 	child->Move(vec3(lineLength, 0.0f, 0.0f));
-	child->Rotate(vec3(0.0f, 0.0f, PI * 0.5f));
+	child->Rotate(vec3(0.0f, 0.0f, -PI * 0.5f));
 	staticModel = child->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(mesh);
 	staticModel->SetCollisionQueryMask(0);
@@ -94,7 +94,7 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 	staticModel->SetEnabled(false);
 	child = zAxis->CreateChild();
 	child->Move(vec3(0.0f, 0.0f, lineLength));
-	child->Rotate(vec3(-PI * 0.5f, 0.0f, 0.0f));
+	child->Rotate(vec3(PI * 0.5f, 0.0f, 0.0f));
 	staticModel = child->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(mesh);
 	staticModel->SetCollisionQueryMask(0);
@@ -139,11 +139,11 @@ bool TranslateGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor 
 		Node *node = result.renderable->GetNode();		
 		if (currentNode->GetNode()->GetParent())
 		{
-			parentRotationMatrix = currentNode->GetNode()->GetParent()->GetWorldRotation();
+			parentRotationQuat = currentNode->GetNode()->GetParent()->GetWorldRotation();
 		}
 		else
 		{
-			parentRotationMatrix.Identity();
+			parentRotationQuat.Identity();
 		}
 		currentAxis = node->GetName();
 		dragStart = query.ray.origin + query.ray.direction * result.distance;
@@ -209,8 +209,8 @@ void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos
 			std::modf(translation.z, &translation.z);
 		}
 
-		mat4 temp = parentRotationMatrix;
-		temp.Inverse();
+		quat temp = parentRotationQuat;
+		temp.Conjugate();
 		translation = temp * translation;
 		endPosition = startPosition + translation;
 		currentNode->SetTranslation(endPosition);		

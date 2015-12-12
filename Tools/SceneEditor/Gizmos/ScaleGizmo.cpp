@@ -44,7 +44,7 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 	staticModel->SetEnabled(false);
 	
 	child = xAxis->CreateChild("XAxis");
-	child->Rotate(vec3(0.0f, 0.0f, -PI * 0.5f));
+	child->Rotate(vec3(0.0f, 0.0f, PI * 0.5f));
 	child->Move(vec3(lineLength + boxSize, 0.0f, 0.0f));	
 	staticModel = child->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(meshIntersection);
@@ -108,7 +108,7 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 	staticModel->SetEnabled(false);
 
 	child = zAxis->CreateChild("ZAxis");
-	child->Rotate(vec3(PI * 0.5f, 0.0f, 0.0f));
+	child->Rotate(vec3(-PI * 0.5f, 0.0f, 0.0f));
 	child->Move(vec3(0.0f, 0.0f, lineLength + boxSize));
 	staticModel = child->CreateComponent<StaticModel>();
 	staticModel->CreateFromMesh(meshIntersection);

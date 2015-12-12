@@ -31,7 +31,7 @@ void NodePropertiesPanelImpl::UpdateUI()
 		positionYTextCtrl->SetLabelText(wxString::FromDouble(node->GetTranslation().y));
 		positionZTextCtrl->SetLabelText(wxString::FromDouble(node->GetTranslation().z));
 
-		vec3 rotationAngles = node->GetRotation().ExtractEulerAngles();
+		vec3 rotationAngles = node->GetRotation().GetMatrix().ExtractEulerAngles();
 		rotationXTextCtrl->SetLabelText(wxString::FromDouble(rotationAngles.x / PI * 180.0f));
 		rotationYTextCtrl->SetLabelText(wxString::FromDouble(rotationAngles.y / PI * 180.0f));
 		rotationZTextCtrl->SetLabelText(wxString::FromDouble(rotationAngles.z / PI * 180.0f));

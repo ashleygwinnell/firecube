@@ -22,6 +22,6 @@ private:
 	FireCube::vec3 startPosition, dragStart, endPosition;
 	std::string currentAxis;
 	bool snapToGrid;
-	FireCube::mat4 parentRotationMatrix;
+	FireCube::quat parentRotationQuat;
 	FireCube::SharedPtr<FireCube::Material> xAxisMaterial, yAxisMaterial, zAxisMaterial;
 };
