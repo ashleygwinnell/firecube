@@ -43,10 +43,16 @@ void FIRECUBE_API Close();
 #define LOGWARNING4(m0, m1, m2, m3) { std::ostringstream oss; oss << m0 << m1 << m2 << m3; Logger::Write(Logger::LogLevel::LEVEL_WARNING, oss.str());}
 #define LOGERROR4(m0, m1, m2, m3) { std::ostringstream oss; oss << m0 << m1 << m2 << m3; Logger::Write(Logger::LogLevel::LEVEL_ERROR, oss.str());}
 
+#define LOGDEBUG5(m0, m1, m2, m3, m4) { std::ostringstream oss; oss << m0 << m1 << m2 << m3 << m4; Logger::Write(Logger::LogLevel::LEVEL_DEBUG, oss.str());}
+#define LOGINFO5(m0, m1, m2, m3, m4) { std::ostringstream oss; oss << m0 << m1 << m2 << m3 << m4; Logger::Write(Logger::LogLevel::LEVEL_INFO, oss.str());}
+#define LOGTRACE5(m0, m1, m2, m3, m4) { std::ostringstream oss; oss << m0 << m1 << m2 << m3 << m4; Logger::Write(Logger::LogLevel::LEVEL_TRACE, oss.str());}
+#define LOGWARNING5(m0, m1, m2, m3, m4) { std::ostringstream oss; oss << m0 << m1 << m2 << m3 << m4; Logger::Write(Logger::LogLevel::LEVEL_WARNING, oss.str());}
+#define LOGERROR5(m0, m1, m2, m3, m4) { std::ostringstream oss; oss << m0 << m1 << m2 << m3 << m4; Logger::Write(Logger::LogLevel::LEVEL_ERROR, oss.str());}
 
-#define COUNT_LOG_ARGS_IMPL2(_1, _2, _3, _4, count, ...) count
+
+#define COUNT_LOG_ARGS_IMPL2(_1, _2, _3, _4, _5, count, ...) count
 #define COUNT_LOG_ARGS_IMPL(args) COUNT_LOG_ARGS_IMPL2 args
-#define COUNT_LOG_ARGS(...) COUNT_LOG_ARGS_IMPL((__VA_ARGS__, 4, 3, 2, 1, 0))
+#define COUNT_LOG_ARGS(...) COUNT_LOG_ARGS_IMPL((__VA_ARGS__, 5, 4, 3, 2, 1, 0))
 #define LOG_CHOOSE_HELPER2(name, count) name##count
 #define LOG_CHOOSE_HELPER1(name, count) LOG_CHOOSE_HELPER2(name, count)
 #define LOG_CHOOSE_HELPER(name, count) LOG_CHOOSE_HELPER1(name, count)
