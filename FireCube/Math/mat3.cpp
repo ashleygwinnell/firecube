@@ -367,16 +367,17 @@ inline void mat3::SetCol(unsigned int i, const vec3 & col)
 vec3 mat3::ExtractEulerAngles() const
 {
 	vec3 rotation;
-	rotation.y = asin(-m[6]);
-	if ((-m[6] < -0.999f) || (m[6] > 0.999f))
+	rotation.y = asin(m[6]);
+	if (std::abs(m[6]) < 0.999f)
 	{
-		rotation.x = 0.0f;
-		rotation.z = atan2(-m[1], m[4]);
+		rotation.x = atan2(-m[7], m[8]);
+		rotation.z = atan2(-m[3], m[0]);
 	}
 	else
 	{
-		rotation.x = atan2( m[7], m[8] );
-		rotation.z = atan2( m[3], m[0] );
+		rotation.x = 0.0f;
+		rotation.z = atan2(m[1], m[4]);
+		
 	}	
 	return rotation;
 }
