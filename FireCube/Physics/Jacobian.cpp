@@ -2,7 +2,7 @@
 
 using namespace FireCube;
 
-Jacobian::Jacobian() : linear(0.0f), rotational(0.0f)
+Jacobian::Jacobian()
 {
 
 }

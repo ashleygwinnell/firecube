@@ -64,7 +64,7 @@ void PhysicsWorld::CollideCharacterController(const CharacterController *charact
 
 	for (auto collisionShape : collisionShapes)
 	{
-		if (characterControllerBoundingBox.Intersects(collisionShape->GetWorldBoundingBox()) &&
+		if (collisionShape->IsOwnedByRigidBody() == false && characterControllerBoundingBox.Intersects(collisionShape->GetWorldBoundingBox()) &&
 			(collisionShape->IsTrigger() == false || triggeredCollisionShapes.find(collisionShape) == triggeredCollisionShapes.end()))
 		{
 			CollisionResult currentResult;

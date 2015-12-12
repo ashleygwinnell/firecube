@@ -2,7 +2,7 @@
 
 using namespace FireCube;
 
-ContactConstraint::ContactConstraint(RigidBody *bodyA, RigidBody *bodyB, float maxForce) : Constraint(bodyA, bodyB, 0.0f, maxForce), restitution(0.0f), ri(0.0f), rj(0.0f), ni(0.0f)
+ContactConstraint::ContactConstraint(RigidBody *bodyA, RigidBody *bodyB, float maxForce) : Constraint(bodyA, bodyB, 0.0f, maxForce)
 {
 
 }

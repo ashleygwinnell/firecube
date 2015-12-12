@@ -36,9 +36,34 @@ void RigidBody::NodeChanged()
 		rotation = node->GetWorldRotation();
 		position = node->GetWorldPosition();
 		node->GetComponents(shapes, true);
+		for (auto &shape : shapes)
+		{
+			shape->SetOwnedByRigidBody(true);
+		}
 		UpdateMassProperties();
 		worldBoundingBoxChanged = true;
 	}
+}
+
+void RigidBody::UpdateCollisionShapes()
+{
+	shapes.clear();
+	for (auto &shape : shapes)
+	{
+		shape->SetOwnedByRigidBody(false);
+	}
+
+	if (node)
+	{
+		node->GetComponents(shapes, true);		
+		for (auto &shape : shapes)
+		{
+			shape->SetOwnedByRigidBody(true);
+		}
+	}
+
+	UpdateMassProperties();
+	worldBoundingBoxChanged = true;
 }
 
 void RigidBody::SceneChanged(Scene *oldScene)

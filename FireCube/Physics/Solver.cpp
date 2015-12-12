@@ -31,9 +31,9 @@ unsigned int Solver::Solve(float dt, PhysicsWorld *physicsWorld)
 	float tolSquared = tolerance * tolerance;		
 	auto &bodies = physicsWorld->GetRigitBodies();		
 
-	std::vector<float> invCs(constraints.size());
-	std::vector<float> Bs(constraints.size());
-	std::vector<float> lambda(constraints.size());
+	invCs.resize(constraints.size());
+	Bs.resize(constraints.size());
+	lambda.resize(constraints.size());
 
 	for (unsigned int i = 0; i < constraints.size(); ++i)
 	{

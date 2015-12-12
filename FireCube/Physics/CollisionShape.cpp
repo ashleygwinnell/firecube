@@ -9,6 +9,7 @@
 #include "Rendering/IndexBuffer.h"
 #include "Rendering/DebugRenderer.h"
 #include "Scene/Scene.h"
+#include "Physics/RigidBody.h"
 
 using namespace FireCube;
 
@@ -23,13 +24,13 @@ CollisionTriangle::CollisionTriangle(vec3 p0, vec3 p1, vec3 p2) : p0(p0), p1(p1)
 }
 
 CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld(nullptr), worldBoundingBoxChanged(false), isTrigger(false), collisionMesh(nullptr),
-	octreeNode(nullptr), octreeNodeNeedsUpdate(false)
+	octreeNode(nullptr), octreeNodeNeedsUpdate(false), ownedByRigidBody(false)
 {
 
 }
 
 CollisionShape::CollisionShape(const CollisionShape &other) : Component(other), worldBoundingBoxChanged(true), type(other.type), physicsWorld(other.physicsWorld), collisionMesh(other.collisionMesh), plane(other.plane),
-															  box(other.box), isTrigger(other.isTrigger), octreeNode(nullptr), octreeNodeNeedsUpdate(false)
+															  box(other.box), isTrigger(other.isTrigger), octreeNode(nullptr), octreeNodeNeedsUpdate(false), ownedByRigidBody(other.ownedByRigidBody)
 {
 	
 }
@@ -56,7 +57,19 @@ void CollisionShape::MarkedDirty()
 
 void CollisionShape::NodeChanged()
 {
-	
+	Node *n = node;
+
+	while (n)
+	{
+		auto rigidBody = n->GetComponent<RigidBody>();
+		if (rigidBody)
+		{
+			rigidBody->UpdateCollisionShapes();
+			break;
+		}
+
+		n = n->GetParent();
+	}
 }
 
 void CollisionShape::SceneChanged(Scene *oldScene)
@@ -325,4 +338,14 @@ bool CollisionShape::GetOctreeNodeNeedsUpdate() const
 void CollisionShape::SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate)
 {
 	this->octreeNodeNeedsUpdate = octreeNodeNeedsUpdate;
+}
+
+void CollisionShape::SetOwnedByRigidBody(bool ownedByRigidBody)
+{
+	this->ownedByRigidBody = ownedByRigidBody;
+}
+
+bool CollisionShape::IsOwnedByRigidBody() const
+{
+	return ownedByRigidBody;
 }

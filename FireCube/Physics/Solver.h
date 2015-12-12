@@ -25,6 +25,10 @@ private:
 
 	unsigned int maxIterations;
 	float tolerance;
+
+	std::vector<float> invCs;
+	std::vector<float> Bs;
+	std::vector<float> lambda;
 };
 
 }

@@ -63,6 +63,9 @@ public:
 	bool IsTrigger() const;
 	void SetIsTrigger(bool isTrigger);
 
+	void SetOwnedByRigidBody(bool ownedByRigidBody);
+	bool IsOwnedByRigidBody() const;
+
 	OctreeNode<CollisionShape> *GetOctreeNode();
 	void SetOctreeNode(OctreeNode<CollisionShape> *octreeNode);
 	bool GetOctreeNodeNeedsUpdate() const;
@@ -89,6 +92,8 @@ private:
 	Plane plane;
 	BoundingBox box;
 	float radius;
+
+	bool ownedByRigidBody;
 
 	OctreeNode<CollisionShape> *octreeNode;
 	bool octreeNodeNeedsUpdate;

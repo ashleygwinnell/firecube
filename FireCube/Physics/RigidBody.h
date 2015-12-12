@@ -59,6 +59,7 @@ public:
 	mat3 GetInvInertiaWorld() const;
 	vec3 GetVelocityAtWorldPoint(vec3 worldPoint) const;
 	std::vector<CollisionShape *> &GetCollisionShapes();
+	void UpdateCollisionShapes();
 private:
 
 	RigidBody(const RigidBody &other);

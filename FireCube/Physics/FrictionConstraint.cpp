@@ -2,7 +2,7 @@
 
 using namespace FireCube;
 
-FrictionConstraint::FrictionConstraint(RigidBody *bodyA, RigidBody *bodyB, float slipForce) : Constraint(bodyA, bodyB, -slipForce, slipForce), ri(0.0f), rj(0.0f), t(0.0f)
+FrictionConstraint::FrictionConstraint(RigidBody *bodyA, RigidBody *bodyB, float slipForce) : Constraint(bodyA, bodyB, -slipForce, slipForce)
 {
 
 }
