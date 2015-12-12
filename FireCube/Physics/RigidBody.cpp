@@ -6,7 +6,7 @@
 
 using namespace FireCube;
 
-RigidBody::RigidBody(Engine *engine) : Component(engine), physicsWorld(nullptr), velocity(0.0f), force(0.0f), angularVelocity(0.0f), torque(0.0f)
+RigidBody::RigidBody(Engine *engine) : Component(engine), physicsWorld(nullptr), velocity(0.0f), force(0.0f), angularVelocity(0.0f), torque(0.0f), vlambda(0.0f), wlambda(0.0f)
 {
 
 }
@@ -35,7 +35,7 @@ void RigidBody::NodeChanged()
 	{		
 		rotation = node->GetWorldRotation();
 		position = node->GetWorldPosition();
-		node->GetComponents(shapes, false);
+		node->GetComponents(shapes, true);
 		UpdateMassProperties();
 		worldBoundingBoxChanged = true;
 	}
@@ -130,6 +130,10 @@ void RigidBody::ApplyLocalImpulse(vec3 impulse, vec3 v)
 
 void RigidBody::Integrate(float t)
 {
+	if (bodyType != RigidBodyType::DYNAMIC) { // Only for dynamic
+		return;
+	}
+
 	velocity += force * invMass * t;
 	angularVelocity += invInertiaWorld * torque * t;
 	position += velocity * t;
@@ -146,8 +150,10 @@ void RigidBody::Integrate(float t)
 	rotation.x += halfT * (ax * bw + ay * bz - az * by);
 	rotation.y += halfT * (ay * bw + az * bx - ax * bz);
 	rotation.z += halfT * (az * bw + ax * by - ay * bx);
-	rotation.w += halfT * (-ax * bx - ay * by - az * bz);	
+	rotation.w += halfT * (-ax * bx - ay * by - az * bz);
 
+	rotation.Normalize();
+	
 	worldBoundingBoxChanged = true;
 
 	UpdateInertiaWorld();
@@ -210,6 +216,14 @@ void RigidBody::SetTorque(vec3 torque)
 void RigidBody::SetMass(float mass)
 {
 	this->mass = mass;
+	if (mass == 0)
+	{
+		bodyType = RigidBodyType::STATIC;
+	}
+	else
+	{
+		bodyType = RigidBodyType::DYNAMIC;
+	}
 	UpdateMassProperties();
 }
 
@@ -221,4 +235,68 @@ quat RigidBody::GetRotation() const
 vec3 RigidBody::GetPosition() const
 {
 	return position;
+}
+
+vec3 RigidBody::GetAngularVelocity() const
+{
+	return angularVelocity;
+}
+
+vec3 RigidBody::GetForce() const
+{
+	return force;
+}
+
+vec3 RigidBody::GetTorque() const
+{
+	return torque;
+}
+
+float RigidBody::GetInvMass() const
+{
+	return invMass;
+}
+
+mat3 RigidBody::GetInvInertiaWorld() const
+{
+	return invInertiaWorld;
+}
+
+vec3 RigidBody::GetVelocityAtWorldPoint(vec3 worldPoint) const
+{
+	vec3 r;
+	r = worldPoint - position;
+	
+	vec3 result = Cross(angularVelocity, r) + velocity;	
+	return result;
+}
+
+void RigidBody::SetAngularVelocity(vec3 angularVelocity)
+{
+	this->angularVelocity = angularVelocity;
+}
+
+std::vector<CollisionShape *> & RigidBody::GetCollisionShapes()
+{
+	return shapes;
+}
+
+void RigidBody::SetBodyType(RigidBodyType bodyType)
+{
+	this->bodyType = bodyType;
+}
+
+RigidBodyType RigidBody::GetBodyType() const
+{
+	return bodyType;
+}
+
+void RigidBody::SetRotation(quat rotation)
+{
+	this->rotation = rotation;
+}
+
+void RigidBody::SetPosition(vec3 position)
+{
+	this->position = position;
 }

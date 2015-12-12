@@ -6,6 +6,8 @@
 #include "Math/Math.h"
 #include "Math/Octree.h"
 #include "Physics/CollisionShape.h"
+#include "Physics/Narrowphase.h"
+#include "Physics/Solver.h"
 
 namespace FireCube
 {
@@ -47,6 +49,12 @@ public:
 
 	void AddRigidBody(RigidBody *rigidBody);
 	void RemoveRigidBody(RigidBody *rigidBody);
+	std::vector<RigidBody *> &GetRigitBodies();
+
+	void SetGravity(vec3 gravity);
+	vec3 GetGravity() const;
+
+	float GetDeltaTime() const;
 
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
 	virtual Component *Clone() const;
@@ -67,6 +75,11 @@ private:
 	std::vector<CollisionShape *> collisionShapes;
 	std::vector<CharacterController *> characterControllers;
 	std::vector<RigidBody *> rigidBodies;
+
+	vec3 gravity;
+	float deltaTime;
+	Narrowphase narrowphase;
+	Solver solver;
 
 	Octree<CollisionShape> octree;
 };

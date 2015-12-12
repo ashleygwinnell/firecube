@@ -12,7 +12,7 @@ class CollisionShape;
 
 enum class RigidBodyType
 {
-	DYNAMIC,STATIC
+	DYNAMIC, STATIC
 };
 
 class RigidBody : public Component
@@ -22,13 +22,20 @@ class RigidBody : public Component
 public:
 	RigidBody(Engine *engine);
 	~RigidBody();
+
+	void SetBodyType(RigidBodyType bodyType);
+	RigidBodyType GetBodyType() const;
 		
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
 	
 	void SetVelocity(vec3 velocity);
+	vec3 GetAngularVelocity() const;
+	void SetAngularVelocity(vec3 angularVelocity);
 	vec3 GetVelocity() const;
 	quat GetRotation() const;
 	vec3 GetPosition() const;
+	void SetRotation(quat rotation);
+	void SetPosition(vec3 position);
 	virtual Component *Clone() const;
 	vec3 PointToLocal(vec3 p);
 	vec3 VectorToLocal(vec3 v);
@@ -44,8 +51,14 @@ public:
 	void UpdateWorldBoundingBox();
 	void UpdateMassProperties();
 	void SetForce(vec3 force);
+	vec3 GetForce() const;
 	void SetTorque(vec3 torque);
+	vec3 GetTorque() const;
 	void SetMass(float mass);
+	float GetInvMass() const;
+	mat3 GetInvInertiaWorld() const;
+	vec3 GetVelocityAtWorldPoint(vec3 worldPoint) const;
+	std::vector<CollisionShape *> &GetCollisionShapes();
 private:
 
 	RigidBody(const RigidBody &other);
@@ -70,6 +83,9 @@ private:
 	vec3 position;
 	BoundingBox worldBoundingBox;
 	bool worldBoundingBoxChanged;
+public:
+	vec3 vlambda;
+	vec3 wlambda;
 
 };
 

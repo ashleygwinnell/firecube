@@ -1,5 +1,5 @@
 #include <algorithm>
-
+#include <Windows.h>
 #include "Physics/PhysicsWorld.h"
 #include "Physics/CharacterController.h"
 #include "Physics/CollisionShape.h"
@@ -10,14 +10,16 @@
 
 using namespace FireCube;
 
-PhysicsWorld::PhysicsWorld(Engine *engine) : Component(engine), octree(engine, vec3(2000), 8)
+PhysicsWorld::PhysicsWorld(Engine *engine) : Component(engine), octree(engine, vec3(2000), 8), narrowphase(this)
 {
 	SubscribeToEvent(Events::Update, &PhysicsWorld::Update);
+	solver.SetSpookParams(1e7f, 3, 1.0f / 60.0f);
 }
 
-PhysicsWorld::PhysicsWorld(const PhysicsWorld &other) : Component(other), collisionShapes(other.collisionShapes), characterControllers(other.characterControllers), rigidBodies(other.rigidBodies), octree(engine, vec3(10000), 10)
+PhysicsWorld::PhysicsWorld(const PhysicsWorld &other) : Component(other), narrowphase(this), collisionShapes(other.collisionShapes), characterControllers(other.characterControllers), rigidBodies(other.rigidBodies), octree(engine, vec3(10000), 10)
 {
 	SubscribeToEvent(Events::Update, &PhysicsWorld::Update);
+	solver.SetSpookParams(1e7f, 3, 1.0f / 60.0f);
 }
 
 void PhysicsWorld::AddCollisionShape(CollisionShape *collisionShape)
@@ -234,16 +236,65 @@ void PhysicsWorld::UpdateCharacterControllers(float deltaTime)
 
 void PhysicsWorld::UpdateRigidBodies(float deltaTime)
 {
+	for (auto rigidBody : rigidBodies)
+	{
+		rigidBody->SetPosition(rigidBody->GetNode()->GetWorldPosition());
+		rigidBody->SetRotation(rigidBody->GetNode()->GetWorldRotation());
+		if (rigidBody->GetBodyType() == RigidBodyType::DYNAMIC)
+		{
+			rigidBody->force += gravity * rigidBody->mass;
+		}
+	}
+
+	std::vector<RigidBody *> p1;
+	std::vector<RigidBody *> p2;
+	for (unsigned int i = 0; i < rigidBodies.size(); ++i)
+	{
+		for (unsigned int j = i + 1; j < rigidBodies.size(); ++j)
+		{
+			p1.push_back(rigidBodies[i]);
+			p2.push_back(rigidBodies[j]);
+		}
+	}
+
+	narrowphase.GetContacts(p1, p2);
+
+	auto contactConstraints = narrowphase.GetContactConstraints();
+	auto frictionConstraints = narrowphase.GetFrictionConstraints();	
+	
+	for (auto c : frictionConstraints)
+	{
+		solver.AddConstraint((Constraint *) c);
+	}
+
+	for (auto c : contactConstraints)
+	{
+		solver.AddConstraint((Constraint *) c);
+	}
+
+	solver.Solve(deltaTime, this);
+	solver.Clear();
 
 	for (auto rigidBody : rigidBodies)
 	{
+		// Apply damping
+		if (rigidBody->GetBodyType() == RigidBodyType::DYNAMIC)
+		{
+			float linearDamping = 0.01f; // TODO: Set as body property
+			float angularDamping = 0.01f; // TODO: Set as body property
+
+			float ld = std::pow(1.0f - linearDamping, deltaTime);
+			rigidBody->SetVelocity(rigidBody->GetVelocity() * ld);
+
+			float ad = std::pow(1.0f - angularDamping, deltaTime);
+			rigidBody->SetAngularVelocity(rigidBody->GetAngularVelocity() * ad);
+		}
+
 		rigidBody->Integrate(deltaTime);
 		rigidBody->GetNode()->SetRotation(rigidBody->GetRotation());
 		rigidBody->GetNode()->SetTranslation(rigidBody->GetPosition());
-	}
 
-	for (auto rigidBody : rigidBodies)
-	{
+		// Clear forces
 		rigidBody->SetForce(vec3::ZERO);
 		rigidBody->SetTorque(vec3::ZERO);
 	}
@@ -251,9 +302,11 @@ void PhysicsWorld::UpdateRigidBodies(float deltaTime)
 
 void PhysicsWorld::Update(float deltaTime)
 {	
+	this->deltaTime = deltaTime;
+	solver.SetSpookParams(1e7f, 3, deltaTime); // TODO: Switch to fixed time step
 	octree.Update();
-	UpdateCharacterControllers(deltaTime);
-	UpdateRigidBodies(deltaTime);	
+	UpdateCharacterControllers(deltaTime);	
+	UpdateRigidBodies(this->deltaTime);	
 }
 
 void PhysicsWorld::MarkedDirty()
@@ -290,6 +343,26 @@ Component *PhysicsWorld::Clone() const
 {
 	PhysicsWorld *clone = new PhysicsWorld(*this);
 	return clone;
+}
+
+std::vector<RigidBody *> & PhysicsWorld::GetRigitBodies()
+{
+	return rigidBodies;
+}
+
+void PhysicsWorld::SetGravity(vec3 gravity)
+{
+	this->gravity = gravity;
+}
+
+vec3 PhysicsWorld::GetGravity() const
+{
+	return gravity;
+}
+
+float PhysicsWorld::GetDeltaTime() const
+{
+	return deltaTime;
 }
 
 CollisionResult::CollisionResult() : collisionFound(false)

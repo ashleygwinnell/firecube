@@ -50,6 +50,12 @@
     <ClCompile Include="Math\vec4.cpp" />
     <ClCompile Include="Physics\CharacterController.cpp" />
     <ClCompile Include="Physics\CollisionShape.cpp" />
+    <ClCompile Include="Physics\ContactConstraint.cpp" />
+    <ClCompile Include="Physics\Constraint.cpp" />
+    <ClCompile Include="Physics\FrictionConstraint.cpp" />
+    <ClCompile Include="Physics\Solver.cpp" />
+    <ClCompile Include="Physics\Jacobian.cpp" />
+    <ClCompile Include="Physics\Narrowphase.cpp" />
     <ClCompile Include="Physics\PhysicsWorld.cpp" />
     <ClCompile Include="Physics\RigidBody.cpp" />
     <ClCompile Include="Rendering\DebugRenderer.cpp" />
@@ -148,6 +154,12 @@
     <ClInclude Include="Math\vec4.h" />
     <ClInclude Include="Physics\CharacterController.h" />
     <ClInclude Include="Physics\CollisionShape.h" />
+    <ClInclude Include="Physics\ContactConstraint.h" />
+    <ClInclude Include="Physics\Constraint.h" />
+    <ClInclude Include="Physics\FrictionConstraint.h" />
+    <ClInclude Include="Physics\Solver.h" />
+    <ClInclude Include="Physics\Jacobian.h" />
+    <ClInclude Include="Physics\Narrowphase.h" />
     <ClInclude Include="Physics\PhysicsWorld.h" />
     <ClInclude Include="Physics\RigidBody.h" />
     <ClInclude Include="Rendering\DebugRenderer.h" />
