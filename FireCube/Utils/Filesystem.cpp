@@ -187,3 +187,16 @@ std::string Filesystem::GetFileExtension(const std::string &filename)
 		return "";
 	}
 }
+
+std::string Filesystem::RemoveFileExtension(const std::string &filename)
+{
+	unsigned int pos = filename.find_last_of('.');
+	if (pos != std::string::npos)
+	{		
+		return filename.substr(0, pos);
+	}
+	else
+	{
+		return filename;
+	}
+}
