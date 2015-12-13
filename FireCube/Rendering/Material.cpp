@@ -4,7 +4,7 @@
 #include "Rendering/Technique.h"
 #include "Core/Engine.h"
 #include "Core/ResourceCache.h"
-#include "Rendering/Texture.h"
+#include "Rendering/Texture2D.h"
 
 using namespace FireCube;
 Material::Material(Engine *engine) : Resource(engine), technique(nullptr)
@@ -67,7 +67,7 @@ bool Material::Load(const std::string &filename)
 				continue;		
 
 			TextureUnit textureUnit = ParseTextureUnitName(textureUnitName);
-			textures[static_cast<int>(textureUnit)] = engine->GetResourceCache()->GetResource<Texture>(textureName);
+			textures[static_cast<int>(textureUnit)] = engine->GetResourceCache()->GetResource<Texture2D>(textureName);
 		}
 	}
 	return true;

@@ -357,6 +357,12 @@
     <ClCompile Include="Physics\Solver.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\Texture2D.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\TextureCube.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -653,6 +659,12 @@
     </ClInclude>
     <ClInclude Include="Physics\Solver.h">
       <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Texture2D.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\TextureCube.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

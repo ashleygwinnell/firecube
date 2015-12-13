@@ -4,7 +4,7 @@
 #include "ThirdParty/GLEW/glew.h"
 #include "Geometry/Geometry.h"
 #include "Rendering/Material.h"
-#include "Rendering/Texture.h"
+#include "Rendering/Texture2D.h"
 #include "Rendering/VertexBuffer.h"
 #include "Rendering/Shader.h"
 #include "Rendering/FrameBuffer.h"
@@ -94,7 +94,7 @@ void Renderer::UseTexture(unsigned int unit, const Texture *texture)
 	if (!texture)
 		return;
 	glActiveTexture(GL_TEXTURE0 + unit);
-	glBindTexture(GL_TEXTURE_2D, texture->GetObjectId());
+	glBindTexture(texture->GetTarget(), texture->GetObjectId());
 	
 	GLint min = GL_LINEAR_MIPMAP_LINEAR, mag = GL_LINEAR;
 
@@ -129,6 +129,7 @@ void Renderer::UseTexture(unsigned int unit, const Texture *texture)
 	}
 	glSamplerParameteri(textureSampler[unit], GL_TEXTURE_WRAP_S, wrap);
 	glSamplerParameteri(textureSampler[unit], GL_TEXTURE_WRAP_T, wrap);
+	glSamplerParameteri(textureSampler[unit], GL_TEXTURE_WRAP_R, wrap);
 
 	glBindSampler(unit, textureSampler[unit]);
 }
@@ -512,7 +513,7 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 	SharedPtr<RenderSurface> renderSurface(new RenderSurface(this, type));
 	if (type == RenderSurfaceType::COLOR)
 	{
-		Texture *texture = new Texture(engine);
+		Texture *texture = new Texture2D(engine);
 		texture->SetWidth(width);
 		texture->SetHeight(height);
 		texture->SetFiltering(TextureFilter::MIPMAP);
@@ -527,7 +528,7 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 	}
 	else if (type == RenderSurfaceType::DEPTH_TEXTURE)
 	{
-		Texture *texture = new Texture(engine);
+		Texture *texture = new Texture2D(engine);
 		texture->SetWidth(width);
 		texture->SetHeight(height);
 		texture->SetFiltering(TextureFilter::NEAREST);

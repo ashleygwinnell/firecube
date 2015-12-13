@@ -43,12 +43,6 @@ public:
 	~Texture();
 
 	/**
-	* Loads a texture.
-	* @param filename The file to load.
-	*/
-	bool Load(const std::string &filename);	
-
-	/**
 	* Creates a new texture.
 	*/
 	bool Create();
@@ -72,11 +66,13 @@ public:
 	void SetHeight(int height);
 
 	void SetWrapMode(TextureWrapMode wrapMode);
-private:		
-	bool LoadDDS(const std::string &filename);
+
+	GLenum GetTarget() const;
+protected:	
 
 	TextureFilter filter;
 	TextureWrapMode wrapMode;
+	GLenum target;
 
 	int width, height;
 };

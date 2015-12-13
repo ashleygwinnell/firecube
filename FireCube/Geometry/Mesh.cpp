@@ -9,7 +9,7 @@
 #include "assimp/Importer.hpp" // C++ importer interface
 #include "assimp/scene.h" // Output data structure
 #include "assimp/postprocess.h" // Post processing flags
-#include "Rendering/Texture.h"
+#include "Rendering/Texture2D.h"
 #include "Rendering/Technique.h"
 #include "Core/ResourceCache.h"
 #include "Geometry/Geometry.h"
@@ -199,17 +199,17 @@ bool Mesh::ProcessAssimpMaterialTexture(const aiMaterial *aMaterial, Material *m
 			std::string relativeToMeshFile = meshBaseDirectory + Filesystem::PATH_SEPARATOR + std::string(file.C_Str());
 			if (Filesystem::FileExists(relativeToMeshFile))
 			{
-				material->SetTexture(unit, engine->GetResourceCache()->GetResource<Texture>(relativeToMeshFile));
+				material->SetTexture(unit, engine->GetResourceCache()->GetResource<Texture2D>(relativeToMeshFile));
 			}
 			else
 			{
 				// Try as absolute path
-				material->SetTexture(unit, engine->GetResourceCache()->GetResource<Texture>(file.C_Str()));
+				material->SetTexture(unit, engine->GetResourceCache()->GetResource<Texture2D>(file.C_Str()));
 			}
 		}
 		else
 		{
-			material->SetTexture(unit, engine->GetResourceCache()->GetResource<Texture>(resourceName));
+			material->SetTexture(unit, engine->GetResourceCache()->GetResource<Texture2D>(resourceName));
 		}
 
 		return true;

@@ -57,5 +57,7 @@ namespace Filesystem
 	bool FIRECUBE_API CreateFolder(const std::string &path);
 
 	std::string FIRECUBE_API GetFileExtension(const std::string &filename);
+
+	std::string FIRECUBE_API RemoveFileExtension(const std::string &filename);
 }
 }

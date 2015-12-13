@@ -68,6 +68,8 @@
     <ClCompile Include="Rendering\SceneView.cpp" />
     <ClCompile Include="Rendering\ShaderTemplate.cpp" />
     <ClCompile Include="Rendering\Technique.cpp" />
+    <ClCompile Include="Rendering\Texture2D.cpp" />
+    <ClCompile Include="Rendering\TextureCube.cpp" />
     <ClCompile Include="Rendering\VertexBuffer.cpp" />
     <ClCompile Include="Rendering\Font.cpp" />
     <ClCompile Include="Rendering\FrameBuffer.cpp" />
@@ -172,6 +174,8 @@
     <ClInclude Include="Rendering\SceneView.h" />
     <ClInclude Include="Rendering\ShaderTemplate.h" />
     <ClInclude Include="Rendering\Technique.h" />
+    <ClInclude Include="Rendering\Texture2D.h" />
+    <ClInclude Include="Rendering\TextureCube.h" />
     <ClInclude Include="Rendering\VertexBuffer.h" />
     <ClInclude Include="Rendering\Font.h" />
     <ClInclude Include="Rendering\FrameBuffer.h" />

@@ -19,6 +19,8 @@
 #include "Geometry/CollisionQuery.h"
 #include "Rendering/Material.h"
 #include "Rendering/Texture.h"
+#include "Rendering/Texture2D.h"
+#include "Rendering/TextureCube.h"
 #include "Rendering/VertexBuffer.h"
 #include "Rendering/Shader.h"
 #include "Rendering/ShaderTemplate.h"

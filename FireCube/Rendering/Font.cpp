@@ -3,7 +3,7 @@
 #include "ThirdParty/GLEW/glew.h"
 #include "ft2build.h"
 #include FT_FREETYPE_H
-#include "Rendering/Texture.h"
+#include "Rendering/Texture2D.h"
 #include "Rendering/Font.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/privateFont.h"
@@ -69,7 +69,7 @@ FontFace *Font::GenerateFontFace(int pointSize)
 		return false;
 	
 	fontFace->page = new FontPage();		
-	fontFace->page->tex = new Texture(engine);	
+	fontFace->page->tex = new Texture2D(engine);	
 	fontFace->page->textureSize = 512;
 	fontFace->page->curPos = vec2::ZERO;
 	glBindTexture(GL_TEXTURE_2D, fontFace->page->tex->GetObjectId());
