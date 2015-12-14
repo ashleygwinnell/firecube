@@ -88,6 +88,7 @@
     <ClCompile Include="Scene\Renderable.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SceneReader.cpp" />
+    <ClCompile Include="Scene\Skybox.cpp" />
     <ClCompile Include="Scene\StaticModel.cpp" />
     <ClCompile Include="Scene\Terrain.cpp" />
     <ClCompile Include="Scripting\Bindings\AudioBindings.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="Scene\Renderable.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneReader.h" />
+    <ClInclude Include="Scene\Skybox.h" />
     <ClInclude Include="Scene\StaticModel.h" />
     <ClInclude Include="Scene\Terrain.h" />
     <ClInclude Include="Scripting\LuaBindings.h" />

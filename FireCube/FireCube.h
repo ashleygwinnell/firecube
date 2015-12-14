@@ -45,6 +45,7 @@
 #include "Scene/Camera.h"
 #include "Scene/OrbitCamera.h"
 #include "Scene/SceneReader.h"
+#include "Scene/Skybox.h"
 #include "UI/UI.h"
 #include "UI/UIElement.h"
 #include "UI/UIText.h"

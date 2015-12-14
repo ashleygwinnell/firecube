@@ -1,0 +1,3 @@
+<technique>
+	<pass name = "base_opaque" vs= "Shaders/Skybox.vert" fs = "Shaders/Skybox.frag" depth_test = "less_equal" />
+</technique>

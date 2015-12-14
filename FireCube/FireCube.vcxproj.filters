@@ -363,6 +363,9 @@
     <ClCompile Include="Rendering\TextureCube.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\Skybox.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -665,6 +668,9 @@
     </ClInclude>
     <ClInclude Include="Rendering\TextureCube.h">
       <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Skybox.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
