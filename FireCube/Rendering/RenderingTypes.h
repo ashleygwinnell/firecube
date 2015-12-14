@@ -70,6 +70,11 @@ enum class ClearBufferType
 	NONE = 0, COLOR = 1, DEPTH = 2
 };
 
+enum class CullMode
+{
+	NONE = 0, CW = 1, CCW = 2
+};
+
 /**
 * Specifies the kind of primitives to render.
 */

@@ -8,7 +8,7 @@
 #include "Rendering/TextureCube.h"
 
 using namespace FireCube;
-Material::Material(Engine *engine) : Resource(engine), technique(nullptr)
+Material::Material(Engine *engine) : Resource(engine), technique(nullptr), cullMode(CullMode::CCW)
 {
 	for (int i = 0; i < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS); ++i)
 		textures[i] = nullptr;
@@ -82,6 +82,10 @@ bool Material::Load(const std::string &filename)
 			{
 				textures[static_cast<int>(textureUnit)] = engine->GetResourceCache()->GetResource<TextureCube>(textureName);
 			}
+		}
+		else if (element->ValueStr() == "cull")
+		{
+			cullMode = ParseCullMode(element->Attribute("value"));
 		}
 	}
 	return true;
@@ -223,4 +227,27 @@ Variant &Material::GetParameter(const StringHash &nameHash)
 {
 	auto i = parameters.find(nameHash);
 	return i->second;	
+}
+
+void Material::SetCullMode(CullMode cullMode)
+{
+	this->cullMode = cullMode;
+}
+
+CullMode Material::GetCullMode() const
+{
+	return cullMode;
+}
+
+FireCube::CullMode FireCube::Material::ParseCullMode(const std::string &cullMode)
+{
+	CullMode ret = CullMode::CCW;
+	if (cullMode == "none")
+		ret = CullMode::NONE;
+	else if (cullMode == "cw")
+		ret = CullMode::CW;
+	else if (cullMode == "ccw")
+		ret = CullMode::CCW;
+
+	return ret;
 }

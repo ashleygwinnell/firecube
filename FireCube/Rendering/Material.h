@@ -72,15 +72,19 @@ public:
 	* @return A new cloned Material of this one.
 	*/
 	Material *Clone();
+
+	void SetCullMode(CullMode cullMode);
+	CullMode GetCullMode() const;
 	
 	static TextureUnit ParseTextureUnitName(const std::string &name);
 	static std::string GetTextureUnitName(TextureUnit unit);
+	static CullMode ParseCullMode(const std::string &cullMode);
 private:
-	
-	
+		
 	std::string name;	
 	Texture *textures[static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS)];
 	Technique *technique;
+	CullMode cullMode;
 	std::map<StringHash, Variant> parameters;
 };
 

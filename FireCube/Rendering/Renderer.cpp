@@ -235,6 +235,23 @@ void Renderer::UseMaterial(Material *material)
 		if (textures[i])
 			UseTexture(i, textures[i]);
 	}
+
+	switch (material->GetCullMode())
+	{
+	case CullMode::NONE:
+		glDisable(GL_CULL_FACE);
+		break;
+	case CullMode::CW:
+		glEnable(GL_CULL_FACE);
+		glFrontFace(GL_CW);
+		break;
+	case CullMode::CCW:
+		glEnable(GL_CULL_FACE);
+		glFrontFace(GL_CCW);
+		break;
+	default:
+		break;
+	}
 }
 
 void Renderer::ResetNumberOfPrimitivesRendered()
