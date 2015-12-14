@@ -8,6 +8,7 @@ using namespace FireCube;
 TextureCube::TextureCube(Engine *engine) : Texture(engine)
 {
 	target = GL_TEXTURE_CUBE_MAP;
+	wrapMode = TextureWrapMode::CLAMP_TO_EDGE;
 }
 
 bool TextureCube::Load(const std::string &filename)
