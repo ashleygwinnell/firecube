@@ -54,6 +54,8 @@ bool TextureCube::Load(const std::string &filename)
 		height = img.GetHeight();
 		
 		glTexImage2D(currentFaceTarget, 0, internalFormat, img.GetWidth(), img.GetHeight(), 0, format, GL_UNSIGNED_BYTE, &img.GetPixels()[0]);				
+		GenerateMipMaps();
+		SetFiltering(TextureFilter::MIPMAP);
 	}
 
 	SetFiltering(TextureFilter::LINEAR);
