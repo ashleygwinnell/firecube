@@ -195,9 +195,11 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			material = engine->GetResourceCache()->GetResource<Material>(e->Attribute("material"));
 		}
 
+		StaticModel *staticModel = nullptr;
+
 		if (e->Attribute("radius") && material)
 		{
-			auto component = node->CreateComponent<StaticModel>();
+			staticModel = node->CreateComponent<StaticModel>();
 			float radius = Variant::FromString(e->Attribute("radius")).GetFloat();
 			
 			unsigned int rings = 16;
@@ -211,7 +213,25 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 
 			Mesh mesh(engine);
 			mesh.AddGeometry(GeometryGenerator::GenerateSphere(engine, radius, rings, columns), BoundingBox(-vec3(radius), vec3(radius)), material);			
-			component->CreateFromMesh(&mesh);
+			staticModel->CreateFromMesh(&mesh);
+		}
+
+		if (staticModel)
+		{
+			if (e->Attribute("cast_shadow"))
+			{
+				staticModel->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
+			}
+
+			if (e->Attribute("light_mask"))
+			{
+				staticModel->SetLightMask(std::stoul(e->Attribute("light_mask"), 0, 16));
+			}
+
+			if (e->Attribute("collision_query_mask"))
+			{
+				staticModel->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
+			}
 		}
 	}
 	else if (type == "LuaScript")
