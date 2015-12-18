@@ -12,6 +12,7 @@
 #include "Descriptors/CharacterControllerDescriptor.h"
 #include "Descriptors/LuaScriptDescriptor.h"
 #include "Descriptors/BoxDescriptor.h"
+#include "Descriptors/RigidBodyDescriptor.h"
 
 using namespace FireCube;
 
@@ -204,6 +205,17 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlElement *pa
 		std::stringstream collisionQueryMaskStream;
 		collisionQueryMaskStream << std::hex << box->GetCollisionQueryMask();
 		element->SetAttribute("collision_query_mask", collisionQueryMaskStream.str());
+	}
+	else if (componentDesc->GetType() == ComponentType::RIGID_BODY)
+	{
+		TiXmlElement *element = new TiXmlElement("component");
+		parent->LinkEndChild(element);
+
+		element->SetAttribute("type", componentDesc->GetTypeName());
+
+		auto rigidBody = static_cast<RigidBodyDescriptor *>(componentDesc);
+
+		element->SetDoubleAttribute("mass", rigidBody->GetMass());		
 	}
 
 }

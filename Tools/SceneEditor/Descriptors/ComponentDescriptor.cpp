@@ -8,7 +8,8 @@ std::map<ComponentType, std::string> ComponentDescriptor::componentTypeToName = 
 	{ ComponentType::PHYSICS_WORLD, "PhysicsWorld" },
 	{ ComponentType::LUA_SCRIPT, "LuaScript" },
 	{ ComponentType::LIGHT, "Light" },
-	{ ComponentType::BOX, "Box" }
+	{ ComponentType::BOX, "Box" },
+	{ ComponentType::RIGID_BODY, "RigidBody" }
 };
 
 ComponentDescriptor::ComponentDescriptor(ComponentType type) : type(type), component(nullptr), parent(nullptr)

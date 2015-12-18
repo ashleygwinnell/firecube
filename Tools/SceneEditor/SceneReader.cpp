@@ -10,6 +10,7 @@
 #include "Descriptors/CharacterControllerDescriptor.h"
 #include "Descriptors/LuaScriptDescriptor.h"
 #include "Descriptors/BoxDescriptor.h"
+#include "Descriptors/RigidBodyDescriptor.h"
 
 using namespace FireCube;
 
@@ -308,6 +309,18 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 		{
 			characterControllerDescriptor->SetStepOffset(Variant::FromString(e->Attribute("step_offset")).GetFloat());
 		}
+	}
+	else if (type == "RigidBody")
+	{
+		auto rigidBodyDescriptor = new RigidBodyDescriptor();
+		addedComponent = rigidBodyDescriptor;
+		float mass = 0.0f;
+		if (e->Attribute("mass"))
+		{
+			float mass = Variant::FromString(e->Attribute("mass")).GetFloat();
+		}
+
+		rigidBodyDescriptor->SetMass(mass);
 	}
 	else
 	{

@@ -159,6 +159,9 @@
     <ClCompile Include="Panels\MaterialEditorPanelImpl.cpp">
       <Filter>Panels</Filter>
     </ClCompile>
+    <ClCompile Include="Descriptors\RigidBodyDescriptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -289,6 +292,9 @@
     </ClInclude>
     <ClInclude Include="Panels\MaterialEditorPanelImpl.h">
       <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Descriptors\RigidBodyDescriptor.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

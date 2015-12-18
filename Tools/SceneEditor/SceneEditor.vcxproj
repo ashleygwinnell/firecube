@@ -107,6 +107,7 @@
     <ClCompile Include="Descriptors\LuaScriptDescriptor.cpp" />
     <ClCompile Include="Descriptors\NodeDescriptor.cpp" />
     <ClCompile Include="Descriptors\PhysicsWorldDescriptor.cpp" />
+    <ClCompile Include="Descriptors\RigidBodyDescriptor.cpp" />
     <ClCompile Include="Descriptors\StaticModelDescriptor.cpp" />
     <ClCompile Include="EditorState.cpp" />
     <ClCompile Include="Gizmos\RotateGizmo.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="Descriptors\LuaScriptDescriptor.h" />
     <ClInclude Include="Descriptors\NodeDescriptor.h" />
     <ClInclude Include="Descriptors\PhysicsWorldDescriptor.h" />
+    <ClInclude Include="Descriptors\RigidBodyDescriptor.h" />
     <ClInclude Include="Descriptors\StaticModelDescriptor.h" />
     <ClInclude Include="EditorState.h" />
     <ClInclude Include="Gizmos\RotateGizmo.h" />
