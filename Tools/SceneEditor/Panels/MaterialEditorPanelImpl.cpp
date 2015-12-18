@@ -159,21 +159,21 @@ void MaterialEditorPanelImpl::PropertyGridChanged(wxPropertyGridEvent& event)
 		std::string sfile = event.GetPropertyValue().GetString().ToStdString();
 		sfile = AssetUtils::ImportTextureIfNeeded(sfile);
 		event.GetProperty()->SetValue(sfile);
-		material->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>(sfile));
+		material->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture2D>(sfile));
 	}
 	else if (properyName == "Normal texture")
 	{
 		std::string sfile = event.GetPropertyValue().GetString().ToStdString();
 		sfile = AssetUtils::ImportTextureIfNeeded(sfile);
 		event.GetProperty()->SetValue(sfile);
-		material->SetTexture(TextureUnit::NORMAL, engine->GetResourceCache()->GetResource<Texture>(sfile));
+		material->SetTexture(TextureUnit::NORMAL, engine->GetResourceCache()->GetResource<Texture2D>(sfile));
 	}
 	else if (properyName == "Specular texture")
 	{
 		std::string sfile = event.GetPropertyValue().GetString().ToStdString();
 		sfile = AssetUtils::ImportTextureIfNeeded(sfile);
 		event.GetProperty()->SetValue(sfile);
-		material->SetTexture(TextureUnit::SPECULAR, engine->GetResourceCache()->GetResource<Texture>(sfile));
+		material->SetTexture(TextureUnit::SPECULAR, engine->GetResourceCache()->GetResource<Texture2D>(sfile));
 	}
 	else if (properyName == "Technique")
 	{
