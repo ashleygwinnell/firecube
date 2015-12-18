@@ -87,6 +87,10 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	addBoxMenuItem = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Box") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu1->Append( addBoxMenuItem );
 	
+	wxMenuItem* addRigidBodyMenuItem;
+	addRigidBodyMenuItem = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Rigid Body") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( addRigidBodyMenuItem );
+	
 	addMenu->Append( m_menu1Item );
 	
 	menuBar->Append( addMenu, wxT("Add") ); 
@@ -175,6 +179,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( addCollisionShapeMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddCollisionShapeClicked ) );
 	this->Connect( addCharacterControllerMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddCharacterControllerClicked ) );
 	this->Connect( addBoxMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddBoxClicked ) );
+	this->Connect( addRigidBodyMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddRigidBodyClicked ) );
 	this->Connect( viewSceneHierarchyMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Connect( viewInspectorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	this->Connect( viewMaterialEditorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
@@ -205,6 +210,7 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddCollisionShapeClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddCharacterControllerClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddBoxClicked ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddRigidBodyClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
@@ -461,6 +467,43 @@ BoxPanel::~BoxPanel()
 	castShadowCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( BoxPanel::CastShadowChanged ), NULL, this );
 	lightMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::LightMaskChanged ), NULL, this );
 	collisionQueryMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::CollisionQueryMaskChanged ), NULL, this );
+	
+}
+
+RigidBodyPanel::RigidBodyPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer24;
+	bSizer24 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer8;
+	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxStaticText* m_staticText2;
+	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Mass"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText2->Wrap( -1 );
+	bSizer8->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	massTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	massTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &massText ) );
+	
+	bSizer8->Add( massTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer24->Add( bSizer8, 1, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer24 );
+	this->Layout();
+	bSizer24->Fit( this );
+	
+	// Connect Events
+	massTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( RigidBodyPanel::MassChanged ), NULL, this );
+}
+
+RigidBodyPanel::~RigidBodyPanel()
+{
+	// Disconnect Events
+	massTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( RigidBodyPanel::MassChanged ), NULL, this );
 	
 }
 

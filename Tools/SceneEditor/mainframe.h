@@ -93,6 +93,7 @@ class MainFrame : public wxFrame
 		virtual void AddCollisionShapeClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddCharacterControllerClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddBoxClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void AddRigidBodyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewSceneHierarchyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewInspectorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewMaterialEditorClicked( wxCommandEvent& event ) { event.Skip(); }
@@ -205,6 +206,28 @@ class BoxPanel : public wxPanel
 		
 		BoxPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~BoxPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class RigidBodyPanel
+///////////////////////////////////////////////////////////////////////////////
+class RigidBodyPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxTextCtrl* massTextCtrl;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void MassChanged( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		wxString massText; 
+		
+		RigidBodyPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
+		~RigidBodyPanel();
 	
 };
 

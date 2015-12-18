@@ -160,7 +160,10 @@
       <Filter>Panels</Filter>
     </ClCompile>
     <ClCompile Include="Descriptors\RigidBodyDescriptor.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Descriptors</Filter>
+    </ClCompile>
+    <ClCompile Include="Panels\RigidBodyPanelImpl.cpp">
+      <Filter>Panels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -294,7 +297,10 @@
       <Filter>Panels</Filter>
     </ClInclude>
     <ClInclude Include="Descriptors\RigidBodyDescriptor.h">
-      <Filter>Header Files</Filter>
+      <Filter>Descriptors</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels\RigidBodyPanelImpl.h">
+      <Filter>Panels</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
