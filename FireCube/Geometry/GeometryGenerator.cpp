@@ -6,6 +6,8 @@
 
 using namespace FireCube;
 
+void FillTangents(std::vector<float> &vertexData, const std::vector<unsigned int> &indices);
+
 Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3 &size)
 {
 	Geometry *ret = new Geometry(engine->GetRenderer());
@@ -17,7 +19,7 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3
 	indexBuffer->SetShadowed(true);
 	vec3 halfSize = size * 0.5f;
 	unsigned int currentVertex = 0;
-	unsigned int vertexSize = 3 + 3 + 2;
+	unsigned int vertexSize = 3 + 3 + 2 + 3;
 	std::vector<float> vertexData(4 * 6 * vertexSize);
 	std::vector<unsigned int> indices(36);
 	// Front
@@ -163,8 +165,10 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3
 	indices[33] = currentVertex - 2;
 	indices[34] = currentVertex - 3;
 	indices[35] = currentVertex - 1;
+
+	FillTangents(vertexData, indices);
 		
-	vertexBuffer->LoadData(&vertexData[0], 4 * 6, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, BufferType::STATIC);	
+	vertexBuffer->LoadData(&vertexData[0], 4 * 6, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0 | VertexAttributeType::TANGENT, BufferType::STATIC);
 	indexBuffer->LoadData(&indices[0], indices.size(), BufferType::STATIC);
 
 	ret->SetPrimitiveType(PrimitiveType::TRIANGLES);
@@ -184,7 +188,7 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateSphere(Engine *engine, float r
 	vertexBuffer->SetShadowed(true);
 	indexBuffer->SetShadowed(true);
 	std::vector<unsigned int> indices;
-	unsigned int vertexSize = 3 + 3 + 2;
+	unsigned int vertexSize = 3 + 3 + 2 + 3;
 	unsigned int vertexCount = (rings + 1) * (columns + 1);
 	std::vector<float> vertexData(vertexCount * vertexSize);
 	unsigned int currentVertex = 0;	
@@ -236,8 +240,10 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateSphere(Engine *engine, float r
 			indexData[(i - 2) * 3 + 2] = indices[i];								
 		}
 	}
+
+	FillTangents(vertexData, indexData);
 	
-	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, BufferType::STATIC);
+	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0 | VertexAttributeType::TANGENT, BufferType::STATIC);
 	indexBuffer->LoadData(&indexData[0], indexData.size(), BufferType::STATIC);
 
 	ret->SetPrimitiveType(PrimitiveType::TRIANGLES);
@@ -257,7 +263,7 @@ Geometry *FIRECUBE_API GeometryGenerator::GeneratePlane(Engine *engine, const ve
 	vertexBuffer->SetShadowed(true);
 	indexBuffer->SetShadowed(true);
 	vec2 halfSize = size * 0.5f;
-	unsigned int vertexSize = 3 + 3 + 2;
+	unsigned int vertexSize = 3 + 3 + 2 + 3;
 	unsigned int vertexCount = 4;
 	std::vector<float> vertexData(vertexCount * vertexSize);
 	std::vector<unsigned int> indexData(6);
@@ -285,8 +291,10 @@ Geometry *FIRECUBE_API GeometryGenerator::GeneratePlane(Engine *engine, const ve
 	indexData[3] = 2;
 	indexData[4] = 1;
 	indexData[5] = 3;
+
+	FillTangents(vertexData, indexData);
 	
-	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, BufferType::STATIC);
+	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0 | VertexAttributeType::TANGENT, BufferType::STATIC);
 	indexBuffer->LoadData(&indexData[0], indexData.size(), BufferType::STATIC);
 	
 	ret->SetPrimitiveType(PrimitiveType::TRIANGLES);
@@ -306,7 +314,7 @@ Geometry *GeometryGenerator::GenerateTorus(Engine *engine, float outerRadius, fl
 	vertexBuffer->SetShadowed(true);
 	indexBuffer->SetShadowed(true);
 	
-	unsigned int vertexSize = 3 + 3 + 2;
+	unsigned int vertexSize = 3 + 3 + 2 + 3;
 	unsigned int vertexCount = (segments + 1) * (tubeSegments + 1);
 	std::vector<float> vertexData(vertexCount * vertexSize);
 	std::vector<unsigned int> indexData(segments * tubeSegments * 6);
@@ -352,7 +360,9 @@ Geometry *GeometryGenerator::GenerateTorus(Engine *engine, float outerRadius, fl
 		}
 	}
 
-	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, BufferType::STATIC);
+	FillTangents(vertexData, indexData);
+
+	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0 | VertexAttributeType::TANGENT, BufferType::STATIC);
 	indexBuffer->LoadData(&indexData[0], indexData.size(), BufferType::STATIC);
 
 	ret->SetPrimitiveType(PrimitiveType::TRIANGLES);
@@ -372,7 +382,7 @@ Geometry *GeometryGenerator::GenerateCylinder(Engine *engine, float bottomRadius
 	vertexBuffer->SetShadowed(true);
 	indexBuffer->SetShadowed(true);
 
-	unsigned int vertexSize = 3 + 3 + 2;
+	unsigned int vertexSize = 3 + 3 + 2 + 3;
 	unsigned int vertexCount = (radialSegments * heightSegments) + 2;
 	std::vector<float> vertexData(vertexCount * vertexSize);
 	std::vector<unsigned int> indexData(radialSegments * (heightSegments - 1) * 6 + 2 * radialSegments * 3);
@@ -452,7 +462,9 @@ Geometry *GeometryGenerator::GenerateCylinder(Engine *engine, float bottomRadius
 		indexData[currentIndex++] = v10;
 	}
 
-	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0, BufferType::STATIC);
+	FillTangents(vertexData, indexData);
+
+	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0 | VertexAttributeType::TANGENT, BufferType::STATIC);
 	indexBuffer->LoadData(&indexData[0], indexData.size(), BufferType::STATIC);
 
 	ret->SetPrimitiveType(PrimitiveType::TRIANGLES);
@@ -478,4 +490,50 @@ Geometry *GeometryGenerator::GeneratePolyline(Engine *engine, const std::vector<
 
 	ret->Update();
 	return ret;
+}
+
+void FillTangents(std::vector<float> &vertexData, const std::vector<unsigned int> &indices)
+{
+	unsigned int vertexSize = 3 + 3 + 2 + 3;
+	unsigned int vertexCount = vertexData.size() / vertexSize;
+	std::vector<vec3> tan(vertexCount);
+	std::fill(tan.begin(), tan.end(), vec3(0, 0, 0));
+
+	for (unsigned int i = 0; i < indices.size(); i += 3)
+	{
+		const vec3 &v0 = *((vec3 *) &vertexData[indices[i + 0] * vertexSize]);
+		const vec3 &v1 = *((vec3 *) &vertexData[indices[i + 1] * vertexSize]);
+		const vec3 &v2 = *((vec3 *) &vertexData[indices[i + 2] * vertexSize]);
+
+		const vec2 &uv0 = *((vec2 *) &vertexData[indices[i + 0] * vertexSize + 6]);
+		const vec2 &uv1 = *((vec2 *) &vertexData[indices[i + 1] * vertexSize + 6]);
+		const vec2 &uv2 = *((vec2 *) &vertexData[indices[i + 2] * vertexSize + 6]);
+
+		float x1 = v1.x - v0.x;
+		float x2 = v2.x - v0.x;
+		float y1 = v1.y - v0.y;
+		float y2 = v2.y - v0.y;
+		float z1 = v1.z - v0.z;
+		float z2 = v2.z - v0.z;
+
+		float s1 = uv1.x - uv0.x;
+		float s2 = uv2.x - uv0.x;
+		float t1 = uv1.y - uv0.y;
+		float t2 = uv2.y - uv0.y;
+
+		float r = 1.0f / (s1 * t2 - s2 * t1);
+		vec3 sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r,
+			(t2 * z1 - t1 * z2) * r);
+
+		tan[indices[i + 0]] += sdir;
+		tan[indices[i + 1]] += sdir;
+		tan[indices[i + 2]] += sdir;
+	}
+	
+	for (unsigned int i = 0; i < vertexCount; i++)
+	{
+		const vec3 &n = *((vec3 *) &vertexData[i * vertexSize + 3]);
+		vec3 t1 = tan[i];
+		*((vec3 *) &vertexData[i * vertexSize + 8]) = (t1 - n * Dot(n, t1)).Normalized();
+	}
 }

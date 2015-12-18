@@ -185,65 +185,6 @@ bool MathUtils::GetLowestRoot(float a, float b, float c, float maxR, float &root
 
 }
 
-/*
-void MathUtils::CalculateTangents(const std::vector<vec3> &vertices, const std::vector<vec3> &normals, const std::vector<vec2> &uv, const std::vector<unsigned int> &indices, std::vector<vec3> &tangents, std::vector<vec3> &bitangents)
-{
-	if ((normals.size() == 0) || (uv.size() == 0))
-		return;
-	std::vector<vec3> tan(vertices.size() * 2);
-	std::fill(tan.begin(), tan.end(), vec3(0, 0, 0));
-
-	for (unsigned int i = 0; i < indices.size(); i += 3)
-	{		
-		const vec3 &v0 = vertices[indices[i + 0]];
-		const vec3 &v1 = vertices[indices[i + 1]];
-		const vec3 &v2 = vertices[indices[i + 2]];
-
-		const vec2 &uv0 = uv[indices[i + 0]];
-		const vec2 &uv1 = uv[indices[i + 1]];
-		const vec2 &uv2 = uv[indices[i + 2]];
-
-		float x1 = v1.x - v0.x;
-		float x2 = v2.x - v0.x;
-		float y1 = v1.y - v0.y;
-		float y2 = v2.y - v0.y;
-		float z1 = v1.z - v0.z;
-		float z2 = v2.z - v0.z;
-
-		float s1 = uv1.x - uv0.x;
-		float s2 = uv2.x - uv0.x;
-		float t1 = uv1.y - uv0.y;
-		float t2 = uv2.y - uv0.y;
-
-		float r = 1.0f / (s1 * t2 - s2 * t1);
-		vec3 sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r,
-			(t2 * z1 - t1 * z2) * r);
-		vec3 tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r,
-			(s1 * z2 - s2 * z1) * r);
-
-		tan[indices[i + 0]] += sdir;
-		tan[indices[i + 1]] += sdir;
-		tan[indices[i + 2]] += sdir;
-
-		tan[vertices.size() + indices[i + 0]] += tdir;
-		tan[vertices.size() + indices[i + 1]] += tdir;
-		tan[vertices.size() + indices[i + 2]] += tdir;
-	}
-	tangents.resize(vertices.size());
-	bitangents.resize(vertices.size());
-	for (unsigned int i = 0; i < vertices.size(); i++)
-	{
-		vec3 n = normals[i];
-		vec3 t1 = tan[i];
-		vec3 t2 = tan[vertices.size() + i];
-
-		tangents[i] = (t1 - n * Dot(n, t1)).Normalized();
-		float w = (Dot(Cross(n, t1), t2) < 0.0f) ? -1.0f : 1.0f;
-		bitangents[i] = (Cross(n, tangents[i]) * w).Normalized();
-	}	
-}
-*/
-
 bool MathUtils::IntersectRayTriangle(const vec3 &origin, const vec3 &direction, const vec3 &vert0, const vec3 &vert1, const vec3 &vert2, float &u, float &v, float &t)
 {
 	vec3 edge1;
