@@ -13,6 +13,7 @@ class SceneWriter
 public:
 	void Serialize(NodeDescriptor *root, const std::string &filename);
 private:
+	std::string ToString(FireCube::vec2 v) const;
 	std::string ToString(FireCube::vec3 v) const;
 	std::string ToString(FireCube::vec4 v) const;	
 	void Serialize(NodeDescriptor *nodeDesc, TiXmlElement *parent);

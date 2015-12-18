@@ -11,6 +11,7 @@
 #include "Descriptors/LuaScriptDescriptor.h"
 #include "Descriptors/BoxDescriptor.h"
 #include "Descriptors/RigidBodyDescriptor.h"
+#include "Descriptors/PlaneDescriptor.h"
 
 using namespace FireCube;
 
@@ -137,6 +138,37 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 		if (e->Attribute("collision_query_mask"))
 		{
 			boxDescriptor->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
+		}
+	}
+	else if (type == "Plane")
+	{
+		PlaneDescriptor *planeDescriptor = new PlaneDescriptor();
+		addedComponent = planeDescriptor;
+
+		if (e->Attribute("size"))
+		{
+			vec2 size = Variant::FromString(e->Attribute("size")).GetVec2();
+			planeDescriptor->SetSize(size, engine);
+		}
+
+		if (e->Attribute("material"))
+		{
+			planeDescriptor->SetMaterialFileName(e->Attribute("material"), engine);
+		}
+
+		if (e->Attribute("cast_shadow"))
+		{
+			planeDescriptor->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
+		}
+
+		if (e->Attribute("light_mask"))
+		{
+			planeDescriptor->SetLightMask(std::stoul(e->Attribute("light_mask"), 0, 16));
+		}
+
+		if (e->Attribute("collision_query_mask"))
+		{
+			planeDescriptor->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
 		}
 	}
 	/*else if (type == "sphere")

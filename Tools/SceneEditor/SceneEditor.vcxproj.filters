@@ -165,6 +165,9 @@
     <ClCompile Include="Panels\RigidBodyPanelImpl.cpp">
       <Filter>Panels</Filter>
     </ClCompile>
+    <ClCompile Include="Descriptors\PlaneDescriptor.cpp">
+      <Filter>Descriptors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -301,6 +304,9 @@
     </ClInclude>
     <ClInclude Include="Panels\RigidBodyPanelImpl.h">
       <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Descriptors\PlaneDescriptor.h">
+      <Filter>Descriptors</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@
 #include "Descriptors/LuaScriptDescriptor.h"
 #include "Descriptors/BoxDescriptor.h"
 #include "Descriptors/RigidBodyDescriptor.h"
+#include "Descriptors/PlaneDescriptor.h"
 
 using namespace FireCube;
 
@@ -206,6 +207,27 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlElement *pa
 		collisionQueryMaskStream << std::hex << box->GetCollisionQueryMask();
 		element->SetAttribute("collision_query_mask", collisionQueryMaskStream.str());
 	}
+	else if (componentDesc->GetType() == ComponentType::PLANE)
+	{
+		TiXmlElement *element = new TiXmlElement("component");
+		parent->LinkEndChild(element);
+
+		element->SetAttribute("type", componentDesc->GetTypeName());
+
+		auto plane = static_cast<PlaneDescriptor *>(componentDesc);
+
+		element->SetAttribute("size", ToString(plane->GetSize()));
+		element->SetAttribute("material", plane->GetMaterialFileName());
+		element->SetAttribute("cast_shadow", plane->GetCastShadow() ? "true" : "false");
+
+		std::stringstream ligtMaskStream;
+		ligtMaskStream << std::hex << plane->GetLightMask();
+		element->SetAttribute("light_mask", ligtMaskStream.str());
+
+		std::stringstream collisionQueryMaskStream;
+		collisionQueryMaskStream << std::hex << plane->GetCollisionQueryMask();
+		element->SetAttribute("collision_query_mask", collisionQueryMaskStream.str());
+	}
 	else if (componentDesc->GetType() == ComponentType::RIGID_BODY)
 	{
 		TiXmlElement *element = new TiXmlElement("component");
@@ -228,6 +250,13 @@ void SceneWriter::SerializeNodeTransformation(NodeDescriptor *nodeDesc, TiXmlEle
 	transformation->SetAttribute("translation", ToString(nodeDesc->GetTranslation()));
 	transformation->SetAttribute("scale", ToString(nodeDesc->GetScale()));
 	transformation->SetAttribute("rotation", ToString(nodeDesc->GetRotation()));
+}
+
+std::string SceneWriter::ToString(vec2 v) const
+{
+	std::ostringstream str;
+	str << v.x << " " << v.y;
+	return str.str();
 }
 
 std::string SceneWriter::ToString(vec3 v) const

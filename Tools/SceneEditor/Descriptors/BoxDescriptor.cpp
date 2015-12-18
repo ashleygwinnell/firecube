@@ -41,7 +41,7 @@ void BoxDescriptor::SetSize(vec3 size, FireCube::Engine *engine)
 	{
 		auto staticModel = static_cast<StaticModel *>(component);
 		SharedPtr<Mesh> mesh = new Mesh(engine);		
-		mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, size), BoundingBox(-size * 0.5f, size * 0.5f), engine->GetResourceCache()->GetResource<Material>("Materials/Default.xml"));
+		mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, size), BoundingBox(-size * 0.5f, size * 0.5f), engine->GetResourceCache()->GetResource<Material>(materialFileName));
 		staticModel->CreateFromMesh(mesh);
 	}
 }
