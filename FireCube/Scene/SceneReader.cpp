@@ -186,7 +186,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			}
 		}
 	}
-	else if (type == "sphere")
+	else if (type == "Sphere")
 	{		
 		Material *material = nullptr;
 
