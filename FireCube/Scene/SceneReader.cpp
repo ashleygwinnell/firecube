@@ -342,6 +342,17 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			component->SetStepOffset(Variant::FromString(e->Attribute("step_offset")).GetFloat());
 		}
 	}
+	else if (type == "RigidBody")
+	{	
+		auto component = node->CreateComponent<RigidBody>();
+		float mass = 0.0f;
+		if (e->Attribute("mass"))
+		{
+			float mass = Variant::FromString(e->Attribute("mass")).GetFloat();
+		}
+
+		component->SetMass(mass);					
+	}
 	else
 	{
 		LOGERROR("Unknow component type: ", type);
