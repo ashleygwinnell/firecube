@@ -22,6 +22,7 @@
 #include "Panels/BoxPanelImpl.h"
 #include "Panels/MaterialEditorPanelImpl.h"
 #include "Panels/RigidBodyPanelImpl.h"
+#include "Panels/PlanePanelImpl.h"
 #include "AssetUtils.h"
 #include "SceneReader.h"
 #include "Descriptors/ComponentDescriptor.h"
@@ -32,6 +33,7 @@
 #include "Descriptors/LuaScriptDescriptor.h"
 #include "Descriptors/BoxDescriptor.h"
 #include "Descriptors/RigidBodyDescriptor.h"
+#include "Descriptors/PlaneDescriptor.h"
 #include "tinyxml.h"
 
 using namespace FireCube;
@@ -177,6 +179,20 @@ void MainFrameImpl::AddBoxClicked(wxCommandEvent& event)
 		boxDescriptor->SetSize(vec3(1.0f), engine);
 		boxDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
 		auto addComponentCommand = new AddComponentCommand(editorState, "Add Box", nodeDesc, boxDescriptor, engine);
+
+		editorState->ExecuteCommand(addComponentCommand);
+	}
+}
+
+void MainFrameImpl::AddPlaneClicked(wxCommandEvent& event)
+{
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{
+		auto planeDescriptor = new PlaneDescriptor();
+		planeDescriptor->SetSize(vec2(1.0f), engine);
+		planeDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add Plane", nodeDesc, planeDescriptor, engine);
 
 		editorState->ExecuteCommand(addComponentCommand);
 	}
@@ -556,6 +572,15 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
 		t->AddControl(new BoxPanelImpl(t));
+
+		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
+
+		currentComponentPanels.push_back(t);
+	}
+	else if (componentDesc->GetType() == ComponentType::PLANE)
+	{
+		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
+		t->AddControl(new PlanePanelImpl(t));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
