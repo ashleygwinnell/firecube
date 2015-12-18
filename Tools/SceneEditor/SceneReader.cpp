@@ -317,7 +317,7 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 		float mass = 0.0f;
 		if (e->Attribute("mass"))
 		{
-			float mass = Variant::FromString(e->Attribute("mass")).GetFloat();
+			mass = Variant::FromString(e->Attribute("mass")).GetFloat();
 		}
 
 		rigidBodyDescriptor->SetMass(mass);

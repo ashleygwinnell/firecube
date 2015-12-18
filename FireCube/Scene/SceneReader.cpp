@@ -348,7 +348,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		float mass = 0.0f;
 		if (e->Attribute("mass"))
 		{
-			float mass = Variant::FromString(e->Attribute("mass")).GetFloat();
+			mass = Variant::FromString(e->Attribute("mass")).GetFloat();
 		}
 
 		component->SetMass(mass);					
