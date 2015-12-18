@@ -95,6 +95,10 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	addPlaneMenuItem = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Plane") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu1->Append( addPlaneMenuItem );
 	
+	wxMenuItem* addSphereMenuItem;
+	addSphereMenuItem = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Sphere") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( addSphereMenuItem );
+	
 	addMenu->Append( m_menu1Item );
 	
 	menuBar->Append( addMenu, wxT("Add") ); 
@@ -185,6 +189,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( addBoxMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddBoxClicked ) );
 	this->Connect( addRigidBodyMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddRigidBodyClicked ) );
 	this->Connect( addPlaneMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddPlaneClicked ) );
+	this->Connect( addSphereMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddSphereClicked ) );
 	this->Connect( viewSceneHierarchyMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Connect( viewInspectorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	this->Connect( viewMaterialEditorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
@@ -217,6 +222,7 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddBoxClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddRigidBodyClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddPlaneClicked ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddSphereClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
@@ -473,6 +479,133 @@ BoxPanel::~BoxPanel()
 	castShadowCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( BoxPanel::CastShadowChanged ), NULL, this );
 	lightMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::LightMaskChanged ), NULL, this );
 	collisionQueryMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::CollisionQueryMaskChanged ), NULL, this );
+	
+}
+
+SpherePanel::SpherePanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer24;
+	bSizer24 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer8;
+	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxStaticText* m_staticText2;
+	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Radius"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText2->Wrap( -1 );
+	bSizer8->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	radiusTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	radiusTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &radiusText ) );
+	
+	bSizer8->Add( radiusTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer24->Add( bSizer8, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer81;
+	bSizer81 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxStaticText* m_staticText21;
+	m_staticText21 = new wxStaticText( this, wxID_ANY, wxT("Columns"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText21->Wrap( -1 );
+	bSizer81->Add( m_staticText21, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	columnsTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	columnsTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &columnsText ) );
+	
+	bSizer81->Add( columnsTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer24->Add( bSizer81, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer811;
+	bSizer811 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxStaticText* m_staticText211;
+	m_staticText211 = new wxStaticText( this, wxID_ANY, wxT("Rings"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText211->Wrap( -1 );
+	bSizer811->Add( m_staticText211, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	ringsTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	ringsTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &ringsText ) );
+	
+	bSizer811->Add( ringsTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer24->Add( bSizer811, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer39;
+	bSizer39 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText48 = new wxStaticText( this, wxID_ANY, wxT("Material"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText48->Wrap( -1 );
+	bSizer39->Add( m_staticText48, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	materialFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.xml"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_SMALL );
+	bSizer39->Add( materialFilePicker, 1, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer24->Add( bSizer39, 1, wxEXPAND, 5 );
+	
+	castShadowCheckBox = new wxCheckBox( this, wxID_ANY, wxT("Cast Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer24->Add( castShadowCheckBox, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizer26;
+	bSizer26 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText42 = new wxStaticText( this, wxID_ANY, wxT("Light Mask"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText42->Wrap( -1 );
+	bSizer26->Add( m_staticText42, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	lightMaskTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	lightMaskTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &lightMaskText ) );
+	
+	bSizer26->Add( lightMaskTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer24->Add( bSizer26, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer261;
+	bSizer261 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText421 = new wxStaticText( this, wxID_ANY, wxT("Collision Query Mask"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText421->Wrap( -1 );
+	bSizer261->Add( m_staticText421, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	collisionQueryMaskTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	collisionQueryMaskTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &collisionQueryMaskText ) );
+	
+	bSizer261->Add( collisionQueryMaskTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer24->Add( bSizer261, 1, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer24 );
+	this->Layout();
+	bSizer24->Fit( this );
+	
+	// Connect Events
+	radiusTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::RadiusChanged ), NULL, this );
+	columnsTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::ColumnsChanged ), NULL, this );
+	ringsTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::RingsChanged ), NULL, this );
+	materialFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( SpherePanel::MaterialFileChanged ), NULL, this );
+	castShadowCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SpherePanel::CastShadowChanged ), NULL, this );
+	lightMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::LightMaskChanged ), NULL, this );
+	collisionQueryMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::CollisionQueryMaskChanged ), NULL, this );
+}
+
+SpherePanel::~SpherePanel()
+{
+	// Disconnect Events
+	radiusTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::RadiusChanged ), NULL, this );
+	columnsTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::ColumnsChanged ), NULL, this );
+	ringsTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::RingsChanged ), NULL, this );
+	materialFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( SpherePanel::MaterialFileChanged ), NULL, this );
+	castShadowCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SpherePanel::CastShadowChanged ), NULL, this );
+	lightMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::LightMaskChanged ), NULL, this );
+	collisionQueryMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::CollisionQueryMaskChanged ), NULL, this );
 	
 }
 

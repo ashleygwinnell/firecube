@@ -14,6 +14,7 @@
 #include "Descriptors/BoxDescriptor.h"
 #include "Descriptors/RigidBodyDescriptor.h"
 #include "Descriptors/PlaneDescriptor.h"
+#include "Descriptors/SphereDescriptor.h"
 
 using namespace FireCube;
 
@@ -226,6 +227,28 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlElement *pa
 
 		std::stringstream collisionQueryMaskStream;
 		collisionQueryMaskStream << std::hex << plane->GetCollisionQueryMask();
+		element->SetAttribute("collision_query_mask", collisionQueryMaskStream.str());
+	}
+	else if (componentDesc->GetType() == ComponentType::SPHERE)
+	{
+		TiXmlElement *element = new TiXmlElement("component");
+		parent->LinkEndChild(element);
+
+		element->SetAttribute("type", componentDesc->GetTypeName());
+
+		auto sphere = static_cast<SphereDescriptor *>(componentDesc);
+
+		element->SetDoubleAttribute("radius", sphere->GetRadius());
+		element->SetAttribute("tessellation", ToString(vec2(sphere->GetRings(), sphere->GetColumns())));
+		element->SetAttribute("material", sphere->GetMaterialFileName());
+		element->SetAttribute("cast_shadow", sphere->GetCastShadow() ? "true" : "false");
+
+		std::stringstream ligtMaskStream;
+		ligtMaskStream << std::hex << sphere->GetLightMask();
+		element->SetAttribute("light_mask", ligtMaskStream.str());
+
+		std::stringstream collisionQueryMaskStream;
+		collisionQueryMaskStream << std::hex << sphere->GetCollisionQueryMask();
 		element->SetAttribute("collision_query_mask", collisionQueryMaskStream.str());
 	}
 	else if (componentDesc->GetType() == ComponentType::RIGID_BODY)

@@ -44,6 +44,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void AddCharacterControllerClicked(wxCommandEvent& event);
 		virtual void AddBoxClicked(wxCommandEvent& event);
 		virtual void AddPlaneClicked(wxCommandEvent& event);
+		virtual void AddSphereClicked(wxCommandEvent& event);
 		virtual void AddRigidBodyClicked(wxCommandEvent& event);
 		virtual void AddNodeClicked(wxCommandEvent& event);
 		virtual void SceneTreeKeyUp(wxKeyEvent& event);

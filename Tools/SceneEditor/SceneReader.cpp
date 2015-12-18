@@ -12,6 +12,7 @@
 #include "Descriptors/BoxDescriptor.h"
 #include "Descriptors/RigidBodyDescriptor.h"
 #include "Descriptors/PlaneDescriptor.h"
+#include "Descriptors/SphereDescriptor.h"
 
 using namespace FireCube;
 
@@ -171,34 +172,48 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 			planeDescriptor->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
 		}
 	}
-	/*else if (type == "sphere")
+	else if (type == "Sphere")
 	{
-		Material *material = nullptr;
+		SphereDescriptor *sphereDescriptor = new SphereDescriptor();
+		addedComponent = sphereDescriptor;
 
 		if (e->Attribute("material"))
 		{
-			material = engine->GetResourceCache()->GetResource<Material>(e->Attribute("material"));
+			sphereDescriptor->SetMaterialFileName(e->Attribute("material"), engine);
 		}
 
-		if (e->Attribute("radius") && material)
+		if (e->Attribute("cast_shadow"))
 		{
-			auto component = node->CreateComponent<StaticModel>();
-			float radius = Variant::FromString(e->Attribute("radius")).GetFloat();
-
-			unsigned int rings = 16;
-			unsigned int columns = 16;
-			if (e->Attribute("tessellation"))
-			{
-				vec2 t = Variant::FromString(e->Attribute("tessellation")).GetVec2();
-				rings = (unsigned int)t.x;
-				columns = (unsigned int)t.y;
-			}
-
-			Mesh mesh(engine);
-			mesh.AddGeometry(GeometryGenerator::GenerateSphere(engine, radius, rings, columns), BoundingBox(-vec3(radius), vec3(radius)), material);
-			component->CreateFromMesh(&mesh);
+			sphereDescriptor->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
 		}
-	}*/
+
+		if (e->Attribute("light_mask"))
+		{
+			sphereDescriptor->SetLightMask(std::stoul(e->Attribute("light_mask"), 0, 16));
+		}
+
+		if (e->Attribute("collision_query_mask"))
+		{
+			sphereDescriptor->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
+		}
+
+		if (e->Attribute("radius"))
+		{
+			sphereDescriptor->SetRadius(Variant::FromString(e->Attribute("radius")).GetFloat(), engine);
+		}
+
+		unsigned int rings = 16;
+		unsigned int columns = 16;
+		if (e->Attribute("tessellation"))
+		{
+			vec2 t = Variant::FromString(e->Attribute("tessellation")).GetVec2();
+			rings = (unsigned int)t.x;
+			columns = (unsigned int)t.y;
+		}
+		
+		sphereDescriptor->SetRings(rings, engine);
+		sphereDescriptor->SetColumns(columns, engine);
+	}
 	else if (type == "LuaScript")
 	{
 		if (e->Attribute("object"))

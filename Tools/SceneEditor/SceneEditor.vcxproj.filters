@@ -171,6 +171,12 @@
     <ClCompile Include="Panels\PlanePanelImpl.cpp">
       <Filter>Panels</Filter>
     </ClCompile>
+    <ClCompile Include="Descriptors\SphereDescriptor.cpp">
+      <Filter>Descriptors</Filter>
+    </ClCompile>
+    <ClCompile Include="Panels\SpherePanelImpl.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -312,6 +318,12 @@
       <Filter>Descriptors</Filter>
     </ClInclude>
     <ClInclude Include="Panels\PlanePanelImpl.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Descriptors\SphereDescriptor.h">
+      <Filter>Descriptors</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels\SpherePanelImpl.h">
       <Filter>Panels</Filter>
     </ClInclude>
   </ItemGroup>

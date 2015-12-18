@@ -23,6 +23,7 @@
 #include "Panels/MaterialEditorPanelImpl.h"
 #include "Panels/RigidBodyPanelImpl.h"
 #include "Panels/PlanePanelImpl.h"
+#include "Panels/SpherePanelImpl.h"
 #include "AssetUtils.h"
 #include "SceneReader.h"
 #include "Descriptors/ComponentDescriptor.h"
@@ -34,6 +35,7 @@
 #include "Descriptors/BoxDescriptor.h"
 #include "Descriptors/RigidBodyDescriptor.h"
 #include "Descriptors/PlaneDescriptor.h"
+#include "Descriptors/SphereDescriptor.h"
 #include "tinyxml.h"
 
 using namespace FireCube;
@@ -193,6 +195,22 @@ void MainFrameImpl::AddPlaneClicked(wxCommandEvent& event)
 		planeDescriptor->SetSize(vec2(1.0f), engine);
 		planeDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
 		auto addComponentCommand = new AddComponentCommand(editorState, "Add Plane", nodeDesc, planeDescriptor, engine);
+
+		editorState->ExecuteCommand(addComponentCommand);
+	}
+}
+
+void MainFrameImpl::AddSphereClicked(wxCommandEvent& event)
+{
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{
+		auto sphereDescriptor = new SphereDescriptor();
+		sphereDescriptor->SetRadius(1.0f, engine);
+		sphereDescriptor->SetColumns(16, engine);
+		sphereDescriptor->SetRings(16, engine);
+		sphereDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add Sphere", nodeDesc, sphereDescriptor, engine);
 
 		editorState->ExecuteCommand(addComponentCommand);
 	}
@@ -581,6 +599,15 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
 		t->AddControl(new PlanePanelImpl(t));
+
+		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
+
+		currentComponentPanels.push_back(t);
+	}
+	else if (componentDesc->GetType() == ComponentType::SPHERE)
+	{
+		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
+		t->AddControl(new SpherePanelImpl(t));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 

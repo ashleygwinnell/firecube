@@ -95,6 +95,7 @@ class MainFrame : public wxFrame
 		virtual void AddBoxClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddRigidBodyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddPlaneClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void AddSphereClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewSceneHierarchyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewInspectorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewMaterialEditorClicked( wxCommandEvent& event ) { event.Skip(); }
@@ -207,6 +208,47 @@ class BoxPanel : public wxPanel
 		
 		BoxPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~BoxPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class SpherePanel
+///////////////////////////////////////////////////////////////////////////////
+class SpherePanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxTextCtrl* radiusTextCtrl;
+		wxTextCtrl* columnsTextCtrl;
+		wxTextCtrl* ringsTextCtrl;
+		wxStaticText* m_staticText48;
+		wxFilePickerCtrl* materialFilePicker;
+		wxCheckBox* castShadowCheckBox;
+		wxStaticText* m_staticText42;
+		wxTextCtrl* lightMaskTextCtrl;
+		wxStaticText* m_staticText421;
+		wxTextCtrl* collisionQueryMaskTextCtrl;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void RadiusChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ColumnsChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RingsChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MaterialFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
+		virtual void CastShadowChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void LightMaskChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void CollisionQueryMaskChanged( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		wxString radiusText; 
+		wxString columnsText; 
+		wxString ringsText; 
+		wxString lightMaskText; 
+		wxString collisionQueryMaskText; 
+		
+		SpherePanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
+		~SpherePanel();
 	
 };
 

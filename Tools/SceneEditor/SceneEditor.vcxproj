@@ -109,6 +109,7 @@
     <ClCompile Include="Descriptors\PhysicsWorldDescriptor.cpp" />
     <ClCompile Include="Descriptors\PlaneDescriptor.cpp" />
     <ClCompile Include="Descriptors\RigidBodyDescriptor.cpp" />
+    <ClCompile Include="Descriptors\SphereDescriptor.cpp" />
     <ClCompile Include="Descriptors\StaticModelDescriptor.cpp" />
     <ClCompile Include="EditorState.cpp" />
     <ClCompile Include="Gizmos\RotateGizmo.cpp" />
@@ -129,6 +130,7 @@
     <ClCompile Include="Panels\NodePropertiesPanelImpl.cpp" />
     <ClCompile Include="Panels\PlanePanelImpl.cpp" />
     <ClCompile Include="Panels\RigidBodyPanelImpl.cpp" />
+    <ClCompile Include="Panels\SpherePanelImpl.cpp" />
     <ClCompile Include="Panels\StaticModelPanelImpl.cpp" />
     <ClCompile Include="SceneReader.cpp" />
     <ClCompile Include="SceneWriter.cpp" />
@@ -157,6 +159,7 @@
     <ClInclude Include="Descriptors\PhysicsWorldDescriptor.h" />
     <ClInclude Include="Descriptors\PlaneDescriptor.h" />
     <ClInclude Include="Descriptors\RigidBodyDescriptor.h" />
+    <ClInclude Include="Descriptors\SphereDescriptor.h" />
     <ClInclude Include="Descriptors\StaticModelDescriptor.h" />
     <ClInclude Include="EditorState.h" />
     <ClInclude Include="Gizmos\RotateGizmo.h" />
@@ -177,6 +180,7 @@
     <ClInclude Include="Panels\NodePropertiesPanelImpl.h" />
     <ClInclude Include="Panels\PlanePanelImpl.h" />
     <ClInclude Include="Panels\RigidBodyPanelImpl.h" />
+    <ClInclude Include="Panels\SpherePanelImpl.h" />
     <ClInclude Include="Panels\StaticModelPanelImpl.h" />
     <ClInclude Include="SceneReader.h" />
     <ClInclude Include="SceneWriter.h" />
