@@ -63,6 +63,18 @@ struct MatHelper
 	}
 };
 
+int QuatFromEulerAngles(lua_State *L, float x, float y, float z)
+{
+	Lua::push(L, quat(x, y, z));
+	return 1;
+}
+
+int QuatFromAxisAngle(lua_State *L, vec3 axis, float angle)
+{
+	Lua::push(L, quat(axis, angle));
+	return 1;
+}
+
 void LuaBindings::InitMath(lua_State *luaState)
 {	
 	LuaBinding(luaState)
@@ -154,5 +166,15 @@ void LuaBindings::InitMath(lua_State *luaState)
 			.addProperty("m13", &MatHelper<mat4>::Get<13>, &MatHelper<mat4>::Set<13>)
 			.addProperty("m23", &MatHelper<mat4>::Get<14>, &MatHelper<mat4>::Set<14>)
 			.addProperty("m33", &MatHelper<mat4>::Get<15>, &MatHelper<mat4>::Set<15>)
+		.endClass()
+		.beginClass<quat>("quat")
+			.addConstructor(LUA_ARGS())			
+			.addVariable("x", &quat::x)
+			.addVariable("y", &quat::y)
+			.addVariable("z", &quat::z)
+			.addVariable("w", &quat::w)
+			.addStaticFunction("FromEulerAngles", &QuatFromEulerAngles)
+			.addStaticFunction("FromAxisAngle", &QuatFromAxisAngle)
+			.addMetaFunction("__mul", (quat(*)(const quat &, const quat &)) &operator*)
 		.endClass();
 }
