@@ -16,7 +16,7 @@ PlaneDescriptor::~PlaneDescriptor()
 void PlaneDescriptor::CreateComponent(Node *node, Engine *engine)
 {
 	SharedPtr<Mesh> mesh = new Mesh(engine);
-	mesh->AddGeometry(GeometryGenerator::GeneratePlane(engine, size), BoundingBox(-vec3(size.x, -1, size.y) * 0.5f, vec3(size.x, 1, size.y) * 0.5f), engine->GetResourceCache()->GetResource<Material>(materialFileName));
+	mesh->AddGeometry(GeometryGenerator::GeneratePlane(engine, size), BoundingBox(-vec3(size.x, 1, size.y) * 0.5f, vec3(size.x, 1, size.y) * 0.5f), engine->GetResourceCache()->GetResource<Material>(materialFileName));
 	auto staticModel = node->CreateComponent<StaticModel>(mesh);
 
 	staticModel->SetCastShadow(castShadow);
@@ -41,7 +41,7 @@ void PlaneDescriptor::SetSize(vec2 size, FireCube::Engine *engine)
 	{
 		auto staticModel = static_cast<StaticModel *>(component);
 		SharedPtr<Mesh> mesh = new Mesh(engine);
-		mesh->AddGeometry(GeometryGenerator::GeneratePlane(engine, size), BoundingBox(-vec3(size.x, -1, size.y) * 0.5f, vec3(size.x, 1, size.y) * 0.5f), engine->GetResourceCache()->GetResource<Material>(materialFileName));
+		mesh->AddGeometry(GeometryGenerator::GeneratePlane(engine, size), BoundingBox(-vec3(size.x, 1, size.y) * 0.5f, vec3(size.x, 1, size.y) * 0.5f), engine->GetResourceCache()->GetResource<Material>(materialFileName));
 		staticModel->CreateFromMesh(mesh);
 	}
 }

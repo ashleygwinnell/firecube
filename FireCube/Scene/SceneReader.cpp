@@ -164,7 +164,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			staticModel = node->CreateComponent<StaticModel>();
 			vec2 size = Variant::FromString(e->Attribute("size")).GetVec2();
 			Mesh mesh(engine);
-			mesh.AddGeometry(GeometryGenerator::GeneratePlane(engine, size), BoundingBox(-vec3(size.x, -1, size.y) * 0.5f, vec3(size.x, 1, size.y) * 0.5f), material);
+			mesh.AddGeometry(GeometryGenerator::GeneratePlane(engine, size), BoundingBox(-vec3(size.x, 1, size.y) * 0.5f, vec3(size.x, 1, size.y) * 0.5f), material);
 			staticModel->CreateFromMesh(&mesh);
 		}
 
