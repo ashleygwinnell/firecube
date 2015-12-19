@@ -39,6 +39,7 @@ ComponentDescriptor *CollisionShapeDescriptor::Clone()
 	clone->meshFilename = meshFilename;
 	clone->plane = plane;
 	clone->box = box;
+	clone->radius = radius;
 	clone->isTrigger = isTrigger;
 
 	return clone;

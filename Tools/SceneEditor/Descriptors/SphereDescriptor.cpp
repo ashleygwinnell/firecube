@@ -33,6 +33,7 @@ ComponentDescriptor *SphereDescriptor::Clone()
 	clone->castShadow = castShadow;
 	clone->lightMask = lightMask;
 	clone->collisionQueryMask = collisionQueryMask;
+	clone->materialFileName = materialFileName;
 	return clone;
 }
 
