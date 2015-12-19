@@ -690,6 +690,8 @@ void MainFrameImpl::ComponentRemoved(ComponentDescriptor *componentDesc)
 	{
 		componentsList->Freeze();
 		RemoveComponentPanel(componentDesc);
+		componentsList->FitInside();
+		componentsList->Layout();
 		componentsList->Thaw();
 	}
 }
