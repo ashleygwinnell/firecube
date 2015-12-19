@@ -14,8 +14,7 @@ RenderSurface::~RenderSurface()
 }
 
 void RenderSurface::Destroy()
-{
-	LOGINFO("Destroyed render surface with id=", objectId);
+{	
 	glDeleteRenderbuffers(1, &objectId);
 	objectId = 0;
 }

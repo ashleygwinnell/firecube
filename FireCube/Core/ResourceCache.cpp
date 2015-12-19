@@ -11,5 +11,5 @@ ResourceCache::ResourceCache(Engine *engine) : Object(engine)
 
 ResourceCache::~ResourceCache()
 {
-	LOGINFO("Destroying resource cache");	
+	
 }

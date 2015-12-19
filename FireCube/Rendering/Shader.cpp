@@ -127,7 +127,6 @@ Program::Program(Renderer *renderer) : GraphicsResource(renderer)
 
 Program::~Program()
 {		
-	LOGINFO("Destroyed program with id=", objectId);
 	glDeleteProgram(objectId);
 	objectId = 0;
 }
@@ -135,8 +134,7 @@ Program::~Program()
 void Program::Create()
 {
 	objectId = glCreateProgram();
-	variables.clear();	
-	LOGINFO("Created program with id=", objectId);
+	variables.clear();		
 }
 
 void Program::Create(Shader *shader1, Shader *shader2)

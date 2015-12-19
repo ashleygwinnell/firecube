@@ -36,8 +36,7 @@ VertexBuffer::~VertexBuffer()
 
 void VertexBuffer::Create()
 {
-	glGenBuffers(1, &objectId);		
-	LOGINFO("Created buffer with id=", objectId);
+	glGenBuffers(1, &objectId);			
 }
 
 bool VertexBuffer::LoadData(void *data, unsigned int vertexCount, VertexAttributeType vertexAttributes, BufferType bt)
@@ -94,10 +93,7 @@ bool VertexBuffer::LoadData(void *data, unsigned int vertexCount, BufferType bt)
 }
 
 void VertexBuffer::Destroy()
-{
-	std::ostringstream ss;
-	ss << "Destroyed buffer with id=" << objectId;
-	LOGINFO(ss.str());
+{	
 	glDeleteBuffers(1, &objectId);
 	objectId = 0;
 }

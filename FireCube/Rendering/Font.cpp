@@ -20,10 +20,11 @@ Font::Font(Engine *engine) : Resource(engine)
 }
 
 Font::~Font()
-{
-	LOGINFO("Destroying font");	
+{	
 	for (auto i : faces)
+	{
 		delete i.second;
+	}
 }
 
 void Font::Init()
@@ -32,8 +33,7 @@ void Font::Init()
 }
 
 bool Font::Load(const std::string &filename)
-{
-	LOGINFO("Loading font with name:" + filename);
+{	
 	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
 	if (resolvedFileName.empty())
 		return false;
@@ -121,8 +121,7 @@ FontFace::FontFace()
 }
 
 FontFace::~FontFace()
-{
-	LOGINFO("Destroying font face");
+{	
 	delete page->tex;
 	delete page;
 	delete fontImpl;

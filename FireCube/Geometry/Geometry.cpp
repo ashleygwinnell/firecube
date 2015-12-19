@@ -19,19 +19,24 @@ Geometry::~Geometry()
 	delete vertexBuffer;
 	delete indexBuffer;
 	if (objectId)
+	{
 		glDeleteVertexArrays(1, &objectId);
-	LOGINFO("Destroyed geometry");
+	}
 }
 
 void Geometry::Update()
 {
 	if (objectId == 0)
+	{
 		glGenVertexArrays(1, &objectId);
+	}
 
 	glBindVertexArray(objectId);
 	vertexBuffer->ApplyAttributes();	
 	if (indexBuffer)
+	{
 		indexBuffer->SetIndexStream();
+	}
 	glBindVertexArray(0);
 }
 
