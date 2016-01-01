@@ -13,8 +13,8 @@ public:
 	TextureDropTarget(MaterialEditorPanelImpl *materialEditorPanel);
 
 	virtual wxDragResult OnData(wxCoord vX, wxCoord vY, wxDragResult eResult) override;
-
 	virtual wxDragResult OnEnter(wxCoord x, wxCoord y, wxDragResult def) override;
+	virtual wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def) override;
 
 private:
 	MaterialEditorPanelImpl *materialEditorPanel;

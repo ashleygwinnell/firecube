@@ -216,12 +216,12 @@ wxDragResult TextureDropTarget::OnData(wxCoord vX, wxCoord vY, wxDragResult eRes
 		textureUnit = TextureUnit::DIFFUSE;
 		validTarget = true;
 	}
-	else if (hitTestResult.GetProperty()->GetName() == "Diffuse texture")
+	else if (hitTestResult.GetProperty()->GetName() == "Normal texture")
 	{
 		textureUnit = TextureUnit::NORMAL;
 		validTarget = true;
 	}
-	else if (hitTestResult.GetProperty()->GetName() == "Diffuse texture")
+	else if (hitTestResult.GetProperty()->GetName() == "Specular texture")
 	{
 		textureUnit = TextureUnit::SPECULAR;
 		validTarget = true;
@@ -249,6 +249,19 @@ wxDragResult TextureDropTarget::OnData(wxCoord vX, wxCoord vY, wxDragResult eRes
 	}			
 
 	return eResult;
+}
+
+wxDragResult TextureDropTarget::OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
+{	
+	auto pos = materialEditorPanel->propertyGrid->CalcScrolledPosition(wxPoint(x, y));
+	auto hitTestResult = materialEditorPanel->propertyGrid->HitTest(pos);	
+
+	if (hitTestResult.GetProperty() && (hitTestResult.GetProperty()->GetName() == "Diffuse texture" || hitTestResult.GetProperty()->GetName() == "Normal texture" || hitTestResult.GetProperty()->GetName() == "Specular texture"))
+	{
+		return wxDragCopy;
+	}
+	
+	return wxDragNone;
 }
 
 wxDragResult TextureDropTarget::OnEnter(wxCoord x, wxCoord y, wxDragResult def)
