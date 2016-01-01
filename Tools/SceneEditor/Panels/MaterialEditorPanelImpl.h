@@ -2,13 +2,29 @@
 
 #include "../mainframe.h"
 #include "FireCube.h"
+#include <wx/dnd.h>
 
 class EditorState;
-//class NodeDescriptor;
+class MaterialEditorPanelImpl;
+
+class TextureDropTarget : public wxDropTarget
+{
+public:
+	TextureDropTarget(MaterialEditorPanelImpl *materialEditorPanel);
+
+	virtual wxDragResult OnData(wxCoord vX, wxCoord vY, wxDragResult eResult) override;
+
+	virtual wxDragResult OnEnter(wxCoord x, wxCoord y, wxDragResult def) override;
+
+private:
+	MaterialEditorPanelImpl *materialEditorPanel;
+};
 
 class MaterialEditorPanelImpl : public MaterialEditorPanel, public FireCube::Object
 {
 	FIRECUBE_OBJECT(MaterialEditorPanelImpl)
+		
+	friend class TextureDropTarget;
 public:
 	MaterialEditorPanelImpl(wxWindow* parent);
 	~MaterialEditorPanelImpl();	

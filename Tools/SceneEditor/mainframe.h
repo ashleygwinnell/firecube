@@ -44,6 +44,8 @@
 #include <wx/clrpicker.h>
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
+#include <wx/listctrl.h>
+#include <wx/splitter.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -67,6 +69,7 @@ class MainFrame : public wxFrame
 		wxMenuItem* viewSceneHierarchyMenuItem;
 		wxMenuItem* viewInspectorMenuItem;
 		wxMenuItem* viewMaterialEditorMenuItem;
+		wxMenuItem* viewAssetBrowserMenuItem;
 		wxPanel* m_panel1;
 		wxTreeCtrl* sceneTreeCtrl;
 		wxPanel* m_panel2;
@@ -99,6 +102,7 @@ class MainFrame : public wxFrame
 		virtual void ViewSceneHierarchyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewInspectorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewMaterialEditorClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ViewAssetBrowserClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SceneTreeKeyUp( wxKeyEvent& event ) { event.Skip(); }
 		virtual void SceneTreeBeginDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeEndDrag( wxTreeEvent& event ) { event.Skip(); }
@@ -108,7 +112,7 @@ class MainFrame : public wxFrame
 	
 	public:
 		
-		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Scene Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 911,643 ), long style = wxDEFAULT_FRAME_STYLE|wxMAXIMIZE|wxTAB_TRAVERSAL );
+		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Scene Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 941,706 ), long style = wxDEFAULT_FRAME_STYLE|wxMAXIMIZE|wxTAB_TRAVERSAL );
 		wxAuiManager m_mgr;
 		
 		~MainFrame();
@@ -583,6 +587,39 @@ class MaterialEditorPanel : public wxPanel
 		
 		MaterialEditorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 507,496 ), long style = wxTAB_TRAVERSAL ); 
 		~MaterialEditorPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class AssetBrowserPanel
+///////////////////////////////////////////////////////////////////////////////
+class AssetBrowserPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxSplitterWindow* m_splitter1;
+		wxPanel* m_panel8;
+		wxTreeCtrl* directoryTreeCtrl;
+		wxPanel* m_panel9;
+		wxListCtrl* fileListCtrl;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void DirectoryTreeSelectionChanged( wxTreeEvent& event ) { event.Skip(); }
+		virtual void FileListBeginDrag( wxListEvent& event ) { event.Skip(); }
+		virtual void FileListItemActivated( wxListEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		AssetBrowserPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 507,496 ), long style = wxTAB_TRAVERSAL ); 
+		~AssetBrowserPanel();
+		
+		void m_splitter1OnIdle( wxIdleEvent& )
+		{
+			m_splitter1->SetSashPosition( 150 );
+			m_splitter1->Disconnect( wxEVT_IDLE, wxIdleEventHandler( AssetBrowserPanel::m_splitter1OnIdle ), NULL, this );
+		}
 	
 };
 

@@ -15,6 +15,7 @@ class BaseComponentPanelImpl;
 class Command;
 class ComponentDescriptor;
 class MaterialEditorPanelImpl;
+class AssetBrowserPanelImpl;
 
 /** Implementing MainFrame */
 class MainFrameImpl : public MainFrame, public FireCube::Object
@@ -34,6 +35,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void ViewSceneHierarchyClicked(wxCommandEvent& event);
 		virtual void ViewInspectorClicked(wxCommandEvent& event);
 		virtual void ViewMaterialEditorClicked(wxCommandEvent& event);
+		virtual void ViewAssetBrowserClicked(wxCommandEvent& event);
 		virtual void SceneTreeBeginDrag(wxTreeEvent& event);
 		virtual void SceneTreeEndDrag(wxTreeEvent& event);
 		virtual void PaneClose(wxAuiManagerEvent& event);		
@@ -68,6 +70,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void OnExitClicked(wxCommandEvent& event);
 		void Reset();
 		void NewSceneCreated();
+		void ShowMaterialEditor();
 
 		MyApp *theApp;
 		FireCube::Engine *engine;
@@ -86,6 +89,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		std::vector<wxMenuItem *> recentSceneFilesMenuItems;
 
 		MaterialEditorPanelImpl *materialEditorPanel;
+		AssetBrowserPanelImpl *assetBrowserPanel;
 	public:
 		/** Constructor */
 		MainFrameImpl( wxWindow* parent );	

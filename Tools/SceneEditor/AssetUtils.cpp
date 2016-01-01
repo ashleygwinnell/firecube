@@ -56,6 +56,44 @@ std::string AssetUtils::ToString(vec4 v)
 	return str.str();
 }
 
+AssetType AssetUtils::GetAssetTypeByPath(const std::string &path)
+{
+	if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials", path))
+	{
+		return AssetType::MATERIAL;
+	}
+	else if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scenes", path))
+	{
+		return AssetType::SCENE;
+	}
+	else if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts", path))
+	{
+		return AssetType::SCRIPT;
+	}
+	else if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Sounds", path))
+	{
+		return AssetType::SOUND;
+	}
+	else if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Shaders", path))
+	{
+		return AssetType::SHADER;
+	}
+	else if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Techniques", path))
+	{
+		return AssetType::TECHNIQUE;
+	}
+	else if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Models", path))
+	{
+		return AssetType::MESH;
+	}
+	else if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Textures", path))
+	{
+		return AssetType::TEXTURE;
+	}
+
+	return AssetType::UNKNOWN;
+}
+
 std::string AssetUtils::ToString(vec3 v)
 {
 	std::ostringstream str;
@@ -142,7 +180,7 @@ bool AssetUtils::SerializeMaterial(FireCube::Material *material, const std::stri
 		{			
 			element = new TiXmlElement("texture");
 			element->SetAttribute("unit", Material::GetTextureUnitName(unit));
-			element->SetAttribute("name", "Textures" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(texture->GetFileName()));
+			element->SetAttribute("name", texture->GetFileName());
 			rootElement->LinkEndChild(element);
 		}
 	}
@@ -214,4 +252,35 @@ std::string AssetUtils::ImportMaterialIfNeeded(const std::string &materialPath)
 
 	std::replace(sfile.begin(), sfile.end(), '\\', '/');
 	return sfile;
+}
+
+char *AssetUtils::SerializeAssetDescription(AssetType type, const std::string &path, unsigned int &size)
+{
+	size = sizeof(AssetType) + path.size() + sizeof(unsigned int);
+	char *ret = new char[size];
+	unsigned int i = 0;
+	*((AssetType *)&ret[i]) = type;
+	i += sizeof(AssetType);
+	*((unsigned int *)&ret[i]) = path.size();
+	i += sizeof(unsigned int);
+	for (unsigned int j = 0; j < path.size(); ++j)
+	{
+		ret[i++] = path[j];
+	}
+
+	return ret;
+}
+
+void AssetUtils::DeserializeAssetDescription(char *data, AssetType &type, std::string &path)
+{
+	unsigned int i = 0;
+	type = *((AssetType *)&data[i]);
+	i += sizeof(AssetType);
+	unsigned int count = *((unsigned int *)&data[i]);
+	i += sizeof(unsigned int);
+	path.resize(count);
+	for (unsigned int j = 0; j < count; ++j)
+	{
+		path[j] = data[i++];
+	}
 }

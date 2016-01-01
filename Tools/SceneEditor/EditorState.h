@@ -42,6 +42,7 @@ public:
 	FireCube::Event<Command *> redoPerformed;
 	FireCube::Event<> startMaterialPick;
 	FireCube::Event<FireCube::Material *> materialPicked;
+	FireCube::Event<> showMaterialEditor;
 private:
 	
 	NodeDescriptor *selectedNode;

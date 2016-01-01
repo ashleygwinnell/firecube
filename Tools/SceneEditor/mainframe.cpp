@@ -115,12 +115,15 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	viewMaterialEditorMenuItem = new wxMenuItem( viewMenu, wxID_ANY, wxString( wxT("Material Editor") ) , wxEmptyString, wxITEM_CHECK );
 	viewMenu->Append( viewMaterialEditorMenuItem );
 	
+	viewAssetBrowserMenuItem = new wxMenuItem( viewMenu, wxID_ANY, wxString( wxT("Asset Browser") ) , wxEmptyString, wxITEM_CHECK );
+	viewMenu->Append( viewAssetBrowserMenuItem );
+	
 	menuBar->Append( viewMenu, wxT("View") ); 
 	
 	this->SetMenuBar( menuBar );
 	
 	m_panel1 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( 150,-1 ), wxTAB_TRAVERSAL );
-	m_mgr.AddPane( m_panel1, wxAuiPaneInfo() .Name( wxT("sceneHierarchyPane") ).Left() .Caption( wxT("Scene") ).PinButton( true ).Dock().Resizable().FloatingSize( wxSize( -1,-1 ) ) );
+	m_mgr.AddPane( m_panel1, wxAuiPaneInfo() .Name( wxT("sceneHierarchyPane") ).Left() .Caption( wxT("Scene") ).PinButton( true ).Dock().Resizable().FloatingSize( wxSize( -1,-1 ) ).Layer( 1 ) );
 	
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -193,6 +196,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( viewSceneHierarchyMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Connect( viewInspectorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	this->Connect( viewMaterialEditorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
+	this->Connect( viewAssetBrowserMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewAssetBrowserClicked ) );
 	sceneTreeCtrl->Connect( wxEVT_KEY_UP, wxKeyEventHandler( MainFrame::SceneTreeKeyUp ), NULL, this );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( MainFrame::SceneTreeBeginDrag ), NULL, this );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_END_DRAG, wxTreeEventHandler( MainFrame::SceneTreeEndDrag ), NULL, this );
@@ -226,6 +230,7 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewAssetBrowserClicked ) );
 	sceneTreeCtrl->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( MainFrame::SceneTreeKeyUp ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( MainFrame::SceneTreeBeginDrag ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_END_DRAG, wxTreeEventHandler( MainFrame::SceneTreeEndDrag ), NULL, this );
@@ -1468,5 +1473,57 @@ MaterialEditorPanel::~MaterialEditorPanel()
 	saveAsButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::SaveAsButtonClicked ), NULL, this );
 	pickMaterialButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::PickMaterialButtonClicked ), NULL, this );
 	propertyGrid->Disconnect( wxEVT_PG_CHANGED, wxPropertyGridEventHandler( MaterialEditorPanel::PropertyGridChanged ), NULL, this );
+	
+}
+
+AssetBrowserPanel::AssetBrowserPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer37;
+	bSizer37 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_splitter1 = new wxSplitterWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_3D|wxSP_LIVE_UPDATE );
+	m_splitter1->Connect( wxEVT_IDLE, wxIdleEventHandler( AssetBrowserPanel::m_splitter1OnIdle ), NULL, this );
+	
+	m_panel8 = new wxPanel( m_splitter1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer58;
+	bSizer58 = new wxBoxSizer( wxVERTICAL );
+	
+	directoryTreeCtrl = new wxTreeCtrl( m_panel8, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
+	bSizer58->Add( directoryTreeCtrl, 1, wxALL|wxEXPAND, 0 );
+	
+	
+	m_panel8->SetSizer( bSizer58 );
+	m_panel8->Layout();
+	bSizer58->Fit( m_panel8 );
+	m_panel9 = new wxPanel( m_splitter1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer59;
+	bSizer59 = new wxBoxSizer( wxVERTICAL );
+	
+	fileListCtrl = new wxListCtrl( m_panel9, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_ICON|wxLC_SINGLE_SEL );
+	bSizer59->Add( fileListCtrl, 1, wxALL|wxEXPAND, 0 );
+	
+	
+	m_panel9->SetSizer( bSizer59 );
+	m_panel9->Layout();
+	bSizer59->Fit( m_panel9 );
+	m_splitter1->SplitVertically( m_panel8, m_panel9, 150 );
+	bSizer37->Add( m_splitter1, 1, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer37 );
+	this->Layout();
+	
+	// Connect Events
+	directoryTreeCtrl->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AssetBrowserPanel::DirectoryTreeSelectionChanged ), NULL, this );
+	fileListCtrl->Connect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( AssetBrowserPanel::FileListBeginDrag ), NULL, this );
+	fileListCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( AssetBrowserPanel::FileListItemActivated ), NULL, this );
+}
+
+AssetBrowserPanel::~AssetBrowserPanel()
+{
+	// Disconnect Events
+	directoryTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AssetBrowserPanel::DirectoryTreeSelectionChanged ), NULL, this );
+	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( AssetBrowserPanel::FileListBeginDrag ), NULL, this );
+	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( AssetBrowserPanel::FileListItemActivated ), NULL, this );
 	
 }

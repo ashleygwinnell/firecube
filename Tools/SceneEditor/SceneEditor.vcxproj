@@ -120,6 +120,7 @@
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="MainFrameImpl.cpp" />
     <ClCompile Include="MathUtils.cpp" />
+    <ClCompile Include="Panels\AssetBrowserPanelImpl.cpp" />
     <ClCompile Include="Panels\BaseComponentPanelImpl.cpp" />
     <ClCompile Include="Panels\BoxPanelImpl.cpp" />
     <ClCompile Include="Panels\CharacterControllerPanelImpl.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="MainFrameImpl.h" />
     <ClInclude Include="MathUtils.h" />
+    <ClInclude Include="Panels\AssetBrowserPanelImpl.h" />
     <ClInclude Include="Panels\BaseComponentPanelImpl.h" />
     <ClInclude Include="Panels\BoxPanelImpl.h" />
     <ClInclude Include="Panels\CharacterControllerPanelImpl.h" />

@@ -24,6 +24,7 @@
 #include "Panels/RigidBodyPanelImpl.h"
 #include "Panels/PlanePanelImpl.h"
 #include "Panels/SpherePanelImpl.h"
+#include "Panels/AssetBrowserPanelImpl.h"
 #include "AssetUtils.h"
 #include "SceneReader.h"
 #include "Descriptors/ComponentDescriptor.h"
@@ -52,10 +53,13 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	SubscribeToEvent(editorState, editorState->undoPerformed, &MainFrameImpl::UpdateUndoRedoMenu);
 	SubscribeToEvent(editorState, editorState->redoPerformed, &MainFrameImpl::UpdateUndoRedoMenu);
 	SubscribeToEvent(editorState, editorState->newSceneCreated, &MainFrameImpl::NewSceneCreated);
+	SubscribeToEvent(editorState, editorState->showMaterialEditor, &MainFrameImpl::ShowMaterialEditor);
 	
 	materialEditorPanel = new MaterialEditorPanelImpl(this);
 	m_mgr.AddPane(materialEditorPanel, wxAuiPaneInfo().Name(wxT("materialEditorPane")).Caption(wxT("Material Editor")).PinButton(true).Float().Resizable().FloatingSize(wxDefaultSize).Hide());
-	m_mgr.Update();
+	assetBrowserPanel = new AssetBrowserPanelImpl(this);
+	m_mgr.AddPane(assetBrowserPanel, wxAuiPaneInfo().Name(wxT("assetBrowserPane")).Caption(wxT("Asset Browser")).PinButton(true).Resizable().Layer(0).Dockable().Bottom().Dock());
+	m_mgr.Update();	
 
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);
 
@@ -303,6 +307,9 @@ void MainFrameImpl::OpenSceneFile(const std::string &filename)
 	}
 
 	SetTitle("SceneEditor - " + filename);
+	
+	assetBrowserPanel->PopulateDirectoryTree();
+	assetBrowserPanel->SetAssetsPath(Filesystem::GetAssetsFolder());
 
 	editorState->sceneChanged(editorState);
 }
@@ -369,6 +376,9 @@ void MainFrameImpl::NewClicked(wxCommandEvent& event)
 	SetAllPanelsVisibility(true);
 
 	Reset();
+
+	assetBrowserPanel->PopulateDirectoryTree();
+	assetBrowserPanel->SetAssetsPath(Filesystem::GetAssetsFolder());
 }
 
 void MainFrameImpl::SelectedNodeChanged(NodeDescriptor *nodeDesc)
@@ -521,6 +531,23 @@ void MainFrameImpl::ViewMaterialEditorClicked(wxCommandEvent& event)
 	m_mgr.Update();
 }
 
+void MainFrameImpl::ViewAssetBrowserClicked(wxCommandEvent& event)
+{
+	auto &pane = m_mgr.GetPane("assetBrowserPane");
+	if (event.IsChecked())
+	{
+		pane.Show();
+		assetBrowserPanel->PopulateDirectoryTree();
+	}
+	else
+	{
+		pane.Hide();
+	}
+
+	m_mgr.Update();
+}
+
+
 void MainFrameImpl::PaneClose(wxAuiManagerEvent& event)
 {
 	auto pane = event.GetPane();
@@ -536,6 +563,10 @@ void MainFrameImpl::PaneClose(wxAuiManagerEvent& event)
 	else if (pane->name == "materialEditorPane")
 	{
 		viewMaterialEditorMenuItem->Check(false);
+	}
+	else if (pane->name == "assetBrowserPane")
+	{
+		viewAssetBrowserMenuItem->Check(false);
 	}
 }
 
@@ -755,6 +786,17 @@ void MainFrameImpl::SetAllPanelsVisibility(bool visible)
 	}	
 	viewInspectorMenuItem->Check(visible);
 
+	auto &assetBrowserPane = m_mgr.GetPane("assetBrowserPane");
+	if (visible)
+	{
+		assetBrowserPane.Show();
+	}
+	else
+	{
+		assetBrowserPane.Hide();
+	}
+	viewAssetBrowserMenuItem->Check(visible);
+
 	m_mgr.Update();
 }
 
@@ -942,4 +984,13 @@ void MainFrameImpl::NewSceneCreated()
 	defaultMaterial->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.0f));
 	defaultMaterial->SetParameter(PARAM_MATERIAL_SHININESS, 0.0f);
 	AssetUtils::SerializeMaterial(defaultMaterial, targetMaterialPath);
+}
+
+void MainFrameImpl::ShowMaterialEditor()
+{
+	auto &pane = m_mgr.GetPane("materialEditorPane");
+	pane.Show();
+	viewMaterialEditorMenuItem->Check();
+
+	m_mgr.Update();
 }
