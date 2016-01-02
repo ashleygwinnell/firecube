@@ -180,7 +180,7 @@ bool AssetUtils::SerializeMaterial(FireCube::Material *material, const std::stri
 		{			
 			element = new TiXmlElement("texture");
 			element->SetAttribute("unit", Material::GetTextureUnitName(unit));
-			element->SetAttribute("name", texture->GetFileName());
+			element->SetAttribute("name", "Textures" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(texture->GetFileName()));
 			rootElement->LinkEndChild(element);
 		}
 	}
