@@ -199,24 +199,14 @@ void AssetBrowserPanelImpl::FileListBeginDrag(wxListEvent& event)
 {
 	auto itemData = (FileItemData *)event.GetItem().GetData();
 	
-	if (itemData->assetType == AssetType::MATERIAL)
+	if (itemData->assetType == AssetType::MATERIAL || itemData->assetType == AssetType::TEXTURE || itemData->assetType == AssetType::TECHNIQUE)
 	{
-		wxCustomDataObject dataObject(wxDataFormat("MaterialAsset"));
+		wxCustomDataObject dataObject(wxDataFormat("Asset"));
 		unsigned int size;
 		char *data = AssetUtils::SerializeAssetDescription(itemData->assetType, itemData->path, size);
 		dataObject.TakeData(size, data);
 		wxDropSource source(dataObject, this);
 
 		source.DoDragDrop(true);
-	}
-	else if (itemData->assetType == AssetType::TEXTURE)
-	{
-		wxCustomDataObject dataObject(wxDataFormat("TextureAsset"));
-		unsigned int size;
-		char *data = AssetUtils::SerializeAssetDescription(itemData->assetType, itemData->path, size);
-		dataObject.TakeData(size, data);
-		wxDropSource source(dataObject, this);
-
-		source.DoDragDrop(true);
-	}
+	}	
 }

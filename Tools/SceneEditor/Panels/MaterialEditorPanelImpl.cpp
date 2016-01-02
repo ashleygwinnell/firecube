@@ -11,7 +11,7 @@ using namespace FireCube;
 MaterialEditorPanelImpl::MaterialEditorPanelImpl(wxWindow* parent) : MaterialEditorPanel(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), editorState(((MyApp*)wxTheApp)->GetEditorState())
 {
 	SubscribeToEvent(editorState->materialPicked, &MaterialEditorPanelImpl::MaterialPicked);
-	propertyGrid->SetDropTarget(new TextureDropTarget(this));
+	propertyGrid->SetDropTarget(new MaterialEditorDropTarget(this));
 }
 
 MaterialEditorPanelImpl::~MaterialEditorPanelImpl()
@@ -199,72 +199,96 @@ void MaterialEditorPanelImpl::MaterialPicked(FireCube::Material *material)
 	FillPropertyGrid(material);
 }
 
-TextureDropTarget::TextureDropTarget(MaterialEditorPanelImpl *materialEditorPanel) : wxDropTarget(new wxCustomDataObject(wxDataFormat("TextureAsset"))), materialEditorPanel(materialEditorPanel)
+MaterialEditorDropTarget::MaterialEditorDropTarget(MaterialEditorPanelImpl *materialEditorPanel) : wxDropTarget(new wxCustomDataObject(wxDataFormat("Asset"))), materialEditorPanel(materialEditorPanel)
 {
 
 }
 
-wxDragResult TextureDropTarget::OnData(wxCoord vX, wxCoord vY, wxDragResult eResult)
+wxDragResult MaterialEditorDropTarget::OnData(wxCoord vX, wxCoord vY, wxDragResult eResult)
 {
-	bool validTarget = false;
-	auto pos = materialEditorPanel->propertyGrid->CalcScrolledPosition(wxPoint(vX, vY));
-	auto hitTestResult = materialEditorPanel->propertyGrid->HitTest(pos);
-	TextureUnit textureUnit;
+	if (GetData())
+	{
+		auto dataObject = (wxCustomDataObject*)GetDataObject();
+		AssetType type;
+		std::string path;
+		AssetUtils::DeserializeAssetDescription((char *)dataObject->GetData(), type, path);
+		std::replace(path.begin(), path.end(), '\\', '/');
+		path = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
 
-	if (hitTestResult.GetProperty()->GetName() == "Diffuse texture")
-	{
-		textureUnit = TextureUnit::DIFFUSE;
-		validTarget = true;
-	}
-	else if (hitTestResult.GetProperty()->GetName() == "Normal texture")
-	{
-		textureUnit = TextureUnit::NORMAL;
-		validTarget = true;
-	}
-	else if (hitTestResult.GetProperty()->GetName() == "Specular texture")
-	{
-		textureUnit = TextureUnit::SPECULAR;
-		validTarget = true;
-	}
-
-	if (validTarget)
-	{
-		if (GetData())
+		if (type == AssetType::TEXTURE)
 		{
-			auto dataObject = (wxCustomDataObject*)GetDataObject();
-			AssetType type;
-			std::string path;
-			AssetUtils::DeserializeAssetDescription((char *)dataObject->GetData(), type, path);
-			std::replace(path.begin(), path.end(), '\\', '/');
-			path = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);			
-			hitTestResult.GetProperty()->SetValue(path);
-			materialEditorPanel->material->SetTexture(textureUnit, materialEditorPanel->engine->GetResourceCache()->GetResource<Texture2D>(path));
-		}
+			bool validTarget = false;
+			auto pos = materialEditorPanel->propertyGrid->CalcScrolledPosition(wxPoint(vX, vY));
+			auto hitTestResult = materialEditorPanel->propertyGrid->HitTest(pos);
+			TextureUnit textureUnit;
 
-		materialEditorPanel->editorState->sceneChanged(materialEditorPanel->editorState);
-		if (!materialEditorPanel->currentFileName.empty())
-		{
-			AssetUtils::SerializeMaterial(materialEditorPanel->material, Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + materialEditorPanel->currentFileName);
+			if (hitTestResult.GetProperty()->GetName() == "Diffuse texture")
+			{
+				textureUnit = TextureUnit::DIFFUSE;
+				validTarget = true;
+			}
+			else if (hitTestResult.GetProperty()->GetName() == "Normal texture")
+			{
+				textureUnit = TextureUnit::NORMAL;
+				validTarget = true;
+			}
+			else if (hitTestResult.GetProperty()->GetName() == "Specular texture")
+			{
+				textureUnit = TextureUnit::SPECULAR;
+				validTarget = true;
+			}
+
+			if (validTarget)
+			{				
+				hitTestResult.GetProperty()->SetValue(path);
+				materialEditorPanel->material->SetTexture(textureUnit, materialEditorPanel->engine->GetResourceCache()->GetResource<Texture2D>(path));
+
+				materialEditorPanel->editorState->sceneChanged(materialEditorPanel->editorState);
+				if (!materialEditorPanel->currentFileName.empty())
+				{
+					AssetUtils::SerializeMaterial(materialEditorPanel->material, Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + materialEditorPanel->currentFileName);
+				}
+			}
 		}
-	}			
+		else if (type == AssetType::TECHNIQUE)
+		{			
+			auto pos = materialEditorPanel->propertyGrid->CalcScrolledPosition(wxPoint(vX, vY));
+			auto hitTestResult = materialEditorPanel->propertyGrid->HitTest(pos);
+			if (hitTestResult.GetProperty()->GetName() == "Technique")
+			{
+				hitTestResult.GetProperty()->SetValue(path);
+				materialEditorPanel->material->SetTechnique(materialEditorPanel->engine->GetResourceCache()->GetResource<Technique>(path));
+
+				materialEditorPanel->editorState->sceneChanged(materialEditorPanel->editorState);
+				if (!materialEditorPanel->currentFileName.empty())
+				{
+					AssetUtils::SerializeMaterial(materialEditorPanel->material, Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + materialEditorPanel->currentFileName);
+				}
+			}
+		}
+	}
 
 	return eResult;
 }
 
-wxDragResult TextureDropTarget::OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
+wxDragResult MaterialEditorDropTarget::OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
 {	
 	auto pos = materialEditorPanel->propertyGrid->CalcScrolledPosition(wxPoint(x, y));
 	auto hitTestResult = materialEditorPanel->propertyGrid->HitTest(pos);	
 
-	if (hitTestResult.GetProperty() && (hitTestResult.GetProperty()->GetName() == "Diffuse texture" || hitTestResult.GetProperty()->GetName() == "Normal texture" || hitTestResult.GetProperty()->GetName() == "Specular texture"))
+	if (hitTestResult.GetProperty())
 	{
-		return wxDragCopy;
+		std::string propertyName = hitTestResult.GetProperty()->GetName();
+		if (propertyName == "Diffuse texture" || propertyName == "Normal texture" || propertyName == "Specular texture" || propertyName == "Technique")
+		{
+			return wxDragCopy;
+		}
 	}
 	
 	return wxDragNone;
 }
 
-wxDragResult TextureDropTarget::OnEnter(wxCoord x, wxCoord y, wxDragResult def)
+wxDragResult MaterialEditorDropTarget::OnEnter(wxCoord x, wxCoord y, wxDragResult def)
 {
 	return OnDragOver(x, y, def);
 }

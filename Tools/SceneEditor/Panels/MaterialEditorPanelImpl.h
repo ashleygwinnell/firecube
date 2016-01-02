@@ -7,10 +7,10 @@
 class EditorState;
 class MaterialEditorPanelImpl;
 
-class TextureDropTarget : public wxDropTarget
+class MaterialEditorDropTarget : public wxDropTarget
 {
 public:
-	TextureDropTarget(MaterialEditorPanelImpl *materialEditorPanel);
+	MaterialEditorDropTarget(MaterialEditorPanelImpl *materialEditorPanel);
 
 	virtual wxDragResult OnData(wxCoord vX, wxCoord vY, wxDragResult eResult) override;
 	virtual wxDragResult OnEnter(wxCoord x, wxCoord y, wxDragResult def) override;
@@ -24,7 +24,7 @@ class MaterialEditorPanelImpl : public MaterialEditorPanel, public FireCube::Obj
 {
 	FIRECUBE_OBJECT(MaterialEditorPanelImpl)
 		
-	friend class TextureDropTarget;
+	friend class MaterialEditorDropTarget;
 public:
 	MaterialEditorPanelImpl(wxWindow* parent);
 	~MaterialEditorPanelImpl();	
