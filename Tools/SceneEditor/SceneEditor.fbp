@@ -14758,7 +14758,7 @@
                                             <event name="OnListItemMiddleClick"></event>
                                             <event name="OnListItemRightClick"></event>
                                             <event name="OnListItemSelected"></event>
-                                            <event name="OnListKeyDown"></event>
+                                            <event name="OnListKeyDown">FileListKeyDown</event>
                                             <event name="OnMiddleDClick"></event>
                                             <event name="OnMiddleDown"></event>
                                             <event name="OnMiddleUp"></event>

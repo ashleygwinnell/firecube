@@ -608,6 +608,7 @@ class AssetBrowserPanel : public wxPanel
 		virtual void DirectoryTreeSelectionChanged( wxTreeEvent& event ) { event.Skip(); }
 		virtual void FileListBeginDrag( wxListEvent& event ) { event.Skip(); }
 		virtual void FileListItemActivated( wxListEvent& event ) { event.Skip(); }
+		virtual void FileListKeyDown( wxListEvent& event ) { event.Skip(); }
 		
 	
 	public:

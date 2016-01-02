@@ -16,6 +16,7 @@ public:
 	virtual void DirectoryTreeSelectionChanged(wxTreeEvent& event);
 	virtual void FileListItemActivated(wxListEvent& event);
 	virtual void FileListBeginDrag(wxListEvent& event);
+	virtual void FileListKeyDown(wxListEvent& event);
 	void SetAssetsPath(const std::string &path);
 private:
 	void OnFileSystemEvent(wxFileSystemWatcherEvent& event);

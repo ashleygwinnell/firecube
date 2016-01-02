@@ -1517,6 +1517,7 @@ AssetBrowserPanel::AssetBrowserPanel( wxWindow* parent, wxWindowID id, const wxP
 	directoryTreeCtrl->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AssetBrowserPanel::DirectoryTreeSelectionChanged ), NULL, this );
 	fileListCtrl->Connect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( AssetBrowserPanel::FileListBeginDrag ), NULL, this );
 	fileListCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( AssetBrowserPanel::FileListItemActivated ), NULL, this );
+	fileListCtrl->Connect( wxEVT_COMMAND_LIST_KEY_DOWN, wxListEventHandler( AssetBrowserPanel::FileListKeyDown ), NULL, this );
 }
 
 AssetBrowserPanel::~AssetBrowserPanel()
@@ -1525,5 +1526,6 @@ AssetBrowserPanel::~AssetBrowserPanel()
 	directoryTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AssetBrowserPanel::DirectoryTreeSelectionChanged ), NULL, this );
 	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( AssetBrowserPanel::FileListBeginDrag ), NULL, this );
 	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( AssetBrowserPanel::FileListItemActivated ), NULL, this );
+	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_KEY_DOWN, wxListEventHandler( AssetBrowserPanel::FileListKeyDown ), NULL, this );
 	
 }

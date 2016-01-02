@@ -131,7 +131,7 @@ void AssetBrowserPanelImpl::OnFileSystemEvent(wxFileSystemWatcherEvent& event)
 	{
 	case wxFSW_EVENT_CREATE:
 	{
-		if (event.GetPath().DirExists())
+		if (event.GetPath().IsDir() && event.GetPath().DirExists())
 		{
 			auto newPath = event.GetPath().GetFullPath().ToStdString();
 			auto parent = pathToTreeItem[Filesystem::GetDirectoryName(newPath)];
@@ -139,17 +139,17 @@ void AssetBrowserPanelImpl::OnFileSystemEvent(wxFileSystemWatcherEvent& event)
 			pathToTreeItem[newPath] = newItem;
 		}
 		
-			std::string basePath = Filesystem::GetDirectoryName(event.GetPath().GetFullPath().ToStdString());
-			if (basePath == currentFileListPath)
-			{
-				UpdateFileList(currentFileListPath);
-			}
-		
+		std::string basePath = Filesystem::GetDirectoryName(event.GetPath().GetFullPath().ToStdString());
+		if (basePath == currentFileListPath)
+		{
+			UpdateFileList(currentFileListPath);
+		}
+
 		break;
 	}
 	case wxFSW_EVENT_DELETE:
 	{
-		if (event.GetPath().DirExists())
+		if (event.GetPath().IsDir() && event.GetPath().DirExists())
 		{
 			auto path = event.GetPath().GetFullPath().ToStdString();
 			auto nodeIter = pathToTreeItem.find(path);
@@ -170,7 +170,7 @@ void AssetBrowserPanelImpl::OnFileSystemEvent(wxFileSystemWatcherEvent& event)
 	}
 	case wxFSW_EVENT_RENAME:
 	{
-		if (event.GetPath().DirExists())
+		if (event.GetPath().IsDir() && event.GetPath().DirExists())
 		{
 			std::string path = event.GetPath().GetFullPath().ToStdString();
 			auto nodeIter = pathToTreeItem.find(path);
@@ -214,4 +214,13 @@ void AssetBrowserPanelImpl::FileListBeginDrag(wxListEvent& event)
 
 		source.DoDragDrop(true);
 	}	
+}
+
+void AssetBrowserPanelImpl::FileListKeyDown(wxListEvent& event)
+{
+	if (event.GetKeyCode() == WXK_DELETE)
+	{
+		auto itemData = (FileItemData *)event.GetItem().GetData();
+		wxRemoveFile(itemData->path);
+	}
 }
