@@ -14,11 +14,15 @@ using namespace FireCube;
 #include "Commands/TransformCommands.h"
 #include "Commands/RemoveNodeCommand.h"
 #include "Commands/AddNodeCommand.h"
+#include "Commands/AddComponentCommand.h"
+#include "Commands/GroupCommand.h"
 #include "Descriptors/PhysicsWorldDescriptor.h"
+#include "Descriptors/StaticModelDescriptor.h"
+#include "AssetUtils.h"
 
 GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()),
-	init(false), theApp((MyApp*)wxTheApp), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), currentOperation(Operation::NONE)
+	init(false), theApp((MyApp*)wxTheApp), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), currentOperation(Operation::NONE), rootDesc(nullptr)
 {
 	context = new wxGLContext(this);
 	Bind(wxEVT_SIZE, &GLCanvas::OnSize, this);
@@ -30,6 +34,8 @@ GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wx
 	Bind(wxEVT_LEFT_UP, &GLCanvas::OnLeftUp, this);
 	Bind(wxEVT_LEFT_DOWN, &GLCanvas::OnLeftDown, this);
 	Bind(wxEVT_KEY_UP, &GLCanvas::OnKeyUp, this);
+
+	SetDropTarget(new CanvasDropTarget(this));
 }
 
 GLCanvas::~GLCanvas()
@@ -56,6 +62,7 @@ void GLCanvas::Init()
 	SubscribeToEvent(editorState, editorState->stateChanged, &GLCanvas::StateChanged);
 	SubscribeToEvent(editorState, editorState->sceneChanged, &GLCanvas::SceneChanged);
 	SubscribeToEvent(editorState->startMaterialPick, &GLCanvas::StartMaterialPick);
+	SubscribeToEvent(editorState->addMesh, &GLCanvas::AddMesh);
 
 	theApp->InitScene();
 	scene = theApp->GetScene();
@@ -492,4 +499,57 @@ void GLCanvas::CreateGrid(float size, unsigned int numberOfCells)
 void GLCanvas::StartMaterialPick()
 {
 	currentOperation = Operation::PICK_MATERIAL;
+}
+
+void GLCanvas::SetRootDescriptor(NodeDescriptor *rootDescriptor)
+{
+	this->rootDesc = rootDescriptor;
+}
+
+void GLCanvas::AddMesh(const std::string &path)
+{
+	auto nodeDesc = new NodeDescriptor("Node");
+	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, rootDesc);
+	auto staticModelDescriptor = new StaticModelDescriptor();
+	staticModelDescriptor->SetMeshFilename(path, engine);
+
+	auto addComponentCommand = new AddComponentCommand(editorState, "Add Component", nodeDesc, staticModelDescriptor, engine);
+
+	GroupCommand *groupCommand = new GroupCommand(editorState, "Add Mesh", { addNodeCommand, addComponentCommand });
+	editorState->ExecuteCommand(groupCommand);
+}
+
+CanvasDropTarget::CanvasDropTarget(GLCanvas *canvas) : wxDropTarget(new wxCustomDataObject(wxDataFormat("Asset"))), canvas(canvas)
+{
+
+}
+
+wxDragResult CanvasDropTarget::OnData(wxCoord vX, wxCoord vY, wxDragResult eResult)
+{
+	if (GetData())
+	{
+		auto dataObject = (wxCustomDataObject*)GetDataObject();
+		AssetType type;
+		std::string path;
+		AssetUtils::DeserializeAssetDescription((char *)dataObject->GetData(), type, path);
+		std::replace(path.begin(), path.end(), '\\', '/');
+		path = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
+
+		if (type == AssetType::MESH)
+		{	
+			canvas->AddMesh(path);			
+		}
+	}
+
+	return eResult;
+}
+
+wxDragResult CanvasDropTarget::OnEnter(wxCoord x, wxCoord y, wxDragResult def)
+{
+	return OnDragOver(x, y, def);
+}
+
+wxDragResult CanvasDropTarget::OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
+{
+	return wxDragCopy;
 }

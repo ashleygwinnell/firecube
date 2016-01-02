@@ -66,6 +66,8 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	SetAllPanelsVisibility(false);
 
 	LoadSettingsFile();
+
+	this->glCanvas->SetRootDescriptor(&rootDesc);
 }
 
 void MainFrameImpl::AddNodeClicked(wxCommandEvent& event)

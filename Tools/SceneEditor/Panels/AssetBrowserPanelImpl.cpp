@@ -111,6 +111,11 @@ void AssetBrowserPanelImpl::FileListItemActivated(wxListEvent& event)
 			editorState->materialPicked(editorState, engine->GetResourceCache()->GetResource<Material>(materialFileName));
 			editorState->showMaterialEditor(editorState);
 		}
+		else if (itemData->assetType == AssetType::MESH)
+		{
+			std::string meshFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), itemData->path);
+			editorState->addMesh(editorState, meshFileName);
+		}
 	}
 }
 
@@ -199,7 +204,7 @@ void AssetBrowserPanelImpl::FileListBeginDrag(wxListEvent& event)
 {
 	auto itemData = (FileItemData *)event.GetItem().GetData();
 	
-	if (itemData->assetType == AssetType::MATERIAL || itemData->assetType == AssetType::TEXTURE || itemData->assetType == AssetType::TECHNIQUE)
+	if (itemData->assetType == AssetType::MATERIAL || itemData->assetType == AssetType::TEXTURE || itemData->assetType == AssetType::TECHNIQUE || itemData->assetType == AssetType::MESH)
 	{
 		wxCustomDataObject dataObject(wxDataFormat("Asset"));
 		unsigned int size;

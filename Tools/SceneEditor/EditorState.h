@@ -43,6 +43,7 @@ public:
 	FireCube::Event<> startMaterialPick;
 	FireCube::Event<FireCube::Material *> materialPicked;
 	FireCube::Event<> showMaterialEditor;
+	FireCube::Event<const std::string &> addMesh;
 private:
 	
 	NodeDescriptor *selectedNode;

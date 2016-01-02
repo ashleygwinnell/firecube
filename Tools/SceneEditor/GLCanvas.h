@@ -1,6 +1,7 @@
 #pragma once
 
 #include "FireCube.h"
+#include <wx/dnd.h>
 
 class MyApp;
 class TranslateGizmo;
@@ -9,15 +10,30 @@ class TransformGizmo;
 class ScaleGizmo;
 class EditorState;
 class NodeDescriptor;
+class GLCanvas;
 
 enum class Operation
 {
 	NONE, OBJECT_TRANSFORM, CAMERA_ORBIT, PICK_MATERIAL
 };
 
+class CanvasDropTarget : public wxDropTarget
+{
+public:
+	CanvasDropTarget(GLCanvas *canvas);
+private:
+
+	virtual wxDragResult OnData(wxCoord vX, wxCoord vY, wxDragResult eResult) override;
+	virtual wxDragResult OnEnter(wxCoord x, wxCoord y, wxDragResult def) override;
+	virtual wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def) override;
+
+	GLCanvas *canvas;
+};
+
 class GLCanvas : public wxGLCanvas, public FireCube::Object
 {
-	FIRECUBE_OBJECT(GLCanvas)
+	FIRECUBE_OBJECT(GLCanvas);	
+	friend class CanvasDropTarget;
 public:	
 	GLCanvas(wxWindow *parent, wxWindowID id = wxID_ANY,
 		const wxPoint& pos = wxDefaultPosition,
@@ -38,6 +54,7 @@ public:
 	void Render();
 	void Init();	
 	void UpdateGizmo();		
+	void SetRootDescriptor(NodeDescriptor *rootDescriptor);	
 private:	
 	void CreateGrid(float size, unsigned int numberOfCells);
 	void SelectedNodeChanged(NodeDescriptor *nodeDesc);
@@ -45,6 +62,7 @@ private:
 	void SceneChanged();
 	void RenderDebugGeometry(NodeDescriptor *nodeDesc, FireCube::DebugRenderer *debugRenderer);
 	void StartMaterialPick();
+	void AddMesh(const std::string &path);
 
 	bool init;
 	MyApp *theApp;
@@ -61,4 +79,5 @@ private:
 	FireCube::vec2 lastMousePos;
 	Operation currentOperation;	
 	EditorState *editorState;	
+	NodeDescriptor *rootDesc;
 };
