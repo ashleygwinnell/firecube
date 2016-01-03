@@ -17,6 +17,8 @@ public:
 	virtual void FileListItemActivated(wxListEvent& event);
 	virtual void FileListBeginDrag(wxListEvent& event);
 	virtual void FileListKeyDown(wxListEvent& event);
+	virtual void FileListItemSelected(wxListEvent& event);
+	virtual void TexturePreviewBitmapResize(wxSizeEvent& event);
 	void SetAssetsPath(const std::string &path);
 private:
 	void OnFileSystemEvent(wxFileSystemWatcherEvent& event);
@@ -29,6 +31,7 @@ private:
 	std::map<std::string, wxTreeItemId> pathToTreeItem;
 	std::string currentFileListPath;
 	wxImageList *imageList;
+	wxImage currentTextureImage;
 };
 
 class DirectoryItemData : public wxTreeItemData

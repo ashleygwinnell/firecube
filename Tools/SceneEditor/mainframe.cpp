@@ -1497,10 +1497,37 @@ AssetBrowserPanel::AssetBrowserPanel( wxWindow* parent, wxWindowID id, const wxP
 	bSizer58->Fit( m_panel8 );
 	m_panel9 = new wxPanel( m_splitter1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer59;
-	bSizer59 = new wxBoxSizer( wxVERTICAL );
+	bSizer59 = new wxBoxSizer( wxHORIZONTAL );
 	
-	fileListCtrl = new wxListCtrl( m_panel9, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_ICON|wxLC_SINGLE_SEL );
-	bSizer59->Add( fileListCtrl, 1, wxALL|wxEXPAND, 0 );
+	splitter2 = new wxSplitterWindow( m_panel9, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_3D|wxSP_LIVE_UPDATE );
+	splitter2->SetSashGravity( 1 );
+	splitter2->Connect( wxEVT_IDLE, wxIdleEventHandler( AssetBrowserPanel::splitter2OnIdle ), NULL, this );
+	splitter2->SetMinimumPaneSize( 150 );
+	
+	m_panel10 = new wxPanel( splitter2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer581;
+	bSizer581 = new wxBoxSizer( wxVERTICAL );
+	
+	fileListCtrl = new wxListCtrl( m_panel10, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_ICON|wxLC_SINGLE_SEL );
+	bSizer581->Add( fileListCtrl, 1, wxALL|wxEXPAND, 0 );
+	
+	
+	m_panel10->SetSizer( bSizer581 );
+	m_panel10->Layout();
+	bSizer581->Fit( m_panel10 );
+	m_panel11 = new wxPanel( splitter2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer591;
+	bSizer591 = new wxBoxSizer( wxVERTICAL );
+	
+	texturePreviewBitmap = new wxStaticBitmap( m_panel11, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxSTATIC_BORDER );
+	bSizer591->Add( texturePreviewBitmap, 1, wxALL|wxEXPAND, 0 );
+	
+	
+	m_panel11->SetSizer( bSizer591 );
+	m_panel11->Layout();
+	bSizer591->Fit( m_panel11 );
+	splitter2->SplitVertically( m_panel10, m_panel11, 2000 );
+	bSizer59->Add( splitter2, 1, wxEXPAND, 5 );
 	
 	
 	m_panel9->SetSizer( bSizer59 );
@@ -1517,7 +1544,9 @@ AssetBrowserPanel::AssetBrowserPanel( wxWindow* parent, wxWindowID id, const wxP
 	directoryTreeCtrl->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AssetBrowserPanel::DirectoryTreeSelectionChanged ), NULL, this );
 	fileListCtrl->Connect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( AssetBrowserPanel::FileListBeginDrag ), NULL, this );
 	fileListCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( AssetBrowserPanel::FileListItemActivated ), NULL, this );
+	fileListCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( AssetBrowserPanel::FileListItemSelected ), NULL, this );
 	fileListCtrl->Connect( wxEVT_COMMAND_LIST_KEY_DOWN, wxListEventHandler( AssetBrowserPanel::FileListKeyDown ), NULL, this );
+	texturePreviewBitmap->Connect( wxEVT_SIZE, wxSizeEventHandler( AssetBrowserPanel::TexturePreviewBitmapResize ), NULL, this );
 }
 
 AssetBrowserPanel::~AssetBrowserPanel()
@@ -1526,6 +1555,8 @@ AssetBrowserPanel::~AssetBrowserPanel()
 	directoryTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AssetBrowserPanel::DirectoryTreeSelectionChanged ), NULL, this );
 	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( AssetBrowserPanel::FileListBeginDrag ), NULL, this );
 	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( AssetBrowserPanel::FileListItemActivated ), NULL, this );
+	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( AssetBrowserPanel::FileListItemSelected ), NULL, this );
 	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_KEY_DOWN, wxListEventHandler( AssetBrowserPanel::FileListKeyDown ), NULL, this );
+	texturePreviewBitmap->Disconnect( wxEVT_SIZE, wxSizeEventHandler( AssetBrowserPanel::TexturePreviewBitmapResize ), NULL, this );
 	
 }

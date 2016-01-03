@@ -45,6 +45,7 @@
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
 #include <wx/listctrl.h>
+#include <wx/statbmp.h>
 #include <wx/splitter.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -602,13 +603,19 @@ class AssetBrowserPanel : public wxPanel
 		wxPanel* m_panel8;
 		wxTreeCtrl* directoryTreeCtrl;
 		wxPanel* m_panel9;
+		wxSplitterWindow* splitter2;
+		wxPanel* m_panel10;
 		wxListCtrl* fileListCtrl;
+		wxPanel* m_panel11;
+		wxStaticBitmap* texturePreviewBitmap;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void DirectoryTreeSelectionChanged( wxTreeEvent& event ) { event.Skip(); }
 		virtual void FileListBeginDrag( wxListEvent& event ) { event.Skip(); }
 		virtual void FileListItemActivated( wxListEvent& event ) { event.Skip(); }
+		virtual void FileListItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void FileListKeyDown( wxListEvent& event ) { event.Skip(); }
+		virtual void TexturePreviewBitmapResize( wxSizeEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -620,6 +627,12 @@ class AssetBrowserPanel : public wxPanel
 		{
 			m_splitter1->SetSashPosition( 150 );
 			m_splitter1->Disconnect( wxEVT_IDLE, wxIdleEventHandler( AssetBrowserPanel::m_splitter1OnIdle ), NULL, this );
+		}
+		
+		void splitter2OnIdle( wxIdleEvent& )
+		{
+			splitter2->SetSashPosition( 2000 );
+			splitter2->Disconnect( wxEVT_IDLE, wxIdleEventHandler( AssetBrowserPanel::splitter2OnIdle ), NULL, this );
 		}
 	
 };

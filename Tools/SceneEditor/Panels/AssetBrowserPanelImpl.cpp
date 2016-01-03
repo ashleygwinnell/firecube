@@ -19,7 +19,7 @@ AssetBrowserPanelImpl::AssetBrowserPanelImpl(wxWindow* parent) : AssetBrowserPan
 	imageList = new wxImageList(32, 32);
 	imageList->Add(wxArtProvider::GetIcon(wxART_FOLDER), wxSize(32, 32));
 	imageList->Add(wxArtProvider::GetIcon(wxART_NORMAL_FILE, wxART_MESSAGE_BOX), wxSize(32, 32));
-	fileListCtrl->AssignImageList(imageList, wxIMAGE_LIST_NORMAL);
+	fileListCtrl->AssignImageList(imageList, wxIMAGE_LIST_NORMAL);	
 }
 
 AssetBrowserPanelImpl::~AssetBrowserPanelImpl()
@@ -222,5 +222,53 @@ void AssetBrowserPanelImpl::FileListKeyDown(wxListEvent& event)
 	{
 		auto itemData = (FileItemData *)event.GetItem().GetData();
 		wxRemoveFile(itemData->path);
+	}
+}
+
+wxImage ScaleImage(wxImage &image, int maxDimension)
+{
+	if (image.GetWidth() > maxDimension || image.GetHeight() > maxDimension)
+	{
+		int newWidth;
+		int newHeight;
+		if (image.GetWidth() > image.GetHeight())
+		{
+			newWidth = maxDimension;
+			newHeight = (float)image.GetHeight() / (float)image.GetWidth() * maxDimension;
+		}
+		else
+		{
+			newHeight = maxDimension;
+			newWidth = (float)image.GetWidth() / (float)image.GetHeight() * maxDimension;
+		}
+
+		return image.Scale(newWidth, newHeight, wxIMAGE_QUALITY_HIGH);
+	}
+
+	return image;
+}
+
+void AssetBrowserPanelImpl::FileListItemSelected(wxListEvent& event)
+{
+	auto itemData = (FileItemData *)event.GetItem().GetData();
+	if (itemData->assetType == AssetType::TEXTURE)
+	{
+		currentTextureImage = wxImage(itemData->path, wxBITMAP_TYPE_ANY);		
+		texturePreviewBitmap->GetParent()->Layout(); // Triggers a resize which displays the new image
+	}
+}
+
+void AssetBrowserPanelImpl::TexturePreviewBitmapResize(wxSizeEvent& event)
+{
+	static bool inResize = false; // Prevent infinite recursive call due to Layout call below
+	if (currentTextureImage.IsOk() && inResize == false)
+	{
+		inResize = true;
+		texturePreviewBitmap->Freeze();
+		auto scaledImage = ScaleImage(currentTextureImage, min(event.GetSize().GetWidth(), event.GetSize().GetHeight()));
+		texturePreviewBitmap->SetBitmap(wxBitmap(scaledImage));
+		texturePreviewBitmap->GetParent()->Layout();
+		texturePreviewBitmap->Thaw();
+		inResize = false;
 	}
 }

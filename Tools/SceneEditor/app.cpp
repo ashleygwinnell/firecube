@@ -11,6 +11,7 @@ bool MyApp::OnInit()
 	scene = nullptr;
 	editorScene = nullptr;
 	editorState = new EditorState(fcApp.GetEngine());
+	wxInitAllImageHandlers();
 	frame = new MainFrameImpl(nullptr);
 	frame->Maximize();
 	frame->Show(true);
