@@ -56,7 +56,7 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	SubscribeToEvent(editorState, editorState->showMaterialEditor, &MainFrameImpl::ShowMaterialEditor);
 	
 	materialEditorPanel = new MaterialEditorPanelImpl(this);
-	m_mgr.AddPane(materialEditorPanel, wxAuiPaneInfo().Name(wxT("materialEditorPane")).Caption(wxT("Material Editor")).PinButton(true).Float().Resizable().FloatingSize(wxDefaultSize).Hide());
+	m_mgr.AddPane(materialEditorPanel, wxAuiPaneInfo().Name(wxT("materialEditorPane")).Caption(wxT("Material Editor")).PinButton(true).Float().Resizable().Hide());
 	assetBrowserPanel = new AssetBrowserPanelImpl(this);
 	m_mgr.AddPane(assetBrowserPanel, wxAuiPaneInfo().Name(wxT("assetBrowserPane")).Caption(wxT("Asset Browser")).PinButton(true).Resizable().Layer(0).Dockable().Bottom().Dock());
 	m_mgr.Update();	

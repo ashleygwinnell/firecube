@@ -5,6 +5,7 @@
 #include "../Commands/RenameNodeCommand.h"
 #include "../Descriptors/NodeDescriptor.h"
 #include "../AssetUtils.h"
+#include <wx/wrapsizer.h>
 
 using namespace FireCube;
 
@@ -12,6 +13,18 @@ MaterialEditorPanelImpl::MaterialEditorPanelImpl(wxWindow* parent) : MaterialEdi
 {
 	SubscribeToEvent(editorState->materialPicked, &MaterialEditorPanelImpl::MaterialPicked);
 	propertyGrid->SetDropTarget(new MaterialEditorDropTarget(this));
+	
+	// Replace the box sizer with a wrap sizer
+	wxWrapSizer *wrapSizer = new wxWrapSizer();			
+	bSizer37->Replace(bSizer38, wrapSizer);
+	wrapSizer->Add(newButton, 0, wxALL, 5);	
+	wrapSizer->Add(openButton, 0, wxALL, 5);	
+	wrapSizer->Add(saveButton, 0, wxALL, 5);	
+	wrapSizer->Add(saveAsButton, 0, wxALL, 5);	
+	wrapSizer->Add(pickMaterialButton, 0, wxALL, 5);
+
+	Layout();
+	this->SetMinSize(wxSize(-1, -1)); // Fix bug where initially the panel has a minimum size set due to the box sizer
 }
 
 MaterialEditorPanelImpl::~MaterialEditorPanelImpl()

@@ -13719,7 +13719,7 @@
                 <property name="minimum_size"></property>
                 <property name="name">bSizer37</property>
                 <property name="orient">wxVERTICAL</property>
-                <property name="permission">none</property>
+                <property name="permission">protected</property>
                 <object class="sizeritem" expanded="0">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
@@ -13728,7 +13728,7 @@
                         <property name="minimum_size"></property>
                         <property name="name">bSizer38</property>
                         <property name="orient">wxHORIZONTAL</property>
-                        <property name="permission">none</property>
+                        <property name="permission">protected</property>
                         <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxALL</property>

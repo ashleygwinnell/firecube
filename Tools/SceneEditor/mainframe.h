@@ -568,6 +568,8 @@ class MaterialEditorPanel : public wxPanel
 	private:
 	
 	protected:
+		wxBoxSizer* bSizer37;
+		wxBoxSizer* bSizer38;
 		wxButton* newButton;
 		wxButton* openButton;
 		wxButton* saveButton;
