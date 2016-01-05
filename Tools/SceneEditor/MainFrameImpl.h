@@ -71,6 +71,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		void Reset();
 		void NewSceneCreated();
 		void ShowMaterialEditor();
+		void LoadPerspective();
 
 		MyApp *theApp;
 		FireCube::Engine *engine;
@@ -90,6 +91,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 
 		MaterialEditorPanelImpl *materialEditorPanel;
 		AssetBrowserPanelImpl *assetBrowserPanel;
+		std::string loadedPerspective;
 	public:
 		/** Constructor */
 		MainFrameImpl( wxWindow* parent );	
