@@ -292,8 +292,7 @@ void MainFrameImpl::UpdateNode(NodeDescriptor *nodeDesc)
 
 void MainFrameImpl::OpenSceneFile(const std::string &filename)
 {
-	SetAllPanelsVisibility(true);	
-	LoadPerspective();
+	SetAllPanelsVisibility(true);		
 
 	editorState->SetCurrentSceneFile(filename);
 
@@ -376,8 +375,7 @@ void MainFrameImpl::NewClicked(wxCommandEvent& event)
 
 	Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Materials");
 
-	SetAllPanelsVisibility(true);
-	LoadPerspective();
+	SetAllPanelsVisibility(true);	
 
 	Reset();
 
@@ -832,13 +830,7 @@ void MainFrameImpl::LoadSettingsFile()
 			recentSceneFilesMenuItems.push_back(menuItem);
 			this->Connect(menuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrameImpl::RecentFileClicked));
 		}
-	}
-
-	e = settings->FirstChildElement("perspective");
-	if (e)
-	{
-		loadedPerspective = e->Attribute("value");		
-	}
+	}	
 }
 void MainFrameImpl::WriteSettingsFile()
 {
@@ -854,11 +846,7 @@ void MainFrameImpl::WriteSettingsFile()
 		TiXmlElement *element = new TiXmlElement("file");
 		recentFilesElement->LinkEndChild(element);
 		element->SetAttribute("name", sceneFile);
-	}
-
-	TiXmlElement *element = new TiXmlElement("perspective");
-	settingsElement->LinkEndChild(element);
-	element->SetAttribute("value", m_mgr.SavePerspective().ToStdString());
+	}	
 
 	doc.SaveFile("settings.xml");
 }
@@ -1009,11 +997,3 @@ void MainFrameImpl::ShowMaterialEditor()
 	m_mgr.Update();
 }
 
-void MainFrameImpl::LoadPerspective()
-{
-	if (loadedPerspective.empty() == false)
-	{
-		m_mgr.LoadPerspective(loadedPerspective);
-		loadedPerspective.clear();
-	}
-}
