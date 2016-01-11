@@ -1558,3 +1558,61 @@ AssetBrowserPanel::~AssetBrowserPanel()
 	texturePreviewBitmap->Disconnect( wxEVT_SIZE, wxSizeEventHandler( AssetBrowserPanel::TexturePreviewBitmapResize ), NULL, this );
 	
 }
+
+ScriptEditorPanel::ScriptEditorPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer37;
+	bSizer37 = new wxBoxSizer( wxVERTICAL );
+	
+	m_toolBar1 = new wxToolBar( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL ); 
+	saveTool = m_toolBar1->AddTool( wxID_ANY, wxT("tool"), wxArtProvider::GetBitmap( wxART_FILE_SAVE, wxART_OTHER ), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL ); 
+	
+	m_toolBar1->Realize(); 
+	
+	bSizer37->Add( m_toolBar1, 0, wxEXPAND, 5 );
+	
+	sourceText = new wxStyledTextCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, wxEmptyString );
+	sourceText->SetUseTabs( true );
+	sourceText->SetTabWidth( 4 );
+	sourceText->SetIndent( 4 );
+	sourceText->SetTabIndents( true );
+	sourceText->SetBackSpaceUnIndents( true );
+	sourceText->SetViewEOL( false );
+	sourceText->SetViewWhiteSpace( false );
+	sourceText->SetMarginWidth( 2, 0 );
+	sourceText->SetIndentationGuides( true );
+	sourceText->SetMarginType( 1, wxSTC_MARGIN_SYMBOL );
+	sourceText->SetMarginMask( 1, wxSTC_MASK_FOLDERS );
+	sourceText->SetMarginWidth( 1, 16);
+	sourceText->SetMarginSensitive( 1, true );
+	sourceText->SetProperty( wxT("fold"), wxT("1") );
+	sourceText->SetFoldFlags( wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED | wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED );
+	sourceText->SetMarginType( 0, wxSTC_MARGIN_NUMBER );
+	sourceText->SetMarginWidth( 0, sourceText->TextWidth( wxSTC_STYLE_LINENUMBER, wxT("_99999") ) );
+	sourceText->MarkerDefine( wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUS );
+	sourceText->MarkerSetBackground( wxSTC_MARKNUM_FOLDER, wxColour( wxT("BLACK") ) );
+	sourceText->MarkerSetForeground( wxSTC_MARKNUM_FOLDER, wxColour( wxT("WHITE") ) );
+	sourceText->MarkerDefine( wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUS );
+	sourceText->MarkerSetBackground( wxSTC_MARKNUM_FOLDEROPEN, wxColour( wxT("BLACK") ) );
+	sourceText->MarkerSetForeground( wxSTC_MARKNUM_FOLDEROPEN, wxColour( wxT("WHITE") ) );
+	sourceText->MarkerDefine( wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY );
+	sourceText->MarkerDefine( wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_BOXPLUS );
+	sourceText->MarkerSetBackground( wxSTC_MARKNUM_FOLDEREND, wxColour( wxT("BLACK") ) );
+	sourceText->MarkerSetForeground( wxSTC_MARKNUM_FOLDEREND, wxColour( wxT("WHITE") ) );
+	sourceText->MarkerDefine( wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_BOXMINUS );
+	sourceText->MarkerSetBackground( wxSTC_MARKNUM_FOLDEROPENMID, wxColour( wxT("BLACK") ) );
+	sourceText->MarkerSetForeground( wxSTC_MARKNUM_FOLDEROPENMID, wxColour( wxT("WHITE") ) );
+	sourceText->MarkerDefine( wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY );
+	sourceText->MarkerDefine( wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY );
+	sourceText->SetSelBackground( true, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ) );
+	sourceText->SetSelForeground( true, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ) );
+	bSizer37->Add( sourceText, 1, wxEXPAND | wxALL, 0 );
+	
+	
+	this->SetSizer( bSizer37 );
+	this->Layout();
+}
+
+ScriptEditorPanel::~ScriptEditorPanel()
+{
+}

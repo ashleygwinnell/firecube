@@ -16,6 +16,7 @@ class Command;
 class ComponentDescriptor;
 class MaterialEditorPanelImpl;
 class AssetBrowserPanelImpl;
+class ScriptEditorPanelImpl;
 
 /** Implementing MainFrame */
 class MainFrameImpl : public MainFrame, public FireCube::Object
@@ -70,7 +71,8 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void OnExitClicked(wxCommandEvent& event);
 		void Reset();
 		void NewSceneCreated();
-		void ShowMaterialEditor();
+		void ShowMaterialEditor();		
+		void EditScript(const std::string &filename);
 
 		MyApp *theApp;
 		FireCube::Engine *engine;
@@ -89,7 +91,8 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		std::vector<wxMenuItem *> recentSceneFilesMenuItems;
 
 		MaterialEditorPanelImpl *materialEditorPanel;
-		AssetBrowserPanelImpl *assetBrowserPanel;
+		AssetBrowserPanelImpl *assetBrowserPanel;		
+		ScriptEditorPanelImpl *scriptEditorPanel;
 	public:
 		/** Constructor */
 		MainFrameImpl( wxWindow* parent );	

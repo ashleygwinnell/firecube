@@ -62,7 +62,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib;$(SolutionDir)\FireCube\Debug Static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>wxbase30ud.lib;wxmsw30ud_core.lib;wxmsw30ud_gl.lib;wxmsw30ud_adv.lib;wxpngd.lib;wxzlibd.lib;wxmsw30ud_propgrid.lib;wxmsw30ud_aui.lib;wxtiffd.lib;wxjpegd.lib;opengl32.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;firecube.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wxbase30ud.lib;wxmsw30ud_core.lib;wxmsw30ud_gl.lib;wxmsw30ud_adv.lib;wxpngd.lib;wxzlibd.lib;wxmsw30ud_propgrid.lib;wxmsw30ud_aui.lib;wxmsw30ud_stc.lib;wxscintillad.lib;wxtiffd.lib;wxjpegd.lib;opengl32.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;firecube.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,7 +82,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib;$(SolutionDir)\FireCube\Release Static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>wxbase30u.lib;wxmsw30u_core.lib;wxmsw30u_gl.lib;wxmsw30u_adv.lib;wxpng.lib;wxzlib.lib;wxmsw30u_propgrid.lib;wxmsw30u_aui.lib;wxtiff.lib;wxjpeg.lib;opengl32.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;firecube.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wxbase30u.lib;wxmsw30u_core.lib;wxmsw30u_gl.lib;wxmsw30u_adv.lib;wxpng.lib;wxzlib.lib;wxmsw30u_propgrid.lib;wxmsw30u_aui.lib;wxmsw30u_stc.lib;wxscintilla.lib;wxtiff.lib;wxjpeg.lib;opengl32.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;firecube.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -131,6 +131,7 @@
     <ClCompile Include="Panels\NodePropertiesPanelImpl.cpp" />
     <ClCompile Include="Panels\PlanePanelImpl.cpp" />
     <ClCompile Include="Panels\RigidBodyPanelImpl.cpp" />
+    <ClCompile Include="Panels\ScriptEditorPanelImpl.cpp" />
     <ClCompile Include="Panels\SpherePanelImpl.cpp" />
     <ClCompile Include="Panels\StaticModelPanelImpl.cpp" />
     <ClCompile Include="SceneReader.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Panels\NodePropertiesPanelImpl.h" />
     <ClInclude Include="Panels\PlanePanelImpl.h" />
     <ClInclude Include="Panels\RigidBodyPanelImpl.h" />
+    <ClInclude Include="Panels\ScriptEditorPanelImpl.h" />
     <ClInclude Include="Panels\SpherePanelImpl.h" />
     <ClInclude Include="Panels\StaticModelPanelImpl.h" />
     <ClInclude Include="SceneReader.h" />

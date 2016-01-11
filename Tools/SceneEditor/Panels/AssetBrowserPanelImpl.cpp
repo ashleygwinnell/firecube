@@ -116,6 +116,11 @@ void AssetBrowserPanelImpl::FileListItemActivated(wxListEvent& event)
 			std::string meshFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), itemData->path);
 			editorState->addMesh(editorState, meshFileName);
 		}
+		else if (itemData->assetType == AssetType::SCRIPT)
+		{
+			std::string scriptFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), itemData->path);			
+			editorState->showScriptEditor(editorState, scriptFileName);
+		}
 	}
 }
 

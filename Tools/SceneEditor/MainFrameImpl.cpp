@@ -25,6 +25,7 @@
 #include "Panels/PlanePanelImpl.h"
 #include "Panels/SpherePanelImpl.h"
 #include "Panels/AssetBrowserPanelImpl.h"
+#include "Panels/ScriptEditorPanelImpl.h"
 #include "AssetUtils.h"
 #include "SceneReader.h"
 #include "Descriptors/ComponentDescriptor.h"
@@ -54,11 +55,14 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	SubscribeToEvent(editorState, editorState->redoPerformed, &MainFrameImpl::UpdateUndoRedoMenu);
 	SubscribeToEvent(editorState, editorState->newSceneCreated, &MainFrameImpl::NewSceneCreated);
 	SubscribeToEvent(editorState, editorState->showMaterialEditor, &MainFrameImpl::ShowMaterialEditor);
+	SubscribeToEvent(editorState, editorState->showScriptEditor, &MainFrameImpl::EditScript);
 	
 	materialEditorPanel = new MaterialEditorPanelImpl(this);
 	m_mgr.AddPane(materialEditorPanel, wxAuiPaneInfo().Name(wxT("materialEditorPane")).Caption(wxT("Material Editor")).PinButton(true).Float().Resizable().Hide());
 	assetBrowserPanel = new AssetBrowserPanelImpl(this);
 	m_mgr.AddPane(assetBrowserPanel, wxAuiPaneInfo().Name(wxT("assetBrowserPane")).Caption(wxT("Asset Browser")).PinButton(true).Resizable().Layer(0).Dockable().Bottom().Dock());
+	scriptEditorPanel = new ScriptEditorPanelImpl(this);
+	m_mgr.AddPane(scriptEditorPanel, wxAuiPaneInfo().Name(wxT("scriptEditorPane")).Caption(wxT("Script Editor")).PinButton(true).Float().Resizable().Hide());
 	m_mgr.Update();	
 
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);
@@ -997,3 +1001,11 @@ void MainFrameImpl::ShowMaterialEditor()
 	m_mgr.Update();
 }
 
+void MainFrameImpl::EditScript(const std::string &filename)
+{
+	scriptEditorPanel->OpenFile(filename);
+	auto &pane = m_mgr.GetPane("scriptEditorPane");
+	pane.Show();	
+
+	m_mgr.Update();
+}

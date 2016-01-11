@@ -47,6 +47,8 @@
 #include <wx/listctrl.h>
 #include <wx/statbmp.h>
 #include <wx/splitter.h>
+#include <wx/toolbar.h>
+#include <wx/stc/stc.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -636,6 +638,25 @@ class AssetBrowserPanel : public wxPanel
 			splitter2->SetSashPosition( 2000 );
 			splitter2->Disconnect( wxEVT_IDLE, wxIdleEventHandler( AssetBrowserPanel::splitter2OnIdle ), NULL, this );
 		}
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class ScriptEditorPanel
+///////////////////////////////////////////////////////////////////////////////
+class ScriptEditorPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxToolBar* m_toolBar1;
+		wxToolBarToolBase* saveTool; 
+		wxStyledTextCtrl* sourceText;
+	
+	public:
+		
+		ScriptEditorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 507,496 ), long style = wxTAB_TRAVERSAL ); 
+		~ScriptEditorPanel();
 	
 };
 
