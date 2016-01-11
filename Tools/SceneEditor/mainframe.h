@@ -655,7 +655,7 @@ class ScriptEditorPanel : public wxPanel
 	
 	public:
 		
-		ScriptEditorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 507,496 ), long style = wxTAB_TRAVERSAL ); 
+		ScriptEditorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 773,746 ), long style = wxTAB_TRAVERSAL ); 
 		~ScriptEditorPanel();
 	
 };

@@ -62,7 +62,7 @@ ScriptEditorPanelImpl::ScriptEditorPanelImpl(wxWindow* parent) : ScriptEditorPan
 	wxColor grey(128, 128, 128);
 	sourceText->SetProperty(wxT("fold"), wxT("1"));
 	sourceText->SetProperty(wxT("fold.comment"), wxT("1"));
-	sourceText->SetProperty(wxT("fold.compact"), wxT("1"));
+	sourceText->SetProperty(wxT("fold.compact"), wxT("0"));
 	sourceText->SetProperty(wxT("fold.preprocessor"), wxT("1"));
 	sourceText->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUS, *wxWHITE, grey);
 	sourceText->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUS, *wxWHITE, grey);

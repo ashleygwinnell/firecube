@@ -15134,7 +15134,7 @@
             <property name="minimum_size"></property>
             <property name="name">ScriptEditorPanel</property>
             <property name="pos"></property>
-            <property name="size">507,496</property>
+            <property name="size">773,746</property>
             <property name="subclass"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
