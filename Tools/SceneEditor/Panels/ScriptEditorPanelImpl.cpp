@@ -14,6 +14,8 @@ enum
 
 ScriptEditorPanelImpl::ScriptEditorPanelImpl(wxWindow* parent) : ScriptEditorPanel(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), editorState(((MyApp*)wxTheApp)->GetEditorState())
 {
+	sourceText->StyleSetFaceName(wxSTC_STYLE_DEFAULT, "Consolas");	
+	sourceText->StyleSetSize(wxSTC_STYLE_DEFAULT, 10);
 	sourceText->StyleClearAll();
 	sourceText->SetLexer(wxSTC_LEX_LUA);
 	
@@ -39,7 +41,7 @@ ScriptEditorPanelImpl::ScriptEditorPanelImpl(wxWindow* parent) : ScriptEditorPan
 	sourceText->StyleSetBold(wxSTC_LUA_WORD, true);
 	sourceText->StyleSetForeground(wxSTC_LUA_WORD2, wxColour(0, 0, 255));
 	sourceText->StyleSetForeground(wxSTC_LUA_WORD3, wxColour(0, 128, 255));
-	sourceText->StyleSetForeground(wxSTC_LUA_WORD4, wxColour(196, 196, 0));
+	sourceText->StyleSetForeground(wxSTC_LUA_WORD4, wxColour(196, 196, 0));	
 
 	// Key words
 	sourceText->SetKeyWords(0, wxT("function for while repeat until if else elseif end break return in do then"));
@@ -77,6 +79,7 @@ ScriptEditorPanelImpl::ScriptEditorPanelImpl(wxWindow* parent) : ScriptEditorPan
 
 	sourceText->Bind(wxEVT_STC_MARGINCLICK, &ScriptEditorPanelImpl::OnMarginClick, this);
 	sourceText->Bind(wxEVT_STC_CHARADDED, &ScriptEditorPanelImpl::OnCharAdded, this);
+	sourceText->Bind(wxEVT_STC_UPDATEUI, &ScriptEditorPanelImpl::OnBrace, this);
 }
 
 ScriptEditorPanelImpl::~ScriptEditorPanelImpl()
@@ -135,5 +138,44 @@ void ScriptEditorPanelImpl::OnCharAdded(wxStyledTextEvent &event)
 				sourceText->GotoPos(sourceText->GetLineIndentPosition(line));
 			}
 		}
+	}
+}
+
+void ScriptEditorPanelImpl::OnBrace(wxStyledTextEvent &event)
+{
+	// Caret position
+	int pos = sourceText->GetCurrentPos();
+	
+	// Keys at position
+	char pre_key = static_cast<char>(sourceText->GetCharAt(pos - 1));
+	char key = static_cast<char>(sourceText->GetCharAt(pos));
+	
+	// Brace search
+	int hit = wxSTC_INVALID_POSITION;
+	if (key == '(' || key == '{' || key == '[')
+	{
+		hit = pos;
+	}
+	else if (pre_key == ')' || pre_key == '}' || pre_key == ']')
+	{
+		hit = pos - 1;
+	}
+
+	// Brace action
+	if (hit != wxSTC_INVALID_POSITION) 
+	{
+		int match = sourceText->BraceMatch(hit);
+		if (match != wxSTC_INVALID_POSITION)
+		{
+			sourceText->BraceHighlight(match, hit);
+		}
+		else
+		{
+			sourceText->BraceBadLight(hit);
+		}
+	}
+	else
+	{
+		sourceText->BraceBadLight(wxSTC_INVALID_POSITION); // Remove any brace highlight
 	}
 }

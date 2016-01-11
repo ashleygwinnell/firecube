@@ -19,6 +19,7 @@ private:
 
 	void OnMarginClick(wxStyledTextEvent &event);
 	void OnCharAdded(wxStyledTextEvent &event);
+	void OnBrace(wxStyledTextEvent &event);
 	
 	EditorState *editorState;
 	std::string currentFileName;
