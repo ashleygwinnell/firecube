@@ -652,6 +652,11 @@ class ScriptEditorPanel : public wxPanel
 		wxToolBar* m_toolBar1;
 		wxToolBarToolBase* saveTool; 
 		wxStyledTextCtrl* sourceText;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void SaveClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		

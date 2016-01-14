@@ -1611,8 +1611,16 @@ ScriptEditorPanel::ScriptEditorPanel( wxWindow* parent, wxWindowID id, const wxP
 	
 	this->SetSizer( bSizer37 );
 	this->Layout();
+	
+	// Connect Events
+	this->Connect( saveTool->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( ScriptEditorPanel::SaveClicked ) );
+	sourceText->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( ScriptEditorPanel::OnKeyDown ), NULL, this );
 }
 
 ScriptEditorPanel::~ScriptEditorPanel()
 {
+	// Disconnect Events
+	this->Disconnect( saveTool->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( ScriptEditorPanel::SaveClicked ) );
+	sourceText->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( ScriptEditorPanel::OnKeyDown ), NULL, this );
+	
 }

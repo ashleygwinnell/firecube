@@ -179,3 +179,29 @@ void ScriptEditorPanelImpl::OnBrace(wxStyledTextEvent &event)
 		sourceText->BraceBadLight(wxSTC_INVALID_POSITION); // Remove any brace highlight
 	}
 }
+
+void ScriptEditorPanelImpl::OnKeyDown(wxKeyEvent& event)
+{
+	if (event.GetKeyCode() == 'S' && event.ControlDown())
+	{
+		SaveScript();
+	}
+	else
+	{
+		event.Skip();
+	}
+}
+
+void ScriptEditorPanelImpl::SaveClicked(wxCommandEvent& event)
+{
+	SaveScript();
+}
+
+void ScriptEditorPanelImpl::SaveScript()
+{
+	if (currentFileName.empty() == false)
+	{
+		std::ofstream out(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentFileName);
+		out << sourceText->GetText().ToStdString();
+	}
+}
