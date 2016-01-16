@@ -6,6 +6,7 @@
 #include "Scene/Scene.h"
 #include "Scene/Node.h"
 #include "Scene/StaticModel.h"
+#include "Scene/Prefab.h"
 #include "Utils/Filesystem.h"
 #include "Scripting/LuaScript.h"
 #include "Scripting/LuaFile.h"
@@ -72,6 +73,10 @@ void SceneReader::ReadNode(TiXmlElement *e, Node *node)
 		else if (element->ValueStr() == "transformation")
 		{
 			ReadTransformation(element, node);
+		}
+		else if (element->ValueStr() == "prefab")
+		{
+			ReadPrefab(element, node);
 		}
 	}
 }
@@ -435,5 +440,26 @@ void SceneReader::ReadTransformation(TiXmlElement *e, Node *node)
 	{
 		vec3 rotation = Variant::FromString(e->Attribute("rotation")).GetVec3();		
 		node->SetRotation(quat(rotation.x, rotation.y, rotation.z));
+	}
+}
+
+void SceneReader::ReadPrefab(TiXmlElement *e, Node *node)
+{
+	Prefab *prefab = nullptr;
+	if (e->Attribute("name"))
+	{
+		prefab = engine->GetResourceCache()->GetResource<Prefab>(e->Attribute("name"));		
+	}
+
+	if (prefab)
+	{
+		auto prefabInstance = prefab->GetNode()->Clone();
+
+		TiXmlElement *transformationElement = e->FirstChildElement("transformation");
+		if (transformationElement)
+		{
+			ReadTransformation(transformationElement, prefabInstance);
+		}
+		prefabInstance->SetParent(node);
 	}
 }

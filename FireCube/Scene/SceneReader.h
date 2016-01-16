@@ -22,6 +22,7 @@ private:
 	
 	void ReadComponent(TiXmlElement *e, Node *node);
 	void ReadTransformation(TiXmlElement *e, Node *node);	
+	void ReadPrefab(TiXmlElement *e, Node *node);
 };
 
 }
