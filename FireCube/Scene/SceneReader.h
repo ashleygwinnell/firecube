@@ -17,9 +17,9 @@ class FIRECUBE_API SceneReader : Object
 public:
 	SceneReader(Engine *engine);
 	bool Read(Scene &scene, const std::string &filename);
-	
-private:
 	void ReadNode(TiXmlElement *e, Node *node);
+private:
+	
 	void ReadComponent(TiXmlElement *e, Node *node);
 	void ReadTransformation(TiXmlElement *e, Node *node);	
 };

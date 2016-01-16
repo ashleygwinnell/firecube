@@ -366,6 +366,9 @@
     <ClCompile Include="Scene\Skybox.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\Prefab.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -670,6 +673,9 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Scene\Skybox.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Prefab.h">
       <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>

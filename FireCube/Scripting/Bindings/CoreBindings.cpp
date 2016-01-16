@@ -8,6 +8,7 @@
 #include "Geometry/Mesh.h"
 #include "Scripting/LuaFile.h"
 #include "Audio/Sound.h"
+#include "Scene/Prefab.h"
 
 using namespace FireCube;
 using namespace LuaIntf;
@@ -62,6 +63,18 @@ int GetResource(ResourceCache *resourceCache, lua_State *L, const std::string &t
 			lua_pushnil(L);
 		}
 	}	
+	else if (type == "Prefab")
+	{
+		auto resource = resourceCache->GetResource<Prefab>(path);
+		if (resource)
+		{
+			Lua::push(L, resource);
+		}
+		else
+		{
+			lua_pushnil(L);
+		}
+	}
 	else
 	{
 		lua_pushnil(L);

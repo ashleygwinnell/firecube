@@ -156,39 +156,6 @@ vec3 Scene::GetAmbientColor() const
 	return ambientColor;
 }
 
-void Scene::SetPrefab(const StringHash &nameHash, Node *prefab)
-{
-	prefabs[nameHash] = prefab;
-}
-
-Node *Scene::GetPrefab(const StringHash &nameHash)
-{
-	auto i = prefabs.find(nameHash);
-	if (i != prefabs.end())
-	{
-		return i->second;
-	}
-	else
-	{
-		return nullptr;
-	}
-}
-
-Node *Scene::ClonePrefab(const StringHash &nameHash)
-{
-	Node *prefab = GetPrefab(nameHash);
-	if (prefab)
-	{
-		Node *clone = prefab->Clone();
-		rootNode.AddChild(clone);
-		return clone;
-	}
-	else
-	{
-		return nullptr;
-	}
-}
-
 Octree<Renderable> &Scene::GetOctree()
 {
 	return octree;

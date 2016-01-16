@@ -14,7 +14,7 @@
 #include "Scripting/LuaScript.h"
 #include "Audio/SoundEmitter.h"
 #include "Scene/SceneReader.h"
-
+#include "Scene/Prefab.h"
 using namespace FireCube;
 using namespace LuaIntf;
 
@@ -162,9 +162,7 @@ Node *NodeNew(Engine *engine, const std::string &name)
 void LuaBindings::InitScene(lua_State *luaState)
 {
 	LuaBinding(luaState)
-		.beginClass<Scene>("Scene")
-			.addFunction("ClonePrefab", &Scene::ClonePrefab)
-			.addFunction("SetPrefab", &Scene::SetPrefab)
+		.beginClass<Scene>("Scene")			
 			.addFunction("IntersectRay", &Scene::IntersectRay)
 			.addFunction("GetRootNode", &Scene::GetRootNode)
 		.endClass()
@@ -245,6 +243,10 @@ void LuaBindings::InitScene(lua_State *luaState)
 		.beginClass<SceneReader>("SceneReader")
 			.addConstructor(LUA_ARGS(Engine *))
 			.addFunction("Read", &SceneReader::Read)
+		.endClass()
+		.beginExtendClass<Prefab, Resource>("Prefab")
+			.addConstructor(LUA_ARGS(Engine *))		
+			.addProperty("node", &Prefab::GetNode)
 		.endClass();
 
 	LuaRef t = LuaRef::createTable(luaState);

@@ -85,6 +85,7 @@
     <ClCompile Include="Scene\Node.cpp" />
     <ClCompile Include="Scene\OrbitCamera.cpp" />
     <ClCompile Include="Scene\ParticleEmitter.cpp" />
+    <ClCompile Include="Scene\Prefab.cpp" />
     <ClCompile Include="Scene\Renderable.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SceneReader.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Scene\Node.h" />
     <ClInclude Include="Scene\OrbitCamera.h" />
     <ClInclude Include="Scene\ParticleEmitter.h" />
+    <ClInclude Include="Scene\Prefab.h" />
     <ClInclude Include="Scene\Renderable.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneReader.h" />
