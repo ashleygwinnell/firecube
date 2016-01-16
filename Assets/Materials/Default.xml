@@ -1,0 +1,6 @@
+<material name="Default">
+    <technique name="Techniques/NoTexture.xml" />
+    <parameter name="materialDiffuse" value="0.7 0.7 0.7" />
+    <parameter name="materialSpecular" value="0 0 0" />
+    <parameter name="materialShininess" value="0.000000" />
+</material>
