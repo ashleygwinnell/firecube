@@ -34,6 +34,8 @@ bool Prefab::Load(const std::string &filename)
 
 	SceneReader sceneReader(engine);
 	sceneReader.ReadNode(e, node);
+
+	return true;
 }
 
 const Node *Prefab::GetNode() const
