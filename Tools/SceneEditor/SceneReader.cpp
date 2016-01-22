@@ -73,6 +73,10 @@ void ::SceneReader::ReadNode(TiXmlElement *e, NodeDescriptor *node)
 		{
 			ReadTransformation(element, node);
 		}
+		else if (element->ValueStr() == "prefab")
+		{
+			ReadPrefab(element, node);
+		}
 	}
 }
 
@@ -378,7 +382,10 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 	{
 		node->AddComponent(addedComponent);
 		addedComponent->SetParent(node);
-		addedComponent->CreateComponent(node->GetNode(), engine);
+		if (node->GetNode())
+		{
+			addedComponent->CreateComponent(node->GetNode(), engine);
+		}
 	}
 }
 
@@ -401,4 +408,65 @@ void ::SceneReader::ReadTransformation(TiXmlElement *e, NodeDescriptor *node)
 		vec3 rotation = Variant::FromString(e->Attribute("rotation")).GetVec3();		
 		node->SetRotation(rotation);
 	}
+}
+
+void ::SceneReader::ReadPrefab(TiXmlElement * element, NodeDescriptor * node)
+{
+	NodeDescriptor *prefab = nullptr;
+	if (element->Attribute("name"))
+	{
+		std::string resolvedFileName = Filesystem::FindResourceByName(element->Attribute("name"));
+		if (resolvedFileName.empty())
+			return;
+
+		TiXmlDocument xmlDocument;
+		if (!xmlDocument.LoadFile(resolvedFileName))
+			return;
+
+		TiXmlElement *e = xmlDocument.FirstChildElement("node");
+		if (e == nullptr)
+			return;
+
+		prefab = new NodeDescriptor();
+
+		::SceneReader reader(engine, editorState);
+		reader.ReadNode(e, prefab);	
+		prefab->SetIsPrefab(true);
+		prefab->SetPrefabPath(element->Attribute("name"));
+	}
+
+	if (prefab)
+	{
+		auto prefabInstance = prefab->Clone();
+
+		TiXmlElement *transformationElement = element->FirstChildElement("transformation");
+		if (transformationElement)
+		{
+			ReadTransformation(transformationElement, prefabInstance);
+		}
+		prefabInstance->SetParent(node);
+	}
+}
+
+NodeDescriptor *::SceneReader::ReadPrefab(const std::string &filename)
+{
+	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
+	if (resolvedFileName.empty())
+		return nullptr;
+
+	TiXmlDocument xmlDocument;
+	if (!xmlDocument.LoadFile(resolvedFileName))
+		return nullptr;
+
+	TiXmlElement *e = xmlDocument.FirstChildElement("node");
+	if (e == nullptr)
+		return nullptr;
+
+	NodeDescriptor *prefab = new NodeDescriptor();
+
+	::SceneReader reader(engine, editorState);
+	reader.ReadNode(e, prefab);
+	prefab->SetIsPrefab(true);
+	prefab->SetPrefabPath(filename);
+	return prefab;
 }

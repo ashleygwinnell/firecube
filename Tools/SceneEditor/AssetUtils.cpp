@@ -90,6 +90,10 @@ AssetType AssetUtils::GetAssetTypeByPath(const std::string &path)
 	{
 		return AssetType::TEXTURE;
 	}
+	else if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Prefabs", path))
+	{
+		return AssetType::PREFAB;
+	}
 
 	return AssetType::UNKNOWN;
 }

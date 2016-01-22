@@ -209,7 +209,7 @@ void AssetBrowserPanelImpl::FileListBeginDrag(wxListEvent& event)
 {
 	auto itemData = (FileItemData *)event.GetItem().GetData();
 	
-	if (itemData->assetType == AssetType::MATERIAL || itemData->assetType == AssetType::TEXTURE || itemData->assetType == AssetType::TECHNIQUE || itemData->assetType == AssetType::MESH)
+	if (itemData->assetType == AssetType::MATERIAL || itemData->assetType == AssetType::TEXTURE || itemData->assetType == AssetType::TECHNIQUE || itemData->assetType == AssetType::MESH || itemData->assetType == AssetType::PREFAB)
 	{
 		wxCustomDataObject dataObject(wxDataFormat("Asset"));
 		unsigned int size;

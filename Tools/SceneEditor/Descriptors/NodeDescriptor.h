@@ -36,6 +36,10 @@ public:
 	FireCube::vec3 GetRotation() const;
 	void SetName(const std::string &name);
 	std::string GetName() const;
+	bool IsPrefab() const;
+	void SetIsPrefab(bool val);
+	std::string GetPrefabPath() const;
+	void SetPrefabPath(std::string val);
 private:
 	FireCube::WeakPtr<FireCube::Node> node;
 	NodeDescriptor *parent;
@@ -47,4 +51,6 @@ private:
 	FireCube::vec3 scale;
 
 	std::string name;
+	bool isPrefab;
+	std::string prefabPath;
 };

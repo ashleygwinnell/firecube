@@ -19,6 +19,7 @@ using namespace FireCube;
 #include "Descriptors/PhysicsWorldDescriptor.h"
 #include "Descriptors/StaticModelDescriptor.h"
 #include "AssetUtils.h"
+#include "SceneReader.h"
 
 GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()),
@@ -538,6 +539,17 @@ wxDragResult CanvasDropTarget::OnData(wxCoord vX, wxCoord vY, wxDragResult eResu
 		if (type == AssetType::MESH)
 		{	
 			canvas->AddMesh(path);			
+		}
+		else if (type == AssetType::PREFAB)
+		{
+			::SceneReader sceneReader(canvas->engine, canvas->editorState);
+			auto prefab = sceneReader.ReadPrefab(path);
+			if (prefab)
+			{
+				auto prefabInstance = prefab->Clone();				
+				auto addNodeCommand = new AddNodeCommand(canvas->editorState, "Add Node", prefabInstance, canvas->rootDesc);
+				canvas->editorState->ExecuteCommand(addNodeCommand);
+			}
 		}
 	}
 

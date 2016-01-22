@@ -376,8 +376,8 @@ void MainFrameImpl::NewClicked(wxCommandEvent& event)
 	Filesystem::SetAssetsFolder(path);
 
 	Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Scenes");
-
 	Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Materials");
+	Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Prefabs");
 
 	SetAllPanelsVisibility(true);	
 

@@ -29,20 +29,30 @@ void SceneWriter::Serialize(NodeDescriptor *root, const std::string &filename)
 
 void SceneWriter::Serialize(NodeDescriptor *nodeDesc, TiXmlElement *parent)
 {
-	TiXmlElement *element = new TiXmlElement("node");
-	parent->LinkEndChild(element);
-
-	element->SetAttribute("name", nodeDesc->GetName());
-	SerializeNodeTransformation(nodeDesc, element);
-
-	for (auto component : nodeDesc->GetComponents())
+	if (nodeDesc->IsPrefab() == false)
 	{
-		Serialize(component, element);
+		TiXmlElement *element = new TiXmlElement("node");
+		parent->LinkEndChild(element);
+
+		element->SetAttribute("name", nodeDesc->GetName());
+		SerializeNodeTransformation(nodeDesc, element);
+
+		for (auto component : nodeDesc->GetComponents())
+		{
+			Serialize(component, element);
+		}
+
+		for (auto child : nodeDesc->GetChildren())
+		{
+			Serialize(child, element);
+		}
 	}
-
-	for (auto child : nodeDesc->GetChildren())
+	else
 	{
-		Serialize(child, element);
+		TiXmlElement *element = new TiXmlElement("prefab");
+		parent->LinkEndChild(element);
+		element->SetAttribute("name", nodeDesc->GetPrefabPath());
+		SerializeNodeTransformation(nodeDesc, element);
 	}
 }
 

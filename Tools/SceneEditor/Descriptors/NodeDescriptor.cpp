@@ -3,7 +3,7 @@
 
 using namespace FireCube;
 
-NodeDescriptor::NodeDescriptor() : node(nullptr), parent(nullptr), translation(0.0f), scale(1.0f), rotation(0.0f)
+NodeDescriptor::NodeDescriptor() : node(nullptr), parent(nullptr), translation(0.0f), scale(1.0f), rotation(0.0f), isPrefab(false)
 {
 
 }
@@ -91,6 +91,8 @@ NodeDescriptor *NodeDescriptor::Clone()
 	ret->scale = scale;
 	ret->rotation = rotation;
 	ret->name = name;
+	ret->isPrefab = isPrefab;
+	ret->prefabPath = prefabPath;
 
 	for (auto component : components)
 	{
@@ -230,6 +232,26 @@ void NodeDescriptor::SetName(const std::string &name)
 std::string NodeDescriptor::GetName() const
 {
 	return name;
+}
+
+bool NodeDescriptor::IsPrefab() const
+{
+	return isPrefab;
+}
+
+void NodeDescriptor::SetIsPrefab(bool val)
+{
+	isPrefab = val;
+}
+
+std::string NodeDescriptor::GetPrefabPath() const
+{
+	return prefabPath;
+}
+
+void NodeDescriptor::SetPrefabPath(std::string val)
+{
+	prefabPath = val;
 }
 
 void NodeDescriptor::SetChildIndex(NodeDescriptor *child, unsigned int index)
