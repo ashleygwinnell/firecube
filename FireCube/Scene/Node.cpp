@@ -283,8 +283,7 @@ Node *Node::Clone() const
 		Node *c = (*i)->Clone();
 		ret->AddChild(c);
 	}
-
-	ret->SetParent(parent);
+	
 	return ret;
 }
 
