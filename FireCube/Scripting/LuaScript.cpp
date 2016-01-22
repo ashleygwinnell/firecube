@@ -23,7 +23,7 @@ LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(othe
 
 void LuaScript::Update(float time)
 {	
-	if (awakeCalled == false)
+	if (awakeCalled == false && scene)
 	{		
 		awakeCalled = true;
 
