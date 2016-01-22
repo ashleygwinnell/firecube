@@ -28,7 +28,7 @@ void LuaScript::Update(float time)
 		awakeCalled = true;
 
 		auto awakeFunction = scriptFunctions[ScriptFunction::AWAKE];
-		if (scene && objectName.empty() == false && IsEnabled() && awakeFunction)
+		if (objectName.empty() == false && IsEnabled() && awakeFunction)
 		{				
 			// Call awake function	
 			try
