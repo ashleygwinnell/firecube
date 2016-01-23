@@ -51,6 +51,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void AddRigidBodyClicked(wxCommandEvent& event);
 		virtual void AddNodeClicked(wxCommandEvent& event);
 		virtual void SceneTreeKeyUp(wxKeyEvent& event);
+		virtual void SceneTreeItemMenu(wxTreeEvent& event);
 		void ComponentAdded(ComponentDescriptor *componentDesc);
 		void ComponentRemoved(ComponentDescriptor *componentDesc);
 		void AddComponentPanel(ComponentDescriptor *componentDesc);

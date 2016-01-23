@@ -110,6 +110,7 @@ class MainFrame : public wxFrame
 		virtual void SceneTreeBeginDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeEndDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeEndLabelEdit( wxTreeEvent& event ) { event.Skip(); }
+		virtual void SceneTreeItemMenu( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeSelectionChanged( wxTreeEvent& event ) { event.Skip(); }
 		
 	

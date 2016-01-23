@@ -12,11 +12,12 @@ class SceneWriter
 {
 public:
 	void Serialize(NodeDescriptor *root, const std::string &filename);
+	void SerializePrefab(NodeDescriptor *root, const std::string &filename);
 private:
 	std::string ToString(FireCube::vec2 v) const;
 	std::string ToString(FireCube::vec3 v) const;
 	std::string ToString(FireCube::vec4 v) const;	
-	void Serialize(NodeDescriptor *nodeDesc, TiXmlElement *parent);
-	void Serialize(ComponentDescriptor *componentDesc, TiXmlElement *parent);
-	void SerializeNodeTransformation(NodeDescriptor *nodeDesc, TiXmlElement *parent);	
+	void Serialize(NodeDescriptor *nodeDesc, TiXmlNode *parent);
+	void Serialize(ComponentDescriptor *componentDesc, TiXmlNode *parent);
+	void SerializeNodeTransformation(NodeDescriptor *nodeDesc, TiXmlNode *parent);
 };

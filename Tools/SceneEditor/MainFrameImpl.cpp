@@ -1009,3 +1009,27 @@ void MainFrameImpl::EditScript(const std::string &filename)
 
 	m_mgr.Update();
 }
+
+void MainFrameImpl::SceneTreeItemMenu(wxTreeEvent& event)
+{
+	auto selectedItem = event.GetItem();
+	auto node = treeItemToNode[selectedItem];
+	if (node->IsPrefab() == false)
+	{
+		wxMenu* menu = new wxMenu;
+		auto createPrefabItem = menu->Append(wxID_ANY, wxT("Create Prefab"));
+
+		menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [createPrefabItem, node, this](wxCommandEvent &event) {
+			if (event.GetId() == createPrefabItem->GetId())
+			{
+				std::string tragetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Prefabs" + Filesystem::PATH_SEPARATOR + node->GetName() + ".xml";
+				SceneWriter sceneWriter;
+				sceneWriter.SerializePrefab(node, tragetPath);
+				node->SetIsPrefab(true);
+				node->SetPrefabPath("Prefabs" + Filesystem::PATH_SEPARATOR + node->GetName() + ".xml");
+			}
+		});
+		PopupMenu(menu);
+		delete menu;
+	}
+}

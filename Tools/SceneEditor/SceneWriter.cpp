@@ -27,7 +27,14 @@ void SceneWriter::Serialize(NodeDescriptor *root, const std::string &filename)
 	doc.SaveFile(filename);
 }
 
-void SceneWriter::Serialize(NodeDescriptor *nodeDesc, TiXmlElement *parent)
+void SceneWriter::SerializePrefab(NodeDescriptor *root, const std::string &filename)
+{
+	TiXmlDocument doc;
+	Serialize(root, &doc);
+	doc.SaveFile(filename);
+}
+
+void SceneWriter::Serialize(NodeDescriptor *nodeDesc, TiXmlNode *parent)
 {
 	if (nodeDesc->IsPrefab() == false)
 	{
@@ -56,7 +63,7 @@ void SceneWriter::Serialize(NodeDescriptor *nodeDesc, TiXmlElement *parent)
 	}
 }
 
-void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlElement *parent)
+void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlNode *parent)
 {
 	if (componentDesc->GetType() == ComponentType::STATIC_MODEL)
 	{
@@ -275,7 +282,7 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlElement *pa
 
 }
 
-void SceneWriter::SerializeNodeTransformation(NodeDescriptor *nodeDesc, TiXmlElement *parent)
+void SceneWriter::SerializeNodeTransformation(NodeDescriptor *nodeDesc, TiXmlNode *parent)
 {	
 	TiXmlElement *transformation = new TiXmlElement("transformation");
 	parent->LinkEndChild(transformation);	
