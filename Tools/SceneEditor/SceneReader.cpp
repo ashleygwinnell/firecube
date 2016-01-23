@@ -444,6 +444,7 @@ void ::SceneReader::ReadPrefab(TiXmlElement * element, NodeDescriptor * node)
 		{
 			ReadTransformation(transformationElement, prefabInstance);
 		}
+		prefabInstance->Instantiate(node, engine, editorState->GetNodeMap());
 		prefabInstance->SetParent(node);
 	}
 }
