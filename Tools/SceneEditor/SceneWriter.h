@@ -17,7 +17,7 @@ private:
 	std::string ToString(FireCube::vec2 v) const;
 	std::string ToString(FireCube::vec3 v) const;
 	std::string ToString(FireCube::vec4 v) const;	
-	void Serialize(NodeDescriptor *nodeDesc, TiXmlNode *parent);
+	void Serialize(NodeDescriptor *nodeDesc, bool prefabAsNode, TiXmlNode *parent);
 	void Serialize(ComponentDescriptor *componentDesc, TiXmlNode *parent);
 	void SerializeNodeTransformation(NodeDescriptor *nodeDesc, TiXmlNode *parent);
 };

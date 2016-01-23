@@ -23,20 +23,20 @@ void SceneWriter::Serialize(NodeDescriptor *root, const std::string &filename)
 	TiXmlDocument doc;	
 	TiXmlElement *element = new TiXmlElement("scene");	
 	doc.LinkEndChild(element);
-	Serialize(root, element);
+	Serialize(root, false, element);
 	doc.SaveFile(filename);
 }
 
 void SceneWriter::SerializePrefab(NodeDescriptor *root, const std::string &filename)
 {
 	TiXmlDocument doc;
-	Serialize(root, &doc);
+	Serialize(root, true, &doc);
 	doc.SaveFile(filename);
 }
 
-void SceneWriter::Serialize(NodeDescriptor *nodeDesc, TiXmlNode *parent)
+void SceneWriter::Serialize(NodeDescriptor *nodeDesc, bool prefabAsNode, TiXmlNode *parent)
 {
-	if (nodeDesc->IsPrefab() == false)
+	if (nodeDesc->IsPrefab() == false || prefabAsNode)
 	{
 		TiXmlElement *element = new TiXmlElement("node");
 		parent->LinkEndChild(element);
@@ -51,7 +51,7 @@ void SceneWriter::Serialize(NodeDescriptor *nodeDesc, TiXmlNode *parent)
 
 		for (auto child : nodeDesc->GetChildren())
 		{
-			Serialize(child, element);
+			Serialize(child, prefabAsNode, element);
 		}
 	}
 	else

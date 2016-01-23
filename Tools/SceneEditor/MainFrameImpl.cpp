@@ -415,6 +415,10 @@ void MainFrameImpl::NodeAdded(NodeDescriptor *nodeDesc)
 		auto id = sceneTreeCtrl->AppendItem(parentId, nodeDesc->GetName());
 		nodeToTreeItem[nodeDesc] = id;
 		treeItemToNode[id] = nodeDesc;
+		if (nodeDesc->IsPrefab())
+		{
+			sceneTreeCtrl->SetItemTextColour(id, *wxRED);
+		}
 	}
 
 	for (auto &child : nodeDesc->GetChildren())
@@ -1019,14 +1023,31 @@ void MainFrameImpl::SceneTreeItemMenu(wxTreeEvent& event)
 		wxMenu* menu = new wxMenu;
 		auto createPrefabItem = menu->Append(wxID_ANY, wxT("Create Prefab"));
 
-		menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [createPrefabItem, node, this](wxCommandEvent &event) {
+		menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [createPrefabItem, selectedItem, node, this](wxCommandEvent &event) {
 			if (event.GetId() == createPrefabItem->GetId())
 			{
 				std::string tragetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Prefabs" + Filesystem::PATH_SEPARATOR + node->GetName() + ".xml";
 				SceneWriter sceneWriter;
 				sceneWriter.SerializePrefab(node, tragetPath);
+				sceneTreeCtrl->SetItemTextColour(selectedItem, *wxRED);
 				node->SetIsPrefab(true);
 				node->SetPrefabPath("Prefabs" + Filesystem::PATH_SEPARATOR + node->GetName() + ".xml");
+			}
+		});
+		PopupMenu(menu);
+		delete menu;
+	}
+	else
+	{
+		wxMenu* menu = new wxMenu;
+		auto updatePrefabItem = menu->Append(wxID_ANY, wxT("Update Prefab"));
+
+		menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [updatePrefabItem, node](wxCommandEvent &event) {
+			if (event.GetId() == updatePrefabItem->GetId())
+			{
+				std::string tragetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + node->GetPrefabPath();
+				SceneWriter sceneWriter;
+				sceneWriter.SerializePrefab(node, tragetPath);
 			}
 		});
 		PopupMenu(menu);
