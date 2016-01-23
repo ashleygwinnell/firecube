@@ -121,6 +121,11 @@ void AssetBrowserPanelImpl::FileListItemActivated(wxListEvent& event)
 			std::string scriptFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), itemData->path);			
 			editorState->showScriptEditor(editorState, scriptFileName);
 		}
+		else if (itemData->assetType == AssetType::PREFAB)
+		{
+			std::string prefabFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), itemData->path);
+			editorState->addPrefab(editorState, prefabFileName);
+		}
 	}
 }
 

@@ -64,6 +64,7 @@ void GLCanvas::Init()
 	SubscribeToEvent(editorState, editorState->sceneChanged, &GLCanvas::SceneChanged);
 	SubscribeToEvent(editorState->startMaterialPick, &GLCanvas::StartMaterialPick);
 	SubscribeToEvent(editorState->addMesh, &GLCanvas::AddMesh);
+	SubscribeToEvent(editorState->addPrefab, &GLCanvas::AddPrefab);
 
 	theApp->InitScene();
 	scene = theApp->GetScene();
@@ -520,6 +521,18 @@ void GLCanvas::AddMesh(const std::string &path)
 	editorState->ExecuteCommand(groupCommand);
 }
 
+void GLCanvas::AddPrefab(const std::string &path)
+{
+	::SceneReader sceneReader(engine, editorState);
+	auto prefab = sceneReader.ReadPrefab(path);
+	if (prefab)
+	{
+		auto prefabInstance = prefab->Clone();
+		auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", prefabInstance, rootDesc);
+		editorState->ExecuteCommand(addNodeCommand);
+	}
+}
+
 CanvasDropTarget::CanvasDropTarget(GLCanvas *canvas) : wxDropTarget(new wxCustomDataObject(wxDataFormat("Asset"))), canvas(canvas)
 {
 
@@ -542,14 +555,7 @@ wxDragResult CanvasDropTarget::OnData(wxCoord vX, wxCoord vY, wxDragResult eResu
 		}
 		else if (type == AssetType::PREFAB)
 		{
-			::SceneReader sceneReader(canvas->engine, canvas->editorState);
-			auto prefab = sceneReader.ReadPrefab(path);
-			if (prefab)
-			{
-				auto prefabInstance = prefab->Clone();				
-				auto addNodeCommand = new AddNodeCommand(canvas->editorState, "Add Node", prefabInstance, canvas->rootDesc);
-				canvas->editorState->ExecuteCommand(addNodeCommand);
-			}
+			canvas->AddPrefab(path);			
 		}
 	}
 

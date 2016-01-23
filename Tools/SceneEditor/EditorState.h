@@ -45,6 +45,7 @@ public:
 	FireCube::Event<> showMaterialEditor;
 	FireCube::Event<const std::string &> addMesh;
 	FireCube::Event<const std::string &> showScriptEditor;
+	FireCube::Event<const std::string &> addPrefab;
 
 private:
 	
