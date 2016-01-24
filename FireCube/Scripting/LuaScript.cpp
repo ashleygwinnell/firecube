@@ -4,6 +4,7 @@
 #include "Core/Events.h"
 #include "Core/Engine.h"
 #include "Scripting/LuaState.h"
+#include "Core/Variant.h"
 
 using namespace FireCube;
 using namespace LuaIntf;
@@ -13,12 +14,10 @@ LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaS
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 }
 
-LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState(), nullptr), luaFile(other.luaFile), awakeCalled(false)
+LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState(), nullptr), luaFile(other.luaFile), initialProperties(other.initialProperties), awakeCalled(false)
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 	CreateObject(objectName);
-
-	// TODO: Copy properties assigned to the object through the script
 }
 
 void LuaScript::Update(float time)
@@ -111,6 +110,8 @@ void LuaScript::CreateObject(const std::string &objectName)
 	scriptFunctions[ScriptFunction::UPDATE] = GetMemberFunction("Update");	
 	scriptFunctions[ScriptFunction::AWAKE] = GetMemberFunction("Awake");
 	
+	SetInitialProperties();
+
 	auto initFunction = scriptFunctions[ScriptFunction::INIT];
 	if (node && initFunction)
 	{
@@ -212,7 +213,50 @@ Component *LuaScript::Clone() const
 	return clone;
 }
 
+void LuaScript::SetInitialPropertyValue(const std::string &property, const std::string &value)
+{
+	initialProperties[property] = value;
+}
+
+void LuaScript::SetInitialProperties()
+{
+	for (auto &p : initialProperties)
+	{
+		auto &propertyName = p.first;
+		auto &propertyValue = p.second;
+		Variant v = Variant::FromString(propertyValue);
+
+		switch (v.GetType())
+		{
+		case VariantType::BOOL:
+			SetField(propertyName, v.GetBool());
+			break;
+		case VariantType::FLOAT:
+			SetField(propertyName, v.GetFloat());
+			break;
+		case VariantType::INT:
+			SetField(propertyName, v.GetInt());
+			break;
+		case VariantType::VEC2:
+			SetField(propertyName, v.GetVec2());
+			break;
+		case VariantType::VEC3:
+			SetField(propertyName, v.GetVec3());
+			break;
+		case VariantType::VEC4:
+			SetField(propertyName, v.GetVec4());
+			break;
+		case VariantType::NONE:
+			SetField(propertyName, propertyValue);
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 void LuaScript::PushObject()
 {
 	object.pushToStack();
 }
+

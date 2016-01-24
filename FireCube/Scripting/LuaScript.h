@@ -72,6 +72,8 @@ public:
 	}
 
 	void PushObject();
+
+	void SetInitialPropertyValue(const std::string &property, const std::string &value);
 	
 	virtual Component *Clone() const;
 private:
@@ -84,12 +86,14 @@ private:
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
+	void SetInitialProperties();
 
 	bool awakeCalled;
 	LuaFile *luaFile;
 	std::string objectName;
 	LuaIntf::LuaRef object;
 	std::map<ScriptFunction, LuaFunction *> scriptFunctions;	
+	std::map<std::string, std::string> initialProperties;
 };
 
 }

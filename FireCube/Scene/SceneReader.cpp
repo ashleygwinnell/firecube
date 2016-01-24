@@ -244,6 +244,15 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		if (e->Attribute("object"))
 		{
 			auto component = node->CreateComponent<LuaScript>();
+
+			for (TiXmlElement *propertyElement = e->FirstChildElement("property"); propertyElement != nullptr; propertyElement = propertyElement->NextSiblingElement("property"))
+			{
+				if (propertyElement->Attribute("name") && propertyElement->Attribute("value"))
+				{
+					component->SetInitialPropertyValue(propertyElement->Attribute("name"), propertyElement->Attribute("value"));
+				}
+			}
+
 			if (e->Attribute("script"))
 			{
 				component->CreateObject(engine->GetResourceCache()->GetResource<LuaFile>(e->Attribute("script")), e->Attribute("object"));
@@ -251,43 +260,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			else
 			{
 				component->CreateObject(e->Attribute("object"));
-			}
-
-			for (TiXmlElement *propertyElement = e->FirstChildElement("property"); propertyElement != nullptr; propertyElement = propertyElement->NextSiblingElement("property"))
-			{
-				if (propertyElement->Attribute("name") && propertyElement->Attribute("value"))
-				{
-					Variant v = Variant::FromString(propertyElement->Attribute("value"));
-
-					switch (v.GetType())
-					{
-					case VariantType::BOOL:
-						component->SetField(propertyElement->Attribute("name"), v.GetBool());
-						break;
-					case VariantType::FLOAT:
-						component->SetField(propertyElement->Attribute("name"), v.GetFloat());
-						break;
-					case VariantType::INT:
-						component->SetField(propertyElement->Attribute("name"), v.GetInt());
-						break;
-					case VariantType::VEC2:
-						component->SetField(propertyElement->Attribute("name"), v.GetVec2());
-						break;
-					case VariantType::VEC3:
-						component->SetField(propertyElement->Attribute("name"), v.GetVec3());
-						break;
-					case VariantType::VEC4:
-						component->SetField(propertyElement->Attribute("name"), v.GetVec4());
-						break;
-					case VariantType::NONE:
-						component->SetField(propertyElement->Attribute("name"), propertyElement->Attribute("value"));
-						break;
-					default:
-						break;
-					}										
-				}
-			}
-			
+			}						
 		}
 		else
 		{
