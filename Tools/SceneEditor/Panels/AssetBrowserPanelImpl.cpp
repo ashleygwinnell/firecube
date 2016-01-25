@@ -9,6 +9,8 @@
 #include <wx/msgdlg.h> 
 #include <wx/dataobj.h>
 #include <wx/dnd.h>
+#include <wx/textdlg.h> 
+#include <fstream>
 
 using namespace FireCube;
 
@@ -231,7 +233,13 @@ void AssetBrowserPanelImpl::FileListKeyDown(wxListEvent& event)
 	if (event.GetKeyCode() == WXK_DELETE)
 	{
 		auto itemData = (FileItemData *)event.GetItem().GetData();
-		wxRemoveFile(itemData->path);
+		auto fileName = Filesystem::GetLastPathComponent(itemData->path);
+		int ans = wxMessageBox("Delete " + fileName + "?", "Confirm", wxYES_NO);
+		if (ans == wxYES)
+		{
+			
+			wxRemoveFile(itemData->path);
+		}
 	}
 }
 
@@ -280,5 +288,35 @@ void AssetBrowserPanelImpl::TexturePreviewBitmapResize(wxSizeEvent& event)
 		texturePreviewBitmap->GetParent()->Layout();
 		texturePreviewBitmap->Thaw();
 		inResize = false;
+	}
+}
+
+void AssetBrowserPanelImpl::FileListRightUp(wxMouseEvent& event)
+{
+	if (AssetUtils::GetAssetTypeByPath(currentFileListPath) == AssetType::SCRIPT)
+	{
+		wxMenu* menu = new wxMenu;
+		auto newScriptItem = menu->Append(wxID_ANY, wxT("New Script"));
+
+		menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [newScriptItem, this](wxCommandEvent &event) {
+		if (event.GetId() == newScriptItem->GetId())
+		{
+			std::string scriptName = wxGetTextFromUser("Enter name of script object", "New Script").ToStdString();
+			if (scriptName.empty() == false)
+			{
+				std::string tragetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts" + Filesystem::PATH_SEPARATOR + scriptName + ".lua";				
+				std::ofstream f(tragetPath, std::ofstream::trunc);
+				f << scriptName << " = Script()" << std::endl << std::endl;
+				f << "function " << scriptName << ":Init()" << std::endl << std::endl;
+				f << "end" << std::endl << std::endl;
+				f << "function " << scriptName << ":Awake()" << std::endl << std::endl;
+				f << "end" << std::endl;
+				f.close();
+				editorState->showScriptEditor(editorState, tragetPath);				
+			}
+		}
+		});
+		PopupMenu(menu);
+		delete menu;
 	}
 }

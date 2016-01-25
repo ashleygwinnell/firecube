@@ -1546,6 +1546,7 @@ AssetBrowserPanel::AssetBrowserPanel( wxWindow* parent, wxWindowID id, const wxP
 	fileListCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( AssetBrowserPanel::FileListItemActivated ), NULL, this );
 	fileListCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( AssetBrowserPanel::FileListItemSelected ), NULL, this );
 	fileListCtrl->Connect( wxEVT_COMMAND_LIST_KEY_DOWN, wxListEventHandler( AssetBrowserPanel::FileListKeyDown ), NULL, this );
+	fileListCtrl->Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( AssetBrowserPanel::FileListRightUp ), NULL, this );
 	texturePreviewBitmap->Connect( wxEVT_SIZE, wxSizeEventHandler( AssetBrowserPanel::TexturePreviewBitmapResize ), NULL, this );
 }
 
@@ -1557,6 +1558,7 @@ AssetBrowserPanel::~AssetBrowserPanel()
 	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( AssetBrowserPanel::FileListItemActivated ), NULL, this );
 	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( AssetBrowserPanel::FileListItemSelected ), NULL, this );
 	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_KEY_DOWN, wxListEventHandler( AssetBrowserPanel::FileListKeyDown ), NULL, this );
+	fileListCtrl->Disconnect( wxEVT_RIGHT_UP, wxMouseEventHandler( AssetBrowserPanel::FileListRightUp ), NULL, this );
 	texturePreviewBitmap->Disconnect( wxEVT_SIZE, wxSizeEventHandler( AssetBrowserPanel::TexturePreviewBitmapResize ), NULL, this );
 	
 }

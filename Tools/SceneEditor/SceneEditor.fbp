@@ -14936,7 +14936,7 @@
                                                                 <event name="OnPaint"></event>
                                                                 <event name="OnRightDClick"></event>
                                                                 <event name="OnRightDown"></event>
-                                                                <event name="OnRightUp"></event>
+                                                                <event name="OnRightUp">FileListRightUp</event>
                                                                 <event name="OnSetFocus"></event>
                                                                 <event name="OnSize"></event>
                                                                 <event name="OnUpdateUI"></event>

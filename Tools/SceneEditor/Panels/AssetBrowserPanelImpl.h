@@ -18,7 +18,8 @@ public:
 	virtual void FileListBeginDrag(wxListEvent& event);
 	virtual void FileListKeyDown(wxListEvent& event);
 	virtual void FileListItemSelected(wxListEvent& event);
-	virtual void TexturePreviewBitmapResize(wxSizeEvent& event);
+	virtual void TexturePreviewBitmapResize(wxSizeEvent& event);	
+	virtual void FileListRightUp(wxMouseEvent& event);
 	void SetAssetsPath(const std::string &path);
 private:
 	void OnFileSystemEvent(wxFileSystemWatcherEvent& event);

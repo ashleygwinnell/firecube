@@ -620,6 +620,7 @@ class AssetBrowserPanel : public wxPanel
 		virtual void FileListItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void FileListItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void FileListKeyDown( wxListEvent& event ) { event.Skip(); }
+		virtual void FileListRightUp( wxMouseEvent& event ) { event.Skip(); }
 		virtual void TexturePreviewBitmapResize( wxSizeEvent& event ) { event.Skip(); }
 		
 	
