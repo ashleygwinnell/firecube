@@ -310,6 +310,8 @@ void AssetBrowserPanelImpl::FileListRightUp(wxMouseEvent& event)
 				f << "function " << scriptName << ":Init()" << std::endl << std::endl;
 				f << "end" << std::endl << std::endl;
 				f << "function " << scriptName << ":Awake()" << std::endl << std::endl;
+				f << "end" << std::endl << std::endl;
+				f << "function " << scriptName << ":Update(time)" << std::endl << std::endl;
 				f << "end" << std::endl;
 				f.close();
 				editorState->showScriptEditor(editorState, tragetPath);				
