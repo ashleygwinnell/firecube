@@ -11,7 +11,7 @@
 #endif
 
 layout (location = 0) in vec3 atrPosition;
-layout (location = 2) in float atrAge;
+layout (location = 2) in float atrLife;
 layout (location = 3) in float atrLifeTime;
 
 smooth out float ageFactor;
@@ -35,7 +35,7 @@ void  main()
 	#endif
 	
 	gl_PointSize = particleSize / length(vec3(modelMatrix * vec4(atrPosition, 1.0)) - cameraPos);
-	ageFactor = atrAge / atrLifeTime;
+	ageFactor = (atrLifeTime - atrLife) / atrLifeTime;
 	
 	gl_Position = viewProjectionMatrix * modelMatrix * vec4(atrPosition, 1.0);
 }

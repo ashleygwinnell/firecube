@@ -1,11 +1,11 @@
 layout (location = 0) in vec3 atrPosition;
 layout (location = 1) in vec3 atrVelocity;
-layout (location = 2) in float atrAge;
+layout (location = 2) in float atrLife;
 layout (location = 3) in float atrLifeTime;
 
 out vec3 outPosition;
 out vec3 outVelocity;
-out float outAge;
+out float outLife;
 out float outLifeTime;
 
 uniform float timeStep;
@@ -24,17 +24,17 @@ float randhash(uint seed, float b)
 
 void  main()
 {
-	if (atrAge > atrLifeTime)	
+	if (atrLife < 0)
 	{	
 		//uint seed = uint(atrAge * 1000.0) + uint(gl_VertexID);
 		//float x = randhash(seed++, 1.0) * 2.0 - 1.0;		
-		outPosition = vec3(0.0);
-		outAge = atrAge - atrLifeTime;
+		outPosition = vec3(1e6);		
+		outLife = atrLife;
 	}
 	else
 	{		
 		outPosition = atrPosition + atrVelocity * timeStep;
-		outAge = atrAge + timeStep;
+		outLife = atrLife - timeStep;
 	}		
 	
 	outVelocity = atrVelocity;
