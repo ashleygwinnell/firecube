@@ -321,4 +321,35 @@ void AssetBrowserPanelImpl::FileListRightUp(wxMouseEvent& event)
 		PopupMenu(menu);
 		delete menu;
 	}
+	else if (AssetUtils::GetAssetTypeByPath(currentFileListPath) == AssetType::MATERIAL)
+	{
+		wxMenu* menu = new wxMenu;
+		auto newMaterialItem = menu->Append(wxID_ANY, wxT("New Material"));
+
+		menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [newMaterialItem, this](wxCommandEvent &event) {
+			if (event.GetId() == newMaterialItem->GetId())
+			{
+				std::string materialName = wxGetTextFromUser("Enter name of material", "New Material").ToStdString();
+				if (materialName.empty() == false)
+				{
+					std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials" + Filesystem::PATH_SEPARATOR + materialName + ".xml";
+					std::ofstream f(targetPath, std::ofstream::trunc);
+					f << "<material name=\"" << materialName << "\">" << std::endl;
+					f << "\t<technique name=\"Techniques/NoTexture.xml\" />" << std::endl;
+					f << "\t<parameter name=\"materialDiffuse\" value=\"0.7 0.7 0.7\" />" << std::endl;
+					f << "\t<parameter name=\"materialSpecular\" value=\"0 0 0\" />" << std::endl;
+					f << "\t<parameter name=\"materialShininess\" value=\"0.000000\" />" << std::endl;
+					f << "\t<parameter name=\"uOffset\" value=\"1 0 0\" />" << std::endl;
+					f << "\t<parameter name=\"vOffset\" value=\"0 1 0\" />" << std::endl;
+					f << "</material>" << std::endl;
+
+					f.close();
+					editorState->materialPicked(editorState, engine->GetResourceCache()->GetResource<Material>("Materials" + Filesystem::PATH_SEPARATOR + materialName + ".xml"));
+					editorState->showMaterialEditor(editorState);					
+				}
+			}
+		});
+		PopupMenu(menu);
+		delete menu;
+	}
 }
