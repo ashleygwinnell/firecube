@@ -5,6 +5,7 @@
 #include "Geometry/Geometry.h"
 #include "Rendering/Shader.h"
 #include "Rendering/ShaderTemplate.h"
+#include "Rendering/DebugRenderer.h"
 #include "Core/Engine.h"
 #include "Core/ResourceCache.h"
 #include "Rendering/VertexBuffer.h"
@@ -14,12 +15,12 @@
 using namespace FireCube;
 
 ParticleEmitter::ParticleEmitter(Engine *engine, unsigned int numberOfParticles, Material *material) : Renderable(engine), lifeTime(2.0f), numberOfParticles(numberOfParticles), needToReset(true), 
-								 emitterType(EmitterType::SPHERE), radius(1.0f), emissionRate(numberOfParticles / 10)
+								 emitterShape(ParticleEmitterShape::SPHERE), radius(1.0f), emissionRate(numberOfParticles / 10)
 {
 	Init(numberOfParticles, material);
 }
 
-ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : Renderable(other), lifeTime(other.lifeTime), numberOfParticles(other.numberOfParticles), needToReset(true), emitterType(other.emitterType),
+ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : Renderable(other), lifeTime(other.lifeTime), numberOfParticles(other.numberOfParticles), needToReset(true), emitterShape(other.emitterShape),
 																 box(other.box), radius(other.radius), boundingBox(other.boundingBox), emissionRate(other.emissionRate)
 {
 	Init(numberOfParticles, other.renderableParts[0].material);	
@@ -169,37 +170,39 @@ void ParticleEmitter::Update(float time)
 	EmitParticles(particlesToEmit);
 }
 
-unsigned int ParticleEmitter::EmitParticles(unsigned int count)
+void ParticleEmitter::EmitParticles(unsigned int count)
 {	
 	count = std::min(count, deadParticles.size());
-	float *data = (float *) particleBuffers[0]->Lock();
-	for (unsigned int i = 0; i < count; ++i)
+	if (count > 0)
 	{
-		unsigned int particleIndex = deadParticles[i];
-		
-		float *particleData = data + particleIndex * particleDataSize;
-		vec3 pos, velocity;
-		RandomPositionAndVelocity(pos, velocity);
-		*((vec3 *)particleData) = pos;
-		*((vec3 *)(particleData + 3)) = velocity;
-		
-		float life = RangedRandom(0.0f, lifeTime);
-		particleData[6] = particleData[7] = particleLife[particleIndex] = life;		
+		float *data = (float *)particleBuffers[0]->Lock();
+		for (unsigned int i = 0; i < count; ++i)
+		{
+			unsigned int particleIndex = deadParticles[i];
+
+			float *particleData = data + particleIndex * particleDataSize;
+			vec3 pos, velocity;
+			RandomPositionAndVelocity(pos, velocity);
+			*((vec3 *)particleData) = pos;
+			*((vec3 *)(particleData + 3)) = velocity;
+
+			float life = RangedRandom(0.0f, lifeTime);
+			particleData[6] = particleData[7] = particleLife[particleIndex] = life;
+		}
+		particleBuffers[0]->Unlock();
+		deadParticles.erase(deadParticles.begin(), deadParticles.begin() + count);
 	}
-	particleBuffers[0]->Unlock();
-	deadParticles.erase(deadParticles.begin(), deadParticles.begin() + count);
-	return count;
 }
 
 void ParticleEmitter::SetBoxEmitter(vec3 box)
 {
-	emitterType = EmitterType::BOX;
+	emitterShape = ParticleEmitterShape::BOX;
 	this->box = box;
 }
 
 void ParticleEmitter::SetSphereEmitter(float radius)
 {
-	emitterType = EmitterType::SPHERE;
+	emitterShape = ParticleEmitterShape::SPHERE;
 	this->radius = radius;
 }
 
@@ -215,12 +218,12 @@ void ParticleEmitter::SetLifeTime(float lifeTime)
 
 void ParticleEmitter::RandomPositionAndVelocity(vec3 &position, vec3 &velocity) const
 {
-	if (emitterType == EmitterType::BOX)
+	if (emitterShape == ParticleEmitterShape::BOX)
 	{
 		position = vec3(RangedRandom(-box.x * 0.5f, box.x * 0.5f), RangedRandom(-box.y * 0.5f, box.y * 0.5f), RangedRandom(-box.z * 0.5f, box.z * 0.5f));
 		velocity = vec3(0, 0, 1);
 	}
-	else if (emitterType == EmitterType::SPHERE)
+	else if (emitterShape == ParticleEmitterShape::SPHERE)
 	{
 		float ang0 = RangedRandom(0, PI * 2.0f);
 		float ang1 = RangedRandom(0, PI * 2.0f);
@@ -229,5 +232,37 @@ void ParticleEmitter::RandomPositionAndVelocity(vec3 &position, vec3 &velocity) 
 		velocity.FromAngles(ang0, ang1);
 		velocity.Normalize();
 		position = velocity * radius;
+	}	
+}
+
+void ParticleEmitter::RenderDebugGeometry(DebugRenderer *debugRenderer)
+{
+	if (emitterShape == ParticleEmitterShape::BOX)
+	{		
+		vec3 p[8];
+		p[0] = node->GetWorldTransformation() * vec3(-box.x * 0.5f, -box.y * 0.5f, -box.z * 0.5f);
+		p[1] = node->GetWorldTransformation() * vec3(box.x * 0.5f, -box.y * 0.5f, -box.z * 0.5f);
+		p[2] = node->GetWorldTransformation() * vec3(box.x * 0.5f, box.y * 0.5f, -box.z * 0.5f);
+		p[3] = node->GetWorldTransformation() * vec3(-box.x * 0.5f, box.y * 0.5f, -box.z * 0.5f);
+		p[4] = node->GetWorldTransformation() * vec3(-box.x * 0.5f, -box.y * 0.5f, box.z * 0.5f);
+		p[5] = node->GetWorldTransformation() * vec3(box.x * 0.5f, -box.y * 0.5f, box.z * 0.5f);
+		p[6] = node->GetWorldTransformation() * vec3(box.x * 0.5f, box.y * 0.5f, box.z * 0.5f);
+		p[7] = node->GetWorldTransformation() * vec3(-box.x * 0.5f, box.y * 0.5f, box.z * 0.5f);
+		debugRenderer->AddLine(p[0], p[1], vec3(0, 1, 0));
+		debugRenderer->AddLine(p[1], p[2], vec3(0, 1, 0));
+		debugRenderer->AddLine(p[2], p[3], vec3(0, 1, 0));
+		debugRenderer->AddLine(p[3], p[0], vec3(0, 1, 0));
+		debugRenderer->AddLine(p[4], p[5], vec3(0, 1, 0));
+		debugRenderer->AddLine(p[5], p[6], vec3(0, 1, 0));
+		debugRenderer->AddLine(p[6], p[7], vec3(0, 1, 0));
+		debugRenderer->AddLine(p[7], p[4], vec3(0, 1, 0));
+		debugRenderer->AddLine(p[0], p[4], vec3(0, 1, 0));
+		debugRenderer->AddLine(p[1], p[5], vec3(0, 1, 0));
+		debugRenderer->AddLine(p[2], p[6], vec3(0, 1, 0));
+		debugRenderer->AddLine(p[3], p[7], vec3(0, 1, 0));				
+	}
+	else if (emitterShape == ParticleEmitterShape::SPHERE)
+	{
+		debugRenderer->AddSphere(node->GetWorldPosition(), radius, 16, 16, vec3(0.0f, 1.0f, 0.0f));
 	}	
 }

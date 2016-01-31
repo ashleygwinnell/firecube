@@ -7,7 +7,7 @@ namespace FireCube
 
 class Shader;
 
-enum class EmitterType
+enum class ParticleEmitterShape
 {
 	BOX, SPHERE
 };
@@ -29,16 +29,19 @@ public:
 	void SetSphereEmitter(float radius);
 	void SetEmissionRate(unsigned int emissionRate);
 	void SetLifeTime(float lifeTime);
+	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
+
 protected:	
 	virtual void UpdateWorldBoundingBox();
-	virtual void UpdateRenderableParts();
+	virtual void UpdateRenderableParts();	
+
 private:
 
 	const int particleDataSize = 8;
 
 	ParticleEmitter(const ParticleEmitter &other);
 	void Update(float time);
-	unsigned int EmitParticles(unsigned int count);
+	void EmitParticles(unsigned int count);
 	void Init(unsigned int numberOfParticles, Material *material);
 	inline void RandomPositionAndVelocity(vec3 &position, vec3 &velocity) const;	
 
@@ -52,7 +55,7 @@ private:
 	std::vector<unsigned int> deadParticles;
 	unsigned int emissionRate;
 	bool needToReset;
-	EmitterType emitterType;
+	ParticleEmitterShape emitterShape;
 	float radius;
 	vec3 box;
 	float emissionLeftOver;

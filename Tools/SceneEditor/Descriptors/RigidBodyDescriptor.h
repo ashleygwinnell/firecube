@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma once
-
 #include "ComponentDescriptor.h"
 
 class RigidBodyDescriptor : public ComponentDescriptor

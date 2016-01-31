@@ -106,6 +106,7 @@
     <ClCompile Include="Descriptors\LightDescriptor.cpp" />
     <ClCompile Include="Descriptors\LuaScriptDescriptor.cpp" />
     <ClCompile Include="Descriptors\NodeDescriptor.cpp" />
+    <ClCompile Include="Descriptors\ParticleEmitterDescriptor.cpp" />
     <ClCompile Include="Descriptors\PhysicsWorldDescriptor.cpp" />
     <ClCompile Include="Descriptors\PlaneDescriptor.cpp" />
     <ClCompile Include="Descriptors\RigidBodyDescriptor.cpp" />
@@ -129,6 +130,7 @@
     <ClCompile Include="Panels\LuaScriptPanelImpl.cpp" />
     <ClCompile Include="Panels\MaterialEditorPanelImpl.cpp" />
     <ClCompile Include="Panels\NodePropertiesPanelImpl.cpp" />
+    <ClCompile Include="Panels\ParticleEmitterPanelImpl.cpp" />
     <ClCompile Include="Panels\PlanePanelImpl.cpp" />
     <ClCompile Include="Panels\RigidBodyPanelImpl.cpp" />
     <ClCompile Include="Panels\ScriptEditorPanelImpl.cpp" />
@@ -158,6 +160,7 @@
     <ClInclude Include="Descriptors\LightDescriptor.h" />
     <ClInclude Include="Descriptors\LuaScriptDescriptor.h" />
     <ClInclude Include="Descriptors\NodeDescriptor.h" />
+    <ClInclude Include="Descriptors\ParticleEmitterDescriptor.h" />
     <ClInclude Include="Descriptors\PhysicsWorldDescriptor.h" />
     <ClInclude Include="Descriptors\PlaneDescriptor.h" />
     <ClInclude Include="Descriptors\RigidBodyDescriptor.h" />
@@ -181,6 +184,7 @@
     <ClInclude Include="Panels\LuaScriptPanelImpl.h" />
     <ClInclude Include="Panels\MaterialEditorPanelImpl.h" />
     <ClInclude Include="Panels\NodePropertiesPanelImpl.h" />
+    <ClInclude Include="Panels\ParticleEmitterPanelImpl.h" />
     <ClInclude Include="Panels\PlanePanelImpl.h" />
     <ClInclude Include="Panels\RigidBodyPanelImpl.h" />
     <ClInclude Include="Panels\ScriptEditorPanelImpl.h" />

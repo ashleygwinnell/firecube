@@ -155,6 +155,13 @@ void GLCanvas::RenderDebugGeometry(NodeDescriptor *nodeDesc, DebugRenderer *debu
 		l->RenderDebugGeometry(debugRenderer);
 	}
 
+	std::vector<ParticleEmitter *> particleEmitters;
+	node->GetComponents(particleEmitters);
+	for (auto p : particleEmitters)
+	{
+		p->RenderDebugGeometry(debugRenderer);
+	}
+
 	for (auto child : nodeDesc->GetChildren())
 	{
 		RenderDebugGeometry(child, debugRenderer);

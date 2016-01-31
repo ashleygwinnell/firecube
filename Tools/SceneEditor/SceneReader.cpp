@@ -13,6 +13,7 @@
 #include "Descriptors/RigidBodyDescriptor.h"
 #include "Descriptors/PlaneDescriptor.h"
 #include "Descriptors/SphereDescriptor.h"
+#include "Descriptors/ParticleEmitterDescriptor.h"
 
 using namespace FireCube;
 
@@ -372,6 +373,32 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 		}
 
 		rigidBodyDescriptor->SetMass(mass);
+	}
+	else if (type == "ParticleEmitter")
+	{
+		auto particleEmitterDescriptor = new ParticleEmitterDescriptor();
+		addedComponent = particleEmitterDescriptor;		
+
+		particleEmitterDescriptor->SetNumberOfParticles((unsigned int) Variant::FromString(e->Attribute("number_of_particles")).GetFloat());		
+		if (e->Attribute("material"))
+		{
+			particleEmitterDescriptor->SetMaterial(e->Attribute("material"));
+		}
+		
+		particleEmitterDescriptor->SetEmissionRate((unsigned int) Variant::FromString(e->Attribute("emission_rate")).GetFloat());
+		particleEmitterDescriptor->SetLifeTime(Variant::FromString(e->Attribute("life_time")).GetFloat());
+
+		std::string shape = e->Attribute("shape");
+		if (shape == "box")
+		{
+			vec3 size = Variant::FromString(e->Attribute("box")).GetVec3();
+			particleEmitterDescriptor->SetBoxEmitter(size);
+		}
+		else if (shape == "sphere")
+		{
+			float radius = Variant::FromString(e->Attribute("radius")).GetFloat();
+			particleEmitterDescriptor->SetSphereEmitter(radius);
+		}		
 	}
 	else
 	{

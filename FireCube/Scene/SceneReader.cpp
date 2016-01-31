@@ -7,6 +7,7 @@
 #include "Scene/Node.h"
 #include "Scene/StaticModel.h"
 #include "Scene/Prefab.h"
+#include "Scene/ParticleEmitter.h"
 #include "Utils/Filesystem.h"
 #include "Scripting/LuaScript.h"
 #include "Scripting/LuaFile.h"
@@ -388,6 +389,32 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		}
 
 		component->SetMass(mass);					
+	}
+	else if (type == "ParticleEmitter")
+	{		
+		unsigned int numberOfParticles = (unsigned int) Variant::FromString(e->Attribute("number_of_particles")).GetFloat();
+		Material *material = nullptr;
+		if (e->Attribute("material"))
+		{
+			material = engine->GetResourceCache()->GetResource<Material>(e->Attribute("material"));
+		}
+		auto component = node->CreateComponent<ParticleEmitter>(numberOfParticles, material);
+		component->SetEmissionRate((unsigned int)Variant::FromString(e->Attribute("emission_rate")).GetFloat());
+		component->SetLifeTime(Variant::FromString(e->Attribute("life_time")).GetFloat());
+
+		std::string shape = e->Attribute("shape");
+		if (shape == "box")
+		{
+			vec3 size = Variant::FromString(e->Attribute("box")).GetVec3();
+			component->SetBoxEmitter(size);
+		}
+		else if (shape == "sphere")
+		{
+			float radius = Variant::FromString(e->Attribute("radius")).GetFloat();
+			component->SetSphereEmitter(radius);
+		}
+
+		component->SetBoundingBox(BoundingBox(-vec3(1e6), vec3(1e6)));
 	}
 	else
 	{

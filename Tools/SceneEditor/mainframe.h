@@ -102,6 +102,7 @@ class MainFrame : public wxFrame
 		virtual void AddRigidBodyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddPlaneClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddSphereClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void AddParticleEmitterClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewSceneHierarchyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewInspectorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewMaterialEditorClicked( wxCommandEvent& event ) { event.Skip(); }
@@ -664,6 +665,61 @@ class ScriptEditorPanel : public wxPanel
 		
 		ScriptEditorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 773,746 ), long style = wxTAB_TRAVERSAL ); 
 		~ScriptEditorPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class ParticleEmitterPanel
+///////////////////////////////////////////////////////////////////////////////
+class ParticleEmitterPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_staticText25;
+		wxChoice* shapeTypeChoice;
+		wxStaticText* boxStaticText;
+		wxPanel* boxPanel;
+		wxStaticText* m_staticText271;
+		wxTextCtrl* bboxWidthTextCtrl;
+		wxStaticText* m_staticText281;
+		wxTextCtrl* bboxHeightTextCtrl;
+		wxStaticText* m_staticText292;
+		wxTextCtrl* bboxDepthTextCtrl;
+		wxStaticText* sphereStaticText;
+		wxTextCtrl* radiusTextCtrl;
+		wxStaticText* m_staticText75;
+		wxTextCtrl* numberOfParticlesTextCtrl;
+		wxStaticText* m_staticText77;
+		wxTextCtrl* emissionRateTextCtrl;
+		wxStaticText* m_staticText81;
+		wxTextCtrl* lifeTimeTextCtrl;
+		wxStaticText* m_staticText48;
+		wxFilePickerCtrl* materialFilePicker;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void ShapeTypeChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void BBoxWidthChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void BBoxHeightChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void BBoxDepthChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RadiusChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void NumberOfParticlesChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void EmissionRateChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void LifeTimeChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MaterialFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		wxString bboxWidthText; 
+		wxString bboxHeightText; 
+		wxString bboxDepthText; 
+		wxString radiusText; 
+		wxString numberOfParticlesText; 
+		wxString emissionRateText; 
+		wxString lifeTimeText; 
+		
+		ParticleEmitterPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
+		~ParticleEmitterPanel();
 	
 };
 

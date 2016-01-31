@@ -99,6 +99,10 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	addSphereMenuItem = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Sphere") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu1->Append( addSphereMenuItem );
 	
+	wxMenuItem* addParticleEmitterMenuItem;
+	addParticleEmitterMenuItem = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("ParticleEmitter") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( addParticleEmitterMenuItem );
+	
 	addMenu->Append( m_menu1Item );
 	
 	menuBar->Append( addMenu, wxT("Add") ); 
@@ -193,6 +197,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( addRigidBodyMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddRigidBodyClicked ) );
 	this->Connect( addPlaneMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddPlaneClicked ) );
 	this->Connect( addSphereMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddSphereClicked ) );
+	this->Connect( addParticleEmitterMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddParticleEmitterClicked ) );
 	this->Connect( viewSceneHierarchyMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Connect( viewInspectorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	this->Connect( viewMaterialEditorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
@@ -228,6 +233,7 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddRigidBodyClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddPlaneClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddSphereClicked ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddParticleEmitterClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
@@ -1626,5 +1632,141 @@ ScriptEditorPanel::~ScriptEditorPanel()
 	// Disconnect Events
 	this->Disconnect( saveTool->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( ScriptEditorPanel::SaveClicked ) );
 	sourceText->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( ScriptEditorPanel::OnKeyDown ), NULL, this );
+	
+}
+
+ParticleEmitterPanel::ParticleEmitterPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxFlexGridSizer* fgSizer3;
+	fgSizer3 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer3->AddGrowableCol( 1 );
+	fgSizer3->SetFlexibleDirection( wxBOTH );
+	fgSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText25 = new wxStaticText( this, wxID_ANY, wxT("Type"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText25->Wrap( -1 );
+	fgSizer3->Add( m_staticText25, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	wxString shapeTypeChoiceChoices[] = { wxT("Box"), wxT("Sphere") };
+	int shapeTypeChoiceNChoices = sizeof( shapeTypeChoiceChoices ) / sizeof( wxString );
+	shapeTypeChoice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, shapeTypeChoiceNChoices, shapeTypeChoiceChoices, 0 );
+	shapeTypeChoice->SetSelection( 0 );
+	fgSizer3->Add( shapeTypeChoice, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
+	
+	boxStaticText = new wxStaticText( this, wxID_ANY, wxT("Box"), wxDefaultPosition, wxDefaultSize, 0 );
+	boxStaticText->Wrap( -1 );
+	fgSizer3->Add( boxStaticText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	boxPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer5;
+	fgSizer5 = new wxFlexGridSizer( 0, 6, 0, 0 );
+	fgSizer5->SetFlexibleDirection( wxBOTH );
+	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText271 = new wxStaticText( boxPanel, wxID_ANY, wxT("W"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText271->Wrap( -1 );
+	fgSizer5->Add( m_staticText271, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	bboxWidthTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxTE_PROCESS_ENTER );
+	bboxWidthTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &bboxWidthText ) );
+	
+	fgSizer5->Add( bboxWidthTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_staticText281 = new wxStaticText( boxPanel, wxID_ANY, wxT("H"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText281->Wrap( -1 );
+	fgSizer5->Add( m_staticText281, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	bboxHeightTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxTE_PROCESS_ENTER );
+	bboxHeightTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &bboxHeightText ) );
+	
+	fgSizer5->Add( bboxHeightTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_staticText292 = new wxStaticText( boxPanel, wxID_ANY, wxT("D"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText292->Wrap( -1 );
+	fgSizer5->Add( m_staticText292, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	bboxDepthTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxTE_PROCESS_ENTER );
+	bboxDepthTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &bboxDepthText ) );
+	
+	fgSizer5->Add( bboxDepthTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	
+	boxPanel->SetSizer( fgSizer5 );
+	boxPanel->Layout();
+	fgSizer5->Fit( boxPanel );
+	fgSizer3->Add( boxPanel, 1, wxEXPAND | wxALL, 5 );
+	
+	sphereStaticText = new wxStaticText( this, wxID_ANY, wxT("Sphere"), wxDefaultPosition, wxDefaultSize, 0 );
+	sphereStaticText->Wrap( -1 );
+	fgSizer3->Add( sphereStaticText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	radiusTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	radiusTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &radiusText ) );
+	
+	fgSizer3->Add( radiusTextCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText75 = new wxStaticText( this, wxID_ANY, wxT("Particle Count"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText75->Wrap( -1 );
+	fgSizer3->Add( m_staticText75, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	numberOfParticlesTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	numberOfParticlesTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &numberOfParticlesText ) );
+	
+	fgSizer3->Add( numberOfParticlesTextCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText77 = new wxStaticText( this, wxID_ANY, wxT("Emission Rate"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText77->Wrap( -1 );
+	fgSizer3->Add( m_staticText77, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	emissionRateTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	emissionRateTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &emissionRateText ) );
+	
+	fgSizer3->Add( emissionRateTextCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText81 = new wxStaticText( this, wxID_ANY, wxT("Life Time"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText81->Wrap( -1 );
+	fgSizer3->Add( m_staticText81, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	lifeTimeTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	lifeTimeTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &lifeTimeText ) );
+	
+	fgSizer3->Add( lifeTimeTextCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText48 = new wxStaticText( this, wxID_ANY, wxT("Material"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText48->Wrap( -1 );
+	fgSizer3->Add( m_staticText48, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	materialFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.xml"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_SMALL );
+	fgSizer3->Add( materialFilePicker, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	this->SetSizer( fgSizer3 );
+	this->Layout();
+	fgSizer3->Fit( this );
+	
+	// Connect Events
+	shapeTypeChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ParticleEmitterPanel::ShapeTypeChanged ), NULL, this );
+	bboxWidthTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::BBoxWidthChanged ), NULL, this );
+	bboxHeightTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::BBoxHeightChanged ), NULL, this );
+	bboxDepthTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::BBoxDepthChanged ), NULL, this );
+	radiusTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::RadiusChanged ), NULL, this );
+	numberOfParticlesTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::NumberOfParticlesChanged ), NULL, this );
+	emissionRateTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::EmissionRateChanged ), NULL, this );
+	lifeTimeTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::LifeTimeChanged ), NULL, this );
+	materialFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ParticleEmitterPanel::MaterialFileChanged ), NULL, this );
+}
+
+ParticleEmitterPanel::~ParticleEmitterPanel()
+{
+	// Disconnect Events
+	shapeTypeChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ParticleEmitterPanel::ShapeTypeChanged ), NULL, this );
+	bboxWidthTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::BBoxWidthChanged ), NULL, this );
+	bboxHeightTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::BBoxHeightChanged ), NULL, this );
+	bboxDepthTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::BBoxDepthChanged ), NULL, this );
+	radiusTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::RadiusChanged ), NULL, this );
+	numberOfParticlesTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::NumberOfParticlesChanged ), NULL, this );
+	emissionRateTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::EmissionRateChanged ), NULL, this );
+	lifeTimeTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::LifeTimeChanged ), NULL, this );
+	materialFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ParticleEmitterPanel::MaterialFileChanged ), NULL, this );
 	
 }

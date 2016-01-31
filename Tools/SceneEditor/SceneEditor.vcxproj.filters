@@ -183,6 +183,12 @@
     <ClCompile Include="Panels\ScriptEditorPanelImpl.cpp">
       <Filter>Panels</Filter>
     </ClCompile>
+    <ClCompile Include="Descriptors\ParticleEmitterDescriptor.cpp">
+      <Filter>Descriptors</Filter>
+    </ClCompile>
+    <ClCompile Include="Panels\ParticleEmitterPanelImpl.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -336,6 +342,12 @@
       <Filter>Panels</Filter>
     </ClInclude>
     <ClInclude Include="Panels\ScriptEditorPanelImpl.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Descriptors\ParticleEmitterDescriptor.h">
+      <Filter>Descriptors</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels\ParticleEmitterPanelImpl.h">
       <Filter>Panels</Filter>
     </ClInclude>
   </ItemGroup>

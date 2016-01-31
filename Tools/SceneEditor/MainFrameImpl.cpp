@@ -26,6 +26,7 @@
 #include "Panels/SpherePanelImpl.h"
 #include "Panels/AssetBrowserPanelImpl.h"
 #include "Panels/ScriptEditorPanelImpl.h"
+#include "Panels/ParticleEmitterPanelImpl.h"
 #include "AssetUtils.h"
 #include "SceneReader.h"
 #include "Descriptors/ComponentDescriptor.h"
@@ -38,6 +39,7 @@
 #include "Descriptors/RigidBodyDescriptor.h"
 #include "Descriptors/PlaneDescriptor.h"
 #include "Descriptors/SphereDescriptor.h"
+#include "Descriptors/ParticleEmitterDescriptor.h"
 #include "tinyxml.h"
 
 using namespace FireCube;
@@ -233,6 +235,18 @@ void MainFrameImpl::AddRigidBodyClicked(wxCommandEvent& event)
 	{
 		auto rigidBodyDescriptor = new RigidBodyDescriptor();		
 		auto addComponentCommand = new AddComponentCommand(editorState, "Add RigidBody", nodeDesc, rigidBodyDescriptor, engine);
+
+		editorState->ExecuteCommand(addComponentCommand);
+	}
+}
+
+void MainFrameImpl::AddParticleEmitterClicked(wxCommandEvent& event)
+{
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{
+		auto particleEmitterDescriptor = new ParticleEmitterDescriptor();
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add ParticleEmitter", nodeDesc, particleEmitterDescriptor, engine);
 
 		editorState->ExecuteCommand(addComponentCommand);
 	}
@@ -658,6 +672,15 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
 		t->AddControl(new RigidBodyPanelImpl(t));
+
+		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
+
+		currentComponentPanels.push_back(t);
+	}
+	else if (componentDesc->GetType() == ComponentType::PARTICLE_EMITTER)
+	{
+		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
+		t->AddControl(new ParticleEmitterPanelImpl(t));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 

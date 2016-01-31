@@ -15,6 +15,7 @@
 #include "Descriptors/RigidBodyDescriptor.h"
 #include "Descriptors/PlaneDescriptor.h"
 #include "Descriptors/SphereDescriptor.h"
+#include "Descriptors/ParticleEmitterDescriptor.h"
 
 using namespace FireCube;
 
@@ -278,6 +279,34 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlNode *paren
 		auto rigidBody = static_cast<RigidBodyDescriptor *>(componentDesc);
 
 		element->SetDoubleAttribute("mass", rigidBody->GetMass());		
+	}
+	else if (componentDesc->GetType() == ComponentType::PARTICLE_EMITTER)
+	{
+		TiXmlElement *element = new TiXmlElement("component");
+		parent->LinkEndChild(element);
+
+		element->SetAttribute("type", componentDesc->GetTypeName());
+
+		auto particleEmitter = static_cast<ParticleEmitterDescriptor *>(componentDesc);	
+
+		element->SetAttribute("number_of_particles", particleEmitter->GetNumberOfParticles());
+		element->SetAttribute("emission_rate", particleEmitter->GetEmissionRate());
+		element->SetDoubleAttribute("life_time", particleEmitter->GetLifeTime());
+		element->SetAttribute("material", particleEmitter->GetMaterial());
+
+		switch (particleEmitter->GetEmitterShape())
+		{
+		case ParticleEmitterShape::BOX:
+			element->SetAttribute("shape", "box");
+			element->SetAttribute("box", ToString(particleEmitter->GetBox()));
+			break;
+		case ParticleEmitterShape::SPHERE:
+			element->SetAttribute("shape", "sphere");
+			element->SetDoubleAttribute("radius", particleEmitter->GetRadius());
+			break;
+		default:
+			break;
+		}
 	}
 
 }

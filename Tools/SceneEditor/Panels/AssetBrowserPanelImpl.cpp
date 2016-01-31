@@ -304,8 +304,8 @@ void AssetBrowserPanelImpl::FileListRightUp(wxMouseEvent& event)
 			std::string scriptName = wxGetTextFromUser("Enter name of script object", "New Script").ToStdString();
 			if (scriptName.empty() == false)
 			{
-				std::string tragetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts" + Filesystem::PATH_SEPARATOR + scriptName + ".lua";				
-				std::ofstream f(tragetPath, std::ofstream::trunc);
+				std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts" + Filesystem::PATH_SEPARATOR + scriptName + ".lua";				
+				std::ofstream f(targetPath, std::ofstream::trunc);
 				f << scriptName << " = Script()" << std::endl << std::endl;
 				f << "function " << scriptName << ":Init()" << std::endl << std::endl;
 				f << "end" << std::endl << std::endl;
@@ -314,7 +314,7 @@ void AssetBrowserPanelImpl::FileListRightUp(wxMouseEvent& event)
 				f << "function " << scriptName << ":Update(time)" << std::endl << std::endl;
 				f << "end" << std::endl;
 				f.close();
-				editorState->showScriptEditor(editorState, tragetPath);				
+				editorState->showScriptEditor(editorState, targetPath);
 			}
 		}
 		});
