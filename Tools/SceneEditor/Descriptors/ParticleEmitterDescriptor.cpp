@@ -6,8 +6,8 @@ using namespace FireCube;
 
 using namespace FireCube;
 
-ParticleEmitterDescriptor::ParticleEmitterDescriptor() : ComponentDescriptor(ComponentType::PARTICLE_EMITTER), numberOfParticles(1000), emissionRate(100), lifeTime(2.0f), box(1.0f), 
-														 radius(1.0f), shape(ParticleEmitterShape::BOX)
+ParticleEmitterDescriptor::ParticleEmitterDescriptor() : ComponentDescriptor(ComponentType::PARTICLE_EMITTER), numberOfParticles(1000), emissionRate(100), minLifeTime(2.0f), maxLifeTime(2.0f),
+														 box(1.0f), minSpeed(1.0f), maxSpeed(1.0f), radius(1.0f), shape(ParticleEmitterShape::BOX)
 {
 
 }
@@ -84,14 +84,36 @@ void ParticleEmitterDescriptor::SetMaterial(std::string val)
 	material = val;
 }
 
-float ParticleEmitterDescriptor::GetLifeTime() const
+float ParticleEmitterDescriptor::GetMinLifeTime() const
 {
-	return lifeTime;
+	return minLifeTime;
 }
 
-void ParticleEmitterDescriptor::SetLifeTime(float val)
+float ParticleEmitterDescriptor::GetMaxLifeTime() const
 {
-	lifeTime = val;
+	return maxLifeTime;
+}
+
+void ParticleEmitterDescriptor::SetLifeTime(float minLifeTime, float maxLifeTime)
+{
+	this->minLifeTime = minLifeTime;
+	this->maxLifeTime = maxLifeTime;
+}
+
+float ParticleEmitterDescriptor::GetMinSpeed() const
+{
+	return minSpeed;
+}
+
+float ParticleEmitterDescriptor::GetMaxSpeed() const
+{
+	return maxSpeed;
+}
+
+void ParticleEmitterDescriptor::SetSpeed(float minSpeed, float maxSpeed)
+{
+	this->minSpeed = minSpeed;
+	this->maxSpeed = maxSpeed;
 }
 
 void ParticleEmitterDescriptor::CreateComponent(Node *node, Engine *engine)

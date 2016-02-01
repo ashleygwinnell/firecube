@@ -693,7 +693,15 @@ class ParticleEmitterPanel : public wxPanel
 		wxStaticText* m_staticText77;
 		wxTextCtrl* emissionRateTextCtrl;
 		wxStaticText* m_staticText81;
-		wxTextCtrl* lifeTimeTextCtrl;
+		wxStaticText* m_staticText72;
+		wxTextCtrl* minLifeTimeTextCtrl;
+		wxStaticText* m_staticText73;
+		wxTextCtrl* maxLifeTimeTextCtrl;
+		wxStaticText* m_staticText74;
+		wxStaticText* m_staticText751;
+		wxTextCtrl* minSpeedTextCtrl;
+		wxStaticText* m_staticText76;
+		wxTextCtrl* maxSpeedTextCtrl;
 		wxStaticText* m_staticText48;
 		wxFilePickerCtrl* materialFilePicker;
 		
@@ -705,7 +713,10 @@ class ParticleEmitterPanel : public wxPanel
 		virtual void RadiusChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void NumberOfParticlesChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void EmissionRateChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void LifeTimeChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MinLifeTimeChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MaxLifeTimeChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MinSpeedChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void MaxSpeedChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MaterialFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		
 	
@@ -716,7 +727,10 @@ class ParticleEmitterPanel : public wxPanel
 		wxString radiusText; 
 		wxString numberOfParticlesText; 
 		wxString emissionRateText; 
-		wxString lifeTimeText; 
+		wxString minLifeTimeText; 
+		wxString maxLifeTimeText; 
+		wxString minSpeedText; 
+		wxString maxSpeedText; 
 		
 		ParticleEmitterPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~ParticleEmitterPanel();

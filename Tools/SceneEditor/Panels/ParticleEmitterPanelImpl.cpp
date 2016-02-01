@@ -45,7 +45,10 @@ void ParticleEmitterPanelImpl::UpdateUI()
 	bboxDepthTextCtrl->SetLabelText(wxString::FromDouble(particleEmitter->GetBox().z));
 	numberOfParticlesTextCtrl->SetLabelText(wxString::Format(wxT("%i"), particleEmitter->GetNumberOfParticles()));
 	emissionRateTextCtrl->SetLabelText(wxString::Format(wxT("%i"), particleEmitter->GetEmissionRate()));
-	lifeTimeTextCtrl->SetLabelText(wxString::FromDouble(particleEmitter->GetLifeTime()));
+	minLifeTimeTextCtrl->SetLabelText(wxString::FromDouble(particleEmitter->GetMinLifeTime()));
+	maxLifeTimeTextCtrl->SetLabelText(wxString::FromDouble(particleEmitter->GetMaxLifeTime()));
+	minSpeedTextCtrl->SetLabelText(wxString::FromDouble(particleEmitter->GetMinSpeed()));
+	maxSpeedTextCtrl->SetLabelText(wxString::FromDouble(particleEmitter->GetMaxSpeed()));
 	materialFilePicker->SetPath(particleEmitter->GetMaterial());	
 }
 
@@ -294,21 +297,88 @@ void ParticleEmitterPanelImpl::MaterialFileChanged(wxFileDirPickerEvent& event)
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
-void ParticleEmitterPanelImpl::LifeTimeChanged(wxCommandEvent& event)
+void ParticleEmitterPanelImpl::MinLifeTimeChanged(wxCommandEvent& event)
 {
 	ParticleEmitterDescriptor *particleEmitter = static_cast<ParticleEmitterDescriptor *>(parent->GetComponent());
 
 	MyApp *theApp = ((MyApp *)wxTheApp);
-	double newLifeTime;
-	event.GetString().ToDouble(&newLifeTime);
-	double oldLifeTime = particleEmitter->GetLifeTime();
+	double newMinLifeTime;
+	double maxLifeTime = particleEmitter->GetMaxLifeTime();
+	event.GetString().ToDouble(&newMinLifeTime);
+	double oldMinLifeTime = particleEmitter->GetMinLifeTime();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Life Time", [particleEmitter, newLifeTime]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Life Time", [particleEmitter, newMinLifeTime, maxLifeTime]()
 	{
-		particleEmitter->SetLifeTime(newLifeTime);
-	}, [particleEmitter, oldLifeTime]()
+		particleEmitter->SetLifeTime(newMinLifeTime, maxLifeTime);
+	}, [particleEmitter, oldMinLifeTime, maxLifeTime]()
 	{
-		particleEmitter->SetLifeTime(oldLifeTime);
+		particleEmitter->SetLifeTime(oldMinLifeTime, maxLifeTime);
+	});
+
+	theApp->GetEditorState()->ExecuteCommand(command);
+	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+}
+
+void ParticleEmitterPanelImpl::MaxLifeTimeChanged(wxCommandEvent& event)
+{
+	ParticleEmitterDescriptor *particleEmitter = static_cast<ParticleEmitterDescriptor *>(parent->GetComponent());
+
+	MyApp *theApp = ((MyApp *)wxTheApp);
+	double newMaxLifeTime;
+	double minLifeTime = particleEmitter->GetMinLifeTime();
+	event.GetString().ToDouble(&newMaxLifeTime);
+	double oldMaxLifeTime = particleEmitter->GetMinLifeTime();
+
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Life Time", [particleEmitter, minLifeTime, newMaxLifeTime]()
+	{
+		particleEmitter->SetLifeTime(minLifeTime, newMaxLifeTime);
+	}, [particleEmitter, minLifeTime, oldMaxLifeTime]()
+	{
+		particleEmitter->SetLifeTime(minLifeTime, oldMaxLifeTime);
+	});
+
+	theApp->GetEditorState()->ExecuteCommand(command);
+	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+}
+
+void ParticleEmitterPanelImpl::MinSpeedChanged(wxCommandEvent& event)
+{
+	ParticleEmitterDescriptor *particleEmitter = static_cast<ParticleEmitterDescriptor *>(parent->GetComponent());
+
+	MyApp *theApp = ((MyApp *)wxTheApp);
+	double newMinSpeed;
+	double maxSpeed = particleEmitter->GetMaxSpeed();
+	event.GetString().ToDouble(&newMinSpeed);
+	double oldMinSpeed = particleEmitter->GetMinSpeed();
+
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Speed", [particleEmitter, newMinSpeed, maxSpeed]()
+	{
+		particleEmitter->SetSpeed(newMinSpeed, maxSpeed);
+	}, [particleEmitter, oldMinSpeed, maxSpeed]()
+	{
+		particleEmitter->SetSpeed(oldMinSpeed, maxSpeed);
+	});
+
+	theApp->GetEditorState()->ExecuteCommand(command);
+	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+}
+
+void ParticleEmitterPanelImpl::MaxSpeedChanged(wxCommandEvent& event)
+{
+	ParticleEmitterDescriptor *particleEmitter = static_cast<ParticleEmitterDescriptor *>(parent->GetComponent());
+
+	MyApp *theApp = ((MyApp *)wxTheApp);
+	double newMaxSpeed;
+	double minSpeed = particleEmitter->GetMinSpeed();
+	event.GetString().ToDouble(&newMaxSpeed);
+	double oldMaxSpeed = particleEmitter->GetMaxSpeed();
+
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Speed", [particleEmitter, minSpeed, newMaxSpeed]()
+	{
+		particleEmitter->SetSpeed(minSpeed, newMaxSpeed);
+	}, [particleEmitter, minSpeed, oldMaxSpeed]()
+	{
+		particleEmitter->SetSpeed(minSpeed, oldMaxSpeed);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);

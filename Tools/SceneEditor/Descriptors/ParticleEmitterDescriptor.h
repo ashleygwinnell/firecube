@@ -22,8 +22,12 @@ public:
 	void SetEmissionRate(unsigned int val);
 	std::string GetMaterial() const;
 	void SetMaterial(std::string val);
-	float GetLifeTime() const;
-	void SetLifeTime(float val);
+	float GetMinLifeTime() const;
+	float GetMaxLifeTime() const;
+	void SetLifeTime(float minLifeTime, float maxLifeTime);
+	float GetMinSpeed() const;
+	float GetMaxSpeed() const;
+	void SetSpeed(float minSpeed, float maxSpeed);
 private:
 	FireCube::ParticleEmitterShape shape;
 	FireCube::vec3 box;
@@ -31,5 +35,8 @@ private:
 	unsigned int numberOfParticles;
 	unsigned int emissionRate;
 	std::string material;
-	float lifeTime;
+	float minLifeTime;
+	float maxLifeTime;
+	float minSpeed;
+	float maxSpeed;
 };

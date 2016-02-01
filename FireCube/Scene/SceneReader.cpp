@@ -400,7 +400,10 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		}
 		auto component = node->CreateComponent<ParticleEmitter>(numberOfParticles, material);
 		component->SetEmissionRate((unsigned int)Variant::FromString(e->Attribute("emission_rate")).GetFloat());
-		component->SetLifeTime(Variant::FromString(e->Attribute("life_time")).GetFloat());
+		vec2 lifeTime = Variant::FromString(e->Attribute("life_time")).GetVec2();
+		component->SetLifeTime(lifeTime.x, lifeTime.y);
+		vec2 speed = Variant::FromString(e->Attribute("speed")).GetVec2();
+		component->SetSpeed(speed.x, speed.y);
 
 		std::string shape = e->Attribute("shape");
 		if (shape == "box")

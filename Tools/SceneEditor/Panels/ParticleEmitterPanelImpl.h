@@ -20,7 +20,10 @@ private:
 	virtual void NumberOfParticlesChanged(wxCommandEvent& event);
 	virtual void EmissionRateChanged(wxCommandEvent& event);
 	virtual void MaterialFileChanged(wxFileDirPickerEvent& event);
-	virtual void LifeTimeChanged(wxCommandEvent& event);
+	virtual void MinLifeTimeChanged(wxCommandEvent& event);
+	virtual void MaxLifeTimeChanged(wxCommandEvent& event);
+	virtual void MinSpeedChanged(wxCommandEvent& event);
+	virtual void MaxSpeedChanged(wxCommandEvent& event);
 
 	BaseComponentPanelImpl *parent;
 };

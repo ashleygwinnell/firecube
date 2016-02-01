@@ -28,7 +28,8 @@ public:
 	void SetBoxEmitter(vec3 box);
 	void SetSphereEmitter(float radius);
 	void SetEmissionRate(unsigned int emissionRate);
-	void SetLifeTime(float lifeTime);
+	void SetLifeTime(float minLifeTime, float maxLifeTime);
+	void SetSpeed(float minSpeed, float maxSpeed);
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
 
 protected:	
@@ -43,13 +44,16 @@ private:
 	void Update(float time);
 	void EmitParticles(unsigned int count);
 	void Init(unsigned int numberOfParticles, Material *material);
-	inline void RandomPositionAndVelocity(vec3 &position, vec3 &velocity) const;	
+	inline void RandomPositionAndDirection(vec3 &position, vec3 &direction) const;	
 
 	BoundingBox boundingBox;
 	Shader *updateShader;
 	VertexBuffer *particleBuffers[2];	
 	SharedPtr<Geometry> geometry;
-	float lifeTime;
+	float minLifeTime;
+	float maxLifeTime;
+	float minSpeed;
+	float maxSpeed;
 	unsigned int numberOfParticles;
 	std::vector<float> particleLife;
 	std::vector<unsigned int> deadParticles;

@@ -1727,10 +1727,57 @@ ParticleEmitterPanel::ParticleEmitterPanel( wxWindow* parent, wxWindowID id, con
 	m_staticText81->Wrap( -1 );
 	fgSizer3->Add( m_staticText81, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	lifeTimeTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
-	lifeTimeTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &lifeTimeText ) );
+	wxBoxSizer* bSizer61;
+	bSizer61 = new wxBoxSizer( wxHORIZONTAL );
 	
-	fgSizer3->Add( lifeTimeTextCtrl, 0, wxALL|wxEXPAND, 5 );
+	m_staticText72 = new wxStaticText( this, wxID_ANY, wxT("Min"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText72->Wrap( -1 );
+	bSizer61->Add( m_staticText72, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	minLifeTimeTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	minLifeTimeTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &minLifeTimeText ) );
+	
+	bSizer61->Add( minLifeTimeTextCtrl, 1, wxALL|wxEXPAND, 5 );
+	
+	m_staticText73 = new wxStaticText( this, wxID_ANY, wxT("Max"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText73->Wrap( -1 );
+	bSizer61->Add( m_staticText73, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	maxLifeTimeTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	maxLifeTimeTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &maxLifeTimeText ) );
+	
+	bSizer61->Add( maxLifeTimeTextCtrl, 1, wxALL, 5 );
+	
+	
+	fgSizer3->Add( bSizer61, 1, wxEXPAND, 5 );
+	
+	m_staticText74 = new wxStaticText( this, wxID_ANY, wxT("Speed"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText74->Wrap( -1 );
+	fgSizer3->Add( m_staticText74, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	wxBoxSizer* bSizer62;
+	bSizer62 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText751 = new wxStaticText( this, wxID_ANY, wxT("Min"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText751->Wrap( -1 );
+	bSizer62->Add( m_staticText751, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	minSpeedTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	minSpeedTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &minSpeedText ) );
+	
+	bSizer62->Add( minSpeedTextCtrl, 0, wxALL, 5 );
+	
+	m_staticText76 = new wxStaticText( this, wxID_ANY, wxT("Max"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText76->Wrap( -1 );
+	bSizer62->Add( m_staticText76, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	maxSpeedTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	maxSpeedTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &maxSpeedText ) );
+	
+	bSizer62->Add( maxSpeedTextCtrl, 0, wxALL, 5 );
+	
+	
+	fgSizer3->Add( bSizer62, 1, wxEXPAND, 5 );
 	
 	m_staticText48 = new wxStaticText( this, wxID_ANY, wxT("Material"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText48->Wrap( -1 );
@@ -1752,7 +1799,10 @@ ParticleEmitterPanel::ParticleEmitterPanel( wxWindow* parent, wxWindowID id, con
 	radiusTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::RadiusChanged ), NULL, this );
 	numberOfParticlesTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::NumberOfParticlesChanged ), NULL, this );
 	emissionRateTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::EmissionRateChanged ), NULL, this );
-	lifeTimeTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::LifeTimeChanged ), NULL, this );
+	minLifeTimeTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinLifeTimeChanged ), NULL, this );
+	maxLifeTimeTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MaxLifeTimeChanged ), NULL, this );
+	minSpeedTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinSpeedChanged ), NULL, this );
+	maxSpeedTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MaxSpeedChanged ), NULL, this );
 	materialFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ParticleEmitterPanel::MaterialFileChanged ), NULL, this );
 }
 
@@ -1766,7 +1816,10 @@ ParticleEmitterPanel::~ParticleEmitterPanel()
 	radiusTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::RadiusChanged ), NULL, this );
 	numberOfParticlesTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::NumberOfParticlesChanged ), NULL, this );
 	emissionRateTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::EmissionRateChanged ), NULL, this );
-	lifeTimeTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::LifeTimeChanged ), NULL, this );
+	minLifeTimeTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinLifeTimeChanged ), NULL, this );
+	maxLifeTimeTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MaxLifeTimeChanged ), NULL, this );
+	minSpeedTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinSpeedChanged ), NULL, this );
+	maxSpeedTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MaxSpeedChanged ), NULL, this );
 	materialFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ParticleEmitterPanel::MaterialFileChanged ), NULL, this );
 	
 }

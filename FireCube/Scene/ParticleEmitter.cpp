@@ -14,14 +14,15 @@
 
 using namespace FireCube;
 
-ParticleEmitter::ParticleEmitter(Engine *engine, unsigned int numberOfParticles, Material *material) : Renderable(engine), lifeTime(2.0f), numberOfParticles(numberOfParticles), needToReset(true), 
-								 emitterShape(ParticleEmitterShape::SPHERE), radius(1.0f), emissionRate(numberOfParticles / 10)
+ParticleEmitter::ParticleEmitter(Engine *engine, unsigned int numberOfParticles, Material *material) : Renderable(engine), minLifeTime(2.0f), maxLifeTime(2.0f), minSpeed(1.0f), maxSpeed(1.0f), 
+				 numberOfParticles(numberOfParticles), needToReset(true), emitterShape(ParticleEmitterShape::SPHERE), radius(1.0f), emissionRate(numberOfParticles / 10)
 {
 	Init(numberOfParticles, material);
 }
 
-ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : Renderable(other), lifeTime(other.lifeTime), numberOfParticles(other.numberOfParticles), needToReset(true), emitterShape(other.emitterShape),
-																 box(other.box), radius(other.radius), boundingBox(other.boundingBox), emissionRate(other.emissionRate)
+ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : Renderable(other), minLifeTime(other.minLifeTime), maxLifeTime(other.maxLifeTime), minSpeed(other.minSpeed), maxSpeed(other.maxSpeed),
+																 numberOfParticles(other.numberOfParticles), needToReset(true), emitterShape(other.emitterShape), box(other.box), radius(other.radius), 
+																 boundingBox(other.boundingBox), emissionRate(other.emissionRate)
 {
 	Init(numberOfParticles, other.renderableParts[0].material);	
 }
@@ -90,11 +91,9 @@ void ParticleEmitter::Reset()
 
 	std::vector<float> particleData(numberOfParticles * particleDataSize);
 	for (unsigned int i = 0; i < numberOfParticles; ++i)
-	{
-		vec3 pos, velocity;
-		RandomPositionAndVelocity(pos, velocity);
-		*((vec3 *)&particleData[i * particleDataSize]) = pos;
-		*((vec3 *)&particleData[i * particleDataSize + 3]) = velocity;
+	{		
+		*((vec3 *)&particleData[i * particleDataSize]) = vec3(0.0f);
+		*((vec3 *)&particleData[i * particleDataSize + 3]) = vec3(0.0f);
 		
 		float life = -1;
 		particleData[i * particleDataSize + 6] = life; // Life
@@ -137,11 +136,17 @@ Material *ParticleEmitter::GetMaterial() const
 
 void ParticleEmitter::Update(float time)
 {
+	if (!IsEnabled())
+		return;
+
+	bool didReset = false;
 	if (needToReset)
 	{
 		Reset();
+		didReset = true;
 		needToReset = false;
 	}
+
 	Program *program = engine->GetRenderer()->SetShaders(updateShader, nullptr);
 	program->SetUniform(PARAM_TIME_STEP, time);	
 	glEnable(GL_RASTERIZER_DISCARD);
@@ -154,13 +159,18 @@ void ParticleEmitter::Update(float time)
 	geometry->SetVertexBuffer(particleBuffers[0]);
 	geometry->Update();
 
-	for (unsigned int i = 0; i < numberOfParticles; ++i)
+	if (!didReset)
 	{
-		float prevLife = particleLife[i];
-		particleLife[i] -= time;
-		if (prevLife > 0 && particleLife[i] < 0)
-		{
-			deadParticles.push_back(i);
+		for (unsigned int i = 0; i < numberOfParticles; ++i)
+		{			
+			if (particleLife[i] > 0)
+			{
+				particleLife[i] -= time;
+				if (particleLife[i] < 0)
+				{
+					deadParticles.push_back(i);
+				}
+			}
 		}
 	}
 	
@@ -181,12 +191,12 @@ void ParticleEmitter::EmitParticles(unsigned int count)
 			unsigned int particleIndex = deadParticles[i];
 
 			float *particleData = data + particleIndex * particleDataSize;
-			vec3 pos, velocity;
-			RandomPositionAndVelocity(pos, velocity);
+			vec3 pos, direction;
+			RandomPositionAndDirection(pos, direction);
 			*((vec3 *)particleData) = pos;
-			*((vec3 *)(particleData + 3)) = velocity;
+			*((vec3 *)(particleData + 3)) = direction * RangedRandom(minSpeed, maxSpeed);
 
-			float life = RangedRandom(0.0f, lifeTime);
+			float life = RangedRandom(minLifeTime, maxLifeTime);
 			particleData[6] = particleData[7] = particleLife[particleIndex] = life;
 		}
 		particleBuffers[0]->Unlock();
@@ -211,17 +221,18 @@ void ParticleEmitter::SetEmissionRate(unsigned int emissionRate)
 	this->emissionRate = emissionRate;
 }
 
-void ParticleEmitter::SetLifeTime(float lifeTime)
+void ParticleEmitter::SetLifeTime(float minLifeTime, float maxLifeTime)
 {
-	this->lifeTime = lifeTime;
+	this->minLifeTime = minLifeTime;
+	this->maxLifeTime = maxLifeTime;
 }
 
-void ParticleEmitter::RandomPositionAndVelocity(vec3 &position, vec3 &velocity) const
+void ParticleEmitter::RandomPositionAndDirection(vec3 &position, vec3 &direction) const
 {
 	if (emitterShape == ParticleEmitterShape::BOX)
 	{
 		position = vec3(RangedRandom(-box.x * 0.5f, box.x * 0.5f), RangedRandom(-box.y * 0.5f, box.y * 0.5f), RangedRandom(-box.z * 0.5f, box.z * 0.5f));
-		velocity = vec3(0, 0, 1);
+		direction = vec3(0, 0, 1);
 	}
 	else if (emitterShape == ParticleEmitterShape::SPHERE)
 	{
@@ -229,9 +240,9 @@ void ParticleEmitter::RandomPositionAndVelocity(vec3 &position, vec3 &velocity) 
 		float ang1 = RangedRandom(0, PI * 2.0f);
 		float rad = RangedRandom(0, radius);
 		
-		velocity.FromAngles(ang0, ang1);
-		velocity.Normalize();
-		position = velocity * radius;
+		direction.FromAngles(ang0, ang1);
+		direction.Normalize();
+		position = direction * radius;
 	}	
 }
 
@@ -265,4 +276,10 @@ void ParticleEmitter::RenderDebugGeometry(DebugRenderer *debugRenderer)
 	{
 		debugRenderer->AddSphere(node->GetWorldPosition(), radius, 16, 16, vec3(0.0f, 1.0f, 0.0f));
 	}	
+}
+
+void ParticleEmitter::SetSpeed(float minSpeed, float maxSpeed)
+{
+	this->minSpeed = minSpeed;
+	this->maxSpeed = maxSpeed;
 }
