@@ -166,11 +166,13 @@ void VertexBuffer::ApplyAttributes()
 
 void *VertexBuffer::Lock()
 {
+	glBindBuffer(GL_ARRAY_BUFFER, objectId);
 	return glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 }
 
 void VertexBuffer::Unlock()
 {
+	glBindBuffer(GL_ARRAY_BUFFER, objectId);
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 }
 
