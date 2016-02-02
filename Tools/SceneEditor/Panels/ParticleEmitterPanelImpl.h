@@ -24,6 +24,7 @@ private:
 	virtual void MaxLifeTimeChanged(wxCommandEvent& event);
 	virtual void MinSpeedChanged(wxCommandEvent& event);
 	virtual void MaxSpeedChanged(wxCommandEvent& event);
+	virtual void PrewarmChanged(wxCommandEvent& event);
 
 	BaseComponentPanelImpl *parent;
 };

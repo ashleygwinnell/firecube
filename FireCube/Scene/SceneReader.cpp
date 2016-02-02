@@ -404,6 +404,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		component->SetLifeTime(lifeTime.x, lifeTime.y);
 		vec2 speed = Variant::FromString(e->Attribute("speed")).GetVec2();
 		component->SetSpeed(speed.x, speed.y);
+		component->SetPrewarm(Variant::FromString(e->Attribute("prewarm")).GetBool());
 
 		std::string shape = e->Attribute("shape");
 		if (shape == "box")

@@ -28,6 +28,8 @@ public:
 	float GetMinSpeed() const;
 	float GetMaxSpeed() const;
 	void SetSpeed(float minSpeed, float maxSpeed);
+	bool GetPrewarm() const;
+	void SetPrewarm(bool val);
 private:
 	FireCube::ParticleEmitterShape shape;
 	FireCube::vec3 box;
@@ -39,4 +41,5 @@ private:
 	float maxLifeTime;
 	float minSpeed;
 	float maxSpeed;
+	bool prewarm;
 };

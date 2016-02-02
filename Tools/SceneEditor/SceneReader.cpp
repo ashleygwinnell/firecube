@@ -390,6 +390,7 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 		particleEmitterDescriptor->SetLifeTime(lifeTime.x, lifeTime.y);
 		vec2 speed = Variant::FromString(e->Attribute("speed")).GetVec2();
 		particleEmitterDescriptor->SetSpeed(speed.x, speed.y);		
+		particleEmitterDescriptor->SetPrewarm(Variant::FromString(e->Attribute("prewarm")).GetBool());
 
 		std::string shape = e->Attribute("shape");
 		if (shape == "box")

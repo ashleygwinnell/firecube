@@ -7,7 +7,7 @@ using namespace FireCube;
 using namespace FireCube;
 
 ParticleEmitterDescriptor::ParticleEmitterDescriptor() : ComponentDescriptor(ComponentType::PARTICLE_EMITTER), numberOfParticles(1000), emissionRate(100), minLifeTime(2.0f), maxLifeTime(2.0f),
-														 box(1.0f), minSpeed(1.0f), maxSpeed(1.0f), radius(1.0f), shape(ParticleEmitterShape::BOX)
+														 box(1.0f), minSpeed(1.0f), maxSpeed(1.0f), radius(1.0f), shape(ParticleEmitterShape::BOX), prewarm(false)
 {
 
 }
@@ -114,6 +114,16 @@ void ParticleEmitterDescriptor::SetSpeed(float minSpeed, float maxSpeed)
 {
 	this->minSpeed = minSpeed;
 	this->maxSpeed = maxSpeed;
+}
+
+bool ParticleEmitterDescriptor::GetPrewarm() const
+{
+	return prewarm;
+}
+
+void ParticleEmitterDescriptor::SetPrewarm(bool val)
+{
+	prewarm = val;
 }
 
 void ParticleEmitterDescriptor::CreateComponent(Node *node, Engine *engine)

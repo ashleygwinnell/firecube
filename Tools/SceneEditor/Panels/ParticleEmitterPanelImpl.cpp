@@ -50,6 +50,7 @@ void ParticleEmitterPanelImpl::UpdateUI()
 	minSpeedTextCtrl->SetLabelText(wxString::FromDouble(particleEmitter->GetMinSpeed()));
 	maxSpeedTextCtrl->SetLabelText(wxString::FromDouble(particleEmitter->GetMaxSpeed()));
 	materialFilePicker->SetPath(particleEmitter->GetMaterial());	
+	prewarmCheckBox->SetValue(particleEmitter->GetPrewarm());
 }
 
 void ParticleEmitterPanelImpl::UpdateVisibility(ParticleEmitterShape shape)
@@ -379,6 +380,26 @@ void ParticleEmitterPanelImpl::MaxSpeedChanged(wxCommandEvent& event)
 	}, [particleEmitter, minSpeed, oldMaxSpeed]()
 	{
 		particleEmitter->SetSpeed(minSpeed, oldMaxSpeed);
+	});
+
+	theApp->GetEditorState()->ExecuteCommand(command);
+	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+}
+
+void ParticleEmitterPanelImpl::PrewarmChanged(wxCommandEvent& event)
+{
+	ParticleEmitterDescriptor *particleEmitter = static_cast<ParticleEmitterDescriptor *>(parent->GetComponent());
+
+	MyApp *theApp = ((MyApp *)wxTheApp);
+	bool oldPrewarm = particleEmitter->GetPrewarm();
+	bool newPrewarm = event.IsChecked();
+	
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Prewarm", [particleEmitter, newPrewarm]()
+	{
+		particleEmitter->SetPrewarm(newPrewarm);
+	}, [particleEmitter, oldPrewarm]()
+	{
+		particleEmitter->SetPrewarm(oldPrewarm);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);

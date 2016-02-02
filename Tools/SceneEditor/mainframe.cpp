@@ -1723,6 +1723,13 @@ ParticleEmitterPanel::ParticleEmitterPanel( wxWindow* parent, wxWindowID id, con
 	
 	fgSizer3->Add( emissionRateTextCtrl, 0, wxALL|wxEXPAND, 5 );
 	
+	m_staticText771 = new wxStaticText( this, wxID_ANY, wxT("Prewarm"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText771->Wrap( -1 );
+	fgSizer3->Add( m_staticText771, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	prewarmCheckBox = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer3->Add( prewarmCheckBox, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
 	m_staticText81 = new wxStaticText( this, wxID_ANY, wxT("Life Time"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText81->Wrap( -1 );
 	fgSizer3->Add( m_staticText81, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
@@ -1799,6 +1806,7 @@ ParticleEmitterPanel::ParticleEmitterPanel( wxWindow* parent, wxWindowID id, con
 	radiusTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::RadiusChanged ), NULL, this );
 	numberOfParticlesTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::NumberOfParticlesChanged ), NULL, this );
 	emissionRateTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::EmissionRateChanged ), NULL, this );
+	prewarmCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ParticleEmitterPanel::PrewarmChanged ), NULL, this );
 	minLifeTimeTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinLifeTimeChanged ), NULL, this );
 	maxLifeTimeTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MaxLifeTimeChanged ), NULL, this );
 	minSpeedTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinSpeedChanged ), NULL, this );
@@ -1816,6 +1824,7 @@ ParticleEmitterPanel::~ParticleEmitterPanel()
 	radiusTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::RadiusChanged ), NULL, this );
 	numberOfParticlesTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::NumberOfParticlesChanged ), NULL, this );
 	emissionRateTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::EmissionRateChanged ), NULL, this );
+	prewarmCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ParticleEmitterPanel::PrewarmChanged ), NULL, this );
 	minLifeTimeTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinLifeTimeChanged ), NULL, this );
 	maxLifeTimeTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MaxLifeTimeChanged ), NULL, this );
 	minSpeedTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinSpeedChanged ), NULL, this );

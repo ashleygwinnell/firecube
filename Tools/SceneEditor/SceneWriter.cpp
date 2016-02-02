@@ -294,6 +294,7 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlNode *paren
 		element->SetAttribute("life_time", ToString(vec2(particleEmitter->GetMinLifeTime(), particleEmitter->GetMaxLifeTime())));
 		element->SetAttribute("speed", ToString(vec2(particleEmitter->GetMinSpeed(), particleEmitter->GetMaxSpeed())));
 		element->SetAttribute("material", particleEmitter->GetMaterial());
+		element->SetAttribute("prewarm", particleEmitter->GetPrewarm() ? "true" : "false");
 
 		switch (particleEmitter->GetEmitterShape())
 		{

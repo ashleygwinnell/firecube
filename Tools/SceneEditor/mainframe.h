@@ -692,6 +692,8 @@ class ParticleEmitterPanel : public wxPanel
 		wxTextCtrl* numberOfParticlesTextCtrl;
 		wxStaticText* m_staticText77;
 		wxTextCtrl* emissionRateTextCtrl;
+		wxStaticText* m_staticText771;
+		wxCheckBox* prewarmCheckBox;
 		wxStaticText* m_staticText81;
 		wxStaticText* m_staticText72;
 		wxTextCtrl* minLifeTimeTextCtrl;
@@ -713,6 +715,7 @@ class ParticleEmitterPanel : public wxPanel
 		virtual void RadiusChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void NumberOfParticlesChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void EmissionRateChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void PrewarmChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MinLifeTimeChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MaxLifeTimeChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MinSpeedChanged( wxCommandEvent& event ) { event.Skip(); }
