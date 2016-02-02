@@ -31,6 +31,7 @@ public:
 	void SetLifeTime(float minLifeTime, float maxLifeTime);
 	void SetSpeed(float minSpeed, float maxSpeed);
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
+	void SetPrewarm(bool prewarm);
 
 protected:	
 	virtual void UpdateWorldBoundingBox();
@@ -45,6 +46,7 @@ private:
 	void EmitParticles(unsigned int count);
 	void Init(unsigned int numberOfParticles, Material *material);
 	inline void RandomPositionAndDirection(vec3 &position, vec3 &direction) const;	
+	void Prewarm();
 
 	BoundingBox boundingBox;
 	Shader *updateShader;
@@ -63,6 +65,7 @@ private:
 	float radius;
 	vec3 box;
 	float emissionLeftOver;
+	bool prewarm;
 };
 
 }

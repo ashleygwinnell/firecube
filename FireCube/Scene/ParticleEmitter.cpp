@@ -15,14 +15,14 @@
 using namespace FireCube;
 
 ParticleEmitter::ParticleEmitter(Engine *engine, unsigned int numberOfParticles, Material *material) : Renderable(engine), minLifeTime(2.0f), maxLifeTime(2.0f), minSpeed(1.0f), maxSpeed(1.0f), 
-				 numberOfParticles(numberOfParticles), needToReset(true), emitterShape(ParticleEmitterShape::SPHERE), radius(1.0f), emissionRate(numberOfParticles / 10)
+				 numberOfParticles(numberOfParticles), needToReset(true), emitterShape(ParticleEmitterShape::SPHERE), radius(1.0f), emissionRate(numberOfParticles / 10), prewarm(false)
 {
 	Init(numberOfParticles, material);
 }
 
 ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : Renderable(other), minLifeTime(other.minLifeTime), maxLifeTime(other.maxLifeTime), minSpeed(other.minSpeed), maxSpeed(other.maxSpeed),
 																 numberOfParticles(other.numberOfParticles), needToReset(true), emitterShape(other.emitterShape), box(other.box), radius(other.radius), 
-																 boundingBox(other.boundingBox), emissionRate(other.emissionRate)
+																 boundingBox(other.boundingBox), emissionRate(other.emissionRate), prewarm(other.prewarm)
 {
 	Init(numberOfParticles, other.renderableParts[0].material);	
 }
@@ -100,14 +100,11 @@ void ParticleEmitter::Reset()
 		particleData[i * particleDataSize + 7] = 1;  // Life time
 		
 		particleLife[i] = life;		
-	}
+	}	
 
 	for (unsigned int i = 0; i < numberOfParticles; ++i)
-	{				
-		if (particleLife[i] < 0)
-		{
-			deadParticles.push_back(i);
-		}
+	{
+		deadParticles.push_back(i);		
 	}
 
 	for (int i = 0; i < 2; ++i)
@@ -116,6 +113,11 @@ void ParticleEmitter::Reset()
 	}
 
 	geometry->Update();
+
+	if (prewarm)
+	{
+		Prewarm();
+	}	
 }
 
 Component *ParticleEmitter::Clone() const
@@ -138,14 +140,17 @@ void ParticleEmitter::Update(float time)
 {
 	if (!IsEnabled())
 		return;
-
-	bool didReset = false;
+	
 	if (needToReset)
 	{
 		Reset();
-		didReset = true;
 		needToReset = false;
 	}
+
+	float particlesToEmitExact = (float)emissionRate * time + emissionLeftOver;
+	unsigned int particlesToEmit = (unsigned int)std::floor(particlesToEmitExact);
+	emissionLeftOver = particlesToEmitExact - particlesToEmit;
+	EmitParticles(particlesToEmit);
 
 	Program *program = engine->GetRenderer()->SetShaders(updateShader, nullptr);
 	program->SetUniform(PARAM_TIME_STEP, time);	
@@ -159,25 +164,17 @@ void ParticleEmitter::Update(float time)
 	geometry->SetVertexBuffer(particleBuffers[0]);
 	geometry->Update();
 
-	if (!didReset)
+	for (unsigned int i = 0; i < numberOfParticles; ++i)
 	{
-		for (unsigned int i = 0; i < numberOfParticles; ++i)
-		{			
-			if (particleLife[i] > 0)
+		if (particleLife[i] > 0)
+		{
+			particleLife[i] -= time;
+			if (particleLife[i] < 0)
 			{
-				particleLife[i] -= time;
-				if (particleLife[i] < 0)
-				{
-					deadParticles.push_back(i);
-				}
+				deadParticles.push_back(i);
 			}
 		}
-	}
-	
-	float particlesToEmitExact = (float) emissionRate * time + emissionLeftOver;
-	unsigned int particlesToEmit = (unsigned int) std::floor(particlesToEmitExact);
-	emissionLeftOver = particlesToEmitExact - particlesToEmit;
-	EmitParticles(particlesToEmit);
+	}	
 }
 
 void ParticleEmitter::EmitParticles(unsigned int count)
@@ -282,4 +279,49 @@ void ParticleEmitter::SetSpeed(float minSpeed, float maxSpeed)
 {
 	this->minSpeed = minSpeed;
 	this->maxSpeed = maxSpeed;
+}
+
+void ParticleEmitter::SetPrewarm(bool prewarm)
+{
+	this->prewarm = prewarm;
+}
+
+void FireCube::ParticleEmitter::Prewarm()
+{
+	float timeStep = 0.1f;
+	float totalTime = maxLifeTime;
+	float time = 0.0f;
+	while (time < totalTime)
+	{
+		float particlesToEmitExact = (float)emissionRate * timeStep + emissionLeftOver;
+		unsigned int particlesToEmit = (unsigned int)std::floor(particlesToEmitExact);
+		emissionLeftOver = particlesToEmitExact - particlesToEmit;
+		EmitParticles(particlesToEmit);
+
+		Program *program = engine->GetRenderer()->SetShaders(updateShader, nullptr);
+		program->SetUniform(PARAM_TIME_STEP, timeStep);
+		glEnable(GL_RASTERIZER_DISCARD);
+		glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, particleBuffers[1]->GetObjectId());
+		glBeginTransformFeedback(GL_POINTS);
+		geometry->Render();
+		glEndTransformFeedback();
+		glDisable(GL_RASTERIZER_DISCARD);
+		std::swap(particleBuffers[0], particleBuffers[1]);
+		geometry->SetVertexBuffer(particleBuffers[0]);
+		geometry->Update();
+
+		for (unsigned int i = 0; i < numberOfParticles; ++i)
+		{
+			if (particleLife[i] > 0)
+			{
+				particleLife[i] -= timeStep;
+				if (particleLife[i] < 0)
+				{
+					deadParticles.push_back(i);
+				}
+			}
+		}		
+
+		time += timeStep;
+	}
 }
