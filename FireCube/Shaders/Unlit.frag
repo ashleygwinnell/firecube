@@ -10,10 +10,13 @@ uniform float materialOpacity;
 
 void main()
 {
+	float alpha = materialOpacity;
 	#ifdef DIFFUSE_MAPPING
-		vec3 diffColor = materialDiffuse * texture(diffuseMap, texcoord.xy).rgb;
+		vec4 textureColor = texture(diffuseMap, texcoord.xy);
+		vec3 diffColor = materialDiffuse * textureColor.rgb;
+		alpha *= textureColor.a;
 	#else			
 		vec3 diffColor = materialDiffuse;			
 	#endif
-	outputColor = vec4(diffColor, materialOpacity);
+	outputColor = vec4(diffColor, alpha);
 }
