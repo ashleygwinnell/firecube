@@ -38,8 +38,7 @@ bool AssetUtils::ImportMesh(FireCube::Engine *engine, const std::string &path)
 
 			if (texture)
 			{
-				std::string targetTexturePath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Textures" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(texture->GetFileName());
-				Filesystem::CopyPath(texture->GetFileName(), targetTexturePath);
+				AssetUtils::ImportTextureIfNeeded(texture->GetFileName());				
 			}
 		}
 	}
@@ -182,9 +181,21 @@ bool AssetUtils::SerializeMaterial(FireCube::Material *material, const std::stri
 
 		if (texture)
 		{			
+			auto path = texture->GetFileName();
+
+			if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), path))
+			{
+				path = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
+			}
+			else
+			{
+				std::string filename = Filesystem::GetLastPathComponent(path);				
+				path = "Textures" + Filesystem::PATH_SEPARATOR + filename;
+			}
+
 			element = new TiXmlElement("texture");
 			element->SetAttribute("unit", Material::GetTextureUnitName(unit));
-			element->SetAttribute("name", "Textures" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(texture->GetFileName()));
+			element->SetAttribute("name", path);
 			rootElement->LinkEndChild(element);
 		}
 	}
@@ -208,8 +219,7 @@ std::string AssetUtils::ImportTextureIfNeeded(const std::string &texturePath)
 		Filesystem::CopyPath(sfile, targetPath);
 		sfile = "Textures" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(sfile);
 	}
-
-	std::replace(sfile.begin(), sfile.end(), '\\', '/');
+	
 	return sfile;
 }
 
