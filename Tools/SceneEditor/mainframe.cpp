@@ -1651,49 +1651,53 @@ ParticleEmitterPanel::ParticleEmitterPanel( wxWindow* parent, wxWindowID id, con
 	int shapeTypeChoiceNChoices = sizeof( shapeTypeChoiceChoices ) / sizeof( wxString );
 	shapeTypeChoice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, shapeTypeChoiceNChoices, shapeTypeChoiceChoices, 0 );
 	shapeTypeChoice->SetSelection( 0 );
-	fgSizer3->Add( shapeTypeChoice, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
+	fgSizer3->Add( shapeTypeChoice, 1, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
 	
 	boxStaticText = new wxStaticText( this, wxID_ANY, wxT("Box"), wxDefaultPosition, wxDefaultSize, 0 );
 	boxStaticText->Wrap( -1 );
 	fgSizer3->Add( boxStaticText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	boxPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer5;
-	fgSizer5 = new wxFlexGridSizer( 0, 6, 0, 0 );
-	fgSizer5->SetFlexibleDirection( wxBOTH );
-	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxBoxSizer* bSizer63;
+	bSizer63 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_staticText271 = new wxStaticText( boxPanel, wxID_ANY, wxT("W"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText271->Wrap( -1 );
-	fgSizer5->Add( m_staticText271, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	bSizer63->Add( m_staticText271, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	bboxWidthTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxTE_PROCESS_ENTER );
+	bboxWidthTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_PROCESS_ENTER );
+	bboxWidthTextCtrl->SetMinSize( wxSize( 1,-1 ) );
+	
 	bboxWidthTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &bboxWidthText ) );
 	
-	fgSizer5->Add( bboxWidthTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	bSizer63->Add( bboxWidthTextCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	m_staticText281 = new wxStaticText( boxPanel, wxID_ANY, wxT("H"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText281->Wrap( -1 );
-	fgSizer5->Add( m_staticText281, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	bSizer63->Add( m_staticText281, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	bboxHeightTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxTE_PROCESS_ENTER );
+	bboxHeightTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_PROCESS_ENTER );
+	bboxHeightTextCtrl->SetMinSize( wxSize( 1,-1 ) );
+	
 	bboxHeightTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &bboxHeightText ) );
 	
-	fgSizer5->Add( bboxHeightTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	bSizer63->Add( bboxHeightTextCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	m_staticText292 = new wxStaticText( boxPanel, wxID_ANY, wxT("D"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText292->Wrap( -1 );
-	fgSizer5->Add( m_staticText292, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	bSizer63->Add( m_staticText292, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	bboxDepthTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxTE_PROCESS_ENTER );
+	bboxDepthTextCtrl = new wxTextCtrl( boxPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_PROCESS_ENTER );
+	bboxDepthTextCtrl->SetMinSize( wxSize( 1,-1 ) );
+	
 	bboxDepthTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &bboxDepthText ) );
 	
-	fgSizer5->Add( bboxDepthTextCtrl, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	bSizer63->Add( bboxDepthTextCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	
-	boxPanel->SetSizer( fgSizer5 );
+	boxPanel->SetSizer( bSizer63 );
 	boxPanel->Layout();
-	fgSizer5->Fit( boxPanel );
+	bSizer63->Fit( boxPanel );
 	fgSizer3->Add( boxPanel, 1, wxEXPAND | wxALL, 5 );
 	
 	sphereStaticText = new wxStaticText( this, wxID_ANY, wxT("Sphere"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1741,22 +1745,26 @@ ParticleEmitterPanel::ParticleEmitterPanel( wxWindow* parent, wxWindowID id, con
 	m_staticText72->Wrap( -1 );
 	bSizer61->Add( m_staticText72, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	minLifeTimeTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	minLifeTimeTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_PROCESS_ENTER );
+	minLifeTimeTextCtrl->SetMinSize( wxSize( 1,-1 ) );
+	
 	minLifeTimeTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &minLifeTimeText ) );
 	
-	bSizer61->Add( minLifeTimeTextCtrl, 1, wxALL|wxEXPAND, 5 );
+	bSizer61->Add( minLifeTimeTextCtrl, 1, wxALL, 5 );
 	
 	m_staticText73 = new wxStaticText( this, wxID_ANY, wxT("Max"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText73->Wrap( -1 );
 	bSizer61->Add( m_staticText73, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	maxLifeTimeTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	maxLifeTimeTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_PROCESS_ENTER );
+	maxLifeTimeTextCtrl->SetMinSize( wxSize( 1,-1 ) );
+	
 	maxLifeTimeTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &maxLifeTimeText ) );
 	
 	bSizer61->Add( maxLifeTimeTextCtrl, 1, wxALL, 5 );
 	
 	
-	fgSizer3->Add( bSizer61, 1, wxEXPAND, 5 );
+	fgSizer3->Add( bSizer61, 0, wxEXPAND, 5 );
 	
 	m_staticText74 = new wxStaticText( this, wxID_ANY, wxT("Speed"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText74->Wrap( -1 );
@@ -1769,19 +1777,23 @@ ParticleEmitterPanel::ParticleEmitterPanel( wxWindow* parent, wxWindowID id, con
 	m_staticText751->Wrap( -1 );
 	bSizer62->Add( m_staticText751, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	minSpeedTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	minSpeedTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_PROCESS_ENTER );
+	minSpeedTextCtrl->SetMinSize( wxSize( 1,-1 ) );
+	
 	minSpeedTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &minSpeedText ) );
 	
-	bSizer62->Add( minSpeedTextCtrl, 0, wxALL, 5 );
+	bSizer62->Add( minSpeedTextCtrl, 1, wxALL, 5 );
 	
 	m_staticText76 = new wxStaticText( this, wxID_ANY, wxT("Max"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText76->Wrap( -1 );
 	bSizer62->Add( m_staticText76, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	maxSpeedTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	maxSpeedTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_PROCESS_ENTER );
+	maxSpeedTextCtrl->SetMinSize( wxSize( 1,-1 ) );
+	
 	maxSpeedTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &maxSpeedText ) );
 	
-	bSizer62->Add( maxSpeedTextCtrl, 0, wxALL, 5 );
+	bSizer62->Add( maxSpeedTextCtrl, 1, wxALL, 5 );
 	
 	
 	fgSizer3->Add( bSizer62, 1, wxEXPAND, 5 );
