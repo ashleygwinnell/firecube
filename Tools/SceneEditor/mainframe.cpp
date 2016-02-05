@@ -296,60 +296,49 @@ BaseComponentPanel::~BaseComponentPanel()
 
 StaticModelPanel::StaticModelPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
-	wxBoxSizer* bSizer24;
-	bSizer24 = new wxBoxSizer( wxVERTICAL );
-	
-	wxBoxSizer* bSizer8;
-	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+	wxFlexGridSizer* fgSizer7;
+	fgSizer7 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer7->AddGrowableCol( 1 );
+	fgSizer7->SetFlexibleDirection( wxBOTH );
+	fgSizer7->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	wxStaticText* m_staticText2;
 	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Mesh"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
-	bSizer8->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer7->Add( m_staticText2, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	meshFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_SMALL );
-	bSizer8->Add( meshFilePicker, 1, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer7->Add( meshFilePicker, 1, wxALL|wxEXPAND, 5 );
 	
+	m_staticText79 = new wxStaticText( this, wxID_ANY, wxT("Cast Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText79->Wrap( -1 );
+	fgSizer7->Add( m_staticText79, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	bSizer24->Add( bSizer8, 1, wxEXPAND, 5 );
-	
-	castShadowCheckBox = new wxCheckBox( this, wxID_ANY, wxT("Cast Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer24->Add( castShadowCheckBox, 0, wxALL, 5 );
-	
-	wxBoxSizer* bSizer26;
-	bSizer26 = new wxBoxSizer( wxHORIZONTAL );
+	castShadowCheckBox = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer7->Add( castShadowCheckBox, 0, wxALL, 5 );
 	
 	m_staticText42 = new wxStaticText( this, wxID_ANY, wxT("Light Mask"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText42->Wrap( -1 );
-	bSizer26->Add( m_staticText42, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer7->Add( m_staticText42, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	lightMaskTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	lightMaskTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &lightMaskText ) );
 	
-	bSizer26->Add( lightMaskTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
-	
-	
-	bSizer24->Add( bSizer26, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer261;
-	bSizer261 = new wxBoxSizer( wxHORIZONTAL );
+	fgSizer7->Add( lightMaskTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	m_staticText421 = new wxStaticText( this, wxID_ANY, wxT("Collision Query Mask"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText421->Wrap( -1 );
-	bSizer261->Add( m_staticText421, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer7->Add( m_staticText421, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	collisionQueryMaskTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	collisionQueryMaskTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &collisionQueryMaskText ) );
 	
-	bSizer261->Add( collisionQueryMaskTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer7->Add( collisionQueryMaskTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	
-	bSizer24->Add( bSizer261, 1, wxEXPAND, 5 );
-	
-	
-	this->SetSizer( bSizer24 );
+	this->SetSizer( fgSizer7 );
 	this->Layout();
-	bSizer24->Fit( this );
+	fgSizer7->Fit( this );
 	
 	// Connect Events
 	meshFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( StaticModelPanel::FileChanged ), NULL, this );
@@ -370,107 +359,94 @@ StaticModelPanel::~StaticModelPanel()
 
 BoxPanel::BoxPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
-	wxBoxSizer* bSizer24;
-	bSizer24 = new wxBoxSizer( wxVERTICAL );
+	wxFlexGridSizer* fgSizer8;
+	fgSizer8 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer8->AddGrowableCol( 1 );
+	fgSizer8->SetFlexibleDirection( wxBOTH );
+	fgSizer8->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	wxBoxSizer* bSizer8;
-	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+	m_staticText80 = new wxStaticText( this, wxID_ANY, wxT("Size"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText80->Wrap( -1 );
+	fgSizer8->Add( m_staticText80, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	wxBoxSizer* bSizer66;
+	bSizer66 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxStaticText* m_staticText2;
-	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Width"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("W"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
-	bSizer8->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
+	bSizer66->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	widthTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	widthTextCtrl->SetMinSize( wxSize( 1,-1 ) );
+	
 	widthTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &widthText ) );
 	
-	bSizer8->Add( widthTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
-	
-	
-	bSizer24->Add( bSizer8, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer81;
-	bSizer81 = new wxBoxSizer( wxHORIZONTAL );
+	bSizer66->Add( widthTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
 	
 	wxStaticText* m_staticText21;
-	m_staticText21 = new wxStaticText( this, wxID_ANY, wxT("Height"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText21 = new wxStaticText( this, wxID_ANY, wxT("H"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText21->Wrap( -1 );
-	bSizer81->Add( m_staticText21, 0, wxALIGN_CENTER|wxALL, 5 );
+	bSizer66->Add( m_staticText21, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	heightTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	heightTextCtrl->SetMinSize( wxSize( 1,-1 ) );
+	
 	heightTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &heightText ) );
 	
-	bSizer81->Add( heightTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
-	
-	
-	bSizer24->Add( bSizer81, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer811;
-	bSizer811 = new wxBoxSizer( wxHORIZONTAL );
+	bSizer66->Add( heightTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
 	
 	wxStaticText* m_staticText211;
-	m_staticText211 = new wxStaticText( this, wxID_ANY, wxT("Depth"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText211 = new wxStaticText( this, wxID_ANY, wxT("D"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText211->Wrap( -1 );
-	bSizer811->Add( m_staticText211, 0, wxALIGN_CENTER|wxALL, 5 );
+	bSizer66->Add( m_staticText211, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	depthTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	depthTextCtrl->SetMinSize( wxSize( 1,-1 ) );
+	
 	depthTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &depthText ) );
 	
-	bSizer811->Add( depthTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	bSizer66->Add( depthTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
 	
 	
-	bSizer24->Add( bSizer811, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer39;
-	bSizer39 = new wxBoxSizer( wxHORIZONTAL );
+	fgSizer8->Add( bSizer66, 1, wxEXPAND, 5 );
 	
 	m_staticText48 = new wxStaticText( this, wxID_ANY, wxT("Material"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText48->Wrap( -1 );
-	bSizer39->Add( m_staticText48, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer8->Add( m_staticText48, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	materialFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.xml"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_SMALL );
-	bSizer39->Add( materialFilePicker, 1, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer8->Add( materialFilePicker, 1, wxALL|wxEXPAND, 5 );
 	
+	m_staticText81 = new wxStaticText( this, wxID_ANY, wxT("Cast Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText81->Wrap( -1 );
+	fgSizer8->Add( m_staticText81, 0, wxALL, 5 );
 	
-	bSizer24->Add( bSizer39, 1, wxEXPAND, 5 );
-	
-	castShadowCheckBox = new wxCheckBox( this, wxID_ANY, wxT("Cast Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer24->Add( castShadowCheckBox, 0, wxALL, 5 );
-	
-	wxBoxSizer* bSizer26;
-	bSizer26 = new wxBoxSizer( wxHORIZONTAL );
+	castShadowCheckBox = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer8->Add( castShadowCheckBox, 0, wxALL, 5 );
 	
 	m_staticText42 = new wxStaticText( this, wxID_ANY, wxT("Light Mask"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText42->Wrap( -1 );
-	bSizer26->Add( m_staticText42, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer8->Add( m_staticText42, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	lightMaskTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	lightMaskTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &lightMaskText ) );
 	
-	bSizer26->Add( lightMaskTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
-	
-	
-	bSizer24->Add( bSizer26, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer261;
-	bSizer261 = new wxBoxSizer( wxHORIZONTAL );
+	fgSizer8->Add( lightMaskTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	m_staticText421 = new wxStaticText( this, wxID_ANY, wxT("Collision Query Mask"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText421->Wrap( -1 );
-	bSizer261->Add( m_staticText421, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer8->Add( m_staticText421, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	collisionQueryMaskTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	collisionQueryMaskTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &collisionQueryMaskText ) );
 	
-	bSizer261->Add( collisionQueryMaskTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer8->Add( collisionQueryMaskTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	
-	bSizer24->Add( bSizer261, 1, wxEXPAND, 5 );
-	
-	
-	this->SetSizer( bSizer24 );
+	this->SetSizer( fgSizer8 );
 	this->Layout();
-	bSizer24->Fit( this );
+	fgSizer8->Fit( this );
 	
 	// Connect Events
 	widthTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::WidthChanged ), NULL, this );
@@ -497,107 +473,78 @@ BoxPanel::~BoxPanel()
 
 SpherePanel::SpherePanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
-	wxBoxSizer* bSizer24;
-	bSizer24 = new wxBoxSizer( wxVERTICAL );
-	
-	wxBoxSizer* bSizer8;
-	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+	wxFlexGridSizer* fgSizer9;
+	fgSizer9 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer9->AddGrowableCol( 1 );
+	fgSizer9->SetFlexibleDirection( wxBOTH );
+	fgSizer9->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	wxStaticText* m_staticText2;
 	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Radius"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
-	bSizer8->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer9->Add( m_staticText2, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	radiusTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	radiusTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &radiusText ) );
 	
-	bSizer8->Add( radiusTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
-	
-	
-	bSizer24->Add( bSizer8, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer81;
-	bSizer81 = new wxBoxSizer( wxHORIZONTAL );
+	fgSizer9->Add( radiusTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	wxStaticText* m_staticText21;
 	m_staticText21 = new wxStaticText( this, wxID_ANY, wxT("Columns"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText21->Wrap( -1 );
-	bSizer81->Add( m_staticText21, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer9->Add( m_staticText21, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	columnsTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	columnsTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &columnsText ) );
 	
-	bSizer81->Add( columnsTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
-	
-	
-	bSizer24->Add( bSizer81, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer811;
-	bSizer811 = new wxBoxSizer( wxHORIZONTAL );
+	fgSizer9->Add( columnsTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	wxStaticText* m_staticText211;
 	m_staticText211 = new wxStaticText( this, wxID_ANY, wxT("Rings"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText211->Wrap( -1 );
-	bSizer811->Add( m_staticText211, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer9->Add( m_staticText211, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	ringsTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	ringsTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &ringsText ) );
 	
-	bSizer811->Add( ringsTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
-	
-	
-	bSizer24->Add( bSizer811, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer39;
-	bSizer39 = new wxBoxSizer( wxHORIZONTAL );
+	fgSizer9->Add( ringsTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	m_staticText48 = new wxStaticText( this, wxID_ANY, wxT("Material"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText48->Wrap( -1 );
-	bSizer39->Add( m_staticText48, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer9->Add( m_staticText48, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	materialFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.xml"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_SMALL );
-	bSizer39->Add( materialFilePicker, 1, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer9->Add( materialFilePicker, 1, wxALL|wxEXPAND, 5 );
 	
+	m_staticText82 = new wxStaticText( this, wxID_ANY, wxT("Cast Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText82->Wrap( -1 );
+	fgSizer9->Add( m_staticText82, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	bSizer24->Add( bSizer39, 1, wxEXPAND, 5 );
-	
-	castShadowCheckBox = new wxCheckBox( this, wxID_ANY, wxT("Cast Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer24->Add( castShadowCheckBox, 0, wxALL, 5 );
-	
-	wxBoxSizer* bSizer26;
-	bSizer26 = new wxBoxSizer( wxHORIZONTAL );
+	castShadowCheckBox = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer9->Add( castShadowCheckBox, 0, wxALL, 5 );
 	
 	m_staticText42 = new wxStaticText( this, wxID_ANY, wxT("Light Mask"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText42->Wrap( -1 );
-	bSizer26->Add( m_staticText42, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer9->Add( m_staticText42, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	lightMaskTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	lightMaskTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &lightMaskText ) );
 	
-	bSizer26->Add( lightMaskTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
-	
-	
-	bSizer24->Add( bSizer26, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer261;
-	bSizer261 = new wxBoxSizer( wxHORIZONTAL );
+	fgSizer9->Add( lightMaskTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	m_staticText421 = new wxStaticText( this, wxID_ANY, wxT("Collision Query Mask"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText421->Wrap( -1 );
-	bSizer261->Add( m_staticText421, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer9->Add( m_staticText421, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	collisionQueryMaskTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	collisionQueryMaskTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &collisionQueryMaskText ) );
 	
-	bSizer261->Add( collisionQueryMaskTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer9->Add( collisionQueryMaskTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	
-	bSizer24->Add( bSizer261, 1, wxEXPAND, 5 );
-	
-	
-	this->SetSizer( bSizer24 );
+	this->SetSizer( fgSizer9 );
 	this->Layout();
-	bSizer24->Fit( this );
+	fgSizer9->Fit( this );
 	
 	// Connect Events
 	radiusTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::RadiusChanged ), NULL, this );
@@ -624,91 +571,82 @@ SpherePanel::~SpherePanel()
 
 PlanePanel::PlanePanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
-	wxBoxSizer* bSizer24;
-	bSizer24 = new wxBoxSizer( wxVERTICAL );
+	wxFlexGridSizer* fgSizer10;
+	fgSizer10 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer10->AddGrowableCol( 1 );
+	fgSizer10->SetFlexibleDirection( wxBOTH );
+	fgSizer10->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	wxBoxSizer* bSizer8;
-	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+	m_staticText83 = new wxStaticText( this, wxID_ANY, wxT("Size"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText83->Wrap( -1 );
+	fgSizer10->Add( m_staticText83, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	wxBoxSizer* bSizer69;
+	bSizer69 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxStaticText* m_staticText2;
 	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Width"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
-	bSizer8->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
+	bSizer69->Add( m_staticText2, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	widthTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	widthTextCtrl->SetMinSize( wxSize( 1,-1 ) );
+	
 	widthTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &widthText ) );
 	
-	bSizer8->Add( widthTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
-	
-	
-	bSizer24->Add( bSizer8, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer811;
-	bSizer811 = new wxBoxSizer( wxHORIZONTAL );
+	bSizer69->Add( widthTextCtrl, 1, wxALL, 5 );
 	
 	wxStaticText* m_staticText211;
 	m_staticText211 = new wxStaticText( this, wxID_ANY, wxT("Depth"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText211->Wrap( -1 );
-	bSizer811->Add( m_staticText211, 0, wxALIGN_CENTER|wxALL, 5 );
+	bSizer69->Add( m_staticText211, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	depthTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	depthTextCtrl->SetMinSize( wxSize( 1,-1 ) );
+	
 	depthTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &depthText ) );
 	
-	bSizer811->Add( depthTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	bSizer69->Add( depthTextCtrl, 1, wxALL, 5 );
 	
 	
-	bSizer24->Add( bSizer811, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer39;
-	bSizer39 = new wxBoxSizer( wxHORIZONTAL );
+	fgSizer10->Add( bSizer69, 1, wxEXPAND, 5 );
 	
 	m_staticText48 = new wxStaticText( this, wxID_ANY, wxT("Material"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText48->Wrap( -1 );
-	bSizer39->Add( m_staticText48, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer10->Add( m_staticText48, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	materialFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.xml"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_SMALL );
-	bSizer39->Add( materialFilePicker, 1, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer10->Add( materialFilePicker, 1, wxALL|wxEXPAND, 5 );
 	
+	m_staticText84 = new wxStaticText( this, wxID_ANY, wxT("Cast Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText84->Wrap( -1 );
+	fgSizer10->Add( m_staticText84, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	bSizer24->Add( bSizer39, 1, wxEXPAND, 5 );
-	
-	castShadowCheckBox = new wxCheckBox( this, wxID_ANY, wxT("Cast Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer24->Add( castShadowCheckBox, 0, wxALL, 5 );
-	
-	wxBoxSizer* bSizer26;
-	bSizer26 = new wxBoxSizer( wxHORIZONTAL );
+	castShadowCheckBox = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer10->Add( castShadowCheckBox, 0, wxALL, 5 );
 	
 	m_staticText42 = new wxStaticText( this, wxID_ANY, wxT("Light Mask"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText42->Wrap( -1 );
-	bSizer26->Add( m_staticText42, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer10->Add( m_staticText42, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	lightMaskTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	lightMaskTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &lightMaskText ) );
 	
-	bSizer26->Add( lightMaskTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
-	
-	
-	bSizer24->Add( bSizer26, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer261;
-	bSizer261 = new wxBoxSizer( wxHORIZONTAL );
+	fgSizer10->Add( lightMaskTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	m_staticText421 = new wxStaticText( this, wxID_ANY, wxT("Collision Query Mask"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText421->Wrap( -1 );
-	bSizer261->Add( m_staticText421, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer10->Add( m_staticText421, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	collisionQueryMaskTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	collisionQueryMaskTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &collisionQueryMaskText ) );
 	
-	bSizer261->Add( collisionQueryMaskTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer10->Add( collisionQueryMaskTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	
-	bSizer24->Add( bSizer261, 1, wxEXPAND, 5 );
-	
-	
-	this->SetSizer( bSizer24 );
+	this->SetSizer( fgSizer10 );
 	this->Layout();
-	bSizer24->Fit( this );
+	fgSizer10->Fit( this );
 	
 	// Connect Events
 	widthTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( PlanePanel::WidthChanged ), NULL, this );
@@ -742,7 +680,7 @@ RigidBodyPanel::RigidBodyPanel( wxWindow* parent, wxWindowID id, const wxPoint& 
 	wxStaticText* m_staticText2;
 	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Mass"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
-	bSizer8->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
+	bSizer8->Add( m_staticText2, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	massTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	massTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &massText ) );
@@ -1177,11 +1115,12 @@ CollisionShapePanel::CollisionShapePanel( wxWindow* parent, wxWindowID id, const
 	shapeTypeChoice->SetSelection( 0 );
 	fgSizer3->Add( shapeTypeChoice, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
 	
-	triggerCheckBox = new wxCheckBox( this, wxID_ANY, wxT("Trigger"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText86 = new wxStaticText( this, wxID_ANY, wxT("Trigger"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText86->Wrap( -1 );
+	fgSizer3->Add( m_staticText86, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	triggerCheckBox = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( triggerCheckBox, 0, wxALL, 5 );
-	
-	
-	fgSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
 	
 	planeStaticText = new wxStaticText( this, wxID_ANY, wxT("Plane"), wxDefaultPosition, wxDefaultSize, 0 );
 	planeStaticText->Wrap( -1 );
@@ -1365,54 +1304,39 @@ CollisionShapePanel::~CollisionShapePanel()
 
 CharacterControllerPanel::CharacterControllerPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
-	wxBoxSizer* bSizer22;
-	bSizer22 = new wxBoxSizer( wxVERTICAL );
-	
-	wxBoxSizer* bSizer28;
-	bSizer28 = new wxBoxSizer( wxHORIZONTAL );
+	wxFlexGridSizer* fgSizer11;
+	fgSizer11 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer11->AddGrowableCol( 1 );
+	fgSizer11->SetFlexibleDirection( wxBOTH );
+	fgSizer11->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	m_staticText3 = new wxStaticText( this, wxID_ANY, wxT("Radius"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText3->Wrap( -1 );
-	bSizer28->Add( m_staticText3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	fgSizer11->Add( m_staticText3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	radiusTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_PROCESS_ENTER );
 	radiusTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &radiusText ) );
 	
-	bSizer28->Add( radiusTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
-	
-	
-	bSizer22->Add( bSizer28, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer29;
-	bSizer29 = new wxBoxSizer( wxHORIZONTAL );
+	fgSizer11->Add( radiusTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	m_staticText44 = new wxStaticText( this, wxID_ANY, wxT("Height"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText44->Wrap( -1 );
-	bSizer29->Add( m_staticText44, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	fgSizer11->Add( m_staticText44, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	heightTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	heightTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &heightText ) );
 	
-	bSizer29->Add( heightTextCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-	
-	
-	bSizer22->Add( bSizer29, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer30;
-	bSizer30 = new wxBoxSizer( wxHORIZONTAL );
+	fgSizer11->Add( heightTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	m_staticText45 = new wxStaticText( this, wxID_ANY, wxT("Contact Offset"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText45->Wrap( -1 );
-	bSizer30->Add( m_staticText45, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	fgSizer11->Add( m_staticText45, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	contactOffsetTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
-	bSizer30->Add( contactOffsetTextCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	fgSizer11->Add( contactOffsetTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	
 	
-	bSizer22->Add( bSizer30, 1, wxEXPAND, 5 );
-	
-	
-	this->SetSizer( bSizer22 );
+	this->SetSizer( fgSizer11 );
 	this->Layout();
 	
 	// Connect Events

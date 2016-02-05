@@ -157,6 +157,7 @@ class StaticModelPanel : public wxPanel
 	
 	protected:
 		wxFilePickerCtrl* meshFilePicker;
+		wxStaticText* m_staticText79;
 		wxCheckBox* castShadowCheckBox;
 		wxStaticText* m_staticText42;
 		wxTextCtrl* lightMaskTextCtrl;
@@ -187,11 +188,13 @@ class BoxPanel : public wxPanel
 	private:
 	
 	protected:
+		wxStaticText* m_staticText80;
 		wxTextCtrl* widthTextCtrl;
 		wxTextCtrl* heightTextCtrl;
 		wxTextCtrl* depthTextCtrl;
 		wxStaticText* m_staticText48;
 		wxFilePickerCtrl* materialFilePicker;
+		wxStaticText* m_staticText81;
 		wxCheckBox* castShadowCheckBox;
 		wxStaticText* m_staticText42;
 		wxTextCtrl* lightMaskTextCtrl;
@@ -233,6 +236,7 @@ class SpherePanel : public wxPanel
 		wxTextCtrl* ringsTextCtrl;
 		wxStaticText* m_staticText48;
 		wxFilePickerCtrl* materialFilePicker;
+		wxStaticText* m_staticText82;
 		wxCheckBox* castShadowCheckBox;
 		wxStaticText* m_staticText42;
 		wxTextCtrl* lightMaskTextCtrl;
@@ -269,10 +273,12 @@ class PlanePanel : public wxPanel
 	private:
 	
 	protected:
+		wxStaticText* m_staticText83;
 		wxTextCtrl* widthTextCtrl;
 		wxTextCtrl* depthTextCtrl;
 		wxStaticText* m_staticText48;
 		wxFilePickerCtrl* materialFilePicker;
+		wxStaticText* m_staticText84;
 		wxCheckBox* castShadowCheckBox;
 		wxStaticText* m_staticText42;
 		wxTextCtrl* lightMaskTextCtrl;
@@ -469,6 +475,7 @@ class CollisionShapePanel : public wxPanel
 	protected:
 		wxStaticText* m_staticText25;
 		wxChoice* shapeTypeChoice;
+		wxStaticText* m_staticText86;
 		wxCheckBox* triggerCheckBox;
 		wxStaticText* planeStaticText;
 		wxPanel* planePanel;
