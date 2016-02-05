@@ -97,6 +97,7 @@ void ScriptEditorPanelImpl::OpenFile(const std::string &filename)
 		std::ifstream f(resolvedFileName);
 		std::string source((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
 		sourceText->SetText(source);
+		sourceText->EmptyUndoBuffer();
 	}
 }
 
