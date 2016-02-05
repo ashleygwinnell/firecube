@@ -100,8 +100,7 @@ void AssetBrowserPanelImpl::FileListItemActivated(wxListEvent& event)
 		{
 			auto node = nodeIter->second;
 			directoryTreeCtrl->Expand(node);
-			directoryTreeCtrl->SelectItem(node);
-			UpdateFileList(itemData->path);
+			directoryTreeCtrl->SelectItem(node);			
 		}
 	}
 	else
