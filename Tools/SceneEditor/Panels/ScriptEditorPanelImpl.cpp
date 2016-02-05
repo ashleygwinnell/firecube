@@ -132,11 +132,19 @@ void ScriptEditorPanelImpl::OnCharAdded(wxStyledTextEvent &event)
 				extraIndent = 1;				
 			}			
 			
-			int indent = sourceText->GetLineIndentation(line - 1) + extraIndent * sourceText->GetIndent();
+			int curIndentation = sourceText->GetLineIndentation(line - 1);
+			int indent = curIndentation + extraIndent * sourceText->GetIndent();
 			if (indent > 0)
 			{
-				sourceText->SetLineIndentation(line, indent);
+				sourceText->SetLineIndentation(line, indent);				
 				sourceText->GotoPos(sourceText->GetLineIndentPosition(line));
+				if (word == "if" || word == "else" || word == "function" || word == "for" || word == "while")
+				{
+					sourceText->NewLine();
+					sourceText->AddText("end");
+					sourceText->SetLineIndentation(line + 1, curIndentation);
+					sourceText->GotoPos(sourceText->GetLineIndentPosition(line));
+				}
 			}
 		}
 	}
