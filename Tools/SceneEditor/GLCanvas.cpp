@@ -160,12 +160,7 @@ void GLCanvas::RenderDebugGeometry(NodeDescriptor *nodeDesc, DebugRenderer *debu
 	for (auto p : particleEmitters)
 	{
 		p->RenderDebugGeometry(debugRenderer);
-	}
-
-	for (auto child : nodeDesc->GetChildren())
-	{
-		RenderDebugGeometry(child, debugRenderer);
-	}
+	}	
 }
 
 void GLCanvas::Render()
