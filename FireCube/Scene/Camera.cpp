@@ -196,3 +196,23 @@ Component *Camera::Clone() const
 	Camera *clone = new Camera(*this);
 	return clone;
 }
+
+float Camera::GetLeftPlane() const
+{
+	return leftPlane;
+}
+
+float Camera::GetRightPlane() const
+{
+	return rightPlane;
+}
+
+float Camera::GetTopPlane() const
+{
+	return topPlane;
+}
+
+float Camera::GetBottomPlane() const
+{
+	return bottomPlane;
+}

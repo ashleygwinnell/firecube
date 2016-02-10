@@ -52,6 +52,10 @@ public:
 	float GetNearPlane() const;
 	float GetFarPlane() const;
 	float GetApectRatio() const;
+	float GetLeftPlane() const;
+	float GetRightPlane() const;
+	float GetTopPlane() const;
+	float GetBottomPlane() const;
 
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
