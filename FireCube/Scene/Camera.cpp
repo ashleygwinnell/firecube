@@ -23,7 +23,7 @@ mat4 Camera::GetProjectionMatrix()
 		projectionMatrixChanged = false;
 		if (orthographic)
 		{
-			projectionMatrix.GenerateOrthographic(leftPlane, rightPlane, bottomPlane, topPlane, nearPlane, farPlane);
+			projectionMatrix.GenerateOrthographic(leftPlane, rightPlane, bottomPlane / aspectRatio, topPlane / aspectRatio, nearPlane, farPlane);
 		}
 		else
 		{
@@ -121,11 +121,9 @@ void Camera::SetAspectRatio(float aspectRatio)
 	if (this->aspectRatio != aspectRatio)
 	{
 		this->aspectRatio = aspectRatio;
-		if (orthographic == false)
-		{
-			projectionMatrixChanged = true;
-			frustumChanged = true;
-		}
+		
+		projectionMatrixChanged = true;
+		frustumChanged = true;		
 	}
 }
 
