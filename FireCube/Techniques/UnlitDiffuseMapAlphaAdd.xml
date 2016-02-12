@@ -1,0 +1,3 @@
+<technique>
+	<pass name = "base_alpha" vs= "Shaders/Unlit.vert" fs = "Shaders/Unlit.frag" defines = "DIFFUSE_MAPPING" blend = "add" depth_write = "false"/>
+</technique>

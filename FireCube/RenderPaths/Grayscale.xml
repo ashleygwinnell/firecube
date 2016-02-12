@@ -1,0 +1,5 @@
+<renderpath>
+	<command type = "quad" vs = "Shaders/grayscale.vert" fs = "Shaders/grayscale.frag" defines = "">
+		<texture unit = "diffuse" name = "viewport" />
+	</command>
+</renderpath>

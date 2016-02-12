@@ -267,3 +267,24 @@ void RenderPath::AllocateRenderSurfaces()
 	}
 	
 }
+
+void RenderPath::Append(RenderPath *renderPath)
+{
+	renderSurfaceDescriptors.insert(renderSurfaceDescriptors.end(), renderPath->renderSurfaceDescriptors.begin(), renderPath->renderSurfaceDescriptors.end());
+	
+	unsigned int newCommandsIndex = commands.size();
+	commands.insert(commands.end(), renderPath->commands.begin(), renderPath->commands.end());
+	
+	for (auto i = commands.begin() + newCommandsIndex; i != commands.end(); ++i)
+	{
+		i->renderPath = this;
+	}
+}
+
+RenderPath *RenderPath::Clone() const
+{
+	RenderPath *clone = new RenderPath(engine);
+	clone->renderSurfaceDescriptors = renderSurfaceDescriptors;
+	clone->commands = commands;
+	return clone;
+}

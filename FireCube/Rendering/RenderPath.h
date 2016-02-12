@@ -25,7 +25,7 @@ class FIRECUBE_API RenderPathCommand
 public:
 	RenderPathCommand(RenderPath *renderPath);
 	bool Load(TiXmlElement *element, Engine *engine);
-	bool HasViewportReads() const;
+	bool HasViewportReads() const;	
 	static RenderPathCommandType stringToType(const std::string &type);
 
 	RenderPath *renderPath;
@@ -60,6 +60,9 @@ public:
 	RenderPathCommand &GetCommand(int index);
 	RenderSurface *GetRenderTarget(StringHash name);
 	void AllocateRenderSurfaces();
+	void Append(RenderPath *renderPath);	
+	RenderPath *Clone() const;
+
 private:
 	std::map<StringHash, SharedPtr<RenderSurface>> renderTargets;
 	std::vector<RenderPathCommand> commands;
