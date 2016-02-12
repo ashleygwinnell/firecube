@@ -46,6 +46,12 @@ void Frame::Render(Renderer *renderer)
 
 	for (auto &command : commands)
 	{
+		if (command.HasViewportReads())
+		{
+			auto viewportRenderSurface = renderPath->GetRenderTarget(VIEWPORT_TARGET);
+			renderer->UseTexture(0, viewportRenderSurface->GetLinkedTexture());
+			glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, renderer->GetWidth(), renderer->GetHeight());			
+		}
 		switch (command.type)
 		{
 		case RenderPathCommandType::CLEAR:

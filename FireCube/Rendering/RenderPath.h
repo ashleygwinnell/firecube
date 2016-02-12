@@ -25,6 +25,7 @@ class FIRECUBE_API RenderPathCommand
 public:
 	RenderPathCommand(RenderPath *renderPath);
 	bool Load(TiXmlElement *element, Engine *engine);
+	bool HasViewportReads() const;
 	static RenderPathCommandType stringToType(const std::string &type);
 
 	RenderPath *renderPath;

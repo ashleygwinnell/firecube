@@ -130,6 +130,19 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 	return true;
 }
 
+bool RenderPathCommand::HasViewportReads() const
+{
+	for (int i = 0; i < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS); ++i)
+	{
+		if (textures[i] == VIEWPORT_TARGET)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 RenderPathCommandType RenderPathCommand::stringToType(const std::string &type)
 {
 	if (type == "clear")
@@ -220,6 +233,22 @@ RenderSurface *RenderPath::GetRenderTarget(StringHash name)
 
 void RenderPath::AllocateRenderSurfaces()
 {
+	bool hasViewportRead = false;
+	for (auto &command : commands)
+	{
+		if (command.HasViewportReads())
+		{
+			hasViewportRead = true;
+			break;
+		}		
+	}
+
+	if (hasViewportRead)
+	{
+		SharedPtr<RenderSurface> renderSurface = engine->GetRenderer()->GetRenderSurface(engine->GetRenderer()->GetWidth(), engine->GetRenderer()->GetHeight(), RenderSurfaceType::COLOR);
+		renderTargets[StringHash("viewport")] = renderSurface;
+	}
+
 	for (const auto &desc : renderSurfaceDescriptors)
 	{
 		int width, height;

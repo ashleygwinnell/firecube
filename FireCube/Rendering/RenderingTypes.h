@@ -114,4 +114,5 @@ extern StringHash LIGHT_PASS;
 extern StringHash SHADOW_PASS;
 extern StringHash ALPHA_PASS;
 
+extern StringHash VIEWPORT_TARGET;
 }

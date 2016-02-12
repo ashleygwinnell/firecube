@@ -31,6 +31,8 @@ StringHash LIGHT_PASS("light_opaque");
 StringHash SHADOW_PASS("shadow");
 StringHash ALPHA_PASS("base_alpha");
 
+StringHash VIEWPORT_TARGET("viewport");
+
 ClearBufferType FireCube::operator | (const ClearBufferType &lhs, const ClearBufferType &rhs)
 {
 	ClearBufferType ret = static_cast<ClearBufferType>(static_cast<int>(lhs) | static_cast<int>(rhs));
