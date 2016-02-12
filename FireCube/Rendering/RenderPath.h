@@ -59,6 +59,7 @@ public:
 	const std::vector<RenderPathCommand> &GetCommands() const;
 	RenderPathCommand &GetCommand(int index);
 	RenderSurface *GetRenderTarget(StringHash name);
+	std::vector<RenderSurfaceDescriptor>  &GetRenderSurfaceDescriptors();
 	void AllocateRenderSurfaces();
 	void Append(RenderPath *renderPath);	
 	RenderPath *Clone() const;

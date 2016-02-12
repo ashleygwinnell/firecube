@@ -24,7 +24,8 @@ StringHash PARAM_FOG_COLOR("fogColor");
 StringHash PARAM_TIME_STEP("timeStep");
 StringHash PARAM_SKIN_MATRICES("skinMatrices");
 StringHash PARAM_LIGHT_BIAS_MVP_MATRIX("lightBiasMVPMatrix");
-StringHash PARAM_SHAODW_INTENSITY("shadowIntensity");
+StringHash PARAM_SHADOW_INTENSITY("shadowIntensity");
+StringHash PARAM_VIEWPORT_INV_SIZE("viewportInvSize");
 
 StringHash BASE_PASS("base_opaque");
 StringHash LIGHT_PASS("light_opaque");

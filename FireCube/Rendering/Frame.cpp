@@ -164,11 +164,22 @@ void Frame::Render(Renderer *renderer)
 			break;
 
 		case RenderPathCommandType::QUAD:
+		{
 			SetRenderTargets(renderer, command);
 			SetTextures(renderer, command);
-			renderer->SetShaders(command.vertexShader, command.fragmentShader);
-			renderer->RenderFullscreenQuad();
+			Program *program = renderer->SetShaders(command.vertexShader, command.fragmentShader);
+			
+			program->SetUniform(PARAM_VIEWPORT_INV_SIZE, vec2(1.0f / (float) renderer->GetWidth(), 1.0f / (float) renderer->GetHeight()));
+			for (auto &renderTarget : renderPath->GetRenderSurfaceDescriptors())
+			{
+				StringHash paramName(renderTarget.name + "InvSize");
+				RenderSurface *renderSurface = renderPath->GetRenderTarget(StringHash(renderTarget.name));
+				program->SetUniform(paramName, vec2(1.0f / (float) renderSurface->GetWidth(), 1.0f / (float) renderSurface->GetHeight()));
+			}
+			
+			renderer->RenderFullscreenQuad();		
 			break;
+		}
 
 		default:
 			LOGERROR("Unkown command type: ", (int)command.type);

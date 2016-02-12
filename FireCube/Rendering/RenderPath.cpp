@@ -288,3 +288,8 @@ RenderPath *RenderPath::Clone() const
 	clone->commands = commands;
 	return clone;
 }
+
+std::vector<RenderSurfaceDescriptor> &RenderPath::GetRenderSurfaceDescriptors()
+{
+	return renderSurfaceDescriptors;
+}
