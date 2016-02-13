@@ -1,0 +1,17 @@
+<renderpath>
+	<rendersurface name = "blurh" size_multiplier = "1 1" />
+	<rendersurface name = "blurv" size_multiplier = "1 1" />
+	<command type = "quad" vs = "Shaders/bloom.vert" fs = "Shaders/bloom.frag" defines = "BRIGHT" output="blurv">
+		<texture unit = "diffuse" name = "viewport" />
+	</command>
+	<command type = "quad" vs = "Shaders/bloom.vert" fs = "Shaders/bloom.frag" defines = "HBLUR" output="blurh">
+		<texture unit = "diffuse" name = "blurv" />
+	</command>
+	<command type = "quad" vs = "Shaders/bloom.vert" fs = "Shaders/bloom.frag" defines = "VBLUR" output="blurv">
+		<texture unit = "diffuse" name = "blurh" />
+	</command>
+	<command type = "quad" vs = "Shaders/bloom.vert" fs = "Shaders/bloom.frag" defines = "MIX">
+		<texture unit = "diffuse" name = "viewport" />
+		<texture unit = "normal" name = "blurv" />
+	</command>
+</renderpath>
