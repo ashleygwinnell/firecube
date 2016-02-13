@@ -490,8 +490,7 @@ RenderPath *Renderer::GetDefaultRenderPath()
 }
 
 void Renderer::RenderFullscreenQuad()
-{
-	RestoreFrameBuffer();
+{	
 	currentProgram->SetUniform(PARAM_VIEW_PROJECTION_MATRIX, mat4::IDENTITY);
 	currentProgram->SetUniform(PARAM_CAMERA_POS, mat4::IDENTITY);	
 	glBindVertexArray(quadVao);
