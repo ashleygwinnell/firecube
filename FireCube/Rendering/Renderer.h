@@ -142,7 +142,7 @@ public:
 	int GetWidth() const;
 	int GetHeight() const;
 
-	SharedPtr<RenderSurface> GetRenderSurface(int width, int height, RenderSurfaceType type);
+	SharedPtr<RenderSurface> GetRenderSurface(int width, int height, RenderSurfaceType type, unsigned int uniqueKey = 0);
 
 	void SetBlendMode(BlendMode blendMode);
 	void SetDepthWrite(bool depthWrite);

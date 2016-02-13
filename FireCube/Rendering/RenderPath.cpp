@@ -13,7 +13,10 @@ using namespace FireCube;
 
 RenderPathCommand::RenderPathCommand(RenderPath *renderPath) : renderPath(renderPath), type(RenderPathCommandType::UNKNOWN), useFogColor(false)
 {
-
+	for (unsigned int i = 0; i < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS); ++i)
+	{
+		textures[i] = StringHash();
+	}
 }
 
 bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
@@ -108,6 +111,10 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 	{
 		output = StringHash(element->Attribute("output"));
 		// TODO: Implement MRT by allowing multiple outputs and specify index for each output
+	}
+	else
+	{
+		output = VIEWPORT_TARGET;
 	}
 
 	for (TiXmlElement *e = element->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
@@ -262,10 +269,11 @@ void RenderPath::AllocateRenderSurfaces()
 			width = desc.width;
 			height = desc.height;
 		}
-		SharedPtr<RenderSurface> renderSurface = engine->GetRenderer()->GetRenderSurface(width, height, RenderSurfaceType::COLOR);
-		renderTargets[StringHash(desc.name)] = renderSurface;
-	}
-	
+
+		StringHash nameHash(desc.name);
+		SharedPtr<RenderSurface> renderSurface = engine->GetRenderer()->GetRenderSurface(width, height, RenderSurfaceType::COLOR, nameHash.Value());
+		renderTargets[nameHash] = renderSurface;
+	}	
 }
 
 void RenderPath::Append(RenderPath *renderPath)

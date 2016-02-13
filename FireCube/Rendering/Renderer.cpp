@@ -520,9 +520,11 @@ int Renderer::GetHeight() const
 	return height;
 }
 
-SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, RenderSurfaceType type)
+SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, RenderSurfaceType type, unsigned int uniqueKey)
 {	
 	long long int key = ((long long) type << 32) | width << 16 | height;
+	key += ((long long)uniqueKey << 32);
+
 	auto i = renderSurfaces.find(key);
 	if (i != renderSurfaces.end())
 		return i->second;
