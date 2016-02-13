@@ -44,15 +44,24 @@ void Frame::Render(Renderer *renderer)
 	renderPath->AllocateRenderSurfaces();
 	const std::vector<RenderPathCommand> commands = renderPath->GetCommands();
 
+	bool backBufferDirty = true;
+
 	for (auto &command : commands)
 	{
-		if (command.HasViewportReads())
+		if (command.HasViewportReads() && backBufferDirty)
 		{
+			backBufferDirty = false;
 			auto viewportRenderSurface = renderPath->GetRenderTarget(VIEWPORT_TARGET);
 			renderer->RestoreFrameBuffer();
 			renderer->UseTexture(0, viewportRenderSurface->GetLinkedTexture());
 			glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, renderer->GetWidth(), renderer->GetHeight());			
 		}
+
+		if (command.output == VIEWPORT_TARGET)
+		{
+			backBufferDirty = true;
+		}
+
 		switch (command.type)
 		{
 		case RenderPathCommandType::CLEAR:
