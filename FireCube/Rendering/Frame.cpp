@@ -49,6 +49,7 @@ void Frame::Render(Renderer *renderer)
 		if (command.HasViewportReads())
 		{
 			auto viewportRenderSurface = renderPath->GetRenderTarget(VIEWPORT_TARGET);
+			renderer->RestoreFrameBuffer();
 			renderer->UseTexture(0, viewportRenderSurface->GetLinkedTexture());
 			glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, renderer->GetWidth(), renderer->GetHeight());			
 		}
@@ -429,7 +430,7 @@ void Frame::UpdateLightQueues()
 
 void Frame::SetRenderTargets(Renderer *renderer, const RenderPathCommand &command)
 {
-	RenderSurface *renderTarget = command.renderPath->GetRenderTarget(command.output);
+	RenderSurface *renderTarget = command.output == VIEWPORT_TARGET ? nullptr : command.renderPath->GetRenderTarget(command.output);
 	if (!renderTarget)
 		renderTarget = renderSurface;
 
@@ -446,9 +447,9 @@ void Frame::SetTextures(Renderer *renderer, const RenderPathCommand &command)
 	{
 		RenderSurface *renderTarget = command.renderPath->GetRenderTarget(command.textures[i]);
 		if (renderTarget)
-		{
-			renderTarget->GetLinkedTexture()->GenerateMipMaps();
+		{			
 			renderer->UseTexture(i, renderTarget->GetLinkedTexture());
+			renderTarget->GetLinkedTexture()->GenerateMipMaps();
 		}
 	}
 }
