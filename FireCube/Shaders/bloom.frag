@@ -6,11 +6,12 @@ const float weight[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016
 uniform vec2 viewportInvSize;
 uniform vec2 blurhInvSize;
 uniform vec2 blurvInvSize;
+uniform float exposure;
+uniform float bloomThreshold;
 void main()
 {
 	vec3 diffColor = texture(diffuseMap, texcoord).rgb;
-	#ifdef BRIGHT		
-		const float bloomThreshold = 0.3;
+	#ifdef BRIGHT				
 		outputColor = vec4((diffColor - vec3(bloomThreshold)) / (1.0 - bloomThreshold), 1.0);		
 	#elif defined(HBLUR)
 		vec3 result = diffColor * weight[0]; // current fragment's contribution
@@ -31,8 +32,7 @@ void main()
         }   
 		outputColor = vec4(result, 1.0);
 	#elif defined(MIX)
-		const float gamma = 2.2;		
-		const float exposure = 0.5;
+		const float gamma = 2.2;				
 		vec3 bloomColor = texture(normalMap, texcoord).rgb;
 		diffColor += bloomColor; // additive blending
 		// tone mapping

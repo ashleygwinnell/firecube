@@ -131,6 +131,17 @@ bool RenderPathCommand::Load(TiXmlElement *element, Engine *engine)
 			TextureUnit textureUnit = Material::ParseTextureUnitName(textureUnitName);
 			textures[static_cast<int>(textureUnit)] = StringHash(textureName);			
 		}
+		else if (e->ValueStr() == "parameter")
+		{
+			std::string parameterName = e->Attribute("name");
+			if (parameterName.empty())
+				continue;
+			std::string parameterValue = e->Attribute("value");
+			if (parameterValue.empty())
+				continue;
+
+			parameters[StringHash(parameterName)] = Variant::FromString(parameterValue);
+		}
 	}
 
 

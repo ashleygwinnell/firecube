@@ -5,6 +5,7 @@
 #include "Rendering/Texture.h"
 #include "Rendering/RenderingTypes.h"
 #include "Math/Math.h"
+#include "Core/Variant.h"
 
 class TiXmlElement;
 
@@ -38,6 +39,7 @@ public:
 	StringHash pass;
 	Shader *vertexShader;
 	Shader *fragmentShader;	
+	std::map<StringHash, Variant> parameters;
 };
 
 class FIRECUBE_API RenderSurfaceDescriptor

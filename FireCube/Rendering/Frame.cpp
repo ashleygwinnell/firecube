@@ -185,6 +185,11 @@ void Frame::Render(Renderer *renderer)
 				StringHash paramName(renderTarget.name + "InvSize");
 				RenderSurface *renderSurface = renderPath->GetRenderTarget(StringHash(renderTarget.name));
 				program->SetUniform(paramName, vec2(1.0f / (float) renderSurface->GetWidth(), 1.0f / (float) renderSurface->GetHeight()));
+			}							
+			
+			for (auto &parameter : command.parameters)
+			{
+				program->SetUniform(parameter.first, parameter.second);
 			}
 			
 			renderer->RenderFullscreenQuad();		
