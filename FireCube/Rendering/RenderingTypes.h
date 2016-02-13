@@ -96,6 +96,7 @@ extern StringHash PARAM_V_OFFSET;
 extern StringHash PARAM_AMBIENT_COLOR;
 extern StringHash PARAM_MODEL_MATRIX;
 extern StringHash PARAM_VIEW_PROJECTION_MATRIX;
+extern StringHash PARAM_PROJECTION_MATRIX;
 extern StringHash PARAM_NORMAL_MATRIX;
 extern StringHash PARAM_LIGHT_DIR;
 extern StringHash PARAM_LIGHT_POS;
@@ -109,6 +110,7 @@ extern StringHash PARAM_SKIN_MATRICES;
 extern StringHash PARAM_LIGHT_BIAS_MVP_MATRIX;
 extern StringHash PARAM_SHADOW_INTENSITY;
 extern StringHash PARAM_VIEWPORT_INV_SIZE;
+extern StringHash PARAM_SCREEN_SIZE;
 
 extern StringHash BASE_PASS;
 extern StringHash LIGHT_PASS;

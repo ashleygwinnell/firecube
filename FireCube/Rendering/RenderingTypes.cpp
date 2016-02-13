@@ -13,6 +13,7 @@ StringHash PARAM_V_OFFSET("vOffset");
 StringHash PARAM_AMBIENT_COLOR("ambientColor");
 StringHash PARAM_MODEL_MATRIX("modelMatrix");
 StringHash PARAM_VIEW_PROJECTION_MATRIX("viewProjectionMatrix");
+StringHash PARAM_PROJECTION_MATRIX("projectionMatrix");
 StringHash PARAM_NORMAL_MATRIX("normalMatrix");
 StringHash PARAM_LIGHT_DIR("directionalLightDir");
 StringHash PARAM_LIGHT_POS("lightPosition");
@@ -26,6 +27,7 @@ StringHash PARAM_SKIN_MATRICES("skinMatrices");
 StringHash PARAM_LIGHT_BIAS_MVP_MATRIX("lightBiasMVPMatrix");
 StringHash PARAM_SHADOW_INTENSITY("shadowIntensity");
 StringHash PARAM_VIEWPORT_INV_SIZE("viewportInvSize");
+StringHash PARAM_SCREEN_SIZE("screenSize");
 
 StringHash BASE_PASS("base_opaque");
 StringHash LIGHT_PASS("light_opaque");

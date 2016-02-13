@@ -88,6 +88,16 @@ void Frame::Render(Renderer *renderer)
 					program->SetUniform(PARAM_FOG_PARAMETERS, fogParameters);
 					program->SetUniform(PARAM_FOG_COLOR, fogColor);
 				}
+
+				if (renderSurface)
+				{
+					program->SetUniform(PARAM_SCREEN_SIZE, vec2(renderSurface->GetWidth(), renderSurface->GetHeight()));
+				}
+				else
+				{
+					program->SetUniform(PARAM_SCREEN_SIZE, vec2(renderer->GetWidth(), renderer->GetHeight()));
+				}
+
 				renderer->UseCamera(camera);
 				// View transformation
 				program->SetUniform(PARAM_MODEL_MATRIX, renderJob.transformation);
@@ -136,6 +146,16 @@ void Frame::Render(Renderer *renderer)
 						program->SetUniform(PARAM_FOG_PARAMETERS, fogParameters);
 						program->SetUniform(PARAM_FOG_COLOR, fogColor);
 					}
+
+					if (renderSurface)
+					{
+						program->SetUniform(PARAM_SCREEN_SIZE, vec2(renderSurface->GetWidth(), renderSurface->GetHeight()));
+					}
+					else
+					{
+						program->SetUniform(PARAM_SCREEN_SIZE, vec2(renderer->GetWidth(), renderer->GetHeight()));
+					}
+
 					renderer->UseCamera(camera);
 					// View transformation
 					program->SetUniform(PARAM_MODEL_MATRIX, renderJob.transformation);

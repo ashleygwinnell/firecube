@@ -326,6 +326,7 @@ void Renderer::UseCamera(Camera *camera)
 	currentCamera = camera;	
 	// Projection transformation
 	currentProgram->SetUniform(PARAM_VIEW_PROJECTION_MATRIX, camera->GetProjectionMatrix() * camera->GetViewMatrix());
+	currentProgram->SetUniform(PARAM_PROJECTION_MATRIX, camera->GetProjectionMatrix());
 	currentProgram->SetUniform(PARAM_CAMERA_POS, camera->GetNode()->GetWorldPosition());
 }
 
