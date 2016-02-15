@@ -288,11 +288,13 @@ void MaterialEditorPanelImpl::PropertyGridRightClicked(wxPropertyGridEvent& even
 	{
 		removePropertyItem->Enable(false);
 	}
-
-	if (data->type == PropertyType::VEC3)
+	else
 	{
-		setFromColorItem = menu->Append(wxID_ANY, wxT("Set From Color"));
-	}
+		if (data->type == PropertyType::VEC3)
+		{
+			setFromColorItem = menu->Append(wxID_ANY, wxT("Set From Color"));
+		}
+	}	
 
 	menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [removePropertyItem, setFromColorItem, this, property, data](wxCommandEvent &event) {
 		if (event.GetId() == removePropertyItem->GetId())
