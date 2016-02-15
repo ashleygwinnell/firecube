@@ -36,6 +36,11 @@ void Texture::SetFiltering(TextureFilter filter)
 	this->filter = filter;	
 }
 
+TextureFilter Texture::GetFiltering() const
+{
+	return filter;
+}
+
 int Texture::GetWidth() const
 {
 	return width;

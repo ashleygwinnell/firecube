@@ -535,7 +535,7 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 		Texture *texture = new Texture2D(engine);
 		texture->SetWidth(width);
 		texture->SetHeight(height);
-		texture->SetFiltering(TextureFilter::MIPMAP);
+		texture->SetFiltering(TextureFilter::LINEAR);
 		UseTexture(0, texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		texture->SetWrapMode(TextureWrapMode::CLAMP_TO_EDGE);		
@@ -677,7 +677,7 @@ void Renderer::Render()
 		frame.Render(this);
 		
 		RenderSurface *renderSurface = sceneView->GetRenderSurface();
-		if (renderSurface && renderSurface->GetLinkedTexture())
+		if (renderSurface && renderSurface->GetLinkedTexture() && renderSurface->GetLinkedTexture()->GetFiltering() == TextureFilter::MIPMAP)
 		{
 			renderSurface->GetLinkedTexture()->GenerateMipMaps();	
 		}

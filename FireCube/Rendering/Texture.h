@@ -58,6 +58,7 @@ public:
 	* @param magFilter The magnification filter.
 	*/
 	void SetFiltering(TextureFilter filter);
+	TextureFilter GetFiltering() const;
 	
 	int GetWidth() const;
 	int GetHeight() const;

@@ -483,7 +483,10 @@ void Frame::SetTextures(Renderer *renderer, const RenderPathCommand &command)
 		if (renderTarget)
 		{			
 			renderer->UseTexture(i, renderTarget->GetLinkedTexture());
-			renderTarget->GetLinkedTexture()->GenerateMipMaps();
+			if (renderTarget->GetLinkedTexture()->GetFiltering() == TextureFilter::MIPMAP)
+			{
+				renderTarget->GetLinkedTexture()->GenerateMipMaps();
+			}
 		}
 	}
 }
