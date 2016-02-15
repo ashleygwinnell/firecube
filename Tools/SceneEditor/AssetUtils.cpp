@@ -97,6 +97,13 @@ AssetType AssetUtils::GetAssetTypeByPath(const std::string &path)
 	return AssetType::UNKNOWN;
 }
 
+std::string AssetUtils::ToString(vec2 v)
+{
+	std::ostringstream str;
+	str << v.x << " " << v.y;
+	return str.str();
+}
+
 std::string AssetUtils::ToString(vec3 v)
 {
 	std::ostringstream str;
@@ -120,59 +127,31 @@ bool AssetUtils::SerializeMaterial(FireCube::Material *material, const std::stri
 		rootElement->LinkEndChild(element);
 	}
 
-	if (material->HasParameter(PARAM_MATERIAL_DIFFUSE))
+	for (auto &p : material->GetParameters())
 	{
-		vec3 color = material->GetParameter(PARAM_MATERIAL_DIFFUSE).GetVec3();
 		element = new TiXmlElement("parameter");
-		element->SetAttribute("name", "materialDiffuse");
-		element->SetAttribute("value", ToString(color));
-		rootElement->LinkEndChild(element);
-	}
+		element->SetAttribute("name", material->GetParameterName(p.first));
 
-	if (material->HasParameter(PARAM_MATERIAL_SPECULAR))
-	{
-		vec3 color = material->GetParameter(PARAM_MATERIAL_SPECULAR).GetVec3();
-		element = new TiXmlElement("parameter");
-		element->SetAttribute("name", "materialSpecular");
-		element->SetAttribute("value", ToString(color));
-		rootElement->LinkEndChild(element);
-	}
+		switch (p.second.GetType())
+		{
+		case VariantType::FLOAT:
+			element->SetDoubleAttribute("value", p.second.GetFloat());
+			break;
+		case VariantType::VEC2:
+			element->SetAttribute("value", ToString(p.second.GetVec2()));
+			break;
+		case VariantType::VEC3:
+			element->SetAttribute("value", ToString(p.second.GetVec3()));
+			break;
+		case VariantType::VEC4:
+			element->SetAttribute("value", ToString(p.second.GetVec4()));
+			break;
+		default:
+			break;
+		}
 
-	if (material->HasParameter(PARAM_MATERIAL_SHININESS))
-	{
-		float value = material->GetParameter(PARAM_MATERIAL_SHININESS).GetFloat();
-		element = new TiXmlElement("parameter");
-		element->SetAttribute("name", "materialShininess");
-		element->SetDoubleAttribute("value", value);
 		rootElement->LinkEndChild(element);
-	}
-
-	if (material->HasParameter(PARAM_MATERIAL_OPACITY))
-	{
-		float value = material->GetParameter(PARAM_MATERIAL_OPACITY).GetFloat();
-		element = new TiXmlElement("parameter");
-		element->SetAttribute("name", "materialOpacity");
-		element->SetDoubleAttribute("value", value);
-		rootElement->LinkEndChild(element);
-	}
-
-	if (material->HasParameter(PARAM_U_OFFSET))
-	{
-		vec3 value = material->GetParameter(PARAM_U_OFFSET).GetVec3();
-		element = new TiXmlElement("parameter");
-		element->SetAttribute("name", "uOffset");
-		element->SetAttribute("value", ToString(value));
-		rootElement->LinkEndChild(element);
-	}
-
-	if (material->HasParameter(PARAM_V_OFFSET))
-	{
-		vec3 value = material->GetParameter(PARAM_V_OFFSET).GetVec3();
-		element = new TiXmlElement("parameter");
-		element->SetAttribute("name", "vOffset");
-		element->SetAttribute("value", ToString(value));
-		rootElement->LinkEndChild(element);
-	}
+	}	
 
 	for (int i = 0; i < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS); ++i)
 	{

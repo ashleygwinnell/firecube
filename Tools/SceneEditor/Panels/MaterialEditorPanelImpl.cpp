@@ -25,6 +25,14 @@ MaterialEditorPanelImpl::MaterialEditorPanelImpl(wxWindow* parent) : MaterialEdi
 
 	Layout();
 	this->SetMinSize(wxSize(-1, -1)); // Fix bug where initially the panel has a minimum size set due to the box sizer
+
+	standardParametersProperties = {
+		{ PARAM_MATERIAL_DIFFUSE, std::make_pair("Diffuse", PropertyType::COLOR) },
+		{ PARAM_MATERIAL_SPECULAR, std::make_pair("Specular", PropertyType::COLOR) },
+		{ PARAM_MATERIAL_SHININESS, std::make_pair("Shininess", PropertyType::FLOAT) },
+		{ PARAM_MATERIAL_OPACITY, std::make_pair("Opacity", PropertyType::FLOAT) },
+		{ PARAM_U_OFFSET, std::make_pair("U Offset", PropertyType::VEC3) },
+		{ PARAM_V_OFFSET, std::make_pair("V Offset", PropertyType::VEC3) } };
 }
 
 MaterialEditorPanelImpl::~MaterialEditorPanelImpl()
@@ -35,10 +43,10 @@ MaterialEditorPanelImpl::~MaterialEditorPanelImpl()
 void MaterialEditorPanelImpl::NewButtonClicked(wxCommandEvent& event)
 {
 	material = new Material(engine);
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
-	material->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.0f));
-	material->SetParameter(PARAM_MATERIAL_SHININESS, 0.0f);
-	material->SetParameter(PARAM_MATERIAL_OPACITY, 0.0f);
+	material->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f));
+	material->SetParameter(PARAM_MATERIAL_SPECULAR_NAME, vec3(0.0f));
+	material->SetParameter(PARAM_MATERIAL_SHININESS_NAME, 0.0f);
+	material->SetParameter(PARAM_MATERIAL_OPACITY_NAME, 0.0f);
 	currentFileName = "";
 	FillPropertyGrid(material);
 }
@@ -99,32 +107,82 @@ void MaterialEditorPanelImpl::PickMaterialButtonClicked(wxCommandEvent& event)
 
 void MaterialEditorPanelImpl::FillPropertyGrid(Material *material)
 {	
-	vec3 color;
-	float value;
-	std::string str;
+	
 	propertyGrid->Clear();
 	
 	propertyGrid->Append(new wxPropertyCategory("Material"));
 
-	propertyGrid->Append(new wxStringProperty("Name", wxPG_LABEL, material->GetName()));
+	propertyGrid->Append(new wxStringProperty("Name", wxPG_LABEL, material->GetName()));	
 
-	color = material->HasParameter(PARAM_MATERIAL_DIFFUSE) ? material->GetParameter(PARAM_MATERIAL_DIFFUSE).GetVec3() : vec3(1.0f);
-	propertyGrid->Append(new wxColourProperty("Diffuse", wxPG_LABEL, wxColor(color.x * 255, color.y * 255, color.z * 255)));
-	
-	color = material->HasParameter(PARAM_MATERIAL_SPECULAR) ? material->GetParameter(PARAM_MATERIAL_SPECULAR).GetVec3() : vec3(0.0f);
-	propertyGrid->Append(new wxColourProperty("Specular", wxPG_LABEL, wxColor(color.x * 255, color.y * 255, color.z * 255)));
-	
-	value = material->HasParameter(PARAM_MATERIAL_SHININESS) ? material->GetParameter(PARAM_MATERIAL_SHININESS).GetFloat() : 0.0f;
-	propertyGrid->Append(new wxFloatProperty("Shininess", wxPG_LABEL, value));
-	
-	value = material->HasParameter(PARAM_MATERIAL_OPACITY) ? material->GetParameter(PARAM_MATERIAL_OPACITY).GetFloat() : 1.0f;
-	propertyGrid->Append(new wxFloatProperty("Opacity", wxPG_LABEL, value));
+	for (auto &p : material->GetParametersNames())
+	{
+		std::string parameterName = p.second;
+		StringHash nameHash(parameterName);
+		std::string label;
+		auto standardParamProperties = standardParametersProperties.find(nameHash);
+		PropertyType type;		
 
-	str = material->HasParameter(PARAM_U_OFFSET) ? AssetUtils::ToString(material->GetParameter(PARAM_U_OFFSET).GetVec3()) : "1 0 0";
-	propertyGrid->Append(new wxStringProperty("U Offset", wxPG_LABEL, str));
+		if (standardParamProperties != standardParametersProperties.end())
+		{
+			label = standardParamProperties->second.first;
+			type = standardParamProperties->second.second;
+		}
+		else
+		{
+			label = parameterName;
+			switch (material->GetParameter(nameHash).GetType())
+			{
+			case VariantType::FLOAT:
+				type = PropertyType::FLOAT;
+				break;
+			case VariantType::VEC2:
+				type = PropertyType::VEC2;
+				break;
+			case VariantType::VEC3:
+				type = PropertyType::VEC3;
+				break;
+			case VariantType::VEC4:
+				type = PropertyType::VEC4;
+				break;
+			default:				
+				break;
+			}
+		}
 
-	str = material->HasParameter(PARAM_V_OFFSET) ? AssetUtils::ToString(material->GetParameter(PARAM_V_OFFSET).GetVec3()) : "0 1 0";
-	propertyGrid->Append(new wxStringProperty("V Offset", wxPG_LABEL, str));
+		wxPGProperty *property = nullptr;
+		if (type == PropertyType::COLOR)
+		{
+			vec3 color = material->GetParameter(nameHash).GetVec3();
+			property = new wxColourProperty(label, wxPG_LABEL, wxColor(color.x * 255, color.y * 255, color.z * 255));
+		}
+		else if (type == PropertyType::FLOAT)
+		{
+			float value = material->GetParameter(nameHash).GetFloat();
+			property = new wxFloatProperty(label, wxPG_LABEL, value);
+
+		}
+		else if (type == PropertyType::VEC2)
+		{
+			std::string str = AssetUtils::ToString(material->GetParameter(nameHash).GetVec2());
+			property = new wxStringProperty(label, wxPG_LABEL, str);
+		}
+		else if (type == PropertyType::VEC3)
+		{
+			std::string str = AssetUtils::ToString(material->GetParameter(nameHash).GetVec3());
+			property = new wxStringProperty(label, wxPG_LABEL, str);
+		}
+		else if (type == PropertyType::VEC4)
+		{
+			std::string str = AssetUtils::ToString(material->GetParameter(nameHash).GetVec4());
+			property = new wxStringProperty(label, wxPG_LABEL, str);
+		}
+				
+		auto data = new MaterialEditorPropertyData;
+		data->paramaterName = parameterName;
+		data->type = type;
+		property->SetClientData(data);
+		propertyGrid->Append(property);
+	}
 	
 	propertyGrid->Append(new wxFileProperty("Diffuse texture", wxPG_LABEL, material->GetTexture(TextureUnit::DIFFUSE) ? material->GetTexture(TextureUnit::DIFFUSE)->GetFileName() : ""));
 	propertyGrid->Append(new wxFileProperty("Normal texture", wxPG_LABEL, material->GetTexture(TextureUnit::NORMAL) ? material->GetTexture(TextureUnit::NORMAL)->GetFileName() : ""));
@@ -141,32 +199,6 @@ void MaterialEditorPanelImpl::PropertyGridChanged(wxPropertyGridEvent& event)
 	if (properyName == "Name")
 	{
 		material->SetName(event.GetPropertyValue().GetString().c_str().AsChar());
-	}
-	else if (properyName == "Diffuse")
-	{		
-		wxColor col = ((wxColourProperty*)event.GetProperty())->GetVal().m_colour;
-		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(col.Red() / 255.0f, col.Green() / 255.0f, col.Blue() / 255.0f));		
-	}
-	else if (properyName == "Specular")
-	{
-		wxColor col = ((wxColourProperty*)event.GetProperty())->GetVal().m_colour;
-		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(col.Red() / 255.0f, col.Green() / 255.0f, col.Blue() / 255.0f));
-	}
-	else if (properyName == "Shininess")
-	{
-		material->SetParameter(PARAM_MATERIAL_SHININESS, (float)event.GetPropertyValue().GetDouble());		
-	}
-	else if (properyName == "Opacity")
-	{
-		material->SetParameter(PARAM_MATERIAL_OPACITY, (float)event.GetPropertyValue().GetDouble());		
-	}
-	else if (properyName == "U Offset")
-	{
-		material->SetParameter(PARAM_U_OFFSET, Variant::FromString(event.GetPropertyValue().GetString().ToStdString()).GetVec3());
-	}
-	else if (properyName == "V Offset")
-	{
-		material->SetParameter(PARAM_V_OFFSET, Variant::FromString(event.GetPropertyValue().GetString().ToStdString()).GetVec3());
 	}
 	else if (properyName == "Diffuse texture")
 	{
@@ -195,8 +227,34 @@ void MaterialEditorPanelImpl::PropertyGridChanged(wxPropertyGridEvent& event)
 		sfile = AssetUtils::ImportTechniqueIfNeeded(sfile);
 		event.GetProperty()->SetValue(sfile);
 		material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>(sfile));
-	}	
-
+	}
+	else
+	{
+		auto property = event.GetProperty();		
+		MaterialEditorPropertyData *data = (MaterialEditorPropertyData *) property->GetClientData();
+		if (data->type == PropertyType::COLOR)
+		{
+			wxColor col = ((wxColourProperty*)event.GetProperty())->GetVal().m_colour;
+			material->SetParameter(data->paramaterName, vec3(col.Red() / 255.0f, col.Green() / 255.0f, col.Blue() / 255.0f));
+		}
+		else if (data->type == PropertyType::FLOAT)
+		{
+			material->SetParameter(data->paramaterName, (float)event.GetPropertyValue().GetDouble());
+		}
+		else if (data->type == PropertyType::VEC2)
+		{
+			material->SetParameter(data->paramaterName, Variant::FromString(event.GetPropertyValue().GetString().ToStdString()).GetVec2());
+		}
+		else if (data->type == PropertyType::VEC3)
+		{
+			material->SetParameter(data->paramaterName, Variant::FromString(event.GetPropertyValue().GetString().ToStdString()).GetVec3());
+		}
+		else if (data->type == PropertyType::VEC4)
+		{
+			material->SetParameter(data->paramaterName, Variant::FromString(event.GetPropertyValue().GetString().ToStdString()).GetVec4());
+		}
+	}
+	
 	if (!currentFileName.empty())
 	{
 		AssetUtils::SerializeMaterial(material, Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentFileName);

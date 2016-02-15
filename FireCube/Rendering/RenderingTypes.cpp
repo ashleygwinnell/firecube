@@ -5,11 +5,17 @@ namespace FireCube
 {
 
 StringHash PARAM_MATERIAL_DIFFUSE("materialDiffuse");
+std::string PARAM_MATERIAL_DIFFUSE_NAME("materialDiffuse");
 StringHash PARAM_MATERIAL_SPECULAR("materialSpecular");
+std::string PARAM_MATERIAL_SPECULAR_NAME("materialSpecular");
 StringHash PARAM_MATERIAL_SHININESS("materialShininess");
+std::string PARAM_MATERIAL_SHININESS_NAME("materialShininess");
 StringHash PARAM_MATERIAL_OPACITY("materialOpacity");
+std::string PARAM_MATERIAL_OPACITY_NAME("materialOpacity");
 StringHash PARAM_U_OFFSET("uOffset");
+std::string PARAM_U_OFFSET_NAME("uOffset");
 StringHash PARAM_V_OFFSET("vOffset");
+std::string PARAM_V_OFFSET_NAME("vOffset");
 StringHash PARAM_AMBIENT_COLOR("ambientColor");
 StringHash PARAM_MODEL_MATRIX("modelMatrix");
 StringHash PARAM_VIEW_PROJECTION_MATRIX("viewProjectionMatrix");

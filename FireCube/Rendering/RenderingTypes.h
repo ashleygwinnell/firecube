@@ -88,11 +88,17 @@ ClearBufferType operator |= (ClearBufferType &lhs, const ClearBufferType &rhs);
 ClearBufferType operator & (const ClearBufferType &lhs, const ClearBufferType &rhs);
 
 extern StringHash PARAM_MATERIAL_DIFFUSE;
+extern std::string PARAM_MATERIAL_DIFFUSE_NAME;
 extern StringHash PARAM_MATERIAL_SPECULAR;
+extern std::string PARAM_MATERIAL_SPECULAR_NAME;
 extern StringHash PARAM_MATERIAL_SHININESS;
+extern std::string PARAM_MATERIAL_SHININESS_NAME;
 extern StringHash PARAM_MATERIAL_OPACITY;
+extern std::string PARAM_MATERIAL_OPACITY_NAME;
 extern StringHash PARAM_U_OFFSET;
+extern std::string PARAM_U_OFFSET_NAME;
 extern StringHash PARAM_V_OFFSET;
+extern std::string PARAM_V_OFFSET_NAME;
 extern StringHash PARAM_AMBIENT_COLOR;
 extern StringHash PARAM_MODEL_MATRIX;
 extern StringHash PARAM_VIEW_PROJECTION_MATRIX;

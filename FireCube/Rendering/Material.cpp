@@ -13,8 +13,8 @@ Material::Material(Engine *engine) : Resource(engine), technique(nullptr), cullM
 	for (int i = 0; i < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS); ++i)
 		textures[i] = nullptr;
 
-	SetParameter(PARAM_U_OFFSET, vec3(1, 0, 0));
-	SetParameter(PARAM_V_OFFSET, vec3(0, 1, 0));
+	SetParameter(PARAM_U_OFFSET_NAME, vec3(1, 0, 0));
+	SetParameter(PARAM_V_OFFSET_NAME, vec3(0, 1, 0));
 }
 
 bool Material::Load(const std::string &filename)
@@ -56,7 +56,7 @@ bool Material::Load(const std::string &filename)
 			if (parameterValue.empty())
 				continue;		
 
-			parameters[StringHash(parameterName)] = Variant::FromString(parameterValue);
+			SetParameter(parameterName, Variant::FromString(parameterValue));			
 		}
 		else if (element->ValueStr() == "texture")
 		{			
@@ -132,38 +132,52 @@ const std::map<StringHash, Variant> &Material::GetParameters() const
 	return parameters;
 }
 
-void Material::SetParameter(const StringHash &nameHash, int value)
+void Material::SetParameter(const std::string &name, int value)
 {
+	StringHash nameHash(name);
+	parametersNames[nameHash] = name;
 	parameters[nameHash] = value;
 }
 
-void Material::SetParameter(const StringHash &nameHash, float value)
+void Material::SetParameter(const std::string &name, float value)
 {
+	StringHash nameHash(name);
+	parametersNames[nameHash] = name;
 	parameters[nameHash] = value;
 }
 
-void Material::SetParameter(const StringHash &nameHash, bool value)
+void Material::SetParameter(const std::string &name, bool value)
 {
+	StringHash nameHash(name);
+	parametersNames[nameHash] = name;
 	parameters[nameHash] = value;
 }
 
-void Material::SetParameter(const StringHash &nameHash, const vec2 &value)
+void Material::SetParameter(const std::string &name, const vec2 &value)
 {
+	StringHash nameHash(name);
+	parametersNames[nameHash] = name;
 	parameters[nameHash] = value;
 }
 
-void Material::SetParameter(const StringHash &nameHash, const vec3 &value)
+void Material::SetParameter(const std::string &name, const vec3 &value)
 {
+	StringHash nameHash(name);
+	parametersNames[nameHash] = name;
 	parameters[nameHash] = value;
 }
 
-void Material::SetParameter(const StringHash &nameHash, const vec4 &value)
+void Material::SetParameter(const std::string &name, const vec4 &value)
 {
+	StringHash nameHash(name);
+	parametersNames[nameHash] = name;
 	parameters[nameHash] = value;
 }
 
-void Material::SetParameter(const StringHash &nameHash, const Variant &value)
+void Material::SetParameter(const std::string &name, const Variant &value)
 {
+	StringHash nameHash(name);
+	parametersNames[nameHash] = name;
 	parameters[nameHash] = value;
 }
 
@@ -237,6 +251,22 @@ void Material::SetCullMode(CullMode cullMode)
 CullMode Material::GetCullMode() const
 {
 	return cullMode;
+}
+
+std::string Material::GetParameterName(StringHash nameHash) const
+{
+	auto i = parametersNames.find(nameHash);
+	if (i != parametersNames.end())
+	{
+		return i->second;
+	}
+	
+	return "";
+}
+
+const std::map<StringHash, std::string> &Material::GetParametersNames() const
+{
+	return parametersNames;
 }
 
 FireCube::CullMode FireCube::Material::ParseCullMode(const std::string &cullMode)

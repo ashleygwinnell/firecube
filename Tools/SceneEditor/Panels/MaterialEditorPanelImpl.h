@@ -20,6 +20,18 @@ private:
 	MaterialEditorPanelImpl *materialEditorPanel;
 };
 
+enum class PropertyType
+{
+	FLOAT, VEC2, VEC3, VEC4, COLOR
+};
+
+class MaterialEditorPropertyData : public wxClientData
+{
+public:
+	std::string paramaterName;
+	PropertyType type;
+};
+
 class MaterialEditorPanelImpl : public MaterialEditorPanel, public FireCube::Object
 {
 	FIRECUBE_OBJECT(MaterialEditorPanelImpl)
@@ -43,4 +55,5 @@ private:
 	EditorState *editorState;
 	std::string currentFileName;
 	FireCube::SharedPtr<FireCube::Material> material;
+	std::map<FireCube::StringHash, std::pair<std::string, PropertyType>> standardParametersProperties;
 };

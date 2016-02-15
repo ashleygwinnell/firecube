@@ -95,7 +95,7 @@ void GLCanvas::Init()
 	transformGizmo = translateGizmo.Get();
 	
 	gridMaterial = FireCube::SharedPtr<FireCube::Material>(new Material(engine));
-	gridMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
+	gridMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f));
 	gridMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));
 
 	CreateGrid(10.0f, 100);	

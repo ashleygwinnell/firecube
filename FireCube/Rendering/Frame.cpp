@@ -91,11 +91,11 @@ void Frame::Render(Renderer *renderer)
 
 				if (renderSurface)
 				{
-					program->SetUniform(PARAM_SCREEN_SIZE, vec2(renderSurface->GetWidth(), renderSurface->GetHeight()));
+					program->SetUniform(PARAM_SCREEN_SIZE, vec2((float) renderSurface->GetWidth(), (float) renderSurface->GetHeight()));
 				}
 				else
 				{
-					program->SetUniform(PARAM_SCREEN_SIZE, vec2(renderer->GetWidth(), renderer->GetHeight()));
+					program->SetUniform(PARAM_SCREEN_SIZE, vec2((float) renderer->GetWidth(), (float) renderer->GetHeight()));
 				}
 
 				renderer->UseCamera(camera);
@@ -149,11 +149,11 @@ void Frame::Render(Renderer *renderer)
 
 					if (renderSurface)
 					{
-						program->SetUniform(PARAM_SCREEN_SIZE, vec2(renderSurface->GetWidth(), renderSurface->GetHeight()));
+						program->SetUniform(PARAM_SCREEN_SIZE, vec2((float) renderSurface->GetWidth(), (float) renderSurface->GetHeight()));
 					}
 					else
 					{
-						program->SetUniform(PARAM_SCREEN_SIZE, vec2(renderer->GetWidth(), renderer->GetHeight()));
+						program->SetUniform(PARAM_SCREEN_SIZE, vec2((float) renderer->GetWidth(), (float) renderer->GetHeight()));
 					}
 
 					renderer->UseCamera(camera);

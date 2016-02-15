@@ -8,7 +8,7 @@
 using namespace FireCube;
 using namespace LuaIntf;
 
-void SetParameter(Material *mat, lua_State *L, const StringHash &paramName, LuaRef b)
+void SetParameter(Material *mat, lua_State *L, const std::string &paramName, LuaRef b)
 {	
 	if (b.type() == LuaTypeID::USERDATA)
 	{

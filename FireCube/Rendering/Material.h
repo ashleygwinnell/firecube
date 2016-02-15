@@ -53,13 +53,13 @@ public:
 	bool HasParameter(const StringHash &nameHash) const;
 	Variant &GetParameter(const StringHash &nameHash);
 
-	void SetParameter(const StringHash &nameHash, int value);
-	void SetParameter(const StringHash &nameHash, float value);
-	void SetParameter(const StringHash &nameHash, bool value);
-	void SetParameter(const StringHash &nameHash, const vec2 &value);
-	void SetParameter(const StringHash &nameHash, const vec3 &value);
-	void SetParameter(const StringHash &nameHash, const vec4 &value);
-	void SetParameter(const StringHash &nameHash, const Variant &value);
+	void SetParameter(const std::string &name, int value);
+	void SetParameter(const std::string &name, float value);
+	void SetParameter(const std::string &name, bool value);
+	void SetParameter(const std::string &name, const vec2 &value);
+	void SetParameter(const std::string &name, const vec3 &value);
+	void SetParameter(const std::string &name, const vec4 &value);
+	void SetParameter(const std::string &name, const Variant &value);
 
 	Texture **GetTextures();
 
@@ -76,6 +76,9 @@ public:
 	void SetCullMode(CullMode cullMode);
 	CullMode GetCullMode() const;
 	
+	const std::map<StringHash, std::string> &GetParametersNames() const;
+	std::string Material::GetParameterName(StringHash nameHash) const;
+	
 	static TextureUnit ParseTextureUnitName(const std::string &name);
 	static std::string GetTextureUnitName(TextureUnit unit);
 	static CullMode ParseCullMode(const std::string &cullMode);
@@ -86,6 +89,7 @@ private:
 	Technique *technique;
 	CullMode cullMode;
 	std::map<StringHash, Variant> parameters;
+	std::map<StringHash, std::string> parametersNames;
 };
 
 }
