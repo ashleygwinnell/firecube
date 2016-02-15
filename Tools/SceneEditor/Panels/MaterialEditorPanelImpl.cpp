@@ -6,6 +6,7 @@
 #include "../Descriptors/NodeDescriptor.h"
 #include "../AssetUtils.h"
 #include <wx/wrapsizer.h>
+#include <wx/textdlg.h>
 
 using namespace FireCube;
 
@@ -22,6 +23,7 @@ MaterialEditorPanelImpl::MaterialEditorPanelImpl(wxWindow* parent) : MaterialEdi
 	wrapSizer->Add(saveButton, 0, wxALL, 5);	
 	wrapSizer->Add(saveAsButton, 0, wxALL, 5);	
 	wrapSizer->Add(pickMaterialButton, 0, wxALL, 5);
+	wrapSizer->Add(addParameterButton, 0, wxALL, 5);
 
 	Layout();
 	this->SetMinSize(wxSize(-1, -1)); // Fix bug where initially the panel has a minimum size set due to the box sizer
@@ -288,6 +290,56 @@ void MaterialEditorPanelImpl::PropertyGridRightClicked(wxPropertyGridEvent& even
 			MaterialEditorPropertyData *data = (MaterialEditorPropertyData *)property->GetClientData();
 			material->RemoveParameter(data->paramaterName);
 			propertyGrid->DeleteProperty(property);
+		}
+	});
+	PopupMenu(menu);
+	delete menu;
+}
+
+void MaterialEditorPanelImpl::AddParameterButtonClicked(wxCommandEvent& event)
+{
+	wxMenu* menu = new wxMenu;
+	auto addFloatPropertyItem = menu->Append(wxID_ANY, wxT("Float"));
+	auto addVec2PropertyItem = menu->Append(wxID_ANY, wxT("Vec2"));
+	auto addVec3PropertyItem = menu->Append(wxID_ANY, wxT("Vec3"));
+	auto addVec4PropertyItem = menu->Append(wxID_ANY, wxT("Vec4"));	
+	
+	menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [addFloatPropertyItem, addVec2PropertyItem, addVec3PropertyItem, addVec4PropertyItem, this](wxCommandEvent &event) {
+		std::string parameterName = wxGetTextFromUser("Enter name of parameter", "New Parameter").ToStdString();
+		if (parameterName.empty() == false)
+		{
+			wxPGProperty *property;
+			PropertyType type;
+			if (event.GetId() == addFloatPropertyItem->GetId())
+			{
+				material->SetParameter(parameterName, 0.0f);
+				property = new wxFloatProperty(parameterName, wxPG_LABEL, 0);
+				type = PropertyType::FLOAT;
+			}
+			else if (event.GetId() == addVec2PropertyItem->GetId())
+			{
+				material->SetParameter(parameterName, vec2(0.0f));
+				property = new wxStringProperty(parameterName, wxPG_LABEL, "0 0");
+				type = PropertyType::VEC2;
+			}
+			else if (event.GetId() == addVec3PropertyItem->GetId())
+			{
+				material->SetParameter(parameterName, vec3(0.0f));
+				property = new wxStringProperty(parameterName, wxPG_LABEL, "0 0 0");
+				type = PropertyType::VEC2;
+			}
+			else if (event.GetId() == addVec4PropertyItem->GetId())
+			{
+				material->SetParameter(parameterName, vec4(0.0f));
+				property = new wxStringProperty(parameterName, wxPG_LABEL, "0 0 0");
+				type = PropertyType::VEC2;
+			}
+			
+			auto data = new MaterialEditorPropertyData;
+			data->paramaterName = parameterName;
+			data->type = type;
+			property->SetClientData(data);
+			propertyGrid->Append(property);
 		}
 	});
 	PopupMenu(menu);

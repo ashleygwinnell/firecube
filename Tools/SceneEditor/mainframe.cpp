@@ -1375,6 +1375,9 @@ MaterialEditorPanel::MaterialEditorPanel( wxWindow* parent, wxWindowID id, const
 	pickMaterialButton = new wxButton( this, wxID_ANY, wxT("Pick"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer38->Add( pickMaterialButton, 0, wxALL, 5 );
 	
+	addParameterButton = new wxButton( this, wxID_ANY, wxT("Add Parameter"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer38->Add( addParameterButton, 0, wxALL, 5 );
+	
 	
 	bSizer37->Add( bSizer38, 0, wxEXPAND, 5 );
 	
@@ -1391,6 +1394,7 @@ MaterialEditorPanel::MaterialEditorPanel( wxWindow* parent, wxWindowID id, const
 	saveButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::SaveButtonClicked ), NULL, this );
 	saveAsButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::SaveAsButtonClicked ), NULL, this );
 	pickMaterialButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::PickMaterialButtonClicked ), NULL, this );
+	addParameterButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::AddParameterButtonClicked ), NULL, this );
 	propertyGrid->Connect( wxEVT_PG_CHANGED, wxPropertyGridEventHandler( MaterialEditorPanel::PropertyGridChanged ), NULL, this );
 }
 
@@ -1402,6 +1406,7 @@ MaterialEditorPanel::~MaterialEditorPanel()
 	saveButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::SaveButtonClicked ), NULL, this );
 	saveAsButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::SaveAsButtonClicked ), NULL, this );
 	pickMaterialButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::PickMaterialButtonClicked ), NULL, this );
+	addParameterButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MaterialEditorPanel::AddParameterButtonClicked ), NULL, this );
 	propertyGrid->Disconnect( wxEVT_PG_CHANGED, wxPropertyGridEventHandler( MaterialEditorPanel::PropertyGridChanged ), NULL, this );
 	
 }

@@ -586,6 +586,7 @@ class MaterialEditorPanel : public wxPanel
 		wxButton* saveButton;
 		wxButton* saveAsButton;
 		wxButton* pickMaterialButton;
+		wxButton* addParameterButton;
 		wxPropertyGrid* propertyGrid;
 		
 		// Virtual event handlers, overide them in your derived class
@@ -594,6 +595,7 @@ class MaterialEditorPanel : public wxPanel
 		virtual void SaveButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SaveAsButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void PickMaterialButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void AddParameterButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void PropertyGridChanged( wxPropertyGridEvent& event ) { event.Skip(); }
 		
 	

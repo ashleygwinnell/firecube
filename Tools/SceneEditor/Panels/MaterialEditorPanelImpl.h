@@ -50,6 +50,7 @@ private:
 	virtual void PickMaterialButtonClicked(wxCommandEvent& event);
 	virtual void PropertyGridChanged(wxPropertyGridEvent& event);
 	void PropertyGridRightClicked(wxPropertyGridEvent& event);
+	virtual void AddParameterButtonClicked(wxCommandEvent& event);
 
 	void MaterialPicked(FireCube::Material *material);
 	void FillPropertyGrid(FireCube::Material *material);
