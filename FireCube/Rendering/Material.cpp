@@ -269,6 +269,13 @@ const std::map<StringHash, std::string> &Material::GetParametersNames() const
 	return parametersNames;
 }
 
+void Material::RemoveParameter(const std::string &name)
+{
+	StringHash nameHash(name);
+	parametersNames.erase(nameHash);
+	parameters.erase(nameHash);
+}
+
 FireCube::CullMode FireCube::Material::ParseCullMode(const std::string &cullMode)
 {
 	CullMode ret = CullMode::CCW;

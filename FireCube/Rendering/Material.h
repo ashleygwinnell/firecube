@@ -61,6 +61,8 @@ public:
 	void SetParameter(const std::string &name, const vec4 &value);
 	void SetParameter(const std::string &name, const Variant &value);
 
+	void RemoveParameter(const std::string &name);
+
 	Texture **GetTextures();
 
 	void SetTexture(TextureUnit textureUnit, Texture *texture);

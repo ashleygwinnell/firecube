@@ -33,6 +33,8 @@ MaterialEditorPanelImpl::MaterialEditorPanelImpl(wxWindow* parent) : MaterialEdi
 		{ PARAM_MATERIAL_OPACITY, std::make_pair("Opacity", PropertyType::FLOAT) },
 		{ PARAM_U_OFFSET, std::make_pair("U Offset", PropertyType::VEC3) },
 		{ PARAM_V_OFFSET, std::make_pair("V Offset", PropertyType::VEC3) } };
+
+	propertyGrid->Bind(wxEVT_PG_RIGHT_CLICK, &MaterialEditorPanelImpl::PropertyGridRightClicked, this);
 }
 
 MaterialEditorPanelImpl::~MaterialEditorPanelImpl()
@@ -268,6 +270,28 @@ void MaterialEditorPanelImpl::MaterialPicked(FireCube::Material *material)
 	this->material = material;
 	currentFileName = material->GetFileName();
 	FillPropertyGrid(material);
+}
+
+void MaterialEditorPanelImpl::PropertyGridRightClicked(wxPropertyGridEvent& event)
+{
+	auto property = event.GetProperty();
+	std::string propertyName = event.GetPropertyName();
+	wxMenu* menu = new wxMenu;
+	auto removePropertyItem = menu->Append(wxID_ANY, wxT("Remove"));
+	
+	if (propertyName == "Name" || propertyName == "Diffuse texture" || propertyName == "Normal texture" || propertyName == "Specular texture" || propertyName == "Technique")
+	removePropertyItem->Enable(false);
+
+	menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [removePropertyItem, this, property](wxCommandEvent &event) {
+		if (event.GetId() == removePropertyItem->GetId())
+		{
+			MaterialEditorPropertyData *data = (MaterialEditorPropertyData *)property->GetClientData();
+			material->RemoveParameter(data->paramaterName);
+			propertyGrid->DeleteProperty(property);
+		}
+	});
+	PopupMenu(menu);
+	delete menu;
 }
 
 MaterialEditorDropTarget::MaterialEditorDropTarget(MaterialEditorPanelImpl *materialEditorPanel) : wxDropTarget(new wxCustomDataObject(wxDataFormat("Asset"))), materialEditorPanel(materialEditorPanel)
