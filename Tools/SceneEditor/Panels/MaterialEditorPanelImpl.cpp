@@ -7,6 +7,7 @@
 #include "../AssetUtils.h"
 #include <wx/wrapsizer.h>
 #include <wx/textdlg.h>
+#include <wx/colordlg.h>
 
 using namespace FireCube;
 
@@ -277,19 +278,39 @@ void MaterialEditorPanelImpl::MaterialPicked(FireCube::Material *material)
 void MaterialEditorPanelImpl::PropertyGridRightClicked(wxPropertyGridEvent& event)
 {
 	auto property = event.GetProperty();
+	MaterialEditorPropertyData *data = (MaterialEditorPropertyData *)property->GetClientData();
 	std::string propertyName = event.GetPropertyName();
 	wxMenu* menu = new wxMenu;
 	auto removePropertyItem = menu->Append(wxID_ANY, wxT("Remove"));
-	
-	if (propertyName == "Name" || propertyName == "Diffuse texture" || propertyName == "Normal texture" || propertyName == "Specular texture" || propertyName == "Technique")
-	removePropertyItem->Enable(false);
+	wxMenuItem *setFromColorItem = nullptr;
 
-	menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [removePropertyItem, this, property](wxCommandEvent &event) {
+	if (propertyName == "Name" || propertyName == "Diffuse texture" || propertyName == "Normal texture" || propertyName == "Specular texture" || propertyName == "Technique")
+	{
+		removePropertyItem->Enable(false);
+	}
+
+	if (data->type == PropertyType::VEC3)
+	{
+		setFromColorItem = menu->Append(wxID_ANY, wxT("Set From Color"));
+	}
+
+	menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [removePropertyItem, setFromColorItem, this, property, data](wxCommandEvent &event) {
 		if (event.GetId() == removePropertyItem->GetId())
-		{
-			MaterialEditorPropertyData *data = (MaterialEditorPropertyData *)property->GetClientData();
+		{			
 			material->RemoveParameter(data->paramaterName);
 			propertyGrid->DeleteProperty(property);
+		}
+		else if (setFromColorItem && event.GetId() == setFromColorItem->GetId())
+		{
+			vec3 color = material->GetParameter(data->paramaterName).GetVec3();
+			wxColor startColor((unsigned char)(color.x * 255.0f), (unsigned char)(color.y * 255.0f), (unsigned char)(color.z * 255.0f));
+			wxColor selectedColor = wxGetColourFromUser(this, startColor, "Select Color");
+			if (selectedColor.IsOk())
+			{
+				color = vec3((float)selectedColor.Red() / 255.0f, (float)selectedColor.Green() / 255.0f, (float)selectedColor.Blue() / 255.0f);
+				material->SetParameter(data->paramaterName, color);
+				property->SetValue(AssetUtils::ToString(color));
+			}			
 		}
 	});
 	PopupMenu(menu);
