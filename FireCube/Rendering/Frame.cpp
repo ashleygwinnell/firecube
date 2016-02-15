@@ -199,13 +199,7 @@ void Frame::Render(Renderer *renderer)
 			SetTextures(renderer, command);
 			Program *program = renderer->SetShaders(command.vertexShader, command.fragmentShader);
 			
-			program->SetUniform(PARAM_VIEWPORT_INV_SIZE, vec2(1.0f / (float) renderer->GetWidth(), 1.0f / (float) renderer->GetHeight()));
-			for (auto &renderTarget : renderPath->GetRenderSurfaceDescriptors())
-			{
-				StringHash paramName(renderTarget.name + "InvSize");
-				RenderSurface *renderSurface = renderPath->GetRenderTarget(StringHash(renderTarget.name));
-				program->SetUniform(paramName, vec2(1.0f / (float) renderSurface->GetWidth(), 1.0f / (float) renderSurface->GetHeight()));
-			}							
+			program->SetUniform(PARAM_VIEWPORT_INV_SIZE, vec2(1.0f / (float) renderer->GetWidth(), 1.0f / (float) renderer->GetHeight()));			
 			
 			for (auto &parameter : command.parameters)
 			{
