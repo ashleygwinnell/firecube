@@ -120,7 +120,7 @@ void ScriptEditorPanelImpl::OnCharAdded(wxStyledTextEvent &event)
 	if (static_cast<char>(event.GetKey()) == '\n' || static_cast<char>(event.GetKey()) == '\r')
 	{		
 		int line = sourceText->GetCurrentLine();		
-		if (line > 0 && sourceText->GetLineLength(line) == 0)
+		if (line > 0)
 		{
 			int startPos = sourceText->WordStartPosition(sourceText->GetLineIndentPosition(line - 1), true);
 			int endPos = sourceText->WordEndPosition(sourceText->GetLineIndentPosition(line - 1), true);			
