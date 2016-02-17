@@ -143,6 +143,16 @@ void ParticleEmitterDescriptor::CreateComponent(Node *node, Engine *engine)
 ComponentDescriptor *ParticleEmitterDescriptor::Clone()
 {
 	ParticleEmitterDescriptor *clone = new ParticleEmitterDescriptor();
-	
+	clone->shape = shape;
+	clone->box = box;
+	clone->radius = radius;
+	clone->numberOfParticles = numberOfParticles;
+	clone->emissionRate = emissionRate;
+	clone->material = material;
+	clone->minLifeTime = minLifeTime;
+	clone->maxLifeTime = maxLifeTime;
+	clone->minSpeed = minSpeed;
+	clone->maxSpeed = maxSpeed;
+	clone->prewarm = prewarm;
 	return clone;
 }
