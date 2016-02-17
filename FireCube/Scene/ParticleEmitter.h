@@ -12,6 +12,11 @@ enum class ParticleEmitterShape
 	BOX, SPHERE
 };
 
+enum class ParticleEmitterSimulationSpace
+{
+	LOCAL, WORLD
+};
+
 class ParticleEmitter : public Renderable
 {
 	FIRECUBE_OBJECT(ParticleEmitter)
@@ -32,6 +37,8 @@ public:
 	void SetSpeed(float minSpeed, float maxSpeed);
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
 	void SetPrewarm(bool prewarm);
+	void SetSimulationSpace(ParticleEmitterSimulationSpace simulationSpace);
+	ParticleEmitterSimulationSpace GetSimulationSpace() const;
 
 protected:	
 	virtual void UpdateWorldBoundingBox();
@@ -46,7 +53,7 @@ private:
 	void EmitParticles(unsigned int count);
 	void Init(unsigned int numberOfParticles, Material *material);
 	inline void RandomPositionAndDirection(vec3 &position, vec3 &direction) const;	
-	void Prewarm();
+	void Prewarm();	
 
 	BoundingBox boundingBox;
 	Shader *updateShader;
@@ -66,6 +73,7 @@ private:
 	vec3 box;
 	float emissionLeftOver;
 	bool prewarm;
+	ParticleEmitterSimulationSpace simulationSpace;
 };
 
 }

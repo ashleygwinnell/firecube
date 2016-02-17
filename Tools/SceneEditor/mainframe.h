@@ -715,6 +715,8 @@ class ParticleEmitterPanel : public wxPanel
 		wxTextCtrl* maxSpeedTextCtrl;
 		wxStaticText* m_staticText48;
 		wxFilePickerCtrl* materialFilePicker;
+		wxStaticText* m_staticText85;
+		wxChoice* simulationSpaceChoice;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void ShapeTypeChanged( wxCommandEvent& event ) { event.Skip(); }
@@ -730,6 +732,7 @@ class ParticleEmitterPanel : public wxPanel
 		virtual void MinSpeedChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MaxSpeedChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MaterialFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
+		virtual void SimulationSpaceChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

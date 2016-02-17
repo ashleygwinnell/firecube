@@ -1734,6 +1734,16 @@ ParticleEmitterPanel::ParticleEmitterPanel( wxWindow* parent, wxWindowID id, con
 	materialFilePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.xml"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_SMALL );
 	fgSizer3->Add( materialFilePicker, 0, wxALL|wxEXPAND, 5 );
 	
+	m_staticText85 = new wxStaticText( this, wxID_ANY, wxT("Simulation Space"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText85->Wrap( -1 );
+	fgSizer3->Add( m_staticText85, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	wxString simulationSpaceChoiceChoices[] = { wxT("Local"), wxT("World") };
+	int simulationSpaceChoiceNChoices = sizeof( simulationSpaceChoiceChoices ) / sizeof( wxString );
+	simulationSpaceChoice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, simulationSpaceChoiceNChoices, simulationSpaceChoiceChoices, 0 );
+	simulationSpaceChoice->SetSelection( 0 );
+	fgSizer3->Add( simulationSpaceChoice, 0, wxALL|wxEXPAND, 5 );
+	
 	
 	this->SetSizer( fgSizer3 );
 	this->Layout();
@@ -1753,6 +1763,7 @@ ParticleEmitterPanel::ParticleEmitterPanel( wxWindow* parent, wxWindowID id, con
 	minSpeedTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinSpeedChanged ), NULL, this );
 	maxSpeedTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MaxSpeedChanged ), NULL, this );
 	materialFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ParticleEmitterPanel::MaterialFileChanged ), NULL, this );
+	simulationSpaceChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ParticleEmitterPanel::SimulationSpaceChanged ), NULL, this );
 }
 
 ParticleEmitterPanel::~ParticleEmitterPanel()
@@ -1771,5 +1782,6 @@ ParticleEmitterPanel::~ParticleEmitterPanel()
 	minSpeedTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinSpeedChanged ), NULL, this );
 	maxSpeedTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MaxSpeedChanged ), NULL, this );
 	materialFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ParticleEmitterPanel::MaterialFileChanged ), NULL, this );
+	simulationSpaceChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ParticleEmitterPanel::SimulationSpaceChanged ), NULL, this );
 	
 }

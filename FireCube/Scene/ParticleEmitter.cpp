@@ -15,14 +15,14 @@
 using namespace FireCube;
 
 ParticleEmitter::ParticleEmitter(Engine *engine, unsigned int numberOfParticles, Material *material) : Renderable(engine), minLifeTime(2.0f), maxLifeTime(2.0f), minSpeed(1.0f), maxSpeed(1.0f), 
-				 numberOfParticles(numberOfParticles), needToReset(true), emitterShape(ParticleEmitterShape::SPHERE), radius(1.0f), emissionRate(numberOfParticles / 10), prewarm(false)
+				 numberOfParticles(numberOfParticles), needToReset(true), emitterShape(ParticleEmitterShape::SPHERE), radius(1.0f), emissionRate(numberOfParticles / 10), prewarm(false), simulationSpace(ParticleEmitterSimulationSpace::LOCAL)
 {
 	Init(numberOfParticles, material);
 }
 
 ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : Renderable(other), minLifeTime(other.minLifeTime), maxLifeTime(other.maxLifeTime), minSpeed(other.minSpeed), maxSpeed(other.maxSpeed),
 																 numberOfParticles(other.numberOfParticles), needToReset(true), emitterShape(other.emitterShape), box(other.box), radius(other.radius), 
-																 boundingBox(other.boundingBox), emissionRate(other.emissionRate), prewarm(other.prewarm)
+																 boundingBox(other.boundingBox), emissionRate(other.emissionRate), prewarm(other.prewarm), simulationSpace(other.simulationSpace)
 {
 	Init(numberOfParticles, other.renderableParts[0].material);	
 }
@@ -80,7 +80,14 @@ void ParticleEmitter::UpdateRenderableParts()
 {	
 	for (auto &i : renderableParts)
 	{
-		i.transformation = node->GetWorldTransformation();
+		if (simulationSpace == ParticleEmitterSimulationSpace::LOCAL)
+		{
+			i.transformation = node->GetWorldTransformation();
+		}
+		else
+		{
+			i.transformation.Identity();
+		}
 	}
 }
 
@@ -190,6 +197,11 @@ void ParticleEmitter::EmitParticles(unsigned int count)
 			float *particleData = data + particleIndex * particleDataSize;
 			vec3 pos, direction;
 			RandomPositionAndDirection(pos, direction);
+			if (simulationSpace == ParticleEmitterSimulationSpace::WORLD)
+			{
+				pos = node->GetWorldTransformation() * pos;
+				direction = direction.TransformNormal(node->GetWorldTransformation());
+			}
 			*((vec3 *)particleData) = pos;
 			*((vec3 *)(particleData + 3)) = direction * RangedRandom(minSpeed, maxSpeed);
 
@@ -324,4 +336,14 @@ void FireCube::ParticleEmitter::Prewarm()
 
 		time += timeStep;
 	}
+}
+
+void ParticleEmitter::SetSimulationSpace(ParticleEmitterSimulationSpace simulationSpace)
+{
+	this->simulationSpace = simulationSpace;
+}
+
+ParticleEmitterSimulationSpace ParticleEmitter::GetSimulationSpace() const
+{
+	return simulationSpace;
 }

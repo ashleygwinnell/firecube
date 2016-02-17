@@ -309,6 +309,18 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlNode *paren
 		default:
 			break;
 		}
+
+		switch (particleEmitter->GetSimulationSpace())
+		{
+		case ParticleEmitterSimulationSpace::LOCAL:
+			element->SetAttribute("simulation_space", "local");
+			break;
+		case ParticleEmitterSimulationSpace::WORLD:
+			element->SetAttribute("simulation_space", "world");
+			break;
+		default:
+			break;
+		}
 	}
 
 }

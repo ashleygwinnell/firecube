@@ -392,6 +392,19 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 		particleEmitterDescriptor->SetSpeed(speed.x, speed.y);		
 		particleEmitterDescriptor->SetPrewarm(Variant::FromString(e->Attribute("prewarm")).GetBool());
 
+		if (e->Attribute("simulation_space"))
+		{
+			std::string simulationSpace = e->Attribute("simulation_space");
+			if (simulationSpace == "local")
+			{
+				particleEmitterDescriptor->SetSimulationSpace(ParticleEmitterSimulationSpace::LOCAL);
+			}
+			else if (simulationSpace == "world")
+			{
+				particleEmitterDescriptor->SetSimulationSpace(ParticleEmitterSimulationSpace::WORLD);
+			}
+		}
+
 		std::string shape = e->Attribute("shape");
 		if (shape == "box")
 		{

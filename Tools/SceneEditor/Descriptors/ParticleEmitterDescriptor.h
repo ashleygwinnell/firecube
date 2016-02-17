@@ -30,6 +30,9 @@ public:
 	void SetSpeed(float minSpeed, float maxSpeed);
 	bool GetPrewarm() const;
 	void SetPrewarm(bool val);
+	void SetSimulationSpace(FireCube::ParticleEmitterSimulationSpace simulationSpace);
+	FireCube::ParticleEmitterSimulationSpace GetSimulationSpace() const;
+
 private:
 	FireCube::ParticleEmitterShape shape;
 	FireCube::vec3 box;
@@ -42,4 +45,5 @@ private:
 	float minSpeed;
 	float maxSpeed;
 	bool prewarm;
+	FireCube::ParticleEmitterSimulationSpace simulationSpace;
 };

@@ -39,6 +39,18 @@ void ParticleEmitterPanelImpl::UpdateUI()
 		break;
 	}
 
+	switch (particleEmitter->GetSimulationSpace())
+	{
+	case ParticleEmitterSimulationSpace::LOCAL:
+		simulationSpaceChoice->SetSelection(0);
+		break;
+	case ParticleEmitterSimulationSpace::WORLD:
+		simulationSpaceChoice->SetSelection(1);
+		break;
+	default:
+		break;
+	}
+
 	radiusTextCtrl->SetLabelText(wxString::FromDouble(particleEmitter->GetRadius()));
 	bboxWidthTextCtrl->SetLabelText(wxString::FromDouble(particleEmitter->GetBox().x));
 	bboxHeightTextCtrl->SetLabelText(wxString::FromDouble(particleEmitter->GetBox().y));
@@ -400,6 +412,37 @@ void ParticleEmitterPanelImpl::PrewarmChanged(wxCommandEvent& event)
 	}, [particleEmitter, oldPrewarm]()
 	{
 		particleEmitter->SetPrewarm(oldPrewarm);
+	});
+
+	theApp->GetEditorState()->ExecuteCommand(command);
+	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+}
+
+void ParticleEmitterPanelImpl::SimulationSpaceChanged(wxCommandEvent& event)
+{
+	ParticleEmitterDescriptor *particleEmitter = static_cast<ParticleEmitterDescriptor *>(parent->GetComponent());
+
+	MyApp *theApp = ((MyApp *)wxTheApp);
+	ParticleEmitterSimulationSpace oldSimulationSpace = particleEmitter->GetSimulationSpace();
+	ParticleEmitterSimulationSpace newSimulationSpace;
+	switch (event.GetSelection())
+	{
+	case 0:
+		newSimulationSpace = ParticleEmitterSimulationSpace::LOCAL;
+		break;
+	case 1:
+		newSimulationSpace = ParticleEmitterSimulationSpace::WORLD;
+		break;
+	default:
+		break;
+	}
+
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Simulation Space", [particleEmitter, newSimulationSpace]()
+	{
+		particleEmitter->SetSimulationSpace(newSimulationSpace);
+	}, [particleEmitter, oldSimulationSpace]()
+	{
+		particleEmitter->SetSimulationSpace(oldSimulationSpace);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
