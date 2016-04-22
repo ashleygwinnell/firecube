@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FireCube", "FireCube\FireCube.vcxproj", "{66AD911D-22A7-415E-A8E1-C746E779E0F7}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -174,8 +174,8 @@ Global
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Singlethreaded|Win32.Build.0 = Debug Static|Win32
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Singlethreaded|x64.ActiveCfg = Debug Static|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Singlethreaded|x64.Build.0 = Debug Static|x64
-		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Static|Win32.ActiveCfg = Debug Static|Win32
-		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Static|Win32.Build.0 = Debug Static|Win32
+		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Static|Win32.ActiveCfg = Debug|Win32
+		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Static|Win32.Build.0 = Debug|Win32
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Static|x64.ActiveCfg = Debug Static|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug Static|x64.Build.0 = Debug Static|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug|Win32.ActiveCfg = Debug|Win32
@@ -192,8 +192,8 @@ Global
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Singlethreaded|Win32.Build.0 = Release Static|Win32
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Singlethreaded|x64.ActiveCfg = Release Static|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Singlethreaded|x64.Build.0 = Release Static|x64
-		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|Win32.ActiveCfg = Release Static|Win32
-		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|Win32.Build.0 = Release Static|Win32
+		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|Win32.ActiveCfg = Release|Win32
+		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|Win32.Build.0 = Release|Win32
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|x64.ActiveCfg = Release Static|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release Static|x64.Build.0 = Release Static|x64
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release|Win32.ActiveCfg = Release|Win32
