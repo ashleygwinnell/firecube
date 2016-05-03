@@ -56,14 +56,26 @@ public:
 
 	Renderer(Engine *engine);
 
-	void ResetNumberOfPrimitivesRendered();	
+	/**
+	* Resets the internal counter of the number of primitives that were renderered
+	*/
+	void ResetNumberOfPrimitivesRendered();
+	
+	/**
+	* Initializes the renderer
+	*/	
 	void Initialize();
+	
+	/**
+	* Destorys the renderer
+	*/
 	void Destroy();
 
 	/**
-	* Clears the depth and color buffer.
+	* Clears the depth and / or color buffer.
 	* @param color The color to clear the framebuffer.
 	* @param depth The depth to set the depth buffer.
+	* @param buffers Controls which buffer to clear
 	*/
 	void Clear(const vec4 &color, float depth, ClearBufferType buffers);
 
@@ -85,6 +97,7 @@ public:
 	* Renders a stream.
 	* @param primitiveType The primitive type.
 	* @param count The number of indices to render.
+	* @param offset An offset to start rendering from
 	*/
 	void RenderStream(const PrimitiveType &primitiveType, unsigned int count, unsigned int offset = 0);
 
@@ -95,8 +108,7 @@ public:
 	void UseProgram(Program *program);
 
 	/**
-	* Uses a material.
-	* @param program The program to apply the material to.
+	* Uses a material.	
 	* @param material The material to use.
 	*/
 	void UseMaterial(Material *material);
@@ -110,20 +122,41 @@ public:
 	* Sets the rendering viewport.
 	*/
 	void SetViewport(int left, int right, int width, int height);
-
+	
+	/**
+	* Increaments the internal counter of the number of primitives that were renderered
+	* @param amount The number of primitives to add
+	*/
 	void IncreamentNumberOfPrimitivesRendered(unsigned int amount);
 
 	/**
-	* Returns the number of triangles that were rendered in the current frame.
+	* Returns the number of primitives that were rendered in the current frame.
 	*/
 	unsigned int GetNumberOfPrimitivesRendered();
-
+	
+	/**
+	* Sets the current shaders
+	* @param vertexShader The vertex shader to use
+	* @param fragmentShader The fragment shader to use
+	* @returns A program generated from the supplied shaders
+	*/
 	Program *SetShaders(Shader *vertexShader, Shader *fragmentShader); // TODO change to void
 
+	/**
+	* Uses a camera.	
+	* @param camera The camera to use.
+	*/
 	void UseCamera(Camera *camera);
 
+	/**
+	* Uses a light.	
+	* @param light The light to use.
+	*/
 	void UseLight(Light *light);
 
+	/**
+	* Resets cached shader parameters state. After calling this function, all shader parameters (view matrix, light properties, ...) are invalidatd
+	*/
 	void ResetCachedShaderParameters();		
 
 	void SetRenderTarget(unsigned int index, RenderSurface *renderTarget);

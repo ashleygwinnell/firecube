@@ -50,7 +50,7 @@ public:
 /** @endcond */
 
 /**
-* This class holds the data needed to draw text with a specific font and size.
+* This class holds the data needed to draw text with a specific font.
 */
 class FIRECUBE_API Font : public Resource
 {	
@@ -65,6 +65,10 @@ public:
 	*/
 	bool Load(const std::string &filename);
 
+	/**
+	* Generates a font face using an actual size
+	* @param pointSize The size of the font
+	*/
 	FontFace *GenerateFontFace(int pointSize);
 
 	static void Init();
@@ -73,6 +77,9 @@ private:
 	std::map<int, FontFace *> faces;
 };
 
+/**
+* This class holds the data needed to draw text with a specific font and size.
+*/
 class FIRECUBE_API FontFace
 {
 	friend class Font;
@@ -82,6 +89,9 @@ public:
 	FontFace();
 	~FontFace();
 
+	/**
+	* @returns the kerning between two characters in pixels
+	*/
 	short GetKerning(unsigned int a, unsigned int b) const;
 
 private:

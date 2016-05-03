@@ -13,13 +13,31 @@ class Renderer;
 class RenderSurface;
 class Camera;
 
+/**
+* This class is reponsible for rendering a single frame given a scene, a camera using a render path
+*/
 class FIRECUBE_API Frame : public Object
 {
 	FIRECUBE_OBJECT(Frame)
 public:
 	Frame(Engine *engine, Scene *scene, Camera *camera, RenderSurface *renderSurface, RenderPath *renderPath);
+	
+	/**
+	* Renders the scene
+	* @param renderer The renderer to use
+	*/
 	void Render(Renderer *renderer);
+	
+	/**
+	* Renders debug geometry of the scene
+	* @param debugRenderer The debug renderer
+	*/
 	void RenderDebugGeometry(DebugRenderer *debugRenderer);
+	
+	/**
+	* Sets the render target to render into instead of the viewport for render path commands which output to the viewport
+	* @param renderSurface A render surface to render into or nullptr to render into the default framebuffer
+	*/
 	void SetRenderTarget(SharedPtr<RenderSurface> renderSurface);
 private:
 	void UpdateBaseQueue();

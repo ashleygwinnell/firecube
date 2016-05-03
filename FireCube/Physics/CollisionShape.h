@@ -37,35 +37,104 @@ public:
 };
 
 
+/**
+* This class represents a collision shape component
+*/
 class CollisionShape : public Component
 {
 	FIRECUBE_OBJECT(CollisionShape)
 public:
 	CollisionShape(Engine *engine);
 	~CollisionShape();
-		
+	
+	/**
+	* Sets the shape of the collision geometry from a mesh
+	* @param mesh The mesh to use as a collision shape
+	*/	
 	void SetMesh(Mesh *mesh);
+	
+	/**
+	* @returns The shape type of this collision shape(box, mesh, sphere, ...)
+	*/
 	CollisionShapeType GetShapeType() const;
+	
+	/**
+	* Sets the shape of the collision geometry to be a plane
+	* @param plane The plane to use as a collision shape 
+	*/
 	void SetPlane(const Plane &plane);
+	
+	/**
+	* Sets the shape of the collision geometry to be a box
+	* @param bbox The box to use as a collision shape 
+	*/
 	void SetBox(BoundingBox bbox);
+	
+	/**
+	* Sets the shape of the collision geometry to be a sphere
+	* @param radius The radius of the sphere 
+	*/
 	void SetSphere(float radius);
 
+	/**
+	* @returns The plane of this shape (if this shape is actually a plane)
+	*/
 	Plane GetPlane() const;
+	
+	/**
+	* @returns The collision mesh of this shape (if this shape is actually a mesh)
+	*/
 	CollisionMesh *GetCollisionMesh();
+	
+	/**
+	* @returns The box of this shape (if this shape is actually a box)
+	*/
 	BoundingBox GetBox() const;	
+	
+	/**
+	* @returns The radius of this shape (if this shape is actually a sphere)
+	*/
 	float GetRadius() const;
 
+	/**
+	* @returns The world bounding box of the collision shape
+	*/
 	BoundingBox GetWorldBoundingBox();
 
-	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);	
+	/**
+	* Renders debug geometry for this shape
+	* @param debugRenderer The debug renderer
+	*/
+	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
+	
+	/**
+	* Clones this collision shape
+	*/	
 	Component *Clone() const;
 	
+	/**
+	* @returns Whether this shape is used as a trigger
+	*/
 	bool IsTrigger() const;
+	
+	/**
+	* Sets whether this shape is used as a trigger. Trigger collision shapes doen't affect the motion of objects they collide with but rather emit an event upon collision
+	* @param isTrigger Whether to use this shape as a trigger
+	*/
 	void SetIsTrigger(bool isTrigger);
-
+	
+	/**
+	* Sets whther this shape is owned by a rigid body (shapes associates with rigid bodies require different handling since they might be a part of a compound shape).
+	* @param ownedByRigidBody Whether this shape is owned by a rigid body
+	*/
 	void SetOwnedByRigidBody(bool ownedByRigidBody);
+	
+	/**
+	* @returns Whether this shape is owned by a ridig body
+	*/
 	bool IsOwnedByRigidBody() const;
 
+	// Functions implemented to enabled placing shapes inside an octree 
 	OctreeNode<CollisionShape> *GetOctreeNode();
 	void SetOctreeNode(OctreeNode<CollisionShape> *octreeNode);
 	bool GetOctreeNodeNeedsUpdate() const;

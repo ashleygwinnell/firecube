@@ -46,9 +46,24 @@ public:
 	*/
 	void Destroy();
 
+	/**
+	* @returns the shadowed data if shadowing was enabled
+	*/
 	const std::vector<char> &GetShadowData() const;
+	
+	/**
+	* Enabled / disables shadowing of the data. If shadowing is enabled, a copy of data is stored in local memory.
+	*/
 	void SetShadowed(bool isShadowed);
+	
+	/**
+	* @returns Whether the buffer is shadowed
+	*/
 	const bool Shadowed() const;
+	
+	/**
+	* @returns The number of indices stored in this buffer
+	*/
 	unsigned int GetIndicesCount() const;
 private:
 	bool isShadowed;

@@ -114,6 +114,9 @@ public:
 
 	Engine *GetEngine();
 
+	/**
+	* Returns the passed time since the application was started in seconds.
+	*/
 	float GetPassedTime() const;
 
 protected:

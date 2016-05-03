@@ -34,6 +34,10 @@ public:
     */
     void Create(int width, int height);    		
 
+    /**
+    * Sets the surface to use as a depth buffer
+    * @param depthSurface A depth render surface
+    */
 	void SetDepthBufferSurface(RenderSurface *depthSurface);
 
 	/**

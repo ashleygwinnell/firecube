@@ -69,23 +69,72 @@ public:
 	BoundingBox boundingBox;
 };
 
-
+/**
+* A mesh resource. This class stores geometries, materials, bone skeleton and animations  
+*/
 class FIRECUBE_API Mesh : public Resource
 {
 	FIRECUBE_OBJECT(Mesh)
 public:
 	Mesh(Engine *engine);
 
+	/**
+	* Loads a mesh
+	* @param filename The path to the mesh file
+	*/
 	virtual bool Load(const std::string &filename);
+	
+	/**
+	* @returns The geometries of this mesh
+	*/
 	const std::vector<SharedPtr<Geometry>> &GetGeometries() const;
+	
+	/**
+	* @returns The materials of this mesh. Note that this list might have duplicates as it contains a material per geometry
+	*/
 	const std::vector<SharedPtr<Material>> &GetMaterials() const;
+	
+	/**
+	* Adds a geometry to this mesh
+	* @param geometry The geometry to add
+	* @param boundingBox The bounding box of this geometry
+	* @param material The material of this geometry
+	*/
 	void AddGeometry(Geometry *geometry, const BoundingBox &boundingBox, Material *material);
-	const std::vector<BoundingBox> &GetBoundingBoxes() const;	
+	
+	/**
+	* @returns The bounding boxes of this mesh (one bounding box per geometry)
+	*/
+	const std::vector<BoundingBox> &GetBoundingBoxes() const;
+	
+	/**
+	* @returns The number of nodes in the skeleton
+	*/	
 	unsigned int GetNumberOfTreeNodes() const;
+	
+	/**
+	* @returns The skeleton's root
+	*/
 	SkeletonNode &GetSkeletonRoot();
+	
+	/**
+	* @reutrns The animations of this mesh
+	*/
 	std::vector<Animation> &GetAnimations();
+	
+	/**
+	* @returns the bone weights of this mesh. A list of bone weights per geometry 
+	*/
 	std::vector<std::vector<BoneWeights>> &GetBoneWeights();
+	
+	/**
+	* @returns the bones of this mesh. A list of bones per geometry 
+	*/
 	std::vector<std::vector<Bone>> &GetBones();
+	
+	/**
+	* @returns The bounding box of this mesh
+	*/
 	BoundingBox GetBoundingBox() const;
 private:
 	void ReadAnimations(const aiScene *aScene);

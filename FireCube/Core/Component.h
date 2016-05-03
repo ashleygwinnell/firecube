@@ -19,10 +19,31 @@ public:
 	Component(Engine *engine);
 	virtual ~Component();
 		
+	/**
+	* Returns the parent node of this component
+	*/
 	Node *GetNode() const;	
+	
+	/**
+	* Controls whether the component is enabled
+	* @param enabled Whether to enable the component
+	*/
 	void SetEnabled(bool enabled);
+	
+	/**
+	* Returns whether the component is enabled
+	*/
 	bool IsEnabled() const;
+	
+	/**
+	* Renders debug geometry of this component
+	* @param debugRender The bug renderer
+	*/
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer) {};
+	
+	/**
+	* Clones the component
+	*/
 	virtual Component *Clone() const = 0;
 protected:	
 	Component(const Component &other);

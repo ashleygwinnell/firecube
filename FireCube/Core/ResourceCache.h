@@ -18,6 +18,11 @@ public:
 
 	~ResourceCache();
 
+	/**
+	* Loads a resource from a path or fetches it from cache if the resource was previosly loaded
+	* @param filename The path to the resource (this path is also used as the kay to look up the resource in the cache)
+	* @returns A pointer to the loaded resource or null if the resource coundn't be loaded
+	*/
 	template <class T> T *GetResource(const std::string &filename)
 	{	
 		auto i = resources.find(filename);

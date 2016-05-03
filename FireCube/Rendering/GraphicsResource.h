@@ -12,6 +12,10 @@ class FIRECUBE_API GraphicsResource
 {
 public:
 	GraphicsResource(Renderer *renderer);
+	
+	/**
+	* @returns The Opengl object id 
+	*/
 	GLuint GetObjectId() const;
 
 	/**

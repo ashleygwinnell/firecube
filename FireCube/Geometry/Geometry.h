@@ -91,13 +91,40 @@ public:
 	*/
 	Geometry *Clone();
 
+	/**
+	* Sets the vertex buffer of this geometry
+	* @param vertexBuffer The vertex buffer to set
+	*/
 	void SetVertexBuffer(VertexBuffer *vertexBuffer);
+	
+	/**
+	* @return The vertex buffer of this geometry
+	*/
 	VertexBuffer *GetVertexBuffer();
+	
+	/**
+	* Sets the index buffer of this geometry
+	* @param indexBuffer The index buffer to set
+	*/
 	void SetIndexBuffer(IndexBuffer *indexBuffer);
+	
+	/**
+	* @return The index buffer of this geometry
+	*/
 	IndexBuffer *GetIndexBuffer();
 
+	/**
+	* Renders the geometry
+	*/
 	void Render();
 
+	/**
+	* Intersects a ray with this geometry
+	* @param ray The intersection ray
+	* @param distance Output parameter where the intersection distance between the ray and the geometry is stored
+	* @param normal Output parameter where the normal at the intersection point is stored
+	* @return Whether an intersection occured between the ray and the geometry
+	*/
 	bool IntersectRay(const Ray &ray, float &distance, vec3 &normal) const;
 
 private:	
