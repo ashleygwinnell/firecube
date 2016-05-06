@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	Filesystem::SetCoreDataFolder("../../FireCube");
 	Filesystem::SetAssetsFolder("../../Assets");
 
-	if (!app.Initialize(1024, 768, 0, false))
+	if (!app.Initialize(1024, 768, 0, false, false))
 		return 0;
 	app.Run();
 	return 0;
@@ -53,10 +53,10 @@ bool App::Prepare()
 
 	mesh = new Mesh(engine);
 	mat = new Material(engine);	
-	mat->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.7f));
-	mat->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.3f));
-	mat->SetParameter(PARAM_MATERIAL_SHININESS, 20.0f);
-	mat->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture>("Textures/earthmap1k.jpg"));
+	mat->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.7f));
+	mat->SetParameter(PARAM_MATERIAL_SPECULAR_NAME, vec3(0.3f));
+	mat->SetParameter(PARAM_MATERIAL_SHININESS_NAME, 20.0f);
+	mat->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture2D>("Textures/earthmap1k.jpg"));
 	mat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
 
 	Node *n = root->CreateChild("Earth");

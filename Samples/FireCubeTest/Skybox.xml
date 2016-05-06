@@ -1,0 +1,5 @@
+<material name = "skybox1">
+<technique name = "Techniques/Skybox.xml" />
+<texture unit="diffuse" name="sp3.jpg" type="cube" />
+<cull value="none" />
+</material>

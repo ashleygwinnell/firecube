@@ -44,15 +44,15 @@ bool App::Prepare()
 	Node *node3 = root->CreateChild("Plane");
 	StaticModel *staticModel = node3->CreateComponent<StaticModel>();
 	material = new Material(engine);	
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 1.0f));
-	material->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0));
+	material->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 1.0f, 1.0f));
+	material->SetParameter(PARAM_MATERIAL_SPECULAR_NAME, vec3(0));
 	material->SetTechnique(resourceCache->GetResource<Technique>("Techniques/DiffuseMap.xml"));
 	Geometry *plane = GeometryGenerator::GeneratePlane(engine, vec2(2, 2));
 	SharedPtr<Mesh> mesh = new Mesh(engine);
 	mesh->AddGeometry(plane, BoundingBox(vec3(-2), vec3(2)), material);	
 	staticModel->CreateFromMesh(mesh);	
 	
-	node3->Rotate(vec3(-(float)PI / 2.0f, 0, 0));
+	node3->Rotate(vec3((float)PI / 2.0f, 0, 0));
 	scene.SetAmbientColor(vec3(1, 1, 1));
 	scene.SetFogColor(vec3(0.4f, 0.4f, 0.4f));	
 	

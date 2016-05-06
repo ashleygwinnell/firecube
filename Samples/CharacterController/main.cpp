@@ -77,7 +77,7 @@ bool App::Prepare()
 	Light *light = childNode->CreateComponent<Light>();
 	light->SetLightType(FireCube::LightType::DIRECTIONAL);
 	light->SetColor(vec3(1.0f));	
-	childNode->Rotate(vec3(PI * 0.5f, 0.0f, 0.0f));	
+	childNode->Rotate(vec3(-PI * 0.5f, 0.0f, 0.0f));	
 
 	scene.SetFogColor(vec3(44, 80, 222) / 255.0f);
 	//renderer->SetCurrentRenderPath(resourceCache->GetResource<RenderPath>("RenderPaths/ForwardGrayscale.xml"));
@@ -143,12 +143,12 @@ void App::HandleInput(float t, const MappedInput &input)
 
 	if (input.IsStateOn("RotateLeft"))
 	{
-		characterController->GetNode()->Rotate(vec3(0, -2.0f, 0) * t);		
+		characterController->GetNode()->Rotate(vec3(0, 2.0f, 0) * t);		
 	}
 
 	if (input.IsStateOn("RotateRight"))
 	{
-		characterController->GetNode()->Rotate(vec3(0, 2.0f, 0) * t);
+		characterController->GetNode()->Rotate(vec3(0, -2.0f, 0) * t);
 	}
 
 	if (input.IsStateOn("Jump") && characterController->IsOnGround())

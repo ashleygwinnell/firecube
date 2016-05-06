@@ -66,7 +66,7 @@ bool App::Prepare()
 	Light *light = lightNode->CreateComponent<Light>();
 	light->SetLightType(FireCube::LightType::DIRECTIONAL);
 	light->SetColor(vec3(1.0f));	
-	lightNode->Rotate(vec3(1, 1, 0));
+	lightNode->Rotate(vec3(-1, -1, 0));
 
 	scene.SetFogEnabled(true);
 	scene.SetFogParameters(vec3(0, 0.01f, 0));
@@ -102,12 +102,9 @@ void App::Update(float time)
 }
 
 void App::Render(float time)
-{		
-	mat4 rot = mat4::IDENTITY;
-	rot.RotateY(ang.y);
-	rot.RotateX(ang.x);	
-	rot.RotateZ(angSpeed.z);
-	cameraNode->SetRotation(rot);		
+{			
+	quat qx(ang.x, 0, 0), qy(0, ang.y, 0), qz(0, 0, angSpeed.z);
+	cameraNode->SetRotation(qy * qx * qz);
 }
 
 void App::HandleInput(float time, const MappedInput &input)
@@ -116,23 +113,23 @@ void App::HandleInput(float time, const MappedInput &input)
 		Close();
 	if (input.IsStateOn("RotateBoth"))
 	{
-		angSpeed.x += input.GetValue("mouseY") * time * 0.1f;
-		angSpeed.y += input.GetValue("mouseX") * time * 0.1f;
+		angSpeed.x -= input.GetValue("mouseY") * time * 0.1f;
+		angSpeed.y -= input.GetValue("mouseX") * time * 0.1f;
 	}
 	if (input.IsStateOn("RotateLeft"))
-	{
-		angSpeed.y -= time * 0.3f;
-		angSpeed.z -= time * 0.5f;
-	}
-	if (input.IsStateOn("RotateRight"))
 	{
 		angSpeed.y += time * 0.3f;
 		angSpeed.z += time * 0.5f;
 	}
+	if (input.IsStateOn("RotateRight"))
+	{
+		angSpeed.y -= time * 0.3f;
+		angSpeed.z -= time * 0.5f;
+	}
 	if (input.IsStateOn("RotateDown"))
-		angSpeed.x -= time * 0.3f;
-	if (input.IsStateOn("RotateUp"))
 		angSpeed.x += time * 0.3f;
+	if (input.IsStateOn("RotateUp"))
+		angSpeed.x -= time * 0.3f;
 	
 	mat4 inverseView = camera->GetViewMatrix();
 	inverseView.Inverse();
