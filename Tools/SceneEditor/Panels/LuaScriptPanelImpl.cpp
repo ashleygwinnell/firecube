@@ -14,6 +14,7 @@ LuaScriptPanelImpl::LuaScriptPanelImpl(BaseComponentPanelImpl* parent) : LuaScri
 	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());
 	wxFileName filename(luaScript->GetScriptFilename());
 	scriptFilePicker->SetFileName(filename);
+	scriptFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts");
 	
 	objectNameTextCtrl->SetLabel(luaScript->GetObjectName());
 

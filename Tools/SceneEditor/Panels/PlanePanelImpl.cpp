@@ -26,6 +26,7 @@ PlanePanelImpl::PlanePanelImpl(BaseComponentPanelImpl* parent) : PlanePanel(pare
 	collisionQueryMaskTextCtrl->SetLabel(collisionQueryMaskStream.str());
 
 	materialFilePicker->SetPath(plane->GetMaterialFileName());
+	materialFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials");
 }
 
 PlanePanelImpl::~PlanePanelImpl()

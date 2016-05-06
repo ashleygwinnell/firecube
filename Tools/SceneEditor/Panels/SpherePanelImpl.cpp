@@ -27,6 +27,7 @@ SpherePanelImpl::SpherePanelImpl(BaseComponentPanelImpl* parent) : SpherePanel(p
 	collisionQueryMaskTextCtrl->SetLabel(collisionQueryMaskStream.str());
 
 	materialFilePicker->SetPath(sphere->GetMaterialFileName());
+	materialFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials");
 }
 
 SpherePanelImpl::~SpherePanelImpl()

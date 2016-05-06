@@ -14,6 +14,7 @@ StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent) : Sta
 	StaticModelDescriptor *staticModel = static_cast<StaticModelDescriptor *>(parent->GetComponent());
 	
 	meshFilePicker->SetPath(staticModel->GetMeshFilename());	
+	meshFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Models");
 	castShadowCheckBox->SetValue(staticModel->GetCastShadow());
 
 	std::stringstream lightMaskStream;

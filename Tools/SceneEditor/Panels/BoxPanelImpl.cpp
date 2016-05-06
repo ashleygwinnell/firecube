@@ -27,6 +27,7 @@ BoxPanelImpl::BoxPanelImpl(BaseComponentPanelImpl* parent) : BoxPanel(parent), p
 	collisionQueryMaskTextCtrl->SetLabel(collisionQueryMaskStream.str());
 
 	materialFilePicker->SetPath(box->GetMaterialFileName());
+	materialFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials");
 }
 
 BoxPanelImpl::~BoxPanelImpl()

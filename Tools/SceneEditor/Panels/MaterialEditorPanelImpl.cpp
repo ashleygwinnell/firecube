@@ -58,7 +58,7 @@ void MaterialEditorPanelImpl::NewButtonClicked(wxCommandEvent& event)
 
 void MaterialEditorPanelImpl::OpenButtonClicked(wxCommandEvent& event)
 {
-	wxFileDialog openFileDialog(this, "Open", "", "", "Material files (*.xml)|*.xml", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	wxFileDialog openFileDialog(this, "Open", Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials", "", "Material files (*.xml)|*.xml", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return;
 

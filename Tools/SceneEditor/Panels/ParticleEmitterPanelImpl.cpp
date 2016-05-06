@@ -62,6 +62,7 @@ void ParticleEmitterPanelImpl::UpdateUI()
 	minSpeedTextCtrl->SetLabelText(wxString::FromDouble(particleEmitter->GetMinSpeed()));
 	maxSpeedTextCtrl->SetLabelText(wxString::FromDouble(particleEmitter->GetMaxSpeed()));
 	materialFilePicker->SetPath(particleEmitter->GetMaterial());	
+	materialFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials");
 	prewarmCheckBox->SetValue(particleEmitter->GetPrewarm());
 }
 

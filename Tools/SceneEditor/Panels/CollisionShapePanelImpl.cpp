@@ -59,6 +59,7 @@ void CollisionShapePanelImpl::UpdateUI()
 
 	radiusTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetRadius()));
 
+	meshFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Models");
 	if (collisionShape->GetMeshFilename().empty() == false)
 	{
 		wxFileName filename(collisionShape->GetMeshFilename());
