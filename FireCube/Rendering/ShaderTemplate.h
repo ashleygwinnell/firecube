@@ -11,6 +11,9 @@ namespace FireCube
 class Renderer;
 class Shader;
 
+/**
+* This class stores a shader template. An actual shader is generated given a list of preprocessor defines.
+*/
 class FIRECUBE_API ShaderTemplate : public Resource
 {
 	FIRECUBE_OBJECT(ShaderTemplate)
@@ -35,8 +38,8 @@ public:
 
 		
 	/**
-	* Generates a shader from a given shader properties.
-	* @param shaderProperties The shader properties to use to generate the shader.
+	* Generates a shader from a list of preprocessor defines.
+	* @param defines The shader preprocessor defines to use to generate the shader.
 	*/	
 	Shader *GenerateShader(const std::string &defines);	
 

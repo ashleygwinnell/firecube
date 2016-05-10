@@ -159,14 +159,33 @@ public:
 	*/
 	void ResetCachedShaderParameters();		
 
+	/**
+	* Sets the render target to use at a given index
+	* @param index The index of the render target
+	* @param renderTarget The render surface to use
+	*/
 	void SetRenderTarget(unsigned int index, RenderSurface *renderTarget);
 
+	/**
+	* Sets the depth render surface
+	* @param depthSurface The render surface to use as the depth buffer
+	*/
 	void SetDepthSurface(RenderSurface *depthSurface);
 	
+	/**
+	* @retruens The defualt render path
+	*/
 	RenderPath *GetDefaultRenderPath();
 
+	/**
+	* Updates the current framebuffer according to the currently set color / depth render targets. If no render targets were 
+	* specified (using SetRenderTarget / SetDepthSurface) the default back buffer is used 	
+	*/
 	void UpdateFrameBuffer();
 
+	/**
+	* Renders a full screen quad
+	*/
 	void RenderFullscreenQuad();
 
 	void SetWidth(int width);
@@ -175,16 +194,66 @@ public:
 	int GetWidth() const;
 	int GetHeight() const;
 
+	/**
+	* Gets or creates a render surface. If uniqueKey is 0, an exisiting render surface with the same properties is returned (if one exists). Otherwise,
+	* the uniqueKey is used to distinguish between render surfaces with the same properties
+	* @param width The width of the render surface
+	* @param height The height of the render surface
+	* @param type The type of the render surface
+	* @param uniqueKey A uniqueKey used to distinguish between render surfaces
+	* @returns The render surface
+	*/
 	SharedPtr<RenderSurface> GetRenderSurface(int width, int height, RenderSurfaceType type, unsigned int uniqueKey = 0);
 
+	/**
+	* Sets the current blending mode
+	* @param blendMode The blend mode to set
+	*/
 	void SetBlendMode(BlendMode blendMode);
+
+	/**
+	* Sets whether to enable depth writes
+	* @param depthWrite Boolean specifiying whether to enabled depth writes
+	*/
 	void SetDepthWrite(bool depthWrite);
+
+	/**
+	* Sets the current depth test mode
+	* @param depthTest The depth test mode to set
+	*/
 	void SetDepthTest(DepthTest depthTest);
+
+	/**
+	* Sets the time step
+	* @param timeStep The time step
+	*/
 	void SetTimeStep(float timeStep);
+
+	/**
+	* @returns The current time step
+	*/
 	float GetTimeStep() const;
+
+	/**
+	* @returns A render surface to be used as the target for shadow maps
+	*/
 	RenderSurface *GetShadowMap();
+
+	/**
+	* Sets a vertex buffer to be used for rendering
+	*/
 	void SetBuffer(VertexBuffer *vertexBuffer);
+
+	/**
+	* Sets a scene view for rendering. The views are rendered in reverse order
+	* @param index The index of the scene view
+	* @param sceneView The scene view to add
+	*/
 	void SetSceneView(unsigned int index, SceneView *sceneView);
+
+	/**
+	* Renders all scene views
+	*/
 	void Render();
 private:
 

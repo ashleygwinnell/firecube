@@ -32,7 +32,7 @@ enum class TextureWrapMode
 class Texture;
 
 /**
-* A 2d texture.
+* A base class for textures.
 */
 class FIRECUBE_API Texture : public Resource, public GraphicsResource
 {
@@ -54,20 +54,46 @@ public:
 
 	/**
 	* Sets the texture filtering.
-	* @param filter The filter.
-	* @param magFilter The magnification filter.
+	* @param filter The filter.	
 	*/
 	void SetFiltering(TextureFilter filter);
+
+	/**
+	* @returns The filtering used for this texture
+	*/
 	TextureFilter GetFiltering() const;
 	
+	/**
+	* @returns The width of the texture
+	*/
 	int GetWidth() const;
+
+	/**
+	* @returns The height of the texture
+	*/
 	int GetHeight() const;
 
+	/**
+	* Sets the width of the texture
+	* @param width The width of the texture
+	*/
 	void SetWidth(int width);
+
+	/**
+	* Sets the height of the texture
+	* @param height The height of the texture
+	*/
 	void SetHeight(int height);
 
+	/**
+	* Sets the wrap mode for the texture
+	* @param wrapMode The wrap mode to set
+	*/
 	void SetWrapMode(TextureWrapMode wrapMode);
 
+	/**
+	* @returns The texture target to use for this texture (GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, ...)
+	*/
 	GLenum GetTarget() const;
 protected:	
 

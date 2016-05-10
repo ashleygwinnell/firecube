@@ -45,18 +45,39 @@ public:
 	*/
 	mat4 transformation;
 
+	/**
+	* The rendering pass used for this render job
+	*/
 	Pass *pass;
 
+	/**
+	* The vertex shader used for this job
+	*/
 	Shader *vertexShader;
 
+	/**
+	* The fragment shader used for this job
+	*/
 	Shader *fragmentShader;
 
+	/**
+	* The sorting key of this job
+	*/
 	unsigned long long int sortKey;
 
+	/**
+	* The distance from the camera
+	*/
 	float distance;
 
+	/**
+	* An array of skin matrices
+	*/
 	mat4 *skinMatrices;
 
+	/**
+	* The number of skin matrices
+	*/
 	unsigned int skinMatricesCount;
 };
 

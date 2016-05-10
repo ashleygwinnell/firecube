@@ -5,6 +5,9 @@
 namespace FireCube
 {
 
+/**
+* A 2d texture.
+*/
 class FIRECUBE_API Texture2D : public Texture
 {
 	FIRECUBE_OBJECT(Texture2D)

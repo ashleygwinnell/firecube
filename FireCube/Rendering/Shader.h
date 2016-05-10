@@ -46,7 +46,14 @@ public:
 	*/
 	bool Create(ShaderType type, const std::string &source);
 
+	/**
+	* Sets the names of output variables (used for shaders when transform feedback is enabled)
+	*/
 	void SetOutputAttributes(const std::vector<std::string> &output);
+
+	/**	
+	*@returns The output variables of this shader
+	*/
 	const std::vector<std::string> &GetOutputAttributes() const;
 private:
 	std::vector<std::string> outputVariables;	
@@ -161,6 +168,11 @@ public:
 	*/
 	void SetUniform(const StringHash &nameHash, const std::vector<int> &value);
 
+	/**
+	* Sets a a from a variant.
+	* @param name The name of the variable.
+	* @param value The value to assign for it.
+	*/
 	void SetUniform(const StringHash &nameHash, const Variant &value);
 
 	/**

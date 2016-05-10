@@ -8,14 +8,28 @@ namespace FireCube
 
 class Mesh;
 
+/**
+* This class represnets an animated model component
+*/
 class AnimatedModel : public Renderable
 {
 	FIRECUBE_OBJECT(AnimatedModel)
 public:
 	AnimatedModel(Engine *engine);
 	AnimatedModel(Engine *engine, Mesh *mesh);
+
+	/**
+	* Creates the model from a mesh resource
+	* @param mesh The mesh to use
+	*/
 	void CreateFromMesh(Mesh *mesh);
+
+	/**
+	* Intersects the model with a ray
+	* @param rayQuery The ray query to use
+	*/
 	virtual void IntersectRay(RayQuery &rayQuery);
+	
 	virtual void UpdateRenderableParts();
 	void Update(float time);
 	void SetAnimation(unsigned int index);
