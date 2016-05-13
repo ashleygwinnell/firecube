@@ -137,14 +137,7 @@ void ScriptEditorPanelImpl::OnCharAdded(wxStyledTextEvent &event)
 			if (indent > 0)
 			{
 				sourceText->SetLineIndentation(line, indent);				
-				sourceText->GotoPos(sourceText->GetLineIndentPosition(line));
-				if (word == "if" || word == "else" || word == "function" || word == "for" || word == "while")
-				{
-					sourceText->NewLine();
-					sourceText->AddText("end");
-					sourceText->SetLineIndentation(line + 1, curIndentation);
-					sourceText->GotoPos(sourceText->GetLineIndentPosition(line));
-				}
+				sourceText->GotoPos(sourceText->GetLineIndentPosition(line));				
 			}
 		}
 	}
