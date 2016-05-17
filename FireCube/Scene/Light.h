@@ -49,14 +49,34 @@ public:
 	*/
 	vec3 GetColor() const;
 	
+	/**
+	* Sets the range of this light
+	* @param range The range to set
+	*/
 	void SetRange(float range);
 
+	/**
+	* @returns The range of this light
+	*/
 	float GetRange() const;
 	
+	/**
+	* Sets the cut off angle for spot lights
+	* @param cutOff The spot cut off angle in radians
+	*/
 	void SetSpotCutOff(float cutOff);
+	
+	/**
+	* @returns The spot cut off angle
+	*/	
 	float GetSpotCutOff() const;
+	
+	
 	void SetScene(Scene *scene);
 
+	/**
+	* @returns The camera of this light (used to render the scene using the light's point of view for shadow mapping)
+	*/
 	Camera *GetCamera();
 
 	/**
@@ -65,10 +85,29 @@ public:
 	*/
 	bool operator == (const Light &other) const;
 
+	/**
+	* Sets whether this light should cast shadows
+	* @param castShadow Whether this light should cast shadows
+	*/
 	void SetCastShadow(bool castShadow);
+	
+	/**
+	* @returns Whether this light casts shadows
+	*/
 	bool GetCastShadow() const;
+	
+	/**
+	* Sets the light mask of this light. This controls which Renderables are affected by this light.
+	* When a renderable's light mask and this light's light mask result in non-zero when AND together the rendeable is affected by this light
+	* @param lightMask The light mask to set
+	*/
 	void SetLightMask(unsigned int lightMask);
+	
+	/**
+	* @returns The light mask of this light
+	*/
 	unsigned int GetLightMask() const;
+	
 	void SetShadowIntensity(float shadowIntensity);
 	float GetShadowIntensity() const;
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);

@@ -31,8 +31,22 @@ public:
 	virtual void IntersectRay(RayQuery &rayQuery);
 	
 	virtual void UpdateRenderableParts();
+	
+	/**
+	* Updates the animation
+	* @param time The time passed
+	*/
 	void Update(float time);
+	
+	/**
+	* Sets the animation index to play
+	* @param index The animation index
+	*/		
 	void SetAnimation(unsigned int index);
+	
+	/**
+	* Clones this component
+	*/
 	virtual Component *Clone() const;
 protected:
 
