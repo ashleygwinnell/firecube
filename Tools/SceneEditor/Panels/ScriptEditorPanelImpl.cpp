@@ -203,7 +203,7 @@ void ScriptEditorPanelImpl::SaveScript()
 {
 	if (currentFileName.empty() == false)
 	{
-		std::ofstream out(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentFileName);
-		out << sourceText->GetText().ToStdString();
+		std::ofstream out(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentFileName, std::ios_base::binary);
+		out << sourceText->GetTextRaw();
 	}
 }
