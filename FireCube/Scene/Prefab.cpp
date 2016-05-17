@@ -38,7 +38,7 @@ bool Prefab::Load(const std::string &filename)
 	return true;
 }
 
-const Node *Prefab::GetNode() const
+Node *Prefab::Instantiate() const
 {
-	return node;
+	return node->Clone();
 }

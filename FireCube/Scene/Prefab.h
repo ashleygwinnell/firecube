@@ -13,8 +13,8 @@ class FIRECUBE_API Prefab : public Resource
 public:
 	Prefab(Engine *engine);
 	virtual ~Prefab();
-	virtual bool Load(const std::string &filename);
-	const Node *GetNode() const;
+	virtual bool Load(const std::string &filename);	
+	Node *Instantiate() const;
 
 	private:
 		Node *node;

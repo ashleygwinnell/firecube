@@ -470,7 +470,7 @@ void SceneReader::ReadPrefab(TiXmlElement *e, Node *node)
 
 	if (prefab)
 	{
-		auto prefabInstance = prefab->GetNode()->Clone();
+		auto prefabInstance = prefab->Instantiate();
 
 		TiXmlElement *transformationElement = e->FirstChildElement("transformation");
 		if (transformationElement)

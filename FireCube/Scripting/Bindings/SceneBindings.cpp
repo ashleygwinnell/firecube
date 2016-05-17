@@ -246,8 +246,8 @@ void LuaBindings::InitScene(lua_State *luaState)
 			.addFunction("Read", &SceneReader::Read)
 		.endClass()
 		.beginExtendClass<Prefab, Resource>("Prefab")
-			.addConstructor(LUA_ARGS(Engine *))		
-			.addProperty("node", &Prefab::GetNode)
+			.addConstructor(LUA_ARGS(Engine *))
+			.addFunction("Instantiate", &Prefab::Instantiate)			
 		.endClass();
 
 	LuaRef t = LuaRef::createTable(luaState);
