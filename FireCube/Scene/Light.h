@@ -108,9 +108,27 @@ public:
 	*/
 	unsigned int GetLightMask() const;
 	
+	/**
+	* Controls how dark the shadows cast by this light are. A value of 0 means that shadowed fragments receive no light at all from this light.
+	* A value of 1 means that shadowed fragments reveive the same light as unshadowed fragments
+	* @param shadowIntensity The shadow intensity
+	*/
 	void SetShadowIntensity(float shadowIntensity);
+	
+	/**
+	* @returns The shadow intensity of this light
+	*/
 	float GetShadowIntensity() const;
+	
+	/**
+	* Renders debug geometry for this light
+	* @param debugRenderer The debug renderer
+	*/
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
+	
+	/**
+	* Clones this light
+	*/
 	virtual Component *Clone() const;
 protected:
 	virtual void MarkedDirty() {}

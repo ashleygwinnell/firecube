@@ -31,13 +31,26 @@ private:
 	BoundingBox boundingBox;
 };
 
+/**
+* A class representing a terrain. The terrain is loaded from an heightmap
+*/
 class Terrain : public Component
 {
 	FIRECUBE_OBJECT(Terrain)
 public:
 	Terrain(Engine *engine);
 	~Terrain();
+	
+	/**
+	* Creates the terrain from a height map
+	* @param image An image containig a gray scale heightmap. The dimensions of the image minus 1 must be divisible by the patch size
+	*/
 	void CreateFromHeightMap(Image *image);	
+	
+	/**
+	* Controls the sizing of the terrain (how pixels in the height map are mapped to positions)
+	* @param spacing The spacing of the pixels. x, z determine the spacing between each pixel in the height map. y controls the height when the height map pixels are white
+	*/
 	void SetVerticesSpacing(vec3 spacing);
 	void SetPatchSize(int patchSize);
 	virtual void MarkedDirty() {}

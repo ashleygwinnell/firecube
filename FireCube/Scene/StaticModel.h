@@ -8,17 +8,44 @@ namespace FireCube
 class Mesh;
 class SkeletonNode;
 
+/**
+* A class representing a renderable component of a static mesh.
+*/
 class StaticModel : public Renderable
 {	
 	FIRECUBE_OBJECT(StaticModel)
 public:
 	StaticModel(Engine *engine);
 	StaticModel(Engine *engine, Mesh *mesh);
+	
+	/**
+	* Creates the static model from a mesh resource
+	* @mesh The mesh to use	
+	*/
 	void CreateFromMesh(Mesh *mesh);
+	
+	/**
+	* @returns All the geometries in the model
+	*/
 	std::vector<SharedPtr<Geometry>> &GetGeometries();
-	std::vector<SharedPtr<Material>> &GetMaterials();		
+	
+	/**
+	* Returns all the materials in this model. Note that the length of the returned array is the same as of the geometries.
+	* The i'th material is used when rendering the i'th geometry. Therefore, the returned array might contain duplicates
+	*/
+	std::vector<SharedPtr<Material>> &GetMaterials();
+				
 	virtual void IntersectRay(RayQuery &rayQuery);
+	
+	/**
+	* Clones this component
+	*/
 	virtual Component *Clone() const;
+	
+	/**
+	* Sets a material to use when rendering all the geometries
+	* @param material The material to set
+	*/
 	void SetMaterial(Material *material);
 protected:
 

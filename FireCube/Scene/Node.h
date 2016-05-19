@@ -70,6 +70,9 @@ public:
 	*/
 	mat4 GetWorldTransformation();
 
+	/**
+	* @returns The world rotation of this node
+	*/
 	quat GetWorldRotation();
 
 	/**
@@ -86,13 +89,13 @@ public:
 
 	/**
 	* Sets the rotation of this node.
-	* @param r The rotation matrix to assign to this node.
+	* @param r The rotation quaternion to assign to this node.
 	*/
 	void SetRotation(const quat &r);
 
 	/**
 	* Gets the rotation of this node.
-	* @return The rotation matrix of this node.
+	* @return The rotation quaternion of this node.
 	*/
 	quat GetRotation() const;
 
@@ -127,9 +130,9 @@ public:
 	void Scale(const vec3 &s);
 	/**
 	* Make the node look at a specific point.
-	* @param position The new position of the node;
-	* @param at The look at position;
-	* @param up The up vector;
+	* @param position The new position of the node
+	* @param at The look at position
+	* @param up The up vector
 	*/
 	void LookAt(vec3 position, vec3 at, vec3 up);
 
@@ -152,11 +155,16 @@ public:
 	std::vector<SharedPtr<Node>> GetChildren() const;
 	
 	/**
-	* Adds a child node.
+	* Adds a child node. The node is reparented to this node 
 	* @param node The node to add as a child.
 	*/
 	Node *AddChild(Node *node);
-
+	
+	/**
+	* Creates a new child node
+	* @param name The name to of the new child node	
+	* @returns The child node
+	*/
 	Node *CreateChild(const std::string &name = "");
 
 	/**
@@ -177,7 +185,10 @@ public:
 	* @param node The child node to remove.
 	*/
 	void RemoveChild(Node *node);	
-
+	
+	/**
+	* Removes all children of this node
+	*/
 	void RemoveAllChildren();
 		
 	/**
@@ -189,17 +200,34 @@ public:
 	* @return The world space position of this node.
 	*/
 	vec3 GetWorldPosition();
-
+	
+	/**
+	* Adds a component to this node
+	* @param component The component to add
+	*/
 	void AddComponent(Component *component);
-
+	
+	/**
+	* Removes a component
+	* @param component The component to remove
+	*/
 	void RemoveComponent(Component *component);
 	
 	void SetScene(Scene *scene);
-
+	
+	/**
+	* @returns the scene this node belongs to
+	*/	
 	Scene *GetScene() const;
-
+	
+	/**
+	* Removes all components from this node
+	*/
 	void RemoveAllComponents();
-
+	
+	/**
+	* Creates a component and add it to this node 
+	*/
 	template <class T, typename... Args> T* CreateComponent(Args&&... args)
 	{
 		T *component = new T(engine, std::forward<Args>(args)...);
@@ -207,14 +235,26 @@ public:
 		return component;
 	}	
 
+	/**
+	* Returns a component in this node of a given type if one exists. Otherwise, returns nullptr
+	* @param type The hash of the component type 
+	*/
 	Component *GetComponent(const StringHash &type);
 
+	/**
+	* Returns a component in this node of a given type if one exists. Otherwise, returns nullptr	 
+	*/
 	template <class T> T* GetComponent()
 	{
 		T *ret = static_cast<T *>(GetComponent(T::GetTypeStatic()));
 		return ret;
 	}
 
+	/**
+	* Returns all component of a given type.
+	* @param components Output vector where the returned components are added
+	* @param recursive Whether to ecurse into child node		 
+	*/
 	template <class T>
 	void GetComponents(std::vector<T *> &components, bool recursive = false)
 	{
@@ -234,12 +274,24 @@ public:
 		}
 	}	
 
+	/**
+	* Returns all component of a given type.
+	* @param type The hash of the component type
+	* @param components Output vector where the returned components are added
+	* @param recursive Whether to ecurse into child node		 
+	*/
 	void GetComponents(const StringHash &type, std::vector<Component *> &components, bool recursive = false);
-
+	
 	Node *GetRootNode() const;
-
+	
+	/**
+	* @returns all the components belonging to this node 
+	*/
 	std::vector<Component *> &GetComponents();
-
+	
+	/**
+	* Removes this node from its parent
+	*/
 	void Remove();
 
 protected:		

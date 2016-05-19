@@ -13,7 +13,7 @@ namespace FireCube
 {
 
 /**
-* A class representing a node observer camera.
+* A class representing a camera which orbits around a point and handles mouse input for orbiting
 */
 class FIRECUBE_API OrbitCamera : public Camera
 {
@@ -101,14 +101,26 @@ public:
 	* @param v The amount to rotate(in radians).
 	*/
 	void RotateY(float v);	
-
+	
+	/**
+	* Sets the rotation of the camera
+	* @param rotation The new rotation to set (Euler angles)
+	*/
 	void SetRotation(vec3 rotation);
 
+	/**
+	* Sets the zoom factor for the camera. Controls the speed of zooming in / out is
+	* @param factor The zoom factor
+	*/
 	void SetZoomFactor(float factor);
 
 	void HandleInput(float time, const MappedInput &input);
 
 	static void AddInputManagerMappings(InputManager &inputManager);
+	
+	/**
+	* Clones this camera
+	*/
 	virtual Component *Clone() const;
 private:
 

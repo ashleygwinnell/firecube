@@ -17,6 +17,10 @@ class Geometry;
 class Scene;
 class DebugRenderer;
 
+/**
+* A class representing a single renderable part which consists of at least a geometry, a material and transformation
+
+*/
 class RenderablePart
 {
 public:
@@ -31,41 +35,127 @@ public:
 	Material *material;
 
 	/**
-	* The transformation to apply to this part.
+	* The transformation to apply to this part. This transformation should transform the geometry to world space
 	*/
 	mat4 transformation;
 
+	/**
+	* An array of skining matrices
+	*/
 	mat4 *skinMatrices;
 
+	/**
+	* Number of skinned matrices
+	*/
 	unsigned int skinMatricesCount;
 };
 
+/**
+* This class is a base class for all renderable components. Child components should
+* fill the renderableParts member with appropriate renderable parts
+*/
 class FIRECUBE_API Renderable : public Component
 {	
 	FIRECUBE_OBJECT(Renderable)
 public:
 	Renderable(Engine *engine);
 	virtual ~Renderable();
+	
+	/**
+	* @returns All the renderable parts in this Renderable
+	*/
 	const std::vector<RenderablePart> &GetRenderableParts() const;
+	
+	/**
+	* @returns The world bounding box of this renderable
+	*/
 	BoundingBox GetWorldBoundingBox();
 	void SetScene(Scene *scene);
+	
+	/**
+	* Sets the collision query mask of this Renderable.
+	* When a ray query collision query mask and this renderable's collision query mask result in non-zero when AND together, no intersection test is performed
+	* @param lightMask The light mask to set
+	*/
 	void SetCollisionQueryMask(unsigned int collisionQueryMask);
+	
+	/**
+	* @returns The collision query mask of this renderable
+	*/
 	unsigned int GetCollisionQueryMask() const;
+	
+	/**
+	* Controls whether this renderable casts shadows
+	* @param castShadow Whether this renderable casts shadow 
+	*/		
 	void SetCastShadow(bool castShadow);
+	
+	/**
+	* @returns Whether this renderable casts shadow 
+	*/
 	bool GetCastShadow() const;
+	
+	/**
+	* Controls whether this renderable receives shadows
+	* @param receiveShadow Whether this renderable receives shadows
+	*/
 	void SetReceiveShadow(bool receiveShadow);
-	bool GetReceiveShadow() const;	
+	
+	/**
+	* @returns Whether this renderable recevies shadows
+	*/
+	bool GetReceiveShadow() const;
+	
+	/**
+	* Sets the light mask of this renderable
+	* @param lightMask The light mask
+	*/
 	void SetLightMask(unsigned int lightMask);
+	
+	/**
+	* @returns The light mask of this renderable
+	*/
 	unsigned int GetLightMask() const;
-
+	
+	/**
+	* Intersects a ray with this renderable
+	* @param rayQuery The ray query object where the ray itself and the intersection results are stored
+	*/
 	virtual void IntersectRay(RayQuery &rayQuery);
+	
+	/**
+	* Updates the transformation of the renderable parts
+	*/
 	virtual void UpdateRenderableParts();
-	virtual void NodeChanged();	
+	
+	/**
+	* This function is called when the node owning this component is changed
+	*/
+	virtual void NodeChanged();
+	
+	/**
+	* This function is called when the scene containing the node which owns this component changes
+	* @param oldScene The previous scene this component was in
+	*/	
 	virtual void SceneChanged(Scene *oldScene);
+	
+	/**
+	* This function is called when the renderable is enabled / disabled 
+	*/
 	virtual void EnabledChanged();
+	
+	/**
+	* This function is called when the node's owninig this renderable transformation has changed 
+	*/
 	virtual void MarkedDirty();
+	
+	/**
+	* Renders debug geometry of this renderable
+	* @param debugRenderer The debug renderer
+	*/
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
 	
+	// Functions implementing the interface needed to be able to insert renderables into an octree
 	OctreeNode<Renderable> *GetOctreeNode();
 	void SetOctreeNode(OctreeNode<Renderable> *octreeNode);
 	bool GetOctreeNodeNeedsUpdate() const;
