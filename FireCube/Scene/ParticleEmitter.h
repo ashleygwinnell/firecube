@@ -37,14 +37,14 @@ public:
 	virtual void IntersectRay(RayQuery &rayQuery);
 	
 	/**
-	* Resets the partice emitter to its initial state
+	* Resets the particle emitter to its initial state
 	*/
 	void Reset();
 	
 	/**
 	* Clones this particle emitter
 	*/
-virtual Component *Clone() const;
+	virtual Component *Clone() const;
 	
 	/**
 	* Sets the material to use the render the particles
@@ -69,7 +69,7 @@ virtual Component *Clone() const;
 	void SetBoxEmitter(vec3 box);
 	
 	/**
-	* Sets the emiitting shape to a sphere
+	* Sets the emitting shape to a sphere
 	* @param radius The radius of the sphere
 	*/
 	void SetSphereEmitter(float radius);

@@ -23,6 +23,7 @@ enum class LightType
 class FIRECUBE_API Light : public Component
 {
 	FIRECUBE_OBJECT(Light)
+	friend class Scene;
 public:
 	Light(Engine *engine);
 	/**
@@ -69,10 +70,7 @@ public:
 	/**
 	* @returns The spot cut off angle
 	*/	
-	float GetSpotCutOff() const;
-	
-	
-	void SetScene(Scene *scene);
+	float GetSpotCutOff() const;			
 
 	/**
 	* @returns The camera of this light (used to render the scene using the light's point of view for shadow mapping)

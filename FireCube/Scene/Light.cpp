@@ -81,11 +81,6 @@ void Light::SceneChanged(Scene *oldScene)
 	}	
 }
 
-void Light::SetScene(Scene *scene)
-{
-	this->scene = scene;
-}
-
 Camera *Light::GetCamera()
 {
 	return camera;

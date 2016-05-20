@@ -139,10 +139,10 @@ public:
 	* @returns The distance of the bottom plane from the camera
 	*/
 	float GetBottomPlane() const;
-
-	virtual void MarkedDirty();
-	virtual void NodeChanged();
-	virtual void SceneChanged(Scene *oldScene);
+	
+	/**
+	* Clones this component
+	*/
 	virtual Component *Clone() const;
 protected:
 	
@@ -152,6 +152,10 @@ protected:
 	* Calculated the frustum of this camera.
 	*/
 	void UpdateFrustum();	
+
+	virtual void MarkedDirty();
+	virtual void NodeChanged();
+	virtual void SceneChanged(Scene *oldScene);
 
 	/** a boolean indicating the view matrix has changed.*/
 	bool viewMatrixChanged;

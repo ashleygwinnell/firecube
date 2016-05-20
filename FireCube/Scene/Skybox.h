@@ -13,9 +13,7 @@ class FIRECUBE_API Skybox : public Renderable
 	FIRECUBE_OBJECT(Skybox)
 public:
 	Skybox(Engine *engine);
-	Skybox(const Skybox &other);
-
-	virtual void UpdateWorldBoundingBox();
+	Skybox(const Skybox &other);	
 	
 	/**
 	* Sets the material to use when rendering the box
@@ -27,6 +25,8 @@ public:
 	* Clones this component
 	*/
 	Component *Clone() const;
+protected:
+	virtual void UpdateWorldBoundingBox();
 private:
 };
 

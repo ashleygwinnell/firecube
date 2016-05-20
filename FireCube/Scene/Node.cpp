@@ -337,11 +337,6 @@ void Node::RemoveComponent(Component *component)
 	}
 }
 
-void Node::SetScene(Scene *scene)
-{
-	this->scene = scene;
-}
-
 Scene *Node::GetScene() const
 {
 	return scene;

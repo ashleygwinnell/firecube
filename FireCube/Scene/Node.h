@@ -35,6 +35,7 @@ class FIRECUBE_API Node : public Object
 {
 	FIRECUBE_OBJECT(Node)
 	friend class RenderQueue;
+	friend class Scene;
 public:	
 	Node(Engine *engine);
 
@@ -211,9 +212,7 @@ public:
 	* Removes a component
 	* @param component The component to remove
 	*/
-	void RemoveComponent(Component *component);
-	
-	void SetScene(Scene *scene);
+	void RemoveComponent(Component *component);	
 	
 	/**
 	* @returns the scene this node belongs to

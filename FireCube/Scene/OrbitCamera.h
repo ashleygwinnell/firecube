@@ -112,9 +112,7 @@ public:
 	* Sets the zoom factor for the camera. Controls the speed of zooming in / out is
 	* @param factor The zoom factor
 	*/
-	void SetZoomFactor(float factor);
-
-	void HandleInput(float time, const MappedInput &input);
+	void SetZoomFactor(float factor);	
 
 	static void AddInputManagerMappings(InputManager &inputManager);
 	
@@ -122,6 +120,7 @@ public:
 	* Clones this camera
 	*/
 	virtual Component *Clone() const;
+
 private:
 
 	OrbitCamera(const OrbitCamera &other);
@@ -129,6 +128,7 @@ private:
 	static bool addedInputMapping;
 	void CheckRanges();
 	void UpdateNode();
+	void HandleInput(float time, const MappedInput &input);
 	vec3 rotation;	
 	float distance;
 	float minDistance;

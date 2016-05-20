@@ -20,33 +20,12 @@ class DebugRenderer;
 class Scene : public Object
 {
 	FIRECUBE_OBJECT(Scene)
+	friend class Renderable;
+	friend class Light;
+	friend class Frame;
 public:
 	Scene(Engine *engine);
-	~Scene();
-	
-	/**
-	* Adds a renderable to the scene
-	* @param renderable The renderable to add
-	*/
-	void AddRenderable(Renderable *renderable);
-	
-	/**
-	* Removes a renderable from the scene
-	* @param renderable The renderable to remove
-	*/
-	void RemoveRenderable(Renderable *renderable);
-	
-	/**
-	* Adds a light to the scene
-	* @param light The light to add
-	*/
-	void AddLight(Light *light);
-	
-	/**
-	* Removes a light from the scene
-	* @param light The light to remove
-	*/
-	void RemoveLight(Light *light);
+	~Scene();			
 	
 	/**
 	* Sets the ambient color to use when rendering the scene
@@ -87,16 +66,12 @@ public:
 	/**
 	* @returns the root node of the scene graph
 	*/
-	Node *GetRootNode();
-	std::vector<Renderable *> &GetRenderables();
-	std::vector<Light *> &GetLights();	
-	void UpdateRenderables();
+	Node *GetRootNode();	
 	
 	/**
 	* @returns Whether fog is enabled
 	*/
 	bool GetFogEnabled() const;	
-	
 	
 	/**
 	* @returns The fog parameters
@@ -106,11 +81,39 @@ public:
 	/**
 	* @returns The ambient color of the scene
 	*/
-	vec3 GetAmbientColor() const;
-		
-	Octree<Renderable> &GetOctree();
+	vec3 GetAmbientColor() const;			
 	
-private:		
+private:	
+
+	/**
+	* Adds a renderable to the scene
+	* @param renderable The renderable to add
+	*/
+	void AddRenderable(Renderable *renderable);
+	
+	/**
+	* Removes a renderable from the scene
+	* @param renderable The renderable to remove
+	*/
+	void RemoveRenderable(Renderable *renderable);
+
+	/**
+	* Adds a light to the scene
+	* @param light The light to add
+	*/
+	void AddLight(Light *light);
+
+	/**
+	* Removes a light from the scene
+	* @param light The light to remove
+	*/
+	void RemoveLight(Light *light);
+
+	std::vector<Renderable *> &GetRenderables();
+	std::vector<Light *> &GetLights();
+	void UpdateRenderables();
+
+	Octree<Renderable> &GetOctree();
 	
 	Node rootNode;	
 	std::vector<Renderable *> renderables;

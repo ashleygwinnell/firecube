@@ -25,11 +25,6 @@ const std::vector<RenderablePart> &Renderable::GetRenderableParts() const
 	return renderableParts;
 }
 
-void Renderable::SetScene(Scene *scene)
-{
-	this->scene = scene;
-}
-
 void Renderable::SetCollisionQueryMask(unsigned int collisionQueryMask)
 {
 	this->collisionQueryMask = collisionQueryMask;

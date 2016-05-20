@@ -28,15 +28,7 @@ public:
 	* Intersects the model with a ray
 	* @param rayQuery The ray query to use
 	*/
-	virtual void IntersectRay(RayQuery &rayQuery);
-	
-	virtual void UpdateRenderableParts();
-	
-	/**
-	* Updates the animation
-	* @param time The time passed
-	*/
-	void Update(float time);
+	virtual void IntersectRay(RayQuery &rayQuery);			
 	
 	/**
 	* Sets the animation index to play
@@ -48,7 +40,7 @@ public:
 	* Clones this component
 	*/
 	virtual Component *Clone() const;
-protected:
+private:
 
 	AnimatedModel(const AnimatedModel &other);
 
@@ -67,6 +59,14 @@ protected:
 	void CalcInterpolatedPosition(vec3 &out, float animationTime, NodeAnimation &nodeAnim);
 	void CalcInterpolatedRotation(quat &out, float animationTime, NodeAnimation &nodeAnim);
 	void CalcInterpolatedScaling(vec3 &out, float animationTime, NodeAnimation &nodeAnim);
+
+	virtual void UpdateRenderableParts();
+	
+	/**
+	* Updates the animation
+	* @param time The time passed
+	*/
+	void Update(float time);
 
 	std::vector<BoundingBox> boundingBoxes;
 	std::vector<SharedPtr<Geometry>> geometries;

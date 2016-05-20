@@ -19,17 +19,21 @@ using namespace FireCube;
 
 Scene::Scene(Engine *engine) : Object(engine), ambientColor(0.1f), fogEnabled(false), rootNode(engine), fogColor(1.0f), octree(engine, vec3(2000), 8)
 {
-	rootNode.SetScene(this);
+	rootNode.scene = this;
 }
 
 Scene::~Scene()
 {
-	for (auto renderable : renderables)
+	auto renderablesCopy = renderables;
+
+	for (auto renderable : renderablesCopy)
 	{
 		renderable->SetScene(nullptr);
 	}
 
-	for (auto light : lights)
+	auto lightsCopy = lights;
+
+	for (auto light : lightsCopy)
 	{
 		light->SetScene(nullptr);
 	}

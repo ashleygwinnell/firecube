@@ -47,6 +47,7 @@ public:
 	* @param material The material to set
 	*/
 	void SetMaterial(Material *material);
+
 protected:
 
 	StaticModel(const StaticModel &other);
