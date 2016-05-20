@@ -5,13 +5,12 @@
 
 using namespace FireCube;
 
-Renderable::Renderable(Engine *engine) : Component(engine), worldBoundingBoxChanged(true), collisionQueryMask(0xFFFFFFFF), castShadow(true), receiveShadow(true), lightMask(0xFFFFFFFF), 
-										 octreeNode(nullptr), octreeNodeNeedsUpdate(false)
+Renderable::Renderable(Engine *engine) : Component(engine), worldBoundingBoxChanged(true), collisionQueryMask(0xFFFFFFFF), castShadow(true), receiveShadow(true), lightMask(0xFFFFFFFF)										 
 {
 }
 
 Renderable::Renderable(const Renderable &other) : Component(other), worldBoundingBoxChanged(true), collisionQueryMask(other.collisionQueryMask), lightMask(other.lightMask), castShadow(other.castShadow),
-												  receiveShadow(other.receiveShadow), octreeNode(nullptr), octreeNodeNeedsUpdate(false)
+												  receiveShadow(other.receiveShadow)
 {
 
 }
@@ -86,11 +85,8 @@ BoundingBox Renderable::GetWorldBoundingBox()
 }
 
 void Renderable::MarkedDirty()
-{
-	if (!octreeNodeNeedsUpdate && octreeNode)
-	{		
-		octreeNode->GetOctree()->QueueUpdate(this);
-	}
+{	
+	MarkForOctreeReinsertion();
 	worldBoundingBoxChanged = true;
 }
 
@@ -139,24 +135,4 @@ void Renderable::SetReceiveShadow(bool receiveShadow)
 bool Renderable::GetReceiveShadow() const
 {
 	return receiveShadow;
-}
-
-OctreeNode<Renderable> *Renderable::GetOctreeNode()
-{
-	return octreeNode;
-}
-
-void Renderable::SetOctreeNode(OctreeNode<Renderable> *octreeNode)
-{
-	this->octreeNode = octreeNode;
-}
-
-bool Renderable::GetOctreeNodeNeedsUpdate() const
-{
-	return octreeNodeNeedsUpdate;
-}
-
-void Renderable::SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate)
-{
-	this->octreeNodeNeedsUpdate = octreeNodeNeedsUpdate;
 }

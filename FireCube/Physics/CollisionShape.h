@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Math/Math.h"
+#include "Math/Octree.h"
 #include "Core/Component.h"
 #include "Core/Memory.h"
 #include "Math/Plane.h"
@@ -9,8 +10,6 @@
 namespace FireCube
 {
 
-template <class T>
-class OctreeNode;
 class PhysicsWorld;
 class Mesh;
 class SkeletonNode;
@@ -40,7 +39,7 @@ public:
 /**
 * This class represents a collision shape component
 */
-class CollisionShape : public Component
+class CollisionShape : public Component, public OctreeItem<CollisionShape>
 {
 	FIRECUBE_OBJECT(CollisionShape)
 public:
@@ -134,12 +133,6 @@ public:
 	*/
 	bool IsOwnedByRigidBody() const;
 
-	// Functions implemented to enabled placing shapes inside an octree 
-	OctreeNode<CollisionShape> *GetOctreeNode();
-	void SetOctreeNode(OctreeNode<CollisionShape> *octreeNode);
-	bool GetOctreeNodeNeedsUpdate() const;
-	void SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate);
-
 private:
 	
 	CollisionShape(const CollisionShape &other);
@@ -164,9 +157,6 @@ private:
 
 	bool ownedByRigidBody;
 
-	OctreeNode<CollisionShape> *octreeNode;
-	bool octreeNodeNeedsUpdate;
-	
 };
 
 }

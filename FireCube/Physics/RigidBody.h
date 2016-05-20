@@ -2,6 +2,7 @@
 
 #include "Core/Component.h"
 #include "Math/Math.h"
+#include "Math/Octree.h"
 #include "Math/BoundingBox.h"
 
 namespace FireCube
@@ -17,7 +18,7 @@ enum class RigidBodyType
 	DYNAMIC, STATIC
 };
 
-class RigidBody : public Component
+class RigidBody : public Component, public OctreeItem<RigidBody>
 {
 	friend PhysicsWorld;
 	FIRECUBE_OBJECT(RigidBody)
@@ -63,11 +64,7 @@ public:
 	std::vector<CollisionShape *> &GetCollisionShapes();
 	void UpdateCollisionShapes();
 	BoundingBox GetWorldBoundingBox();
-
-	OctreeNode<RigidBody> *GetOctreeNode();
-	void SetOctreeNode(OctreeNode<RigidBody> *octreeNode);
-	bool GetOctreeNodeNeedsUpdate() const;
-	void SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate);
+	
 private:
 
 	RigidBody(const RigidBody &other);
@@ -92,9 +89,7 @@ private:
 	vec3 position;
 	BoundingBox worldBoundingBox;
 	bool worldBoundingBoxChanged;
-
-	OctreeNode<RigidBody> *octreeNode;
-	bool octreeNodeNeedsUpdate;
+	
 public:
 	vec3 vlambda;
 	vec3 wlambda;

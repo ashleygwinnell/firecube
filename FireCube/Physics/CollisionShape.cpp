@@ -23,14 +23,13 @@ CollisionTriangle::CollisionTriangle(vec3 p0, vec3 p1, vec3 p2) : p0(p0), p1(p1)
 
 }
 
-CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld(nullptr), worldBoundingBoxChanged(false), isTrigger(false), collisionMesh(nullptr),
-	octreeNode(nullptr), octreeNodeNeedsUpdate(false), ownedByRigidBody(false)
+CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld(nullptr), worldBoundingBoxChanged(false), isTrigger(false), collisionMesh(nullptr), ownedByRigidBody(false)
 {
 
 }
 
 CollisionShape::CollisionShape(const CollisionShape &other) : Component(other), worldBoundingBoxChanged(true), type(other.type), physicsWorld(other.physicsWorld), collisionMesh(other.collisionMesh), plane(other.plane),
-															  box(other.box), isTrigger(other.isTrigger), octreeNode(nullptr), octreeNodeNeedsUpdate(false), ownedByRigidBody(other.ownedByRigidBody)
+															  box(other.box), isTrigger(other.isTrigger), ownedByRigidBody(other.ownedByRigidBody)
 {
 	
 }
@@ -47,11 +46,7 @@ CollisionShapeType CollisionShape::GetShapeType() const
 
 void CollisionShape::MarkedDirty()
 {
-	// Update shape (if scale changed)
-	if (!octreeNodeNeedsUpdate && octreeNode)
-	{
-		octreeNode->GetOctree()->QueueUpdate(this);
-	}
+	MarkForOctreeReinsertion();
 	worldBoundingBoxChanged = true;
 }
 
@@ -318,26 +313,6 @@ BoundingBox CollisionShape::GetBox() const
 float CollisionShape::GetRadius() const
 {
 	return radius;
-}
-
-OctreeNode<CollisionShape> *CollisionShape::GetOctreeNode()
-{
-	return octreeNode;
-}
-
-void CollisionShape::SetOctreeNode(OctreeNode<CollisionShape> *octreeNode)
-{
-	this->octreeNode = octreeNode;
-}
-
-bool CollisionShape::GetOctreeNodeNeedsUpdate() const
-{
-	return octreeNodeNeedsUpdate;
-}
-
-void CollisionShape::SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate)
-{
-	this->octreeNodeNeedsUpdate = octreeNodeNeedsUpdate;
 }
 
 void CollisionShape::SetOwnedByRigidBody(bool ownedByRigidBody)

@@ -6,13 +6,12 @@
 #include "Rendering/RenderQueue.h"
 #include "Math/BoundingBox.h"
 #include "Math/Ray.h"
+#include "Math/Octree.h"
 #include "Geometry/CollisionQuery.h"
 
 namespace FireCube
 {
 
-template <class T>
-class OctreeNode;
 class Geometry;
 class Scene;
 class DebugRenderer;
@@ -54,7 +53,7 @@ public:
 * This class is a base class for all renderable components. Child components should
 * fill the renderableParts member with appropriate renderable parts
 */
-class FIRECUBE_API Renderable : public Component
+class FIRECUBE_API Renderable : public Component, public OctreeItem<Renderable>
 {	
 	FIRECUBE_OBJECT(Renderable)
 	friend class Scene;
@@ -159,12 +158,6 @@ protected:
 	/**
 	* This function is called when the node's ownig this renderable transformation has changed
 	*/
-	
-	// Functions implementing the interface needed to be able to insert renderables into an octree
-	OctreeNode<Renderable> *GetOctreeNode();
-	void SetOctreeNode(OctreeNode<Renderable> *octreeNode);
-	bool GetOctreeNodeNeedsUpdate() const;
-	void SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate);
 	virtual void MarkedDirty();
 
 	std::vector<RenderablePart> renderableParts;
@@ -175,8 +168,6 @@ protected:
 	bool castShadow;
 	bool receiveShadow;
 
-	OctreeNode<Renderable> *octreeNode;
-	bool octreeNodeNeedsUpdate;
 private:
 
 };

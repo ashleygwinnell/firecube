@@ -4,7 +4,6 @@
 
 #include "Core/Object.h"
 #include "Utils/utils.h"
-#include "Scene/Renderable.h"
 #include "Math/Math.h"
 #include "Math/Frustum.h"
 #include "Math/Ray.h"
@@ -15,6 +14,9 @@ namespace FireCube
 
 template <class T>
 class FIRECUBE_API Octree;
+
+template <class T>
+class FIRECUBE_API OctreeItem;
 
 template <class T>
 class FIRECUBE_API OctreeNode
@@ -48,7 +50,7 @@ public:
 	}
 
 
-	bool Insert(T *object, const BoundingBox &boundingBox)
+	bool Insert(OctreeItem<T> *object, const BoundingBox &boundingBox)
 	{
 		bool addedToChild = false;
 		auto size = boundingBox.GetSize();
@@ -95,7 +97,7 @@ public:
 		{
 			for (auto object : this->objects)
 			{
-				objects.push_back(object);
+				objects.push_back(static_cast<T *>(object));
 			}
 
 			for (auto child : children)
@@ -115,7 +117,7 @@ public:
 		{
 			for (auto object : this->objects)
 			{
-				objects.push_back(object);
+				objects.push_back(static_cast<T *>(object));
 			}
 
 			for (auto child : children)
@@ -134,7 +136,7 @@ public:
 		{
 			for (auto object : this->objects)
 			{
-				objects.push_back(object);
+				objects.push_back(static_cast<T *>(object));
 			}
 
 			for (auto child : children)
@@ -182,12 +184,55 @@ private:
 	BoundingBox cullingBox;
 	vec3 halfSize;
 	vec3 center;
-	std::vector<T *> objects;
+	std::vector<OctreeItem<T> *> objects;
 	std::array<OctreeNode<T> *, 8> children;
 	OctreeNode *root;
 	Octree<T> *octree;
 	unsigned int level;
 };
+
+template <class T>
+class FIRECUBE_API OctreeItem
+{
+public:
+
+	OctreeItem() : octreeNode(nullptr), octreeNodeNeedsUpdate(false)
+	{
+
+	}
+	
+	OctreeNode<T> *GetOctreeNode()
+	{
+		return octreeNode;
+	}
+
+	void SetOctreeNode(OctreeNode<T> *octreeNode)
+	{
+		this->octreeNode = octreeNode;
+	}
+
+	bool GetOctreeNodeNeedsUpdate() const
+	{
+		return octreeNodeNeedsUpdate;
+	}
+
+	void SetOctreeNodeNeedsUpdate(bool octreeNodeNeedsUpdate)
+	{
+		this->octreeNodeNeedsUpdate = octreeNodeNeedsUpdate;
+	}
+
+	void MarkForOctreeReinsertion()
+	{
+		if (!octreeNodeNeedsUpdate && octreeNode)
+		{
+			octreeNode->GetOctree()->QueueUpdate(this);
+		}
+	}
+
+	OctreeNode<T> *octreeNode;
+	bool octreeNodeNeedsUpdate;
+};
+
 
 template <class T>
 class FIRECUBE_API Octree : public Object
@@ -204,14 +249,14 @@ public:
 		delete root;
 	}
 
-	void Insert(T *object)
+	void Insert(OctreeItem<T> *object)
 	{
-		auto boundingBox = object->GetWorldBoundingBox();
+		auto boundingBox = static_cast<T *>(object)->GetWorldBoundingBox();
 		auto size = boundingBox.GetSize();
-		root->Insert(object, object->GetWorldBoundingBox());
+		root->Insert(object, boundingBox);
 	}
 
-	void Remove(T *object)
+	void Remove(OctreeItem<T> *object)
 	{
 		if (object->GetOctreeNode()->GetOctree() == this)
 		{
@@ -241,7 +286,7 @@ public:
 		root->GetObjects(boundingBox, objects);
 	}
 
-	void QueueUpdate(T *object)
+	void QueueUpdate(OctreeItem<T> *object)
 	{
 		pendingUpdate.push_back(object);
 		object->SetOctreeNodeNeedsUpdate(true);
@@ -270,7 +315,7 @@ public:
 
 private:
 	OctreeNode<T> *root;
-	std::vector<T *> pendingUpdate;
+	std::vector<OctreeItem<T> *> pendingUpdate;
 	unsigned int maxLevel;
 };
 
