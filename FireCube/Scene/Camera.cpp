@@ -23,7 +23,14 @@ mat4 Camera::GetProjectionMatrix()
 		projectionMatrixChanged = false;
 		if (orthographic)
 		{
-			projectionMatrix.GenerateOrthographic(leftPlane, rightPlane, bottomPlane / aspectRatio, topPlane / aspectRatio, nearPlane, farPlane);
+			if (aspectRatio >= 1.0f)
+			{
+				projectionMatrix.GenerateOrthographic(leftPlane * aspectRatio, rightPlane * aspectRatio, bottomPlane, topPlane, nearPlane, farPlane);
+			}
+			else
+			{
+				projectionMatrix.GenerateOrthographic(leftPlane, rightPlane, bottomPlane / aspectRatio, topPlane / aspectRatio, nearPlane, farPlane);
+			}
 		}
 		else
 		{
