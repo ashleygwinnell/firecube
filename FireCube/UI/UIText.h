@@ -13,12 +13,15 @@ class FIRECUBE_API UIText : public UIElement
 public:
 	UIText(Engine *engine, UIElement *parent);
 	~UIText();	
-	virtual void GetParts(std::vector<UIPart> &parts, std::vector<UIVertex> &vertexData);
+	
 	void SetFontFace(FontFace *fontFace);
 	void SetText(const std::string &text);
 	void SetColor(vec4 color);
 	vec4 GetColor() const;
 private:
+
+	virtual void GetParts(std::vector<UIPart> &parts, std::vector<UIVertex> &vertexData) override;
+
 	FontFace *fontFace;	
 	std::string text;
 	std::vector<UIVertex> vertexData;

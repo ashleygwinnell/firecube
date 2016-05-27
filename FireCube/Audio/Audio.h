@@ -11,31 +11,20 @@ class SoundEmitter;
 
 class FIRECUBE_API Audio
 {
+	friend class SoundEmitter;
 public:
 	Audio();
 	~Audio();
 
 	/**
-	* Initializes the audio sytsem
+	* Initializes the audio system
 	*/
 	void Init();
 	
 	/**
 	* Starts playback
 	*/
-	void Play();
-	
-	/**
-	* Adds a sound emitter
-	* @param soundEmitter The sounds emitter	
-	*/
-	void AddSoundEmitter(SoundEmitter *soundEmitter);
-	
-	/**
-	* Removes a sound emitter
-	* @param soundEmitter The sound emitter
-	*/
-	void RemoveSoundEmitter(SoundEmitter *soundEmitter);
+	void Play();		
 	
 	/**
 	* Main mixing function.
@@ -46,9 +35,22 @@ public:
 	* Returns the sample size in bytes (2 for mono, 4 for stereo)
 	*/
 	unsigned int GetSampleSize() const;
-	
+		
+private:
+
+	/**
+	* Adds a sound emitter
+	* @param soundEmitter The sounds emitter
+	*/
+	void AddSoundEmitter(SoundEmitter *soundEmitter);
+
+	/**
+	* Removes a sound emitter
+	* @param soundEmitter The sound emitter
+	*/
+	void RemoveSoundEmitter(SoundEmitter *soundEmitter);
+
 	std::mutex &GetMutex();
-private:	
 	
 	unsigned int deviceId;
 	bool isPlaying;

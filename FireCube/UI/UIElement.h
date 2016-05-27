@@ -9,14 +9,16 @@ namespace FireCube
 {
 
 class Renderer;
+class UI;
 
 class FIRECUBE_API UIElement : public Object
 {
+	friend class UI;
 	FIRECUBE_OBJECT(UIElement);
 public:
 	UIElement(Engine *engine, UIElement *parent);
 	virtual ~UIElement();
-	virtual void GetParts(std::vector<UIPart> &parts, std::vector<UIVertex> &vertexData) {}
+	
 	std::vector<UIElement *> &GetChildren();
 	void SetPosition(vec2 position);
 	vec2 GetPosition() const;
@@ -31,6 +33,7 @@ public:
 	
 protected:
 	void SetPositionChanged();
+	virtual void GetParts(std::vector<UIPart> &parts, std::vector<UIVertex> &vertexData) {}
 
 	vec2 position;
 	vec2 screenPosition;

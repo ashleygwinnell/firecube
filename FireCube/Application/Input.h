@@ -146,7 +146,16 @@ public:
 	* @param analogInput The type of the analog input.
 	* @param name The name of the mapping.
 	*/
-	void RemoveMapping(AnalogInput analogInput, const std::string &name);
+	void RemoveMapping(AnalogInput analogInput, const std::string &name);			
+	
+private:
+	class InputMapping
+	{
+	public:
+		InputMappingType inputMappingType;
+		std::string actionName;
+		KeyModifier modifier;
+	};
 
 	/**
 	* This function is used internally to provide key state from the underlying input system(OS).
@@ -163,17 +172,10 @@ public:
 	* @param value The value of this analog input.
 	*/
 	void SetRawAnalogValue(AnalogInput analogInput, float value);
-	
-	const MappedInput &GetMappedInput() const;
+
 	void ResetInputState();
-private:
-	class InputMapping
-	{
-	public:
-		InputMappingType inputMappingType;
-		std::string actionName;
-		KeyModifier modifier;
-	};
+	const MappedInput &GetMappedInput() const;
+
 	std::map<Key, std::vector<InputMapping>> mappedKeys;
 	std::map<AnalogInput, std::vector<std::string>> mappedAnalogs;	
 	std::vector<Key> pressedKeys;
