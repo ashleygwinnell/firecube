@@ -494,6 +494,7 @@ void Frame::RenderShadowMap(Renderer *renderer, Light *light, RenderQueue &queue
 	if (!renderTarget)
 		return;
 
+	renderTarget->ResetUseTimer();
 	renderer->SetDepthSurface(renderTarget);
 	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
 		renderer->SetRenderTarget(i, nullptr);

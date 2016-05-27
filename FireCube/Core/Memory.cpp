@@ -43,3 +43,8 @@ RefCount *RefCounted::GetRefCountObject()
 {
 	return refCount;
 }
+
+int RefCounted::GetRefCount() const
+{
+	return refCount->refs;
+}

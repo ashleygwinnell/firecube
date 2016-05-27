@@ -12,6 +12,8 @@ class FIRECUBE_API Timer
 {
 public:
 
+	Timer();
+
     /**
     * Initializes the timer.
     */
@@ -25,10 +27,10 @@ public:
     /**
     * Returns the time that has passed since the last call to Update() in seconds.
     */
-    double Passed();
+    float Passed() const;
 private:
     LARGE_INTEGER now;
-    LARGE_INTEGER temp;
+    
     double res;
 };
 }

@@ -255,7 +255,12 @@ public:
 	* Renders all scene views
 	*/
 	void Render();
+
+	void RemoveUnusedRenderSurfaces();
+
 private:
+
+	const float MAX_UNUSED_RENDERSURFACE_DURATION = 1.0f;
 
 	/**
 	* Uses a frame buffer.

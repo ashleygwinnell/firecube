@@ -23,6 +23,8 @@ public:
 	void AddRef();
 	void ReleaseRef();
 	RefCount *GetRefCountObject();
+	int GetRefCount() const;
+
 private:
 	RefCount *refCount;
 };

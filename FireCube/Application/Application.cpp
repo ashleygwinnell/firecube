@@ -87,7 +87,6 @@ bool Application::InitializeNoWindow()
 	engine->SetLuaState(luaState);
 	Logger::Init("log.txt");
 	LOGINFO("Initializing application");	
-	timer.Init();
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	srand(GetTickCount());

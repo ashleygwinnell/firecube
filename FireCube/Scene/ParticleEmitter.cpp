@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include <sstream>
 
 #include "Scene/ParticleEmitter.h"

@@ -2,6 +2,13 @@
 
 using namespace FireCube;
 
+
+
+Timer::Timer()
+{
+	Init();
+}
+
 void Timer::Init()
 {
     LARGE_INTEGER freq;
@@ -15,8 +22,9 @@ void Timer::Update()
     QueryPerformanceCounter(&now);
 }
 
-double Timer::Passed()
+float Timer::Passed() const
 {
+	LARGE_INTEGER temp;
     QueryPerformanceCounter(&temp);
-    return (temp.QuadPart - now.QuadPart) * res;
+    return (float) ((temp.QuadPart - now.QuadPart) * res);
 }

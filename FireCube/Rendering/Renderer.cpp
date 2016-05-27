@@ -527,7 +527,10 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 
 	auto i = renderSurfaces.find(key);
 	if (i != renderSurfaces.end())
+	{
+		i->second->ResetUseTimer();
 		return i->second;
+	}
 
 	SharedPtr<RenderSurface> renderSurface(new RenderSurface(this, type));
 	if (type == RenderSurfaceType::COLOR)
@@ -557,6 +560,7 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 		renderSurface->SetLinkedTexture(texture);		
 	}
 	renderSurfaces[key] = renderSurface;
+	renderSurface->ResetUseTimer();
 	return renderSurface;
 }
 
@@ -681,6 +685,25 @@ void Renderer::Render()
 		{
 			renderSurface->GetLinkedTexture()->GenerateMipMaps();	
 		}
+	}
 
+	RemoveUnusedRenderSurfaces();
+}
+
+void Renderer::RemoveUnusedRenderSurfaces()
+{
+	for (auto i = renderSurfaces.begin(); i != renderSurfaces.end();)
+	{
+		auto renderSurface = i->second.Get();
+
+		// Check if the render surface is reference only by the Renderer and if it was unused for long enough
+		if (renderSurface->GetRefCount() == 1 && renderSurface->GetLastUsed() > MAX_UNUSED_RENDERSURFACE_DURATION)
+		{
+			i = renderSurfaces.erase(i);
+		}
+		else
+		{
+			++i;
+		}
 	}
 }

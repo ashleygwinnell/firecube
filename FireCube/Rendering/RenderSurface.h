@@ -5,6 +5,7 @@
 #include "Core/Memory.h"
 #include "Rendering/Texture.h"
 #include "Rendering/RenderingTypes.h"
+#include "Utils/Timer.h"
 
 namespace FireCube
 {
@@ -53,11 +54,16 @@ public:
 	* @returns The render surface type
 	*/
 	RenderSurfaceType GetRenderSurfaceType() const;
+
+	float GetLastUsed() const;
+
+	void ResetUseTimer();
 private:
 	int width;
 	int height;
 	SharedPtr<Texture> linkedTexture;
 	RenderSurfaceType type;
+	Timer useTimer;
 };
 
 }

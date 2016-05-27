@@ -56,3 +56,13 @@ RenderSurfaceType RenderSurface::GetRenderSurfaceType() const
 {
 	return type;
 }
+
+float RenderSurface::GetLastUsed() const
+{
+	return useTimer.Passed();
+}
+
+void RenderSurface::ResetUseTimer()
+{
+	useTimer.Update();
+}
