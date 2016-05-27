@@ -53,7 +53,7 @@ public:
 	*/
 	void SetVerticesSpacing(vec3 spacing);
 	void SetPatchSize(int patchSize);
-	virtual void MarkedDirty() {}
+	
 	void SetMaterial(Material *material);
 	void SetSmoothHeightMap(bool smoothHeightMap);
 	void SetGenerateHardNormals(bool generateHardNormals);
@@ -73,6 +73,8 @@ private:
 	vec3 GetNormalDiscrete(int x, int y);
 	void GenerateIndexBuffer();
 	void SmoothHeightMap();
+	virtual void MarkedDirty() {}
+
 	std::vector<float> heightData;
 	int patchSize;
 	int numVerticesX, numVerticesY;
