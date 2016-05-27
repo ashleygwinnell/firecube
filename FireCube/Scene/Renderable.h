@@ -156,7 +156,7 @@ protected:
 	virtual void NodeChanged();
 
 	/**
-	* This function is called when the node's ownig this renderable transformation has changed
+	* This function is called when the node's owning this renderable transformation has changed
 	*/
 	virtual void MarkedDirty();
 

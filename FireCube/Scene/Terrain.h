@@ -43,7 +43,7 @@ public:
 	
 	/**
 	* Creates the terrain from a height map
-	* @param image An image containig a gray scale heightmap. The dimensions of the image minus 1 must be divisible by the patch size
+	* @param image An image containing a gray scale heightmap. The dimensions of the image minus 1 must be divisible by the patch size
 	*/
 	void CreateFromHeightMap(Image *image);	
 	
