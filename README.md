@@ -4,20 +4,23 @@ FireCube
 Basic 3D Game engine.
    * Platform: Windows
    * Graphics: OpenGL
-   * Language: C++
+   * Language: C++, Lua
 
-Status:
-
-Currently only the basic framework of the engine is implemented. features so far are:
-   * 3DS, Collada, OBJ loading
+Features:
+   
    * Component based scene graph
+   * Configurable rendering pipeline with post-processing support
    * Per-pixel lighting
+   * Point, spot and directional lights
+   * Shadow mapping (for directional and spot lights) 
    * Shaders with automatic shader generation
-   * Resource pools
+   * Skeletal animation (with hardware skinning)
+   * GPU particle system
+   * Basic rigid body physics
+   * Character controller using CCD with auto stepping
+   * Scripting using Lua
+   * Scene editor
+   * Resource cache
    * Text rendering
    * Input system
    * Terrain
-
-TODO:
-   * Finish physics
-   * Better rendering pipeline(shaders, materials, etc...)
