@@ -14,6 +14,7 @@ namespace FireCube
 class LuaFile;
 class CharacterController;
 class CollisionShape;
+class LuaBindings;
 
 enum class ScriptFunction
 {
@@ -22,6 +23,7 @@ enum class ScriptFunction
 
 class FIRECUBE_API LuaScript : public Component
 {
+	friend class LuaBindings;
 	FIRECUBE_OBJECT(LuaScript);
 public:
 	LuaScript(Engine *engine);
@@ -29,7 +31,7 @@ public:
 	void CreateObject(LuaFile *luaFile, const std::string &objectName);
 	LuaFunction *GetFunction(const std::string &functionName);
 	LuaFunction *GetMemberFunction(const std::string &functionName);
-	void SubscribeToEventFromLua(const std::string &eventName, LuaIntf::LuaRef param);
+	
 	LuaFile *GetLuaFile();
 	std::string GetObjectName() const;
 
@@ -87,6 +89,7 @@ private:
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
 	void SetInitialProperties();
+	void SubscribeToEventFromLua(const std::string &eventName, LuaIntf::LuaRef param);
 
 	bool awakeCalled;
 	LuaFile *luaFile;
