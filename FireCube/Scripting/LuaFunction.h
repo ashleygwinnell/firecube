@@ -8,11 +8,18 @@
 namespace FireCube
 {
 
+/**
+* This class represnets a referne to a Lua function
+*/
 class FIRECUBE_API LuaFunction : public RefCounted
 {
 public:
 	LuaFunction(const LuaIntf::LuaRef &ref);
 	template<class... Args>
+	
+	/**
+	* Invokes the function
+	*/
 	void operator ()(Args&&... args)
 	{
 		try

@@ -266,42 +266,6 @@ float Terrain::GetHeight(vec2 pos)
 	}
 }
 
-/*
-vec3 Terrain::GetNormalDiscrete(int x, int y)
-{	
-	float baseHeight = GetHeightDiscrete(x, y);
-	float d0 = GetHeightDiscrete(x, y - 1);
-	float d1 = GetHeightDiscrete(x + 1, y - 1);
-	float d2 = GetHeightDiscrete(x + 1, y);
-	float d3 = GetHeightDiscrete(x + 1, y + 1);
-	float d4 = GetHeightDiscrete(x, y + 1);
-	float d5 = GetHeightDiscrete(x - 1, y + 1);
-	float d6 = GetHeightDiscrete(x - 1, y);
-	float d7 = GetHeightDiscrete(x - 1, y - 1);
-	float xx = (float) x;
-	float yy = (float) y;
-	vec3 b((xx + 0) * verticesSpacing.x, baseHeight, (yy + 0) * verticesSpacing.z);
-	vec3 v0((xx + 0) * verticesSpacing.x, d0, (yy - 1) * verticesSpacing.z);
-	vec3 v1((xx + 1) * verticesSpacing.x, d1, (yy - 1) * verticesSpacing.z);
-	vec3 v2((xx + 1) * verticesSpacing.x, d2, (yy + 0) * verticesSpacing.z);
-	vec3 v3((xx + 1) * verticesSpacing.x, d3, (yy + 1) * verticesSpacing.z);
-	vec3 v4((xx + 0) * verticesSpacing.x, d4, (yy + 1) * verticesSpacing.z);
-	vec3 v5((xx - 1) * verticesSpacing.x, d5, (yy + 1) * verticesSpacing.z);
-	vec3 v6((xx - 1) * verticesSpacing.x, d6, (yy + 0) * verticesSpacing.z);
-	vec3 v7((xx - 1) * verticesSpacing.x, d7, (yy - 1) * verticesSpacing.z);
-	vec3 n0 = Cross(v1 - b, v0 - b).Normalized();
-	vec3 n1 = Cross(v2 - b, v1 - b).Normalized();
-	vec3 n2 = Cross(v3 - b, v2 - b).Normalized();
-	vec3 n3 = Cross(v4 - b, v3 - b).Normalized();
-	vec3 n4 = Cross(v5 - b, v4 - b).Normalized();
-	vec3 n5 = Cross(v6 - b, v5 - b).Normalized();
-	vec3 n6 = Cross(v7 - b, v6 - b).Normalized();
-	vec3 n7 = Cross(v0 - b, v7 - b).Normalized();
-	vec3 n = (n0 + n1 + n2 + n3 + n4 + n5 + n6 + n7).Normalized();
-	return n;
-}*/
-
-
 vec3 Terrain::GetNormalDiscrete(int x, int y)
 {	
 	float baseHeight = GetHeightDiscrete(x, y);

@@ -52,14 +52,51 @@ public:
 	* @param spacing The spacing of the pixels. x, z determine the spacing between each pixel in the height map. y controls the height when the height map pixels are white
 	*/
 	void SetVerticesSpacing(vec3 spacing);
+	
+	/**
+	* Sets the patch size to use. The terrain is borken into rectangular patches of this size.
+	* @param patchSize The patch size to use
+	*/
 	void SetPatchSize(int patchSize);
 	
+	/**
+	* Sets the material to use for rendering the terrain
+	* @param material The material to use
+	*/	
 	void SetMaterial(Material *material);
+	
+	/**
+	* Controls whether to apply a smoothing filter on the height map
+	* @param smoothHeightMap Whether tp smooth the height map
+	*/
 	void SetSmoothHeightMap(bool smoothHeightMap);
+	
+	/**
+	* Controls whether to generate hard normals for the height map (smooth normals are generated otherwise)
+	* @param generateHardNormals Whether to generate hard normals
+	*/
 	void SetGenerateHardNormals(bool generateHardNormals);
+	
+	/**
+	* Returns the height of a given point on the height map. The point is given in world space with the origin being the center of the height map
+	* @param pos The point to query its height
+	*/
 	float GetHeight(vec2 pos);
+	
+	/**
+	* Returns the normal of the terrain of a given point. The point is given in world space with the origin being the center of the height map
+	* @param pos The point to query its normal
+	*/
 	vec3 GetNormal(vec2 pos);
+	
+	/**
+	* @returns the world size of the terrain along its width and depth	
+	*/
 	vec2 GetWorldSize() const;
+	
+	/**
+	* Clones the terrain
+	*/
 	virtual Component *Clone() const;
 private:
 
@@ -74,7 +111,7 @@ private:
 	void GenerateIndexBuffer();
 	void SmoothHeightMap();
 	virtual void MarkedDirty() {}
-
+	
 	std::vector<float> heightData;
 	int patchSize;
 	int numVerticesX, numVerticesY;
@@ -88,67 +125,5 @@ private:
 	bool generateHardNormals;
 	bool patchesCreated;
 };
-
-/*class Camera;
-typedef std::shared_ptr<Camera> CameraPtr;
-class Geometry;
-typedef std::shared_ptr<Geometry> GeometryPtr;
-class Engine;
-
-class FIRECUBE_API Terrain : public Object
-{	
-public:
-	Terrain(Engine *engine);
-	bool GenerateTerrain(const std::string &heightmap, vec3 sizeVertices, vec2 sizeUv, bool smoothNormals);
-	void Render(CameraPtr camera);
-	float GetHeight(vec2 pos);
-	int GetWidth();
-	int GetLength();
-	vec3 GetNormal(vec2 pos);
-	GeometryPtr GetGeometry();
-	BoundingBox GetBoundingBox() const;
-private:
-	class QuadTree
-	{
-	public:
-		class Node;
-		typedef std::shared_ptr<Node> NodePtr;
-		class Node
-		{
-		public:
-			typedef std::vector<vec2> FaceList;
-			typedef std::shared_ptr<FaceList> FaceListPtr;		
-			BoundingBox boundingBox;
-			FaceListPtr face;
-			std::vector<unsigned int> indices;
-			NodePtr child[4];
-		};
-		QuadTree();		
-		void Init(vec2 size, vec2 verticesSize);
-		void Build(float minSize, unsigned int maxNumberOfFaces);
-		unsigned int Render(CameraPtr camera, std::vector<unsigned int> &indicesToRender);
-		void RenderLines();
-		void Save(const std::string &filename);
-		void Load(const std::string &filename);
-	private:
-		void Load(const std::vector<unsigned char> &buffer, unsigned int &currentIndex, NodePtr node);
-		void Save(NodePtr node, std::ofstream &file);
-		void Build(NodePtr node, float minSize, unsigned int maxNumberOfFaces);
-		void BuildIndices(NodePtr node);
-		void Render(NodePtr node, CameraPtr camera, std::vector<unsigned int> &indicesToRender);
-		void RenderLines(NodePtr node);
-		NodePtr root;
-		vec2 size;		
-		vec2 aspect;
-		unsigned int currentIndex;	
-	};
-
-	GeometryPtr geometry;
-	QuadTree quadtree;
-	vec3 terrainScale;
-	Image heightmapImage;
-	unsigned int width, length;
-	BoundingBox boundingBox;
-};*/
 
 }

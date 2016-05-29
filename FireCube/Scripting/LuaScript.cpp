@@ -229,25 +229,25 @@ void LuaScript::SetInitialProperties()
 		switch (v.GetType())
 		{
 		case VariantType::BOOL:
-			SetField(propertyName, v.GetBool());
+			SetProperty(propertyName, v.GetBool());
 			break;
 		case VariantType::FLOAT:
-			SetField(propertyName, v.GetFloat());
+			SetProperty(propertyName, v.GetFloat());
 			break;
 		case VariantType::INT:
-			SetField(propertyName, v.GetInt());
+			SetProperty(propertyName, v.GetInt());
 			break;
 		case VariantType::VEC2:
-			SetField(propertyName, v.GetVec2());
+			SetProperty(propertyName, v.GetVec2());
 			break;
 		case VariantType::VEC3:
-			SetField(propertyName, v.GetVec3());
+			SetProperty(propertyName, v.GetVec3());
 			break;
 		case VariantType::VEC4:
-			SetField(propertyName, v.GetVec4());
+			SetProperty(propertyName, v.GetVec4());
 			break;
 		case VariantType::NONE:
-			SetField(propertyName, propertyValue);
+			SetProperty(propertyName, propertyValue);
 			break;
 		default:
 			break;

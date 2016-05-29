@@ -11,6 +11,9 @@ namespace FireCube
 class Renderer;
 class UI;
 
+/**
+* Base class for UI elements
+*/
 class FIRECUBE_API UIElement : public Object
 {
 	friend class UI;

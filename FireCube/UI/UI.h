@@ -27,13 +27,25 @@ public:
 	unsigned int count;
 };
 
+/**
+* This class is responsible for rendering UI
+*/
 class FIRECUBE_API UI : public Object
 {
 	FIRECUBE_OBJECT(UI);
 public:
 	UI(Engine *engine);
 	~UI();
+	
+	/**
+	* Renders the ui
+	* @param renderer The renderer to use
+	*/
 	void Render(Renderer *renderer);
+	
+	/**
+	* @returns the root UI element
+	*/
 	UIElement *GetRoot();
 private:
 	

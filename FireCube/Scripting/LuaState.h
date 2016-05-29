@@ -16,18 +16,30 @@ class Engine;
 class LuaFile;
 class LuaFunction;
 
+/**
+* The class encapsulated the Lua state
+*/
 class FIRECUBE_API LuaState : public Object
 {
 	FIRECUBE_OBJECT(LuaState)
 public:
 	LuaState(Engine *engine);
 	~LuaState();
-
+	
+	/**
+	* Exectues a Lua script file	
+	* @param luaFile The Lua file to execute
+	*/
 	void ExecuteFile(LuaFile *luaFile);
 	lua_State *GetState();
 	LuaFunction *GetFunction(const std::string &functionName);
 	LuaFunction *GetFunction(int index = -1);
 	
+	/**
+	* Registers a function
+	* @param name The name of the function
+	* @param function The function to register
+	*/
 	template <typename FN>
 	void AddFunction(const std::string &name, const FN &function)
 	{
