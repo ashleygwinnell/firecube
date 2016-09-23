@@ -45,8 +45,8 @@
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
 #include <wx/listctrl.h>
-#include <wx/statbmp.h>
 #include <wx/splitter.h>
+#include <wx/statbmp.h>
 #include <wx/toolbar.h>
 #include <wx/stc/stc.h>
 
@@ -621,8 +621,8 @@ class AssetBrowserPanel : public wxPanel
 		wxSplitterWindow* splitter2;
 		wxPanel* m_panel10;
 		wxListCtrl* fileListCtrl;
-		wxPanel* m_panel11;
-		wxStaticBitmap* texturePreviewBitmap;
+		wxPanel* previewPanel;
+		wxBoxSizer* previewPanelSizer;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void DirectoryTreeSelectionChanged( wxTreeEvent& event ) { event.Skip(); }
@@ -631,7 +631,6 @@ class AssetBrowserPanel : public wxPanel
 		virtual void FileListItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void FileListKeyDown( wxListEvent& event ) { event.Skip(); }
 		virtual void FileListRightUp( wxMouseEvent& event ) { event.Skip(); }
-		virtual void TexturePreviewBitmapResize( wxSizeEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -650,6 +649,27 @@ class AssetBrowserPanel : public wxPanel
 			splitter2->SetSashPosition( 2000 );
 			splitter2->Disconnect( wxEVT_IDLE, wxIdleEventHandler( AssetBrowserPanel::splitter2OnIdle ), NULL, this );
 		}
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class TexturePreviewPanel
+///////////////////////////////////////////////////////////////////////////////
+class TexturePreviewPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxStaticBitmap* texturePreviewBitmap;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void TexturePreviewBitmapResize( wxSizeEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		TexturePreviewPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
+		~TexturePreviewPanel();
 	
 };
 

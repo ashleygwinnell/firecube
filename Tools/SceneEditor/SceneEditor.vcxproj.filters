@@ -192,6 +192,9 @@
     <ClCompile Include="AuxGLCanvas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Panels\TexturePreviewPanelImpl.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -355,6 +358,9 @@
     </ClInclude>
     <ClInclude Include="AuxGLCanvas.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels\TexturePreviewPanelImpl.h">
+      <Filter>Panels</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

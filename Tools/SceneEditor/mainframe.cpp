@@ -1450,18 +1450,14 @@ AssetBrowserPanel::AssetBrowserPanel( wxWindow* parent, wxWindowID id, const wxP
 	m_panel10->SetSizer( bSizer581 );
 	m_panel10->Layout();
 	bSizer581->Fit( m_panel10 );
-	m_panel11 = new wxPanel( splitter2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer591;
-	bSizer591 = new wxBoxSizer( wxVERTICAL );
-	
-	texturePreviewBitmap = new wxStaticBitmap( m_panel11, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxSTATIC_BORDER );
-	bSizer591->Add( texturePreviewBitmap, 1, wxALL|wxEXPAND, 0 );
+	previewPanel = new wxPanel( splitter2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	previewPanelSizer = new wxBoxSizer( wxVERTICAL );
 	
 	
-	m_panel11->SetSizer( bSizer591 );
-	m_panel11->Layout();
-	bSizer591->Fit( m_panel11 );
-	splitter2->SplitVertically( m_panel10, m_panel11, 2000 );
+	previewPanel->SetSizer( previewPanelSizer );
+	previewPanel->Layout();
+	previewPanelSizer->Fit( previewPanel );
+	splitter2->SplitVertically( m_panel10, previewPanel, 2000 );
 	bSizer59->Add( splitter2, 1, wxEXPAND, 5 );
 	
 	
@@ -1482,7 +1478,6 @@ AssetBrowserPanel::AssetBrowserPanel( wxWindow* parent, wxWindowID id, const wxP
 	fileListCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( AssetBrowserPanel::FileListItemSelected ), NULL, this );
 	fileListCtrl->Connect( wxEVT_COMMAND_LIST_KEY_DOWN, wxListEventHandler( AssetBrowserPanel::FileListKeyDown ), NULL, this );
 	fileListCtrl->Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( AssetBrowserPanel::FileListRightUp ), NULL, this );
-	texturePreviewBitmap->Connect( wxEVT_SIZE, wxSizeEventHandler( AssetBrowserPanel::TexturePreviewBitmapResize ), NULL, this );
 }
 
 AssetBrowserPanel::~AssetBrowserPanel()
@@ -1494,7 +1489,29 @@ AssetBrowserPanel::~AssetBrowserPanel()
 	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( AssetBrowserPanel::FileListItemSelected ), NULL, this );
 	fileListCtrl->Disconnect( wxEVT_COMMAND_LIST_KEY_DOWN, wxListEventHandler( AssetBrowserPanel::FileListKeyDown ), NULL, this );
 	fileListCtrl->Disconnect( wxEVT_RIGHT_UP, wxMouseEventHandler( AssetBrowserPanel::FileListRightUp ), NULL, this );
-	texturePreviewBitmap->Disconnect( wxEVT_SIZE, wxSizeEventHandler( AssetBrowserPanel::TexturePreviewBitmapResize ), NULL, this );
+	
+}
+
+TexturePreviewPanel::TexturePreviewPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer38;
+	bSizer38 = new wxBoxSizer( wxVERTICAL );
+	
+	texturePreviewBitmap = new wxStaticBitmap( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer38->Add( texturePreviewBitmap, 1, wxALL|wxEXPAND, 0 );
+	
+	
+	this->SetSizer( bSizer38 );
+	this->Layout();
+	
+	// Connect Events
+	texturePreviewBitmap->Connect( wxEVT_SIZE, wxSizeEventHandler( TexturePreviewPanel::TexturePreviewBitmapResize ), NULL, this );
+}
+
+TexturePreviewPanel::~TexturePreviewPanel()
+{
+	// Disconnect Events
+	texturePreviewBitmap->Disconnect( wxEVT_SIZE, wxSizeEventHandler( TexturePreviewPanel::TexturePreviewBitmapResize ), NULL, this );
 	
 }
 
