@@ -173,6 +173,13 @@ void GLCanvas::Render()
 		init = true;
 		Init();
 	}	
+
+	int w, h;
+	GetClientSize(&w, &h);
+
+	engine->GetRenderer()->SetWidth(w);
+	engine->GetRenderer()->SetHeight(h);
+	engine->GetRenderer()->SetViewport(0, 0, w, h);
 	
 	engine->GetRenderer()->Render();
 	
