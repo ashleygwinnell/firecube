@@ -256,6 +256,11 @@ public:
 	*/
 	void Render();
 
+	/**
+	* Renders a single scene view
+	*/
+	void RenderSceneView(SceneView *sceneView);
+
 	void RemoveUnusedRenderSurfaces();
 
 private:

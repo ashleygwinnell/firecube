@@ -690,6 +690,20 @@ void Renderer::Render()
 	RemoveUnusedRenderSurfaces();
 }
 
+void Renderer::RenderSceneView(SceneView *sceneView)
+{
+	Frame frame(engine, sceneView->GetScene(), sceneView->GetCamera(), sceneView->GetRenderSurface(), sceneView->GetRenderPath());
+	frame.Render(this);
+
+	RenderSurface *renderSurface = sceneView->GetRenderSurface();
+	if (renderSurface && renderSurface->GetLinkedTexture() && renderSurface->GetLinkedTexture()->GetFiltering() == TextureFilter::MIPMAP)
+	{
+		renderSurface->GetLinkedTexture()->GenerateMipMaps();
+	}
+
+	RemoveUnusedRenderSurfaces();
+}
+
 void Renderer::RemoveUnusedRenderSurfaces()
 {
 	for (auto i = renderSurfaces.begin(); i != renderSurfaces.end();)
