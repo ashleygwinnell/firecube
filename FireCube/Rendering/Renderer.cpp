@@ -555,7 +555,7 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 		texture->SetHeight(height);
 		texture->SetFiltering(TextureFilter::NEAREST);
 		UseTexture(0, texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 		texture->SetWrapMode(TextureWrapMode::CLAMP_TO_EDGE);
 		renderSurface->SetLinkedTexture(texture);		
 	}
