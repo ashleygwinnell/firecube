@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FireCube", "FireCube\FireCube.vcxproj", "{66AD911D-22A7-415E-A8E1-C746E779E0F7}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -21,8 +21,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CharacterController", "Samp
 	ProjectSection(ProjectDependencies) = postProject
 		{66AD911D-22A7-415E-A8E1-C746E779E0F7} = {66AD911D-22A7-415E-A8E1-C746E779E0F7}
 	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CSG", "Samples\CSG\CSG.vcxproj", "{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FireCubeTest", "Samples\FireCubeTest\FireCubeTest.vcxproj", "{AF6EFDA6-3B19-4401-A2E6-B651291E110B}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -230,34 +228,6 @@ Global
 		{7749B663-11D7-42EC-8984-3E20B690EA49}.Release|x64.ActiveCfg = Release|Win32
 		{7749B663-11D7-42EC-8984-3E20B690EA49}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
 		{7749B663-11D7-42EC-8984-3E20B690EA49}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Debug Multithreaded|Win32.ActiveCfg = Debug|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Debug Multithreaded|Win32.Build.0 = Debug|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Debug Multithreaded|x64.ActiveCfg = Debug|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Debug Singlethreaded|Win32.ActiveCfg = Debug|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Debug Singlethreaded|Win32.Build.0 = Debug|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Debug Singlethreaded|x64.ActiveCfg = Debug|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Debug Static|Win32.ActiveCfg = Debug|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Debug Static|Win32.Build.0 = Debug|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Debug Static|x64.ActiveCfg = Debug|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Debug|Win32.ActiveCfg = Debug|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Debug|Win32.Build.0 = Debug|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Debug|x64.ActiveCfg = Debug|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.MinSizeRel|Win32.ActiveCfg = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.MinSizeRel|x64.ActiveCfg = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Release Multithreaded|Win32.ActiveCfg = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Release Multithreaded|Win32.Build.0 = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Release Multithreaded|x64.ActiveCfg = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Release Singlethreaded|Win32.ActiveCfg = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Release Singlethreaded|Win32.Build.0 = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Release Singlethreaded|x64.ActiveCfg = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Release Static|Win32.ActiveCfg = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Release Static|Win32.Build.0 = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Release Static|x64.ActiveCfg = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Release|Win32.ActiveCfg = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Release|Win32.Build.0 = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.Release|x64.ActiveCfg = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
-		{69E4BB3B-C6C3-4312-BDE6-793A696C5D3A}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
 		{AF6EFDA6-3B19-4401-A2E6-B651291E110B}.Debug Multithreaded|Win32.ActiveCfg = Debug|Win32
 		{AF6EFDA6-3B19-4401-A2E6-B651291E110B}.Debug Multithreaded|Win32.Build.0 = Debug|Win32
 		{AF6EFDA6-3B19-4401-A2E6-B651291E110B}.Debug Multithreaded|x64.ActiveCfg = Debug|Win32
