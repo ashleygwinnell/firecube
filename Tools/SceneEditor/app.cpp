@@ -55,7 +55,7 @@ void MyApp::SetMainContext(wxGLContext *mainContext)
 	this->mainContext = mainContext;
 }
 
-wxGLContext * MyApp::GetMainContext()
+wxGLContext *MyApp::GetMainContext()
 {
 	return mainContext;
 }

@@ -1,5 +1,6 @@
 #include "EditorState.h"
 class MainFrameImpl;
+class wxGLContext;
 
 class FireCubeApp : public FireCube::Application
 {
