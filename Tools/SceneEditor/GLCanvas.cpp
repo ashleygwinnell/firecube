@@ -26,6 +26,7 @@ GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wx
 	init(false), theApp((MyApp*)wxTheApp), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), currentOperation(Operation::NONE), rootDesc(nullptr)
 {
 	context = new wxGLContext(this);
+	theApp->SetMainContext(context);
 	Bind(wxEVT_SIZE, &GLCanvas::OnSize, this);
 	Bind(wxEVT_PAINT, &GLCanvas::OnPaint, this);
 	Bind(wxEVT_ERASE_BACKGROUND, &GLCanvas::OnEraseBackground, this);

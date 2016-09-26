@@ -1450,13 +1450,12 @@ AssetBrowserPanel::AssetBrowserPanel( wxWindow* parent, wxWindowID id, const wxP
 	m_panel10->SetSizer( bSizer581 );
 	m_panel10->Layout();
 	bSizer581->Fit( m_panel10 );
-	previewPanel = new wxPanel( splitter2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	previewPanel = new wxPanel( splitter2, wxID_ANY, wxDefaultPosition, wxSize( 300,-1 ), wxTAB_TRAVERSAL );
 	previewPanelSizer = new wxBoxSizer( wxVERTICAL );
 	
 	
 	previewPanel->SetSizer( previewPanelSizer );
 	previewPanel->Layout();
-	previewPanelSizer->Fit( previewPanel );
 	splitter2->SplitVertically( m_panel10, previewPanel, 2000 );
 	bSizer59->Add( splitter2, 1, wxEXPAND, 5 );
 	

@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "AssetBrowserPanelImpl.h"
 #include "../app.h"
 #include "../EditorState.h"
@@ -6,6 +7,7 @@
 #include "../Descriptors/NodeDescriptor.h"
 #include "../AssetUtils.h"
 #include "TexturePreviewPanelImpl.h"
+#include "../AuxGLCanvas.h"
 #include <wx/dir.h>
 #include <wx/msgdlg.h> 
 #include <wx/dataobj.h>
@@ -245,16 +247,49 @@ void AssetBrowserPanelImpl::FileListKeyDown(wxListEvent& event)
 
 void AssetBrowserPanelImpl::FileListItemSelected(wxListEvent& event)
 {
+	previewPanel->DestroyChildren();
 	auto itemData = (FileItemData *)event.GetItem().GetData();
+
 	if (itemData->assetType == AssetType::TEXTURE)
 	{
-		previewPanel->DestroyChildren();
-		
 		wxImage textureImage = wxImage(itemData->path, wxBITMAP_TYPE_ANY);
 
 		TexturePreviewPanelImpl *texturePreviewPanel = new TexturePreviewPanelImpl(previewPanel, textureImage);
 		previewPanelSizer->Add(texturePreviewPanel, 1, wxALL | wxEXPAND, 1);
 		
+		previewPanel->Layout();
+	}
+	else if (itemData->assetType == AssetType::MESH)
+	{		
+		AuxGLCanvas *glCanvas = new AuxGLCanvas(previewPanel);
+		std::string meshPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), itemData->path);
+
+		glCanvas->SetConstructSceneCallback([&meshPath, this](AuxGLCanvas *glCanvas) {
+			auto root = glCanvas->GetRootNode();
+			auto meshNode = root->CreateChild();						
+			
+			auto mesh = engine->GetResourceCache()->GetResource<Mesh>(meshPath);
+			meshNode->CreateComponent<StaticModel>(mesh);
+			auto bbox = mesh->GetBoundingBox();
+			float maxSize = std::max(bbox.GetWidth(), std::max(bbox.GetHeight(), bbox.GetDepth()));
+			meshNode->Scale(vec3(1.0f / maxSize));
+
+			auto lightNode1 = root->CreateChild();
+			auto light = lightNode1->CreateComponent<Light>();
+			light->SetLightType(LightType::DIRECTIONAL);
+			light->SetColor(1.0f);
+			lightNode1->Rotate(vec3((float) -M_PI * 0.25f, (float) -M_PI * 0.25f, 0.0f));
+
+			auto lightNode2 = root->CreateChild();
+			light = lightNode2->CreateComponent<Light>();
+			light->SetLightType(LightType::DIRECTIONAL);
+			light->SetColor(1.0f);
+			lightNode2->Rotate(vec3((float)M_PI * 0.25f, (float) M_PI * 0.25f, 0.0f));
+		});		
+
+		
+		previewPanelSizer->Add(glCanvas, 1, wxALL | wxEXPAND, 1);
+
 		previewPanel->Layout();
 	}
 }

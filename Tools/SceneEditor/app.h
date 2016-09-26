@@ -20,10 +20,14 @@ public:
 	void InitScene();
 	MainFrameImpl *GetMainFrame();
 	FireCubeApp fcApp;	
+
+	void SetMainContext(wxGLContext *mainContext);
+	wxGLContext *GetMainContext();
 	
 private:	
 	MainFrameImpl *frame;
 	FireCube::Scene *scene;
 	FireCube::Scene *editorScene;
-	EditorState *editorState;		
+	EditorState *editorState;	
+	wxGLContext *mainContext;
 };

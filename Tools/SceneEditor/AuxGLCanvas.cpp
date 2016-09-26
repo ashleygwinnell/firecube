@@ -8,7 +8,7 @@ AuxGLCanvas::AuxGLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, co
 	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()),
 	init(false), theApp((MyApp*)wxTheApp), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr)
 {
-	context = new wxGLContext(this);
+	context = theApp->GetMainContext();
 	Bind(wxEVT_SIZE, &AuxGLCanvas::OnSize, this);
 	Bind(wxEVT_PAINT, &AuxGLCanvas::OnPaint, this);
 	Bind(wxEVT_ERASE_BACKGROUND, &AuxGLCanvas::OnEraseBackground, this);
@@ -39,23 +39,26 @@ void AuxGLCanvas::Init()
 				
 	gridMaterial = FireCube::SharedPtr<FireCube::Material>(new Material(engine));
 	gridMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f));
-	gridMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));
-
-	CreateGrid(10.0f, 100);
+	gridMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));	
 
 	scene = new Scene(engine);
 	root = scene->GetRootNode();
 
-	cameraTarget = root->CreateChild("Editor_CameraTarget");
+	CreateGrid(0.5f, 10);
+
+	cameraTarget = root->CreateChild();
 	Node *cameraNode = cameraTarget->CreateChild("Camera");
 	camera = cameraNode->CreateComponent<OrbitCamera>();
-	camera->SetFarPlane(2000.0f);
-	camera->SetDistance(5.0f);
-	camera->SetMaxDistance(10000.0f);
+	camera->SetFarPlane(20.0f);
+	camera->SetDistance(2.0f);
+	camera->SetMaxDistance(20.0f);
+	camera->RotateX(-(float) M_PI * 0.25f);	
 
 	scene->SetFogColor(vec3(0.2f, 0.2f, 0.2f));
 	
 	sceneView = new SceneView(engine, scene, camera);
+
+	constructSceneCallback(this);
 }
 
 void AuxGLCanvas::Render()
@@ -132,6 +135,30 @@ void AuxGLCanvas::OnMotion(wxMouseEvent& event)
 {
 	vec2 curpos(event.GetPosition().x, event.GetPosition().y);	
 
+	/*camera->RotateX(5.0f / 60.0f);
+	camera->RotateY(5.0f / 60.0f);
+	this->Refresh(false);*/
+
+	if (event.LeftIsDown())
+	{
+		camera->RotateX(-(curpos.y - lastMousePos.y) / 60.0f);
+		camera->RotateY(-(curpos.x - lastMousePos.x) / 60.0f);		
+		this->Refresh(false);
+	}
+	else if (event.MiddleIsDown())
+	{
+		if (event.ShiftDown())
+		{
+			camera->Zoom(-(curpos.y - lastMousePos.y) / 15.0f);			
+			this->Refresh(false);
+		}
+		else
+		{
+			camera->Zoom(-(curpos.y - lastMousePos.y) / 30.0f);			
+			this->Refresh(false);
+		}
+	}	
+
 	lastMousePos = curpos;
 }
 void AuxGLCanvas::OnMouseWheel(wxMouseEvent& event)
@@ -179,4 +206,9 @@ void AuxGLCanvas::CreateGrid(float size, unsigned int numberOfCells)
 	gridGeometry->SetMaterial(gridMaterial);
 	gridGeometry->UpdateGeometry();
 	gridGeometry->SetCollisionQueryMask(0);
+}
+
+Node *AuxGLCanvas::GetRootNode()
+{
+	return root;
 }

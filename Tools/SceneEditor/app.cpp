@@ -49,3 +49,13 @@ MainFrameImpl *MyApp::GetMainFrame()
 {
 	return frame;
 }
+
+void MyApp::SetMainContext(wxGLContext *mainContext)
+{
+	this->mainContext = mainContext;
+}
+
+wxGLContext * MyApp::GetMainContext()
+{
+	return mainContext;
+}

@@ -16,7 +16,7 @@ public:
 	AuxGLCanvas(wxWindow *parent, wxWindowID id = wxID_ANY,
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize,
-		long style = 0, const wxString& name = _T("GLCanvas"));
+		long style = 0, const wxString& name = _T("AuxGLCanvas"));
 
 	~AuxGLCanvas();
 
@@ -31,6 +31,13 @@ public:
 	void OnKeyUp(wxKeyEvent& event);
 	void Render();
 	void Init();
+	FireCube::Node *GetRootNode();
+
+	template <typename T>
+	void SetConstructSceneCallback(T &&callbck)
+	{
+		constructSceneCallback = callbck;
+	}
 	
 private:
 	void CreateGrid(float size, unsigned int numberOfCells);
@@ -40,7 +47,7 @@ private:
 	wxGLContext *context;
 	FireCube::Scene *scene, *editorScene;
 	FireCube::OrbitCamera *camera;
-	FireCube::Node *root, *gridNode, *cameraTarget, *editorRoot;
+	FireCube::Node *root, *gridNode, *cameraTarget;
 		
 	FireCube::CustomGeometry *gridGeometry;
 	FireCube::SharedPtr<FireCube::Material> gridMaterial;
@@ -48,4 +55,5 @@ private:
 	
 	EditorState *editorState;
 	FireCube::SharedPtr<FireCube::SceneView> sceneView;
+	std::function<void(AuxGLCanvas *)> constructSceneCallback;
 };
