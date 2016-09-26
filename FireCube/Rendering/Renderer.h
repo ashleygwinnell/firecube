@@ -290,7 +290,7 @@ private:
 	std::map<unsigned int, FrameBuffer *> frameBuffers;
 	std::map<long long int, SharedPtr<RenderSurface>> renderSurfaces;
 	FrameBuffer *currentFrameBuffer;
-	RenderSurface *shadowMap;
+	SharedPtr<RenderSurface> shadowMap;
 	bool fboDirty;	
 	SharedPtr<RenderPath> defaultRenderPath;
 	int width, height;

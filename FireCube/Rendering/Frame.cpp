@@ -33,9 +33,13 @@ void Frame::Render(Renderer *renderer)
 	vec3 fogParameters = scene->GetFogParameters();
 
 	if (renderSurface)
+	{
 		camera->SetAspectRatio((float)renderSurface->GetWidth() / (float)renderSurface->GetHeight());
+	}
 	else
+	{
 		camera->SetAspectRatio((float)renderer->GetWidth() / (float)renderer->GetHeight());
+	}
 
 	scene->UpdateRenderables();
 	UpdateBaseQueue();
