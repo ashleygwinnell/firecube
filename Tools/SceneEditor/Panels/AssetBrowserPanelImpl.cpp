@@ -287,7 +287,40 @@ void AssetBrowserPanelImpl::FileListItemSelected(wxListEvent& event)
 			lightNode2->Rotate(vec3((float)M_PI * 0.25f, (float) M_PI * 0.25f, 0.0f));
 		});		
 
-		
+		previewPanelSizer->Add(glCanvas, 1, wxALL | wxEXPAND, 1);
+
+		previewPanel->Layout();
+	}
+	else if (itemData->assetType == AssetType::MATERIAL)
+	{
+		AuxGLCanvas *glCanvas = new AuxGLCanvas(previewPanel);
+		std::string materialPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), itemData->path);
+
+		glCanvas->SetConstructSceneCallback([&materialPath, this](AuxGLCanvas *glCanvas) {
+			auto root = glCanvas->GetRootNode();
+			auto sphereNode = root->CreateChild();
+
+			auto material = engine->GetResourceCache()->GetResource<Material>(materialPath);
+
+			auto geometry = GeometryGenerator::GenerateSphere(engine, 0.5f, 16, 16);
+			SharedPtr<Mesh> sphereMesh = new Mesh(engine);
+			sphereMesh->AddGeometry(geometry, BoundingBox(vec3(-0.5f), vec3(0.5f)), material);
+			
+			sphereNode->CreateComponent<StaticModel>(sphereMesh);			
+
+			auto lightNode1 = root->CreateChild();
+			auto light = lightNode1->CreateComponent<Light>();
+			light->SetLightType(LightType::DIRECTIONAL);
+			light->SetColor(1.0f);
+			lightNode1->Rotate(vec3((float)-M_PI * 0.25f, (float)-M_PI * 0.25f, 0.0f));
+
+			auto lightNode2 = root->CreateChild();
+			light = lightNode2->CreateComponent<Light>();
+			light->SetLightType(LightType::DIRECTIONAL);
+			light->SetColor(1.0f);
+			lightNode2->Rotate(vec3((float)M_PI * 0.25f, (float)M_PI * 0.25f, 0.0f));
+		});
+
 		previewPanelSizer->Add(glCanvas, 1, wxALL | wxEXPAND, 1);
 
 		previewPanel->Layout();
