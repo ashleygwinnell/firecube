@@ -6,6 +6,7 @@
 
 class EditorState;
 class MaterialEditorPanelImpl;
+class AuxGLCanvas;
 
 class MaterialEditorDropTarget : public wxDropTarget
 {
@@ -54,8 +55,11 @@ private:
 
 	void MaterialPicked(FireCube::Material *material);
 	void FillPropertyGrid(FireCube::Material *material);
+	void UpdatePreview(FireCube::Material *material);
 	EditorState *editorState;
 	std::string currentFileName;
 	FireCube::SharedPtr<FireCube::Material> material;
+	FireCube::SharedPtr<FireCube::Node> meshNode;
 	std::map<FireCube::StringHash, std::pair<std::string, PropertyType>> standardParametersProperties;
+	AuxGLCanvas *glCanvas;
 };

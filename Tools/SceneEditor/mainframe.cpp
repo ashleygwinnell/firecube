@@ -1381,8 +1381,29 @@ MaterialEditorPanel::MaterialEditorPanel( wxWindow* parent, wxWindowID id, const
 	
 	bSizer37->Add( bSizer38, 0, wxEXPAND, 5 );
 	
-	propertyGrid = new wxPropertyGrid(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxPG_DEFAULT_STYLE);
-	bSizer37->Add( propertyGrid, 1, wxALL|wxEXPAND, 1 );
+	m_splitter3 = new wxSplitterWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_3D|wxSP_LIVE_UPDATE );
+	m_splitter3->Connect( wxEVT_IDLE, wxIdleEventHandler( MaterialEditorPanel::m_splitter3OnIdle ), NULL, this );
+	
+	m_panel13 = new wxPanel( m_splitter3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer39;
+	bSizer39 = new wxBoxSizer( wxVERTICAL );
+	
+	propertyGrid = new wxPropertyGrid(m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxPG_DEFAULT_STYLE);
+	bSizer39->Add( propertyGrid, 1, wxALL|wxEXPAND, 1 );
+	
+	
+	m_panel13->SetSizer( bSizer39 );
+	m_panel13->Layout();
+	bSizer39->Fit( m_panel13 );
+	previewPanel = new wxPanel( m_splitter3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	previewPanelSizer = new wxBoxSizer( wxVERTICAL );
+	
+	
+	previewPanel->SetSizer( previewPanelSizer );
+	previewPanel->Layout();
+	previewPanelSizer->Fit( previewPanel );
+	m_splitter3->SplitHorizontally( m_panel13, previewPanel, 0 );
+	bSizer37->Add( m_splitter3, 1, wxEXPAND, 5 );
 	
 	
 	this->SetSizer( bSizer37 );

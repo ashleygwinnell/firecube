@@ -5,6 +5,7 @@
 #include "../Commands/RenameNodeCommand.h"
 #include "../Descriptors/NodeDescriptor.h"
 #include "../AssetUtils.h"
+#include "../AuxGLCanvas.h"
 #include <wx/wrapsizer.h>
 #include <wx/textdlg.h>
 #include <wx/colordlg.h>
@@ -38,6 +39,29 @@ MaterialEditorPanelImpl::MaterialEditorPanelImpl(wxWindow* parent) : MaterialEdi
 		{ PARAM_V_OFFSET, std::make_pair("V Offset", PropertyType::VEC3) } };
 
 	propertyGrid->Bind(wxEVT_PG_RIGHT_CLICK, &MaterialEditorPanelImpl::PropertyGridRightClicked, this);
+
+	glCanvas = new AuxGLCanvas(previewPanel);
+	
+	glCanvas->SetConstructSceneCallback([this](AuxGLCanvas *glCanvas) {
+		auto root = glCanvas->GetRootNode();
+		meshNode = root->CreateChild();				
+
+		auto lightNode1 = root->CreateChild();
+		auto light = lightNode1->CreateComponent<Light>();
+		light->SetLightType(LightType::DIRECTIONAL);
+		light->SetColor(1.0f);
+		lightNode1->Rotate(vec3((float)-M_PI * 0.25f, (float)-M_PI * 0.25f, 0.0f));
+
+		auto lightNode2 = root->CreateChild();
+		light = lightNode2->CreateComponent<Light>();
+		light->SetLightType(LightType::DIRECTIONAL);
+		light->SetColor(1.0f);
+		lightNode2->Rotate(vec3((float)M_PI * 0.25f, (float)M_PI * 0.25f, 0.0f));
+	});
+
+	previewPanelSizer->Add(glCanvas, 1, wxALL | wxEXPAND, 1);
+
+	previewPanel->Layout();
 }
 
 MaterialEditorPanelImpl::~MaterialEditorPanelImpl()
@@ -52,8 +76,10 @@ void MaterialEditorPanelImpl::NewButtonClicked(wxCommandEvent& event)
 	material->SetParameter(PARAM_MATERIAL_SPECULAR_NAME, vec3(0.0f));
 	material->SetParameter(PARAM_MATERIAL_SHININESS_NAME, 0.0f);
 	material->SetParameter(PARAM_MATERIAL_OPACITY_NAME, 0.0f);
+	material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
 	currentFileName = "";
 	FillPropertyGrid(material);
+	UpdatePreview(material);	
 }
 
 void MaterialEditorPanelImpl::OpenButtonClicked(wxCommandEvent& event)
@@ -72,6 +98,7 @@ void MaterialEditorPanelImpl::OpenButtonClicked(wxCommandEvent& event)
 		if (material)
 		{
 			FillPropertyGrid(material);
+			UpdatePreview(material);
 		}
 	}
 	else
@@ -266,6 +293,7 @@ void MaterialEditorPanelImpl::PropertyGridChanged(wxPropertyGridEvent& event)
 	}
 
 	editorState->sceneChanged(editorState);
+	glCanvas->Refresh(false);
 }
 
 void MaterialEditorPanelImpl::MaterialPicked(FireCube::Material *material)
@@ -273,6 +301,7 @@ void MaterialEditorPanelImpl::MaterialPicked(FireCube::Material *material)
 	this->material = material;
 	currentFileName = material->GetFileName();
 	FillPropertyGrid(material);
+	UpdatePreview(material);
 }
 
 void MaterialEditorPanelImpl::PropertyGridRightClicked(wxPropertyGridEvent& event)
@@ -301,6 +330,7 @@ void MaterialEditorPanelImpl::PropertyGridRightClicked(wxPropertyGridEvent& even
 		{			
 			material->RemoveParameter(data->paramaterName);
 			propertyGrid->DeleteProperty(property);
+			glCanvas->Refresh(false);
 		}
 		else if (setFromColorItem && event.GetId() == setFromColorItem->GetId())
 		{
@@ -312,6 +342,7 @@ void MaterialEditorPanelImpl::PropertyGridRightClicked(wxPropertyGridEvent& even
 				color = vec3((float)selectedColor.Red() / 255.0f, (float)selectedColor.Green() / 255.0f, (float)selectedColor.Blue() / 255.0f);
 				material->SetParameter(data->paramaterName, color);
 				property->SetValue(AssetUtils::ToString(color));
+				glCanvas->Refresh(false);
 			}			
 		}
 	});
@@ -367,6 +398,17 @@ void MaterialEditorPanelImpl::AddParameterButtonClicked(wxCommandEvent& event)
 	});
 	PopupMenu(menu);
 	delete menu;
+}
+
+void MaterialEditorPanelImpl::UpdatePreview(FireCube::Material *material)
+{
+	meshNode->RemoveAllComponents();
+	auto geometry = GeometryGenerator::GenerateSphere(engine, 0.5f, 16, 16);
+	SharedPtr<Mesh> sphereMesh = new Mesh(engine);
+	sphereMesh->AddGeometry(geometry, BoundingBox(vec3(-0.5f), vec3(0.5f)), material);
+
+	meshNode->CreateComponent<StaticModel>(sphereMesh);
+	glCanvas->Refresh(false);
 }
 
 MaterialEditorDropTarget::MaterialEditorDropTarget(MaterialEditorPanelImpl *materialEditorPanel) : wxDropTarget(new wxCustomDataObject(wxDataFormat("Asset"))), materialEditorPanel(materialEditorPanel)

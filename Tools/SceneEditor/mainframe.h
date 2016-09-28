@@ -44,8 +44,8 @@
 #include <wx/clrpicker.h>
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
-#include <wx/listctrl.h>
 #include <wx/splitter.h>
+#include <wx/listctrl.h>
 #include <wx/statbmp.h>
 #include <wx/toolbar.h>
 #include <wx/stc/stc.h>
@@ -587,7 +587,11 @@ class MaterialEditorPanel : public wxPanel
 		wxButton* saveAsButton;
 		wxButton* pickMaterialButton;
 		wxButton* addParameterButton;
+		wxSplitterWindow* m_splitter3;
+		wxPanel* m_panel13;
 		wxPropertyGrid* propertyGrid;
+		wxPanel* previewPanel;
+		wxBoxSizer* previewPanelSizer;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void NewButtonClicked( wxCommandEvent& event ) { event.Skip(); }
@@ -603,6 +607,12 @@ class MaterialEditorPanel : public wxPanel
 		
 		MaterialEditorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 507,496 ), long style = wxTAB_TRAVERSAL ); 
 		~MaterialEditorPanel();
+		
+		void m_splitter3OnIdle( wxIdleEvent& )
+		{
+			m_splitter3->SetSashPosition( 0 );
+			m_splitter3->Disconnect( wxEVT_IDLE, wxIdleEventHandler( MaterialEditorPanel::m_splitter3OnIdle ), NULL, this );
+		}
 	
 };
 
