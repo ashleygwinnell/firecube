@@ -56,6 +56,7 @@
 #include "Physics/RigidBody.h"
 #include "Application/Input.h"
 #include "Application/Application.h"
+#include "Application/WindowProperties.h"
 #include "Core/ResourceCache.h"
 #include "Core/Engine.h"
 #include "Core/Memory.h"

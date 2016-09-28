@@ -24,12 +24,7 @@ Application::~Application()
 	Destroy();	
 }
 
-bool Application::Initialize()
-{
-	return Initialize(800, 600, 0, false, false);
-}
-
-bool Application::Initialize(int width, int height, int multisample, bool fullscreen, bool maximized)
+bool Application::Initialize(WindowProperties windowPrperties)
 {    
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 		return false;
@@ -44,21 +39,21 @@ bool Application::Initialize(int width, int height, int multisample, bool fullsc
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	
-	if (multisample)
+	if (windowPrperties.multisample)
 	{
 		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, multisample);
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, windowPrperties.multisample);
 	}
 	mainWindow = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		width, height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | (maximized ? SDL_WINDOW_MAXIMIZED : 0) | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
+		windowPrperties.width, windowPrperties.height, (windowPrperties.resizable ? SDL_WINDOW_RESIZABLE : 0) | SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | (windowPrperties.maximized ? SDL_WINDOW_MAXIMIZED : 0) | (windowPrperties.fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
 	
 	if (!mainWindow)
 		return false;
 	
 	context = new SDL_GLContext;
 	*context = SDL_GL_CreateContext(mainWindow);		
-	this->width = width;
-	this->height = height;	
+	this->width = windowPrperties.width;
+	this->height = windowPrperties.height;
 	return InitializeNoWindow();
 }
 
@@ -408,3 +403,4 @@ void Application::ProcessInput(const SDL_Event &event)
 		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_WHEEL_Y_RELATIVE, ((float)event.wheel.y) / 60.0f);
 	}
 }
+

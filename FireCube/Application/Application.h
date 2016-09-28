@@ -8,6 +8,7 @@
 #include "Core/Object.h"
 #include "Application/Input.h"
 #include "Utils/Timer.h"
+#include "WindowProperties.h"
 
 struct SDL_Window;
 typedef void *SDL_GLContext;
@@ -35,18 +36,12 @@ class FIRECUBE_API Application : public Object
 public:
 	Application();
 	virtual ~Application();
-
-	/**
-	* Creates a default window and initializes OpenGL.
-	* @return true on success, false otherwise.
-	*/
-	bool Initialize();
-
+	
 	/**
 	* Creates a window and initializes OpenGL.
 	* @return true on success, false otherwise.
 	*/
-	bool Initialize(int width, int height,int multisample, bool fullscreen, bool maximized);
+	bool Initialize(WindowProperties windowPrperties = WindowProperties());
 
 	/**
 	* Initializes without creating a window (assumes there is already an active rendering context).

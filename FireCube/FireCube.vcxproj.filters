@@ -369,6 +369,9 @@
     <ClCompile Include="Scene\Prefab.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Application\WindowProperties.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -677,6 +680,9 @@
     </ClInclude>
     <ClInclude Include="Scene\Prefab.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\WindowProperties.h">
+      <Filter>Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

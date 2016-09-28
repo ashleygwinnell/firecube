@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	Filesystem::SetCoreDataFolder("../../FireCube");
 	Filesystem::SetAssetsFolder("../../Assets");
 
-	if (!app.Initialize(1024, 768, 0, false, false))
+	if (!app.Initialize(WindowProperties(1024, 768, 0, false, false, true)))
 		return 0;
 	app.Run();
 	return 0;
