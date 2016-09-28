@@ -469,6 +469,10 @@ void Frame::SetRenderTargets(Renderer *renderer, const RenderPathCommand &comman
 	for (int i = 1; i < MAX_RENDER_TARGETS; ++i)
 		renderer->SetRenderTarget(i, nullptr);
 	renderer->UpdateFrameBuffer();
+
+	int width, height;
+	renderer->GetRenderTargetSize(width, height);
+	renderer->SetViewport(0, 0, width, height);
 }
 
 void Frame::SetTextures(Renderer *renderer, const RenderPathCommand &command)

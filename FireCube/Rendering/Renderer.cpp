@@ -261,8 +261,7 @@ void Renderer::ResetNumberOfPrimitivesRendered()
 
 void Renderer::UseFrameBuffer(FrameBuffer *frameBuffer)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->GetObjectId());
-	glViewport(0, 0, frameBuffer->width, frameBuffer->height);	
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->GetObjectId());	
 }
 
 void Renderer::RestoreFrameBuffer()
@@ -401,8 +400,7 @@ void Renderer::UpdateFrameBuffer()
 	if (!hasFbo)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glDrawBuffer(GL_BACK);
-		SetViewport(0, 0, width, height);
+		glDrawBuffer(GL_BACK);		
 		return;
 	}
 
@@ -719,5 +717,24 @@ void Renderer::RemoveUnusedRenderSurfaces()
 		{
 			++i;
 		}
+	}
+}
+
+void Renderer::GetRenderTargetSize(int &width, int &height)
+{
+	if (renderTargets[0])
+	{
+		width = renderTargets[0]->GetWidth();
+		height = renderTargets[0]->GetHeight();
+	}
+	else if (depthSurface)
+	{
+		width = depthSurface->GetWidth();
+		height = depthSurface->GetHeight();
+	}
+	else
+	{
+		width = this->width;
+		height = this->height;
 	}
 }

@@ -263,6 +263,8 @@ public:
 
 	void RemoveUnusedRenderSurfaces();
 
+	void GetRenderTargetSize(int &width, int &height);
+
 private:
 
 	const float MAX_UNUSED_RENDERSURFACE_DURATION = 1.0f;

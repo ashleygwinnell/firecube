@@ -161,8 +161,7 @@ void Application::Run()
 				width = event.window.data1;
 				height = event.window.data2;
 				renderer->SetWidth(width);
-				renderer->SetHeight(height);
-				renderer->SetViewport(0, 0, width, height);
+				renderer->SetHeight(height);				
 			}
 			else if (event.type == SDL_QUIT)
 				running = false;
