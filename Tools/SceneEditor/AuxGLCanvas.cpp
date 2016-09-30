@@ -5,13 +5,8 @@
 using namespace FireCube;
 
 AuxGLCanvas::AuxGLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
-	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()),
-	init(false), theApp((MyApp*)wxTheApp), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr)
+	: BaseGLCanvas(parent, id, pos, size, style, name), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr)
 {
-	context = theApp->GetMainContext(this);
-	Bind(wxEVT_SIZE, &AuxGLCanvas::OnSize, this);
-	Bind(wxEVT_PAINT, &AuxGLCanvas::OnPaint, this);
-	Bind(wxEVT_ERASE_BACKGROUND, &AuxGLCanvas::OnEraseBackground, this);
 	Bind(wxEVT_ENTER_WINDOW, &AuxGLCanvas::OnEnterWindow, this);
 	Bind(wxEVT_MOTION, &AuxGLCanvas::OnMotion, this);
 	Bind(wxEVT_MOUSEWHEEL, &AuxGLCanvas::OnMouseWheel, this);
@@ -22,9 +17,6 @@ AuxGLCanvas::AuxGLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, co
 
 AuxGLCanvas::~AuxGLCanvas()
 {
-	Unbind(wxEVT_SIZE, &AuxGLCanvas::OnSize, this);
-	Unbind(wxEVT_PAINT, &AuxGLCanvas::OnPaint, this);
-	Unbind(wxEVT_ERASE_BACKGROUND, &AuxGLCanvas::OnEraseBackground, this);
 	Unbind(wxEVT_ENTER_WINDOW, &AuxGLCanvas::OnEnterWindow, this);
 	Unbind(wxEVT_MOTION, &AuxGLCanvas::OnMotion, this);
 	Unbind(wxEVT_MOUSEWHEEL, &AuxGLCanvas::OnMouseWheel, this);
@@ -35,10 +27,6 @@ AuxGLCanvas::~AuxGLCanvas()
 
 void AuxGLCanvas::Init()
 {	
-	theApp->InitEngine();
-
-	editorState = theApp->GetEditorState();				
-				
 	gridMaterial = FireCube::SharedPtr<FireCube::Material>(new Material(engine));
 	gridMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f));
 	gridMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));	
@@ -64,26 +52,8 @@ void AuxGLCanvas::Init()
 }
 
 void AuxGLCanvas::Render()
-{
-	wxPaintDC dc(this);
-	if (!SetCurrent(*context))
-		return;
-	if (!init)
-	{
-		init = true;
-		Init();
-	}
-
-	int w, h;
-	GetClientSize(&w, &h);
-
-	engine->GetRenderer()->SetWidth(w);
-	engine->GetRenderer()->SetHeight(h);
-	engine->GetRenderer()->SetViewport(0, 0, w, h);
-	
+{	
 	engine->GetRenderer()->RenderSceneView(sceneView);
-
-	SwapBuffers();
 }
 
 void AuxGLCanvas::OnEnterWindow(wxMouseEvent& event)
@@ -96,36 +66,6 @@ void AuxGLCanvas::OnEnterWindow(wxMouseEvent& event)
 	lastMousePos = vec2(event.GetPosition().x, event.GetPosition().y);
 }
 
-void AuxGLCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
-{
-	Render();
-}
-void AuxGLCanvas::OnSize(wxSizeEvent& event)
-{
-	if (!IsShownOnScreen())
-		return;
-
-	int w, h;
-	GetClientSize(&w, &h);
-	if (!SetCurrent(*context))
-		return;
-
-	if (!init)
-	{
-		init = true;
-		Init();
-	}
-
-	engine->GetRenderer()->SetWidth(w);
-	engine->GetRenderer()->SetHeight(h);
-	engine->GetRenderer()->SetViewport(0, 0, w, h);
-}
-
-void AuxGLCanvas::OnEraseBackground(wxEraseEvent& WXUNUSED(event))
-{
-	// Do nothing, to avoid flashing.
-}
-
 void AuxGLCanvas::OnLeftDown(wxMouseEvent& event)
 {
 	vec2 curpos(event.GetPosition().x, event.GetPosition().y);	
@@ -136,11 +76,7 @@ void AuxGLCanvas::OnLeftDown(wxMouseEvent& event)
 void AuxGLCanvas::OnMotion(wxMouseEvent& event)
 {
 	vec2 curpos(event.GetPosition().x, event.GetPosition().y);	
-
-	/*camera->RotateX(5.0f / 60.0f);
-	camera->RotateY(5.0f / 60.0f);
-	this->Refresh(false);*/
-
+	
 	if (event.LeftIsDown())
 	{
 		camera->RotateX(-(curpos.y - lastMousePos.y) / 60.0f);

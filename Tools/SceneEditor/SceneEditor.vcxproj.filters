@@ -195,6 +195,9 @@
     <ClCompile Include="Panels\TexturePreviewPanelImpl.cpp">
       <Filter>Panels</Filter>
     </ClCompile>
+    <ClCompile Include="BaseGLCanvas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -361,6 +364,9 @@
     </ClInclude>
     <ClInclude Include="Panels\TexturePreviewPanelImpl.h">
       <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseGLCanvas.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

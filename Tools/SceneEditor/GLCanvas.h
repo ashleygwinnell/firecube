@@ -1,9 +1,9 @@
 #pragma once
 
 #include "FireCube.h"
+#include "BaseGLCanvas.h"
 #include <wx/dnd.h>
 
-class MyApp;
 class TranslateGizmo;
 class RotateGizmo;
 class TransformGizmo;
@@ -30,7 +30,7 @@ private:
 	GLCanvas *canvas;
 };
 
-class GLCanvas : public wxGLCanvas, public FireCube::Object
+class GLCanvas : public BaseGLCanvas
 {
 	FIRECUBE_OBJECT(GLCanvas);	
 	friend class CanvasDropTarget;
@@ -42,17 +42,14 @@ public:
 
 	~GLCanvas();
 
-	void OnPaint(wxPaintEvent& event);
-	void OnSize(wxSizeEvent& event);
-	void OnEraseBackground(wxEraseEvent& event);
 	void OnEnterWindow(wxMouseEvent& event);
 	void OnMotion(wxMouseEvent& event);
 	void OnMouseWheel(wxMouseEvent& event);
 	void OnLeftUp(wxMouseEvent& event);
 	void OnLeftDown(wxMouseEvent& event);
 	void OnKeyUp(wxKeyEvent& event);
-	void Render();
-	void Init();	
+	virtual void Render() override;
+	virtual void Init() override;
 	void UpdateGizmo();		
 	void SetRootDescriptor(NodeDescriptor *rootDescriptor);	
 private:	
@@ -64,10 +61,7 @@ private:
 	void StartMaterialPick();
 	void AddMesh(const std::string &path);
 	void AddPrefab(const std::string &path);
-
-	bool init;
-	MyApp *theApp;
-	wxGLContext *context;	
+	
 	FireCube::Scene *scene, *editorScene;
 	FireCube::OrbitCamera *camera;
 	FireCube::Node *root, *gridNode, *cameraTarget, *editorRoot;

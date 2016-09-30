@@ -22,13 +22,9 @@ using namespace FireCube;
 #include "SceneReader.h"
 
 GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
-	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()),
-	init(false), theApp((MyApp*)wxTheApp), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), currentOperation(Operation::NONE), rootDesc(nullptr)
-{
-	context = theApp->GetMainContext(this);		
-	Bind(wxEVT_SIZE, &GLCanvas::OnSize, this);
-	Bind(wxEVT_PAINT, &GLCanvas::OnPaint, this);
-	Bind(wxEVT_ERASE_BACKGROUND, &GLCanvas::OnEraseBackground, this);
+	: BaseGLCanvas(parent, id, pos, size, style, name), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), 
+	currentOperation(Operation::NONE), rootDesc(nullptr)
+{	
 	Bind(wxEVT_ENTER_WINDOW, &GLCanvas::OnEnterWindow, this);
 	Bind(wxEVT_MOTION, &GLCanvas::OnMotion, this);
 	Bind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
@@ -41,9 +37,6 @@ GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wx
 
 GLCanvas::~GLCanvas()
 {
-	Unbind(wxEVT_SIZE, &GLCanvas::OnSize, this);
-	Unbind(wxEVT_PAINT, &GLCanvas::OnPaint, this);
-	Unbind(wxEVT_ERASE_BACKGROUND, &GLCanvas::OnEraseBackground, this);
 	Unbind(wxEVT_ENTER_WINDOW, &GLCanvas::OnEnterWindow, this);
 	Unbind(wxEVT_MOTION, &GLCanvas::OnMotion, this);
 	Unbind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
@@ -54,8 +47,6 @@ GLCanvas::~GLCanvas()
 
 void GLCanvas::Init()
 {	
-	theApp->InitEngine();
-	
 	editorState = theApp->GetEditorState();
 	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &GLCanvas::SelectedNodeChanged);
 	SubscribeToEvent(editorState, editorState->stateChanged, &GLCanvas::StateChanged);
@@ -162,23 +153,7 @@ void GLCanvas::RenderDebugGeometry(NodeDescriptor *nodeDesc, DebugRenderer *debu
 }
 
 void GLCanvas::Render()
-{
-	wxPaintDC dc(this);
-	if (!SetCurrent(*context))
-		return;
-	if (!init)
-	{
-		init = true;
-		Init();
-	}	
-
-	int w, h;
-	GetClientSize(&w, &h);
-
-	engine->GetRenderer()->SetWidth(w);
-	engine->GetRenderer()->SetHeight(h);
-	engine->GetRenderer()->SetViewport(0, 0, w, h);
-	
+{		
 	engine->GetRenderer()->Render();
 	
 	if (editorState->GetSelectedNode())
@@ -186,8 +161,6 @@ void GLCanvas::Render()
 		RenderDebugGeometry(editorState->GetSelectedNode(), engine->GetDebugRenderer());
 	}
 	engine->GetDebugRenderer()->Render(camera);
-
-	SwapBuffers();
 }
 
 void GLCanvas::OnEnterWindow(wxMouseEvent& event)
@@ -198,36 +171,6 @@ void GLCanvas::OnEnterWindow(wxMouseEvent& event)
 	}
 
 	lastMousePos = vec2(event.GetPosition().x, event.GetPosition().y);
-}
-
-void GLCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
-{
-	Render();
-}
-void GLCanvas::OnSize(wxSizeEvent& event)
-{
-	if (!IsShownOnScreen())
-		return;
-
-	int w, h;
-	GetClientSize(&w, &h);
-	if (!SetCurrent(*context))
-		return;
-
-	if (!init)
-	{
-		init = true;
-		Init();
-	}
-	
-	engine->GetRenderer()->SetWidth(w);
-	engine->GetRenderer()->SetHeight(h);	
-	engine->GetRenderer()->SetViewport(0, 0, w, h);
-}
-
-void GLCanvas::OnEraseBackground(wxEraseEvent& WXUNUSED(event))
-{
-	// Do nothing, to avoid flashing.
 }
 
 void GLCanvas::OnLeftDown(wxMouseEvent& event)
