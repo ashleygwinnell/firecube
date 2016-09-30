@@ -73,7 +73,7 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 
 	LoadSettingsFile();
 
-	this->glCanvas->SetRootDescriptor(&rootDesc);
+	this->editorCanvas->SetRootDescriptor(&rootDesc);
 }
 
 void MainFrameImpl::AddNodeClicked(wxCommandEvent& event)
@@ -81,7 +81,7 @@ void MainFrameImpl::AddNodeClicked(wxCommandEvent& event)
 	auto nodeDesc = new NodeDescriptor("Node");
 	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, &rootDesc);
 	editorState->ExecuteCommand(addNodeCommand);
-	this->glCanvas->SetFocus();	
+	this->editorCanvas->SetFocus();
 }
 
 void MainFrameImpl::AddMeshClicked(wxCommandEvent& event)

@@ -146,8 +146,8 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxBoxSizer* bSizer11;
 	bSizer11 = new wxBoxSizer( wxVERTICAL );
 	
-	glCanvas = new GLCanvas(m_panel2, wxID_ANY,wxDefaultPosition,wxSize(1,1));
-	bSizer11->Add( glCanvas, 1, wxEXPAND, 1 );
+	editorCanvas = new EditorCanvas(m_panel2, wxID_ANY,wxDefaultPosition,wxSize(1,1));
+	bSizer11->Add( editorCanvas, 1, wxEXPAND, 1 );
 	
 	
 	m_panel2->SetSizer( bSizer11 );

@@ -29,7 +29,7 @@
 #include <queue>
 #include <FireCube.h>
 #include <wx/glcanvas.h>
-#include "GlCanvas.h"
+#include "EditorCanvas.h"
 #include <wx/scrolwin.h>
 #include <wx/frame.h>
 #include <wx/aui/aui.h>
@@ -76,7 +76,7 @@ class MainFrame : public wxFrame
 		wxPanel* m_panel1;
 		wxTreeCtrl* sceneTreeCtrl;
 		wxPanel* m_panel2;
-		GLCanvas *glCanvas;
+		EditorCanvas *editorCanvas;
 		wxPanel* inspectorPanel;
 		wxScrolledWindow* componentsList;
 		wxBoxSizer* componentsSizer;

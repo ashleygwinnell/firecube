@@ -10,7 +10,7 @@ class TransformGizmo;
 class ScaleGizmo;
 class EditorState;
 class NodeDescriptor;
-class GLCanvas;
+class EditorCanvas;
 
 enum class Operation
 {
@@ -20,27 +20,27 @@ enum class Operation
 class CanvasDropTarget : public wxDropTarget
 {
 public:
-	CanvasDropTarget(GLCanvas *canvas);
+	CanvasDropTarget(EditorCanvas *canvas);
 private:
 
 	virtual wxDragResult OnData(wxCoord vX, wxCoord vY, wxDragResult eResult) override;
 	virtual wxDragResult OnEnter(wxCoord x, wxCoord y, wxDragResult def) override;
 	virtual wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def) override;
 
-	GLCanvas *canvas;
+	EditorCanvas *canvas;
 };
 
-class GLCanvas : public BaseGLCanvas
+class EditorCanvas : public BaseGLCanvas
 {
-	FIRECUBE_OBJECT(GLCanvas);	
+	FIRECUBE_OBJECT(EditorCanvas);	
 	friend class CanvasDropTarget;
 public:	
-	GLCanvas(wxWindow *parent, wxWindowID id = wxID_ANY,
+	EditorCanvas(wxWindow *parent, wxWindowID id = wxID_ANY,
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize,
 		long style = 0, const wxString& name = _T("GLCanvas"));
 
-	~GLCanvas();
+	~EditorCanvas();
 
 	void OnEnterWindow(wxMouseEvent& event);
 	void OnMotion(wxMouseEvent& event);

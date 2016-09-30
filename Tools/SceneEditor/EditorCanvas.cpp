@@ -2,7 +2,7 @@
 using namespace FireCube;
 #include <wx/wx.h>
 #include <wx/glcanvas.h>
-#include "GLCanvas.h"
+#include "EditorCanvas.h"
 #include "mainframe.h"
 #include "MainFrameImpl.h"
 #include "app.h"
@@ -21,39 +21,39 @@ using namespace FireCube;
 #include "AssetUtils.h"
 #include "SceneReader.h"
 
-GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
+EditorCanvas::EditorCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 	: BaseGLCanvas(parent, id, pos, size, style, name), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), 
 	currentOperation(Operation::NONE), rootDesc(nullptr)
 {	
-	Bind(wxEVT_ENTER_WINDOW, &GLCanvas::OnEnterWindow, this);
-	Bind(wxEVT_MOTION, &GLCanvas::OnMotion, this);
-	Bind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
-	Bind(wxEVT_LEFT_UP, &GLCanvas::OnLeftUp, this);
-	Bind(wxEVT_LEFT_DOWN, &GLCanvas::OnLeftDown, this);
-	Bind(wxEVT_KEY_UP, &GLCanvas::OnKeyUp, this);
+	Bind(wxEVT_ENTER_WINDOW, &EditorCanvas::OnEnterWindow, this);
+	Bind(wxEVT_MOTION, &EditorCanvas::OnMotion, this);
+	Bind(wxEVT_MOUSEWHEEL, &EditorCanvas::OnMouseWheel, this);
+	Bind(wxEVT_LEFT_UP, &EditorCanvas::OnLeftUp, this);
+	Bind(wxEVT_LEFT_DOWN, &EditorCanvas::OnLeftDown, this);
+	Bind(wxEVT_KEY_UP, &EditorCanvas::OnKeyUp, this);
 
 	SetDropTarget(new CanvasDropTarget(this));
 }
 
-GLCanvas::~GLCanvas()
+EditorCanvas::~EditorCanvas()
 {
-	Unbind(wxEVT_ENTER_WINDOW, &GLCanvas::OnEnterWindow, this);
-	Unbind(wxEVT_MOTION, &GLCanvas::OnMotion, this);
-	Unbind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
-	Unbind(wxEVT_LEFT_UP, &GLCanvas::OnLeftUp, this);
-	Unbind(wxEVT_LEFT_DOWN, &GLCanvas::OnLeftDown, this);
-	Unbind(wxEVT_KEY_UP, &GLCanvas::OnKeyUp, this);
+	Unbind(wxEVT_ENTER_WINDOW, &EditorCanvas::OnEnterWindow, this);
+	Unbind(wxEVT_MOTION, &EditorCanvas::OnMotion, this);
+	Unbind(wxEVT_MOUSEWHEEL, &EditorCanvas::OnMouseWheel, this);
+	Unbind(wxEVT_LEFT_UP, &EditorCanvas::OnLeftUp, this);
+	Unbind(wxEVT_LEFT_DOWN, &EditorCanvas::OnLeftDown, this);
+	Unbind(wxEVT_KEY_UP, &EditorCanvas::OnKeyUp, this);
 }
 
-void GLCanvas::Init()
+void EditorCanvas::Init()
 {	
 	editorState = theApp->GetEditorState();
-	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &GLCanvas::SelectedNodeChanged);
-	SubscribeToEvent(editorState, editorState->stateChanged, &GLCanvas::StateChanged);
-	SubscribeToEvent(editorState, editorState->sceneChanged, &GLCanvas::SceneChanged);
-	SubscribeToEvent(editorState->startMaterialPick, &GLCanvas::StartMaterialPick);
-	SubscribeToEvent(editorState->addMesh, &GLCanvas::AddMesh);
-	SubscribeToEvent(editorState->addPrefab, &GLCanvas::AddPrefab);
+	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &EditorCanvas::SelectedNodeChanged);
+	SubscribeToEvent(editorState, editorState->stateChanged, &EditorCanvas::StateChanged);
+	SubscribeToEvent(editorState, editorState->sceneChanged, &EditorCanvas::SceneChanged);
+	SubscribeToEvent(editorState->startMaterialPick, &EditorCanvas::StartMaterialPick);
+	SubscribeToEvent(editorState->addMesh, &EditorCanvas::AddMesh);
+	SubscribeToEvent(editorState->addPrefab, &EditorCanvas::AddPrefab);
 
 	theApp->InitScene();
 	scene = theApp->GetScene();
@@ -101,26 +101,26 @@ void GLCanvas::Init()
 	editorState->newSceneCreated(editorState);
 }
 
-void GLCanvas::SelectedNodeChanged(NodeDescriptor *nodeDesc)
+void EditorCanvas::SelectedNodeChanged(NodeDescriptor *nodeDesc)
 {
 	UpdateGizmo();
 	this->Refresh(false);
 }
 
-void GLCanvas::StateChanged()
+void EditorCanvas::StateChanged()
 {
 	UpdateGizmo();
 	this->Refresh(false);
 }
 
-void GLCanvas::SceneChanged()
+void EditorCanvas::SceneChanged()
 {
 	UpdateGizmo();
 	this->Refresh(false);
 }
 
 
-void GLCanvas::RenderDebugGeometry(NodeDescriptor *nodeDesc, DebugRenderer *debugRenderer)
+void EditorCanvas::RenderDebugGeometry(NodeDescriptor *nodeDesc, DebugRenderer *debugRenderer)
 {
 	auto node = nodeDesc->GetNode();
 	std::vector<CollisionShape *> collisionShapes;
@@ -152,7 +152,7 @@ void GLCanvas::RenderDebugGeometry(NodeDescriptor *nodeDesc, DebugRenderer *debu
 	}	
 }
 
-void GLCanvas::Render()
+void EditorCanvas::Render()
 {		
 	engine->GetRenderer()->Render();
 	
@@ -163,7 +163,7 @@ void GLCanvas::Render()
 	engine->GetDebugRenderer()->Render(camera);
 }
 
-void GLCanvas::OnEnterWindow(wxMouseEvent& event)
+void EditorCanvas::OnEnterWindow(wxMouseEvent& event)
 {
 	if (!this->HasFocus())
 	{
@@ -173,7 +173,7 @@ void GLCanvas::OnEnterWindow(wxMouseEvent& event)
 	lastMousePos = vec2(event.GetPosition().x, event.GetPosition().y);
 }
 
-void GLCanvas::OnLeftDown(wxMouseEvent& event)
+void EditorCanvas::OnLeftDown(wxMouseEvent& event)
 {	
 	vec2 curpos(event.GetPosition().x, event.GetPosition().y);
 
@@ -203,7 +203,7 @@ void GLCanvas::OnLeftDown(wxMouseEvent& event)
 	lastMousePos = curpos;
 }
 
-void GLCanvas::OnMotion(wxMouseEvent& event)
+void EditorCanvas::OnMotion(wxMouseEvent& event)
 {
 	vec2 curpos(event.GetPosition().x, event.GetPosition().y);
 	
@@ -245,7 +245,7 @@ void GLCanvas::OnMotion(wxMouseEvent& event)
 
 	lastMousePos = curpos;	
 }
-void GLCanvas::OnMouseWheel(wxMouseEvent& event)
+void EditorCanvas::OnMouseWheel(wxMouseEvent& event)
 {
 	int r = event.GetWheelRotation();
 	if (event.ShiftDown())
@@ -261,7 +261,7 @@ void GLCanvas::OnMouseWheel(wxMouseEvent& event)
 	this->Refresh(false);
 }
 
-void GLCanvas::OnLeftUp(wxMouseEvent& event)
+void EditorCanvas::OnLeftUp(wxMouseEvent& event)
 {
 	if (event.ShiftDown() == false)
 	{
@@ -317,7 +317,7 @@ void GLCanvas::OnLeftUp(wxMouseEvent& event)
 	}
 }
 
-void GLCanvas::OnKeyUp(wxKeyEvent& event)
+void EditorCanvas::OnKeyUp(wxKeyEvent& event)
 {
 	if (event.GetKeyCode() == 'Q')
 	{		
@@ -412,7 +412,7 @@ void GLCanvas::OnKeyUp(wxKeyEvent& event)
 	}
 }
 
-void GLCanvas::UpdateGizmo()
+void EditorCanvas::UpdateGizmo()
 {
 	if (transformGizmo && editorState->GetSelectedNode())
 	{
@@ -425,7 +425,7 @@ void GLCanvas::UpdateGizmo()
 	}	
 }
 
-void GLCanvas::CreateGrid(float size, unsigned int numberOfCells)
+void EditorCanvas::CreateGrid(float size, unsigned int numberOfCells)
 {
 	if (!gridNode)
 		gridNode = root->CreateChild("Editor_GridNode");
@@ -448,17 +448,17 @@ void GLCanvas::CreateGrid(float size, unsigned int numberOfCells)
 	gridGeometry->SetCollisionQueryMask(0);
 }
 
-void GLCanvas::StartMaterialPick()
+void EditorCanvas::StartMaterialPick()
 {
 	currentOperation = Operation::PICK_MATERIAL;
 }
 
-void GLCanvas::SetRootDescriptor(NodeDescriptor *rootDescriptor)
+void EditorCanvas::SetRootDescriptor(NodeDescriptor *rootDescriptor)
 {
 	this->rootDesc = rootDescriptor;
 }
 
-void GLCanvas::AddMesh(const std::string &path)
+void EditorCanvas::AddMesh(const std::string &path)
 {
 	auto nodeDesc = new NodeDescriptor("Node");
 	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, rootDesc);
@@ -471,7 +471,7 @@ void GLCanvas::AddMesh(const std::string &path)
 	editorState->ExecuteCommand(groupCommand);
 }
 
-void GLCanvas::AddPrefab(const std::string &path)
+void EditorCanvas::AddPrefab(const std::string &path)
 {
 	::SceneReader sceneReader(engine, editorState);
 	auto prefab = sceneReader.ReadPrefab(path);
@@ -483,7 +483,7 @@ void GLCanvas::AddPrefab(const std::string &path)
 	}
 }
 
-CanvasDropTarget::CanvasDropTarget(GLCanvas *canvas) : wxDropTarget(new wxCustomDataObject(wxDataFormat("Asset"))), canvas(canvas)
+CanvasDropTarget::CanvasDropTarget(EditorCanvas *canvas) : wxDropTarget(new wxCustomDataObject(wxDataFormat("Asset"))), canvas(canvas)
 {
 
 }

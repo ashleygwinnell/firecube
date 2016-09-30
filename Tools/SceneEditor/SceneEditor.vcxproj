@@ -118,7 +118,7 @@
     <ClCompile Include="Gizmos\RotateGizmo.cpp" />
     <ClCompile Include="Gizmos\ScaleGizmo.cpp" />
     <ClCompile Include="Gizmos\TranslateGizmo.cpp" />
-    <ClCompile Include="GLCanvas.cpp" />
+    <ClCompile Include="EditorCanvas.cpp" />
     <ClCompile Include="app.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="MainFrameImpl.cpp" />
@@ -176,7 +176,7 @@
     <ClInclude Include="Gizmos\ScaleGizmo.h" />
     <ClInclude Include="Gizmos\TransformGizmo.h" />
     <ClInclude Include="Gizmos\TranslateGizmo.h" />
-    <ClInclude Include="GLCanvas.h" />
+    <ClInclude Include="EditorCanvas.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="MainFrameImpl.h" />
     <ClInclude Include="MathUtils.h" />
