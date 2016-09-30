@@ -25,8 +25,7 @@ GLCanvas::GLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wx
 	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()),
 	init(false), theApp((MyApp*)wxTheApp), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), currentOperation(Operation::NONE), rootDesc(nullptr)
 {
-	context = new wxGLContext(this);
-	theApp->SetMainContext(context);
+	context = theApp->GetMainContext(this);		
 	Bind(wxEVT_SIZE, &GLCanvas::OnSize, this);
 	Bind(wxEVT_PAINT, &GLCanvas::OnPaint, this);
 	Bind(wxEVT_ERASE_BACKGROUND, &GLCanvas::OnEraseBackground, this);
@@ -55,9 +54,7 @@ GLCanvas::~GLCanvas()
 
 void GLCanvas::Init()
 {	
-	Filesystem::SetCoreDataFolder("../../FireCube");
-
-	theApp->fcApp.InitializeNoWindow();			
+	theApp->InitEngine();
 	
 	editorState = theApp->GetEditorState();
 	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &GLCanvas::SelectedNodeChanged);

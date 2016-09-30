@@ -4,13 +4,17 @@
 #include "MainFrameImpl.h"
 #include "app.h"
 
+using namespace FireCube;
+
 wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
+	engineInitialized = false;
 	scene = nullptr;
 	editorScene = nullptr;
-	editorState = new EditorState(fcApp.GetEngine());
+	editorState = new EditorState(fcApp.GetEngine());	
+	mainContext = nullptr;
 	wxInitAllImageHandlers();
 	frame = new MainFrameImpl(nullptr);
 	frame->Maximize();
@@ -39,6 +43,18 @@ void MyApp::InitScene()
 	editorScene = new FireCube::Scene(fcApp.GetEngine());
 }
 
+void MyApp::InitEngine()
+{
+	if (!engineInitialized)
+	{
+		engineInitialized = true;
+
+		Filesystem::SetCoreDataFolder("../../FireCube");
+
+		fcApp.InitializeNoWindow();
+	}
+}
+
 MyApp::~MyApp()
 {
 	delete scene;
@@ -55,7 +71,11 @@ void MyApp::SetMainContext(wxGLContext *mainContext)
 	this->mainContext = mainContext;
 }
 
-wxGLContext *MyApp::GetMainContext()
-{
+wxGLContext *MyApp::GetMainContext(wxGLCanvas *glCanvas)
+{		
+	if (!mainContext)
+	{
+		mainContext = new wxGLContext(glCanvas);
+	}
 	return mainContext;
 }

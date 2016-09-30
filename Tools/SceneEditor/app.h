@@ -19,11 +19,12 @@ public:
 	FireCube::Scene *GetEditorScene();
 	EditorState *GetEditorState();
 	void InitScene();
+	void InitEngine();
 	MainFrameImpl *GetMainFrame();
 	FireCubeApp fcApp;	
 
 	void SetMainContext(wxGLContext *mainContext);
-	wxGLContext *GetMainContext();
+	wxGLContext *GetMainContext(wxGLCanvas *glCanvas);
 	
 private:	
 	MainFrameImpl *frame;
@@ -31,4 +32,5 @@ private:
 	FireCube::Scene *editorScene;
 	EditorState *editorState;	
 	wxGLContext *mainContext;
+	bool engineInitialized;
 };

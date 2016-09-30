@@ -8,7 +8,7 @@ AuxGLCanvas::AuxGLCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, co
 	: wxGLCanvas(parent, id, nullptr, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()),
 	init(false), theApp((MyApp*)wxTheApp), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr)
 {
-	context = theApp->GetMainContext();
+	context = theApp->GetMainContext(this);
 	Bind(wxEVT_SIZE, &AuxGLCanvas::OnSize, this);
 	Bind(wxEVT_PAINT, &AuxGLCanvas::OnPaint, this);
 	Bind(wxEVT_ERASE_BACKGROUND, &AuxGLCanvas::OnEraseBackground, this);
@@ -35,6 +35,8 @@ AuxGLCanvas::~AuxGLCanvas()
 
 void AuxGLCanvas::Init()
 {	
+	theApp->InitEngine();
+
 	editorState = theApp->GetEditorState();				
 				
 	gridMaterial = FireCube::SharedPtr<FireCube::Material>(new Material(engine));
