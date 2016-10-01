@@ -325,6 +325,57 @@ void AssetBrowserPanelImpl::FileListItemSelected(wxListEvent& event)
 
 		previewPanel->Layout();
 	}
+	else if (itemData->assetType == AssetType::PREFAB)
+	{
+		AuxGLCanvas *glCanvas = new AuxGLCanvas(previewPanel);
+		std::string prefabPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), itemData->path);
+
+		glCanvas->SetConstructSceneCallback([&prefabPath, this](AuxGLCanvas *glCanvas) {
+			auto root = glCanvas->GetRootNode();
+			
+			auto prefab = engine->GetResourceCache()->GetResource<Prefab>(prefabPath);
+			auto instance = prefab->Instantiate();
+			instance->SetTranslation(vec3(0.0f));
+			instance->SetScale(vec3(1.0f));
+
+			std::vector<StaticModel *> staticModels;
+			std::vector<AnimatedModel *> animatedModels;
+			instance->GetComponents(staticModels, true);
+			BoundingBox bbox;
+			for (auto &staticModel : staticModels)
+			{
+				bbox.Expand(staticModel->GetWorldBoundingBox());
+			}
+
+			for (auto &animatedModel : animatedModels)
+			{
+				bbox.Expand(animatedModel->GetWorldBoundingBox());
+			}
+			
+			float scale = 1.0f / std::max(std::max(bbox.GetWidth(), bbox.GetHeight()), bbox.GetDepth());
+
+			instance->SetTranslation(-bbox.GetCenter() * scale);
+			
+			instance->SetScale(vec3(scale));
+			root->AddChild(instance);
+
+			auto lightNode1 = root->CreateChild();
+			auto light = lightNode1->CreateComponent<Light>();
+			light->SetLightType(LightType::DIRECTIONAL);
+			light->SetColor(1.0f);
+			lightNode1->Rotate(vec3((float)-M_PI * 0.25f, (float)-M_PI * 0.25f, 0.0f));
+
+			auto lightNode2 = root->CreateChild();
+			light = lightNode2->CreateComponent<Light>();
+			light->SetLightType(LightType::DIRECTIONAL);
+			light->SetColor(1.0f);
+			lightNode2->Rotate(vec3((float)M_PI * 0.25f, (float)M_PI * 0.25f, 0.0f));
+		});
+
+		previewPanelSizer->Add(glCanvas, 1, wxALL | wxEXPAND, 1);
+
+		previewPanel->Layout();
+	}
 }
 
 void AssetBrowserPanelImpl::FileListRightUp(wxMouseEvent& event)
