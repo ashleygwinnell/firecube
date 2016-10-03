@@ -87,6 +87,26 @@ void LuaScript::NodeChanged()
 void LuaScript::SceneChanged(Scene *oldScene)
 {
 	
+	if (awakeCalled == false && scene && objectName.empty() == false)
+	{
+		awakeCalled = true;
+
+		auto awakeFunction = scriptFunctions[ScriptFunction::AWAKE];
+		if (IsEnabled() && awakeFunction)
+		{
+
+			// Call awake function	
+			try
+			{
+				(*awakeFunction)(object);
+			}
+			catch (LuaException &e)
+			{
+				(void)e; // Disable warning about e not being used
+				LOGERROR(e.what());
+			}
+		}
+	}
 }
 
 void LuaScript::CreateObject(const std::string &objectName)
