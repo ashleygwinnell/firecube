@@ -177,9 +177,6 @@
     <ClCompile Include="Panels\AssetBrowserPanelImpl.cpp">
       <Filter>Panels</Filter>
     </ClCompile>
-    <ClCompile Include="Panels\ScriptEditorPanelImpl.cpp">
-      <Filter>Panels</Filter>
-    </ClCompile>
     <ClCompile Include="Descriptors\ParticleEmitterDescriptor.cpp">
       <Filter>Descriptors</Filter>
     </ClCompile>
@@ -196,6 +193,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EditorCanvas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptEditorFrameImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -347,9 +347,6 @@
     <ClInclude Include="Panels\AssetBrowserPanelImpl.h">
       <Filter>Panels</Filter>
     </ClInclude>
-    <ClInclude Include="Panels\ScriptEditorPanelImpl.h">
-      <Filter>Panels</Filter>
-    </ClInclude>
     <ClInclude Include="Descriptors\ParticleEmitterDescriptor.h">
       <Filter>Descriptors</Filter>
     </ClInclude>
@@ -366,6 +363,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EditorCanvas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptEditorFrameImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

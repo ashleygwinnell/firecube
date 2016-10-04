@@ -135,12 +135,12 @@
     <ClCompile Include="Panels\ParticleEmitterPanelImpl.cpp" />
     <ClCompile Include="Panels\PlanePanelImpl.cpp" />
     <ClCompile Include="Panels\RigidBodyPanelImpl.cpp" />
-    <ClCompile Include="Panels\ScriptEditorPanelImpl.cpp" />
     <ClCompile Include="Panels\SpherePanelImpl.cpp" />
     <ClCompile Include="Panels\StaticModelPanelImpl.cpp" />
     <ClCompile Include="Panels\TexturePreviewPanelImpl.cpp" />
     <ClCompile Include="SceneReader.cpp" />
     <ClCompile Include="SceneWriter.cpp" />
+    <ClCompile Include="ScriptEditorFrameImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\FireCube\ThirdParty\TinyXML\tinyxml.h" />
@@ -192,12 +192,12 @@
     <ClInclude Include="Panels\ParticleEmitterPanelImpl.h" />
     <ClInclude Include="Panels\PlanePanelImpl.h" />
     <ClInclude Include="Panels\RigidBodyPanelImpl.h" />
-    <ClInclude Include="Panels\ScriptEditorPanelImpl.h" />
     <ClInclude Include="Panels\SpherePanelImpl.h" />
     <ClInclude Include="Panels\StaticModelPanelImpl.h" />
     <ClInclude Include="Panels\TexturePreviewPanelImpl.h" />
     <ClInclude Include="SceneReader.h" />
     <ClInclude Include="SceneWriter.h" />
+    <ClInclude Include="ScriptEditorFrameImpl.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

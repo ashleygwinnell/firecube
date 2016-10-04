@@ -354,8 +354,7 @@ void AssetBrowserPanelImpl::FileListItemSelected(wxListEvent& event)
 			
 			float scale = 1.0f / std::max(std::max(bbox.GetWidth(), bbox.GetHeight()), bbox.GetDepth());
 
-			instance->SetTranslation(-bbox.GetCenter() * scale);
-			
+			instance->SetTranslation(-bbox.GetCenter() * scale);			
 			instance->SetScale(vec3(scale));
 			root->AddChild(instance);
 

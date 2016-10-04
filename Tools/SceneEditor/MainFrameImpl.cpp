@@ -12,6 +12,7 @@
 #include "Commands/TransformCommands.h"
 #include "Commands/ReparentNodeCommand.h"
 #include "SceneWriter.h"
+#include "ScriptEditorFrameImpl.h"
 #include "Panels/BaseComponentPanelImpl.h"
 #include "Panels/StaticModelPanelImpl.h"
 #include "Panels/LightPanelImpl.h"
@@ -25,7 +26,6 @@
 #include "Panels/PlanePanelImpl.h"
 #include "Panels/SpherePanelImpl.h"
 #include "Panels/AssetBrowserPanelImpl.h"
-#include "Panels/ScriptEditorPanelImpl.h"
 #include "Panels/ParticleEmitterPanelImpl.h"
 #include "AssetUtils.h"
 #include "SceneReader.h"
@@ -59,12 +59,13 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	SubscribeToEvent(editorState, editorState->showMaterialEditor, &MainFrameImpl::ShowMaterialEditor);
 	SubscribeToEvent(editorState, editorState->showScriptEditor, &MainFrameImpl::EditScript);
 	
+	scriptEditorFrame = new ScriptEditorFrameImpl(this);
+	scriptEditorFrame->Maximize();
+	
 	materialEditorPanel = new MaterialEditorPanelImpl(this);
 	m_mgr.AddPane(materialEditorPanel, wxAuiPaneInfo().Name(wxT("materialEditorPane")).Caption(wxT("Material Editor")).PinButton(true).Float().Resizable().Hide());
 	assetBrowserPanel = new AssetBrowserPanelImpl(this);
-	m_mgr.AddPane(assetBrowserPanel, wxAuiPaneInfo().Name(wxT("assetBrowserPane")).Caption(wxT("Asset Browser")).PinButton(true).Resizable().Layer(0).Dockable().Bottom().Dock());
-	scriptEditorPanel = new ScriptEditorPanelImpl(this);
-	m_mgr.AddPane(scriptEditorPanel, wxAuiPaneInfo().Name(wxT("scriptEditorPane")).Caption(wxT("Script Editor")).PinButton(true).Float().Resizable().Hide());
+	m_mgr.AddPane(assetBrowserPanel, wxAuiPaneInfo().Name(wxT("assetBrowserPane")).Caption(wxT("Asset Browser")).PinButton(true).Resizable().Layer(0).Dockable().Bottom().Dock());	
 	m_mgr.Update();	
 
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);
@@ -1030,11 +1031,9 @@ void MainFrameImpl::ShowMaterialEditor()
 
 void MainFrameImpl::EditScript(const std::string &filename)
 {
-	scriptEditorPanel->OpenFile(filename);
-	auto &pane = m_mgr.GetPane("scriptEditorPane");
-	pane.Show();	
-
-	m_mgr.Update();
+	scriptEditorFrame->OpenFile(filename);
+	scriptEditorFrame->Show();	
+	scriptEditorFrame->SetFocus();
 }
 
 void MainFrameImpl::SceneTreeItemMenu(wxTreeEvent& event)

@@ -1,9 +1,7 @@
 #include <fstream>
+#include "ScriptEditorFrameImpl.h"
+#include "FireCube.h"
 
-#include "ScriptEditorPanelImpl.h"
-#include "../app.h"
-#include "../EditorState.h"
-#include <wx/msgdlg.h>
 using namespace FireCube;
 
 enum
@@ -12,15 +10,15 @@ enum
 	MARGIN_FOLD
 };
 
-ScriptEditorPanelImpl::ScriptEditorPanelImpl(wxWindow* parent) : ScriptEditorPanel(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), editorState(((MyApp*)wxTheApp)->GetEditorState())
+ScriptEditorFrameImpl::ScriptEditorFrameImpl(wxWindow* parent) : ScriptEditorFrame(parent)
 {
-	sourceText->StyleSetFaceName(wxSTC_STYLE_DEFAULT, "Consolas");	
+	sourceText->StyleSetFaceName(wxSTC_STYLE_DEFAULT, "Consolas");
 	sourceText->StyleSetSize(wxSTC_STYLE_DEFAULT, 10);
 	sourceText->StyleClearAll();
 	sourceText->SetLexer(wxSTC_LEX_LUA);
-	
-	sourceText->SetWrapMode(wxSTC_WRAP_NONE);		
-			
+
+	sourceText->SetWrapMode(wxSTC_WRAP_NONE);
+
 	sourceText->StyleSetForeground(wxSTC_LUA_DEFAULT, wxColour(0, 0, 0));
 	sourceText->StyleSetForeground(wxSTC_LUA_COMMENT, wxColour(128, 128, 128));
 	sourceText->StyleSetItalic(wxSTC_LUA_COMMENT, true);
@@ -41,7 +39,7 @@ ScriptEditorPanelImpl::ScriptEditorPanelImpl(wxWindow* parent) : ScriptEditorPan
 	sourceText->StyleSetBold(wxSTC_LUA_WORD, true);
 	sourceText->StyleSetForeground(wxSTC_LUA_WORD2, wxColour(0, 0, 255));
 	sourceText->StyleSetForeground(wxSTC_LUA_WORD3, wxColour(0, 128, 255));
-	sourceText->StyleSetForeground(wxSTC_LUA_WORD4, wxColour(196, 196, 0));	
+	sourceText->StyleSetForeground(wxSTC_LUA_WORD4, wxColour(196, 196, 0));
 
 	// Key words
 	sourceText->SetKeyWords(0, wxT("function for while repeat until if else elseif end break return in do then"));
@@ -77,17 +75,12 @@ ScriptEditorPanelImpl::ScriptEditorPanelImpl(wxWindow* parent) : ScriptEditorPan
 	sourceText->StyleSetBackground(wxSTC_STYLE_LINENUMBER, wxColour(220, 220, 220));
 	sourceText->SetMarginType(MARGIN_LINE_NUMBERS, wxSTC_MARGIN_NUMBER);
 
-	sourceText->Bind(wxEVT_STC_MARGINCLICK, &ScriptEditorPanelImpl::OnMarginClick, this);
-	sourceText->Bind(wxEVT_STC_CHARADDED, &ScriptEditorPanelImpl::OnCharAdded, this);
-	sourceText->Bind(wxEVT_STC_UPDATEUI, &ScriptEditorPanelImpl::OnBrace, this);
+	sourceText->Bind(wxEVT_STC_MARGINCLICK, &ScriptEditorFrameImpl::OnMarginClick, this);
+	sourceText->Bind(wxEVT_STC_CHARADDED, &ScriptEditorFrameImpl::OnCharAdded, this);
+	sourceText->Bind(wxEVT_STC_UPDATEUI, &ScriptEditorFrameImpl::OnBrace, this);
 }
 
-ScriptEditorPanelImpl::~ScriptEditorPanelImpl()
-{
-
-}
-
-void ScriptEditorPanelImpl::OpenFile(const std::string &filename)
+void ScriptEditorFrameImpl::OpenFile(const std::string &filename)
 {
 	auto resolvedFileName = Filesystem::FindResourceByName(filename);
 	if (resolvedFileName.empty() == false)
@@ -98,10 +91,12 @@ void ScriptEditorPanelImpl::OpenFile(const std::string &filename)
 		std::string source((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
 		sourceText->SetTextRaw(source.c_str());
 		sourceText->EmptyUndoBuffer();
+
+		UpdateTitle();
 	}
 }
 
-void ScriptEditorPanelImpl::OnMarginClick(wxStyledTextEvent &event)
+void ScriptEditorFrameImpl::OnMarginClick(wxStyledTextEvent &event)
 {
 	if (event.GetMargin() == MARGIN_FOLD)
 	{
@@ -115,43 +110,43 @@ void ScriptEditorPanelImpl::OnMarginClick(wxStyledTextEvent &event)
 	}
 }
 
-void ScriptEditorPanelImpl::OnCharAdded(wxStyledTextEvent &event)
+void ScriptEditorFrameImpl::OnCharAdded(wxStyledTextEvent &event)
 {
 	if (static_cast<char>(event.GetKey()) == '\n' || static_cast<char>(event.GetKey()) == '\r')
-	{		
-		int line = sourceText->GetCurrentLine();		
+	{
+		int line = sourceText->GetCurrentLine();
 		if (line > 0)
 		{
 			int startPos = sourceText->WordStartPosition(sourceText->GetLineIndentPosition(line - 1), true);
-			int endPos = sourceText->WordEndPosition(sourceText->GetLineIndentPosition(line - 1), true);			
-			
+			int endPos = sourceText->WordEndPosition(sourceText->GetLineIndentPosition(line - 1), true);
+
 			int extraIndent = 0;
 			auto word = sourceText->GetRange(startPos, endPos);
 			if (word == "if" || word == "elseif" || word == "else" || word == "function" || word == "while" || word == "for" || word == "repeat")
 			{
-				extraIndent = 1;				
-			}			
-			
+				extraIndent = 1;
+			}
+
 			int curIndentation = sourceText->GetLineIndentation(line - 1);
 			int indent = curIndentation + extraIndent * sourceText->GetIndent();
 			if (indent > 0)
 			{
-				sourceText->SetLineIndentation(line, indent);				
-				sourceText->GotoPos(sourceText->GetLineIndentPosition(line));				
+				sourceText->SetLineIndentation(line, indent);
+				sourceText->GotoPos(sourceText->GetLineIndentPosition(line));
 			}
 		}
 	}
 }
 
-void ScriptEditorPanelImpl::OnBrace(wxStyledTextEvent &event)
+void ScriptEditorFrameImpl::OnBrace(wxStyledTextEvent &event)
 {
 	// Caret position
 	int pos = sourceText->GetCurrentPos();
-	
+
 	// Keys at position
 	char pre_key = static_cast<char>(sourceText->GetCharAt(pos - 1));
 	char key = static_cast<char>(sourceText->GetCharAt(pos));
-	
+
 	// Brace search
 	int hit = wxSTC_INVALID_POSITION;
 	if (key == '(' || key == '{' || key == '[')
@@ -164,7 +159,7 @@ void ScriptEditorPanelImpl::OnBrace(wxStyledTextEvent &event)
 	}
 
 	// Brace action
-	if (hit != wxSTC_INVALID_POSITION) 
+	if (hit != wxSTC_INVALID_POSITION)
 	{
 		int match = sourceText->BraceMatch(hit);
 		if (match != wxSTC_INVALID_POSITION)
@@ -182,7 +177,7 @@ void ScriptEditorPanelImpl::OnBrace(wxStyledTextEvent &event)
 	}
 }
 
-void ScriptEditorPanelImpl::OnKeyDown(wxKeyEvent& event)
+void ScriptEditorFrameImpl::OnKeyDown(wxKeyEvent& event)
 {
 	if (event.GetKeyCode() == 'S' && event.ControlDown())
 	{
@@ -194,16 +189,34 @@ void ScriptEditorPanelImpl::OnKeyDown(wxKeyEvent& event)
 	}
 }
 
-void ScriptEditorPanelImpl::SaveClicked(wxCommandEvent& event)
+void ScriptEditorFrameImpl::SaveClicked(wxCommandEvent& event)
 {
 	SaveScript();
 }
 
-void ScriptEditorPanelImpl::SaveScript()
+void ScriptEditorFrameImpl::SaveScript()
 {
 	if (currentFileName.empty() == false)
 	{
 		std::ofstream out(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentFileName, std::ios_base::binary);
 		out << sourceText->GetTextRaw();
 	}
+}
+
+void ScriptEditorFrameImpl::UpdateTitle()
+{
+	if (currentFileName.empty())
+	{
+		SetTitle("Script Editor");
+	}
+	else
+	{
+		SetTitle("Script Editor - " + Filesystem::GetLastPathComponent(currentFileName));
+	}
+}
+
+void ScriptEditorFrameImpl::OnClose(wxCloseEvent& event)
+{
+	this->Hide();
+	event.Veto();
 }

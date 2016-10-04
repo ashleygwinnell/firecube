@@ -17,6 +17,7 @@ bool MyApp::OnInit()
 	mainContext = nullptr;
 	wxInitAllImageHandlers();
 	frame = new MainFrameImpl(nullptr);
+	SetTopWindow(frame);
 	frame->Maximize();
 	frame->Show(true);
 	return true;

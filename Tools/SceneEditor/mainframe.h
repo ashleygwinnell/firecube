@@ -684,30 +684,6 @@ class TexturePreviewPanel : public wxPanel
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class ScriptEditorPanel
-///////////////////////////////////////////////////////////////////////////////
-class ScriptEditorPanel : public wxPanel 
-{
-	private:
-	
-	protected:
-		wxToolBar* m_toolBar1;
-		wxToolBarToolBase* saveTool; 
-		wxStyledTextCtrl* sourceText;
-		
-		// Virtual event handlers, overide them in your derived class
-		virtual void SaveClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
-		
-	
-	public:
-		
-		ScriptEditorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 773,746 ), long style = wxTAB_TRAVERSAL ); 
-		~ScriptEditorPanel();
-	
-};
-
-///////////////////////////////////////////////////////////////////////////////
 /// Class ParticleEmitterPanel
 ///////////////////////////////////////////////////////////////////////////////
 class ParticleEmitterPanel : public wxPanel 
@@ -779,6 +755,32 @@ class ParticleEmitterPanel : public wxPanel
 		
 		ParticleEmitterPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~ParticleEmitterPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class ScriptEditorFrame
+///////////////////////////////////////////////////////////////////////////////
+class ScriptEditorFrame : public wxFrame 
+{
+	private:
+	
+	protected:
+		wxToolBar* m_toolBar1;
+		wxToolBarToolBase* saveTool; 
+		wxStyledTextCtrl* sourceText;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
+		virtual void SaveClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		ScriptEditorFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Script Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,600 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		
+		~ScriptEditorFrame();
 	
 };
 

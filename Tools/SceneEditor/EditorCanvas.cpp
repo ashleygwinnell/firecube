@@ -165,7 +165,7 @@ void EditorCanvas::Render()
 
 void EditorCanvas::OnEnterWindow(wxMouseEvent& event)
 {
-	if (!this->HasFocus())
+	if (theApp->GetTopWindow()->HasFocus() && !this->HasFocus())
 	{
 		this->SetFocus();
 	}
