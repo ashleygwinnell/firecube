@@ -61,8 +61,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		void NodeAdded(NodeDescriptor *nodeDesc);
 		void NodeRemoved(NodeDescriptor *nodeDesc);
 		void NodeRenamed(NodeDescriptor *nodeDesc);
-		void UpdateInpsectorPane();
-		void UpdateNode(NodeDescriptor *nodeDesc);
+		void UpdateInpsectorPane();		
 		void UpdateUndoRedoMenu(Command *command);		
 		void SetAllPanelsVisibility(bool visible);
 		void LoadSettingsFile();

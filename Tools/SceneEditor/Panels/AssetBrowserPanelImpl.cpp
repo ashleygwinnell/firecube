@@ -335,7 +335,7 @@ void AssetBrowserPanelImpl::FileListItemSelected(wxListEvent& event)
 			auto root = glCanvas->GetRootNode();
 			
 			std::map<Node *, NodeDescriptor *> nodeMap;
-			::SceneReader sceneReader(engine, nodeMap);
+			::SceneReader sceneReader(engine);
 			auto prefab = sceneReader.ReadPrefab(prefabPath);
 			auto instance = prefab->Instantiate(nullptr, engine, nodeMap);						
 			instance->SetTranslation(vec3(0.0f));

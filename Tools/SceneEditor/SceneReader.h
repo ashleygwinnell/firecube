@@ -11,7 +11,7 @@ class SceneReader : FireCube::Object
 {
 	FIRECUBE_OBJECT(SceneReader)
 public:
-	SceneReader(FireCube::Engine *engine, std::map<FireCube::Node *, NodeDescriptor *> &nodeMap);
+	SceneReader(FireCube::Engine *engine);
 	bool Read(NodeDescriptor *root, const std::string &filename);
 	void ReadNode(TiXmlElement *e, NodeDescriptor *node);
 	NodeDescriptor *ReadPrefab(const std::string &filename);
@@ -20,6 +20,4 @@ private:
 	void ReadComponent(TiXmlElement *e, NodeDescriptor *node);
 	void ReadTransformation(TiXmlElement *e, NodeDescriptor *node);
 	void ReadPrefab(TiXmlElement * element, NodeDescriptor * node);
-	
-	std::map<FireCube::Node *, NodeDescriptor *> &nodeMap;
 };

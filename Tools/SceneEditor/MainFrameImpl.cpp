@@ -299,16 +299,6 @@ void MainFrameImpl::SaveAsClicked(wxCommandEvent& event)
 	SetTitle("SceneEditor - " + filename);
 }
 
-void MainFrameImpl::UpdateNode(NodeDescriptor *nodeDesc)
-{	
-	editorState->GetNodeMap()[nodeDesc->GetNode()] = nodeDesc;
-
-	for (auto child : nodeDesc->GetChildren())
-	{
-		UpdateNode(child);
-	}
-}
-
 void MainFrameImpl::OpenSceneFile(const std::string &filename)
 {
 	SetAllPanelsVisibility(true);		
@@ -317,14 +307,16 @@ void MainFrameImpl::OpenSceneFile(const std::string &filename)
 
 	Filesystem::SetAssetsFolder(Filesystem::GetDirectoryName(Filesystem::GetDirectoryName(filename)));
 
-	::SceneReader sceneReader(engine, editorState->GetNodeMap());
+	::SceneReader sceneReader(engine);
 
 	Reset();
 
 	if (sceneReader.Read(&rootDesc, filename))
 	{
-		NodeAdded(&rootDesc);
-		UpdateNode(&rootDesc);
+		root = rootDesc.Instantiate(nullptr, engine, editorState->GetNodeMap());
+		rootDesc.SetNode(root);
+		scene->GetRootNode()->AddChild(root);
+		NodeAdded(&rootDesc);		
 	}
 
 	SetTitle("SceneEditor - " + filename);
