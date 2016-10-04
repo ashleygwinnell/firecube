@@ -17,7 +17,7 @@
 
 using namespace FireCube;
 
-::SceneReader::SceneReader(Engine *engine, EditorState *editorState) : Object(engine), editorState(editorState)
+::SceneReader::SceneReader(Engine *engine, std::map<FireCube::Node *, NodeDescriptor *> &nodeMap) : Object(engine), nodeMap(nodeMap)
 {
 
 }
@@ -62,7 +62,7 @@ void ::SceneReader::ReadNode(TiXmlElement *e, NodeDescriptor *node)
 		if (element->ValueStr() == "node")
 		{
 			NodeDescriptor *child = new NodeDescriptor();
-			child->Instantiate(node, engine, editorState->GetNodeMap());			
+			child->Instantiate(node, engine, nodeMap);			
 			child->SetParent(node);
 			ReadNode(element, child);
 		}
@@ -473,7 +473,7 @@ void ::SceneReader::ReadPrefab(TiXmlElement * element, NodeDescriptor * node)
 
 		prefab = new NodeDescriptor();
 
-		::SceneReader reader(engine, editorState);
+		::SceneReader reader(engine, nodeMap);
 		reader.ReadNode(e, prefab);	
 		prefab->SetIsPrefab(true);
 		prefab->SetPrefabPath(element->Attribute("name"));
@@ -488,7 +488,7 @@ void ::SceneReader::ReadPrefab(TiXmlElement * element, NodeDescriptor * node)
 		{
 			ReadTransformation(transformationElement, prefabInstance);
 		}
-		prefabInstance->Instantiate(node, engine, editorState->GetNodeMap());
+		prefabInstance->Instantiate(node, engine, nodeMap);
 		prefabInstance->SetParent(node);
 	}
 }
@@ -509,7 +509,7 @@ NodeDescriptor *::SceneReader::ReadPrefab(const std::string &filename)
 
 	NodeDescriptor *prefab = new NodeDescriptor();
 
-	::SceneReader reader(engine, editorState);
+	::SceneReader reader(engine, nodeMap);
 	reader.ReadNode(e, prefab);
 	prefab->SetIsPrefab(true);
 	prefab->SetPrefabPath(filename);

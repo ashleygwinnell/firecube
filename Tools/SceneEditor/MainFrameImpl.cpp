@@ -317,7 +317,7 @@ void MainFrameImpl::OpenSceneFile(const std::string &filename)
 
 	Filesystem::SetAssetsFolder(Filesystem::GetDirectoryName(Filesystem::GetDirectoryName(filename)));
 
-	::SceneReader sceneReader(engine, editorState);
+	::SceneReader sceneReader(engine, editorState->GetNodeMap());
 
 	Reset();
 

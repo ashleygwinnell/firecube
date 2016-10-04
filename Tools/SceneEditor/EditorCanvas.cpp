@@ -473,7 +473,7 @@ void EditorCanvas::AddMesh(const std::string &path)
 
 void EditorCanvas::AddPrefab(const std::string &path)
 {
-	::SceneReader sceneReader(engine, editorState);
+	::SceneReader sceneReader(engine, editorState->GetNodeMap());
 	auto prefab = sceneReader.ReadPrefab(path);
 	if (prefab)
 	{

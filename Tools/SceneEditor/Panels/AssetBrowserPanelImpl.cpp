@@ -8,6 +8,7 @@
 #include "../AssetUtils.h"
 #include "TexturePreviewPanelImpl.h"
 #include "../AuxGLCanvas.h"
+#include "../SceneReader.h"
 #include <wx/dir.h>
 #include <wx/msgdlg.h> 
 #include <wx/dataobj.h>
@@ -333,8 +334,10 @@ void AssetBrowserPanelImpl::FileListItemSelected(wxListEvent& event)
 		glCanvas->SetConstructSceneCallback([&prefabPath, this](AuxGLCanvas *glCanvas) {
 			auto root = glCanvas->GetRootNode();
 			
-			auto prefab = engine->GetResourceCache()->GetResource<Prefab>(prefabPath);
-			auto instance = prefab->Instantiate();
+			std::map<Node *, NodeDescriptor *> nodeMap;
+			::SceneReader sceneReader(engine, nodeMap);
+			auto prefab = sceneReader.ReadPrefab(prefabPath);
+			auto instance = prefab->Instantiate(nullptr, engine, nodeMap);						
 			instance->SetTranslation(vec3(0.0f));
 			instance->SetScale(vec3(1.0f));
 
