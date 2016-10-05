@@ -12,6 +12,71 @@ enum
 
 ScriptEditorFrameImpl::ScriptEditorFrameImpl(wxWindow* parent) : ScriptEditorFrame(parent)
 {
+	
+}
+
+void ScriptEditorFrameImpl::OpenFile(const std::string &filename)
+{
+	auto iter = std::find_if(currentPages.begin(), currentPages.end(), [&filename](const PageInfo &info) {
+		return info.filename == filename;
+	});
+
+	if (iter != currentPages.end())
+	{
+		auto index = std::distance(currentPages.begin(), iter);
+		notebook->ChangeSelection(index);
+	}
+	else
+	{
+		auto resolvedFileName = Filesystem::FindResourceByName(filename);
+		if (resolvedFileName.empty() == false)
+		{
+			NewTab(filename, resolvedFileName);
+		}
+	}
+}
+
+void ScriptEditorFrameImpl::NewTab(const std::string &filename, const std::string &resolvedFileName)
+{	
+	auto panel = new wxPanel(notebook);
+	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
+	
+	auto sourceText = new wxStyledTextCtrl(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER, wxEmptyString);
+	sourceText->SetUseTabs(true);
+	sourceText->SetTabWidth(4);
+	sourceText->SetIndent(4);
+	sourceText->SetTabIndents(true);
+	sourceText->SetBackSpaceUnIndents(true);
+	sourceText->SetViewEOL(false);
+	sourceText->SetViewWhiteSpace(false);
+	sourceText->SetMarginWidth(2, 0);
+	sourceText->SetIndentationGuides(true);
+	sourceText->SetMarginType(1, wxSTC_MARGIN_SYMBOL);
+	sourceText->SetMarginMask(1, wxSTC_MASK_FOLDERS);
+	sourceText->SetMarginWidth(1, 16);
+	sourceText->SetMarginSensitive(1, true);
+	sourceText->SetProperty(wxT("fold"), wxT("1"));
+	sourceText->SetFoldFlags(wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED | wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED);
+	sourceText->SetMarginType(0, wxSTC_MARGIN_NUMBER);
+	sourceText->SetMarginWidth(0, sourceText->TextWidth(wxSTC_STYLE_LINENUMBER, wxT("_99999")));
+	sourceText->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUS);
+	sourceText->MarkerSetBackground(wxSTC_MARKNUM_FOLDER, wxColour(wxT("BLACK")));
+	sourceText->MarkerSetForeground(wxSTC_MARKNUM_FOLDER, wxColour(wxT("WHITE")));
+	sourceText->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUS);
+	sourceText->MarkerSetBackground(wxSTC_MARKNUM_FOLDEROPEN, wxColour(wxT("BLACK")));
+	sourceText->MarkerSetForeground(wxSTC_MARKNUM_FOLDEROPEN, wxColour(wxT("WHITE")));
+	sourceText->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY);
+	sourceText->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_BOXPLUS);
+	sourceText->MarkerSetBackground(wxSTC_MARKNUM_FOLDEREND, wxColour(wxT("BLACK")));
+	sourceText->MarkerSetForeground(wxSTC_MARKNUM_FOLDEREND, wxColour(wxT("WHITE")));
+	sourceText->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_BOXMINUS);
+	sourceText->MarkerSetBackground(wxSTC_MARKNUM_FOLDEROPENMID, wxColour(wxT("BLACK")));
+	sourceText->MarkerSetForeground(wxSTC_MARKNUM_FOLDEROPENMID, wxColour(wxT("WHITE")));
+	sourceText->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY);
+	sourceText->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY);
+	sourceText->SetSelBackground(true, wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT));
+	sourceText->SetSelForeground(true, wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT));
+
 	sourceText->StyleSetFaceName(wxSTC_STYLE_DEFAULT, "Consolas");
 	sourceText->StyleSetSize(wxSTC_STYLE_DEFAULT, 10);
 	sourceText->StyleClearAll();
@@ -78,26 +143,30 @@ ScriptEditorFrameImpl::ScriptEditorFrameImpl(wxWindow* parent) : ScriptEditorFra
 	sourceText->Bind(wxEVT_STC_MARGINCLICK, &ScriptEditorFrameImpl::OnMarginClick, this);
 	sourceText->Bind(wxEVT_STC_CHARADDED, &ScriptEditorFrameImpl::OnCharAdded, this);
 	sourceText->Bind(wxEVT_STC_UPDATEUI, &ScriptEditorFrameImpl::OnBrace, this);
-}
+	sourceText->Bind(wxEVT_KEY_DOWN, &ScriptEditorFrameImpl::OnKeyDown, this);
 
-void ScriptEditorFrameImpl::OpenFile(const std::string &filename)
-{
-	auto resolvedFileName = Filesystem::FindResourceByName(filename);
-	if (resolvedFileName.empty() == false)
-	{
-		currentFileName = filename;
+	std::ifstream f(resolvedFileName, std::ios_base::binary);
+	std::string source((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+	sourceText->SetTextRaw(source.c_str());
+	sourceText->EmptyUndoBuffer();	
 
-		std::ifstream f(resolvedFileName, std::ios_base::binary);
-		std::string source((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
-		sourceText->SetTextRaw(source.c_str());
-		sourceText->EmptyUndoBuffer();
+	PageInfo info;
+	info.filename = filename;
+	info.sourceText = sourceText;
+	currentPages.push_back(info);
+	
+	sizer->Add(sourceText, 1, wxALL | wxEXPAND, 0);
 
-		UpdateTitle();
-	}
+	panel->SetSizer(sizer);
+	panel->Layout();
+	sizer->Fit(panel);
+	notebook->AddPage(panel, Filesystem::GetLastPathComponent(filename), true);	
 }
 
 void ScriptEditorFrameImpl::OnMarginClick(wxStyledTextEvent &event)
 {
+	wxStyledTextCtrl *sourceText = (wxStyledTextCtrl *) event.GetEventObject();
+
 	if (event.GetMargin() == MARGIN_FOLD)
 	{
 		int lineClick = sourceText->LineFromPosition(event.GetPosition());
@@ -112,6 +181,8 @@ void ScriptEditorFrameImpl::OnMarginClick(wxStyledTextEvent &event)
 
 void ScriptEditorFrameImpl::OnCharAdded(wxStyledTextEvent &event)
 {
+	wxStyledTextCtrl *sourceText = (wxStyledTextCtrl *)event.GetEventObject();
+
 	if (static_cast<char>(event.GetKey()) == '\n' || static_cast<char>(event.GetKey()) == '\r')
 	{
 		int line = sourceText->GetCurrentLine();
@@ -140,6 +211,8 @@ void ScriptEditorFrameImpl::OnCharAdded(wxStyledTextEvent &event)
 
 void ScriptEditorFrameImpl::OnBrace(wxStyledTextEvent &event)
 {
+	wxStyledTextCtrl *sourceText = (wxStyledTextCtrl *)event.GetEventObject();
+
 	// Caret position
 	int pos = sourceText->GetCurrentPos();
 
@@ -177,6 +250,11 @@ void ScriptEditorFrameImpl::OnBrace(wxStyledTextEvent &event)
 	}
 }
 
+void ScriptEditorFrameImpl::OnNotebookPageChanged(wxAuiNotebookEvent& event)
+{
+	UpdateTitle();
+}
+
 void ScriptEditorFrameImpl::OnKeyDown(wxKeyEvent& event)
 {
 	if (event.GetKeyCode() == 'S' && event.ControlDown())
@@ -196,22 +274,22 @@ void ScriptEditorFrameImpl::SaveClicked(wxCommandEvent& event)
 
 void ScriptEditorFrameImpl::SaveScript()
 {
-	if (currentFileName.empty() == false)
-	{
-		std::ofstream out(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentFileName, std::ios_base::binary);
-		out << sourceText->GetTextRaw();
-	}
+	int id = notebook->GetSelection();
+
+	std::ofstream out(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentPages[id].filename, std::ios_base::binary);
+	out << currentPages[id].sourceText->GetTextRaw();
 }
 
 void ScriptEditorFrameImpl::UpdateTitle()
 {
-	if (currentFileName.empty())
+	if (currentPages.empty())
 	{
 		SetTitle("Script Editor");
 	}
 	else
 	{
-		SetTitle("Script Editor - " + Filesystem::GetLastPathComponent(currentFileName));
+		int id = notebook->GetSelection();
+		SetTitle("Script Editor - " + Filesystem::GetLastPathComponent(currentPages[id].filename));
 	}
 }
 
@@ -219,4 +297,13 @@ void ScriptEditorFrameImpl::OnClose(wxCloseEvent& event)
 {
 	this->Hide();
 	event.Veto();
+}
+
+void ScriptEditorFrameImpl::OnNotebookPageClose(wxAuiNotebookEvent& event)
+{
+	currentPages.erase(currentPages.begin() + event.GetSelection());
+	if (currentPages.empty())
+	{
+		SetTitle("Script Editor");
+	}
 }

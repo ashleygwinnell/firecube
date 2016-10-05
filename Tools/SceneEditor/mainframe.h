@@ -48,7 +48,7 @@
 #include <wx/listctrl.h>
 #include <wx/statbmp.h>
 #include <wx/toolbar.h>
-#include <wx/stc/stc.h>
+#include <wx/aui/auibook.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -768,12 +768,13 @@ class ScriptEditorFrame : public wxFrame
 	protected:
 		wxToolBar* m_toolBar1;
 		wxToolBarToolBase* saveTool; 
-		wxStyledTextCtrl* sourceText;
+		wxAuiNotebook* notebook;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void SaveClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
+		virtual void OnNotebookPageChanged( wxAuiNotebookEvent& event ) { event.Skip(); }
+		virtual void OnNotebookPageClose( wxAuiNotebookEvent& event ) { event.Skip(); }
 		
 	
 	public:
