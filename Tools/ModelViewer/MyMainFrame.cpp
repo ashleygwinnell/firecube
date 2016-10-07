@@ -279,7 +279,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		std::istringstream idss(properyName.substr(14));
 		idss >> id;
 		mat = materialMap[id];
-		mat->SetTexture(TextureUnit::DIFFUSE, theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Texture>(evt->GetPropertyValue().GetString().ToStdString()));
+		mat->SetTexture(TextureUnit::DIFFUSE, theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Texture2D>(evt->GetPropertyValue().GetString().ToStdString()));
 		updateTechnique = true;
 	}
 	if (properyName.substr(0, 13) == "TextureNormal")
@@ -288,7 +288,7 @@ void MyMainFrame::PropertyGrid1Changed(wxCommandEvent& event )
 		std::istringstream idss(properyName.substr(13));
 		idss >> id;
 		mat = materialMap[id];		
-		mat->SetTexture(TextureUnit::NORMAL, theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Texture>(evt->GetPropertyValue().GetString().ToStdString()));
+		mat->SetTexture(TextureUnit::NORMAL, theApp->fcApp.GetEngine()->GetResourceCache()->GetResource<Texture2D>(evt->GetPropertyValue().GetString().ToStdString()));
 		updateTechnique = true;
 	}
 	if (properyName.substr(0, 9) == "Technique")
