@@ -122,6 +122,9 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	viewAssetBrowserMenuItem = new wxMenuItem( viewMenu, wxID_ANY, wxString( wxT("Asset Browser") ) , wxEmptyString, wxITEM_CHECK );
 	viewMenu->Append( viewAssetBrowserMenuItem );
 	
+	viewScriptEditorMenuItem = new wxMenuItem( viewMenu, wxID_ANY, wxString( wxT("Script Editor") ) , wxEmptyString, wxITEM_CHECK );
+	viewMenu->Append( viewScriptEditorMenuItem );
+	
 	menuBar->Append( viewMenu, wxT("View") ); 
 	
 	this->SetMenuBar( menuBar );
@@ -202,6 +205,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( viewInspectorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	this->Connect( viewMaterialEditorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
 	this->Connect( viewAssetBrowserMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewAssetBrowserClicked ) );
+	this->Connect( viewScriptEditorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewScriptEditorClicked ) );
 	sceneTreeCtrl->Connect( wxEVT_KEY_UP, wxKeyEventHandler( MainFrame::SceneTreeKeyUp ), NULL, this );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( MainFrame::SceneTreeBeginDrag ), NULL, this );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_END_DRAG, wxTreeEventHandler( MainFrame::SceneTreeEndDrag ), NULL, this );
@@ -238,6 +242,7 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewAssetBrowserClicked ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewScriptEditorClicked ) );
 	sceneTreeCtrl->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( MainFrame::SceneTreeKeyUp ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( MainFrame::SceneTreeBeginDrag ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_END_DRAG, wxTreeEventHandler( MainFrame::SceneTreeEndDrag ), NULL, this );

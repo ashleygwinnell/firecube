@@ -37,6 +37,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void ViewInspectorClicked(wxCommandEvent& event);
 		virtual void ViewMaterialEditorClicked(wxCommandEvent& event);
 		virtual void ViewAssetBrowserClicked(wxCommandEvent& event);
+		virtual void ViewScriptEditorClicked(wxCommandEvent& event) override;
 		virtual void SceneTreeBeginDrag(wxTreeEvent& event);
 		virtual void SceneTreeEndDrag(wxTreeEvent& event);
 		virtual void PaneClose(wxAuiManagerEvent& event);		

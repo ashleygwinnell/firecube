@@ -73,6 +73,7 @@ class MainFrame : public wxFrame
 		wxMenuItem* viewInspectorMenuItem;
 		wxMenuItem* viewMaterialEditorMenuItem;
 		wxMenuItem* viewAssetBrowserMenuItem;
+		wxMenuItem* viewScriptEditorMenuItem;
 		wxPanel* m_panel1;
 		wxTreeCtrl* sceneTreeCtrl;
 		wxPanel* m_panel2;
@@ -107,6 +108,7 @@ class MainFrame : public wxFrame
 		virtual void ViewInspectorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewMaterialEditorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewAssetBrowserClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ViewScriptEditorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SceneTreeKeyUp( wxKeyEvent& event ) { event.Skip(); }
 		virtual void SceneTreeBeginDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeEndDrag( wxTreeEvent& event ) { event.Skip(); }

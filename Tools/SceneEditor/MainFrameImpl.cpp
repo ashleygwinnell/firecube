@@ -59,8 +59,10 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	SubscribeToEvent(editorState, editorState->showMaterialEditor, &MainFrameImpl::ShowMaterialEditor);
 	SubscribeToEvent(editorState, editorState->showScriptEditor, &MainFrameImpl::EditScript);
 	
-	scriptEditorFrame = new ScriptEditorFrameImpl(this);
-	scriptEditorFrame->Maximize();
+	scriptEditorFrame = new ScriptEditorFrameImpl(this);			
+	scriptEditorFrame->Bind(wxEVT_SHOW, [this](wxShowEvent &event) {
+		viewScriptEditorMenuItem->Check(event.IsShown());
+	});	
 	
 	materialEditorPanel = new MaterialEditorPanelImpl(this);
 	m_mgr.AddPane(materialEditorPanel, wxAuiPaneInfo().Name(wxT("materialEditorPane")).Caption(wxT("Material Editor")).PinButton(true).Float().Resizable().Hide());
@@ -564,6 +566,18 @@ void MainFrameImpl::ViewAssetBrowserClicked(wxCommandEvent& event)
 	m_mgr.Update();
 }
 
+void MainFrameImpl::ViewScriptEditorClicked(wxCommandEvent& event)
+{	
+	if (event.IsChecked())
+	{
+		scriptEditorFrame->Show();
+	}
+	else
+	{
+		scriptEditorFrame->Hide();
+	}
+	
+}
 
 void MainFrameImpl::PaneClose(wxAuiManagerEvent& event)
 {
