@@ -7,6 +7,7 @@ namespace FireCube
 {
 
 class Sound;
+class SoundDecoder;
 
 class FIRECUBE_API SoundEmitter : public Component
 {
@@ -85,21 +86,24 @@ public:
 	*/
 	float GetPanning() const;
 private:
-	void MixMonoToMono(int *dest, int samples, unsigned int mixRate);
-	void MixStereoToMono(int *dest, int samples, unsigned int mixRate);
-	void MixMonoToStereo(int *dest, int samples, unsigned int mixRate);
-	void MixStereoToStereo(int *dest, int samples, unsigned int mixRate);
+	void MixMonoToMono(int *dest, Sound *sound, int samples, unsigned int mixRate);
+	void MixStereoToMono(int *dest, Sound *sound, int samples, unsigned int mixRate);
+	void MixMonoToStereo(int *dest, Sound *sound, int samples, unsigned int mixRate);
+	void MixStereoToStereo(int *dest, Sound *sound, int samples, unsigned int mixRate);
 	void MixSilence(int *dest, int samples, unsigned int mixRate);
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
 
-	Sound *sound;
+	Sound *sound;	
+	SharedPtr<SoundDecoder> soundDecoder;
+	SharedPtr<Sound> decodedSoundBuffer;
 	char *position;	
 	int fractPosition;
 	bool looped;
 	float gain;
 	float panning;
+	unsigned int unusedDecodedBytes;
 };
 
 }

@@ -23,6 +23,7 @@
     <ClCompile Include="Application\Input.cpp" />
     <ClCompile Include="Application\WindowProperties.cpp" />
     <ClCompile Include="Audio\Audio.cpp" />
+    <ClCompile Include="Audio\OggVorbisSoundDecoder.cpp" />
     <ClCompile Include="Audio\Sound.cpp" />
     <ClCompile Include="Audio\SoundEmitter.cpp" />
     <ClCompile Include="Core\Component.cpp" />
@@ -128,7 +129,9 @@
     <ClInclude Include="Application\Input.h" />
     <ClInclude Include="Application\WindowProperties.h" />
     <ClInclude Include="Audio\Audio.h" />
+    <ClInclude Include="Audio\OggVorbisSoundDecoder.h" />
     <ClInclude Include="Audio\Sound.h" />
+    <ClInclude Include="Audio\SoundDecoder.h" />
     <ClInclude Include="Audio\SoundEmitter.h" />
     <ClInclude Include="Core\Component.h" />
     <ClInclude Include="Core\Engine.h" />

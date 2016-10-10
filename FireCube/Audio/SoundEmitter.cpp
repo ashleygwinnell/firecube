@@ -2,10 +2,13 @@
 #include "Audio/Sound.h"
 #include "Core/Engine.h"
 #include "Audio/Audio.h"
+#include "SoundDecoder.h"
 
 using namespace FireCube;
 
-SoundEmitter::SoundEmitter(Engine *engine) : Component(engine), sound(nullptr), looped(false), gain(1.0f), panning(0.0f)
+const int EXTRA_DECODED_SAMPLES = 4;
+
+SoundEmitter::SoundEmitter(Engine *engine) : Component(engine), sound(nullptr), looped(false), gain(1.0f), panning(0.0f), unusedDecodedBytes(0), position(nullptr)
 {
 
 }
@@ -52,6 +55,24 @@ void SoundEmitter::SceneChanged(Scene *oldScene)
 void SoundEmitter::SetSound(Sound *sound)
 {
 	this->sound = sound;
+	if (sound->NeedsDecoding())
+	{
+		soundDecoder = sound->GetSoundDecoder();
+		unsigned int sampleSize = sound->GetSampleSize();
+		const int DECODED_BUFFER_LENGTH = 100;
+		unsigned int decodedbufferSize = sound->GetFrequency() * sampleSize * DECODED_BUFFER_LENGTH / 1000;
+
+		decodedSoundBuffer = new Sound(engine);
+		decodedSoundBuffer->SetSize(decodedbufferSize);
+		decodedSoundBuffer->SetFrequency(sound->GetFrequency());
+		decodedSoundBuffer->SetSixteenBit(sound->IsSixteenBit());
+		decodedSoundBuffer->SetStereo(sound->IsStereo());
+	}
+	else
+	{
+		soundDecoder.Reset();
+		decodedSoundBuffer.Reset();
+	}
 	position = nullptr;	
 }
 
@@ -65,43 +86,72 @@ void SoundEmitter::Play()
 	if (position)
 	{
 		std::lock_guard<std::mutex> lock(engine->GetAudio()->GetMutex());
-		position = sound->GetStart();
+		position = soundDecoder ? decodedSoundBuffer->GetStart() : sound->GetStart();
 		fractPosition = 0;
 	}
 	else
 	{
-		position = sound->GetStart();
+		position = soundDecoder ? decodedSoundBuffer->GetStart() : sound->GetStart();
 		fractPosition = 0;
 	}
 }
 
 void SoundEmitter::Mix(int *dest, unsigned int samples, unsigned int mixRate, bool stereo)
 {
-	if (position == nullptr || !sound)
+	if (position == nullptr || (!sound && !soundDecoder))
 		return;
+
+	int decodedBufferDataSize = 0;
+
+	if (soundDecoder)
+	{
+		int neededSize = (int) ((float) samples * (float) sound->GetFrequency() / (float) mixRate + EXTRA_DECODED_SAMPLES) * sound->GetSampleSize() - unusedDecodedBytes;
+		neededSize = std::min(std::max(neededSize, 0), (int) decodedSoundBuffer->GetSize() - (int) unusedDecodedBytes);
+		position = decodedSoundBuffer->GetStart();
+
+		char *decodedBufferDest = position + unusedDecodedBytes;
+		int writtenBytes = neededSize > 0 ? soundDecoder->GetData(decodedBufferDest, neededSize) : 0;
+		if (writtenBytes < neededSize)
+		{
+			memset(decodedBufferDest + writtenBytes, 0, neededSize - writtenBytes);
+		}
+
+		decodedBufferDataSize = writtenBytes + unusedDecodedBytes;
+	}
+
+	Sound *curSound = soundDecoder ? decodedSoundBuffer : sound;
 	
 	if (stereo)
 	{
 		if (sound->IsStereo())
 		{
-			MixStereoToStereo(dest, samples, mixRate);
+			MixStereoToStereo(dest, curSound, samples, mixRate);
 		}
 		else
 		{
-			MixMonoToStereo(dest, samples, mixRate);
+			MixMonoToStereo(dest, curSound, samples, mixRate);
 		}
 	}
 	else
 	{
 		if (sound->IsStereo())
 		{
-			MixStereoToMono(dest, samples, mixRate);
+			MixStereoToMono(dest, curSound, samples, mixRate);
 		}
 		else
 		{
-			MixMonoToMono(dest, samples, mixRate);
+			MixMonoToMono(dest, curSound, samples, mixRate);
 		}
 	}	
+
+	if (soundDecoder)
+	{
+		unusedDecodedBytes = std::max(0, decodedBufferDataSize - (position - decodedSoundBuffer->GetStart()));
+		if (unusedDecodedBytes > 0)
+		{
+			memcpy(decodedSoundBuffer->GetStart(), position, unusedDecodedBytes);
+		}
+	}
 }
 
 template <typename T>
@@ -150,7 +200,7 @@ void IncPositionStereo(T *& position, int &fractPosition, int intInc, int fractI
 	}
 }
 
-void SoundEmitter::MixMonoToMono(int *dest, int samples, unsigned int mixRate)
+void SoundEmitter::MixMonoToMono(int *dest, Sound *sound, int samples, unsigned int mixRate)
 {
 	float finalGain = gain;
 	int vol = (int)(256.0f * finalGain + 0.5f);	
@@ -173,7 +223,7 @@ void SoundEmitter::MixMonoToMono(int *dest, int samples, unsigned int mixRate)
 			*dest = *dest + (*pos * vol) / 256;
 			++dest;			
 
-			IncPositionMono(pos, fractPosition, intInc, fractInc, looped, (short *)sound->GetStart(), end);
+			IncPositionMono(pos, fractPosition, intInc, fractInc, soundDecoder ? true : looped, (short *)sound->GetStart(), end);
 			if (pos == nullptr)
 				break;			
 		}
@@ -189,7 +239,7 @@ void SoundEmitter::MixMonoToMono(int *dest, int samples, unsigned int mixRate)
 			*dest = *dest + *pos * vol;
 			++dest;
 			
-			IncPositionMono(pos, fractPosition, intInc, fractInc, looped, sound->GetStart(), end);
+			IncPositionMono(pos, fractPosition, intInc, fractInc, soundDecoder ? true : looped, sound->GetStart(), end);
 			if (pos == nullptr)
 				break;
 		}
@@ -198,7 +248,7 @@ void SoundEmitter::MixMonoToMono(int *dest, int samples, unsigned int mixRate)
 	}	
 }
 
-void SoundEmitter::MixStereoToMono(int *dest, int samples, unsigned int mixRate)
+void SoundEmitter::MixStereoToMono(int *dest, Sound *sound, int samples, unsigned int mixRate)
 {
 	float finalGain = gain;
 	int vol = (int)(256.0f * finalGain + 0.5f);
@@ -222,7 +272,7 @@ void SoundEmitter::MixStereoToMono(int *dest, int samples, unsigned int mixRate)
 			*dest = *dest + (m * vol) / 256;
 			++dest;
 			
-			IncPositionStereo(pos, fractPosition, intInc, fractInc, looped, (short *) sound->GetStart(), end);
+			IncPositionStereo(pos, fractPosition, intInc, fractInc, soundDecoder ? true : looped, (short *) sound->GetStart(), end);
 			if (pos == nullptr)
 				break;			
 		}
@@ -239,7 +289,7 @@ void SoundEmitter::MixStereoToMono(int *dest, int samples, unsigned int mixRate)
 			*dest = *dest + m * vol;
 			++dest;
 			
-			IncPositionStereo(pos, fractPosition, intInc, fractInc, looped, sound->GetStart(), end);
+			IncPositionStereo(pos, fractPosition, intInc, fractInc, soundDecoder ? true : looped, sound->GetStart(), end);
 			if (pos == nullptr)
 				break;
 		}
@@ -248,7 +298,7 @@ void SoundEmitter::MixStereoToMono(int *dest, int samples, unsigned int mixRate)
 	}	
 }
 
-void SoundEmitter::MixMonoToStereo(int *dest, int samples, unsigned int mixRate)
+void SoundEmitter::MixMonoToStereo(int *dest, Sound *sound, int samples, unsigned int mixRate)
 {
 	float finalGain = gain;
 	int leftVol = (int)((-panning + 1.0f) * (256.0f * finalGain + 0.5f));
@@ -274,7 +324,7 @@ void SoundEmitter::MixMonoToStereo(int *dest, int samples, unsigned int mixRate)
 			*dest = *dest + (*pos * rightVol) / 256;
 			++dest;
 
-			IncPositionMono(pos, fractPosition, intInc, fractInc, looped, (short *)sound->GetStart(), end);
+			IncPositionMono(pos, fractPosition, intInc, fractInc, soundDecoder ? true : looped, (short *)sound->GetStart(), end);
 			if (pos == nullptr)
 				break;
 		}
@@ -292,7 +342,7 @@ void SoundEmitter::MixMonoToStereo(int *dest, int samples, unsigned int mixRate)
 			*dest = *dest + *pos * rightVol;
 			++dest;
 
-			IncPositionMono(pos, fractPosition, intInc, fractInc, looped, sound->GetStart(), end);
+			IncPositionMono(pos, fractPosition, intInc, fractInc, soundDecoder ? true : looped, sound->GetStart(), end);
 			if (pos == nullptr)
 				break;
 		}
@@ -301,7 +351,7 @@ void SoundEmitter::MixMonoToStereo(int *dest, int samples, unsigned int mixRate)
 	}	
 }
 
-void SoundEmitter::MixStereoToStereo(int *dest, int samples, unsigned int mixRate)
+void SoundEmitter::MixStereoToStereo(int *dest, Sound *sound, int samples, unsigned int mixRate)
 {
 	float finalGain = gain;
 	int leftVol = (int)((-panning + 1.0f) * (256.0f * finalGain + 0.5f));
@@ -327,7 +377,7 @@ void SoundEmitter::MixStereoToStereo(int *dest, int samples, unsigned int mixRat
 			*dest = *dest + (pos[1] * rightVol) / 256;
 			++dest;
 
-			IncPositionStereo(pos, fractPosition, intInc, fractInc, looped, (short *)sound->GetStart(), end);
+			IncPositionStereo(pos, fractPosition, intInc, fractInc, soundDecoder ? true : looped, (short *)sound->GetStart(), end);
 			if (pos == nullptr)
 				break;
 		}
@@ -345,7 +395,7 @@ void SoundEmitter::MixStereoToStereo(int *dest, int samples, unsigned int mixRat
 			*dest = *dest + pos[1] * rightVol;
 			++dest;
 
-			IncPositionStereo(pos, fractPosition, intInc, fractInc, looped, sound->GetStart(), end);
+			IncPositionStereo(pos, fractPosition, intInc, fractInc, soundDecoder ? true : looped, sound->GetStart(), end);
 			if (pos == nullptr)
 				break;
 		}
