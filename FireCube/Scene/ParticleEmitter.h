@@ -127,7 +127,7 @@ private:
 	const int particleDataSize = 8;
 
 	ParticleEmitter(const ParticleEmitter &other);
-	void Update(float time);
+	void Update(float dt);
 	void EmitParticles(unsigned int count);
 	void Init(unsigned int numberOfParticles, Material *material);
 	inline void RandomPositionAndDirection(vec3 &position, vec3 &direction) const;	

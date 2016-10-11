@@ -66,9 +66,9 @@ void AnimatedModel::CreateFromMesh(Mesh *mesh)
 	SetAnimation(0);
 }
 
-void AnimatedModel::Update(float time)
+void AnimatedModel::Update(float dt)
 {
-	currentTime += time;
+	currentTime += dt;
 	MarkedDirty();
 }
 

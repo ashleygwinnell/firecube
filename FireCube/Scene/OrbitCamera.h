@@ -128,7 +128,7 @@ private:
 	static bool addedInputMapping;
 	void CheckRanges();
 	void UpdateNode();
-	void HandleInput(float time, const MappedInput &input);
+	void HandleInput(float dt, const MappedInput &input);
 	vec3 rotation;	
 	float distance;
 	float minDistance;

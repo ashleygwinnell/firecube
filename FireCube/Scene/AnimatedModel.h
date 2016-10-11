@@ -64,9 +64,9 @@ private:
 	
 	/**
 	* Updates the animation
-	* @param time The time passed
+	* @param dt The time passed
 	*/
-	void Update(float time);
+	void Update(float dt);
 
 	std::vector<BoundingBox> boundingBoxes;
 	std::vector<SharedPtr<Geometry>> geometries;

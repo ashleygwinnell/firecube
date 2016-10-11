@@ -130,8 +130,8 @@ private:
 
 	LuaScript(const LuaScript &other);
 
-	void Update(float time);
-	void HandleInput(float time, const MappedInput &input);
+	void Update(float dt);
+	void HandleInput(float dt, const MappedInput &input);
 	void CharacterControllerCollision(CharacterController *characterController, CollisionShape *collisionShape);
 	virtual void MarkedDirty();
 	virtual void NodeChanged();

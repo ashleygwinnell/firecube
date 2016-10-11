@@ -20,7 +20,7 @@ LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(othe
 	CreateObject(objectName);
 }
 
-void LuaScript::Update(float time)
+void LuaScript::Update(float dt)
 {	
 	if (awakeCalled == false && scene)
 	{		
@@ -48,7 +48,7 @@ void LuaScript::Update(float time)
 		// Call update function	
 		try
 		{
-			(*updateFunction)(object, time);
+			(*updateFunction)(object, dt);
 		}
 		catch (LuaException &e)
 		{
@@ -185,13 +185,13 @@ void LuaScript::SubscribeToEventFromLua(const std::string &eventName, LuaRef par
 	}
 }
 
-void LuaScript::HandleInput(float time, const MappedInput &input)
+void LuaScript::HandleInput(float dt, const MappedInput &input)
 {
 	if (awakeCalled)
 	{
 		try
 		{
-			(*scriptFunctions[ScriptFunction::HANDLE_INPUT])(object, time, input);
+			(*scriptFunctions[ScriptFunction::HANDLE_INPUT])(object, dt, input);
 		}
 		catch (LuaException &e)
 		{

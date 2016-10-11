@@ -144,7 +144,7 @@ Material *ParticleEmitter::GetMaterial() const
 	return renderableParts[0].material;
 }
 
-void ParticleEmitter::Update(float time)
+void ParticleEmitter::Update(float dt)
 {
 	if (!IsEnabled())
 		return;
@@ -155,13 +155,13 @@ void ParticleEmitter::Update(float time)
 		needToReset = false;
 	}
 
-	float particlesToEmitExact = (float)emissionRate * time + emissionLeftOver;
+	float particlesToEmitExact = (float)emissionRate * dt + emissionLeftOver;
 	unsigned int particlesToEmit = (unsigned int)std::floor(particlesToEmitExact);
 	emissionLeftOver = particlesToEmitExact - particlesToEmit;
 	EmitParticles(particlesToEmit);
 
 	Program *program = engine->GetRenderer()->SetShaders(updateShader, nullptr);
-	program->SetUniform(PARAM_TIME_STEP, time);	
+	program->SetUniform(PARAM_TIME_STEP, dt);
 	glEnable(GL_RASTERIZER_DISCARD);
 	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, particleBuffers[1]->GetObjectId());
 	glBeginTransformFeedback(GL_POINTS);
@@ -176,7 +176,7 @@ void ParticleEmitter::Update(float time)
 	{
 		if (particleLife[i] > 0)
 		{
-			particleLife[i] -= time;
+			particleLife[i] -= dt;
 			if (particleLife[i] < 0)
 			{
 				deadParticles.push_back(i);
