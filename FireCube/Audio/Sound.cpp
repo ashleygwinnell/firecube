@@ -147,6 +147,7 @@ unsigned int Sound::GetSampleSize() const
 void Sound::SetSize(unsigned int size)
 {
 	data.resize(size);
+	end = data.data() + size;
 }
 
 bool Sound::NeedsDecoding() const
