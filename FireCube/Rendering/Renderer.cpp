@@ -644,6 +644,16 @@ float Renderer::GetTimeStep() const
 	return timeStep;
 }
 
+void Renderer::SetTime(float time)
+{
+	this->time = time;
+}
+
+float Renderer::GetTime() const
+{
+	return time;
+}
+
 RenderSurface *Renderer::GetShadowMap()
 {
 	return shadowMap;

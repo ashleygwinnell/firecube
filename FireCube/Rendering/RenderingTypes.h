@@ -112,6 +112,7 @@ extern StringHash PARAM_CAMERA_POS;
 extern StringHash PARAM_FOG_PARAMETERS;
 extern StringHash PARAM_FOG_COLOR;
 extern StringHash PARAM_TIME_STEP;
+extern StringHash PARAM_TIME;
 extern StringHash PARAM_SKIN_MATRICES;
 extern StringHash PARAM_LIGHT_BIAS_MVP_MATRIX;
 extern StringHash PARAM_SHADOW_INTENSITY;

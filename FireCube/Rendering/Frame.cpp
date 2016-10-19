@@ -111,6 +111,7 @@ void Frame::Render(Renderer *renderer)
 				normalMatrix.Transpose();
 				program->SetUniform(PARAM_NORMAL_MATRIX, normalMatrix);
 				program->SetUniform(PARAM_TIME_STEP, renderer->GetTimeStep());
+				program->SetUniform(PARAM_TIME, renderer->GetTime());
 				// Set material properties if this geometry is different from the last one 
 				renderer->UseMaterial(renderJob.material);
 				renderer->SetBlendMode(renderJob.pass->GetBlendMode());
@@ -169,6 +170,7 @@ void Frame::Render(Renderer *renderer)
 					normalMatrix.Transpose();
 					program->SetUniform(PARAM_NORMAL_MATRIX, normalMatrix);
 					program->SetUniform(PARAM_TIME_STEP, renderer->GetTimeStep());
+					program->SetUniform(PARAM_TIME, renderer->GetTime());
 					// Set material properties if this geometry is different from the last one 
 					renderer->UseMaterial(renderJob.material);
 					renderer->UseLight(light);

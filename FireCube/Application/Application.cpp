@@ -14,7 +14,7 @@
 
 using namespace FireCube;
 
-Application::Application() : Object(new Engine), running(false), frameCount(0), fpsTime(0), fps(0), context(nullptr), mainWindow(nullptr), appInitialized(false)
+Application::Application() : Object(new Engine), running(false), frameCount(0), fpsTime(0), fps(0), context(nullptr), mainWindow(nullptr), appInitialized(false), passedTime(0.0f)
 {
 	
 }
@@ -166,6 +166,7 @@ void Application::Run()
 		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_X_ABSOLUTE, (float)x);
 		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_AXIS_Y_ABSOLUTE, (float)y);		
 		renderer->SetTimeStep(deltaTime);
+		renderer->SetTime(GetPassedTime());
 		// Dispatch input to all input listeners		
 		Events::HandleInput(this, deltaTime, inputManager.GetMappedInput());
 		// Update the scene

@@ -235,6 +235,17 @@ public:
 	float GetTimeStep() const;
 
 	/**
+	* Sets the time
+	* @param time The time
+	*/
+	void SetTime(float time);
+
+	/**
+	* @returns The current time
+	*/
+	float GetTime() const;
+
+	/**
 	* @returns A render surface to be used as the target for shadow maps
 	*/
 	RenderSurface *GetShadowMap();
@@ -300,6 +311,7 @@ private:
 	bool depthWrite;
 	DepthTest depthTest;
 	float timeStep;
+	float time;
 	std::vector<SharedPtr<SceneView>> sceneViews;
 };
 
