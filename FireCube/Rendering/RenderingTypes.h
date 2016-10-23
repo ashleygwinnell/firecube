@@ -87,18 +87,15 @@ ClearBufferType operator | (const ClearBufferType &lhs, const ClearBufferType &r
 ClearBufferType operator |= (ClearBufferType &lhs, const ClearBufferType &rhs);
 ClearBufferType operator & (const ClearBufferType &lhs, const ClearBufferType &rhs);
 
-extern StringHash PARAM_MATERIAL_DIFFUSE;
-extern std::string PARAM_MATERIAL_DIFFUSE_NAME;
-extern StringHash PARAM_MATERIAL_SPECULAR;
-extern std::string PARAM_MATERIAL_SPECULAR_NAME;
-extern StringHash PARAM_MATERIAL_SHININESS;
-extern std::string PARAM_MATERIAL_SHININESS_NAME;
-extern StringHash PARAM_MATERIAL_OPACITY;
-extern std::string PARAM_MATERIAL_OPACITY_NAME;
-extern StringHash PARAM_U_OFFSET;
-extern std::string PARAM_U_OFFSET_NAME;
-extern StringHash PARAM_V_OFFSET;
-extern std::string PARAM_V_OFFSET_NAME;
+// Material parameters
+extern std::string PARAM_MATERIAL_DIFFUSE;
+extern std::string PARAM_MATERIAL_SPECULAR;
+extern std::string PARAM_MATERIAL_SHININESS;
+extern std::string PARAM_MATERIAL_OPACITY;
+extern std::string PARAM_MATERIAL_U_OFFSET;
+extern std::string PARAM_MATERIAL_V_OFFSET;
+
+// Shader parameters
 extern StringHash PARAM_AMBIENT_COLOR;
 extern StringHash PARAM_MODEL_MATRIX;
 extern StringHash PARAM_VIEW_PROJECTION_MATRIX;
@@ -118,10 +115,12 @@ extern StringHash PARAM_LIGHT_BIAS_MVP_MATRIX;
 extern StringHash PARAM_SHADOW_INTENSITY;
 extern StringHash PARAM_SCREEN_SIZE;
 
+// Pass names
 extern StringHash BASE_PASS;
 extern StringHash LIGHT_PASS;
 extern StringHash SHADOW_PASS;
 extern StringHash ALPHA_PASS;
 
+// Render surface targets
 extern StringHash VIEWPORT_TARGET;
 }

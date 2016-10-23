@@ -21,7 +21,7 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 	
 	// X Axis
 	xAxisMaterial = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml")->Clone();
-	xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 0.0f, 0.0f));
+	xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
 	mesh = new Mesh(engine);
 	meshIntersection = new Mesh(engine);
 	mesh->AddGeometry(CreateArc(arcRadius, PI * 0.5f, PI * 1.5f, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), xAxisMaterial);
@@ -43,7 +43,7 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 
 	// Y Axis
 	yAxisMaterial = xAxisMaterial->Clone();
-	yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.0f, 1.0f, 0.0f));
+	yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
 	mesh = new Mesh(engine);
 	meshIntersection = new Mesh(engine);
 	mesh->AddGeometry(CreateArc(arcRadius, 0, PI, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), yAxisMaterial);
@@ -65,7 +65,7 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 
 	// Z Axis
 	zAxisMaterial = xAxisMaterial->Clone();
-	zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.0f, 0.0f, 1.0f));
+	zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
 	mesh = new Mesh(engine);
 	meshIntersection = new Mesh(engine);
 	mesh->AddGeometry(CreateArc(arcRadius, PI * 0.5f, PI * 1.5f, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), zAxisMaterial);
@@ -136,17 +136,17 @@ bool RotateGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor *cu
 		if (currentAxis == "XAxis")
 		{
 			currentPlane = Plane(vec3(1, 0, 0), node->GetWorldPosition());
-			xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 1.0f, 0.0f));
+			xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
 		}
 		else if (currentAxis == "YAxis")
 		{
 			currentPlane = Plane(vec3(0, 1, 0), node->GetWorldPosition());
-			yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 1.0f, 0.0f));
+			yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
 		}
 		else if (currentAxis == "ZAxis")
 		{
 			currentPlane = Plane(vec3(0, 0, 1), node->GetWorldPosition());
-			zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 1.0f, 0.0f));
+			zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
 		}
 
 		float distance;
@@ -243,14 +243,14 @@ void RotateGizmo::OperationEnd()
 {
 	if (currentAxis == "XAxis")
 	{
-		xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 0.0f, 0.0f));
+		xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
 	}
 	else if (currentAxis == "YAxis")
 	{
-		yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.0f, 1.0f, 0.0f));
+		yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
 	}
 	else if (currentAxis == "ZAxis")
 	{
-		zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.0f, 0.0f, 1.0f));
+		zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
 	}
 }

@@ -1020,9 +1020,9 @@ void MainFrameImpl::NewSceneCreated()
 	SharedPtr<Material> defaultMaterial = new Material(engine);
 	defaultMaterial->SetName("Default");
 	defaultMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
-	defaultMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.7f));
-	defaultMaterial->SetParameter(PARAM_MATERIAL_SPECULAR_NAME, vec3(0.0f));
-	defaultMaterial->SetParameter(PARAM_MATERIAL_SHININESS_NAME, 0.0f);
+	defaultMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.7f));
+	defaultMaterial->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.0f));
+	defaultMaterial->SetParameter(PARAM_MATERIAL_SHININESS, 0.0f);
 	AssetUtils::SerializeMaterial(defaultMaterial, targetMaterialPath);
 }
 

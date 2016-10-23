@@ -50,4 +50,6 @@ void LuaBindings::InitRendering(lua_State *luaState)
 	Lua::setGlobal(luaState, "PARAM_MATERIAL_DIFFUSE", PARAM_MATERIAL_DIFFUSE);
 	Lua::setGlobal(luaState, "PARAM_MATERIAL_SPECULAR", PARAM_MATERIAL_SPECULAR);
 	Lua::setGlobal(luaState, "PARAM_MATERIAL_SHININESS", PARAM_MATERIAL_SHININESS);
+	Lua::setGlobal(luaState, "PARAM_MATERIAL_OPACITY", PARAM_MATERIAL_OPACITY);
+	
 }

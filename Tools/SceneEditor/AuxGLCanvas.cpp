@@ -28,7 +28,7 @@ AuxGLCanvas::~AuxGLCanvas()
 void AuxGLCanvas::Init()
 {	
 	gridMaterial = FireCube::SharedPtr<FireCube::Material>(new Material(engine));
-	gridMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f));
+	gridMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
 	gridMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/Unlit.xml"));	
 
 	scene = new Scene(engine);

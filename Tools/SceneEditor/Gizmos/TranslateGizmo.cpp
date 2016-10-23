@@ -23,7 +23,7 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 
 	// X Axis
 	xAxisMaterial = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml")->Clone();
-	xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 0.0f, 0.0f));
+	xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
 	mesh = new Mesh(engine);
 	meshLine = new Mesh(engine);
 	meshIntersection = new Mesh(engine);	
@@ -52,7 +52,7 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 
 	// Y Axis
 	yAxisMaterial = xAxisMaterial->Clone();
-	yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.0f, 1.0f, 0.0f));
+	yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
 	mesh = new Mesh(engine);
 	meshLine = new Mesh(engine);
 	meshIntersection = new Mesh(engine);
@@ -80,7 +80,7 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 
 	// Z Axis
 	zAxisMaterial = xAxisMaterial->Clone();
-	zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.0f, 0.0f, 1.0f));
+	zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
 	mesh = new Mesh(engine);
 	meshLine = new Mesh(engine);
 	meshIntersection = new Mesh(engine);
@@ -151,15 +151,15 @@ bool TranslateGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor 
 
 		if (currentAxis == "XAxis")
 		{			
-			xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 1.0f, 0.0f));
+			xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
 		}
 		else if (currentAxis == "YAxis")
 		{		
-			yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 1.0f, 0.0f));
+			yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
 		}
 		else if (currentAxis == "ZAxis")
 		{		
-			zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 1.0f, 0.0f));
+			zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
 		}
 
 		return true;
@@ -238,14 +238,14 @@ void TranslateGizmo::OperationEnd()
 {
 	if (currentAxis == "XAxis")
 	{
-		xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 0.0f, 0.0f));
+		xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
 	}
 	else if (currentAxis == "YAxis")
 	{
-		yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.0f, 1.0f, 0.0f));
+		yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
 	}
 	else if (currentAxis == "ZAxis")
 	{
-		zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.0f, 0.0f, 1.0f));
+		zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
 	}
 }

@@ -20,7 +20,7 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 
 	// X Axis
 	xAxisMaterial = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml")->Clone();
-	xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 0.0f, 0.0f));
+	xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
 
 	mesh = new Mesh(engine);
 	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(boxSize)), BoundingBox(vec3(-boxSize), vec3(boxSize)), xAxisMaterial);
@@ -53,7 +53,7 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 
 	// Y Axis
 	yAxisMaterial = xAxisMaterial->Clone();
-	yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.0f, 1.0f, 0.0f));
+	yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
 		
 	mesh = new Mesh(engine);
 	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(boxSize)), BoundingBox(vec3(-boxSize), vec3(boxSize)), yAxisMaterial);
@@ -85,7 +85,7 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 
 	// Z Axis
 	zAxisMaterial = xAxisMaterial->Clone();
-	zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.0f, 0.0f, 1.0f));
+	zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
 	mesh = new Mesh(engine);
 	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(boxSize)), BoundingBox(vec3(-boxSize), vec3(boxSize)), zAxisMaterial);
 	meshLine = new Mesh(engine);
@@ -117,7 +117,7 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 
 	// All axes
 	allAxesMaterial = xAxisMaterial->Clone();
-	allAxesMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f));
+	allAxesMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
 	mesh = new Mesh(engine);
 	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(boxSize)), BoundingBox(vec3(-boxSize * 0.5f), vec3(boxSize * 0.5f)), allAxesMaterial);
 	child = node->CreateChild("AllAxes");	
@@ -162,19 +162,19 @@ bool ScaleGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor *cur
 		startScale = currentNode->GetScale();
 		if (currentAxis == "XAxis")
 		{			
-			xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 1.0f, 0.0f));
+			xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
 		}
 		else if (currentAxis == "YAxis")
 		{		
-			yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 1.0f, 0.0f));
+			yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
 		}
 		else if (currentAxis == "ZAxis")
 		{		
-			zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 1.0f, 0.0f));
+			zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
 		}
 		else if (currentAxis == "AllAxes")
 		{
-			allAxesMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 1.0f, 0.0f));
+			allAxesMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 0.0f));
 		}
 		return true;
 	}
@@ -249,18 +249,18 @@ void ScaleGizmo::OperationEnd()
 {
 	if (currentAxis == "XAxis")
 	{
-		xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 0.0f, 0.0f));
+		xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
 	}
 	else if (currentAxis == "YAxis")
 	{
-		yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.0f, 1.0f, 0.0f));
+		yAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 1.0f, 0.0f));
 	}
 	else if (currentAxis == "ZAxis")
 	{
-		zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.0f, 0.0f, 1.0f));
+		zAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.0f, 0.0f, 1.0f));
 	}
 	else if (currentAxis == "AllAxes")
 	{
-		allAxesMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f));
+		allAxesMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
 	}
 }

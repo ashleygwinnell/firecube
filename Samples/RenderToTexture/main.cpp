@@ -44,8 +44,8 @@ bool App::Prepare()
 	Node *node3 = root->CreateChild("Plane");
 	StaticModel *staticModel = node3->CreateComponent<StaticModel>();
 	material = new Material(engine);	
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f, 1.0f, 1.0f));
-	material->SetParameter(PARAM_MATERIAL_SPECULAR_NAME, vec3(0));
+	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 1.0f, 1.0f));
+	material->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0));
 	material->SetTechnique(resourceCache->GetResource<Technique>("Techniques/DiffuseMap.xml"));
 	Geometry *plane = GeometryGenerator::GeneratePlane(engine, vec2(2, 2));
 	SharedPtr<Mesh> mesh = new Mesh(engine);

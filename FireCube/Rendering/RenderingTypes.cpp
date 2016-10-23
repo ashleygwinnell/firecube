@@ -3,19 +3,15 @@
 
 namespace FireCube
 {
+// Material parameters
+std::string PARAM_MATERIAL_DIFFUSE("materialDiffuse");
+std::string PARAM_MATERIAL_SPECULAR("materialSpecular");
+std::string PARAM_MATERIAL_SHININESS("materialShininess");
+std::string PARAM_MATERIAL_OPACITY("materialOpacity");
+std::string PARAM_MATERIAL_U_OFFSET("uOffset");
+std::string PARAM_MATERIAL_V_OFFSET("vOffset");
 
-StringHash PARAM_MATERIAL_DIFFUSE("materialDiffuse");
-std::string PARAM_MATERIAL_DIFFUSE_NAME("materialDiffuse");
-StringHash PARAM_MATERIAL_SPECULAR("materialSpecular");
-std::string PARAM_MATERIAL_SPECULAR_NAME("materialSpecular");
-StringHash PARAM_MATERIAL_SHININESS("materialShininess");
-std::string PARAM_MATERIAL_SHININESS_NAME("materialShininess");
-StringHash PARAM_MATERIAL_OPACITY("materialOpacity");
-std::string PARAM_MATERIAL_OPACITY_NAME("materialOpacity");
-StringHash PARAM_U_OFFSET("uOffset");
-std::string PARAM_U_OFFSET_NAME("uOffset");
-StringHash PARAM_V_OFFSET("vOffset");
-std::string PARAM_V_OFFSET_NAME("vOffset");
+// Shader parameters
 StringHash PARAM_AMBIENT_COLOR("ambientColor");
 StringHash PARAM_MODEL_MATRIX("modelMatrix");
 StringHash PARAM_VIEW_PROJECTION_MATRIX("viewProjectionMatrix");
@@ -35,11 +31,13 @@ StringHash PARAM_LIGHT_BIAS_MVP_MATRIX("lightBiasMVPMatrix");
 StringHash PARAM_SHADOW_INTENSITY("shadowIntensity");
 StringHash PARAM_SCREEN_SIZE("screenSize");
 
+// Pass names
 StringHash BASE_PASS("base_opaque");
 StringHash LIGHT_PASS("light_opaque");
 StringHash SHADOW_PASS("shadow");
 StringHash ALPHA_PASS("base_alpha");
 
+// Render surface targets
 StringHash VIEWPORT_TARGET("viewport");
 
 ClearBufferType FireCube::operator | (const ClearBufferType &lhs, const ClearBufferType &rhs)

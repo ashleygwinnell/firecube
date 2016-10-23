@@ -121,46 +121,46 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	
 	if (aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aColor) == AI_SUCCESS)
 	{
-		material->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(aColor.r, aColor.g, aColor.b));
+		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(aColor.r, aColor.g, aColor.b));
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f));
+		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
 	}
 
 	if (aMaterial->Get(AI_MATKEY_COLOR_SPECULAR, aColor) == AI_SUCCESS)
 	{
-		material->SetParameter(PARAM_MATERIAL_SPECULAR_NAME, vec3(aColor.r, aColor.g, aColor.b));
+		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(aColor.r, aColor.g, aColor.b));
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_SPECULAR_NAME, vec3(0.0f));
+		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.0f));
 	}
 	
 	if (aMaterial->Get(AI_MATKEY_SHININESS, value) == AI_SUCCESS)
 	{
-		material->SetParameter(PARAM_MATERIAL_SHININESS_NAME, value);
+		material->SetParameter(PARAM_MATERIAL_SHININESS, value);
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_SHININESS_NAME, 15.0f);
+		material->SetParameter(PARAM_MATERIAL_SHININESS, 15.0f);
 	}
 
 	if (aMaterial->Get(AI_MATKEY_OPACITY, value) == AI_SUCCESS)
 	{
-		material->SetParameter(PARAM_MATERIAL_OPACITY_NAME, value);
+		material->SetParameter(PARAM_MATERIAL_OPACITY, value);
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_OPACITY_NAME, 1.0f);
+		material->SetParameter(PARAM_MATERIAL_OPACITY, 1.0f);
 	}
 
 	if (aMaterial->Get(AI_MATKEY_UVTRANSFORM_DIFFUSE(0), uvTransform) == AI_SUCCESS)
 	{
 		vec3 uOffset(uvTransform.mScaling.x, 0.0f, uvTransform.mTranslation.x);
 		vec3 vOffset(0.0f, uvTransform.mScaling.y, uvTransform.mTranslation.y);
-		material->SetParameter(PARAM_U_OFFSET_NAME, uOffset);
-		material->SetParameter(PARAM_V_OFFSET_NAME, vOffset);
+		material->SetParameter(PARAM_MATERIAL_U_OFFSET, uOffset);
+		material->SetParameter(PARAM_MATERIAL_V_OFFSET, vOffset);
 	}
 	
 	bool hasDiffuseTexture = ProcessAssimpMaterialTexture(aMaterial, material, aiTextureType_DIFFUSE, TextureUnit::DIFFUSE);

@@ -35,8 +35,8 @@ MaterialEditorPanelImpl::MaterialEditorPanelImpl(wxWindow* parent) : MaterialEdi
 		{ PARAM_MATERIAL_SPECULAR, std::make_pair("Specular", PropertyType::COLOR) },
 		{ PARAM_MATERIAL_SHININESS, std::make_pair("Shininess", PropertyType::FLOAT) },
 		{ PARAM_MATERIAL_OPACITY, std::make_pair("Opacity", PropertyType::FLOAT) },
-		{ PARAM_U_OFFSET, std::make_pair("U Offset", PropertyType::VEC3) },
-		{ PARAM_V_OFFSET, std::make_pair("V Offset", PropertyType::VEC3) } };
+		{ PARAM_MATERIAL_U_OFFSET, std::make_pair("U Offset", PropertyType::VEC3) },
+		{ PARAM_MATERIAL_V_OFFSET, std::make_pair("V Offset", PropertyType::VEC3) } };
 
 	propertyGrid->Bind(wxEVT_PG_RIGHT_CLICK, &MaterialEditorPanelImpl::PropertyGridRightClicked, this);
 
@@ -72,10 +72,10 @@ MaterialEditorPanelImpl::~MaterialEditorPanelImpl()
 void MaterialEditorPanelImpl::NewButtonClicked(wxCommandEvent& event)
 {
 	material = new Material(engine);
-	material->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(1.0f));
-	material->SetParameter(PARAM_MATERIAL_SPECULAR_NAME, vec3(0.0f));
-	material->SetParameter(PARAM_MATERIAL_SHININESS_NAME, 0.0f);
-	material->SetParameter(PARAM_MATERIAL_OPACITY_NAME, 0.0f);
+	material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
+	material->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.0f));
+	material->SetParameter(PARAM_MATERIAL_SHININESS, 0.0f);
+	material->SetParameter(PARAM_MATERIAL_OPACITY, 0.0f);
 	material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
 	currentFileName = "";
 	FillPropertyGrid(material);

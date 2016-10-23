@@ -53,9 +53,9 @@ bool App::Prepare()
 
 	mesh = new Mesh(engine);
 	mat = new Material(engine);	
-	mat->SetParameter(PARAM_MATERIAL_DIFFUSE_NAME, vec3(0.7f));
-	mat->SetParameter(PARAM_MATERIAL_SPECULAR_NAME, vec3(0.3f));
-	mat->SetParameter(PARAM_MATERIAL_SHININESS_NAME, 20.0f);
+	mat->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.7f));
+	mat->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.3f));
+	mat->SetParameter(PARAM_MATERIAL_SHININESS, 20.0f);
 	mat->SetTexture(TextureUnit::DIFFUSE, engine->GetResourceCache()->GetResource<Texture2D>("Textures/earthmap1k.jpg"));
 	mat->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/DiffuseMap.xml"));
 
