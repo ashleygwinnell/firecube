@@ -4,8 +4,9 @@
 
 class BaseComponentPanelImpl;
 
-class LuaScriptPanelImpl : public LuaScriptPanel
+class LuaScriptPanelImpl : public LuaScriptPanel, public FireCube::Object
 {
+	FIRECUBE_OBJECT(LuaScriptPanelImpl);
 public:
 	LuaScriptPanelImpl(BaseComponentPanelImpl* parent);
 	~LuaScriptPanelImpl();
@@ -17,6 +18,8 @@ private:
 	virtual void RemovePropertyClicked(wxCommandEvent& event);
 	virtual void PropertyGridChanged(wxPropertyGridEvent& event);
 	void PropertyGridLabelChanged(wxPropertyGridEvent& event);
+	std::string GetObjectNameFromScript(const std::string &filename);
+	void UpdateUI();
 
 	BaseComponentPanelImpl *parent;
 };

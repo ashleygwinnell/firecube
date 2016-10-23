@@ -1,3 +1,5 @@
+#include <fstream>
+#include <regex>
 #include "BaseComponentPanelImpl.h"
 #include "LuaScriptPanelImpl.h"
 #include "../app.h"
@@ -9,7 +11,7 @@
 
 using namespace FireCube;
 
-LuaScriptPanelImpl::LuaScriptPanelImpl(BaseComponentPanelImpl* parent) : LuaScriptPanel(parent), parent(parent)
+LuaScriptPanelImpl::LuaScriptPanelImpl(BaseComponentPanelImpl* parent) : LuaScriptPanel(parent), parent(parent), Object(engine)
 {
 	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());
 	wxFileName filename(luaScript->GetScriptFilename());
@@ -26,11 +28,12 @@ LuaScriptPanelImpl::LuaScriptPanelImpl(BaseComponentPanelImpl* parent) : LuaScri
 	}
 	propertyGrid->Thaw();
 	propertyGrid->Connect(wxEVT_PG_LABEL_EDIT_ENDING, wxPropertyGridEventHandler(LuaScriptPanelImpl::PropertyGridLabelChanged), NULL, this);
+	SubscribeToEvent(luaScript->componentChanged, &LuaScriptPanelImpl::UpdateUI);
 }
 
 LuaScriptPanelImpl::~LuaScriptPanelImpl()
 {
-
+	
 }
 
 void LuaScriptPanelImpl::FileChanged(wxFileDirPickerEvent& event)
@@ -52,13 +55,23 @@ void LuaScriptPanelImpl::FileChanged(wxFileDirPickerEvent& event)
 		newLuaFileName = "Scripts" + Filesystem::PATH_SEPARATOR + filename;
 	}
 	std::string oldLuaFileName = luaScript->GetScriptFilename();
+	std::string oldObjectName = luaScript->GetObjectName();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Script", [luaScript, newLuaFileName]()
+	std::string newObjectName = GetObjectNameFromScript(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + newLuaFileName);	
+
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Script", [luaScript, newLuaFileName, newObjectName]()
 	{
-		luaScript->SetScriptFilename(newLuaFileName);		
-	}, [luaScript, oldLuaFileName]()
+		luaScript->SetScriptFilename(newLuaFileName);
+		if (newObjectName.empty() == false)
+		{
+			luaScript->SetObjectName(newObjectName);
+		}
+		luaScript->componentChanged(nullptr);
+	}, [luaScript, oldLuaFileName, oldObjectName]()
 	{		
 		luaScript->SetScriptFilename(oldLuaFileName);		
+		luaScript->SetObjectName(oldObjectName);
+		luaScript->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -128,4 +141,29 @@ void LuaScriptPanelImpl::PropertyGridLabelChanged(wxPropertyGridEvent& event)
 	luaScript->SetProperty(newProperty, luaScript->GetProperty(oldProperty));
 	luaScript->RemoveProperty(oldProperty);	
 	event.GetProperty()->SetLabel(newLabel);
+}
+
+std::string LuaScriptPanelImpl::GetObjectNameFromScript(const std::string &filename)
+{
+	std::ifstream file(filename);
+	const std::string code((std::istreambuf_iterator<char>(file)),
+		std::istreambuf_iterator<char>());
+	
+	std::regex rgx("\\s*(\\w+)\\s*=\\s*Script");
+	std::smatch match;
+
+	if (std::regex_search(code.begin(), code.end(), match, rgx))
+	{
+		return match[1];
+	}
+
+	return "";
+}
+
+void LuaScriptPanelImpl::UpdateUI()
+{
+	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());	
+	objectNameTextCtrl->ChangeValue(luaScript->GetObjectName());
+	wxFileName filename(luaScript->GetScriptFilename());
+	scriptFilePicker->SetFileName(filename);
 }

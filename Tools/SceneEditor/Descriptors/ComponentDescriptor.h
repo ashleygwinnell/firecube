@@ -22,6 +22,9 @@ public:
 	NodeDescriptor *GetParent();
 	ComponentType GetType() const;
 	std::string GetTypeName() const;
+
+	FireCube::Event<> componentChanged;
+
 protected:
 	FireCube::Component *component;
 	NodeDescriptor *parent;
