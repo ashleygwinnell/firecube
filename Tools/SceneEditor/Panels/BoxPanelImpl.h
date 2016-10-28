@@ -4,10 +4,11 @@
 
 class BaseComponentPanelImpl;
 
-class BoxPanelImpl : public BoxPanel
+class BoxPanelImpl : public BoxPanel, public FireCube::Object
 {
+	FIRECUBE_OBJECT(BoxPanelImpl);
 public:
-	BoxPanelImpl(BaseComponentPanelImpl* parent);
+	BoxPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine);
 	~BoxPanelImpl();
 private:
 	virtual void WidthChanged(wxCommandEvent& event);
@@ -17,6 +18,7 @@ private:
 	virtual void LightMaskChanged(wxCommandEvent& event);
 	virtual void CollisionQueryMaskChanged(wxCommandEvent& event);
 	virtual void MaterialFileChanged(wxFileDirPickerEvent& event);
+	void UpdateUI();
 	
 	BaseComponentPanelImpl *parent;
 };

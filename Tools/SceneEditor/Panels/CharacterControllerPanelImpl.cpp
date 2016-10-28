@@ -8,12 +8,13 @@
 
 using namespace FireCube;
 
-CharacterControllerPanelImpl::CharacterControllerPanelImpl(BaseComponentPanelImpl* parent) : CharacterControllerPanel(parent), parent(parent)
+CharacterControllerPanelImpl::CharacterControllerPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : CharacterControllerPanel(parent), parent(parent), Object(engine)
 {
 	CharacterControllerDescriptor *characterController = static_cast<CharacterControllerDescriptor *>(parent->GetComponent());
-	radiusTextCtrl->SetLabel(wxString::FromDouble(characterController->GetRadius()));
-	heightTextCtrl->SetLabel(wxString::FromDouble(characterController->GetHeight()));
-	contactOffsetTextCtrl->SetLabel(wxString::FromDouble(characterController->GetContactOffset()));
+	
+	UpdateUI();
+
+	SubscribeToEvent(characterController->componentChanged, &CharacterControllerPanelImpl::UpdateUI);
 }
 
 CharacterControllerPanelImpl::~CharacterControllerPanelImpl()
@@ -34,9 +35,11 @@ void CharacterControllerPanelImpl::RadiusChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Radius", [characterController, newRadius]()
 	{				
 		characterController->SetRadius(newRadius);
+		characterController->componentChanged(nullptr);
 	}, [characterController, oldRadius]()
 	{		
 		characterController->SetRadius(oldRadius);
+		characterController->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -56,9 +59,11 @@ void CharacterControllerPanelImpl::HeightChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Height", [characterController, newHeight]()
 	{		
 		characterController->SetHeight(newHeight);
+		characterController->componentChanged(nullptr);
 	}, [characterController, oldHeight]()
 	{	
 		characterController->SetHeight(oldHeight);
+		characterController->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -78,13 +83,22 @@ void CharacterControllerPanelImpl::ContactOffsetChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Contact Offset", [characterController, newContactOffset]()
 	{	
 		characterController->SetContactOffset(newContactOffset);
+		characterController->componentChanged(nullptr);
 	}, [characterController, oldContactOffset]()
 	{		
 		characterController->SetContactOffset(oldContactOffset);
+		characterController->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
+void CharacterControllerPanelImpl::UpdateUI()
+{
+	CharacterControllerDescriptor *characterController = static_cast<CharacterControllerDescriptor *>(parent->GetComponent());
+	radiusTextCtrl->ChangeValue(wxString::FromDouble(characterController->GetRadius()));
+	heightTextCtrl->ChangeValue(wxString::FromDouble(characterController->GetHeight()));
+	contactOffsetTextCtrl->ChangeValue(wxString::FromDouble(characterController->GetContactOffset()));
+}
 

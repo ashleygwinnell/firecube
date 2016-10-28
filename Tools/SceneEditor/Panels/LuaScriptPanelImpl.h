@@ -8,7 +8,7 @@ class LuaScriptPanelImpl : public LuaScriptPanel, public FireCube::Object
 {
 	FIRECUBE_OBJECT(LuaScriptPanelImpl);
 public:
-	LuaScriptPanelImpl(BaseComponentPanelImpl* parent);
+	LuaScriptPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine);
 	~LuaScriptPanelImpl();
 private:
 	virtual void FileChanged(wxFileDirPickerEvent& event);

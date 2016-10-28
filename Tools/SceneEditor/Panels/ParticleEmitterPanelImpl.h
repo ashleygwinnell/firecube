@@ -4,10 +4,11 @@
 
 class BaseComponentPanelImpl;
 
-class ParticleEmitterPanelImpl : public ParticleEmitterPanel
+class ParticleEmitterPanelImpl : public ParticleEmitterPanel, public FireCube::Object
 {
+	FIRECUBE_OBJECT(ParticleEmitterPanelImpl);
 public:
-	ParticleEmitterPanelImpl(BaseComponentPanelImpl* parent);
+	ParticleEmitterPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine);
 	~ParticleEmitterPanelImpl();
 private:
 	void UpdateUI();

@@ -9,24 +9,15 @@
 
 using namespace FireCube;
 
-PlanePanelImpl::PlanePanelImpl(BaseComponentPanelImpl* parent) : PlanePanel(parent), parent(parent)
+PlanePanelImpl::PlanePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : PlanePanel(parent), parent(parent), Object(engine)
 {
 	PlaneDescriptor *plane = static_cast<PlaneDescriptor *>(parent->GetComponent());
-
-	widthTextCtrl->SetLabel(wxString::FromDouble(plane->GetSize().x));
-	depthTextCtrl->SetLabel(wxString::FromDouble(plane->GetSize().y));
-	castShadowCheckBox->SetValue(plane->GetCastShadow());
-
-	std::stringstream lightMaskStream;
-	lightMaskStream << std::hex << plane->GetLightMask();
-	lightMaskTextCtrl->SetLabel(lightMaskStream.str());
-
-	std::stringstream collisionQueryMaskStream;
-	collisionQueryMaskStream << std::hex << plane->GetCollisionQueryMask();
-	collisionQueryMaskTextCtrl->SetLabel(collisionQueryMaskStream.str());
-
-	materialFilePicker->SetPath(plane->GetMaterialFileName());
+	
 	materialFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials");
+
+	UpdateUI();
+
+	SubscribeToEvent(plane->componentChanged, &PlanePanelImpl::UpdateUI);
 }
 
 PlanePanelImpl::~PlanePanelImpl()
@@ -49,9 +40,11 @@ void PlanePanelImpl::WidthChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Width", [plane, newSize, engine]()
 	{
 		plane->SetSize(newSize, engine);
+		plane->componentChanged(nullptr);
 	}, [plane, oldSize, engine]()
 	{
 		plane->SetSize(oldSize, engine);
+		plane->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -73,9 +66,11 @@ void PlanePanelImpl::DepthChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Depth", [plane, newSize, engine]()
 	{
 		plane->SetSize(newSize, engine);
+		plane->componentChanged(nullptr);
 	}, [plane, oldSize, engine]()
 	{
 		plane->SetSize(oldSize, engine);
+		plane->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -94,9 +89,11 @@ void PlanePanelImpl::CastShadowChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Cast Shadow", [plane, newShadow]()
 	{
 		plane->SetCastShadow(newShadow);
+		plane->componentChanged(nullptr);
 	}, [plane, oldShadow]()
 	{
 		plane->SetCastShadow(oldShadow);
+		plane->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -115,9 +112,11 @@ void PlanePanelImpl::LightMaskChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [plane, newValue]()
 	{
 		plane->SetLightMask(newValue);
+		plane->componentChanged(nullptr);
 	}, [plane, oldValue]()
 	{
 		plane->SetLightMask(oldValue);
+		plane->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -136,9 +135,11 @@ void PlanePanelImpl::CollisionQueryMaskChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [plane, newValue]()
 	{
 		plane->SetCollisionQueryMask(newValue);
+		plane->componentChanged(nullptr);
 	}, [plane, oldValue]()
 	{
 		plane->SetCollisionQueryMask(oldValue);
+		plane->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -158,11 +159,32 @@ void PlanePanelImpl::MaterialFileChanged(wxFileDirPickerEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Material", [plane, newValue, engine]()
 	{
 		plane->SetMaterialFileName(newValue, engine);
+		plane->componentChanged(nullptr);
 	}, [plane, oldValue, engine]()
 	{
 		plane->SetMaterialFileName(oldValue, engine);
+		plane->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+}
+
+void PlanePanelImpl::UpdateUI()
+{
+	PlaneDescriptor *plane = static_cast<PlaneDescriptor *>(parent->GetComponent());
+
+	widthTextCtrl->ChangeValue(wxString::FromDouble(plane->GetSize().x));
+	depthTextCtrl->ChangeValue(wxString::FromDouble(plane->GetSize().y));
+	castShadowCheckBox->SetValue(plane->GetCastShadow());
+
+	std::stringstream lightMaskStream;
+	lightMaskStream << std::hex << plane->GetLightMask();
+	lightMaskTextCtrl->ChangeValue(lightMaskStream.str());
+
+	std::stringstream collisionQueryMaskStream;
+	collisionQueryMaskStream << std::hex << plane->GetCollisionQueryMask();
+	collisionQueryMaskTextCtrl->ChangeValue(collisionQueryMaskStream.str());
+
+	materialFilePicker->SetPath(plane->GetMaterialFileName());
 }

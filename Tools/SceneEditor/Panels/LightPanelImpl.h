@@ -4,10 +4,11 @@
 
 class BaseComponentPanelImpl;
 
-class LightPanelImpl : public LightPanel
+class LightPanelImpl : public LightPanel, public FireCube::Object
 {
+	FIRECUBE_OBJECT(LightPanelImpl);
 public:
-	LightPanelImpl(BaseComponentPanelImpl* parent);
+	LightPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine);
 	~LightPanelImpl();
 private:	
 	
@@ -19,5 +20,7 @@ private:
 	virtual void SpotCutoffChanged(wxCommandEvent& event);
 	virtual void MaskChanged(wxCommandEvent& event);
 	void UpdatePanelsVisibility(FireCube::LightType type);
+	void UpdateUI();
+
 	BaseComponentPanelImpl *parent;
 };

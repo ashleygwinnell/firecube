@@ -4,10 +4,11 @@
 
 class BaseComponentPanelImpl;
 
-class CollisionShapePanelImpl : public CollisionShapePanel
+class CollisionShapePanelImpl : public CollisionShapePanel, public FireCube::Object
 {
+	FIRECUBE_OBJECT(CollisionShapePanelImpl);
 public:
-	CollisionShapePanelImpl(BaseComponentPanelImpl* parent);
+	CollisionShapePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine);
 	~CollisionShapePanelImpl();
 private:
 	void UpdateUI();

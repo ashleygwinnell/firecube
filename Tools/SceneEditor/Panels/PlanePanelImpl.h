@@ -4,10 +4,11 @@
 
 class BaseComponentPanelImpl;
 
-class PlanePanelImpl : public PlanePanel
+class PlanePanelImpl : public PlanePanel, public FireCube::Object
 {
+	FIRECUBE_OBJECT(PlanePanelImpl);
 public:
-	PlanePanelImpl(BaseComponentPanelImpl* parent);
+	PlanePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine);
 	~PlanePanelImpl();
 private:
 	virtual void WidthChanged(wxCommandEvent& event);	
@@ -16,6 +17,7 @@ private:
 	virtual void LightMaskChanged(wxCommandEvent& event);
 	virtual void CollisionQueryMaskChanged(wxCommandEvent& event);
 	virtual void MaterialFileChanged(wxFileDirPickerEvent& event);
+	void UpdateUI();
 
 	BaseComponentPanelImpl *parent;
 };

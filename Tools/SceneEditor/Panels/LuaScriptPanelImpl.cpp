@@ -11,14 +11,13 @@
 
 using namespace FireCube;
 
-LuaScriptPanelImpl::LuaScriptPanelImpl(BaseComponentPanelImpl* parent) : LuaScriptPanel(parent), parent(parent), Object(engine)
+LuaScriptPanelImpl::LuaScriptPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : LuaScriptPanel(parent), parent(parent), Object(engine)
 {
 	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());
-	wxFileName filename(luaScript->GetScriptFilename());
-	scriptFilePicker->SetFileName(filename);
+	
 	scriptFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts");
 	
-	objectNameTextCtrl->SetLabel(luaScript->GetObjectName());
+	UpdateUI();
 
 	propertyGrid->Freeze();	
 	auto &properties = luaScript->GetProperties();
@@ -28,6 +27,7 @@ LuaScriptPanelImpl::LuaScriptPanelImpl(BaseComponentPanelImpl* parent) : LuaScri
 	}
 	propertyGrid->Thaw();
 	propertyGrid->Connect(wxEVT_PG_LABEL_EDIT_ENDING, wxPropertyGridEventHandler(LuaScriptPanelImpl::PropertyGridLabelChanged), NULL, this);
+
 	SubscribeToEvent(luaScript->componentChanged, &LuaScriptPanelImpl::UpdateUI);
 }
 
@@ -89,9 +89,11 @@ void LuaScriptPanelImpl::ObjectNameChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Object", [luaScript, newObjectName]()
 	{
 		luaScript->SetObjectName(newObjectName);
+		luaScript->componentChanged(nullptr);
 	}, [luaScript, oldObjectName]()
 	{
 		luaScript->SetObjectName(oldObjectName);
+		luaScript->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);

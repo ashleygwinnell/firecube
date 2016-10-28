@@ -606,7 +606,7 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	if (componentDesc->GetType() == ComponentType::STATIC_MODEL)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
-		t->AddControl(new StaticModelPanelImpl(t));
+		t->AddControl(new StaticModelPanelImpl(t, engine));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
@@ -615,7 +615,7 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	else if (componentDesc->GetType() == ComponentType::LIGHT)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
-		t->AddControl(new LightPanelImpl(t));
+		t->AddControl(new LightPanelImpl(t, engine));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
@@ -624,7 +624,7 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	else if (componentDesc->GetType() == ComponentType::LUA_SCRIPT)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
-		t->AddControl(new LuaScriptPanelImpl(t));
+		t->AddControl(new LuaScriptPanelImpl(t, engine));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
@@ -633,7 +633,7 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	else if (componentDesc->GetType() == ComponentType::COLLISION_SHAPE)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
-		t->AddControl(new CollisionShapePanelImpl(t));
+		t->AddControl(new CollisionShapePanelImpl(t, engine));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
@@ -642,7 +642,7 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	else if (componentDesc->GetType() == ComponentType::CHARACTER_CONTROLLER)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
-		t->AddControl(new CharacterControllerPanelImpl(t));
+		t->AddControl(new CharacterControllerPanelImpl(t, engine));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
@@ -651,7 +651,7 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	else if (componentDesc->GetType() == ComponentType::BOX)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
-		t->AddControl(new BoxPanelImpl(t));
+		t->AddControl(new BoxPanelImpl(t, engine));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
@@ -660,7 +660,7 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	else if (componentDesc->GetType() == ComponentType::PLANE)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
-		t->AddControl(new PlanePanelImpl(t));
+		t->AddControl(new PlanePanelImpl(t, engine));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
@@ -669,7 +669,7 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	else if (componentDesc->GetType() == ComponentType::SPHERE)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
-		t->AddControl(new SpherePanelImpl(t));
+		t->AddControl(new SpherePanelImpl(t, engine));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
@@ -678,7 +678,7 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	else if (componentDesc->GetType() == ComponentType::RIGID_BODY)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
-		t->AddControl(new RigidBodyPanelImpl(t));
+		t->AddControl(new RigidBodyPanelImpl(t, engine));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 
@@ -687,7 +687,7 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	else if (componentDesc->GetType() == ComponentType::PARTICLE_EMITTER)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
-		t->AddControl(new ParticleEmitterPanelImpl(t));
+		t->AddControl(new ParticleEmitterPanelImpl(t, engine));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 

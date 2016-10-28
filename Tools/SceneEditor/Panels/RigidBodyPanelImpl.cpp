@@ -9,11 +9,13 @@
 
 using namespace FireCube;
 
-RigidBodyPanelImpl::RigidBodyPanelImpl(BaseComponentPanelImpl* parent) : RigidBodyPanel(parent), parent(parent)
+RigidBodyPanelImpl::RigidBodyPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : RigidBodyPanel(parent), parent(parent), Object(engine)
 {
 	RigidBodyDescriptor *rigidBody = static_cast<RigidBodyDescriptor *>(parent->GetComponent());
 
-	massTextCtrl->SetLabel(wxString::FromDouble(rigidBody->GetMass()));	
+	UpdateUI();
+
+	SubscribeToEvent(rigidBody->componentChanged, &RigidBodyPanelImpl::UpdateUI);
 }
 
 RigidBodyPanelImpl::~RigidBodyPanelImpl()
@@ -35,11 +37,20 @@ void RigidBodyPanelImpl::MassChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mass", [rigidBody, newMass]()
 	{
 		rigidBody->SetMass(newMass);
+		rigidBody->componentChanged(false);
 	}, [rigidBody, oldMass]()
 	{
 		rigidBody->SetMass(oldMass);
+		rigidBody->componentChanged(false);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+}
+
+void RigidBodyPanelImpl::UpdateUI()
+{
+	RigidBodyDescriptor *rigidBody = static_cast<RigidBodyDescriptor *>(parent->GetComponent());
+
+	massTextCtrl->ChangeValue(wxString::FromDouble(rigidBody->GetMass()));
 }

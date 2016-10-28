@@ -8,12 +8,13 @@
 
 using namespace FireCube;
 
-CollisionShapePanelImpl::CollisionShapePanelImpl(BaseComponentPanelImpl* parent) : CollisionShapePanel(parent), parent(parent)
+CollisionShapePanelImpl::CollisionShapePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : CollisionShapePanel(parent), parent(parent), Object(engine)
 {	
  	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
  
  	UpdateUI();
- 	UpdateVisibility(collisionShape->GetShapeType());
+ 	
+	SubscribeToEvent(collisionShape->componentChanged, &CollisionShapePanelImpl::UpdateUI);
 }
 
 CollisionShapePanelImpl::~CollisionShapePanelImpl()
@@ -44,20 +45,22 @@ void CollisionShapePanelImpl::UpdateUI()
 		break;
 	}
 
-	planeXTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetPlane().GetNormal().x));
-	planeYTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetPlane().GetNormal().y));
-	planeZTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetPlane().GetNormal().z));
-	planeWTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetPlane().GetDistance()));
+	UpdateVisibility(type);
 
-	bboxMinXTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetBox().GetMin().x));
-	bboxMinYTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetBox().GetMin().y));
-	bboxMinZTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetBox().GetMin().z));
+	planeXTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetPlane().GetNormal().x));
+	planeYTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetPlane().GetNormal().y));
+	planeZTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetPlane().GetNormal().z));
+	planeWTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetPlane().GetDistance()));
 
-	bboxMaxXTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetBox().GetMax().x));
-	bboxMaxYTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetBox().GetMax().y));
-	bboxMaxZTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetBox().GetMax().z));
+	bboxMinXTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetBox().GetMin().x));
+	bboxMinYTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetBox().GetMin().y));
+	bboxMinZTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetBox().GetMin().z));
 
-	radiusTextCtrl->SetLabelText(wxString::FromDouble(collisionShape->GetRadius()));
+	bboxMaxXTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetBox().GetMax().x));
+	bboxMaxYTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetBox().GetMax().y));
+	bboxMaxZTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetBox().GetMax().z));
+
+	radiusTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetRadius()));
 
 	meshFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Models");
 	if (collisionShape->GetMeshFilename().empty() == false)
@@ -138,9 +141,7 @@ void CollisionShapePanelImpl::ShapeTypeChanged(wxCommandEvent& event)
 		break;
 	default:
 		break;
-	}
-
-	UpdateVisibility(newType);
+	}	
 
 	CollisionShapeType oldType = collisionShape->GetShapeType();
 	std::string oldMesh = collisionShape->GetMeshFilename();
@@ -167,6 +168,7 @@ void CollisionShapePanelImpl::ShapeTypeChanged(wxCommandEvent& event)
 		default:
 			break;
 		}
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldType, oldPlane, oldBoundingBox, oldMesh, oldRadius, engine]()
 	{		
 		switch (oldType)
@@ -186,6 +188,7 @@ void CollisionShapePanelImpl::ShapeTypeChanged(wxCommandEvent& event)
 		default:
 			break;
 		}
+		collisionShape->componentChanged(nullptr);
 	});		
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -208,9 +211,11 @@ void CollisionShapePanelImpl::PlaneXChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [collisionShape, newPlane]()
 	{		
 		collisionShape->SetPlane(newPlane);
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldPlane]()
 	{		
 		collisionShape->SetPlane(oldPlane);
+		collisionShape->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -233,9 +238,11 @@ void CollisionShapePanelImpl::PlaneYChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [collisionShape, newPlane]()
 	{		
 		collisionShape->SetPlane(newPlane);
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldPlane]()
 	{		
 		collisionShape->SetPlane(oldPlane);
+		collisionShape->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -258,9 +265,11 @@ void CollisionShapePanelImpl::PlaneZChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [collisionShape, newPlane]()
 	{		
 		collisionShape->SetPlane(newPlane);
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldPlane]()
 	{		
 		collisionShape->SetPlane(oldPlane);
+		collisionShape->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -283,9 +292,11 @@ void CollisionShapePanelImpl::PlaneWChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [collisionShape, newPlane]()
 	{		
 		collisionShape->SetPlane(newPlane);
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldPlane]()
 	{		
 		collisionShape->SetPlane(oldPlane);
+		collisionShape->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -310,9 +321,11 @@ void CollisionShapePanelImpl::BBoxMinXChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
 	{		
 		collisionShape->SetBox(newBox);
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldBox]()
 	{		
 		collisionShape->SetBox(oldBox);
+		collisionShape->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -337,9 +350,11 @@ void CollisionShapePanelImpl::BBoxMinYChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
 	{
 		collisionShape->SetBox(newBox);
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldBox]()
 	{
 		collisionShape->SetBox(oldBox);
+		collisionShape->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -364,9 +379,11 @@ void CollisionShapePanelImpl::BBoxMinZChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
 	{
 		collisionShape->SetBox(newBox);
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldBox]()
 	{
 		collisionShape->SetBox(oldBox);
+		collisionShape->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -391,9 +408,11 @@ void CollisionShapePanelImpl::BBoxMaxXChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
 	{
 		collisionShape->SetBox(newBox);
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldBox]()
 	{
 		collisionShape->SetBox(oldBox);
+		collisionShape->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -418,9 +437,11 @@ void CollisionShapePanelImpl::BBoxMaxYChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
 	{
 		collisionShape->SetBox(newBox);
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldBox]()
 	{
 		collisionShape->SetBox(oldBox);
+		collisionShape->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -445,9 +466,11 @@ void CollisionShapePanelImpl::BBoxMaxZChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
 	{
 		collisionShape->SetBox(newBox);
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldBox]()
 	{
 		collisionShape->SetBox(oldBox);
+		collisionShape->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -465,9 +488,11 @@ void CollisionShapePanelImpl::TriggerChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Trigger", [collisionShape, newTrigger]()
 	{	
 		collisionShape->SetIsTrigger(newTrigger);
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldTrigger]()
 	{		
 		collisionShape->SetIsTrigger(oldTrigger);
+		collisionShape->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -487,9 +512,11 @@ void CollisionShapePanelImpl::MeshFileChanged(wxFileDirPickerEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mesh", [collisionShape, newMeshFileName, engine]()
 	{		
 		collisionShape->SetMesh(newMeshFileName, engine);
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldMeshFileName, engine]()
 	{		
 		collisionShape->SetMesh(oldMeshFileName, engine);
+		collisionShape->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
@@ -508,9 +535,11 @@ void CollisionShapePanelImpl::RadiusChanged(wxCommandEvent& event)
 	auto command = new CustomCommand(theApp->GetEditorState(), "Change Radius", [collisionShape, newRadius]()
 	{
 		collisionShape->SetSphere(newRadius);
+		collisionShape->componentChanged(nullptr);
 	}, [collisionShape, oldRadius]()
 	{
 		collisionShape->SetSphere(oldRadius);
+		collisionShape->componentChanged(nullptr);
 	});
 
 	theApp->GetEditorState()->ExecuteCommand(command);
