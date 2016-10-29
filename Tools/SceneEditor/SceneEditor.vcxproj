@@ -59,7 +59,7 @@
       <AdditionalIncludeDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib\mswud;C:\Dev\wxWidgets-3.0.2\include;$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib;$(SolutionDir)\FireCube\Debug Static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>wxbase30ud.lib;wxmsw30ud_core.lib;wxmsw30ud_gl.lib;wxmsw30ud_adv.lib;wxpngd.lib;wxzlibd.lib;wxmsw30ud_propgrid.lib;wxmsw30ud_aui.lib;wxmsw30ud_stc.lib;wxscintillad.lib;wxtiffd.lib;wxjpegd.lib;opengl32.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;firecube.lib;%(AdditionalDependencies)</AdditionalDependencies>

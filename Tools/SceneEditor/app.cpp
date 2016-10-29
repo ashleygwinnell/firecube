@@ -6,7 +6,11 @@
 
 using namespace FireCube;
 
-wxIMPLEMENT_APP(MyApp);
+#ifdef _DEBUG
+	wxIMPLEMENT_APP_CONSOLE(MyApp);
+#else
+	wxIMPLEMENT_APP(MyApp);
+#endif
 
 bool MyApp::OnInit()
 {
