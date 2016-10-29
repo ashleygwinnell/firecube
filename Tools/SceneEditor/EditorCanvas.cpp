@@ -175,6 +175,8 @@ void EditorCanvas::OnEnterWindow(wxMouseEvent& event)
 
 void EditorCanvas::OnLeftDown(wxMouseEvent& event)
 {	
+	CaptureMouse();
+	
 	vec2 curpos(event.GetPosition().x, event.GetPosition().y);
 
 	if (event.ShiftDown() == false)
@@ -263,6 +265,11 @@ void EditorCanvas::OnMouseWheel(wxMouseEvent& event)
 
 void EditorCanvas::OnLeftUp(wxMouseEvent& event)
 {
+	if (!HasCapture())
+		return;
+
+	ReleaseMouse();
+
 	if (event.ShiftDown() == false)
 	{
 		wxPoint mousePos = event.GetPosition();
