@@ -23,5 +23,5 @@ private:
 	std::string currentAxis;
 	bool snapToGrid;
 	FireCube::quat parentRotationQuat;
-	FireCube::SharedPtr<FireCube::Material> xAxisMaterial, yAxisMaterial, zAxisMaterial;
+	FireCube::SharedPtr<FireCube::Material> xAxisMaterial, yAxisMaterial, zAxisMaterial, xyPlaneMaterial, xzPlaneMaterial, yzPlaneMaterial;
 };
