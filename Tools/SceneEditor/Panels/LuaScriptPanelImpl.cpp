@@ -18,14 +18,7 @@ LuaScriptPanelImpl::LuaScriptPanelImpl(BaseComponentPanelImpl* parent, FireCube:
 	scriptFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts");
 	
 	UpdateUI();
-
-	propertyGrid->Freeze();	
-	auto &properties = luaScript->GetProperties();
-	for (auto &property : properties)
-	{
-		propertyGrid->Append(new wxStringProperty(property.first, wxPG_LABEL, property.second));
-	}
-	propertyGrid->Thaw();
+	
 	propertyGrid->Connect(wxEVT_PG_LABEL_EDIT_ENDING, wxPropertyGridEventHandler(LuaScriptPanelImpl::PropertyGridLabelChanged), NULL, this);
 
 	SubscribeToEvent(luaScript->componentChanged, &LuaScriptPanelImpl::UpdateUI);
@@ -102,14 +95,26 @@ void LuaScriptPanelImpl::ObjectNameChanged(wxCommandEvent& event)
 
 void LuaScriptPanelImpl::AddPropertyClicked(wxCommandEvent& event)
 {
-	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());
-	
+	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());		
+
+	MyApp *theApp = ((MyApp *)wxTheApp);
 	auto propertyName = wxGetTextFromUser("Enter property name", "Add Property");
+	
 	if (propertyName.empty() == false)
 	{
-		propertyGrid->Append(new wxStringProperty(propertyName, wxPG_LABEL));
-		luaScript->SetProperty(propertyName.ToStdString(), "");		
-	}
+		auto command = new CustomCommand(theApp->GetEditorState(), "Add Property", [luaScript, propertyName]()
+		{
+			luaScript->SetProperty(propertyName.ToStdString(), "");
+			luaScript->componentChanged(nullptr);
+		}, [luaScript, propertyName]()
+		{
+			luaScript->RemoveProperty(propertyName.ToStdString());			
+			luaScript->componentChanged(nullptr);
+		});
+
+		theApp->GetEditorState()->ExecuteCommand(command);
+		theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+	}	
 }
 
 void LuaScriptPanelImpl::RenamePropertyClicked(wxCommandEvent& event)
@@ -119,30 +124,81 @@ void LuaScriptPanelImpl::RenamePropertyClicked(wxCommandEvent& event)
 
 void LuaScriptPanelImpl::RemovePropertyClicked(wxCommandEvent& event)
 {
+	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());
+
+	MyApp *theApp = ((MyApp *)wxTheApp);	
+
 	if (propertyGrid->GetSelectedProperty())
 	{
-		propertyGrid->RemoveProperty(propertyGrid->GetSelectedProperty());
+		std::string propertyName = propertyGrid->GetSelectedProperty()->GetLabel();
+		std::string propertyValue = propertyGrid->GetSelectedProperty()->GetValue().GetString().ToStdString();
+
+		auto command = new CustomCommand(theApp->GetEditorState(), "Remove Property", [luaScript, propertyName]()
+		{
+			luaScript->RemoveProperty(propertyName);
+			luaScript->componentChanged(nullptr);
+		}, [luaScript, propertyName, propertyValue]()
+		{
+			luaScript->SetProperty(propertyName, propertyValue);
+			luaScript->componentChanged(nullptr);
+		});
+
+		theApp->GetEditorState()->ExecuteCommand(command);
+		theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 	}
 }
 
 void LuaScriptPanelImpl::PropertyGridChanged(wxPropertyGridEvent& event)
 {
 	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());
-	luaScript->SetProperty(event.GetProperty()->GetLabel().ToStdString(), event.GetPropertyValue().GetString().ToStdString());	
+
+	MyApp *theApp = ((MyApp *)wxTheApp);
+
+	std::string propertyName = event.GetProperty()->GetLabel().ToStdString();
+	std::string newPropertyValue = event.GetPropertyValue().GetString().ToStdString();
+	std::string oldPropertyValue = luaScript->GetProperty(propertyName);
+
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Value", [luaScript, propertyName, newPropertyValue]()
+	{
+		luaScript->SetProperty(propertyName, newPropertyValue);
+		luaScript->componentChanged(nullptr);
+	}, [luaScript, propertyName, oldPropertyValue]()
+	{
+		luaScript->SetProperty(propertyName, oldPropertyValue);
+		luaScript->componentChanged(nullptr);
+	});
+
+	theApp->GetEditorState()->ExecuteCommand(command);
+	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
 void LuaScriptPanelImpl::PropertyGridLabelChanged(wxPropertyGridEvent& event)
 {	
 	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());
 	
+	MyApp *theApp = ((MyApp *)wxTheApp);
 	const wxString &newLabel = propertyGrid->GetLabelEditor()->GetValue();	
 	const wxString &oldLabel = event.GetProperty()->GetLabel();
-	auto oldProperty = oldLabel.ToStdString();
-	auto newProperty = newLabel.ToStdString();
-	
-	luaScript->SetProperty(newProperty, luaScript->GetProperty(oldProperty));
-	luaScript->RemoveProperty(oldProperty);	
-	event.GetProperty()->SetLabel(newLabel);
+	auto oldPropertyName = oldLabel.ToStdString();
+	auto newPropertyName = newLabel.ToStdString();
+	auto propertyValue = luaScript->GetProperty(oldPropertyName);
+			
+	CallAfter([theApp, luaScript, newPropertyName, oldPropertyName, propertyValue]() {
+		auto command = new CustomCommand(theApp->GetEditorState(), "Rename Property", [luaScript, newPropertyName, oldPropertyName, propertyValue]()
+		{
+			luaScript->SetProperty(newPropertyName, propertyValue);
+			luaScript->RemoveProperty(oldPropertyName);
+			luaScript->componentChanged(nullptr);
+		}, [luaScript, newPropertyName, oldPropertyName, propertyValue]()
+		{
+			luaScript->SetProperty(oldPropertyName, propertyValue);
+			luaScript->RemoveProperty(newPropertyName);
+			luaScript->componentChanged(nullptr);
+		});
+
+		theApp->GetEditorState()->ExecuteCommand(command);
+		theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+	});	
 }
 
 std::string LuaScriptPanelImpl::GetObjectNameFromScript(const std::string &filename)
@@ -167,5 +223,16 @@ void LuaScriptPanelImpl::UpdateUI()
 	LuaScriptDescriptor *luaScript = static_cast<LuaScriptDescriptor *>(parent->GetComponent());	
 	objectNameTextCtrl->ChangeValue(luaScript->GetObjectName());
 	wxFileName filename(luaScript->GetScriptFilename());
-	scriptFilePicker->SetFileName(filename);
+	scriptFilePicker->SetFileName(filename);		
+		
+	propertyGrid->Freeze();
+	propertyGrid->Clear();
+	
+	auto &properties = luaScript->GetProperties();
+	for (auto &property : properties)
+	{
+		propertyGrid->Append(new wxStringProperty(property.first, wxPG_LABEL, property.second));
+	}	
+
+	propertyGrid->Thaw();
 }

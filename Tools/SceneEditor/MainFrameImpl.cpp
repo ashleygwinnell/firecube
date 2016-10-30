@@ -394,6 +394,8 @@ void MainFrameImpl::NewClicked(wxCommandEvent& event)
 
 	assetBrowserPanel->PopulateDirectoryTree();
 	assetBrowserPanel->SetAssetsPath(Filesystem::GetAssetsFolder());
+
+	editorState->SetCurrentSceneFile("");
 }
 
 void MainFrameImpl::SelectedNodeChanged(NodeDescriptor *nodeDesc)
