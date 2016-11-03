@@ -8,6 +8,7 @@
 #include "Scene/StaticModel.h"
 #include "Scene/Prefab.h"
 #include "Scene/ParticleEmitter.h"
+#include "Scene/Camera.h"
 #include "Utils/Filesystem.h"
 #include "Scripting/LuaScript.h"
 #include "Scripting/LuaFile.h"
@@ -432,6 +433,27 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		}
 
 		component->SetBoundingBox(BoundingBox(-vec3(1e6), vec3(1e6)));
+	}
+	else if (type == "Camera")
+	{
+		auto component = node->CreateComponent<Camera>();
+		std::string projection = e->Attribute("projection");
+		float nearPlane = Variant::FromString(e->Attribute("near")).GetFloat();
+		float farPlane = Variant::FromString(e->Attribute("far")).GetFloat();
+		if (projection == "orthographic")
+		{
+			float left = Variant::FromString(e->Attribute("left")).GetFloat();
+			float right = Variant::FromString(e->Attribute("right")).GetFloat();
+			float top = Variant::FromString(e->Attribute("top")).GetFloat();
+			float bottom = Variant::FromString(e->Attribute("bottom")).GetFloat();
+
+			component->SetOrthographicProjectionParameters(left, right, bottom, top, nearPlane, farPlane);
+		}
+		else if (projection == "perspective")
+		{
+			float fov = Variant::FromString(e->Attribute("left")).GetFloat();
+			component->SetPerspectiveProjectionParameters(fov, 1.0f, nearPlane, farPlane);
+		}
 	}
 	else
 	{
