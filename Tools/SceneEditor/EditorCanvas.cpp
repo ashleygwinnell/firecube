@@ -150,6 +150,13 @@ void EditorCanvas::RenderDebugGeometry(NodeDescriptor *nodeDesc, DebugRenderer *
 	{
 		p->RenderDebugGeometry(debugRenderer);
 	}	
+
+	std::vector<Camera *> cameras;
+	node->GetComponents(cameras);
+	for (auto c : cameras)
+	{
+		c->RenderDebugGeometry(debugRenderer);
+	}
 }
 
 void EditorCanvas::Render()

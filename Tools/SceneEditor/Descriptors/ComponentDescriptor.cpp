@@ -12,7 +12,8 @@ std::map<ComponentType, std::string> ComponentDescriptor::componentTypeToName = 
 	{ ComponentType::RIGID_BODY, "RigidBody" },
 	{ ComponentType::PLANE, "Plane" },
 	{ ComponentType::SPHERE, "Sphere" },
-	{ ComponentType::PARTICLE_EMITTER, "ParticleEmitter" }
+	{ ComponentType::PARTICLE_EMITTER, "ParticleEmitter" },
+	{ ComponentType::CAMERA, "Camera" }
 };
 
 ComponentDescriptor::ComponentDescriptor(ComponentType type) : type(type), component(nullptr), parent(nullptr)

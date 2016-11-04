@@ -16,6 +16,7 @@
 #include "Descriptors/PlaneDescriptor.h"
 #include "Descriptors/SphereDescriptor.h"
 #include "Descriptors/ParticleEmitterDescriptor.h"
+#include "Descriptors/CameraDescriptor.h"
 
 using namespace FireCube;
 
@@ -321,6 +322,31 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlNode *paren
 		default:
 			break;
 		}
+	}
+	else if (componentDesc->GetType() == ComponentType::CAMERA)
+	{
+		TiXmlElement *element = new TiXmlElement("component");
+		parent->LinkEndChild(element);
+
+		element->SetAttribute("type", componentDesc->GetTypeName());
+
+		auto camera = static_cast<CameraDescriptor *>(componentDesc);
+
+		element->SetAttribute("projection", camera->GetOrthographic() ? "orthographic" : "perspective");
+		if (camera->GetOrthographic())
+		{
+			element->SetDoubleAttribute("left", camera->GetLeftPlane());
+			element->SetDoubleAttribute("right", camera->GetRightPlane());
+			element->SetDoubleAttribute("top", camera->GetTopPlane());
+			element->SetDoubleAttribute("bottom", camera->GetBottomPlane());
+		}
+		else
+		{
+			element->SetDoubleAttribute("fov", camera->GetFOV());			
+		}
+
+		element->SetDoubleAttribute("near", camera->GetNearPlane());
+		element->SetDoubleAttribute("far", camera->GetFarPlane());		
 	}
 
 }

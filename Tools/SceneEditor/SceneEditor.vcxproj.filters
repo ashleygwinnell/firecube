@@ -198,6 +198,12 @@
     <ClCompile Include="ScriptEditorFrameImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Descriptors\CameraDescriptor.cpp">
+      <Filter>Descriptors</Filter>
+    </ClCompile>
+    <ClCompile Include="Panels\CameraPanelImpl.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -367,6 +373,12 @@
     </ClInclude>
     <ClInclude Include="ScriptEditorFrameImpl.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Descriptors\CameraDescriptor.h">
+      <Filter>Descriptors</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels\CameraPanelImpl.h">
+      <Filter>Panels</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

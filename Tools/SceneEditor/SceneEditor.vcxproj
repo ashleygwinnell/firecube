@@ -102,6 +102,7 @@
     <ClCompile Include="Commands\ReparentNodeCommand.cpp" />
     <ClCompile Include="Commands\TransformCommands.cpp" />
     <ClCompile Include="Descriptors\BoxDescriptor.cpp" />
+    <ClCompile Include="Descriptors\CameraDescriptor.cpp" />
     <ClCompile Include="Descriptors\CharacterControllerDescriptor.cpp" />
     <ClCompile Include="Descriptors\CollisionShapeDescriptor.cpp" />
     <ClCompile Include="Descriptors\ComponentDescriptor.cpp" />
@@ -126,6 +127,7 @@
     <ClCompile Include="Panels\AssetBrowserPanelImpl.cpp" />
     <ClCompile Include="Panels\BaseComponentPanelImpl.cpp" />
     <ClCompile Include="Panels\BoxPanelImpl.cpp" />
+    <ClCompile Include="Panels\CameraPanelImpl.cpp" />
     <ClCompile Include="Panels\CharacterControllerPanelImpl.cpp" />
     <ClCompile Include="Panels\CollisionShapePanelImpl.cpp" />
     <ClCompile Include="Panels\LightPanelImpl.cpp" />
@@ -159,6 +161,7 @@
     <ClInclude Include="Commands\ReparentNodeCommand.h" />
     <ClInclude Include="Commands\TransformCommands.h" />
     <ClInclude Include="Descriptors\BoxDescriptor.h" />
+    <ClInclude Include="Descriptors\CameraDescriptor.h" />
     <ClInclude Include="Descriptors\CharacterControllerDescriptor.h" />
     <ClInclude Include="Descriptors\CollisionShapeDescriptor.h" />
     <ClInclude Include="Descriptors\ComponentDescriptor.h" />
@@ -183,6 +186,7 @@
     <ClInclude Include="Panels\AssetBrowserPanelImpl.h" />
     <ClInclude Include="Panels\BaseComponentPanelImpl.h" />
     <ClInclude Include="Panels\BoxPanelImpl.h" />
+    <ClInclude Include="Panels\CameraPanelImpl.h" />
     <ClInclude Include="Panels\CharacterControllerPanelImpl.h" />
     <ClInclude Include="Panels\CollisionShapePanelImpl.h" />
     <ClInclude Include="Panels\LightPanelImpl.h" />

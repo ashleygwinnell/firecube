@@ -14,6 +14,7 @@
 #include "Descriptors/PlaneDescriptor.h"
 #include "Descriptors/SphereDescriptor.h"
 #include "Descriptors/ParticleEmitterDescriptor.h"
+#include "Descriptors/CameraDescriptor.h"
 
 using namespace FireCube;
 
@@ -415,6 +416,28 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 			float radius = Variant::FromString(e->Attribute("radius")).GetFloat();
 			particleEmitterDescriptor->SetSphereEmitter(radius);
 		}		
+	}
+	else if (type == "Camera")
+	{
+		auto cameraDescriptor = new CameraDescriptor();
+		addedComponent = cameraDescriptor;
+
+		std::string projection = e->Attribute("projection");
+		cameraDescriptor->SetNearPlane(Variant::FromString(e->Attribute("near")).GetFloat());		
+		cameraDescriptor->SetFarPlane(Variant::FromString(e->Attribute("far")).GetFloat());
+		if (projection == "orthographic")
+		{
+			cameraDescriptor->SetOrthographic(true);
+			cameraDescriptor->SetLeftPlane(Variant::FromString(e->Attribute("left")).GetFloat());
+			cameraDescriptor->SetRightPlane(Variant::FromString(e->Attribute("right")).GetFloat());
+			cameraDescriptor->SetTopPlane(Variant::FromString(e->Attribute("top")).GetFloat());
+			cameraDescriptor->SetBottomPlane(Variant::FromString(e->Attribute("bottom")).GetFloat());
+		}
+		else if (projection == "perspective")
+		{
+			cameraDescriptor->SetOrthographic(false);
+			cameraDescriptor->SetFOV(Variant::FromString(e->Attribute("fov")).GetFloat());			
+		}
 	}
 	else
 	{

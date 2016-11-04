@@ -27,6 +27,7 @@
 #include "Panels/SpherePanelImpl.h"
 #include "Panels/AssetBrowserPanelImpl.h"
 #include "Panels/ParticleEmitterPanelImpl.h"
+#include "Panels/CameraPanelImpl.h"
 #include "AssetUtils.h"
 #include "SceneReader.h"
 #include "Descriptors/ComponentDescriptor.h"
@@ -40,6 +41,7 @@
 #include "Descriptors/PlaneDescriptor.h"
 #include "Descriptors/SphereDescriptor.h"
 #include "Descriptors/ParticleEmitterDescriptor.h"
+#include "Descriptors/CameraDescriptor.h"
 #include "tinyxml.h"
 
 using namespace FireCube;
@@ -250,6 +252,26 @@ void MainFrameImpl::AddParticleEmitterClicked(wxCommandEvent& event)
 	{
 		auto particleEmitterDescriptor = new ParticleEmitterDescriptor();
 		auto addComponentCommand = new AddComponentCommand(editorState, "Add ParticleEmitter", nodeDesc, particleEmitterDescriptor, engine);
+
+		editorState->ExecuteCommand(addComponentCommand);
+	}
+}
+
+void MainFrameImpl::AddCameraClicked(wxCommandEvent& event)
+{
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{
+		auto cameraDescriptor = new CameraDescriptor();
+		cameraDescriptor->SetOrthographic(false);
+		cameraDescriptor->SetFOV(60.0f);
+		cameraDescriptor->SetNearPlane(0.1f);
+		cameraDescriptor->SetFarPlane(200.0f);
+		cameraDescriptor->SetLeftPlane(-100.0f);
+		cameraDescriptor->SetRightPlane(100.0f);
+		cameraDescriptor->SetTopPlane(100.0f);
+		cameraDescriptor->SetBottomPlane(-100.0f);
+		auto addComponentCommand = new AddComponentCommand(editorState, "Add Camera", nodeDesc, cameraDescriptor, engine);
 
 		editorState->ExecuteCommand(addComponentCommand);
 	}
@@ -690,6 +712,15 @@ void MainFrameImpl::AddComponentPanel(ComponentDescriptor *componentDesc)
 	{
 		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
 		t->AddControl(new ParticleEmitterPanelImpl(t, engine));
+
+		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
+
+		currentComponentPanels.push_back(t);
+	}
+	else if (componentDesc->GetType() == ComponentType::CAMERA)
+	{
+		auto t = new BaseComponentPanelImpl(componentsList, componentDesc);
+		t->AddControl(new CameraPanelImpl(t, engine));
 
 		componentsSizer->Add(t, 0, wxALL | wxEXPAND, 1);
 

@@ -103,6 +103,10 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	addParticleEmitterMenuItem = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("ParticleEmitter") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu1->Append( addParticleEmitterMenuItem );
 	
+	wxMenuItem* addCameraMenuItem;
+	addCameraMenuItem = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Camera") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( addCameraMenuItem );
+	
 	addMenu->Append( m_menu1Item );
 	
 	menuBar->Append( addMenu, wxT("Add") ); 
@@ -201,6 +205,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( addPlaneMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddPlaneClicked ) );
 	this->Connect( addSphereMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddSphereClicked ) );
 	this->Connect( addParticleEmitterMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddParticleEmitterClicked ) );
+	this->Connect( addCameraMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddCameraClicked ) );
 	this->Connect( viewSceneHierarchyMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Connect( viewInspectorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	this->Connect( viewMaterialEditorMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
@@ -238,6 +243,7 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddPlaneClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddSphereClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddParticleEmitterClicked ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::AddCameraClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewSceneHierarchyClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewInspectorClicked ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::ViewMaterialEditorClicked ) );
@@ -1759,6 +1765,117 @@ ParticleEmitterPanel::~ParticleEmitterPanel()
 	maxSpeedTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MaxSpeedChanged ), NULL, this );
 	materialFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ParticleEmitterPanel::MaterialFileChanged ), NULL, this );
 	simulationSpaceChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ParticleEmitterPanel::SimulationSpaceChanged ), NULL, this );
+	
+}
+
+CameraPanel::CameraPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxFlexGridSizer* fgSizer15;
+	fgSizer15 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer15->AddGrowableCol( 1 );
+	fgSizer15->SetFlexibleDirection( wxBOTH );
+	fgSizer15->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText25 = new wxStaticText( this, wxID_ANY, wxT("Projection"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText25->Wrap( -1 );
+	fgSizer15->Add( m_staticText25, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	wxString projectionTypeChoiceChoices[] = { wxT("Perspective"), wxT("Orthographic") };
+	int projectionTypeChoiceNChoices = sizeof( projectionTypeChoiceChoices ) / sizeof( wxString );
+	projectionTypeChoice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, projectionTypeChoiceNChoices, projectionTypeChoiceChoices, 0 );
+	projectionTypeChoice->SetSelection( 0 );
+	fgSizer15->Add( projectionTypeChoice, 1, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
+	
+	m_staticText104 = new wxStaticText( this, wxID_ANY, wxT("Z Near"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText104->Wrap( -1 );
+	fgSizer15->Add( m_staticText104, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	zNearTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	zNearTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &zNearText ) );
+	
+	fgSizer15->Add( zNearTextCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText1041 = new wxStaticText( this, wxID_ANY, wxT("Z Far"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText1041->Wrap( -1 );
+	fgSizer15->Add( m_staticText1041, 0, wxALL, 5 );
+	
+	zFarTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	zFarTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &zFarText ) );
+	
+	fgSizer15->Add( zFarTextCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	leftStaticText = new wxStaticText( this, wxID_ANY, wxT("Left"), wxDefaultPosition, wxDefaultSize, 0 );
+	leftStaticText->Wrap( -1 );
+	fgSizer15->Add( leftStaticText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	leftTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	leftTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &leftText ) );
+	
+	fgSizer15->Add( leftTextCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	rightStaticText = new wxStaticText( this, wxID_ANY, wxT("Right"), wxDefaultPosition, wxDefaultSize, 0 );
+	rightStaticText->Wrap( -1 );
+	fgSizer15->Add( rightStaticText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	rightTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	rightTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &rightText ) );
+	
+	fgSizer15->Add( rightTextCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	bottomStaticText = new wxStaticText( this, wxID_ANY, wxT("Bottom"), wxDefaultPosition, wxDefaultSize, 0 );
+	bottomStaticText->Wrap( -1 );
+	fgSizer15->Add( bottomStaticText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	bottomTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	bottomTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &bottomText ) );
+	
+	fgSizer15->Add( bottomTextCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	topStaticText = new wxStaticText( this, wxID_ANY, wxT("Top"), wxDefaultPosition, wxDefaultSize, 0 );
+	topStaticText->Wrap( -1 );
+	fgSizer15->Add( topStaticText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	topTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	topTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &topText ) );
+	
+	fgSizer15->Add( topTextCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	fovStaticText = new wxStaticText( this, wxID_ANY, wxT("FOV"), wxDefaultPosition, wxDefaultSize, 0 );
+	fovStaticText->Wrap( -1 );
+	fgSizer15->Add( fovStaticText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	fovTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	fovTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &fovText ) );
+	
+	fgSizer15->Add( fovTextCtrl, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	this->SetSizer( fgSizer15 );
+	this->Layout();
+	fgSizer15->Fit( this );
+	
+	// Connect Events
+	projectionTypeChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CameraPanel::ProjectionTypeChanged ), NULL, this );
+	zNearTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::ZNearChanged ), NULL, this );
+	zFarTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::ZFarChanged ), NULL, this );
+	leftTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::LeftChanged ), NULL, this );
+	rightTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::RightChanged ), NULL, this );
+	bottomTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::BottomChanged ), NULL, this );
+	topTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::TopChanged ), NULL, this );
+	fovTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::FovChanged ), NULL, this );
+}
+
+CameraPanel::~CameraPanel()
+{
+	// Disconnect Events
+	projectionTypeChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CameraPanel::ProjectionTypeChanged ), NULL, this );
+	zNearTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::ZNearChanged ), NULL, this );
+	zFarTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::ZFarChanged ), NULL, this );
+	leftTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::LeftChanged ), NULL, this );
+	rightTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::RightChanged ), NULL, this );
+	bottomTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::BottomChanged ), NULL, this );
+	topTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::TopChanged ), NULL, this );
+	fovTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CameraPanel::FovChanged ), NULL, this );
 	
 }
 

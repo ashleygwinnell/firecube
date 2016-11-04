@@ -104,6 +104,7 @@ class MainFrame : public wxFrame
 		virtual void AddPlaneClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddSphereClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AddParticleEmitterClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void AddCameraClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewSceneHierarchyClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewInspectorClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ViewMaterialEditorClicked( wxCommandEvent& event ) { event.Skip(); }
@@ -757,6 +758,56 @@ class ParticleEmitterPanel : public wxPanel
 		
 		ParticleEmitterPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~ParticleEmitterPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class CameraPanel
+///////////////////////////////////////////////////////////////////////////////
+class CameraPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_staticText25;
+		wxChoice* projectionTypeChoice;
+		wxStaticText* m_staticText104;
+		wxTextCtrl* zNearTextCtrl;
+		wxStaticText* m_staticText1041;
+		wxTextCtrl* zFarTextCtrl;
+		wxStaticText* leftStaticText;
+		wxTextCtrl* leftTextCtrl;
+		wxStaticText* rightStaticText;
+		wxTextCtrl* rightTextCtrl;
+		wxStaticText* bottomStaticText;
+		wxTextCtrl* bottomTextCtrl;
+		wxStaticText* topStaticText;
+		wxTextCtrl* topTextCtrl;
+		wxStaticText* fovStaticText;
+		wxTextCtrl* fovTextCtrl;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void ProjectionTypeChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ZNearChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ZFarChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void LeftChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RightChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void BottomChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void TopChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void FovChanged( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		wxString zNearText; 
+		wxString zFarText; 
+		wxString leftText; 
+		wxString rightText; 
+		wxString bottomText; 
+		wxString topText; 
+		wxString fovText; 
+		
+		CameraPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
+		~CameraPanel();
 	
 };
 
