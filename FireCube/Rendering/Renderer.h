@@ -121,7 +121,7 @@ public:
 	/**
 	* Sets the rendering viewport.
 	*/
-	void SetViewport(int left, int right, int width, int height);
+	void SetViewport(int x, int y, int width, int height);
 	
 	/**
 	* Increaments the internal counter of the number of primitives that were renderered

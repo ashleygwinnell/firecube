@@ -273,9 +273,9 @@ void Renderer::RestoreFrameBuffer()
 	UpdateFrameBuffer();		
 }
 
-void Renderer::SetViewport(int left, int right, int width, int height)
+void Renderer::SetViewport(int x, int y, int width, int height)
 {
-	glViewport(left, right, width, height);
+	glViewport(x, y, width, height);
 }
 
 Program *Renderer::SetShaders(Shader *vertexShader, Shader *fragmentShader)
