@@ -57,6 +57,11 @@ MaterialEditorPanelImpl::MaterialEditorPanelImpl(wxWindow* parent) : MaterialEdi
 		light->SetLightType(LightType::DIRECTIONAL);
 		light->SetColor(1.0f);
 		lightNode2->Rotate(vec3((float)M_PI * 0.25f, (float)M_PI * 0.25f, 0.0f));
+
+		if (material)
+		{
+			UpdatePreview(material);
+		}
 	});
 
 	previewPanelSizer->Add(glCanvas, 1, wxALL | wxEXPAND, 1);
@@ -402,13 +407,16 @@ void MaterialEditorPanelImpl::AddParameterButtonClicked(wxCommandEvent& event)
 
 void MaterialEditorPanelImpl::UpdatePreview(FireCube::Material *material)
 {
-	meshNode->RemoveAllComponents();
-	auto geometry = GeometryGenerator::GenerateSphere(engine, 0.5f, 16, 16);
-	SharedPtr<Mesh> sphereMesh = new Mesh(engine);
-	sphereMesh->AddGeometry(geometry, BoundingBox(vec3(-0.5f), vec3(0.5f)), material);
+	if (meshNode)
+	{
+		meshNode->RemoveAllComponents();
+		auto geometry = GeometryGenerator::GenerateSphere(engine, 0.5f, 16, 16);
+		SharedPtr<Mesh> sphereMesh = new Mesh(engine);
+		sphereMesh->AddGeometry(geometry, BoundingBox(vec3(-0.5f), vec3(0.5f)), material);
 
-	meshNode->CreateComponent<StaticModel>(sphereMesh);
-	glCanvas->Refresh(false);
+		meshNode->CreateComponent<StaticModel>(sphereMesh);
+		glCanvas->Refresh(false);
+	}
 }
 
 MaterialEditorDropTarget::MaterialEditorDropTarget(MaterialEditorPanelImpl *materialEditorPanel) : wxDropTarget(new wxCustomDataObject(wxDataFormat("Asset"))), materialEditorPanel(materialEditorPanel)
