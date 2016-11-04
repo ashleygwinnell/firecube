@@ -139,6 +139,12 @@ public:
 	* @returns The distance of the bottom plane from the camera
 	*/
 	float GetBottomPlane() const;
+
+	/**
+	* Renders debug geometry of this camera
+	* @param debugRenderer The debug renderer
+	*/
+	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
 	
 	/**
 	* Clones this component

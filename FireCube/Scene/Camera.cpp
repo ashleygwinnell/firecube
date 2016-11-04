@@ -1,5 +1,6 @@
 #include "Scene/Camera.h"
 #include "Scene/Node.h"
+#include "Rendering/DebugRenderer.h"
 
 using namespace FireCube;
 
@@ -222,4 +223,11 @@ float Camera::GetTopPlane() const
 float Camera::GetBottomPlane() const
 {
 	return bottomPlane;
+}
+
+void Camera::RenderDebugGeometry(DebugRenderer *debugRenderer)
+{
+	Frustum frustum;
+	frustum.Extract(GetViewMatrix(), GetProjectionMatrix());
+	debugRenderer->AddFrustum(frustum, vec3(0, 1, 0));
 }
