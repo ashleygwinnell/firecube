@@ -43,7 +43,7 @@ Node *Node::GetParent()
 	return parent;
 }
 
-mat4 Node::GetLocalTransformation()
+mat4 Node::GetLocalTransformation() const
 {	
 	localTransformation.Identity();
 	localTransformation.Translate(translation);
@@ -53,7 +53,7 @@ mat4 Node::GetLocalTransformation()
 	return localTransformation;
 }
 
-mat4 Node::GetWorldTransformation()
+mat4 Node::GetWorldTransformation() const
 {
 	if (transformationChanged)
 	{
@@ -63,7 +63,7 @@ mat4 Node::GetWorldTransformation()
 	return worldTransformation;	
 }
 
-quat Node::GetWorldRotation()
+quat Node::GetWorldRotation() const
 {
 	if (transformationChanged)
 	{
@@ -73,7 +73,7 @@ quat Node::GetWorldRotation()
 	return worldRotation;
 }
 
-void Node::UpdateWorldTransformation()
+void Node::UpdateWorldTransformation() const
 {
 	transformationChanged = false;
 	if (parent)
@@ -303,7 +303,7 @@ void Node::SetTransformationChanged()
 	}
 }
 
-vec3 Node::GetWorldPosition()
+vec3 Node::GetWorldPosition() const
 {
 	return GetWorldTransformation() * vec3(0.0f, 0.0f, 0.0f);
 }

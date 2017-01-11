@@ -63,18 +63,18 @@ public:
 	* Gets the local transformation of this node.
 	* @return The local transformation of this node.
 	*/
-	mat4 GetLocalTransformation();
+	mat4 GetLocalTransformation() const;
 
 	/**
 	* Gets the world transformation of this node.
 	* @return The world transformation of this node.
 	*/
-	mat4 GetWorldTransformation();
+	mat4 GetWorldTransformation() const;
 
 	/**
 	* @returns The world rotation of this node
 	*/
-	quat GetWorldRotation();
+	quat GetWorldRotation() const;
 
 	/**
 	* Sets the translation of this node.
@@ -200,7 +200,7 @@ public:
 	/**
 	* @return The world space position of this node.
 	*/
-	vec3 GetWorldPosition();
+	vec3 GetWorldPosition() const;
 	
 	/**
 	* Adds a component to this node
@@ -316,17 +316,17 @@ protected:
 
 	void SetTransformationChanged();	
 	void SceneChanged(Scene *oldScene);
-	void UpdateWorldTransformation();
+	void UpdateWorldTransformation() const;
 	
 	std::vector<SharedPtr<Node>> children;	
 
 	vec3 translation;
 	quat rotation;
 	vec3 scale;	
-	mat4 localTransformation;
-	bool transformationChanged;	
-	mat4 worldTransformation;	
-	quat worldRotation;
+	mutable mat4 localTransformation;
+	mutable bool transformationChanged;	
+	mutable mat4 worldTransformation;	
+	mutable quat worldRotation;
 	
 	Node *parent;
 	std::string name;
