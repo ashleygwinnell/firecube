@@ -18,6 +18,7 @@ using namespace FireCube;
 #include "Commands/GroupCommand.h"
 #include "Descriptors/PhysicsWorldDescriptor.h"
 #include "Descriptors/StaticModelDescriptor.h"
+#include "Descriptors/CameraDescriptor.h"
 #include "AssetUtils.h"
 #include "SceneReader.h"
 
@@ -71,10 +72,11 @@ void EditorCanvas::Init()
 	
 	cameraTarget = root->CreateChild("Editor_CameraTarget");
 	Node *cameraNode = cameraTarget->CreateChild("Camera");
-	camera = cameraNode->CreateComponent<OrbitCamera>();
-	camera->SetFarPlane(2000.0f);	
-	camera->SetDistance(5.0f);
-	camera->SetMaxDistance(10000.0f);
+	defaultCamera = cameraNode->CreateComponent<OrbitCamera>();
+	defaultCamera->SetFarPlane(2000.0f);	
+	defaultCamera->SetDistance(5.0f);
+	defaultCamera->SetMaxDistance(10000.0f);
+	currentCamera = defaultCamera;
 
 	scene->SetFogColor(vec3(0.2f, 0.2f, 0.2f));		
 
@@ -95,8 +97,8 @@ void EditorCanvas::Init()
 	engine->GetRenderer()->SetHeight(h);
 	engine->GetRenderer()->SetViewport(0, 0, w, h);
 
-	engine->GetRenderer()->SetSceneView(1, new SceneView(engine, scene, camera, nullptr));
-	engine->GetRenderer()->SetSceneView(0, new SceneView(engine, editorScene, camera, nullptr, engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/ForwardNoClear.xml")));
+	engine->GetRenderer()->SetSceneView(1, new SceneView(engine, scene, currentCamera, nullptr));
+	engine->GetRenderer()->SetSceneView(0, new SceneView(engine, editorScene, currentCamera, nullptr, engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/ForwardNoClear.xml")));
 
 	editorState->newSceneCreated(editorState);
 }
@@ -167,7 +169,7 @@ void EditorCanvas::Render()
 	{
 		RenderDebugGeometry(editorState->GetSelectedNode(), engine->GetDebugRenderer());
 	}
-	engine->GetDebugRenderer()->Render(camera);
+	engine->GetDebugRenderer()->Render(currentCamera);
 }
 
 void EditorCanvas::OnEnterWindow(wxMouseEvent& event)
@@ -190,7 +192,7 @@ void EditorCanvas::OnLeftDown(wxMouseEvent& event)
 	{
 		wxPoint mousePos = event.GetPosition();
 		wxSize size = this->GetSize();
-		Ray ray = camera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
+		Ray ray = currentCamera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
 
 		if (currentOperation == Operation::NONE && editorState->GetSelectedNode())
 		{
@@ -216,24 +218,24 @@ void EditorCanvas::OnMotion(wxMouseEvent& event)
 {
 	vec2 curpos(event.GetPosition().x, event.GetPosition().y);
 	
-	if (event.LeftIsDown() && event.ShiftDown() == true)
+	if (event.LeftIsDown() && event.ShiftDown() == true && currentCamera == defaultCamera)
 	{
-		camera->RotateX(-(curpos.y - lastMousePos.y) / 60.0f);
-		camera->RotateY(-(curpos.x - lastMousePos.x) / 60.0f);
+		defaultCamera->RotateX(-(curpos.y - lastMousePos.y) / 60.0f);
+		defaultCamera->RotateY(-(curpos.x - lastMousePos.x) / 60.0f);
 		UpdateGizmo();
 		this->Refresh(false);
 	}
-	else if (event.MiddleIsDown())
+	else if (event.MiddleIsDown() && currentCamera == defaultCamera)
 	{
 		if (event.ShiftDown())
 		{
-			camera->Zoom(-(curpos.y - lastMousePos.y) / 15.0f);
+			defaultCamera->Zoom(-(curpos.y - lastMousePos.y) / 15.0f);
 			UpdateGizmo();
 			this->Refresh(false);
 		}
 		else
 		{
-			camera->Zoom(-(curpos.y - lastMousePos.y) / 30.0f);
+			defaultCamera->Zoom(-(curpos.y - lastMousePos.y) / 30.0f);
 			UpdateGizmo();
 			this->Refresh(false);
 		}
@@ -242,7 +244,7 @@ void EditorCanvas::OnMotion(wxMouseEvent& event)
 	{
 		wxPoint mousePos = event.GetPosition();
 		wxSize size = this->GetSize();
-		Ray ray = camera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
+		Ray ray = currentCamera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
 		
 		if (currentOperation == Operation::OBJECT_TRANSFORM)
 		{						
@@ -256,18 +258,21 @@ void EditorCanvas::OnMotion(wxMouseEvent& event)
 }
 void EditorCanvas::OnMouseWheel(wxMouseEvent& event)
 {
-	int r = event.GetWheelRotation();
-	if (event.ShiftDown())
+	if (currentCamera == defaultCamera)
 	{
-		camera->Zoom((float)r / 400.0f);
-		UpdateGizmo();
+		int r = event.GetWheelRotation();
+		if (event.ShiftDown())
+		{
+			defaultCamera->Zoom((float)r / 400.0f);
+			UpdateGizmo();
+		}
+		else
+		{
+			defaultCamera->Zoom((float)r / 150.0f);
+			UpdateGizmo();
+		}
+		this->Refresh(false);
 	}
-	else
-	{
-		camera->Zoom((float)r / 150.0f);
-		UpdateGizmo();
-	}
-	this->Refresh(false);
 }
 
 void EditorCanvas::OnLeftUp(wxMouseEvent& event)
@@ -281,7 +286,7 @@ void EditorCanvas::OnLeftUp(wxMouseEvent& event)
 	{
 		wxPoint mousePos = event.GetPosition();
 		wxSize size = this->GetSize();
-		Ray ray = camera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
+		Ray ray = currentCamera->GetPickingRay(vec2(mousePos.x, size.GetHeight() - mousePos.y), size.GetWidth(), size.GetHeight());
 		RayQuery query(ray, 10e4);
 					
 		if (currentOperation == Operation::NONE)
@@ -407,7 +412,7 @@ void EditorCanvas::OnKeyUp(wxKeyEvent& event)
 			}
 		}		
 	}
-	else if (event.GetKeyCode() == 'Z' && event.ControlDown() == false)
+	else if (event.GetKeyCode() == 'Z' && event.ControlDown() == false && currentCamera == defaultCamera)
 	{
 		if (editorState->GetSelectedNode())
 		{
@@ -430,7 +435,7 @@ void EditorCanvas::UpdateGizmo()
 {
 	if (transformGizmo && editorState->GetSelectedNode())
 	{
-		transformGizmo->UpdateTransformation(camera, editorState->GetSelectedNode());
+		transformGizmo->UpdateTransformation(currentCamera, editorState->GetSelectedNode());
 		transformGizmo->Show();
 	}
 	else if (transformGizmo && editorState->GetSelectedNode() == nullptr)
@@ -495,6 +500,26 @@ void EditorCanvas::AddPrefab(const std::string &path)
 		auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", prefabInstance, rootDesc);
 		editorState->ExecuteCommand(addNodeCommand);
 	}
+}
+
+void EditorCanvas::UseCamera(CameraDescriptor *camera)
+{
+	UseCamera((Camera *) camera->GetComponent());
+}
+
+void EditorCanvas::UseDefaultCamera()
+{
+	UseCamera(defaultCamera);
+}
+
+void EditorCanvas::UseCamera(FireCube::Camera *camera)
+{
+	currentCamera = camera;
+
+	engine->GetRenderer()->SetSceneView(1, new SceneView(engine, scene, currentCamera, nullptr));
+	engine->GetRenderer()->SetSceneView(0, new SceneView(engine, editorScene, currentCamera, nullptr, engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/ForwardNoClear.xml")));
+
+	this->Refresh(false);
 }
 
 CanvasDropTarget::CanvasDropTarget(EditorCanvas *canvas) : wxDropTarget(new wxCustomDataObject(wxDataFormat("Asset"))), canvas(canvas)

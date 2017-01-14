@@ -348,6 +348,8 @@ void MainFrameImpl::OpenSceneFile(const std::string &filename)
 	assetBrowserPanel->PopulateDirectoryTree();
 	assetBrowserPanel->SetAssetsPath(Filesystem::GetAssetsFolder());
 
+	UpdateCamerasList();
+
 	editorState->sceneChanged(editorState);
 }
 
@@ -500,6 +502,7 @@ void MainFrameImpl::SceneTreeBeginDrag(wxTreeEvent& event)
 	dragItem = event.GetItem();
 	event.Allow();
 }
+
 void MainFrameImpl::SceneTreeEndDrag(wxTreeEvent& event)
 {
 	auto newParent = event.GetItem();
@@ -786,6 +789,11 @@ void MainFrameImpl::ComponentAdded(ComponentDescriptor *componentDesc)
 		AddComponentPanel(componentDesc);
 		componentsList->Thaw();
 	}
+
+	if (componentDesc->GetType() == ComponentType::CAMERA)
+	{
+		cameraChoice->Append(componentDesc->GetParent()->GetName(), (void *) componentDesc);
+	}
 }
 
 void MainFrameImpl::ComponentRemoved(ComponentDescriptor *componentDesc)
@@ -797,6 +805,24 @@ void MainFrameImpl::ComponentRemoved(ComponentDescriptor *componentDesc)
 		componentsList->FitInside();
 		componentsList->Layout();
 		componentsList->Thaw();
+	}
+
+	if (componentDesc->GetType() == ComponentType::CAMERA)
+	{
+		for (unsigned int i = 0; i < cameraChoice->GetCount(); ++i)
+		{
+			if (cameraChoice->GetClientData(i) == componentDesc)
+			{
+				if (cameraChoice->GetSelection() == i)
+				{
+					cameraChoice->SetSelection(0);
+					editorCanvas->UseDefaultCamera();
+				}
+
+				cameraChoice->Delete(i);
+				break;
+			}
+		}
 	}
 }
 
@@ -903,6 +929,7 @@ void MainFrameImpl::LoadSettingsFile()
 		}
 	}	
 }
+
 void MainFrameImpl::WriteSettingsFile()
 {
 	TiXmlDocument doc;
@@ -944,6 +971,7 @@ void MainFrameImpl::RecentFileClicked(wxCommandEvent& event)
 
 void MainFrameImpl::OnClose(wxCloseEvent& event)
 {
+	editorCanvas->UseDefaultCamera(); // Use default camera to prevent rendering from a soon to be deleted camera
 	Reset();
 
 	// Prevent destructor of NodeDescriptor from deleting the node itself since it is owned by the Scene
@@ -1073,6 +1101,46 @@ void MainFrameImpl::EditScript(const std::string &filename)
 	scriptEditorFrame->OpenFile(filename);
 	scriptEditorFrame->Show();	
 	scriptEditorFrame->SetFocus();
+}
+
+void MainFrameImpl::UpdateCamerasList()
+{
+	cameraChoice->Freeze();
+	cameraChoice->Clear();
+	cameraChoice->Append("Default", (void *) nullptr);
+	CollectCameras(&rootDesc);
+	cameraChoice->SetSelection(0);
+	cameraChoice->Thaw();
+}
+
+void MainFrameImpl::CollectCameras(NodeDescriptor *node)
+{
+	for (auto &componentDesc : node->GetComponents())
+	{
+		if (componentDesc->GetType() == ComponentType::CAMERA)
+		{
+			cameraChoice->Append(node->GetName(), (void *) componentDesc);
+		}
+	}
+
+	for (auto &child : node->GetChildren())
+	{
+		CollectCameras(child);
+	}
+}
+
+void MainFrameImpl::CameraChoiceChanged(wxCommandEvent& event)
+{
+	auto cameraComponent = (CameraDescriptor *) event.GetClientData();
+
+	if (cameraComponent)
+	{
+		editorCanvas->UseCamera(cameraComponent);
+	}
+	else
+	{
+		editorCanvas->UseDefaultCamera();
+	}
 }
 
 void MainFrameImpl::SceneTreeItemMenu(wxTreeEvent& event)

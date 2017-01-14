@@ -24,37 +24,38 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 	FIRECUBE_OBJECT(MainFrameImpl)
 	protected:
 		// Handlers for MainFrame events.		
-		virtual void UndoClicked(wxCommandEvent& event);
-		virtual void RedoClicked(wxCommandEvent& event);
-		virtual void SaveClicked(wxCommandEvent& event);
-		virtual void SaveAsClicked(wxCommandEvent& event);
-		virtual void OpenClicked(wxCommandEvent& event);
-		virtual void NewClicked(wxCommandEvent& event);		
-		virtual void AddMeshClicked(wxCommandEvent& event);		
-		virtual void SceneTreeSelectionChanged(wxTreeEvent& event);
-		virtual void SceneTreeEndLabelEdit(wxTreeEvent& event);
-		virtual void ViewSceneHierarchyClicked(wxCommandEvent& event);
-		virtual void ViewInspectorClicked(wxCommandEvent& event);
-		virtual void ViewMaterialEditorClicked(wxCommandEvent& event);
-		virtual void ViewAssetBrowserClicked(wxCommandEvent& event);
+		virtual void UndoClicked(wxCommandEvent& event) override;
+		virtual void RedoClicked(wxCommandEvent& event) override;
+		virtual void SaveClicked(wxCommandEvent& event) override;
+		virtual void SaveAsClicked(wxCommandEvent& event) override;
+		virtual void OpenClicked(wxCommandEvent& event) override;
+		virtual void NewClicked(wxCommandEvent& event) override;
+		virtual void AddMeshClicked(wxCommandEvent& event) override;
+		virtual void SceneTreeSelectionChanged(wxTreeEvent& event) override;
+		virtual void SceneTreeEndLabelEdit(wxTreeEvent& event) override;
+		virtual void ViewSceneHierarchyClicked(wxCommandEvent& event) override;
+		virtual void ViewInspectorClicked(wxCommandEvent& event) override;
+		virtual void ViewMaterialEditorClicked(wxCommandEvent& event) override;
+		virtual void ViewAssetBrowserClicked(wxCommandEvent& event) override;
 		virtual void ViewScriptEditorClicked(wxCommandEvent& event) override;
-		virtual void SceneTreeBeginDrag(wxTreeEvent& event);
-		virtual void SceneTreeEndDrag(wxTreeEvent& event);
-		virtual void PaneClose(wxAuiManagerEvent& event);		
-		virtual void AddStaticModelClicked(wxCommandEvent& event);
-		virtual void AddLightClicked(wxCommandEvent& event);
-		virtual void AddLuaScriptClicked(wxCommandEvent& event);
-		virtual void AddCollisionShapeClicked(wxCommandEvent& event);
-		virtual void AddCharacterControllerClicked(wxCommandEvent& event);
-		virtual void AddBoxClicked(wxCommandEvent& event);
-		virtual void AddPlaneClicked(wxCommandEvent& event);
-		virtual void AddSphereClicked(wxCommandEvent& event);
-		virtual void AddRigidBodyClicked(wxCommandEvent& event);
-		virtual void AddParticleEmitterClicked(wxCommandEvent& event);
-		virtual void AddCameraClicked(wxCommandEvent& event);
-		virtual void AddNodeClicked(wxCommandEvent& event);
-		virtual void SceneTreeKeyUp(wxKeyEvent& event);
-		virtual void SceneTreeItemMenu(wxTreeEvent& event);
+		virtual void SceneTreeBeginDrag(wxTreeEvent& event) override;
+		virtual void SceneTreeEndDrag(wxTreeEvent& event) override;
+		virtual void PaneClose(wxAuiManagerEvent& event) override;
+		virtual void AddStaticModelClicked(wxCommandEvent& event) override;
+		virtual void AddLightClicked(wxCommandEvent& event) override;
+		virtual void AddLuaScriptClicked(wxCommandEvent& event) override;
+		virtual void AddCollisionShapeClicked(wxCommandEvent& event) override;
+		virtual void AddCharacterControllerClicked(wxCommandEvent& event) override;
+		virtual void AddBoxClicked(wxCommandEvent& event) override;
+		virtual void AddPlaneClicked(wxCommandEvent& event) override;
+		virtual void AddSphereClicked(wxCommandEvent& event) override;
+		virtual void AddRigidBodyClicked(wxCommandEvent& event) override;
+		virtual void AddParticleEmitterClicked(wxCommandEvent& event) override;
+		virtual void AddCameraClicked(wxCommandEvent& event) override;
+		virtual void AddNodeClicked(wxCommandEvent& event) override;
+		virtual void SceneTreeKeyUp(wxKeyEvent& event) override;
+		virtual void SceneTreeItemMenu(wxTreeEvent& event) override;
+		virtual void CameraChoiceChanged(wxCommandEvent& event) override;
 		void ComponentAdded(ComponentDescriptor *componentDesc);
 		void ComponentRemoved(ComponentDescriptor *componentDesc);
 		void AddComponentPanel(ComponentDescriptor *componentDesc);
@@ -76,6 +77,8 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		void NewSceneCreated();
 		void ShowMaterialEditor();		
 		void EditScript(const std::string &filename);
+		void UpdateCamerasList();
+		void CollectCameras(NodeDescriptor *node);
 
 		MyApp *theApp;
 		FireCube::Engine *engine;
@@ -95,8 +98,9 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 
 		MaterialEditorPanelImpl *materialEditorPanel;
 		AssetBrowserPanelImpl *assetBrowserPanel;				
-		ScriptEditorFrameImpl *scriptEditorFrame;
-	public:
+		ScriptEditorFrameImpl *scriptEditorFrame;		
+
+public:
 		/** Constructor */
 		MainFrameImpl( wxWindow* parent );	
 

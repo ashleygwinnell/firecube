@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun 17 2015)
+// C++ code generated with wxFormBuilder (version Dec 21 2016)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -31,6 +31,8 @@
 #include <wx/glcanvas.h>
 #include "EditorCanvas.h"
 #include <wx/scrolwin.h>
+#include <wx/choice.h>
+#include <wx/toolbar.h>
 #include <wx/frame.h>
 #include <wx/aui/aui.h>
 #include <wx/stattext.h>
@@ -40,14 +42,12 @@
 #include <wx/checkbox.h>
 #include <wx/textctrl.h>
 #include <wx/valtext.h>
-#include <wx/choice.h>
 #include <wx/clrpicker.h>
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
 #include <wx/splitter.h>
 #include <wx/listctrl.h>
 #include <wx/statbmp.h>
-#include <wx/toolbar.h>
 #include <wx/aui/auibook.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -81,6 +81,8 @@ class MainFrame : public wxFrame
 		wxPanel* inspectorPanel;
 		wxScrolledWindow* componentsList;
 		wxBoxSizer* componentsSizer;
+		wxToolBar* toolbar;
+		wxChoice* cameraChoice;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void PaneClose( wxAuiManagerEvent& event ) { event.Skip(); }
@@ -116,6 +118,7 @@ class MainFrame : public wxFrame
 		virtual void SceneTreeEndLabelEdit( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeItemMenu( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeSelectionChanged( wxTreeEvent& event ) { event.Skip(); }
+		virtual void CameraChoiceChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

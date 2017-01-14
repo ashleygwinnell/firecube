@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun 17 2015)
+// C++ code generated with wxFormBuilder (version Dec 21 2016)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -179,6 +179,15 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	inspectorPanel->SetSizer( bSizer3 );
 	inspectorPanel->Layout();
+	toolbar = new wxToolBar( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL ); 
+	wxArrayString cameraChoiceChoices;
+	cameraChoice = new wxChoice( toolbar, wxID_ANY, wxDefaultPosition, wxDefaultSize, cameraChoiceChoices, 0 );
+	cameraChoice->SetSelection( 0 );
+	toolbar->AddControl( cameraChoice );
+	toolbar->Realize();
+	m_mgr.AddPane( toolbar, wxAuiPaneInfo() .Top() .CaptionVisible( false ).PinButton( true ).PaneBorder( false ).Gripper().Dock().Resizable().FloatingSize( wxDefaultSize ).Layer( 10 ) );
+	
+	
 	
 	m_mgr.Update();
 	this->Centre( wxBOTH );
@@ -217,6 +226,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_END_LABEL_EDIT, wxTreeEventHandler( MainFrame::SceneTreeEndLabelEdit ), NULL, this );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( MainFrame::SceneTreeItemMenu ), NULL, this );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( MainFrame::SceneTreeSelectionChanged ), NULL, this );
+	cameraChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::CameraChoiceChanged ), NULL, this );
 }
 
 MainFrame::~MainFrame()
@@ -255,6 +265,7 @@ MainFrame::~MainFrame()
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_END_LABEL_EDIT, wxTreeEventHandler( MainFrame::SceneTreeEndLabelEdit ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( MainFrame::SceneTreeItemMenu ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( MainFrame::SceneTreeSelectionChanged ), NULL, this );
+	cameraChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::CameraChoiceChanged ), NULL, this );
 	
 	m_mgr.UnInit();
 	

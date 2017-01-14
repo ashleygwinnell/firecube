@@ -11,6 +11,7 @@ class ScaleGizmo;
 class EditorState;
 class NodeDescriptor;
 class EditorCanvas;
+class CameraDescriptor;
 
 enum class Operation
 {
@@ -52,6 +53,8 @@ public:
 	virtual void Init() override;
 	void UpdateGizmo();		
 	void SetRootDescriptor(NodeDescriptor *rootDescriptor);	
+	void UseCamera(CameraDescriptor *camera);
+	void UseDefaultCamera();
 private:	
 	void CreateGrid(float size, unsigned int numberOfCells);
 	void SelectedNodeChanged(NodeDescriptor *nodeDesc);
@@ -61,9 +64,11 @@ private:
 	void StartMaterialPick();
 	void AddMesh(const std::string &path);
 	void AddPrefab(const std::string &path);
+	void UseCamera(FireCube::Camera *camera);
 	
 	FireCube::Scene *scene, *editorScene;
-	FireCube::OrbitCamera *camera;
+	FireCube::OrbitCamera *defaultCamera;
+	FireCube::Camera *currentCamera;
 	FireCube::Node *root, *gridNode, *cameraTarget, *editorRoot;
 	FireCube::SharedPtr<TranslateGizmo> translateGizmo;
 	FireCube::SharedPtr<RotateGizmo> rotateGizmo;
