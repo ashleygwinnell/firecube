@@ -17,6 +17,7 @@ RemoveNodeCommand::~RemoveNodeCommand()
 
 void RemoveNodeCommand::Do()
 {
+	node = nodeDesc->GetNode();
 	nodeDesc->Remove();
 	shouldDelete = true;
 	editorState->nodeRemoved(editorState, nodeDesc);
@@ -37,4 +38,5 @@ void RemoveNodeCommand::Undo()
 		editorState->componentAdded(editorState, component);
 	}
 	editorState->SetSelectedNode(nodeDesc);	
+	node.Reset();
 }
