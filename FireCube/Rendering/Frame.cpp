@@ -509,6 +509,8 @@ void Frame::RenderShadowMap(Renderer *renderer, Light *light, RenderQueue &queue
 	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
 		renderer->SetRenderTarget(i, nullptr);
 	renderer->UpdateFrameBuffer();
+	
+	renderer->SetViewport(0, 0, renderTarget->GetWidth(), renderTarget->GetHeight());
 
 	Camera *lightCamera = light->GetCamera();
 	renderer->SetDepthWrite(true);
