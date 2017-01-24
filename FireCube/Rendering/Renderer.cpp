@@ -66,6 +66,8 @@ void Renderer::Initialize()
 	depthWrite = true;
 
 	shadowMap = GetRenderSurface(1024, 1024, RenderSurfaceType::DEPTH_TEXTURE);
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 }
 
 void Renderer::Destroy()
@@ -123,6 +125,9 @@ void Renderer::UseTexture(unsigned int unit, const Texture *texture)
 		break;
 	case TextureWrapMode::REPEAT:
 		wrap = GL_REPEAT;
+		break;
+	case TextureWrapMode::CLAMP:
+		wrap = GL_CLAMP;
 		break;
 	default:
 		break;
@@ -533,12 +538,9 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 	SharedPtr<RenderSurface> renderSurface(new RenderSurface(this, type));
 	if (type == RenderSurfaceType::COLOR)
 	{
-		Texture *texture = new Texture2D(engine);
-		texture->SetWidth(width);
-		texture->SetHeight(height);
+		Texture2D *texture = new Texture2D(engine);		
 		texture->SetFiltering(TextureFilter::LINEAR);
-		UseTexture(0, texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+		texture->SetSize(width, height, TextureFormat::RGBA);		
 		texture->SetWrapMode(TextureWrapMode::CLAMP_TO_EDGE);		
 		renderSurface->SetLinkedTexture(texture);		
 	}
@@ -548,12 +550,9 @@ SharedPtr<RenderSurface> Renderer::GetRenderSurface(int width, int height, Rende
 	}
 	else if (type == RenderSurfaceType::DEPTH_TEXTURE)
 	{
-		Texture *texture = new Texture2D(engine);
-		texture->SetWidth(width);
-		texture->SetHeight(height);
+		Texture2D *texture = new Texture2D(engine);
 		texture->SetFiltering(TextureFilter::NEAREST);
-		UseTexture(0, texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+		texture->SetSize(width, height, TextureFormat::DEPTH);
 		texture->SetWrapMode(TextureWrapMode::CLAMP_TO_EDGE);
 		renderSurface->SetLinkedTexture(texture);		
 	}

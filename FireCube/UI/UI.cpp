@@ -7,6 +7,7 @@
 #include "Rendering/Shader.h"
 #include "Rendering/ShaderTemplate.h"
 #include "Core/ResourceCache.h"
+#include "Rendering/Texture2D.h"
 
 using namespace FireCube;
 

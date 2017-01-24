@@ -14,7 +14,7 @@ namespace FireCube
 
 //Forward declarations.
 class Font;
-class Texture;
+class Texture2D;
 class vec2;
 class vec3;
 class vec4;
@@ -43,7 +43,7 @@ public:
 class FIRECUBE_API FontPage
 {
 public:
-	Texture *tex;
+	Texture2D *tex;
 	vec2 curPos;
 	int textureSize;
 };

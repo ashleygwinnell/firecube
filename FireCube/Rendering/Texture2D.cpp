@@ -1,6 +1,7 @@
 #include "Texture2D.h"
 #include "Utils/Filesystem.h"
 #include "Utils/Image.h"
+#include "Rendering/Renderer.h"
 
 using namespace FireCube;
 
@@ -20,31 +21,25 @@ bool Texture2D::Load(const std::string &filename)
 	if (!img.Load(filename))
 		return false;
 
-	GLenum format;
-	GLenum internalFormat;
+
+	TextureFormat format;	
 	this->filename = filename;
 
 	if (img.GetBytesPerPixel() == 4)
-	{
-		internalFormat = GL_RGBA;
-		format = GL_RGBA;
+	{		
+		format = TextureFormat::RGBA;
 
 	}
 	else if (img.GetBytesPerPixel() == 3)
 	{
-		internalFormat = GL_RGB;
-		format = GL_RGB;
+		format = TextureFormat::RGB;
 	}
 	else
 	{
 		return false;
-	}
-
-	width = img.GetWidth();
-	height = img.GetHeight();
-
-	glBindTexture(target, objectId);
-	glTexImage2D(target, 0, internalFormat, img.GetWidth(), img.GetHeight(), 0, format, GL_UNSIGNED_BYTE, &img.GetPixels()[0]);
+	}	
+	
+	SetData(img.GetWidth(), img.GetHeight(), format, img.GetPixels().data());	
 	GenerateMipMaps();
 	SetFiltering(TextureFilter::MIPMAP);
 	return true;
@@ -147,4 +142,82 @@ bool Texture2D::LoadDDS(const std::string &filename)
 	free(buffer);
 
 	return true;
+}
+
+void Texture2D::SetSize(unsigned int width, unsigned int height, TextureFormat format)
+{
+	this->width = width;
+	this->height = height;
+	
+	renderer->UseTexture(0, this);
+
+	if (format == TextureFormat::DEPTH)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+	}
+	else if (format == TextureFormat::R)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+	}
+	else if (format == TextureFormat::RGB)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+	}
+	else if (format == TextureFormat::RGBA)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	}
+
+	renderer->UseTexture(0, nullptr);
+}
+
+void Texture2D::SetData(unsigned int width, unsigned int height, TextureFormat format, void *data)
+{
+	this->width = width;
+	this->height = height;
+
+	renderer->UseTexture(0, this);
+
+	if (format == TextureFormat::DEPTH)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, data);
+	}
+	else if (format == TextureFormat::R)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, data);
+	}
+	else if (format == TextureFormat::RGB)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	}
+	else if (format == TextureFormat::RGBA)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	}
+
+	renderer->UseTexture(0, nullptr);
+}
+
+void Texture2D::SetData(unsigned int x, unsigned int y, unsigned int width, unsigned int height, TextureFormat format, void *data)
+{	
+	renderer->UseTexture(0, this);
+	
+	if (format == TextureFormat::DEPTH)
+	{
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, width, height, GL_DEPTH_COMPONENT, GL_FLOAT, data);
+	}
+	else if (format == TextureFormat::R)
+	{
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, width, height, GL_RED,  GL_UNSIGNED_BYTE, data);
+	}
+	else if (format == TextureFormat::RGB)
+	{
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);		
+	}
+	else if (format == TextureFormat::RGBA)
+	{
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);		
+	}
+
+	renderer->UseTexture(0, nullptr);
 }

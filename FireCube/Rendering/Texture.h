@@ -26,7 +26,7 @@ enum class TextureFilter
 
 enum class TextureWrapMode
 {
-	REPEAT, CLAMP_TO_EDGE
+	REPEAT, CLAMP_TO_EDGE, CLAMP
 };
 
 class Texture;

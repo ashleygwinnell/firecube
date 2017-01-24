@@ -8,7 +8,7 @@ namespace FireCube
 {
 
 class Renderer;
-class Texture;
+class Texture2D;
 class UIElement;
 class VertexBuffer;
 
@@ -22,7 +22,7 @@ struct UIVertex
 class UIPart
 {
 public:
-	Texture *texture;
+	Texture2D *texture;
 	unsigned int offset;
 	unsigned int count;
 };

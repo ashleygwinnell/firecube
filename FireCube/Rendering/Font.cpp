@@ -71,22 +71,17 @@ FontFace *Font::GenerateFontFace(int pointSize)
 	fontFace->page = new FontPage();		
 	fontFace->page->tex = new Texture2D(engine);	
 	fontFace->page->textureSize = 512;
-	fontFace->page->curPos = vec2::ZERO;
-	glBindTexture(GL_TEXTURE_2D, fontFace->page->tex->GetObjectId());
+	fontFace->page->curPos = vec2::ZERO;	
 	std::vector<unsigned char> empty(fontFace->page->textureSize * fontFace->page->textureSize, 0);	
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, fontFace->page->textureSize, fontFace->page->textureSize, 0, GL_RED, GL_UNSIGNED_BYTE, &empty[0]);		
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	fontFace->page->tex->SetData(fontFace->page->textureSize, fontFace->page->textureSize, TextureFormat::R, empty.data());	
 	for (unsigned int i = 0; i < strlen(text); i++)
 	{
 		fontFace->AddChar(text[i]);
 	}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);	
 
+	fontFace->page->tex->SetFiltering(TextureFilter::NEAREST);
+	fontFace->page->tex->SetWrapMode(TextureWrapMode::CLAMP);	
+	
 	FT_Long useKerning = FT_HAS_KERNING(fontFace->fontImpl->face);
 	if (useKerning)
 	{
@@ -156,7 +151,7 @@ bool FontFace::AddChar(char c)
 	if (page->textureSize - page->curPos.y < fontImpl->face->glyph->bitmap.rows)
 		return false;
 	// Update the font texture
-	glTexSubImage2D(GL_TEXTURE_2D, 0, (int)page->curPos.x, (int)page->curPos.y, fontImpl->face->glyph->bitmap.width, fontImpl->face->glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, fontImpl->face->glyph->bitmap.buffer);
+	page->tex->SetData((unsigned int)page->curPos.x, (unsigned int)page->curPos.y, fontImpl->face->glyph->bitmap.width, fontImpl->face->glyph->bitmap.rows, TextureFormat::R, fontImpl->face->glyph->bitmap.buffer);	
 	// Store information about this glyph which is used when rendering it
 	glyph[c].uv = page->curPos / (float) page->textureSize;
 	glyph[c].size = vec2((float)fontImpl->face->glyph->bitmap.width, (float)fontImpl->face->glyph->bitmap.rows);

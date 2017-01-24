@@ -5,6 +5,14 @@
 namespace FireCube
 {
 
+enum class TextureFormat
+{
+	RGB,
+	RGBA,
+	R,
+	DEPTH
+};
+
 /**
 * A 2d texture.
 */
@@ -19,6 +27,10 @@ public:
 	* @param filename The file to load.
 	*/
 	virtual bool Load(const std::string &filename);
+
+	void SetSize(unsigned int width, unsigned int height, TextureFormat format);
+	void SetData(unsigned int width, unsigned int height, TextureFormat format, void *data);
+	void SetData(unsigned int x, unsigned int y, unsigned int width, unsigned int height, TextureFormat format, void *data);
 private:
 	bool LoadDDS(const std::string &filename);
 
