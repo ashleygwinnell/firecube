@@ -172,11 +172,14 @@ vec3 Camera::Unproject(vec3 pos)
 
 Ray Camera::GetPickingRay(vec2 pos, float width, float height)
 {
-	vec3 ndcPos(pos.x / width, pos.y / height, 0.5f);
-	ndcPos = ndcPos * 2.0f - 1.0f;
-	vec3 worldPos = Unproject(ndcPos);
+	vec3 ndcPosTarget(pos.x / width, pos.y / height, 0.0f);
+	vec3 ndcPosOrigin(pos.x / width, pos.y / height, 1.0f);
+	ndcPosOrigin = ndcPosOrigin * 2.0f - 1.0f;
+	ndcPosTarget = ndcPosTarget * 2.0f - 1.0f;
+	vec3 worldPosOrigin = Unproject(ndcPosOrigin);
+	vec3 worldPosTarget = Unproject(ndcPosTarget);
 	vec3 cameraPos = node->GetWorldPosition();
-	return Ray(cameraPos, (worldPos - cameraPos).Normalized());
+	return Ray(worldPosOrigin, (worldPosTarget - worldPosOrigin).Normalized());	
 }
 
 float Camera::GetFOV() const
