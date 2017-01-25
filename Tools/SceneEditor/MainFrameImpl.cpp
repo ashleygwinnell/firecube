@@ -793,6 +793,7 @@ void MainFrameImpl::ComponentAdded(ComponentDescriptor *componentDesc)
 	if (componentDesc->GetType() == ComponentType::CAMERA)
 	{
 		cameraChoice->Append(componentDesc->GetParent()->GetName(), (void *) componentDesc);
+		cameraChoice->Enable();
 	}
 }
 
@@ -823,6 +824,7 @@ void MainFrameImpl::ComponentRemoved(ComponentDescriptor *componentDesc)
 				break;
 			}
 		}
+		cameraChoice->Enable(cameraChoice->GetCount() > 1);
 	}
 }
 
@@ -1110,6 +1112,7 @@ void MainFrameImpl::UpdateCamerasList()
 	cameraChoice->Append("Default", (void *) nullptr);
 	CollectCameras(&rootDesc);
 	cameraChoice->SetSelection(0);
+	cameraChoice->Enable(cameraChoice->GetCount() > 1);
 	cameraChoice->Thaw();
 }
 
