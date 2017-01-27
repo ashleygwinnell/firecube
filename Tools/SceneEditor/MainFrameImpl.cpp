@@ -973,7 +973,10 @@ void MainFrameImpl::RecentFileClicked(wxCommandEvent& event)
 
 void MainFrameImpl::OnClose(wxCloseEvent& event)
 {
-	editorCanvas->UseDefaultCamera(); // Use default camera to prevent rendering from a soon to be deleted camera
+	if (editorCanvas->IsInitialized())
+	{
+		editorCanvas->UseDefaultCamera(); // Use default camera to prevent rendering from a soon to be deleted camera
+	}
 	Reset();
 
 	// Prevent destructor of NodeDescriptor from deleting the node itself since it is owned by the Scene

@@ -38,6 +38,11 @@ BaseGLCanvas::~BaseGLCanvas()
 	Unbind(wxEVT_ERASE_BACKGROUND, &BaseGLCanvas::OnEraseBackground, this);	
 }
 
+bool BaseGLCanvas::IsInitialized() const
+{
+	return init;
+}
+
 void BaseGLCanvas::InitCanvas()
 {
 	if (!init)

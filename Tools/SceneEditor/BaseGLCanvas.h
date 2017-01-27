@@ -16,6 +16,8 @@ public:
 
 	~BaseGLCanvas();
 
+	bool IsInitialized() const;
+
 protected:
 	MyApp *theApp;
 private:
