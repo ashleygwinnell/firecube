@@ -82,6 +82,9 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	LoadSettingsFile();
 
 	this->editorCanvas->SetRootDescriptor(&rootDesc);
+	
+	toolbar->InsertStretchableSpace(toolbar->GetToolsCount() - 1);
+	toolbar->Realize();
 }
 
 void MainFrameImpl::AddNodeClicked(wxCommandEvent& event)
