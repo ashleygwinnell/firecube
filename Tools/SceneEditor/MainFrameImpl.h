@@ -56,6 +56,9 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		virtual void SceneTreeKeyUp(wxKeyEvent& event) override;
 		virtual void SceneTreeItemMenu(wxTreeEvent& event) override;
 		virtual void CameraChoiceChanged(wxCommandEvent& event) override;
+		virtual void TranslateToolClicked(wxCommandEvent& event) override;
+		virtual void RotateToolClicked(wxCommandEvent& event) override;
+		virtual void ScaleToolClicked(wxCommandEvent& event) override;
 		void ComponentAdded(ComponentDescriptor *componentDesc);
 		void ComponentRemoved(ComponentDescriptor *componentDesc);
 		void AddComponentPanel(ComponentDescriptor *componentDesc);
@@ -79,6 +82,9 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		void EditScript(const std::string &filename);
 		void UpdateCamerasList();
 		void CollectCameras(NodeDescriptor *node);
+		void SwitchedToTranslateGizmo();
+		void SwitchedToRotateGizmo();
+		void SwitchedToScaleGizmo();
 
 		MyApp *theApp;
 		FireCube::Engine *engine;
@@ -98,7 +104,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 
 		MaterialEditorPanelImpl *materialEditorPanel;
 		AssetBrowserPanelImpl *assetBrowserPanel;				
-		ScriptEditorFrameImpl *scriptEditorFrame;		
+		ScriptEditorFrameImpl *scriptEditorFrame;				
 
 public:
 		/** Constructor */

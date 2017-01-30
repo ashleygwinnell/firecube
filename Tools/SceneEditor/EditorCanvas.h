@@ -55,6 +55,9 @@ public:
 	void SetRootDescriptor(NodeDescriptor *rootDescriptor);	
 	void UseCamera(CameraDescriptor *camera);
 	void UseDefaultCamera();
+	void UseTranslateGizmo();
+	void UseRotateGizmo();
+	void UseScaleGizmo();
 private:	
 	void CreateGrid(float size, unsigned int numberOfCells);
 	void SelectedNodeChanged(NodeDescriptor *nodeDesc);

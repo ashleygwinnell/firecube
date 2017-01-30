@@ -60,6 +60,9 @@ MainFrameImpl::MainFrameImpl(wxWindow* parent) : MainFrame(parent), Object(((MyA
 	SubscribeToEvent(editorState, editorState->newSceneCreated, &MainFrameImpl::NewSceneCreated);
 	SubscribeToEvent(editorState, editorState->showMaterialEditor, &MainFrameImpl::ShowMaterialEditor);
 	SubscribeToEvent(editorState, editorState->showScriptEditor, &MainFrameImpl::EditScript);
+	SubscribeToEvent(editorState, editorState->switchedToTranslateGizmo, &MainFrameImpl::SwitchedToTranslateGizmo);
+	SubscribeToEvent(editorState, editorState->switchedToRotateGizmo, &MainFrameImpl::SwitchedToRotateGizmo);
+	SubscribeToEvent(editorState, editorState->switchedToScaleGizmo, &MainFrameImpl::SwitchedToScaleGizmo);
 	
 	scriptEditorFrame = new ScriptEditorFrameImpl(this);			
 	scriptEditorFrame->Bind(wxEVT_SHOW, [this](wxShowEvent &event) {
@@ -1133,6 +1136,51 @@ void MainFrameImpl::CollectCameras(NodeDescriptor *node)
 	{
 		CollectCameras(child);
 	}
+}
+
+void MainFrameImpl::SwitchedToTranslateGizmo()
+{
+	toolbar->ToggleTool(translateTool->GetId(), true);
+	toolbar->ToggleTool(rotateTool->GetId(), false);
+	toolbar->ToggleTool(scaleTool->GetId(), false);
+}
+
+void MainFrameImpl::SwitchedToRotateGizmo()
+{
+	toolbar->ToggleTool(translateTool->GetId(), false);
+	toolbar->ToggleTool(rotateTool->GetId(), true);
+	toolbar->ToggleTool(scaleTool->GetId(), false);
+}
+
+void MainFrameImpl::SwitchedToScaleGizmo()
+{
+	toolbar->ToggleTool(translateTool->GetId(), false);
+	toolbar->ToggleTool(rotateTool->GetId(), false);
+	toolbar->ToggleTool(scaleTool->GetId(), true);
+}
+
+void MainFrameImpl::TranslateToolClicked(wxCommandEvent& event)
+{
+	toolbar->ToggleTool(translateTool->GetId(), true);
+	toolbar->ToggleTool(rotateTool->GetId(), false);
+	toolbar->ToggleTool(scaleTool->GetId(), false);	
+	editorCanvas->UseTranslateGizmo();
+}
+
+void MainFrameImpl::RotateToolClicked(wxCommandEvent& event)
+{
+	toolbar->ToggleTool(translateTool->GetId(), false);
+	toolbar->ToggleTool(rotateTool->GetId(), true);
+	toolbar->ToggleTool(scaleTool->GetId(), false);	
+	editorCanvas->UseRotateGizmo();
+}
+
+void MainFrameImpl::ScaleToolClicked(wxCommandEvent& event)
+{
+	toolbar->ToggleTool(translateTool->GetId(), false);
+	toolbar->ToggleTool(rotateTool->GetId(), false);	
+	toolbar->ToggleTool(scaleTool->GetId(), true);
+	editorCanvas->UseScaleGizmo();
 }
 
 void MainFrameImpl::CameraChoiceChanged(wxCommandEvent& event)

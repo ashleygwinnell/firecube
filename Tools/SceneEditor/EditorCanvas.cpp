@@ -84,6 +84,7 @@ void EditorCanvas::Init()
 	rotateGizmo = new RotateGizmo(engine, editorRoot);
 	scaleGizmo = new ScaleGizmo(engine, editorRoot);
 	transformGizmo = translateGizmo.Get();
+	editorState->switchedToTranslateGizmo(editorState);
 	
 	gridMaterial = FireCube::SharedPtr<FireCube::Material>(new Material(engine));
 	gridMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
@@ -340,36 +341,15 @@ void EditorCanvas::OnKeyUp(wxKeyEvent& event)
 {
 	if (event.GetKeyCode() == 'Q')
 	{		
-		if (transformGizmo != translateGizmo.Get())
-		{
-			transformGizmo->Hide();
-			transformGizmo = translateGizmo.Get();			
-			UpdateGizmo();
-			
-			this->Refresh(false);
-		}
+		UseTranslateGizmo();
 	}
 	else if (event.GetKeyCode() == 'W')
 	{	
-		if (transformGizmo != rotateGizmo.Get())
-		{
-			transformGizmo->Hide();
-			transformGizmo = rotateGizmo.Get();			
-			UpdateGizmo();
-			
-			this->Refresh(false);
-		}
+		UseRotateGizmo();
 	}
 	else if (event.GetKeyCode() == 'E')
 	{
-		if (transformGizmo != scaleGizmo.Get())
-		{
-			transformGizmo->Hide();
-			transformGizmo = scaleGizmo.Get();			
-			UpdateGizmo();
-			
-			this->Refresh(false);
-		}
+		UseScaleGizmo();
 	}	
 	else if (event.GetKeyCode() == WXK_ESCAPE)
 	{
@@ -428,6 +408,45 @@ void EditorCanvas::OnKeyUp(wxKeyEvent& event)
 			editorState->ExecuteCommand(new RemoveNodeCommand(editorState, "Remove Node", editorState->GetSelectedNode()));
 			editorState->SetSelectedNode(nullptr);			
 		}
+	}
+}
+
+void EditorCanvas::UseTranslateGizmo()
+{
+	if (transformGizmo != translateGizmo.Get())
+	{
+		transformGizmo->Hide();
+		transformGizmo = translateGizmo.Get();
+		UpdateGizmo();
+
+		this->Refresh(false);
+		editorState->switchedToTranslateGizmo(editorState);
+	}
+}
+
+void EditorCanvas::UseRotateGizmo()
+{
+	if (transformGizmo != rotateGizmo.Get())
+	{
+		transformGizmo->Hide();
+		transformGizmo = rotateGizmo.Get();
+		UpdateGizmo();
+
+		this->Refresh(false);
+		editorState->switchedToRotateGizmo(editorState);
+	}
+}
+
+void EditorCanvas::UseScaleGizmo()
+{
+	if (transformGizmo != scaleGizmo.Get())
+	{
+		transformGizmo->Hide();
+		transformGizmo = scaleGizmo.Get();
+		UpdateGizmo();
+
+		this->Refresh(false);
+		editorState->switchedToScaleGizmo(editorState);
 	}
 }
 

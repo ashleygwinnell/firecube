@@ -46,6 +46,9 @@ public:
 	FireCube::Event<const std::string &> addMesh;
 	FireCube::Event<const std::string &> showScriptEditor;
 	FireCube::Event<const std::string &> addPrefab;
+	FireCube::Event<> switchedToTranslateGizmo;
+	FireCube::Event<> switchedToRotateGizmo;
+	FireCube::Event<> switchedToScaleGizmo;
 
 private:
 	

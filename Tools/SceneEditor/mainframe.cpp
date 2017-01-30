@@ -180,6 +180,12 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	inspectorPanel->SetSizer( bSizer3 );
 	inspectorPanel->Layout();
 	toolbar = new wxToolBar( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL ); 
+	translateTool = toolbar->AddTool( wxID_ANY, wxT("tool"), wxBitmap( wxT("Data/Icons/move.png"), wxBITMAP_TYPE_ANY ), wxNullBitmap, wxITEM_CHECK, wxEmptyString, wxEmptyString, NULL ); 
+	
+	rotateTool = toolbar->AddTool( wxID_ANY, wxT("tool"), wxBitmap( wxT("Data/Icons/loop.png"), wxBITMAP_TYPE_ANY ), wxNullBitmap, wxITEM_CHECK, wxEmptyString, wxEmptyString, NULL ); 
+	
+	scaleTool = toolbar->AddTool( wxID_ANY, wxT("tool"), wxBitmap( wxT("Data/Icons/resize.png"), wxBITMAP_TYPE_ANY ), wxNullBitmap, wxITEM_CHECK, wxEmptyString, wxEmptyString, NULL ); 
+	
 	wxArrayString cameraChoiceChoices;
 	cameraChoice = new wxChoice( toolbar, wxID_ANY, wxDefaultPosition, wxDefaultSize, cameraChoiceChoices, 0 );
 	cameraChoice->SetSelection( 0 );
@@ -226,6 +232,9 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_END_LABEL_EDIT, wxTreeEventHandler( MainFrame::SceneTreeEndLabelEdit ), NULL, this );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( MainFrame::SceneTreeItemMenu ), NULL, this );
 	sceneTreeCtrl->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( MainFrame::SceneTreeSelectionChanged ), NULL, this );
+	this->Connect( translateTool->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::TranslateToolClicked ) );
+	this->Connect( rotateTool->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::RotateToolClicked ) );
+	this->Connect( scaleTool->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::ScaleToolClicked ) );
 	cameraChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::CameraChoiceChanged ), NULL, this );
 }
 
@@ -265,6 +274,9 @@ MainFrame::~MainFrame()
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_END_LABEL_EDIT, wxTreeEventHandler( MainFrame::SceneTreeEndLabelEdit ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( MainFrame::SceneTreeItemMenu ), NULL, this );
 	sceneTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( MainFrame::SceneTreeSelectionChanged ), NULL, this );
+	this->Disconnect( translateTool->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::TranslateToolClicked ) );
+	this->Disconnect( rotateTool->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::RotateToolClicked ) );
+	this->Disconnect( scaleTool->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::ScaleToolClicked ) );
 	cameraChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::CameraChoiceChanged ), NULL, this );
 	
 	m_mgr.UnInit();

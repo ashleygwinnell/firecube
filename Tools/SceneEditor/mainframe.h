@@ -82,6 +82,9 @@ class MainFrame : public wxFrame
 		wxScrolledWindow* componentsList;
 		wxBoxSizer* componentsSizer;
 		wxToolBar* toolbar;
+		wxToolBarToolBase* translateTool; 
+		wxToolBarToolBase* rotateTool; 
+		wxToolBarToolBase* scaleTool; 
 		wxChoice* cameraChoice;
 		
 		// Virtual event handlers, overide them in your derived class
@@ -118,6 +121,9 @@ class MainFrame : public wxFrame
 		virtual void SceneTreeEndLabelEdit( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeItemMenu( wxTreeEvent& event ) { event.Skip(); }
 		virtual void SceneTreeSelectionChanged( wxTreeEvent& event ) { event.Skip(); }
+		virtual void TranslateToolClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void RotateToolClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ScaleToolClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void CameraChoiceChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
