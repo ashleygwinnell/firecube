@@ -189,6 +189,8 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxArrayString cameraChoiceChoices;
 	cameraChoice = new wxChoice( toolbar, wxID_ANY, wxDefaultPosition, wxDefaultSize, cameraChoiceChoices, 0 );
 	cameraChoice->SetSelection( 0 );
+	cameraChoice->Enable( false );
+	
 	toolbar->AddControl( cameraChoice );
 	toolbar->Realize();
 	m_mgr.AddPane( toolbar, wxAuiPaneInfo() .Top() .CaptionVisible( false ).PinButton( true ).PaneBorder( false ).Gripper().Dock().Resizable().FloatingSize( wxDefaultSize ).Layer( 10 ) );
