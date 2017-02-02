@@ -59,5 +59,16 @@ namespace Filesystem
 	std::string FIRECUBE_API GetFileExtension(const std::string &filename);
 
 	std::string FIRECUBE_API RemoveFileExtension(const std::string &filename);
+
+	template <typename ...Args>
+	std::string JoinPath(const std::string &p0, const std::string &p1, Args const&... args)
+	{
+		return p0 + Filesystem::PATH_SEPARATOR + JoinPath(p1, args...);
+	}
+	
+	inline std::string JoinPath(const std::string &p0)
+	{
+		return p0;
+	}
 }
 }
