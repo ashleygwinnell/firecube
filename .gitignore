@@ -46,3 +46,6 @@ Tools/SceneEditor/settings.xml
 FireCube.VC.opendb
 FireCube.VC.db
 FireCube.VC.VC.opendb
+.vs
+FireCube/ThirdParty/Release
+FireCube/ThirdParty/Debug
