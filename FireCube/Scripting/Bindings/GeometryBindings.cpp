@@ -1,52 +1,49 @@
 #include "lua.hpp"
-#include "LuaIntf.h"
+#include "sol.hpp"
 #include "Scripting/LuaBindings.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/GeometryGenerator.h"
 #include "Geometry/Mesh.h"
 #include "Geometry/CollisionQuery.h"
 #include "Geometry/Mesh.h"
+#include "Scene/Renderable.h"
 
 using namespace FireCube;
-using namespace LuaIntf;
 
 
-
-void LuaBindings::InitGeometry(lua_State *luaState)
+void LuaBindings::InitGeometry(sol::state &luaState)
 {
-	LuaBinding(luaState)
-		.beginClass<Geometry>("Geometry")
-		.endClass()
-		.beginModule("GeometryGenerator")
-			.addFunction("GenerateBox", &GeometryGenerator::GenerateBox)
-			.addFunction("GeneratePlane", &GeometryGenerator::GeneratePlane)
-			.addFunction("GenerateSphere", &GeometryGenerator::GenerateSphere)
-		.endModule()		
-		.beginExtendClass<Mesh, Resource>("Mesh")
-			.addConstructor(LUA_ARGS(Engine *))
-			.addFunction("AddGeometry", &Mesh::AddGeometry)
-			.addProperty("boundingBox", &Mesh::GetBoundingBox)
-		.endClass()
-		.beginClass<RayQueryResult>("RayQueryResult")
-			.addVariable("distance", &RayQueryResult::distance)
-			.addVariable("normal", &RayQueryResult::normal)
-			.addVariable("renderable", &RayQueryResult::renderable)
-		.endClass()
-		.beginClass<RayQuery>("RayQuery")
-			.addConstructor(LUA_ARGS(const Ray &, float))
-			.addVariable("results", &RayQuery::results, false)
-			.addVariable("ray", &RayQuery::ray)
-		.endClass();
+	luaState.new_usertype<Geometry>("Geometry");
+	
+	sol::table GeometryGeneratorTable = luaState.create_named_table("GeometryGenerator");
+	GeometryGeneratorTable.set("GenerateBox", &GeometryGenerator::GenerateBox);
+	GeometryGeneratorTable.set("GeneratePlane", &GeometryGenerator::GeneratePlane);
+	GeometryGeneratorTable.set("GenerateSphere", &GeometryGenerator::GenerateSphere);
+	
+	luaState.new_usertype<Mesh>("Mesh",
+		sol::constructors<Mesh(Engine *)>(),
+		"AddGeometry", &Mesh::AddGeometry,
+		"boundingBox", sol::property(&Mesh::GetBoundingBox),
+		sol::base_classes, sol::bases<Resource, Object, RefCounted>());
+	
+	luaState.new_usertype<RayQueryResult>("RayQueryResult",
+		"distance", &RayQueryResult::distance,
+		"normal", &RayQueryResult::normal,
+		"renderable", &RayQueryResult::renderable);
+	
+	luaState.new_usertype<RayQuery>("RayQuery",
+		sol::constructors<RayQuery(const Ray &, float)>(),
+		"results", &RayQuery::results,
+		"ray", &RayQuery::ray);
 
-	LuaRef t = LuaRef::createTable(luaState);
-	t["LINE_LOOP"] = static_cast<unsigned int>(PrimitiveType::LINE_LOOP);
-	t["LINE_STRIP"] = static_cast<unsigned int>(PrimitiveType::LINE_STRIP);
-	t["LINES"] = static_cast<unsigned int>(PrimitiveType::LINES);
-	t["POINTS"] = static_cast<unsigned int>(PrimitiveType::POINTS);
-	t["QUADS"] = static_cast<unsigned int>(PrimitiveType::QUADS);
-	t["TRIANGLE_FAN"] = static_cast<unsigned int>(PrimitiveType::TRIANGLE_FAN);
-	t["TRIANGLE_STRIP"] = static_cast<unsigned int>(PrimitiveType::TRIANGLE_STRIP);
-	t["TRIANGLES"] = static_cast<unsigned int>(PrimitiveType::TRIANGLES);
-	Lua::setGlobal(luaState, "PrimitiveType", t);
+	sol::table PrimitiveTypeTable = luaState.create_named_table("PrimitiveType");
+	PrimitiveTypeTable["LINE_LOOP"] = static_cast<unsigned int>(PrimitiveType::LINE_LOOP);
+	PrimitiveTypeTable["LINE_STRIP"] = static_cast<unsigned int>(PrimitiveType::LINE_STRIP);
+	PrimitiveTypeTable["LINES"] = static_cast<unsigned int>(PrimitiveType::LINES);
+	PrimitiveTypeTable["POINTS"] = static_cast<unsigned int>(PrimitiveType::POINTS);
+	PrimitiveTypeTable["QUADS"] = static_cast<unsigned int>(PrimitiveType::QUADS);
+	PrimitiveTypeTable["TRIANGLE_FAN"] = static_cast<unsigned int>(PrimitiveType::TRIANGLE_FAN);
+	PrimitiveTypeTable["TRIANGLE_STRIP"] = static_cast<unsigned int>(PrimitiveType::TRIANGLE_STRIP);
+	PrimitiveTypeTable["TRIANGLES"] = static_cast<unsigned int>(PrimitiveType::TRIANGLES);
 }
 

@@ -61,6 +61,8 @@ bool App::Prepare()
 	particleEmitter->SetLifeTime(10, 12);	
 	particleEmitter->SetSpeed(5, 10);	
 	particleEmitter->SetPrewarm(true);
+	auto script = node->CreateComponent<LuaScript>();
+	script->CreateObject(resourceCache->GetResource<LuaFile>("test.lua"), "Rotator");
 
 	scene.SetFogColor(vec3(44, 80, 222) / 255.0f);	
 	text = engine->GetUI()->GetRoot()->CreateChild<UIText>();

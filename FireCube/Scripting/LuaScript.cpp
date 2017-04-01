@@ -5,16 +5,18 @@
 #include "Core/Engine.h"
 #include "Scripting/LuaState.h"
 #include "Core/Variant.h"
+#include "Physics/CollisionShape.h"
+#include "Physics/CharacterController.h"
+#include "Scene/Node.h"
 
 using namespace FireCube;
-using namespace LuaIntf;
 
-LuaScript::LuaScript(Engine *engine) : Component(engine), object(engine->GetLuaState()->GetState(), nullptr), luaFile(nullptr), awakeCalled(false)
+LuaScript::LuaScript(Engine *engine) : Component(engine), luaFile(nullptr), awakeCalled(false)
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 }
 
-LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), object(engine->GetLuaState()->GetState(), nullptr), luaFile(other.luaFile), initialProperties(other.initialProperties), awakeCalled(false)
+LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), luaFile(other.luaFile), initialProperties(other.initialProperties), awakeCalled(false)
 {
 	SubscribeToEvent(Events::Update, &LuaScript::Update);
 	CreateObject(objectName);
@@ -30,15 +32,7 @@ void LuaScript::Update(float dt)
 		if (objectName.empty() == false && IsEnabled() && awakeFunction)
 		{				
 			// Call awake function	
-			try
-			{
-				(*awakeFunction)(object);
-			}
-			catch (LuaException &e)
-			{
-				(void)e; // Disable warning about e not being used
-				LOGERROR(e.what());
-			}
+			(*awakeFunction)(object);			
 		}
 	}
 
@@ -46,15 +40,7 @@ void LuaScript::Update(float dt)
 	if (awakeCalled && IsEnabled() && updateFunction)
 	{
 		// Call update function	
-		try
-		{
-			(*updateFunction)(object, dt);
-		}
-		catch (LuaException &e)
-		{
-			(void)e; // Disable warning about e not being used
-			LOGERROR(e.what());
-		}		
+		(*updateFunction)(object, dt);			
 	}
 }
 
@@ -65,21 +51,13 @@ void LuaScript::MarkedDirty()
 
 void LuaScript::NodeChanged()
 {	
-	if (object.isTable())
+	if (object.valid())
 	{
 		object["node"] = node;
 		auto initFunction = scriptFunctions[ScriptFunction::INIT];
 		if (node && initFunction)
 		{		
-			try
-			{
-				(*initFunction)(object);
-			}
-			catch (LuaException &e)
-			{
-				(void)e; // Disable warning about e not being used
-				LOGERROR(e.what());
-			}
+			(*initFunction)(object);			
 		}
 	}
 }
@@ -91,19 +69,19 @@ void LuaScript::SceneChanged(Scene *oldScene)
 
 void LuaScript::CreateObject(const std::string &objectName)
 {	
-	lua_State *state = engine->GetLuaState()->GetState();
-	LuaRef objectTable = Lua::getGlobal(state, objectName.c_str());
-	if (objectTable.isTable() == false)
+	sol::state &state = engine->GetLuaState()->GetState();
+	sol::object objectTable = state[objectName];
+	if (objectTable.is<sol::table>() == false)
 	{
 		LOGERROR("Can't init script object: ", objectName, " is not a table");
 		return;
 	}
 		
 	this->objectName = objectName;	
-	object = LuaRef::createTable(state);	
-	LuaRef metatable = LuaRef::createTable(state);
-	metatable["__index"] = objectTable;	
-	object.setMetaTable(metatable);
+	object = state.create_table();		
+	sol::table metatable = state.create_table();
+	metatable["__index"] = objectTable;		
+	object.set(sol::metatable_key, metatable);
 	
 	object["script"] = this;
 	scriptFunctions[ScriptFunction::INIT] = GetMemberFunction("Init");	
@@ -115,16 +93,8 @@ void LuaScript::CreateObject(const std::string &objectName)
 	auto initFunction = scriptFunctions[ScriptFunction::INIT];
 	if (node && initFunction)
 	{
-		object["node"] = node;		
-		try
-		{
-			(*initFunction)(object);
-		}
-		catch (LuaException &e)
-		{
-			(void)e; // Disable warning about e not being used
-			LOGERROR(e.what());
-		}
+		object["node"] = node;
+		(*initFunction)(object);		
 	}		
 }
 
@@ -145,12 +115,12 @@ LuaFunction *LuaScript::GetMemberFunction(const std::string &functionName)
 	return GetFunction(objectName + "." + functionName);
 }
 
-void LuaScript::SubscribeToEventFromLua(const std::string &eventName, LuaRef param)
+void LuaScript::SubscribeToEventFromLua(const std::string &eventName, sol::object param)
 {
 	Object *sender = nullptr;	
-	if (param.isFunction() == false)
+	if (param.is<sol::function>() == false)
 	{		
-		sender = param.toValue<Object *>();
+		sender = param.as<Object *>();
 	}	
 
 	if (eventName == "HandleInput")
@@ -169,15 +139,7 @@ void LuaScript::HandleInput(float dt, const MappedInput &input)
 {
 	if (awakeCalled)
 	{
-		try
-		{
-			(*scriptFunctions[ScriptFunction::HANDLE_INPUT])(object, dt, input);
-		}
-		catch (LuaException &e)
-		{
-			(void)e; // Disable warning about e not being used
-			LOGERROR(e.what());
-		}
+		(*scriptFunctions[ScriptFunction::HANDLE_INPUT])(object, dt, input);		
 	}
 }
 
@@ -185,15 +147,7 @@ void LuaScript::CharacterControllerCollision(CharacterController *characterContr
 {
 	if (awakeCalled)
 	{
-		try
-		{
-			(*scriptFunctions[ScriptFunction::CHARACTER_CONTROLLER_COLLISION])(object, characterController, collisionShape);
-		}
-		catch (LuaException &e)
-		{
-			(void)e; // Disable warning about e not being used
-			LOGERROR(e.what());
-		}
+		(*scriptFunctions[ScriptFunction::CHARACTER_CONTROLLER_COLLISION])(object, characterController, collisionShape);		
 	}
 }
 
@@ -256,7 +210,11 @@ void LuaScript::SetInitialProperties()
 }
 
 void LuaScript::PushObject()
-{
-	object.pushToStack();
+{	
+	object.push();	
 }
 
+sol::table FireCube::LuaScript::GetScriptObject()
+{
+	return object;
+}

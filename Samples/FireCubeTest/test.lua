@@ -1,7 +1,7 @@
-Rotator = {}
+Rotator = Script()
 function Rotator:Init()
 	print("Init")
-	self.rotationSpeed = vec3(0, 0.5, 0)
+	self.rotationSpeed = vec3.new(0, 0.5, 0)
 	self.script:SubscribeToEvent("HandleInput", Rotator.HandleInput)
 end
 

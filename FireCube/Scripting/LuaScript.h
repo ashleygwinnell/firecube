@@ -6,7 +6,7 @@
 #include "Scripting/LuaFunction.h"
 #include "Core/Component.h"
 #include "ThirdParty/Lua/src/lua.hpp"
-#include "ThirdParty/LuaIntf/LuaIntf.h"
+#include "ThirdParty/Sol/sol.hpp"
 
 namespace FireCube
 {
@@ -110,10 +110,11 @@ public:
 	template<class T>
 	void SetProperty(const std::string &name, T value)
 	{
-		object[name] = value;
+		object.set(name, value);
 	}
 
 	void PushObject();
+	sol::table GetScriptObject();
 	
 	/**
 	* Assign a value to a property. These values are assigned once the object is created
@@ -137,12 +138,12 @@ private:
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
 	void SetInitialProperties();
-	void SubscribeToEventFromLua(const std::string &eventName, LuaIntf::LuaRef param);
+	void SubscribeToEventFromLua(const std::string &eventName, sol::object param);
 
 	bool awakeCalled;
 	LuaFile *luaFile;
 	std::string objectName;
-	LuaIntf::LuaRef object;
+	sol::table object;
 	std::map<ScriptFunction, LuaFunction *> scriptFunctions;	
 	std::map<std::string, std::string> initialProperties;
 };

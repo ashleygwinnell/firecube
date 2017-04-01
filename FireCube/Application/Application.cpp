@@ -106,8 +106,7 @@ void Application::Destroy()
 	renderer->Destroy();
 	delete renderer;
 	delete debugRenderer;
-	delete ui;	
-	delete luaState;
+	delete ui;		
 	delete audio;
 
 	if (context)

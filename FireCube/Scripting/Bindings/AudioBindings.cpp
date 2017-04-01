@@ -1,24 +1,22 @@
 #include "lua.hpp"
-#include "LuaIntf.h"
+#include "sol.hpp"
 #include "Scripting/LuaBindings.h"
 #include "Audio/SoundEmitter.h"
 #include "Audio/Sound.h"
 
 using namespace FireCube;
-using namespace LuaIntf;
 
-void LuaBindings::InitAudio(lua_State *luaState)
+void LuaBindings::InitAudio(sol::state &luaState)
 {
-	LuaBinding(luaState)
-		.beginExtendClass<SoundEmitter, Component>("SoundEmitter")		
-			.addFunction("Play", (void(SoundEmitter::*)()) &SoundEmitter::Play)
-			.addProperty("sound", &SoundEmitter::GetSound, &SoundEmitter::SetSound)
-			.addProperty("panning", &SoundEmitter::GetPanning, &SoundEmitter::SetPanning)
-			.addProperty("gain", &SoundEmitter::GetGain, &SoundEmitter::SetGain)
-			.addProperty("looped", &SoundEmitter::GetLooped, &SoundEmitter::SetLooped)
-		.endClass()
-		.beginExtendClass<Sound, Resource>("Sound")
-		.endClass();
-			
+	luaState.new_usertype<SoundEmitter>("SoundEmitter",
+		"Play", (void(SoundEmitter::*)()) &SoundEmitter::Play,
+		"sound", sol::property(&SoundEmitter::GetSound, &SoundEmitter::SetSound),
+		"panning", sol::property(&SoundEmitter::GetPanning, &SoundEmitter::SetPanning),
+		"gain", sol::property(&SoundEmitter::GetGain, &SoundEmitter::SetGain),
+		"looped", sol::property(&SoundEmitter::GetLooped, &SoundEmitter::SetLooped),
+		sol::base_classes, sol::bases<Component, Object, RefCounted>());
+	
+	luaState.new_usertype<Sound>("Sound",
+		sol::base_classes, sol::bases<Resource, Object, RefCounted>());				
 }
 

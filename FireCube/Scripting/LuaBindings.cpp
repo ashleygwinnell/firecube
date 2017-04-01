@@ -1,10 +1,10 @@
 #include "lua.hpp"
-#include "LuaIntf.h"
+#include "sol.hpp"
 #include "Scripting/LuaBindings.h"
 
 using namespace FireCube;
 
-void LuaBindings::Init(lua_State *luaState, Engine *engine)
+void LuaBindings::Init(sol::state &luaState, Engine *engine)
 {
 	LuaBindings::InitMath(luaState);
 	LuaBindings::InitCore(luaState, engine);		

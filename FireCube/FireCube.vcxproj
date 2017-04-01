@@ -213,12 +213,7 @@
     <ClInclude Include="Scripting\LuaState.h" />
     <ClInclude Include="ThirdParty\GLEW\glew.h" />
     <ClInclude Include="ThirdParty\GLEW\wglew.h" />
-    <ClInclude Include="ThirdParty\LuaIntf\LuaCompat.h" />
-    <ClInclude Include="ThirdParty\LuaIntf\LuaContext.h" />
-    <ClInclude Include="ThirdParty\LuaIntf\LuaIntf.h" />
-    <ClInclude Include="ThirdParty\LuaIntf\LuaRef.h" />
-    <ClInclude Include="ThirdParty\LuaIntf\LuaState.h" />
-    <ClInclude Include="ThirdParty\LuaIntf\QtLuaIntf.h" />
+    <ClInclude Include="ThirdParty\Sol\sol.hpp" />
     <ClInclude Include="ThirdParty\STB\stb_image.h" />
     <ClInclude Include="ThirdParty\STB\stb_image_write.h" />
     <ClInclude Include="ThirdParty\TinyXML\tinyxml.h" />
@@ -344,7 +339,7 @@
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\ThirdParty\FreeType\include;$(ProjectDir)\ThirdParty\TinyXML;$(ProjectDir)\ThirdParty\GLEW;$(ProjectDir)\ThirdParty\STB;$(ProjectDir)\ThirdParty\jpgd;$(ProjectDir);$(ProjectDir)\ThirdParty\SDL\include;$(ProjectDir)\ThirdParty\Lua\src;$(ProjectDir)\ThirdParty\Assimp\include;$(ProjectDir)\ThirdParty\LuaIntf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\ThirdParty\FreeType\include;$(ProjectDir)\ThirdParty\TinyXML;$(ProjectDir)\ThirdParty\GLEW;$(ProjectDir)\ThirdParty\STB;$(ProjectDir)\ThirdParty\jpgd;$(ProjectDir);$(ProjectDir)\ThirdParty\SDL\include;$(ProjectDir)\ThirdParty\Lua\src;$(ProjectDir)\ThirdParty\Assimp\include;$(ProjectDir)\ThirdParty\Sol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TIXML_USE_STL;GLEW_BUILD;FIRECUBE_EXPORTS;ENABLE_LOGGING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -414,7 +409,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(ProjectDir)\ThirdParty\FreeType\include;$(ProjectDir)\ThirdParty\TinyXML;$(ProjectDir)\ThirdParty\GLEW;$(ProjectDir)\ThirdParty\STB;$(ProjectDir)\ThirdParty\jpgd;$(ProjectDir);$(ProjectDir)\ThirdParty\SDL\include;$(ProjectDir)\ThirdParty\Lua\src;$(ProjectDir)\ThirdParty\Assimp\include;$(ProjectDir)\ThirdParty\LuaIntf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\ThirdParty\FreeType\include;$(ProjectDir)\ThirdParty\TinyXML;$(ProjectDir)\ThirdParty\GLEW;$(ProjectDir)\ThirdParty\STB;$(ProjectDir)\ThirdParty\jpgd;$(ProjectDir);$(ProjectDir)\ThirdParty\SDL\include;$(ProjectDir)\ThirdParty\Lua\src;$(ProjectDir)\ThirdParty\Assimp\include;$(ProjectDir)\ThirdParty\Sol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;sdl.lib;sdl_image.lib;freetype242MT_D.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>

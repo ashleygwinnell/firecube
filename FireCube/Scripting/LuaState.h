@@ -5,7 +5,7 @@
 #include "Core/Object.h"
 #include "Utils/StringHash.h"
 #include "ThirdParty/Lua/src/lua.hpp"
-#include "ThirdParty/LuaIntf/LuaIntf.h"
+#include "ThirdParty/sol/sol.hpp"
 
 struct lua_State;
 
@@ -27,11 +27,11 @@ public:
 	~LuaState();
 	
 	/**
-	* Exectues a Lua script file	
+	* Executes a Lua script file	
 	* @param luaFile The Lua file to execute
 	*/
 	void ExecuteFile(LuaFile *luaFile);
-	lua_State *GetState();
+	sol::state &GetState();
 	LuaFunction *GetFunction(const std::string &functionName);
 	LuaFunction *GetFunction(int index = -1);
 	
@@ -43,12 +43,11 @@ public:
 	template <typename FN>
 	void AddFunction(const std::string &name, const FN &function)
 	{
-		LuaIntf::LuaBinding(luaState).addFunction(name.c_str(), function);
+		luaState.set_function(name, function);
 	}
 private:
-	static int Print(lua_State *L);
-	static int LuaState::AtPanic(lua_State* L);
-	lua_State *luaState;
+	static int Print(lua_State *L);	
+	sol::state luaState;
 	std::map<StringHash, SharedPtr<LuaFunction>> functions;
 };
 

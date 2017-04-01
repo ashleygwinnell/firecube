@@ -2,7 +2,6 @@
 #include "Scripting/LuaFunction.h"
 #include "Utils/Logger.h"
 #include "lua.hpp"
-#include "LuaIntf.h"
 #include "Scripting/LuaBindings.h"
 #include "Scripting/LuaFile.h"
 #include "Core/Engine.h"
@@ -12,16 +11,13 @@ using namespace FireCube;
 
 LuaState::LuaState(Engine *engine) : Object(engine)
 {
-	luaState = luaL_newstate();
-	luaL_openlibs(luaState);
+	luaState.open_libraries();
 
 	static const struct luaL_Reg reg[] =
 	{
 		{ "print", &LuaState::Print },
 		{ NULL, NULL }
-	};
-
-	lua_atpanic(luaState, &LuaState::AtPanic);
+	};	
 	
 	lua_getglobal(luaState, "_G");
 	luaL_setfuncs(luaState, reg, 0);	
@@ -71,15 +67,6 @@ int LuaState::Print(lua_State *L)
 	return 0;
 }
 
-int LuaState::AtPanic(lua_State* L)
-{
-	std::string errorMessage = luaL_checkstring(L, -1);
-	LOGERROR("Lua error: error message = '", errorMessage, "'");
-	lua_pop(L, 1);
-	return 0;
-}
-
-
 void LuaState::ExecuteFile(LuaFile *luaFile)
 {
 	if (luaFile->HasExecuted())
@@ -109,7 +96,7 @@ void LuaState::ExecuteFile(LuaFile *luaFile)
 	luaFile->SetExecuted(true);
 }
 
-lua_State *LuaState::GetState()
+sol::state &LuaState::GetState()
 {
 	return luaState;
 }
@@ -122,25 +109,40 @@ LuaFunction *LuaState::GetFunction(const std::string &functionName)
 	{
 		return functionIter->second;
 	}
-	
-	LuaIntf::LuaRef ref(luaState, functionName.c_str());
 
-	if (ref.isFunction() == false)
+	auto parts = Split(functionName, '.');
+	sol::object obj;
+	if (parts.empty() == false)
+	{
+		obj = luaState[parts.front()];
+	}	
+
+	for (auto i = parts.begin() + 1; obj && i != parts.end(); ++i)
+	{
+		if (obj)
+		{
+			obj = obj.as<sol::table>()[*i];
+		}
+	}
+
+	if (obj.is<sol::function>())
+	{		
+		LuaFunction *ret = new LuaFunction(obj.as<sol::function>());
+		functions[functionNameHash] = ret;
+		return ret;
+	}
+	else
 	{
 		LOGERROR(functionName, " is not a function");
 		return nullptr;
 	}
-	
-	LuaFunction *ret = new LuaFunction(ref);
-	functions[functionNameHash] = ret;
-	return ret;
 }
 
 LuaFunction *LuaState::GetFunction(int index)
-{
-	LuaIntf::LuaRef ref(luaState, index);
+{	
+	sol::stack_function ref(luaState, index);
 
-	if (ref.isFunction() == false)
+	if (ref.valid() == false)
 	{
 		return nullptr;
 	}

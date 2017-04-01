@@ -58,8 +58,8 @@
     <Filter Include="Audio">
       <UniqueIdentifier>{69e533eb-1c94-4e4a-bf09-2b4c3dcdb178}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ThirdParty\LuaIntf">
-      <UniqueIdentifier>{464c9f56-aa96-4488-9209-737a34a9f7c2}</UniqueIdentifier>
+    <Filter Include="ThirdParty\Sol">
+      <UniqueIdentifier>{c02e55ff-16eb-434d-a6de-7077ace34fce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -630,24 +630,6 @@
     <ClInclude Include="Geometry\Mesh.h">
       <Filter>Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="ThirdParty\LuaIntf\LuaCompat.h">
-      <Filter>ThirdParty\LuaIntf</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaIntf\LuaContext.h">
-      <Filter>ThirdParty\LuaIntf</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaIntf\LuaIntf.h">
-      <Filter>ThirdParty\LuaIntf</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaIntf\LuaRef.h">
-      <Filter>ThirdParty\LuaIntf</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaIntf\LuaState.h">
-      <Filter>ThirdParty\LuaIntf</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\LuaIntf\QtLuaIntf.h">
-      <Filter>ThirdParty\LuaIntf</Filter>
-    </ClInclude>
     <ClInclude Include="Math\Octree.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -692,6 +674,9 @@
     </ClInclude>
     <ClInclude Include="Audio\OggVorbisSoundDecoder.h">
       <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\Sol\sol.hpp">
+      <Filter>ThirdParty\Sol</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

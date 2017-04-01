@@ -1,22 +1,19 @@
 #include "lua.hpp"
-#include "LuaIntf.h"
+#include "sol.hpp"
 #include "Scripting/LuaBindings.h"
 #include "Utils/StringHash.h"
 #include "Application/Input.h"
 
 using namespace FireCube;
-using namespace LuaIntf;
 
-void LuaBindings::InitUtils(lua_State *luaState)
+void LuaBindings::InitUtils(sol::state &luaState)
 {
-	LuaBinding(luaState)
-		.beginClass<StringHash>("StringHash")
-			.addConstructor(LUA_ARGS(const std::string &))
-		.endClass()
-		.beginClass<MappedInput>("MappedInput")
-			.addFunction("IsStateOn", &MappedInput::IsStateOn)
-			.addFunction("IsActionTriggered", &MappedInput::IsActionTriggered)
-			.addFunction("GetValue", &MappedInput::GetValue)
-			.addFunction("HasValue", &MappedInput::HasValue)
-		.endClass();
+	luaState.new_usertype<StringHash>("StringHash",
+		sol::constructors<StringHash(const std::string &)>());
+	
+	luaState.new_usertype<MappedInput>("MappedInput",
+		"IsStateOn", &MappedInput::IsStateOn,
+		"IsActionTriggered", &MappedInput::IsActionTriggered,
+		"GetValue", &MappedInput::GetValue,
+		"HasValue", &MappedInput::HasValue);	
 }

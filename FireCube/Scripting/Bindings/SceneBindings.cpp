@@ -1,5 +1,5 @@
 #include "lua.hpp"
-#include "LuaIntf.h"
+#include "sol.hpp"
 #include "Scripting/LuaBindings.h"
 #include "Geometry/CollisionQuery.h"
 #include "Scene/Node.h"
@@ -16,8 +16,222 @@
 #include "Scene/SceneReader.h"
 #include "Scene/Prefab.h"
 using namespace FireCube;
-using namespace LuaIntf;
 
+sol::object GetComponent(Node *node, const std::string &type, sol::this_state s)
+{
+	if (type == "ParticleEmitter")
+	{
+		auto component = node->GetComponent<ParticleEmitter>();
+		if (component)
+		{
+			return sol::object(s, sol::in_place, component);
+		}
+		else
+		{
+			return sol::make_object(s, sol::nil);
+		}
+	}
+	else if (type == "CustomGeometry")
+	{
+		auto component = node->GetComponent<CustomGeometry>();
+		if (component)
+		{
+			return sol::object(s, sol::in_place, component);
+		}
+		else
+		{
+			return sol::make_object(s, sol::nil);
+		}
+	}
+	else if (type == "StaticModel")
+	{
+		auto component = node->GetComponent<StaticModel>();
+		if (component)
+		{
+			return sol::object(s, sol::in_place, component);
+		}
+		else
+		{
+			return sol::make_object(s, sol::nil);
+		}
+	}
+	else if (type == "CollisionShape")
+	{
+		auto component = node->GetComponent<CollisionShape>();
+		if (component)
+		{
+			return sol::object(s, sol::in_place, component);
+		}
+		else
+		{
+			return sol::make_object(s, sol::nil);
+		}
+	}
+	else if (type == "LuaScript")
+	{
+		auto component = node->GetComponent<LuaScript>();
+		if (component)
+		{
+			return sol::object(s, sol::in_place, component);
+		}
+		else
+		{
+			return sol::make_object(s, sol::nil);
+		}
+	}
+	else if (type == "SoundEmitter")
+	{
+		auto component = node->GetComponent<SoundEmitter>();
+		if (component)
+		{
+			return sol::object(s, sol::in_place, component);
+		}
+		else
+		{
+			return sol::make_object(s, sol::nil);
+		}
+	}
+	else if (type == "AnimatedModel")
+	{
+		auto component = node->GetComponent<AnimatedModel>();
+		if (component)
+		{
+			return sol::object(s, sol::in_place, component);
+		}
+		else
+		{
+			return sol::make_object(s, sol::nil);
+		}
+	}
+	else if (type == "Light")
+	{
+		auto component = node->GetComponent<Light>();
+		if (component)
+		{
+			return sol::object(s, sol::in_place, component);
+		}
+		else
+		{
+			return sol::make_object(s, sol::nil);
+		}
+	}
+	else
+	{
+		return sol::make_object(s, sol::nil);
+	}
+}
+
+sol::object GetComponents(Node *node, const std::string &type, bool recursive, sol::this_state s)
+{
+	std::vector<Component *> components;
+	node->GetComponents(type, components, recursive);
+
+	return sol::object(s, sol::in_place, components);	
+}
+
+sol::object GetScriptObject(Node *node, const std::string &objectName, sol::this_state s)
+{
+	std::vector<LuaScript *> scripts;
+
+	node->GetComponents(scripts);
+	
+	for (auto &script : scripts)
+	{
+		if (script->GetObjectName() == objectName)
+		{	
+			return script->GetScriptObject();
+		}
+	}	
+
+	return sol::make_object(s, sol::nil);
+}
+
+sol::object CreateComponent(Node *node, const std::string &type, sol::variadic_args va, sol::this_state s)
+{	
+	if (type == "ParticleEmitter")
+	{
+		sol::object param3 = va[1];
+		sol::object param4 = va[2];		
+		auto component = node->CreateComponent<ParticleEmitter>(param3.as<unsigned int>(), param4 == sol::nil ? nullptr : param4.as<Material *>());
+		return sol::object(s, sol::in_place, component);
+	}
+	else if (type == "CustomGeometry")
+	{
+		auto component = node->CreateComponent<CustomGeometry>();
+		return sol::object(s, sol::in_place, component);
+	}
+	else if (type == "StaticModel")
+	{
+		StaticModel *component;
+		if (va.leftover_count() == 1)
+		{
+			auto param3 = va[0];
+			component = node->CreateComponent<StaticModel>(param3.get<Mesh *>());
+		}
+		else
+		{
+			component = node->CreateComponent<StaticModel>();
+		}
+
+		return sol::object(s, sol::in_place, component);
+	}
+	else if (type == "CollisionShape")
+	{
+		auto component = node->CreateComponent<CollisionShape>();
+		return sol::object(s, sol::in_place, component);
+	}
+	else if (type == "LuaScript")
+	{
+		auto component = node->CreateComponent<LuaScript>();
+		return sol::object(s, sol::in_place, component);
+	}
+	else if (type == "SoundEmitter")
+	{
+		SoundEmitter *component;
+		if (va.leftover_count() == 1)
+		{
+			auto param3 = va[0];
+			component = node->CreateComponent<SoundEmitter>(param3.get<Sound *>());
+		}
+		else
+		{
+			component = node->CreateComponent<SoundEmitter>();
+		}
+
+		return sol::object(s, sol::in_place, component);
+	}
+	else if (type == "AnimatedModel")
+	{
+		AnimatedModel *component;
+		if (va.leftover_count() == 1)
+		{
+			auto param3 = va[0];
+			component = node->CreateComponent<AnimatedModel>(param3.get<Mesh *>());
+		}
+		else
+		{
+			component = node->CreateComponent<AnimatedModel>();
+		}
+
+		return sol::object(s, sol::in_place, component);
+	}
+	else if (type == "Light")
+	{
+		auto component = node->CreateComponent<Light>();
+		return sol::object(s, sol::in_place, component);
+	}
+	else
+	{
+		return sol::make_object(s, sol::nil);
+	}	
+}
+
+Node *NodeNew(Engine *engine, const std::string &name)
+{
+	return new Node(engine, name);
+}
+
+/*
 int GetComponent(Node *node, lua_State *L, const std::string &type)
 {
 	Component *component = node->GetComponent(type);
@@ -158,101 +372,109 @@ Node *NodeNew(Engine *engine, const std::string &name)
 {
 	return new Node(engine, name);
 }
-
-void LuaBindings::InitScene(lua_State *luaState)
+*/
+void LuaBindings::InitScene(sol::state &luaState)
 {
-	LuaBinding(luaState)
-		.beginClass<Scene>("Scene")			
-			.addFunction("IntersectRay", &Scene::IntersectRay)
-			.addFunction("GetRootNode", &Scene::GetRootNode)
-		.endClass()
-		.beginClass<Node>("Node")
-			.addFunction("Rotate", &Node::Rotate)
-			.addFunction("SetRotation", &Node::SetRotation)
-			.addProperty("rotation", &Node::GetRotation, &Node::SetRotation)
-			.addFunction("Move", &Node::Move)
-			.addFunction("SetTranslation", &Node::SetTranslation)
-			.addProperty("translation", &Node::GetTranslation, &Node::SetTranslation)
-			.addFunction("Scale", &Node::Scale)
-			.addFunction("SetScale", &Node::SetScale)
-			.addProperty("scale", &Node::GetScale, &Node::SetScale)
-			.addProperty("scene", &Node::GetScene)
-			.addFunction("GetWorldTransformation", &Node::GetWorldTransformation)
-			.addFunction("GetWorldPosition", &Node::GetWorldPosition)
-			.addFunction("GetComponent", &GetComponent)
-			.addFunction("GetComponents", &GetComponents)
-			.addFunction("CreateComponent", &CreateComponent)
-			.addFunction("Remove", &Node::Remove)
-			.addProperty("name", &Node::GetName, &Node::SetName)
-			.addProperty("children", &Node::GetChildren)
-			.addFunction("CreateChild", &Node::CreateChild)
-			.addStaticFunction("New", &NodeNew)
-			.addFunction("LookAt", &Node::LookAt)
-			.addFunction("GetChild", &Node::GetChild)
-			.addFunction("GetScriptObject", &GetScriptObject)
-			.addFunction("Clone", &Node::Clone)
-			.addProperty("parent", &Node::GetParent, &Node::SetParent)
-		.endClass()
-		.beginExtendClass<Component, Object>("Component")
-			.addProperty("node", &Component::GetNode)
-			.addProperty("enabled", &Component::IsEnabled, &Component::SetEnabled)
-			.addFunction("Clone", &Component::Clone)
-		.endClass()
-		.beginExtendClass<Renderable, Component>("Renderable")
-			.addFunction("SetCollisionQueryMask", &Renderable::SetCollisionQueryMask)
-			.addFunction("GetCollisionQueryMask", &Renderable::GetCollisionQueryMask)
-			.addProperty("collisionQueryMask", &Renderable::GetCollisionQueryMask, &Renderable::SetCollisionQueryMask)
-			.addFunction("SetReceiveShadow", &Renderable::SetReceiveShadow)
-			.addFunction("GetReceiveShadow", &Renderable::GetReceiveShadow)
-			.addProperty("receiveShadow", &Renderable::GetReceiveShadow, &Renderable::SetReceiveShadow)
-			.addFunction("SetCastShadow", &Renderable::SetCastShadow)
-			.addFunction("GetCastShadow", &Renderable::GetCastShadow)
-			.addProperty("castShadow", &Renderable::GetCastShadow, &Renderable::SetCastShadow)
-			.addFunction("SetLightMask", &Renderable::SetLightMask)
-			.addFunction("GetLightMask", &Renderable::GetLightMask)
-			.addProperty("lightMask", &Renderable::GetLightMask, &Renderable::SetLightMask)
-		.endClass()
-		.beginExtendClass<StaticModel, Renderable>("StaticModel")
-		.endClass()
-		.beginExtendClass<AnimatedModel, Renderable>("AnimatedModel")
-		.endClass()
-		.beginExtendClass<Light, Component>("Light")
-			.addProperty("lightType", &Light::GetLightType, &Light::SetLightType)
-			.addProperty("castShadow", &Light::GetCastShadow, &Light::SetCastShadow)
-			.addProperty("color", &Light::GetColor, &Light::SetColor)
-			.addProperty("spotCutOff", &Light::GetSpotCutOff, &Light::SetSpotCutOff)
-		.endClass()		
-		.beginExtendClass<ParticleEmitter, Renderable>("ParticleEmitter")
-			.addFunction("Reset", &ParticleEmitter::Reset)
-			.addFunction("SetBoundingBox", &ParticleEmitter::SetBoundingBox)
-			.addFunction("SetMaterial", &ParticleEmitter::SetMaterial)
-			.addFunction("GetMaterial", &ParticleEmitter::GetMaterial)
-			.addProperty("material", &ParticleEmitter::GetMaterial, &ParticleEmitter::SetMaterial)
-		.endClass()
-		.beginExtendClass<CustomGeometry, Renderable>("CustomGeometry")
-			.addFunction("AddVertex", &CustomGeometry::AddVertex)
-			.addFunction("SetNormal", &CustomGeometry::SetNormal)
-			.addFunction("SetTexCoord", &CustomGeometry::SetTexCoord)
-			.addFunction("SetMaterial", &CustomGeometry::SetMaterial)
-			.addFunction("SetPrimitiveType", &CustomGeometry::SetPrimitiveType)
-			.addFunction("UpdateGeometry", &CustomGeometry::UpdateGeometry)
-			.addFunction("Clear", &CustomGeometry::Clear)
-		.endClass()
-		.beginExtendClass<Camera, Component>("Camera")
-			.addFunction("GetPickingRay", &Camera::GetPickingRay)
-		.endClass()
-		.beginClass<SceneReader>("SceneReader")
-			.addConstructor(LUA_ARGS(Engine *))
-			.addFunction("Read", &SceneReader::Read)
-		.endClass()
-		.beginExtendClass<Prefab, Resource>("Prefab")
-			.addConstructor(LUA_ARGS(Engine *))
-			.addFunction("Instantiate", &Prefab::Instantiate)			
-		.endClass();
+	luaState.new_usertype<Scene>("Scene",
+		"IntersectRay", &Scene::IntersectRay,
+		"GetRootNode", &Scene::GetRootNode);
 
-	LuaRef t = LuaRef::createTable(luaState);
-	t["DIRECTIONAL"] = static_cast<unsigned int>(LightType::DIRECTIONAL);
-	t["POINT"] = static_cast<unsigned int>(LightType::POINT);
-	t["SPOT"] = static_cast<unsigned int>(LightType::SPOT);
-	Lua::setGlobal(luaState, "LightType", t);
+	luaState.new_usertype<Node>("Node",
+		"Rotate", &Node::Rotate,
+		"SetRotation", &Node::SetRotation, 
+		"rotation", sol::property(&Node::GetRotation, &Node::SetRotation),
+		"Move", &Node::Move,
+		"SetTranslation", &Node::SetTranslation,
+		"translation", sol::property(&Node::GetTranslation, &Node::SetTranslation),
+		"Scale", &Node::Scale,
+		"SetScale", &Node::SetScale,
+		"scale", sol::property(&Node::GetScale, &Node::SetScale),
+		"scene", sol::property(&Node::GetScene),
+		"GetWorldTransformation", &Node::GetWorldTransformation,
+		"GetWorldPosition", &Node::GetWorldPosition,
+		"GetComponent", &GetComponent,
+		"GetComponents", &GetComponents,
+		"CreateComponent", &CreateComponent,
+		"Remove", &Node::Remove,
+		"name", sol::property(&Node::GetName, &Node::SetName),
+		"children", sol::property(&Node::GetChildren),
+		"CreateChild", &Node::CreateChild,
+		"new", &NodeNew,
+		"LookAt", &Node::LookAt,
+		"GetChild", &Node::GetChild,
+		"GetScriptObject", &GetScriptObject,
+		"Clone", &Node::Clone,
+		"parent", sol::property(&Node::GetParent, &Node::SetParent),
+		sol::base_classes, sol::bases<Object, RefCounted>());
+
+	luaState.new_usertype<Component>("Component",
+		"node", sol::property(&Component::GetNode),
+		"enabled", sol::property(&Component::IsEnabled, &Component::SetEnabled),
+		"Clone", &Component::Clone,
+		sol::base_classes, sol::bases<Object, RefCounted>());
+
+	luaState.new_usertype<Renderable>("Renderable",
+		"SetCollisionQueryMask", &Renderable::SetCollisionQueryMask,
+		"GetCollisionQueryMask", &Renderable::GetCollisionQueryMask,
+		"collisionQueryMask", sol::property(&Renderable::GetCollisionQueryMask, &Renderable::SetCollisionQueryMask),
+		"SetReceiveShadow", &Renderable::SetReceiveShadow,
+		"GetReceiveShadow", &Renderable::GetReceiveShadow,
+		"receiveShadow", sol::property(&Renderable::GetReceiveShadow, &Renderable::SetReceiveShadow),
+		"SetCastShadow", &Renderable::SetCastShadow,
+		"GetCastShadow", &Renderable::GetCastShadow,
+		"castShadow", sol::property(&Renderable::GetCastShadow, &Renderable::SetCastShadow),
+		"SetLightMask", &Renderable::SetLightMask,
+		"GetLightMask", &Renderable::GetLightMask,
+		"lightMask", sol::property(&Renderable::GetLightMask, &Renderable::SetLightMask),
+		sol::base_classes, sol::bases<Component, Object, RefCounted>());
+
+	luaState.new_usertype<StaticModel>("StaticModel",		
+		sol::base_classes, sol::bases<Renderable, Component, Object, RefCounted>());
+
+	luaState.new_usertype<AnimatedModel>("AnimatedModel",
+		sol::base_classes, sol::bases<Renderable, Component, Object, RefCounted>());
+
+	luaState.new_usertype<Light>("Light",	
+		"GetColor", &Light::GetColor,
+		"lightType", sol::property(&Light::GetLightType, &Light::SetLightType),
+		"castShadow", sol::property(&Light::GetCastShadow, &Light::SetCastShadow),
+		"color", sol::property(&Light::GetColor, &Light::SetColor),
+		"spotCutOff", sol::property(&Light::GetSpotCutOff, &Light::SetSpotCutOff),
+		sol::base_classes, sol::bases<Component, Object, RefCounted>());
+
+	luaState.new_usertype<ParticleEmitter>("ParticleEmitter",
+		"Reset", &ParticleEmitter::Reset,
+		"SetBoundingBox", &ParticleEmitter::SetBoundingBox,
+		"SetMaterial", &ParticleEmitter::SetMaterial,
+		"GetMaterial", &ParticleEmitter::GetMaterial,
+		"material", sol::property(&ParticleEmitter::GetMaterial, &ParticleEmitter::SetMaterial),
+		sol::base_classes, sol::bases<Renderable, Component, Object, RefCounted>());
+
+	luaState.new_usertype<CustomGeometry>("CustomGeometry",
+		"AddVertex", &CustomGeometry::AddVertex,
+		"SetNormal", &CustomGeometry::SetNormal,
+		"SetTexCoord", &CustomGeometry::SetTexCoord,
+		"SetMaterial", &CustomGeometry::SetMaterial,
+		"SetPrimitiveType", &CustomGeometry::SetPrimitiveType,
+		"UpdateGeometry", &CustomGeometry::UpdateGeometry,
+		"Clear", &CustomGeometry::Clear,
+		sol::base_classes, sol::bases<Renderable, Component, Object, RefCounted>());
+
+	luaState.new_usertype<Camera>("Camera",
+		"GetPickingRay", &Camera::GetPickingRay,
+		sol::base_classes, sol::bases<Component, Object, RefCounted>());
+
+	luaState.new_usertype<SceneReader>("SceneReader",
+		sol::constructors<SceneReader(Engine *)>(),
+		"Read", &SceneReader::Read);
+
+	luaState.new_usertype<Prefab>("Prefab",
+		sol::constructors<Prefab(Engine *)>(),
+		"Instantiate", &Prefab::Instantiate,
+		sol::base_classes, sol::bases<Resource, Object, RefCounted>());
+
+	sol::table LightTypeTable = luaState.create_named_table("LightType");	
+	LightTypeTable["DIRECTIONAL"] = static_cast<unsigned int>(LightType::DIRECTIONAL);
+	LightTypeTable["POINT"] = static_cast<unsigned int>(LightType::POINT);
+	LightTypeTable["SPOT"] = static_cast<unsigned int>(LightType::SPOT);	
 }

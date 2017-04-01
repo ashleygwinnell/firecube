@@ -1,5 +1,5 @@
 #include "lua.hpp"
-#include "LuaIntf.h"
+#include "sol.hpp"
 #include "Scripting/LuaBindings.h"
 #include "Core/Object.h"
 #include "Core/Engine.h"
@@ -9,22 +9,24 @@
 #include "Scripting/LuaFile.h"
 #include "Audio/Sound.h"
 #include "Scene/Prefab.h"
+#include "Rendering/Renderer.h"
 
 using namespace FireCube;
-using namespace LuaIntf;
 
-int GetResource(ResourceCache *resourceCache, lua_State *L, const std::string &type, const std::string &path)
+sol::object GetResource(ResourceCache *resourceCache, const std::string &type, const std::string &path, sol::this_state s)
 {
+	sol::state_view lua(s);
+
 	if (type == "Material")
 	{
 		auto resource = resourceCache->GetResource<Material>(path);
 		if (resource)
 		{
-			Lua::push(L, resource);
+			return sol::object(lua, sol::in_place, resource);
 		}
 		else
 		{
-			lua_pushnil(L);
+			return sol::make_object(s, sol::nil);
 		}
 	}
 	else if (type == "Mesh")
@@ -32,11 +34,11 @@ int GetResource(ResourceCache *resourceCache, lua_State *L, const std::string &t
 		auto resource = resourceCache->GetResource<Mesh>(path);
 		if (resource)
 		{
-			Lua::push(L, resource);
+			return sol::object(lua, sol::in_place, resource);
 		}
 		else
 		{
-			lua_pushnil(L);
+			return sol::make_object(s, sol::nil);
 		}
 	}
 	else if (type == "LuaFile")
@@ -44,11 +46,11 @@ int GetResource(ResourceCache *resourceCache, lua_State *L, const std::string &t
 		auto resource = resourceCache->GetResource<LuaFile>(path);
 		if (resource)
 		{
-			Lua::push(L, resource);
+			return sol::object(lua, sol::in_place, resource);
 		}
 		else
 		{
-			lua_pushnil(L);
+			return sol::make_object(s, sol::nil);
 		}
 	}
 	else if (type == "Sound")
@@ -56,11 +58,11 @@ int GetResource(ResourceCache *resourceCache, lua_State *L, const std::string &t
 		auto resource = resourceCache->GetResource<Sound>(path);
 		if (resource)
 		{
-			Lua::push(L, resource);
+			return sol::object(lua, sol::in_place, resource);
 		}
 		else
 		{
-			lua_pushnil(L);
+			return sol::make_object(s, sol::nil);
 		}
 	}	
 	else if (type == "Prefab")
@@ -68,36 +70,36 @@ int GetResource(ResourceCache *resourceCache, lua_State *L, const std::string &t
 		auto resource = resourceCache->GetResource<Prefab>(path);
 		if (resource)
 		{
-			Lua::push(L, resource);
+			return sol::object(lua, sol::in_place, resource);
 		}
 		else
 		{
-			lua_pushnil(L);
+			return sol::make_object(s, sol::nil);
 		}
 	}
 	else
 	{
-		lua_pushnil(L);
+		return sol::make_object(s, sol::nil);
 	}
 
-	return 1;
+	return sol::make_object(s, sol::nil);
 }
 
-void LuaBindings::InitCore(lua_State *luaState, Engine *engine)
+void LuaBindings::InitCore(sol::state &luaState, Engine *engine)
 {
-	LuaBinding(luaState)
-		.beginClass<Object>("Object")
-		.endClass()
-		.beginClass<Engine>("Engine")
-			.addProperty("renderer", &Engine::GetRenderer)
-			.addProperty("resourceCache", &Engine::GetResourceCache)
-		.endClass()
-		.beginClass<Resource>("Resource")
-		.endClass()
-		.beginClass<ResourceCache>("ResourceCache")
-			.addFunction("GetResource", &GetResource)
-		.endClass();
-
-	Lua::setGlobal(luaState, "engine", engine);
+	luaState.new_usertype<Object>("Object",
+		sol::base_classes, sol::bases<RefCounted>());
+	
+	luaState.new_usertype<Engine>("Engine",
+		"renderer", sol::property(&Engine::GetRenderer),
+		"resourceCache", sol::property(&Engine::GetResourceCache));
+	
+	luaState.new_usertype<Resource>("Resource",
+		sol::base_classes, sol::bases<Object, RefCounted>());
+	
+	luaState.new_usertype<ResourceCache>("ResourceCache",
+		"GetResource", &GetResource);
+	
+	luaState["engine"] = engine;
 }
 
