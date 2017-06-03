@@ -6,6 +6,7 @@
 #include "Scripting/LuaFile.h"
 #include "Core/Engine.h"
 #include "Core/ResourceCache.h"
+#include "Utils/Filesystem.h"
 
 using namespace FireCube;
 
@@ -26,6 +27,13 @@ LuaState::LuaState(Engine *engine) : Object(engine)
 	ExecuteFile(engine->GetResourceCache()->GetResource<LuaFile>("Scripts/core.lua"));
 
 	LuaBindings::Init(luaState, engine);	
+
+	originalPackagePath = luaState["package"]["path"];
+	
+	if (Filesystem::GetAssetsFolder().empty() == false)
+	{
+		AddPackagePath(Filesystem::GetAssetsFolder() + "/Scripts");
+	}
 }
 
 LuaState::~LuaState()
@@ -151,4 +159,17 @@ LuaFunction *LuaState::GetFunction(int index)
 		LuaFunction *ret = new LuaFunction(ref);
 		return ret;
 	}
+}
+
+void LuaState::AddPackagePath(const std::string &path)
+{
+	packagePaths.push_back(path);
+	
+	std::string additionalPaths;
+	for (auto &path : packagePaths)
+	{
+		additionalPaths += ";" + Filesystem::JoinPath(path, "?.lua");
+	}
+
+	luaState["package"]["path"] = originalPackagePath + additionalPaths;
 }

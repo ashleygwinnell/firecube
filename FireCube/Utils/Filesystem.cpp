@@ -200,3 +200,15 @@ std::string Filesystem::RemoveFileExtension(const std::string &filename)
 		return filename;
 	}
 }
+
+std::string FIRECUBE_API FireCube::Filesystem::AddPathSeparatorIfNeeded(const std::string &path)
+{
+	if (path.back() == PATH_SEPARATOR_CHAR)
+	{
+		return path;
+	}
+	else
+	{
+		return path + PATH_SEPARATOR;
+	}
+}

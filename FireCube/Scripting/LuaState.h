@@ -45,10 +45,15 @@ public:
 	{
 		luaState.set_function(name, function);
 	}
+
+	void AddPackagePath(const std::string &path);
+
 private:
 	static int Print(lua_State *L);	
 	sol::state luaState;
 	std::map<StringHash, SharedPtr<LuaFunction>> functions;
+	std::string originalPackagePath;
+	std::vector<std::string> packagePaths;
 };
 
 }
