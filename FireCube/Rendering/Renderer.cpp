@@ -173,7 +173,6 @@ void Renderer::RenderIndexStream(const PrimitiveType &primitiveType, unsigned in
 		return;
 	}
 	glDrawElements(glmode, count, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
 }
 
 void Renderer::RenderStream(const PrimitiveType &primitiveType, unsigned int count, unsigned int offset)
@@ -210,7 +209,6 @@ void Renderer::RenderStream(const PrimitiveType &primitiveType, unsigned int cou
 		return;
 	}
 	glDrawArrays(glmode, offset, count);
-	glBindVertexArray(0);
 }
 
 void Renderer::UseProgram(Program *program)
