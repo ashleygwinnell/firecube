@@ -102,6 +102,12 @@ public:
 		}
 	}
 
+	template <class T>
+	T GetProperty(const std::string &name)
+	{
+		return object[name];
+	}
+
 	/**
 	* Assign a value to a property of the Lua script object
 	* @param name The name of the property
