@@ -846,7 +846,7 @@ void MainFrameImpl::UpdateUndoRedoMenu(Command *command)
 		undoMenuItem->Enable(false);
 		undoMenuItem->SetItemLabel(wxString(wxT("Undo")) + wxT('\t') + wxT("Ctrl+Z"));
 	}
-	
+
 	if (editorState->HasRedo())
 	{
 		redoMenuItem->SetItemLabel(wxString(wxT("Redo \"")) + editorState->GetCurrentRedoCommand()->GetDescription() + wxT("\"\t") + wxT("Ctrl+Y"));
@@ -874,7 +874,7 @@ void MainFrameImpl::SetAllPanelsVisibility(bool visible)
 	auto &sceneHierarchyPane = m_mgr.GetPane("sceneHierarchyPane");
 	if (visible)
 	{
-		sceneHierarchyPane.Show();		
+		sceneHierarchyPane.Show();
 	}
 	else
 	{
@@ -890,7 +890,7 @@ void MainFrameImpl::SetAllPanelsVisibility(bool visible)
 	else
 	{
 		inspectorPane.Hide();
-	}	
+	}
 	viewInspectorMenuItem->Check(visible);
 
 	auto &assetBrowserPane = m_mgr.GetPane("assetBrowserPane");
@@ -924,6 +924,10 @@ void MainFrameImpl::LoadSettingsFile()
 		for (TiXmlElement *element = e->FirstChildElement("file"); element != nullptr; element = element->NextSiblingElement("file"))
 		{
 			std::string filename = element->Attribute("name");
+			if (!wxFileExists(filename))
+			{
+				continue;
+			}
 			recentSceneFiles.push_back(filename);
 			
 			if (itemLocation == 5)
