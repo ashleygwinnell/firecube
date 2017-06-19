@@ -64,6 +64,8 @@ void AssetBrowserPanelImpl::PopulateDirectoryNode(wxTreeItemId item, const std::
 
 void AssetBrowserPanelImpl::DirectoryTreeSelectionChanged(wxTreeEvent& event)
 {
+	previewPanel->DestroyChildren();
+
 	DirectoryItemData *data = (DirectoryItemData *) directoryTreeCtrl->GetItemData(event.GetItem());
 	UpdateFileList(data->path);
 }
