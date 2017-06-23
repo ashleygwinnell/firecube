@@ -429,7 +429,15 @@ void LuaBindings::InitScene(sol::state &luaState)
 		sol::base_classes, sol::bases<Component, Object, RefCounted>());
 
 	luaState.new_usertype<StaticModel>("StaticModel",
-		"GetMaterial", [](StaticModel *self, int index) { return self->GetMaterials()[index].Get(); },
+		"GetMaterial", [](StaticModel &self, int index) { return self.GetMaterials()[index].Get(); },
+		"materials", sol::property([](StaticModel &self) {
+			std::vector<Material *> ret(self.GetMaterials().size());
+			auto &materials = self.GetMaterials();
+			std::transform(materials.begin(), materials.end(), ret.begin(), [](SharedPtr<Material> &mat) {
+				return mat.Get();
+			});
+			return ret;
+		}),
 		sol::base_classes, sol::bases<Renderable, Component, Object, RefCounted>());
 
 	luaState.new_usertype<AnimatedModel>("AnimatedModel",
