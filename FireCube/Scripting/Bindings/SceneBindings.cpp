@@ -428,7 +428,8 @@ void LuaBindings::InitScene(sol::state &luaState)
 		"lightMask", sol::property(&Renderable::GetLightMask, &Renderable::SetLightMask),
 		sol::base_classes, sol::bases<Component, Object, RefCounted>());
 
-	luaState.new_usertype<StaticModel>("StaticModel",		
+	luaState.new_usertype<StaticModel>("StaticModel",
+		"GetMaterial", [](StaticModel *self, int index) { return self->GetMaterials()[index].Get(); },
 		sol::base_classes, sol::bases<Renderable, Component, Object, RefCounted>());
 
 	luaState.new_usertype<AnimatedModel>("AnimatedModel",
