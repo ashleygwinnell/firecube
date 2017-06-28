@@ -115,6 +115,18 @@ sol::object GetComponent(Node *node, const std::string &type, sol::this_state s)
 			return sol::make_object(s, sol::nil);
 		}
 	}
+	else if (type == "Camera")
+	{
+		auto component = node->GetComponent<Camera>();
+		if (component)
+		{
+			return sol::object(s, sol::in_place, component);
+		}
+		else
+		{
+			return sol::make_object(s, sol::nil);
+		}
+	}
 	else
 	{
 		return sol::make_object(s, sol::nil);
@@ -218,6 +230,11 @@ sol::object CreateComponent(Node *node, const std::string &type, sol::variadic_a
 	else if (type == "Light")
 	{
 		auto component = node->CreateComponent<Light>();
+		return sol::object(s, sol::in_place, component);
+	}
+	else if (type == "Camera")
+	{
+		auto component = node->CreateComponent<Camera>();
 		return sol::object(s, sol::in_place, component);
 	}
 	else
@@ -376,8 +393,10 @@ Node *NodeNew(Engine *engine, const std::string &name)
 void LuaBindings::InitScene(sol::state &luaState)
 {
 	luaState.new_usertype<Scene>("Scene",
+		"root", sol::property(&Scene::GetRootNode),
 		"IntersectRay", &Scene::IntersectRay,
-		"GetRootNode", &Scene::GetRootNode);
+		"GetRootNode", &Scene::GetRootNode,
+		sol::base_classes, sol::bases<Object, RefCounted>());
 
 	luaState.new_usertype<Node>("Node",
 		"Rotate", &Node::Rotate,
