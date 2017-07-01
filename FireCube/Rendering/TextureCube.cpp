@@ -31,20 +31,16 @@ bool TextureCube::Load(const std::string &filename)
 		if (!img.Load(currentFaceFileName))
 			return false;
 
-		GLenum format;
-		GLenum internalFormat;
 		this->filename = filename;
 
 		if (img.GetBytesPerPixel() == 4)
 		{
-			internalFormat = GL_RGBA;
-			format = GL_RGBA;
+			format = TextureFormat::RGBA;
 
 		}
 		else if (img.GetBytesPerPixel() == 3)
 		{
-			internalFormat = GL_RGB;
-			format = GL_RGB;
+			format = TextureFormat::RGB;
 		}
 		else
 		{
@@ -53,8 +49,15 @@ bool TextureCube::Load(const std::string &filename)
 
 		width = img.GetWidth();
 		height = img.GetHeight();
-		
-		glTexImage2D(currentFaceTarget, 0, internalFormat, img.GetWidth(), img.GetHeight(), 0, format, GL_UNSIGNED_BYTE, &img.GetPixels()[0]);						
+
+		if (format == TextureFormat::RGB)
+		{
+			glTexImage2D(currentFaceTarget, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, &img.GetPixels()[0]);
+		}
+		else if (format == TextureFormat::RGBA)
+		{
+			glTexImage2D(currentFaceTarget, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &img.GetPixels()[0]);
+		}
 	}	
 
 	GenerateMipMaps();
