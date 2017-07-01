@@ -21,6 +21,7 @@
 #include "Utils/Logger.h"
 #include "Rendering/RenderSurface.h"
 #include "Rendering/Frame.h"
+#include "stb_image.h"
 
 using namespace FireCube;
 
@@ -68,6 +69,8 @@ void Renderer::Initialize()
 	shadowMap = GetRenderSurface(1024, 1024, RenderSurfaceType::DEPTH_TEXTURE);
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	stbi_set_flip_vertically_on_load(true);
 }
 
 void Renderer::Destroy()

@@ -47,9 +47,8 @@ bool Mesh::Load(const std::string &filename)
 	const aiScene* scene = importer.ReadFile(resolvedFileName,
 		aiProcess_Triangulate |
 		aiProcess_GenSmoothNormals |
-		aiProcess_FlipUVs |
 		aiProcess_CalcTangentSpace |
-		aiProcess_JoinIdenticalVertices | 
+		aiProcess_JoinIdenticalVertices |
 		aiProcess_LimitBoneWeights);
 
 	if (!scene)
