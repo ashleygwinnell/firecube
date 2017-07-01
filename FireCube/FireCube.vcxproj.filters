@@ -375,6 +375,9 @@
     <ClCompile Include="Audio\OggVorbisSoundDecoder.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
+    <ClCompile Include="UI\UIImage.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -677,6 +680,9 @@
     </ClInclude>
     <ClInclude Include="ThirdParty\Sol\sol.hpp">
       <Filter>ThirdParty\Sol</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIImage.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

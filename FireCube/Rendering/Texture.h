@@ -13,6 +13,14 @@
 namespace FireCube
 {
 
+enum class TextureFormat
+{
+	RGB,
+	RGBA,
+	R,
+	DEPTH
+};
+
 // Forward declarations.
 class Renderer;
 
@@ -95,6 +103,8 @@ public:
 	* @returns The texture target to use for this texture (GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, ...)
 	*/
 	GLenum GetTarget() const;
+
+	TextureFormat GetFormat() const;
 protected:	
 
 	TextureFilter filter;
@@ -102,6 +112,7 @@ protected:
 	GLenum target;
 
 	int width, height;
+	TextureFormat format;
 };
 
 }

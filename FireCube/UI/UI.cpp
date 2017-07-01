@@ -33,20 +33,41 @@ void UI::Render(Renderer *renderer)
 	renderer->RestoreFrameBuffer();
 	renderer->SetDepthTest(DepthTest::ALWAYS);
 	renderer->SetBlendMode(BlendMode::ALPHA);
-	Shader *textVertexShader = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/font.vert")->GenerateShader("");
-	Shader *textFragmentShader = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/font.frag")->GenerateShader("");
-	Program *textProgram = renderer->SetShaders(textVertexShader, textFragmentShader);
-	mat4 ortho;
-	ortho.GenerateOrthographic(0, (float)renderer->GetWidth(), (float)renderer->GetHeight(), 0, 0, 1);
-	if (textProgram->IsValid())
-	{		
-		textProgram->SetUniform("tex0", 0);				
-		textProgram->SetUniform("projectionMatrix", ortho);
-	}
 	for (const auto &part : parts)
 	{
-		renderer->UseTexture(0, part.texture);
-		renderer->RenderStream(PrimitiveType::TRIANGLES, part.count, part.offset);
+		if (part.texture->GetFormat() == TextureFormat::R)
+		{
+			Shader *textVertexShader = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/font.vert")->GenerateShader("");
+			Shader *textFragmentShader = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/font.frag")->GenerateShader("");
+			Program *textProgram = renderer->SetShaders(textVertexShader, textFragmentShader);
+			mat4 ortho;
+			ortho.GenerateOrthographic(0, (float)renderer->GetWidth(), (float)renderer->GetHeight(), 0, 0, 1);
+			if (textProgram->IsValid())
+			{
+				textProgram->SetUniform("tex0", 0);
+				textProgram->SetUniform("projectionMatrix", ortho);
+			}
+
+			renderer->UseTexture(0, part.texture);
+			renderer->RenderStream(PrimitiveType::TRIANGLES, part.count, part.offset);
+		}
+		else if (part.texture->GetFormat() == TextureFormat::RGB || part.texture->GetFormat() == TextureFormat::RGBA)
+		{
+			std::string fragmentShaderDefines = part.texture->GetFormat() == TextureFormat::RGBA ? "ALPHA" : "";
+			Shader *vertexShader = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/font.vert")->GenerateShader("");
+			Shader *fragmentShader = engine->GetResourceCache()->GetResource<ShaderTemplate>("Shaders/image.frag")->GenerateShader(fragmentShaderDefines);
+			Program *program = renderer->SetShaders(vertexShader, fragmentShader);
+			mat4 ortho;
+			ortho.GenerateOrthographic(0, (float)renderer->GetWidth(), (float)renderer->GetHeight(), 0, 0, 1);
+			if (program->IsValid())
+			{
+				program->SetUniform("tex0", 0);
+				program->SetUniform("projectionMatrix", ortho);
+			}
+
+			renderer->UseTexture(0, part.texture);
+			renderer->RenderStream(PrimitiveType::TRIANGLES, part.count, part.offset);
+		}
 	}
 }
 

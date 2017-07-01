@@ -3,7 +3,6 @@
 
 using namespace FireCube;
 
-
 UIText::UIText(Engine *engine, UIElement *parent) : UIElement(engine, parent), color(1.0f)
 {	
 	
@@ -43,8 +42,8 @@ void UIText::SetText(const std::string &text)
 	
 	int numTris = 0;
 	
-	vec2 intialPosition = GetScreenPosition();
-	vec2 curPos = intialPosition;	
+	vec2 initialPosition = GetScreenPosition();
+	vec2 curPos = initialPosition;	
 	char previous = 0;
 	for (std::string::const_iterator i = text.begin(); i != text.end(); i++)
 	{
@@ -58,7 +57,7 @@ void UIText::SetText(const std::string &text)
 		else if (c == '\n')
 		{
 			// If current glyph is new line set the current position accordingly
-			curPos.x = intialPosition.x;
+			curPos.x = initialPosition.x;
 			curPos.y += fontFace->pointSize;
 			continue;
 		}

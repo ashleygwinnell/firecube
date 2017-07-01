@@ -21,8 +21,7 @@ bool Texture2D::Load(const std::string &filename)
 	if (!img.Load(filename))
 		return false;
 
-
-	TextureFormat format;	
+	
 	this->filename = filename;
 
 	if (img.GetBytesPerPixel() == 4)
@@ -148,6 +147,7 @@ void Texture2D::SetSize(unsigned int width, unsigned int height, TextureFormat f
 {
 	this->width = width;
 	this->height = height;
+	this->format = format;
 	
 	renderer->UseTexture(0, this);
 
@@ -175,6 +175,7 @@ void Texture2D::SetData(unsigned int width, unsigned int height, TextureFormat f
 {
 	this->width = width;
 	this->height = height;
+	this->format = format;
 
 	renderer->UseTexture(0, this);
 
@@ -200,6 +201,7 @@ void Texture2D::SetData(unsigned int width, unsigned int height, TextureFormat f
 
 void Texture2D::SetData(unsigned int x, unsigned int y, unsigned int width, unsigned int height, TextureFormat format, void *data)
 {	
+	this->format = format;
 	renderer->UseTexture(0, this);
 	
 	if (format == TextureFormat::DEPTH)

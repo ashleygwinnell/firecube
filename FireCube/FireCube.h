@@ -50,6 +50,7 @@
 #include "UI/UI.h"
 #include "UI/UIElement.h"
 #include "UI/UIText.h"
+#include "UI/UIImage.h"
 #include "Physics/CharacterController.h"
 #include "Physics/CollisionShape.h"
 #include "Physics/PhysicsWorld.h"

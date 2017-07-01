@@ -69,3 +69,8 @@ GLenum Texture::GetTarget() const
 {
 	return target;
 }
+
+TextureFormat Texture::GetFormat() const
+{
+	return format;
+}

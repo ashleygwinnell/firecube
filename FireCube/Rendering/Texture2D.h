@@ -5,14 +5,6 @@
 namespace FireCube
 {
 
-enum class TextureFormat
-{
-	RGB,
-	RGBA,
-	R,
-	DEPTH
-};
-
 /**
 * A 2d texture.
 */
