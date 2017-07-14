@@ -85,6 +85,7 @@ class MainFrameImpl : public MainFrame, public FireCube::Object
 		void SwitchedToTranslateGizmo();
 		void SwitchedToRotateGizmo();
 		void SwitchedToScaleGizmo();
+		void SavePrefabs(NodeDescriptor *node);
 
 		MyApp *theApp;
 		FireCube::Engine *engine;

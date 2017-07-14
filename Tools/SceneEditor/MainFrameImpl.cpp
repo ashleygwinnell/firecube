@@ -312,6 +312,7 @@ void MainFrameImpl::SaveClicked(wxCommandEvent& event)
 	{
 		SceneWriter sceneWriter;
 		sceneWriter.Serialize(&rootDesc, editorState->GetCurrentSceneFile());		
+		SavePrefabs(&rootDesc);
 	}
 }
 
@@ -325,6 +326,7 @@ void MainFrameImpl::SaveAsClicked(wxCommandEvent& event)
 
 	SceneWriter sceneWriter;
 	sceneWriter.Serialize(&rootDesc, filename);
+	SavePrefabs(&rootDesc);
 	editorState->SetCurrentSceneFile(filename);
 	SetTitle("SceneEditor - " + filename);
 }
@@ -1164,6 +1166,23 @@ void MainFrameImpl::SwitchedToScaleGizmo()
 	toolbar->ToggleTool(translateTool->GetId(), false);
 	toolbar->ToggleTool(rotateTool->GetId(), false);
 	toolbar->ToggleTool(scaleTool->GetId(), true);
+}
+
+void MainFrameImpl::SavePrefabs(NodeDescriptor *node)
+{
+	if (node->IsPrefab())
+	{
+		std::string tragetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + node->GetPrefabPath();
+		SceneWriter sceneWriter;
+		sceneWriter.SerializePrefab(node, tragetPath);
+	}
+	else
+	{
+		for (auto child : node->GetChildren())
+		{
+			SavePrefabs(child);
+		}
+	}
 }
 
 void MainFrameImpl::TranslateToolClicked(wxCommandEvent& event)
