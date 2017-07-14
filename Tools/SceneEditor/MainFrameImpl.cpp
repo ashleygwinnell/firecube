@@ -1250,13 +1250,19 @@ void MainFrameImpl::SceneTreeItemMenu(wxTreeEvent& event)
 	{
 		wxMenu* menu = new wxMenu;
 		auto updatePrefabItem = menu->Append(wxID_ANY, wxT("Update Prefab"));
+		auto unlinkPrefabItem = menu->Append(wxID_ANY, wxT("Unlink From Prefab"));
 
-		menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [updatePrefabItem, node](wxCommandEvent &event) {
+		menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [this, updatePrefabItem, unlinkPrefabItem, node](wxCommandEvent &event) {
 			if (event.GetId() == updatePrefabItem->GetId())
 			{
 				std::string tragetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + node->GetPrefabPath();
 				SceneWriter sceneWriter;
 				sceneWriter.SerializePrefab(node, tragetPath);
+			}
+			else if (event.GetId() == unlinkPrefabItem->GetId())
+			{
+				node->SetIsPrefab(false);
+				sceneTreeCtrl->SetItemTextColour(nodeToTreeItem[node], *wxBLACK);
 			}
 		});
 		PopupMenu(menu);
