@@ -374,6 +374,8 @@ class NodePropertiesPanel : public wxPanel
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void NameChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void TextKillFocus( wxFocusEvent& event ) { event.Skip(); }
+		virtual void TextSetFocus( wxFocusEvent& event ) { event.Skip(); }
 		virtual void PositionXChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void PositionYChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void PositionZChanged( wxCommandEvent& event ) { event.Skip(); }

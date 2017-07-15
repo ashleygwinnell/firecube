@@ -7,10 +7,12 @@
 
 using namespace FireCube;
 
-NodePropertiesPanelImpl::NodePropertiesPanelImpl(wxWindow* parent) : NodePropertiesPanel(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), editorState(((MyApp*)wxTheApp)->GetEditorState())
+NodePropertiesPanelImpl::NodePropertiesPanelImpl(wxWindow* parent) : NodePropertiesPanel(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), editorState(((MyApp*)wxTheApp)->GetEditorState()),
+	commandAdded(false)
 {
 	SubscribeToEvent(editorState, editorState->nodeChanged, &NodePropertiesPanelImpl::UpdateUI);
 	SubscribeToEvent(editorState, editorState->nodeRenamed, &NodePropertiesPanelImpl::NodeRenamed);
+	SubscribeToEvent(editorState, editorState->undoPerformed, &NodePropertiesPanelImpl::UndoPerformed);
 	UpdateUI();
 }
 
@@ -27,20 +29,41 @@ void NodePropertiesPanelImpl::UpdateUI()
 		auto node = nodeDesc->GetNode();
 		nameTextCtrl->SetLabelText(node->GetName());
 
-		positionXTextCtrl->SetLabelText(wxString::FromDouble(node->GetTranslation().x));
-		positionYTextCtrl->SetLabelText(wxString::FromDouble(node->GetTranslation().y));
-		positionZTextCtrl->SetLabelText(wxString::FromDouble(node->GetTranslation().z));
+		positionXTextCtrl->ChangeValue(wxString::FromDouble(node->GetTranslation().x));
+		positionYTextCtrl->ChangeValue(wxString::FromDouble(node->GetTranslation().y));
+		positionZTextCtrl->ChangeValue(wxString::FromDouble(node->GetTranslation().z));
 
 		vec3 rotationAngles = node->GetRotation().GetMatrix().ExtractEulerAngles();
-		rotationXTextCtrl->SetLabelText(wxString::FromDouble(rotationAngles.x / PI * 180.0f));
-		rotationYTextCtrl->SetLabelText(wxString::FromDouble(rotationAngles.y / PI * 180.0f));
-		rotationZTextCtrl->SetLabelText(wxString::FromDouble(rotationAngles.z / PI * 180.0f));
+		rotationXTextCtrl->ChangeValue(wxString::FromDouble(rotationAngles.x / PI * 180.0f));
+		rotationYTextCtrl->ChangeValue(wxString::FromDouble(rotationAngles.y / PI * 180.0f));
+		rotationZTextCtrl->ChangeValue(wxString::FromDouble(rotationAngles.z / PI * 180.0f));
 
-		scaleXTextCtrl->SetLabelText(wxString::FromDouble(node->GetScale().x));
-		scaleYTextCtrl->SetLabelText(wxString::FromDouble(node->GetScale().y));
-		scaleZTextCtrl->SetLabelText(wxString::FromDouble(node->GetScale().z));
+		scaleXTextCtrl->ChangeValue(wxString::FromDouble(node->GetScale().x));
+		scaleYTextCtrl->ChangeValue(wxString::FromDouble(node->GetScale().y));
+		scaleZTextCtrl->ChangeValue(wxString::FromDouble(node->GetScale().z));
 	}
 }
+
+void NodePropertiesPanelImpl::TextSetFocus(wxFocusEvent& event)
+{
+	auto nodeDesc = editorState->GetSelectedNode();
+	if (nodeDesc)
+	{
+		prevTranslation = nodeDesc->GetTranslation();		 
+		prevRotation = nodeDesc->GetRotation();
+		prevScale = nodeDesc->GetScale();
+	}
+
+	event.Skip();
+}
+
+void NodePropertiesPanelImpl::TextKillFocus(wxFocusEvent& event)
+{
+	commandAdded = false;
+
+	event.Skip();
+}
+
 
 void NodePropertiesPanelImpl::PositionXChanged(wxCommandEvent& event)
 {
@@ -51,8 +74,9 @@ void NodePropertiesPanelImpl::PositionXChanged(wxCommandEvent& event)
 		double newCoordinate;
 		event.GetString().ToDouble(&newCoordinate);
 		translation.x = newCoordinate;
-		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", nodeDesc, nodeDesc->GetTranslation(), translation));
+		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", nodeDesc, prevTranslation, translation), commandAdded == false);
 		editorState->sceneChanged(editorState);
+		commandAdded = true;
 	}
 }
 
@@ -65,8 +89,9 @@ void NodePropertiesPanelImpl::PositionYChanged(wxCommandEvent& event)
 		double newCoordinate;
 		event.GetString().ToDouble(&newCoordinate);
 		translation.y = newCoordinate;
-		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", nodeDesc, nodeDesc->GetTranslation(), translation));
+		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", nodeDesc, prevTranslation, translation), commandAdded == false);
 		editorState->sceneChanged(editorState);
+		commandAdded = true;
 	}
 }
 
@@ -79,8 +104,9 @@ void NodePropertiesPanelImpl::PositionZChanged(wxCommandEvent& event)
 		double newCoordinate;
 		event.GetString().ToDouble(&newCoordinate);
 		translation.z = newCoordinate;
-		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", nodeDesc, nodeDesc->GetTranslation(), translation));
+		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", nodeDesc, prevTranslation, translation), commandAdded == false);
 		editorState->sceneChanged(editorState);
+		commandAdded = true;
 	}
 }
 
@@ -93,8 +119,9 @@ void NodePropertiesPanelImpl::RotationXChanged(wxCommandEvent& event)
 		double ang;
 		event.GetString().ToDouble(&ang);
 		rotation.x = ang / 180.0f * PI;
-		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", nodeDesc, nodeDesc->GetRotation(), rotation));
+		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", nodeDesc, prevRotation, rotation), commandAdded == false);
 		editorState->sceneChanged(editorState);
+		commandAdded = true;
 	}
 }
 
@@ -107,8 +134,9 @@ void NodePropertiesPanelImpl::RotationYChanged(wxCommandEvent& event)
 		double ang;
 		event.GetString().ToDouble(&ang);
 		rotation.y = ang / 180.0f * PI;
-		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", nodeDesc, nodeDesc->GetRotation(), rotation));
+		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", nodeDesc, prevRotation, rotation), commandAdded == false);
 		editorState->sceneChanged(editorState);
+		commandAdded = true;
 	}
 }
 
@@ -121,8 +149,9 @@ void NodePropertiesPanelImpl::RotationZChanged(wxCommandEvent& event)
 		double ang;
 		event.GetString().ToDouble(&ang);
 		rotation.z = ang / 180.0f * PI;
-		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", nodeDesc, nodeDesc->GetRotation(), rotation));
+		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", nodeDesc, prevRotation, rotation), commandAdded == false);
 		editorState->sceneChanged(editorState);
+		commandAdded = true;
 	}
 }
 
@@ -135,8 +164,9 @@ void NodePropertiesPanelImpl::ScaleXChanged(wxCommandEvent& event)
 		double newScale;
 		event.GetString().ToDouble(&newScale);
 		scale.x = newScale;
-		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", nodeDesc, nodeDesc->GetScale(), scale));
+		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", nodeDesc, prevScale, scale), commandAdded == false);
 		editorState->sceneChanged(editorState);
+		commandAdded = true;
 	}
 }
 
@@ -149,8 +179,9 @@ void NodePropertiesPanelImpl::ScaleYChanged(wxCommandEvent& event)
 		double newScale;
 		event.GetString().ToDouble(&newScale);
 		scale.y = newScale;
-		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", nodeDesc, nodeDesc->GetScale(), scale));
+		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", nodeDesc, prevScale, scale), commandAdded == false);
 		editorState->sceneChanged(editorState);
+		commandAdded = true;
 	}
 }
 
@@ -163,8 +194,9 @@ void NodePropertiesPanelImpl::ScaleZChanged(wxCommandEvent& event)
 		double newScale;
 		event.GetString().ToDouble(&newScale);
 		scale.z = newScale;
-		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", nodeDesc, nodeDesc->GetScale(), scale));
+		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", nodeDesc, prevScale, scale), commandAdded == false);
 		editorState->sceneChanged(editorState);
+		commandAdded = true;
 	}
 }
 
@@ -181,4 +213,9 @@ void NodePropertiesPanelImpl::NameChanged(wxCommandEvent& event)
 void NodePropertiesPanelImpl::NodeRenamed(NodeDescriptor *node)
 {
 	nameTextCtrl->ChangeValue(node->GetNode()->GetName());
+}
+
+void NodePropertiesPanelImpl::UndoPerformed(Command *command)
+{
+	commandAdded = false;
 }

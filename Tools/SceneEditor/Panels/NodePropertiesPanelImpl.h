@@ -5,6 +5,7 @@
 
 class EditorState;
 class NodeDescriptor;
+class Command;
 
 class NodePropertiesPanelImpl : public NodePropertiesPanel, public FireCube::Object
 {
@@ -14,6 +15,8 @@ public:
 	~NodePropertiesPanelImpl();
 
 	virtual void PositionXChanged(wxCommandEvent& event);
+	virtual void TextSetFocus(wxFocusEvent& event) override;
+	virtual void TextKillFocus(wxFocusEvent& event) override;
 	virtual void PositionYChanged(wxCommandEvent& event);
 	virtual void PositionZChanged(wxCommandEvent& event);
 	virtual void RotationXChanged(wxCommandEvent& event);
@@ -24,9 +27,14 @@ public:
 	virtual void ScaleZChanged(wxCommandEvent& event);
 	virtual void NameChanged(wxCommandEvent& event);
 	void NodeRenamed(NodeDescriptor *node);
-
+	void UndoPerformed(Command *command);
 private:
 	void UpdateUI();
 
 	EditorState *editorState;
+	FireCube::vec3 prevTranslation;
+	FireCube::vec3 prevRotation;
+	FireCube::vec3 prevScale;
+	bool commandAdded;
+
 };

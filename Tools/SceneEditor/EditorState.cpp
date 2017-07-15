@@ -8,7 +8,7 @@ EditorState::EditorState(Engine *engine) : Object(engine), lastExecutedCommand(-
 
 }
 
-void EditorState::ExecuteCommand(Command *command)
+void EditorState::ExecuteCommand(Command *command, bool canUndo)
 {	
 	for (int i = lastExecutedCommand + 1; i < (int)commands.size(); ++i)
 	{
@@ -21,10 +21,17 @@ void EditorState::ExecuteCommand(Command *command)
 	}
 	
 	command->Do();
-	commands.push_back(command);	
-	lastExecutedCommand = commands.size() - 1;
+	if (canUndo)
+	{
+		commands.push_back(command);
+		lastExecutedCommand = commands.size() - 1;
 
-	commandExecuted(this, command);
+		commandExecuted(this, command);
+	}
+	else
+	{
+		delete command;
+	}
 }
 
 void EditorState::Undo()
