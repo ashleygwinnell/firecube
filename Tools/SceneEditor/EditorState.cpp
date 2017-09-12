@@ -8,7 +8,7 @@ EditorState::EditorState(Engine *engine) : Object(engine), lastExecutedCommand(-
 
 }
 
-void EditorState::ExecuteCommand(Command *command, bool canUndo)
+void EditorState::ExecuteCommand(Command *command, Command *commandToReplace)
 {	
 	for (int i = lastExecutedCommand + 1; i < (int)commands.size(); ++i)
 	{
@@ -21,17 +21,20 @@ void EditorState::ExecuteCommand(Command *command, bool canUndo)
 	}
 	
 	command->Do();
-	if (canUndo)
+	
+	if (lastExecutedCommand != -1 && commands[lastExecutedCommand] == commandToReplace)
 	{
-		commands.push_back(command);
-		lastExecutedCommand = commands.size() - 1;
-
-		commandExecuted(this, command);
+		delete commands[lastExecutedCommand];
+		commands[lastExecutedCommand] = command;
 	}
 	else
 	{
-		delete command;
+		commands.push_back(command);
+		lastExecutedCommand = commands.size() - 1;
 	}
+
+	commandExecuted(this, command);
+	
 }
 
 void EditorState::Undo()

@@ -26,7 +26,7 @@
         <property name="ui_table">UI</property>
         <property name="use_enum">0</property>
         <property name="use_microsoft_bom">0</property>
-        <object class="Frame" expanded="1">
+        <object class="Frame" expanded="0">
             <property name="aui_managed">1</property>
             <property name="aui_manager_style">wxAUI_MGR_DEFAULT</property>
             <property name="bg"></property>
@@ -88,7 +88,7 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxMenuBar" expanded="1">
+            <object class="wxMenuBar" expanded="0">
                 <property name="bg"></property>
                 <property name="context_help"></property>
                 <property name="context_menu">1</property>
@@ -252,7 +252,7 @@
                         <event name="OnUpdateUI"></event>
                     </object>
                 </object>
-                <object class="wxMenu" expanded="1">
+                <object class="wxMenu" expanded="0">
                     <property name="label">Add</property>
                     <property name="name">addMenu</property>
                     <property name="permission">protected</property>
@@ -286,7 +286,7 @@
                         <event name="OnMenuSelection">AddMeshClicked</event>
                         <event name="OnUpdateUI"></event>
                     </object>
-                    <object class="submenu" expanded="1">
+                    <object class="submenu" expanded="0">
                         <property name="bitmap"></property>
                         <property name="label">Component</property>
                         <property name="name">m_menu1</property>
@@ -441,7 +441,7 @@
                             <event name="OnMenuSelection">AddParticleEmitterClicked</event>
                             <event name="OnUpdateUI"></event>
                         </object>
-                        <object class="wxMenuItem" expanded="1">
+                        <object class="wxMenuItem" expanded="0">
                             <property name="bitmap"></property>
                             <property name="checked">0</property>
                             <property name="enabled">1</property>
@@ -458,7 +458,7 @@
                         </object>
                     </object>
                 </object>
-                <object class="wxMenu" expanded="1">
+                <object class="wxMenu" expanded="0">
                     <property name="label">View</property>
                     <property name="name">viewMenu</property>
                     <property name="permission">protected</property>
@@ -522,7 +522,7 @@
                         <event name="OnMenuSelection">ViewAssetBrowserClicked</event>
                         <event name="OnUpdateUI"></event>
                     </object>
-                    <object class="wxMenuItem" expanded="1">
+                    <object class="wxMenuItem" expanded="0">
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
                         <property name="enabled">1</property>
@@ -539,7 +539,7 @@
                     </object>
                 </object>
             </object>
-            <object class="wxPanel" expanded="1">
+            <object class="wxPanel" expanded="0">
                 <property name="BottomDockable">1</property>
                 <property name="LeftDockable">1</property>
                 <property name="RightDockable">1</property>
@@ -613,7 +613,7 @@
                 <event name="OnSetFocus"></event>
                 <event name="OnSize"></event>
                 <event name="OnUpdateUI"></event>
-                <object class="wxBoxSizer" expanded="1">
+                <object class="wxBoxSizer" expanded="0">
                     <property name="minimum_size"></property>
                     <property name="name">bSizer2</property>
                     <property name="orient">wxVERTICAL</property>
@@ -1057,7 +1057,7 @@
                     </object>
                 </object>
             </object>
-            <object class="wxToolBar" expanded="1">
+            <object class="wxToolBar" expanded="0">
                 <property name="BottomDockable">1</property>
                 <property name="LeftDockable">1</property>
                 <property name="RightDockable">1</property>
@@ -1136,7 +1136,7 @@
                 <event name="OnSetFocus"></event>
                 <event name="OnSize"></event>
                 <event name="OnUpdateUI"></event>
-                <object class="tool" expanded="1">
+                <object class="tool" expanded="0">
                     <property name="bitmap">Load From File; Data/Icons/move.png</property>
                     <property name="context_menu">0</property>
                     <property name="id">wxID_ANY</property>
@@ -1157,7 +1157,7 @@
                     <event name="OnToolRClicked"></event>
                     <event name="OnUpdateUI"></event>
                 </object>
-                <object class="tool" expanded="1">
+                <object class="tool" expanded="0">
                     <property name="bitmap">Load From File; Data/Icons/loop.png</property>
                     <property name="context_menu">0</property>
                     <property name="id">wxID_ANY</property>
@@ -1178,7 +1178,7 @@
                     <event name="OnToolRClicked"></event>
                     <event name="OnUpdateUI"></event>
                 </object>
-                <object class="tool" expanded="1">
+                <object class="tool" expanded="0">
                     <property name="bitmap">Load From File; Data/Icons/resize.png</property>
                     <property name="context_menu">0</property>
                     <property name="id">wxID_ANY</property>
@@ -1199,7 +1199,7 @@
                     <event name="OnToolRClicked"></event>
                     <event name="OnUpdateUI"></event>
                 </object>
-                <object class="wxChoice" expanded="1">
+                <object class="wxChoice" expanded="0">
                     <property name="BottomDockable">1</property>
                     <property name="LeftDockable">1</property>
                     <property name="RightDockable">1</property>
@@ -2708,7 +2708,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnText"></event>
-                                <event name="OnTextEnter">WidthChanged</event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
                                 <event name="OnUpdateUI"></event>
@@ -2882,7 +2882,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnText"></event>
-                                <event name="OnTextEnter">HeightChanged</event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
                                 <event name="OnUpdateUI"></event>
@@ -3056,7 +3056,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnText"></event>
-                                <event name="OnTextEnter">DepthChanged</event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
                                 <event name="OnUpdateUI"></event>
@@ -3575,7 +3575,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">LightMaskChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -3749,7 +3749,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">CollisionQueryMaskChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -6968,7 +6968,7 @@
                                         <event name="OnEraseBackground"></event>
                                         <event name="OnKeyDown"></event>
                                         <event name="OnKeyUp"></event>
-                                        <event name="OnKillFocus">TextKillFocus</event>
+                                        <event name="OnKillFocus"></event>
                                         <event name="OnLeaveWindow"></event>
                                         <event name="OnLeftDClick"></event>
                                         <event name="OnLeftDown"></event>
@@ -6983,9 +6983,9 @@
                                         <event name="OnRightDClick"></event>
                                         <event name="OnRightDown"></event>
                                         <event name="OnRightUp"></event>
-                                        <event name="OnSetFocus">TextSetFocus</event>
+                                        <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText">PositionXChanged</event>
+                                        <event name="OnText"></event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -7142,7 +7142,7 @@
                                         <event name="OnEraseBackground"></event>
                                         <event name="OnKeyDown"></event>
                                         <event name="OnKeyUp"></event>
-                                        <event name="OnKillFocus">TextKillFocus</event>
+                                        <event name="OnKillFocus"></event>
                                         <event name="OnLeaveWindow"></event>
                                         <event name="OnLeftDClick"></event>
                                         <event name="OnLeftDown"></event>
@@ -7157,9 +7157,9 @@
                                         <event name="OnRightDClick"></event>
                                         <event name="OnRightDown"></event>
                                         <event name="OnRightUp"></event>
-                                        <event name="OnSetFocus">TextSetFocus</event>
+                                        <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText">PositionYChanged</event>
+                                        <event name="OnText"></event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -7316,7 +7316,7 @@
                                         <event name="OnEraseBackground"></event>
                                         <event name="OnKeyDown"></event>
                                         <event name="OnKeyUp"></event>
-                                        <event name="OnKillFocus">TextKillFocus</event>
+                                        <event name="OnKillFocus"></event>
                                         <event name="OnLeaveWindow"></event>
                                         <event name="OnLeftDClick"></event>
                                         <event name="OnLeftDown"></event>
@@ -7331,9 +7331,9 @@
                                         <event name="OnRightDClick"></event>
                                         <event name="OnRightDown"></event>
                                         <event name="OnRightUp"></event>
-                                        <event name="OnSetFocus">TextSetFocus</event>
+                                        <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText">PositionZChanged</event>
+                                        <event name="OnText"></event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -7601,7 +7601,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText">RotationXChanged</event>
+                                        <event name="OnText"></event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -7775,7 +7775,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText">RotationYChanged</event>
+                                        <event name="OnText"></event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -7949,7 +7949,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText">RotationZChanged</event>
+                                        <event name="OnText"></event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -8217,7 +8217,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText">ScaleXChanged</event>
+                                        <event name="OnText"></event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -8391,7 +8391,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText">ScaleYChanged</event>
+                                        <event name="OnText"></event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -8565,7 +8565,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText">ScaleZChanged</event>
+                                        <event name="OnText"></event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -8659,7 +8659,7 @@
                 </object>
             </object>
         </object>
-        <object class="Panel" expanded="1">
+        <object class="Panel" expanded="0">
             <property name="aui_managed">0</property>
             <property name="aui_manager_style">wxAUI_MGR_DEFAULT</property>
             <property name="bg"></property>
@@ -8711,7 +8711,7 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxFlexGridSizer" expanded="1">
+            <object class="wxFlexGridSizer" expanded="0">
                 <property name="cols">2</property>
                 <property name="flexible_direction">wxBOTH</property>
                 <property name="growablecols">0,1</property>
@@ -9565,7 +9565,7 @@
                         </object>
                     </object>
                 </object>
-                <object class="sizeritem" expanded="1">
+                <object class="sizeritem" expanded="0">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">1</property>

@@ -485,25 +485,15 @@ BoxPanel::BoxPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const w
 	fgSizer8->Fit( this );
 	
 	// Connect Events
-	widthTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::WidthChanged ), NULL, this );
-	heightTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::HeightChanged ), NULL, this );
-	depthTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::DepthChanged ), NULL, this );
 	materialFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( BoxPanel::MaterialFileChanged ), NULL, this );
 	castShadowCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( BoxPanel::CastShadowChanged ), NULL, this );
-	lightMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::LightMaskChanged ), NULL, this );
-	collisionQueryMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::CollisionQueryMaskChanged ), NULL, this );
 }
 
 BoxPanel::~BoxPanel()
 {
 	// Disconnect Events
-	widthTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::WidthChanged ), NULL, this );
-	heightTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::HeightChanged ), NULL, this );
-	depthTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::DepthChanged ), NULL, this );
 	materialFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( BoxPanel::MaterialFileChanged ), NULL, this );
 	castShadowCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( BoxPanel::CastShadowChanged ), NULL, this );
-	lightMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::LightMaskChanged ), NULL, this );
-	collisionQueryMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BoxPanel::CollisionQueryMaskChanged ), NULL, this );
 	
 }
 
@@ -883,42 +873,12 @@ NodePropertiesPanel::NodePropertiesPanel( wxWindow* parent, wxWindowID id, const
 	
 	// Connect Events
 	nameTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NodePropertiesPanel::NameChanged ), NULL, this );
-	positionXTextCtrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler( NodePropertiesPanel::TextKillFocus ), NULL, this );
-	positionXTextCtrl->Connect( wxEVT_SET_FOCUS, wxFocusEventHandler( NodePropertiesPanel::TextSetFocus ), NULL, this );
-	positionXTextCtrl->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::PositionXChanged ), NULL, this );
-	positionYTextCtrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler( NodePropertiesPanel::TextKillFocus ), NULL, this );
-	positionYTextCtrl->Connect( wxEVT_SET_FOCUS, wxFocusEventHandler( NodePropertiesPanel::TextSetFocus ), NULL, this );
-	positionYTextCtrl->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::PositionYChanged ), NULL, this );
-	positionZTextCtrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler( NodePropertiesPanel::TextKillFocus ), NULL, this );
-	positionZTextCtrl->Connect( wxEVT_SET_FOCUS, wxFocusEventHandler( NodePropertiesPanel::TextSetFocus ), NULL, this );
-	positionZTextCtrl->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::PositionZChanged ), NULL, this );
-	rotationXTextCtrl->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::RotationXChanged ), NULL, this );
-	rotationYTextCtrl->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::RotationYChanged ), NULL, this );
-	rotationZTextCtrl->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::RotationZChanged ), NULL, this );
-	scaleXTextCtrl->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::ScaleXChanged ), NULL, this );
-	scaleYTextCtrl->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::ScaleYChanged ), NULL, this );
-	scaleZTextCtrl->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::ScaleZChanged ), NULL, this );
 }
 
 NodePropertiesPanel::~NodePropertiesPanel()
 {
 	// Disconnect Events
 	nameTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NodePropertiesPanel::NameChanged ), NULL, this );
-	positionXTextCtrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler( NodePropertiesPanel::TextKillFocus ), NULL, this );
-	positionXTextCtrl->Disconnect( wxEVT_SET_FOCUS, wxFocusEventHandler( NodePropertiesPanel::TextSetFocus ), NULL, this );
-	positionXTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::PositionXChanged ), NULL, this );
-	positionYTextCtrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler( NodePropertiesPanel::TextKillFocus ), NULL, this );
-	positionYTextCtrl->Disconnect( wxEVT_SET_FOCUS, wxFocusEventHandler( NodePropertiesPanel::TextSetFocus ), NULL, this );
-	positionYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::PositionYChanged ), NULL, this );
-	positionZTextCtrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler( NodePropertiesPanel::TextKillFocus ), NULL, this );
-	positionZTextCtrl->Disconnect( wxEVT_SET_FOCUS, wxFocusEventHandler( NodePropertiesPanel::TextSetFocus ), NULL, this );
-	positionZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::PositionZChanged ), NULL, this );
-	rotationXTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::RotationXChanged ), NULL, this );
-	rotationYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::RotationYChanged ), NULL, this );
-	rotationZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::RotationZChanged ), NULL, this );
-	scaleXTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::ScaleXChanged ), NULL, this );
-	scaleYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::ScaleYChanged ), NULL, this );
-	scaleZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( NodePropertiesPanel::ScaleZChanged ), NULL, this );
 	
 }
 

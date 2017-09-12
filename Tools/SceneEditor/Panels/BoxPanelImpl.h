@@ -3,6 +3,8 @@
 #include "../mainframe.h"
 
 class BaseComponentPanelImpl;
+class BoxDescriptor;
+class Command;
 
 class BoxPanelImpl : public BoxPanel, public FireCube::Object
 {
@@ -10,15 +12,17 @@ class BoxPanelImpl : public BoxPanel, public FireCube::Object
 public:
 	BoxPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine);
 	~BoxPanelImpl();
-private:
-	virtual void WidthChanged(wxCommandEvent& event);
-	virtual void HeightChanged(wxCommandEvent& event);
-	virtual void DepthChanged(wxCommandEvent& event);
-	virtual void CastShadowChanged(wxCommandEvent& event);
-	virtual void LightMaskChanged(wxCommandEvent& event);
-	virtual void CollisionQueryMaskChanged(wxCommandEvent& event);
+private:	
+	virtual void CastShadowChanged(wxCommandEvent& event);	
 	virtual void MaterialFileChanged(wxFileDirPickerEvent& event);
 	void UpdateUI();
+	void UndoPerformed(Command *command);
+	
+	FireCube::vec3 prevSize;	
+	bool prevCastShadow;
+	unsigned int prevCollisionQueryMask;
+	unsigned int prevLightMask;
 	
 	BaseComponentPanelImpl *parent;
+	Command *prevCommand;
 };

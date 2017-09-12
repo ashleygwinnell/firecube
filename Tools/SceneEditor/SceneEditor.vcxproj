@@ -190,6 +190,7 @@
     <ClInclude Include="Panels\CameraPanelImpl.h" />
     <ClInclude Include="Panels\CharacterControllerPanelImpl.h" />
     <ClInclude Include="Panels\CollisionShapePanelImpl.h" />
+    <ClInclude Include="Panels\EventBindingHelpers.h" />
     <ClInclude Include="Panels\LightPanelImpl.h" />
     <ClInclude Include="Panels\LuaScriptPanelImpl.h" />
     <ClInclude Include="Panels\MaterialEditorPanelImpl.h" />

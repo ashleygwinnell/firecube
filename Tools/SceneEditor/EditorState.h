@@ -12,7 +12,7 @@ class EditorState : public FireCube::Object
 	FIRECUBE_OBJECT(EditorState)
 public:
 	EditorState(FireCube::Engine *engine);
-	void ExecuteCommand(Command *command, bool canUndo = true);
+	void ExecuteCommand(Command *command, Command *commandToReplace = nullptr);
 	void Undo();
 	void Redo();
 	void SetSelectedNode(NodeDescriptor *selectedNode);

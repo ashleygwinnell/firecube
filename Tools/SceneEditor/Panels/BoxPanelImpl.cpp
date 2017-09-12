@@ -6,99 +6,79 @@
 #include "../Types.h"
 #include "../AssetUtils.h"
 #include "../Descriptors/BoxDescriptor.h"
+#include "EventBindingHelpers.h"
 
 using namespace FireCube;
 
-BoxPanelImpl::BoxPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : BoxPanel(parent), parent(parent), Object(engine)
+BoxPanelImpl::BoxPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : BoxPanel(parent), parent(parent), Object(engine), prevCommand(nullptr)
 {
+	MyApp *theApp = ((MyApp *)wxTheApp);
 	BoxDescriptor *box = static_cast<BoxDescriptor *>(parent->GetComponent());
 	
 	UpdateUI();
 	materialFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials");
 	SubscribeToEvent(box->componentChanged, &BoxPanelImpl::UpdateUI);
+	SubscribeToEvent(theApp->GetEditorState(), theApp->GetEditorState()->undoPerformed, &BoxPanelImpl::UndoPerformed);
+	
+
+	auto sizeGetter = [](BoxDescriptor *box) -> vec3 {
+		return box->GetSize();
+	};
+
+	auto sizeSetter = [engine](BoxDescriptor *box, const vec3 &v) {
+		box->SetSize(v, engine);
+	};
+
+	auto sizeEvtHandler = [this](BoxDescriptor *box, wxCommandEvent &evt) -> vec3 {
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+		vec3 oldSize = box->GetSize();
+
+		if (evt.GetEventObject() == widthTextCtrl)
+		{
+			return vec3(newVal, oldSize.y, oldSize.z);
+		}
+		else if (evt.GetEventObject() == heightTextCtrl)
+		{
+			return vec3(oldSize.x, newVal, oldSize.z);
+		}
+		else if (evt.GetEventObject() == depthTextCtrl)
+		{
+			return vec3(oldSize.x, oldSize.y, newVal);
+		}
+
+		return vec3(0);
+
+	};
+
+	EventBindingHelpers::BindTextCtrl<vec3, BoxDescriptor>(widthTextCtrl, box, engine, theApp->GetEditorState(), "Change Width", sizeGetter, sizeSetter, sizeEvtHandler, prevCommand, prevSize);
+	EventBindingHelpers::BindTextCtrl<vec3, BoxDescriptor>(heightTextCtrl, box, engine, theApp->GetEditorState(), "Change Height", sizeGetter, sizeSetter, sizeEvtHandler, prevCommand, prevSize);
+	EventBindingHelpers::BindTextCtrl<vec3, BoxDescriptor>(depthTextCtrl, box, engine, theApp->GetEditorState(), "Change Depth", sizeGetter, sizeSetter, sizeEvtHandler, prevCommand, prevSize);	
+
+	EventBindingHelpers::BindTextCtrl<unsigned int, BoxDescriptor>(collisionQueryMaskTextCtrl, box, engine, theApp->GetEditorState(), "Change Mask", [](BoxDescriptor *box) -> unsigned int {
+		return box->GetCollisionQueryMask();
+	}, [](BoxDescriptor *box, const unsigned int &mask) {
+		box->SetCollisionQueryMask(mask);
+	}, [](BoxDescriptor *box, wxCommandEvent &evt) -> unsigned int {
+		unsigned long newVal;
+		evt.GetString().ToULong(&newVal);
+		return (unsigned int)newVal;
+	}, prevCommand, prevCollisionQueryMask);
+
+	EventBindingHelpers::BindTextCtrl<unsigned int, BoxDescriptor>(lightMaskTextCtrl, box, engine, theApp->GetEditorState(), "Change Mask", [](BoxDescriptor *box) -> unsigned int {
+		return box->GetLightMask();
+	}, [](BoxDescriptor *box, const unsigned int &mask) {
+		box->SetLightMask(mask);
+	}, [](BoxDescriptor *box, wxCommandEvent &evt) -> unsigned int {
+		unsigned long newVal;
+		evt.GetString().ToULong(&newVal);
+		return (unsigned int)newVal;
+	}, prevCommand, prevLightMask);
 }
 
 BoxPanelImpl::~BoxPanelImpl()
 {
 	
-}
-
-void BoxPanelImpl::WidthChanged(wxCommandEvent& event)
-{
-	BoxDescriptor *box = static_cast<BoxDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	auto engine = theApp->fcApp.GetEngine();
-
-	double x;
-	event.GetString().ToDouble(&x);
-	vec3 oldSize = box->GetSize();
-	vec3 newSize(x, oldSize.y, oldSize.z);	
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Width", [box, newSize, engine]()
-	{
-		box->SetSize(newSize, engine);
-		box->componentChanged(nullptr);
-	}, [box, oldSize, engine]()
-	{
-		box->SetSize(oldSize, engine);
-		box->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void BoxPanelImpl::HeightChanged(wxCommandEvent& event)
-{
-	BoxDescriptor *box = static_cast<BoxDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	auto engine = theApp->fcApp.GetEngine();
-
-	double y;
-	event.GetString().ToDouble(&y);
-	vec3 oldSize = box->GetSize();
-	vec3 newSize(oldSize.x, y, oldSize.z);
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Height", [box, newSize, engine]()
-	{
-		box->SetSize(newSize, engine);
-		box->componentChanged(nullptr);
-	}, [box, oldSize, engine]()
-	{
-		box->SetSize(oldSize, engine);
-		box->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void BoxPanelImpl::DepthChanged(wxCommandEvent& event)
-{
-	BoxDescriptor *box = static_cast<BoxDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	auto engine = theApp->fcApp.GetEngine();
-
-	double z;
-	event.GetString().ToDouble(&z);
-	vec3 oldSize = box->GetSize();
-	vec3 newSize(oldSize.x, oldSize.y, z);
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Depth", [box, newSize, engine]()
-	{
-		box->SetSize(newSize, engine);
-		box->componentChanged(nullptr);
-	}, [box, oldSize, engine]()
-	{
-		box->SetSize(oldSize, engine);
-		box->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
 void BoxPanelImpl::CastShadowChanged(wxCommandEvent& event)
@@ -117,52 +97,6 @@ void BoxPanelImpl::CastShadowChanged(wxCommandEvent& event)
 	}, [box, oldShadow]()
 	{
 		box->SetCastShadow(oldShadow);
-		box->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void BoxPanelImpl::LightMaskChanged(wxCommandEvent& event)
-{
-	BoxDescriptor *box = static_cast<BoxDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	
-	unsigned int newValue = std::stoul(event.GetString().ToStdString(), 0, 16);
-	unsigned int oldValue = box->GetLightMask();
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [box, newValue]()
-	{
-		box->SetLightMask(newValue);
-		box->componentChanged(nullptr);
-	}, [box, oldValue]()
-	{	
-		box->SetLightMask(oldValue);
-		box->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void BoxPanelImpl::CollisionQueryMaskChanged(wxCommandEvent& event)
-{
-	BoxDescriptor *box = static_cast<BoxDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	
-	unsigned int newValue = std::stoul(event.GetString().ToStdString(), 0, 16);
-	unsigned int oldValue = box->GetCollisionQueryMask();
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [box, newValue]()
-	{		
-		box->SetCollisionQueryMask(newValue);
-		box->componentChanged(nullptr);
-	}, [box, oldValue]()
-	{	
-		box->SetCollisionQueryMask(oldValue);
 		box->componentChanged(nullptr);
 	});
 
@@ -212,4 +146,9 @@ void BoxPanelImpl::UpdateUI()
 	collisionQueryMaskTextCtrl->ChangeValue(collisionQueryMaskStream.str());
 
 	materialFilePicker->SetPath(box->GetMaterialFileName());	
+}
+
+void BoxPanelImpl::UndoPerformed(Command *command)
+{
+	prevCommand = nullptr;
 }

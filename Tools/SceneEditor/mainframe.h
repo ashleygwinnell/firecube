@@ -214,13 +214,8 @@ class BoxPanel : public wxPanel
 		wxTextCtrl* collisionQueryMaskTextCtrl;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void WidthChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void HeightChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void DepthChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MaterialFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void CastShadowChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void LightMaskChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void CollisionQueryMaskChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -374,17 +369,6 @@ class NodePropertiesPanel : public wxPanel
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void NameChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void TextKillFocus( wxFocusEvent& event ) { event.Skip(); }
-		virtual void TextSetFocus( wxFocusEvent& event ) { event.Skip(); }
-		virtual void PositionXChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void PositionYChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void PositionZChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void RotationXChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void RotationYChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void RotationZChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void ScaleXChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void ScaleYChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void ScaleZChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

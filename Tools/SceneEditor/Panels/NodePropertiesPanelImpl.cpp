@@ -4,16 +4,119 @@
 #include "../Commands/TransformCommands.h"
 #include "../Commands/RenameNodeCommand.h"
 #include "../Descriptors/NodeDescriptor.h"
+#include "../Panels/EventBindingHelpers.h"
 
 using namespace FireCube;
 
-NodePropertiesPanelImpl::NodePropertiesPanelImpl(wxWindow* parent) : NodePropertiesPanel(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), editorState(((MyApp*)wxTheApp)->GetEditorState()),
-	commandAdded(false)
+NodePropertiesPanelImpl::NodePropertiesPanelImpl(wxWindow* parent) : NodePropertiesPanel(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), editorState(((MyApp*)wxTheApp)->GetEditorState()), 
+	prevCommand(nullptr)
 {
 	SubscribeToEvent(editorState, editorState->nodeChanged, &NodePropertiesPanelImpl::UpdateUI);
 	SubscribeToEvent(editorState, editorState->nodeRenamed, &NodePropertiesPanelImpl::NodeRenamed);
 	SubscribeToEvent(editorState, editorState->undoPerformed, &NodePropertiesPanelImpl::UndoPerformed);
 	UpdateUI();
+
+	auto nodeDesc = editorState->GetSelectedNode();
+
+	auto positionGetter = [](NodeDescriptor *nodeDesc) {
+		return nodeDesc->GetTranslation();
+	};
+
+	auto positionSetter = [](NodeDescriptor *nodeDesc, const vec3 &v) {
+		nodeDesc->SetTranslation(v);
+	};
+
+	auto positionEvtHandler = [this](NodeDescriptor *nodeDesc, wxCommandEvent &evt) {
+		vec3 translation = nodeDesc->GetTranslation();
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+
+		if (evt.GetEventObject() == positionXTextCtrl)
+		{
+			translation.x = newVal;
+		}
+		else if (evt.GetEventObject() == positionYTextCtrl)
+		{
+			translation.y = newVal;
+		}
+		else if (evt.GetEventObject() == positionZTextCtrl)
+		{
+			translation.z = newVal;
+		}
+
+		return translation;
+	};
+
+	EventBindingHelpers::BindTextCtrl<vec3, SetTranslationCommand>(positionXTextCtrl, nodeDesc, engine, editorState, "Translate", positionGetter, positionSetter, positionEvtHandler, prevCommand, prevTranslation);
+	EventBindingHelpers::BindTextCtrl<vec3, SetTranslationCommand>(positionYTextCtrl, nodeDesc, engine, editorState, "Translate", positionGetter, positionSetter, positionEvtHandler, prevCommand, prevTranslation);
+	EventBindingHelpers::BindTextCtrl<vec3, SetTranslationCommand>(positionZTextCtrl, nodeDesc, engine, editorState, "Translate", positionGetter, positionSetter, positionEvtHandler, prevCommand, prevTranslation);
+
+	auto rotationGetter = [](NodeDescriptor *nodeDesc) {
+		return nodeDesc->GetRotation();
+	};
+
+	auto rotationSetter = [](NodeDescriptor *nodeDesc, const vec3 &v) {
+		nodeDesc->SetRotation(v);
+	};
+
+	auto rotationEvtHandler = [this](NodeDescriptor *nodeDesc, wxCommandEvent &evt) {
+		vec3 rotation = nodeDesc->GetRotation();
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+		newVal = newVal / 180.0f * PI;
+
+		if (evt.GetEventObject() == rotationXTextCtrl)
+		{
+			rotation.x = newVal;
+		}
+		else if (evt.GetEventObject() == rotationYTextCtrl)
+		{
+			rotation.y = newVal;
+		}
+		else if (evt.GetEventObject() == rotationZTextCtrl)
+		{
+			rotation.z = newVal;
+		}
+
+		return rotation;
+	};
+
+	EventBindingHelpers::BindTextCtrl<vec3, SetRotationCommand>(rotationXTextCtrl, nodeDesc, engine, editorState, "Rotate", rotationGetter, rotationSetter, rotationEvtHandler, prevCommand, prevRotation);
+	EventBindingHelpers::BindTextCtrl<vec3, SetRotationCommand>(rotationYTextCtrl, nodeDesc, engine, editorState, "Rotate", positionGetter, positionSetter, rotationEvtHandler, prevCommand, prevRotation);
+	EventBindingHelpers::BindTextCtrl<vec3, SetRotationCommand>(rotationZTextCtrl, nodeDesc, engine, editorState, "Rotate", positionGetter, positionSetter, rotationEvtHandler, prevCommand, prevRotation);
+
+	auto scaleGetter = [](NodeDescriptor *nodeDesc) {
+		return nodeDesc->GetScale();
+	};
+
+	auto scaleSetter = [](NodeDescriptor *nodeDesc, const vec3 &v) {
+		nodeDesc->SetScale(v);
+	};
+
+	auto scaleEvtHandler = [this](NodeDescriptor *nodeDesc, wxCommandEvent &evt) {
+		vec3 scale = nodeDesc->GetScale();
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+
+		if (evt.GetEventObject() == scaleXTextCtrl)
+		{
+			scale.x = newVal;
+		}
+		else if (evt.GetEventObject() == scaleYTextCtrl)
+		{
+			scale.y = newVal;
+		}
+		else if (evt.GetEventObject() == scaleZTextCtrl)
+		{
+			scale.z = newVal;
+		}
+
+		return scale;
+	};
+
+	EventBindingHelpers::BindTextCtrl<vec3, SetScaleCommand>(scaleXTextCtrl, nodeDesc, engine, editorState, "Scale", scaleGetter, scaleSetter, scaleEvtHandler, prevCommand, prevScale);
+	EventBindingHelpers::BindTextCtrl<vec3, SetScaleCommand>(scaleYTextCtrl, nodeDesc, engine, editorState, "Scale", scaleGetter, scaleSetter, scaleEvtHandler, prevCommand, prevScale);
+	EventBindingHelpers::BindTextCtrl<vec3, SetScaleCommand>(scaleZTextCtrl, nodeDesc, engine, editorState, "Scale", scaleGetter, scaleSetter, scaleEvtHandler, prevCommand, prevScale);
 }
 
 NodePropertiesPanelImpl::~NodePropertiesPanelImpl()
@@ -44,162 +147,6 @@ void NodePropertiesPanelImpl::UpdateUI()
 	}
 }
 
-void NodePropertiesPanelImpl::TextSetFocus(wxFocusEvent& event)
-{
-	auto nodeDesc = editorState->GetSelectedNode();
-	if (nodeDesc)
-	{
-		prevTranslation = nodeDesc->GetTranslation();		 
-		prevRotation = nodeDesc->GetRotation();
-		prevScale = nodeDesc->GetScale();
-	}
-
-	event.Skip();
-}
-
-void NodePropertiesPanelImpl::TextKillFocus(wxFocusEvent& event)
-{
-	commandAdded = false;
-
-	event.Skip();
-}
-
-
-void NodePropertiesPanelImpl::PositionXChanged(wxCommandEvent& event)
-{
-	auto nodeDesc = editorState->GetSelectedNode();
-	if (nodeDesc)
-	{		
-		vec3 translation = nodeDesc->GetTranslation();
-		double newCoordinate;
-		event.GetString().ToDouble(&newCoordinate);
-		translation.x = newCoordinate;
-		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", nodeDesc, prevTranslation, translation), commandAdded == false);
-		editorState->sceneChanged(editorState);
-		commandAdded = true;
-	}
-}
-
-void NodePropertiesPanelImpl::PositionYChanged(wxCommandEvent& event)
-{
-	auto nodeDesc = editorState->GetSelectedNode();
-	if (nodeDesc)
-	{		
-		vec3 translation = nodeDesc->GetTranslation();
-		double newCoordinate;
-		event.GetString().ToDouble(&newCoordinate);
-		translation.y = newCoordinate;
-		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", nodeDesc, prevTranslation, translation), commandAdded == false);
-		editorState->sceneChanged(editorState);
-		commandAdded = true;
-	}
-}
-
-void NodePropertiesPanelImpl::PositionZChanged(wxCommandEvent& event)
-{
-	auto nodeDesc = editorState->GetSelectedNode();
-	if (nodeDesc)
-	{		
-		vec3 translation = nodeDesc->GetTranslation();
-		double newCoordinate;
-		event.GetString().ToDouble(&newCoordinate);
-		translation.z = newCoordinate;
-		editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", nodeDesc, prevTranslation, translation), commandAdded == false);
-		editorState->sceneChanged(editorState);
-		commandAdded = true;
-	}
-}
-
-void NodePropertiesPanelImpl::RotationXChanged(wxCommandEvent& event)
-{
-	auto nodeDesc = editorState->GetSelectedNode();
-	if (nodeDesc)
-	{		
-		vec3 rotation = nodeDesc->GetRotation();
-		double ang;
-		event.GetString().ToDouble(&ang);
-		rotation.x = ang / 180.0f * PI;
-		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", nodeDesc, prevRotation, rotation), commandAdded == false);
-		editorState->sceneChanged(editorState);
-		commandAdded = true;
-	}
-}
-
-void NodePropertiesPanelImpl::RotationYChanged(wxCommandEvent& event)
-{
-	auto nodeDesc = editorState->GetSelectedNode();
-	if (nodeDesc)
-	{		
-		vec3 rotation = nodeDesc->GetRotation();
-		double ang;
-		event.GetString().ToDouble(&ang);
-		rotation.y = ang / 180.0f * PI;
-		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", nodeDesc, prevRotation, rotation), commandAdded == false);
-		editorState->sceneChanged(editorState);
-		commandAdded = true;
-	}
-}
-
-void NodePropertiesPanelImpl::RotationZChanged(wxCommandEvent& event)
-{
-	auto nodeDesc = editorState->GetSelectedNode();
-	if (nodeDesc)
-	{		
-		vec3 rotation = nodeDesc->GetRotation();
-		double ang;
-		event.GetString().ToDouble(&ang);
-		rotation.z = ang / 180.0f * PI;
-		editorState->ExecuteCommand(new SetRotationCommand(editorState, "Rotate", nodeDesc, prevRotation, rotation), commandAdded == false);
-		editorState->sceneChanged(editorState);
-		commandAdded = true;
-	}
-}
-
-void NodePropertiesPanelImpl::ScaleXChanged(wxCommandEvent& event)
-{
-	auto nodeDesc = editorState->GetSelectedNode();
-	if (nodeDesc)
-	{		
-		vec3 scale = nodeDesc->GetScale();
-		double newScale;
-		event.GetString().ToDouble(&newScale);
-		scale.x = newScale;
-		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", nodeDesc, prevScale, scale), commandAdded == false);
-		editorState->sceneChanged(editorState);
-		commandAdded = true;
-	}
-}
-
-void NodePropertiesPanelImpl::ScaleYChanged(wxCommandEvent& event)
-{
-	auto nodeDesc = editorState->GetSelectedNode();
-	if (nodeDesc)
-	{		
-		vec3 scale = nodeDesc->GetScale();
-		double newScale;
-		event.GetString().ToDouble(&newScale);
-		scale.y = newScale;
-		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", nodeDesc, prevScale, scale), commandAdded == false);
-		editorState->sceneChanged(editorState);
-		commandAdded = true;
-	}
-}
-
-void NodePropertiesPanelImpl::ScaleZChanged(wxCommandEvent& event)
-{
-	auto nodeDesc = editorState->GetSelectedNode();
-	if (nodeDesc)
-	{		
-		vec3 scale = nodeDesc->GetScale();
-		double newScale;
-		event.GetString().ToDouble(&newScale);
-		scale.z = newScale;
-		editorState->ExecuteCommand(new SetScaleCommand(editorState, "Scale", nodeDesc, prevScale, scale), commandAdded == false);
-		editorState->sceneChanged(editorState);
-		commandAdded = true;
-	}
-}
-
 void NodePropertiesPanelImpl::NameChanged(wxCommandEvent& event)
 {
 	auto nodeDesc = editorState->GetSelectedNode();
@@ -217,5 +164,5 @@ void NodePropertiesPanelImpl::NodeRenamed(NodeDescriptor *node)
 
 void NodePropertiesPanelImpl::UndoPerformed(Command *command)
 {
-	commandAdded = false;
+	prevCommand = nullptr;
 }
