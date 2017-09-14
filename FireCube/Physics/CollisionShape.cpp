@@ -231,10 +231,11 @@ void CollisionShape::RenderDebugGeometry(DebugRenderer *debugRenderer)
 		const float cellSize = 1.0f;
 		const int numCells = 20;
 		const float halfSize = numCells * cellSize * 0.5f;
-		vec3 up(0, 1, 0);
-		if (Dot(up, plane.GetNormal()) >= 1.0f - 0.0001f)
+		vec3 up(0, 0, 1);
+		vec3 normalizedPlaneNormal = plane.GetNormal().Normalized();
+		if (Dot(up, normalizedPlaneNormal) >= 1.0f - 0.0001f)
 			up = vec3(0, 1, 0);
-		up = (up - plane.GetNormal() * Dot(up, plane.GetNormal())).Normalized();
+		up = (up - normalizedPlaneNormal * Dot(up, normalizedPlaneNormal)).Normalized();
 		vec3 right = Cross(up, plane.GetNormal()).Normalized();
 		vec3 center = plane.GetNormal() * plane.GetDistance();
 		for (int i = 0; i < numCells + 1; ++i)
