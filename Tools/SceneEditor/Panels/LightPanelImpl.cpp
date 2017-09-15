@@ -46,7 +46,7 @@ LightPanelImpl::LightPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine 
 	}, [](LightDescriptor *light, wxCommandEvent &evt) {
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
-		return (float)newVal;
+		return (float)newVal / 180.0f * PI;
 	}, prevCommand, prevFloatVal);
 
 	EventBindingHelpers::BindTextCtrl<float, LightDescriptor>(shadowIntensityTextCtrl, light, engine, theApp->GetEditorState(), "Change Shadow Intensity", [](LightDescriptor *light) {
