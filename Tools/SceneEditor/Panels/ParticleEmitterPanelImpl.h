@@ -3,6 +3,7 @@
 #include "../mainframe.h"
 
 class BaseComponentPanelImpl;
+class Command;
 
 class ParticleEmitterPanelImpl : public ParticleEmitterPanel, public FireCube::Object
 {
@@ -13,20 +14,16 @@ public:
 private:
 	void UpdateUI();
 	void UpdateVisibility(FireCube::ParticleEmitterShape shape);
-	virtual void ShapeTypeChanged(wxCommandEvent& event);
-	virtual void BBoxWidthChanged(wxCommandEvent& event);
-	virtual void BBoxHeightChanged(wxCommandEvent& event);
-	virtual void BBoxDepthChanged(wxCommandEvent& event);
-	virtual void RadiusChanged(wxCommandEvent& event);
-	virtual void NumberOfParticlesChanged(wxCommandEvent& event);
-	virtual void EmissionRateChanged(wxCommandEvent& event);
-	virtual void MaterialFileChanged(wxFileDirPickerEvent& event);
-	virtual void MinLifeTimeChanged(wxCommandEvent& event);
-	virtual void MaxLifeTimeChanged(wxCommandEvent& event);
-	virtual void MinSpeedChanged(wxCommandEvent& event);
-	virtual void MaxSpeedChanged(wxCommandEvent& event);
-	virtual void PrewarmChanged(wxCommandEvent& event);
-	virtual void SimulationSpaceChanged(wxCommandEvent& event);
+	virtual void ShapeTypeChanged(wxCommandEvent& event) override;
+	virtual void MaterialFileChanged(wxFileDirPickerEvent& event) override;	
+	virtual void PrewarmChanged(wxCommandEvent& event) override;
+	virtual void SimulationSpaceChanged(wxCommandEvent& event) override;
+	void UndoPerformed(Command *command);
 
 	BaseComponentPanelImpl *parent;
+	FireCube::vec3 prevBox;
+	float prevFloatVal;
+	unsigned int prevUIntVal;
+	FireCube::vec2 prevVec2Val;
+	Command *prevCommand;
 };

@@ -6,11 +6,13 @@
 #include "../Types.h"
 #include "../AssetUtils.h"
 #include "../Descriptors/StaticModelDescriptor.h"
+#include "EventBindingHelpers.h"
 
 using namespace FireCube;
 
 StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : StaticModelPanel(parent), parent(parent), Object(engine)
 {
+	MyApp *theApp = ((MyApp *)wxTheApp);
 	StaticModelDescriptor *staticModel = static_cast<StaticModelDescriptor *>(parent->GetComponent());
 	
 	meshFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Models");
@@ -18,6 +20,27 @@ StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent, FireC
 	UpdateUI();
 
 	SubscribeToEvent(staticModel->componentChanged, &StaticModelPanelImpl::UpdateUI);
+	SubscribeToEvent(theApp->GetEditorState(), theApp->GetEditorState()->undoPerformed, &StaticModelPanelImpl::UndoPerformed);
+
+	EventBindingHelpers::BindTextCtrl<unsigned int, StaticModelDescriptor>(collisionQueryMaskTextCtrl, staticModel, engine, theApp->GetEditorState(), "Change Mask", [](StaticModelDescriptor *staticModel) -> unsigned int {
+		return staticModel->GetCollisionQueryMask();
+	}, [](StaticModelDescriptor *staticModel, const unsigned int &mask) {
+		staticModel->SetCollisionQueryMask(mask);
+	}, [](StaticModelDescriptor *staticModel, wxCommandEvent &evt) -> unsigned int {
+		unsigned long newVal;
+		evt.GetString().ToULong(&newVal);
+		return (unsigned int)newVal;
+	}, prevCommand, prevUIntVal);
+
+	EventBindingHelpers::BindTextCtrl<unsigned int, StaticModelDescriptor>(lightMaskTextCtrl, staticModel, engine, theApp->GetEditorState(), "Change Mask", [](StaticModelDescriptor *staticModel) -> unsigned int {
+		return staticModel->GetLightMask();
+	}, [](StaticModelDescriptor *staticModel, const unsigned int &mask) {
+		staticModel->SetLightMask(mask);
+	}, [](StaticModelDescriptor *staticModel, wxCommandEvent &evt) -> unsigned int {
+		unsigned long newVal;
+		evt.GetString().ToULong(&newVal);
+		return (unsigned int)newVal;
+	}, prevCommand, prevUIntVal);
 }
 
 StaticModelPanelImpl::~StaticModelPanelImpl()
@@ -85,52 +108,6 @@ void StaticModelPanelImpl::CastShadowChanged(wxCommandEvent& event)
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
-void StaticModelPanelImpl::LightMaskChanged(wxCommandEvent& event)
-{
-	StaticModelDescriptor *staticModel = static_cast<StaticModelDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	
-	unsigned int newValue = std::stoul(event.GetString().ToStdString(), 0, 16);
-	unsigned int oldValue = staticModel->GetLightMask();
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [staticModel, newValue]()
-	{
-		staticModel->SetLightMask(newValue);	
-		staticModel->componentChanged(nullptr);
-	}, [staticModel, oldValue]()
-	{	
-		staticModel->SetLightMask(oldValue);
-		staticModel->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void StaticModelPanelImpl::CollisionQueryMaskChanged(wxCommandEvent& event)
-{
-	StaticModelDescriptor *staticModel = static_cast<StaticModelDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	
-	unsigned int newValue = std::stoul(event.GetString().ToStdString(), 0, 16);
-	unsigned int oldValue = staticModel->GetCollisionQueryMask();
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [staticModel, newValue]()
-	{		
-		staticModel->SetCollisionQueryMask(newValue);
-		staticModel->componentChanged(nullptr);
-	}, [staticModel, oldValue]()
-	{	
-		staticModel->SetCollisionQueryMask(oldValue);
-		staticModel->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
 void StaticModelPanelImpl::UpdateUI()
 {
 	StaticModelDescriptor *staticModel = static_cast<StaticModelDescriptor *>(parent->GetComponent());	
@@ -145,4 +122,9 @@ void StaticModelPanelImpl::UpdateUI()
 	std::stringstream collisionQueryMaskStream;
 	collisionQueryMaskStream << std::hex << staticModel->GetCollisionQueryMask();
 	collisionQueryMaskTextCtrl->ChangeValue(collisionQueryMaskStream.str());
+}
+
+void StaticModelPanelImpl::UndoPerformed(Command *command)
+{
+	prevCommand = nullptr;
 }

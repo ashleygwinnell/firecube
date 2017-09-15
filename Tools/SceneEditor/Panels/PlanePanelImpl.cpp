@@ -6,11 +6,13 @@
 #include "../Types.h"
 #include "../AssetUtils.h"
 #include "../Descriptors/PlaneDescriptor.h"
+#include "EventBindingHelpers.h"
 
 using namespace FireCube;
 
 PlanePanelImpl::PlanePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : PlanePanel(parent), parent(parent), Object(engine)
 {
+	MyApp *theApp = ((MyApp *)wxTheApp);
 	PlaneDescriptor *plane = static_cast<PlaneDescriptor *>(parent->GetComponent());
 	
 	materialFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials");
@@ -18,63 +20,58 @@ PlanePanelImpl::PlanePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine 
 	UpdateUI();
 
 	SubscribeToEvent(plane->componentChanged, &PlanePanelImpl::UpdateUI);
+	SubscribeToEvent(theApp->GetEditorState(), theApp->GetEditorState()->undoPerformed, &PlanePanelImpl::UndoPerformed);
+
+	EventBindingHelpers::BindTextCtrl<unsigned int, PlaneDescriptor>(collisionQueryMaskTextCtrl, plane, engine, theApp->GetEditorState(), "Change Mask", [](PlaneDescriptor *plane) {
+		return plane->GetCollisionQueryMask();
+	}, [](PlaneDescriptor *plane, const unsigned int &mask) {
+		plane->SetCollisionQueryMask(mask);
+	}, [](PlaneDescriptor *plane, wxCommandEvent &evt) {
+		unsigned long newVal;
+		evt.GetString().ToULong(&newVal);
+		return (unsigned int)newVal;
+	}, prevCommand, prevUIntVal);
+
+	EventBindingHelpers::BindTextCtrl<unsigned int, PlaneDescriptor>(lightMaskTextCtrl, plane, engine, theApp->GetEditorState(), "Change Mask", [](PlaneDescriptor *plane) {
+		return plane->GetLightMask();
+	}, [](PlaneDescriptor *plane, const unsigned int &mask) {
+		plane->SetLightMask(mask);
+	}, [](PlaneDescriptor *plane, wxCommandEvent &evt) {
+		unsigned long newVal;
+		evt.GetString().ToULong(&newVal);
+		return (unsigned int)newVal;
+	}, prevCommand, prevUIntVal);
+
+	auto sizeGetter = [](PlaneDescriptor *plane) {
+		return plane->GetSize();
+	};
+
+	auto sizeSetter = [engine](PlaneDescriptor *plane, const vec2 &size) {
+		return plane->SetSize(size, engine);
+	};
+
+	auto sizeEvtHandler = [this](PlaneDescriptor *plane, wxCommandEvent &evt) {		
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+		if (evt.GetEventObject() == widthTextCtrl) 
+		{
+			return vec2(newVal, plane->GetSize().y);
+		}
+		else if (evt.GetEventObject() == depthTextCtrl)
+		{
+			return vec2(plane->GetSize().x, newVal);
+		}
+		
+		return vec2(0.0f);
+	};
+
+	EventBindingHelpers::BindTextCtrl<vec2, PlaneDescriptor>(widthTextCtrl, plane, engine, theApp->GetEditorState(), "Change Width", sizeGetter,sizeSetter, sizeEvtHandler, prevCommand, prevSize);
+	EventBindingHelpers::BindTextCtrl<vec2, PlaneDescriptor>(depthTextCtrl, plane, engine, theApp->GetEditorState(), "Change Depth", sizeGetter, sizeSetter, sizeEvtHandler, prevCommand, prevSize);
 }
 
 PlanePanelImpl::~PlanePanelImpl()
 {
 
-}
-
-void PlanePanelImpl::WidthChanged(wxCommandEvent& event)
-{
-	PlaneDescriptor *plane = static_cast<PlaneDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	auto engine = theApp->fcApp.GetEngine();
-
-	double x;
-	event.GetString().ToDouble(&x);
-	vec2 oldSize = plane->GetSize();
-	vec2 newSize(x, oldSize.y);
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Width", [plane, newSize, engine]()
-	{
-		plane->SetSize(newSize, engine);
-		plane->componentChanged(nullptr);
-	}, [plane, oldSize, engine]()
-	{
-		plane->SetSize(oldSize, engine);
-		plane->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void PlanePanelImpl::DepthChanged(wxCommandEvent& event)
-{
-	PlaneDescriptor *plane = static_cast<PlaneDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	auto engine = theApp->fcApp.GetEngine();
-
-	double y;
-	event.GetString().ToDouble(&y);
-	vec2 oldSize = plane->GetSize();
-	vec2 newSize(oldSize.x, y);
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Depth", [plane, newSize, engine]()
-	{
-		plane->SetSize(newSize, engine);
-		plane->componentChanged(nullptr);
-	}, [plane, oldSize, engine]()
-	{
-		plane->SetSize(oldSize, engine);
-		plane->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
 void PlanePanelImpl::CastShadowChanged(wxCommandEvent& event)
@@ -93,52 +90,6 @@ void PlanePanelImpl::CastShadowChanged(wxCommandEvent& event)
 	}, [plane, oldShadow]()
 	{
 		plane->SetCastShadow(oldShadow);
-		plane->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void PlanePanelImpl::LightMaskChanged(wxCommandEvent& event)
-{
-	PlaneDescriptor *plane = static_cast<PlaneDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-
-	unsigned int newValue = std::stoul(event.GetString().ToStdString(), 0, 16);
-	unsigned int oldValue = plane->GetLightMask();
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [plane, newValue]()
-	{
-		plane->SetLightMask(newValue);
-		plane->componentChanged(nullptr);
-	}, [plane, oldValue]()
-	{
-		plane->SetLightMask(oldValue);
-		plane->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void PlanePanelImpl::CollisionQueryMaskChanged(wxCommandEvent& event)
-{
-	PlaneDescriptor *plane = static_cast<PlaneDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-
-	unsigned int newValue = std::stoul(event.GetString().ToStdString(), 0, 16);
-	unsigned int oldValue = plane->GetCollisionQueryMask();
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [plane, newValue]()
-	{
-		plane->SetCollisionQueryMask(newValue);
-		plane->componentChanged(nullptr);
-	}, [plane, oldValue]()
-	{
-		plane->SetCollisionQueryMask(oldValue);
 		plane->componentChanged(nullptr);
 	});
 
@@ -187,4 +138,9 @@ void PlanePanelImpl::UpdateUI()
 	collisionQueryMaskTextCtrl->ChangeValue(collisionQueryMaskStream.str());
 
 	materialFilePicker->SetPath(plane->GetMaterialFileName());
+}
+
+void PlanePanelImpl::UndoPerformed(Command *command)
+{
+	prevCommand = nullptr;
 }

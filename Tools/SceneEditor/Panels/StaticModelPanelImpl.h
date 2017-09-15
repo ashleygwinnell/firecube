@@ -3,6 +3,7 @@
 #include "../mainframe.h"
 
 class BaseComponentPanelImpl;
+class Command;
 
 class StaticModelPanelImpl : public StaticModelPanel, public FireCube::Object
 {
@@ -13,9 +14,10 @@ public:
 private:
 	virtual void FileChanged(wxFileDirPickerEvent& event);
 	virtual void CastShadowChanged(wxCommandEvent& event);
-	virtual void LightMaskChanged(wxCommandEvent& event);
-	virtual void CollisionQueryMaskChanged(wxCommandEvent& event);
+	void UndoPerformed(Command *command);
 	void UpdateUI();
 
 	BaseComponentPanelImpl *parent;
+	Command *prevCommand;
+	unsigned int prevUIntVal;	
 };

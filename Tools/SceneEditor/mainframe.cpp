@@ -379,8 +379,6 @@ StaticModelPanel::StaticModelPanel( wxWindow* parent, wxWindowID id, const wxPoi
 	// Connect Events
 	meshFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( StaticModelPanel::FileChanged ), NULL, this );
 	castShadowCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( StaticModelPanel::CastShadowChanged ), NULL, this );
-	lightMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( StaticModelPanel::LightMaskChanged ), NULL, this );
-	collisionQueryMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( StaticModelPanel::CollisionQueryMaskChanged ), NULL, this );
 }
 
 StaticModelPanel::~StaticModelPanel()
@@ -388,8 +386,6 @@ StaticModelPanel::~StaticModelPanel()
 	// Disconnect Events
 	meshFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( StaticModelPanel::FileChanged ), NULL, this );
 	castShadowCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( StaticModelPanel::CastShadowChanged ), NULL, this );
-	lightMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( StaticModelPanel::LightMaskChanged ), NULL, this );
-	collisionQueryMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( StaticModelPanel::CollisionQueryMaskChanged ), NULL, this );
 	
 }
 
@@ -573,25 +569,15 @@ SpherePanel::SpherePanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, c
 	fgSizer9->Fit( this );
 	
 	// Connect Events
-	radiusTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::RadiusChanged ), NULL, this );
-	columnsTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::ColumnsChanged ), NULL, this );
-	ringsTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::RingsChanged ), NULL, this );
 	materialFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( SpherePanel::MaterialFileChanged ), NULL, this );
 	castShadowCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SpherePanel::CastShadowChanged ), NULL, this );
-	lightMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::LightMaskChanged ), NULL, this );
-	collisionQueryMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::CollisionQueryMaskChanged ), NULL, this );
 }
 
 SpherePanel::~SpherePanel()
 {
 	// Disconnect Events
-	radiusTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::RadiusChanged ), NULL, this );
-	columnsTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::ColumnsChanged ), NULL, this );
-	ringsTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::RingsChanged ), NULL, this );
 	materialFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( SpherePanel::MaterialFileChanged ), NULL, this );
 	castShadowCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SpherePanel::CastShadowChanged ), NULL, this );
-	lightMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::LightMaskChanged ), NULL, this );
-	collisionQueryMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( SpherePanel::CollisionQueryMaskChanged ), NULL, this );
 	
 }
 
@@ -675,23 +661,15 @@ PlanePanel::PlanePanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, con
 	fgSizer10->Fit( this );
 	
 	// Connect Events
-	widthTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( PlanePanel::WidthChanged ), NULL, this );
-	depthTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( PlanePanel::DepthChanged ), NULL, this );
 	materialFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( PlanePanel::MaterialFileChanged ), NULL, this );
 	castShadowCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PlanePanel::CastShadowChanged ), NULL, this );
-	lightMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( PlanePanel::LightMaskChanged ), NULL, this );
-	collisionQueryMaskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( PlanePanel::CollisionQueryMaskChanged ), NULL, this );
 }
 
 PlanePanel::~PlanePanel()
 {
 	// Disconnect Events
-	widthTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( PlanePanel::WidthChanged ), NULL, this );
-	depthTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( PlanePanel::DepthChanged ), NULL, this );
 	materialFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( PlanePanel::MaterialFileChanged ), NULL, this );
 	castShadowCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PlanePanel::CastShadowChanged ), NULL, this );
-	lightMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( PlanePanel::LightMaskChanged ), NULL, this );
-	collisionQueryMaskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( PlanePanel::CollisionQueryMaskChanged ), NULL, this );
 	
 }
 
@@ -720,16 +698,10 @@ RigidBodyPanel::RigidBodyPanel( wxWindow* parent, wxWindowID id, const wxPoint& 
 	this->SetSizer( bSizer24 );
 	this->Layout();
 	bSizer24->Fit( this );
-	
-	// Connect Events
-	massTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( RigidBodyPanel::MassChanged ), NULL, this );
 }
 
 RigidBodyPanel::~RigidBodyPanel()
 {
-	// Disconnect Events
-	massTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( RigidBodyPanel::MassChanged ), NULL, this );
-	
 }
 
 NodePropertiesPanel::NodePropertiesPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
@@ -1008,11 +980,7 @@ LightPanel::LightPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, con
 	// Connect Events
 	lightTypeChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( LightPanel::LightTypeChanged ), NULL, this );
 	lightColorPicker->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( LightPanel::LightColorChanged ), NULL, this );
-	maskTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::MaskChanged ), NULL, this );
 	castShadowCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LightPanel::CastShadowChanged ), NULL, this );
-	shadowIntensityTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::ShadowIntensityChanged ), NULL, this );
-	rangeTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::RangeChanged ), NULL, this );
-	spotCutoffTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::SpotCutoffChanged ), NULL, this );
 }
 
 LightPanel::~LightPanel()
@@ -1020,11 +988,7 @@ LightPanel::~LightPanel()
 	// Disconnect Events
 	lightTypeChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( LightPanel::LightTypeChanged ), NULL, this );
 	lightColorPicker->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( LightPanel::LightColorChanged ), NULL, this );
-	maskTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::MaskChanged ), NULL, this );
 	castShadowCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LightPanel::CastShadowChanged ), NULL, this );
-	shadowIntensityTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::ShadowIntensityChanged ), NULL, this );
-	rangeTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::RangeChanged ), NULL, this );
-	spotCutoffTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LightPanel::SpotCutoffChanged ), NULL, this );
 	
 }
 
@@ -1276,18 +1240,7 @@ CollisionShapePanel::CollisionShapePanel( wxWindow* parent, wxWindowID id, const
 	// Connect Events
 	shapeTypeChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CollisionShapePanel::ShapeTypeChanged ), NULL, this );
 	triggerCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CollisionShapePanel::TriggerChanged ), NULL, this );
-	planeXTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneXChanged ), NULL, this );
-	planeYTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneYChanged ), NULL, this );
-	planeZTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneZChanged ), NULL, this );
-	planeWTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneWChanged ), NULL, this );
-	bboxMinXTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMinXChanged ), NULL, this );
-	bboxMinYTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMinYChanged ), NULL, this );
-	bboxMinZTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMinZChanged ), NULL, this );
-	bboxMaxXTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxXChanged ), NULL, this );
-	bboxMaxYTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxYChanged ), NULL, this );
-	bboxMaxZTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxZChanged ), NULL, this );
 	meshFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CollisionShapePanel::MeshFileChanged ), NULL, this );
-	radiusTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::RadiusChanged ), NULL, this );
 }
 
 CollisionShapePanel::~CollisionShapePanel()
@@ -1295,18 +1248,7 @@ CollisionShapePanel::~CollisionShapePanel()
 	// Disconnect Events
 	shapeTypeChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CollisionShapePanel::ShapeTypeChanged ), NULL, this );
 	triggerCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CollisionShapePanel::TriggerChanged ), NULL, this );
-	planeXTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneXChanged ), NULL, this );
-	planeYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneYChanged ), NULL, this );
-	planeZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneZChanged ), NULL, this );
-	planeWTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::PlaneWChanged ), NULL, this );
-	bboxMinXTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMinXChanged ), NULL, this );
-	bboxMinYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMinYChanged ), NULL, this );
-	bboxMinZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMinZChanged ), NULL, this );
-	bboxMaxXTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxXChanged ), NULL, this );
-	bboxMaxYTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxYChanged ), NULL, this );
-	bboxMaxZTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::BBoxMaxZChanged ), NULL, this );
 	meshFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CollisionShapePanel::MeshFileChanged ), NULL, this );
-	radiusTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CollisionShapePanel::RadiusChanged ), NULL, this );
 	
 }
 
@@ -1346,20 +1288,10 @@ CharacterControllerPanel::CharacterControllerPanel( wxWindow* parent, wxWindowID
 	
 	this->SetSizer( fgSizer11 );
 	this->Layout();
-	
-	// Connect Events
-	radiusTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusChanged ), NULL, this );
-	heightTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::HeightChanged ), NULL, this );
-	contactOffsetTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::ContactOffsetChanged ), NULL, this );
 }
 
 CharacterControllerPanel::~CharacterControllerPanel()
 {
-	// Disconnect Events
-	radiusTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::RadiusChanged ), NULL, this );
-	heightTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::HeightChanged ), NULL, this );
-	contactOffsetTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CharacterControllerPanel::ContactOffsetChanged ), NULL, this );
-	
 }
 
 MaterialEditorPanel::MaterialEditorPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
@@ -1730,17 +1662,7 @@ ParticleEmitterPanel::ParticleEmitterPanel( wxWindow* parent, wxWindowID id, con
 	
 	// Connect Events
 	shapeTypeChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ParticleEmitterPanel::ShapeTypeChanged ), NULL, this );
-	bboxWidthTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::BBoxWidthChanged ), NULL, this );
-	bboxHeightTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::BBoxHeightChanged ), NULL, this );
-	bboxDepthTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::BBoxDepthChanged ), NULL, this );
-	radiusTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::RadiusChanged ), NULL, this );
-	numberOfParticlesTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::NumberOfParticlesChanged ), NULL, this );
-	emissionRateTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::EmissionRateChanged ), NULL, this );
 	prewarmCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ParticleEmitterPanel::PrewarmChanged ), NULL, this );
-	minLifeTimeTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinLifeTimeChanged ), NULL, this );
-	maxLifeTimeTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MaxLifeTimeChanged ), NULL, this );
-	minSpeedTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinSpeedChanged ), NULL, this );
-	maxSpeedTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MaxSpeedChanged ), NULL, this );
 	materialFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ParticleEmitterPanel::MaterialFileChanged ), NULL, this );
 	simulationSpaceChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ParticleEmitterPanel::SimulationSpaceChanged ), NULL, this );
 }
@@ -1749,17 +1671,7 @@ ParticleEmitterPanel::~ParticleEmitterPanel()
 {
 	// Disconnect Events
 	shapeTypeChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ParticleEmitterPanel::ShapeTypeChanged ), NULL, this );
-	bboxWidthTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::BBoxWidthChanged ), NULL, this );
-	bboxHeightTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::BBoxHeightChanged ), NULL, this );
-	bboxDepthTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::BBoxDepthChanged ), NULL, this );
-	radiusTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::RadiusChanged ), NULL, this );
-	numberOfParticlesTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::NumberOfParticlesChanged ), NULL, this );
-	emissionRateTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::EmissionRateChanged ), NULL, this );
 	prewarmCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ParticleEmitterPanel::PrewarmChanged ), NULL, this );
-	minLifeTimeTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinLifeTimeChanged ), NULL, this );
-	maxLifeTimeTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MaxLifeTimeChanged ), NULL, this );
-	minSpeedTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MinSpeedChanged ), NULL, this );
-	maxSpeedTextCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ParticleEmitterPanel::MaxSpeedChanged ), NULL, this );
 	materialFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ParticleEmitterPanel::MaterialFileChanged ), NULL, this );
 	simulationSpaceChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ParticleEmitterPanel::SimulationSpaceChanged ), NULL, this );
 	

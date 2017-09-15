@@ -3,6 +3,7 @@
 #include "../mainframe.h"
 
 class BaseComponentPanelImpl;
+class Command;
 
 class LightPanelImpl : public LightPanel, public FireCube::Object
 {
@@ -12,15 +13,15 @@ public:
 	~LightPanelImpl();
 private:	
 	
-	virtual void LightTypeChanged(wxCommandEvent& event);
-	virtual void LightColorChanged(wxColourPickerEvent& event);
-	virtual void CastShadowChanged(wxCommandEvent& event);
-	virtual void ShadowIntensityChanged(wxCommandEvent& event);
-	virtual void RangeChanged(wxCommandEvent& event);
-	virtual void SpotCutoffChanged(wxCommandEvent& event);
-	virtual void MaskChanged(wxCommandEvent& event);
+	virtual void LightTypeChanged(wxCommandEvent& event) override;
+	virtual void LightColorChanged(wxColourPickerEvent& event) override;
+	virtual void CastShadowChanged(wxCommandEvent& event) override;	
 	void UpdatePanelsVisibility(FireCube::LightType type);
+	void UndoPerformed(Command *command);
 	void UpdateUI();
 
 	BaseComponentPanelImpl *parent;
+	Command *prevCommand;
+	unsigned int prevMask;
+	float prevFloatVal;
 };

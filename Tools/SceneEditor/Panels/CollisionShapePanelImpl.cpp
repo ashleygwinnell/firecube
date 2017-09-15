@@ -5,16 +5,116 @@
 #include "../Commands/CustomCommand.h"
 #include "../Types.h"
 #include "../Descriptors/CollisionShapeDescriptor.h"
+#include "EventBindingHelpers.h"
 
 using namespace FireCube;
 
 CollisionShapePanelImpl::CollisionShapePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : CollisionShapePanel(parent), parent(parent), Object(engine)
 {	
+	MyApp *theApp = ((MyApp *)wxTheApp);
  	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
  
  	UpdateUI();
  	
 	SubscribeToEvent(collisionShape->componentChanged, &CollisionShapePanelImpl::UpdateUI);
+	SubscribeToEvent(theApp->GetEditorState(), theApp->GetEditorState()->undoPerformed, &CollisionShapePanelImpl::UndoPerformed);
+
+	auto planeGetter = [](CollisionShapeDescriptor *collisionShape) {
+		return collisionShape->GetPlane();
+	};
+
+	auto planeSetter = [](CollisionShapeDescriptor *collisionShape, const Plane &newVal) {
+		collisionShape->SetPlane(newVal);		
+	};
+
+	auto planeEvtHandler = [this](CollisionShapeDescriptor *collisionShape, wxCommandEvent &evt) {
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+
+		Plane curPlane = collisionShape->GetPlane();
+		if (evt.GetEventObject() == planeXTextCtrl)
+		{
+			curPlane.SetNormal(vec3((float)newVal, curPlane.GetNormal().y, curPlane.GetNormal().z));
+		}
+		else if (evt.GetEventObject() == planeYTextCtrl)
+		{
+			curPlane.SetNormal(vec3(curPlane.GetNormal().x, (float)newVal, curPlane.GetNormal().z));
+		}
+		else if (evt.GetEventObject() == planeZTextCtrl)
+		{
+			curPlane.SetNormal(vec3(curPlane.GetNormal().x, curPlane.GetNormal().y, (float)newVal));
+		}
+		if (evt.GetEventObject() == planeWTextCtrl)
+		{
+			curPlane.SetDistance(newVal);
+		}
+
+		return curPlane;
+	};
+
+	EventBindingHelpers::BindTextCtrl<Plane, CollisionShapeDescriptor>(planeXTextCtrl, collisionShape, engine, theApp->GetEditorState(), "Change Plane", planeGetter, planeSetter, planeEvtHandler, prevCommand, prevPlane);
+	EventBindingHelpers::BindTextCtrl<Plane, CollisionShapeDescriptor>(planeYTextCtrl, collisionShape, engine, theApp->GetEditorState(), "Change Plane", planeGetter, planeSetter, planeEvtHandler, prevCommand, prevPlane);
+	EventBindingHelpers::BindTextCtrl<Plane, CollisionShapeDescriptor>(planeZTextCtrl, collisionShape, engine, theApp->GetEditorState(), "Change Plane", planeGetter, planeSetter, planeEvtHandler, prevCommand, prevPlane);
+	EventBindingHelpers::BindTextCtrl<Plane, CollisionShapeDescriptor>(planeWTextCtrl, collisionShape, engine, theApp->GetEditorState(), "Change Plane", planeGetter, planeSetter, planeEvtHandler, prevCommand, prevPlane);
+
+	auto bboxGetter = [](CollisionShapeDescriptor *collisionShape) {
+		return collisionShape->GetBox();
+	};
+
+	auto bboxSetter = [](CollisionShapeDescriptor *collisionShape, const BoundingBox &newVal) {
+		collisionShape->SetBox(newVal);
+	};
+
+	auto bboxEvtHandler = [this](CollisionShapeDescriptor *collisionShape, wxCommandEvent &evt) {
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+
+		BoundingBox curBox = collisionShape->GetBox();
+		if (evt.GetEventObject() == bboxMinXTextCtrl)
+		{
+			curBox.SetMin(vec3((float)newVal, curBox.GetMin().y, curBox.GetMin().z));
+		}
+		else if (evt.GetEventObject() == bboxMinYTextCtrl)
+		{
+			curBox.SetMin(vec3(curBox.GetMin().x, (float)newVal, curBox.GetMin().z));
+		}
+		else if (evt.GetEventObject() == bboxMinZTextCtrl)
+		{
+			curBox.SetMin(vec3(curBox.GetMin().x, curBox.GetMin().y, (float)newVal));
+		}
+
+		else if (evt.GetEventObject() == bboxMaxXTextCtrl)
+		{
+			curBox.SetMax(vec3((float)newVal, curBox.GetMax().y, curBox.GetMax().z));
+		}
+		else if (evt.GetEventObject() == bboxMaxYTextCtrl)
+		{
+			curBox.SetMax(vec3(curBox.GetMax().x, (float)newVal, curBox.GetMax().z));
+		}
+		else if (evt.GetEventObject() == bboxMaxZTextCtrl)
+		{
+			curBox.SetMax(vec3(curBox.GetMax().x, curBox.GetMax().y, (float)newVal));
+		}
+
+		return curBox;
+	};
+
+	EventBindingHelpers::BindTextCtrl<BoundingBox, CollisionShapeDescriptor>(bboxMinXTextCtrl, collisionShape, engine, theApp->GetEditorState(), "Change Box", bboxGetter, bboxSetter, bboxEvtHandler, prevCommand, prevBoundingBox);
+	EventBindingHelpers::BindTextCtrl<BoundingBox, CollisionShapeDescriptor>(bboxMinYTextCtrl, collisionShape, engine, theApp->GetEditorState(), "Change Box", bboxGetter, bboxSetter, bboxEvtHandler, prevCommand, prevBoundingBox);
+	EventBindingHelpers::BindTextCtrl<BoundingBox, CollisionShapeDescriptor>(bboxMinZTextCtrl, collisionShape, engine, theApp->GetEditorState(), "Change Box", bboxGetter, bboxSetter, bboxEvtHandler, prevCommand, prevBoundingBox);
+	EventBindingHelpers::BindTextCtrl<BoundingBox, CollisionShapeDescriptor>(bboxMaxXTextCtrl, collisionShape, engine, theApp->GetEditorState(), "Change Box", bboxGetter, bboxSetter, bboxEvtHandler, prevCommand, prevBoundingBox);
+	EventBindingHelpers::BindTextCtrl<BoundingBox, CollisionShapeDescriptor>(bboxMaxYTextCtrl, collisionShape, engine, theApp->GetEditorState(), "Change Box", bboxGetter, bboxSetter, bboxEvtHandler, prevCommand, prevBoundingBox);
+	EventBindingHelpers::BindTextCtrl<BoundingBox, CollisionShapeDescriptor>(bboxMaxZTextCtrl, collisionShape, engine, theApp->GetEditorState(), "Change Box", bboxGetter, bboxSetter, bboxEvtHandler, prevCommand, prevBoundingBox);
+
+	EventBindingHelpers::BindTextCtrl<float, CollisionShapeDescriptor>(radiusTextCtrl, collisionShape, engine, theApp->GetEditorState(), "Change Radius", [](CollisionShapeDescriptor *collisionShape) {
+		return collisionShape->GetRadius();
+	}, [](CollisionShapeDescriptor *collisionShape, const float &radius) {
+		collisionShape->SetSphere(radius);
+	}, [](CollisionShapeDescriptor *collisionShape, wxCommandEvent &evt) {
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+		return (float)newVal;
+	}, prevCommand, prevRadius);
 }
 
 CollisionShapePanelImpl::~CollisionShapePanelImpl()
@@ -195,288 +295,6 @@ void CollisionShapePanelImpl::ShapeTypeChanged(wxCommandEvent& event)
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
-void CollisionShapePanelImpl::PlaneXChanged(wxCommandEvent& event)
-{
-	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
-	
-	MyApp *theApp = ((MyApp *)wxTheApp);	
-	double x, y, z, w;		
-	event.GetString().ToDouble(&x);
-	planeYTextCtrl->GetValue().ToDouble(&y);
-	planeZTextCtrl->GetValue().ToDouble(&z);
-	planeWTextCtrl->GetValue().ToDouble(&w);		
-	Plane oldPlane = collisionShape->GetPlane();
-	Plane newPlane(vec3(x, y, z).Normalized(), w);
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [collisionShape, newPlane]()
-	{		
-		collisionShape->SetPlane(newPlane);
-		collisionShape->componentChanged(nullptr);
-	}, [collisionShape, oldPlane]()
-	{		
-		collisionShape->SetPlane(oldPlane);
-		collisionShape->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void CollisionShapePanelImpl::PlaneYChanged(wxCommandEvent& event)
-{
-	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	double x, y, z, w;
-	event.GetString().ToDouble(&y);
-	planeXTextCtrl->GetValue().ToDouble(&x);
-	planeZTextCtrl->GetValue().ToDouble(&z);
-	planeWTextCtrl->GetValue().ToDouble(&w);	
-	Plane oldPlane = collisionShape->GetPlane();
-	Plane newPlane(vec3(x, y, z).Normalized(), w);
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [collisionShape, newPlane]()
-	{		
-		collisionShape->SetPlane(newPlane);
-		collisionShape->componentChanged(nullptr);
-	}, [collisionShape, oldPlane]()
-	{		
-		collisionShape->SetPlane(oldPlane);
-		collisionShape->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void CollisionShapePanelImpl::PlaneZChanged(wxCommandEvent& event)
-{
-	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	double x, y, z, w;
-	event.GetString().ToDouble(&z);
-	planeXTextCtrl->GetValue().ToDouble(&x);
-	planeYTextCtrl->GetValue().ToDouble(&y);	
-	planeWTextCtrl->GetValue().ToDouble(&w);
-	Plane oldPlane = collisionShape->GetPlane();
-	Plane newPlane(vec3(x, y, z).Normalized(), w);
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [collisionShape, newPlane]()
-	{		
-		collisionShape->SetPlane(newPlane);
-		collisionShape->componentChanged(nullptr);
-	}, [collisionShape, oldPlane]()
-	{		
-		collisionShape->SetPlane(oldPlane);
-		collisionShape->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void CollisionShapePanelImpl::PlaneWChanged(wxCommandEvent& event)
-{
-	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	double x, y, z, w;
-	event.GetString().ToDouble(&w);
-	planeXTextCtrl->GetValue().ToDouble(&x);
-	planeYTextCtrl->GetValue().ToDouble(&y);
-	planeZTextCtrl->GetValue().ToDouble(&z);	
-	Plane oldPlane = collisionShape->GetPlane();
-	Plane newPlane(vec3(x, y, z).Normalized(), w);
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Plane", [collisionShape, newPlane]()
-	{		
-		collisionShape->SetPlane(newPlane);
-		collisionShape->componentChanged(nullptr);
-	}, [collisionShape, oldPlane]()
-	{		
-		collisionShape->SetPlane(oldPlane);
-		collisionShape->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void CollisionShapePanelImpl::BBoxMinXChanged(wxCommandEvent& event)
-{
-	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	double minX, minY, minZ, maxX, maxY, maxZ;
-	event.GetString().ToDouble(&minX);
-	bboxMinYTextCtrl->GetValue().ToDouble(&minY);
-	bboxMinZTextCtrl->GetValue().ToDouble(&minZ);
-	bboxMaxXTextCtrl->GetValue().ToDouble(&maxX);
-	bboxMaxYTextCtrl->GetValue().ToDouble(&maxY);
-	bboxMaxZTextCtrl->GetValue().ToDouble(&maxZ);
-	BoundingBox oldBox = collisionShape->GetBox();
-	BoundingBox newBox(vec3(minX, minY, minZ), vec3(maxX, maxY, maxZ));
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
-	{		
-		collisionShape->SetBox(newBox);
-		collisionShape->componentChanged(nullptr);
-	}, [collisionShape, oldBox]()
-	{		
-		collisionShape->SetBox(oldBox);
-		collisionShape->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void CollisionShapePanelImpl::BBoxMinYChanged(wxCommandEvent& event)
-{
-	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	double minX, minY, minZ, maxX, maxY, maxZ;
-	event.GetString().ToDouble(&minY);
-	bboxMinXTextCtrl->GetValue().ToDouble(&minX);
-	bboxMinZTextCtrl->GetValue().ToDouble(&minZ);
-	bboxMaxXTextCtrl->GetValue().ToDouble(&maxX);
-	bboxMaxYTextCtrl->GetValue().ToDouble(&maxY);
-	bboxMaxZTextCtrl->GetValue().ToDouble(&maxZ);
-	BoundingBox oldBox = collisionShape->GetBox();
-	BoundingBox newBox(vec3(minX, minY, minZ), vec3(maxX, maxY, maxZ));
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
-	{
-		collisionShape->SetBox(newBox);
-		collisionShape->componentChanged(nullptr);
-	}, [collisionShape, oldBox]()
-	{
-		collisionShape->SetBox(oldBox);
-		collisionShape->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void CollisionShapePanelImpl::BBoxMinZChanged(wxCommandEvent& event)
-{
-	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	double minX, minY, minZ, maxX, maxY, maxZ;
-	event.GetString().ToDouble(&minZ);
-	bboxMinXTextCtrl->GetValue().ToDouble(&minX);
-	bboxMinYTextCtrl->GetValue().ToDouble(&minY);
-	bboxMaxXTextCtrl->GetValue().ToDouble(&maxX);
-	bboxMaxYTextCtrl->GetValue().ToDouble(&maxY);
-	bboxMaxZTextCtrl->GetValue().ToDouble(&maxZ);
-	BoundingBox oldBox = collisionShape->GetBox();
-	BoundingBox newBox(vec3(minX, minY, minZ), vec3(maxX, maxY, maxZ));
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
-	{
-		collisionShape->SetBox(newBox);
-		collisionShape->componentChanged(nullptr);
-	}, [collisionShape, oldBox]()
-	{
-		collisionShape->SetBox(oldBox);
-		collisionShape->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void CollisionShapePanelImpl::BBoxMaxXChanged(wxCommandEvent& event)
-{
-	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	double minX, minY, minZ, maxX, maxY, maxZ;
-	event.GetString().ToDouble(&maxX);
-	bboxMinXTextCtrl->GetValue().ToDouble(&minX);
-	bboxMinYTextCtrl->GetValue().ToDouble(&minY);
-	bboxMinZTextCtrl->GetValue().ToDouble(&minZ);	
-	bboxMaxYTextCtrl->GetValue().ToDouble(&maxY);
-	bboxMaxZTextCtrl->GetValue().ToDouble(&maxZ);
-	BoundingBox oldBox = collisionShape->GetBox();
-	BoundingBox newBox(vec3(minX, minY, minZ), vec3(maxX, maxY, maxZ));
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
-	{
-		collisionShape->SetBox(newBox);
-		collisionShape->componentChanged(nullptr);
-	}, [collisionShape, oldBox]()
-	{
-		collisionShape->SetBox(oldBox);
-		collisionShape->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void CollisionShapePanelImpl::BBoxMaxYChanged(wxCommandEvent& event)
-{
-	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	double minX, minY, minZ, maxX, maxY, maxZ;
-	event.GetString().ToDouble(&maxY);
-	bboxMinXTextCtrl->GetValue().ToDouble(&minX);
-	bboxMinYTextCtrl->GetValue().ToDouble(&minY);
-	bboxMinZTextCtrl->GetValue().ToDouble(&minZ);
-	bboxMaxXTextCtrl->GetValue().ToDouble(&maxX);
-	bboxMaxZTextCtrl->GetValue().ToDouble(&maxZ);
-	BoundingBox oldBox = collisionShape->GetBox();
-	BoundingBox newBox(vec3(minX, minY, minZ), vec3(maxX, maxY, maxZ));
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
-	{
-		collisionShape->SetBox(newBox);
-		collisionShape->componentChanged(nullptr);
-	}, [collisionShape, oldBox]()
-	{
-		collisionShape->SetBox(oldBox);
-		collisionShape->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void CollisionShapePanelImpl::BBoxMaxZChanged(wxCommandEvent& event)
-{
-	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	double minX, minY, minZ, maxX, maxY, maxZ;
-	event.GetString().ToDouble(&maxZ);
-	bboxMinXTextCtrl->GetValue().ToDouble(&minX);
-	bboxMinYTextCtrl->GetValue().ToDouble(&minY);
-	bboxMinZTextCtrl->GetValue().ToDouble(&minZ);
-	bboxMaxXTextCtrl->GetValue().ToDouble(&maxX);
-	bboxMaxYTextCtrl->GetValue().ToDouble(&maxY);	
-	BoundingBox oldBox = collisionShape->GetBox();
-	BoundingBox newBox(vec3(minX, minY, minZ), vec3(maxX, maxY, maxZ));
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Box", [collisionShape, newBox]()
-	{
-		collisionShape->SetBox(newBox);
-		collisionShape->componentChanged(nullptr);
-	}, [collisionShape, oldBox]()
-	{
-		collisionShape->SetBox(oldBox);
-		collisionShape->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
 void CollisionShapePanelImpl::TriggerChanged(wxCommandEvent& event)
 {
 	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
@@ -523,25 +341,7 @@ void CollisionShapePanelImpl::MeshFileChanged(wxFileDirPickerEvent& event)
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
-void CollisionShapePanelImpl::RadiusChanged(wxCommandEvent& event)
+void CollisionShapePanelImpl::UndoPerformed(Command *command)
 {
-	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	double newRadius;
-	event.GetString().ToDouble(&newRadius);
-	float oldRadius = collisionShape->GetRadius();
-	
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Radius", [collisionShape, newRadius]()
-	{
-		collisionShape->SetSphere(newRadius);
-		collisionShape->componentChanged(nullptr);
-	}, [collisionShape, oldRadius]()
-	{
-		collisionShape->SetSphere(oldRadius);
-		collisionShape->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+	prevCommand = nullptr;
 }

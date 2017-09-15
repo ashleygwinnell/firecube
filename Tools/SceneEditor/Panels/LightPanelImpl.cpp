@@ -5,16 +5,59 @@
 #include "../Commands/CustomCommand.h"
 #include "../Types.h"
 #include "../Descriptors/LightDescriptor.h"
+#include "EventBindingHelpers.h"
 
 using namespace FireCube;
 
 LightPanelImpl::LightPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : LightPanel(parent), parent(parent), Object(engine)
 {	
+	MyApp *theApp = ((MyApp *)wxTheApp);
 	LightDescriptor *light = static_cast<LightDescriptor *>(parent->GetComponent());
 	
 	UpdateUI();
 
 	SubscribeToEvent(light->componentChanged, &LightPanelImpl::UpdateUI);
+	SubscribeToEvent(theApp->GetEditorState(), theApp->GetEditorState()->undoPerformed, &LightPanelImpl::UndoPerformed);
+
+	EventBindingHelpers::BindTextCtrl<unsigned int, LightDescriptor>(maskTextCtrl, light, engine, theApp->GetEditorState(), "Change Mask", [](LightDescriptor *light) {
+		return light->GetLightMask();
+	}, [](LightDescriptor *light, const unsigned int &mask) {
+		light->SetLightMask(mask);
+	}, [](LightDescriptor *light, wxCommandEvent &evt) {
+		unsigned long newVal;
+		evt.GetString().ToULong(&newVal);
+		return (unsigned int)newVal;
+	}, prevCommand, prevMask);
+
+	EventBindingHelpers::BindTextCtrl<float, LightDescriptor>(rangeTextCtrl, light, engine, theApp->GetEditorState(), "Change Range", [](LightDescriptor *light) {
+		return light->GetRange();
+	}, [](LightDescriptor *light, const float &range) {
+		light->SetRange(range);
+	}, [](LightDescriptor *light, wxCommandEvent &evt) {
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+		return (float)newVal;
+	}, prevCommand, prevFloatVal);
+
+	EventBindingHelpers::BindTextCtrl<float, LightDescriptor>(spotCutoffTextCtrl, light, engine, theApp->GetEditorState(), "Change Spot Cutoff", [](LightDescriptor *light) {
+		return light->GetSpotCutOff();
+	}, [](LightDescriptor *light, const float &spotCutoff) {
+		light->SetSpotCutOff(spotCutoff);
+	}, [](LightDescriptor *light, wxCommandEvent &evt) {
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+		return (float)newVal;
+	}, prevCommand, prevFloatVal);
+
+	EventBindingHelpers::BindTextCtrl<float, LightDescriptor>(shadowIntensityTextCtrl, light, engine, theApp->GetEditorState(), "Change Shadow Intensity", [](LightDescriptor *light) {
+		return light->GetShadowIntensity();
+	}, [](LightDescriptor *light, const float &shadowIntensity) {
+		light->SetShadowIntensity(shadowIntensity);
+	}, [](LightDescriptor *light, wxCommandEvent &evt) {
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+		return (float)newVal;
+	}, prevCommand, prevFloatVal);
 }
 
 LightPanelImpl::~LightPanelImpl()
@@ -136,102 +179,6 @@ void LightPanelImpl::CastShadowChanged(wxCommandEvent& event)
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
-void LightPanelImpl::ShadowIntensityChanged(wxCommandEvent& event)
-{
-	LightDescriptor *light = static_cast<LightDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	
-	double newIntensity;
-	event.GetString().ToDouble(&newIntensity);	
-	float oldIntensity = light->GetShadowIntensity();
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Shadow Intensity", [light, newIntensity]()
-	{		
-		light->SetShadowIntensity(newIntensity);
-		light->componentChanged(nullptr);
-	}, [light, oldIntensity]()
-	{		
-		light->SetShadowIntensity(oldIntensity);
-		light->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void LightPanelImpl::RangeChanged(wxCommandEvent& event)
-{
-	LightDescriptor *light = static_cast<LightDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	
-	double newValue;
-	event.GetString().ToDouble(&newValue);
-	float oldValue = light->GetRange();
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Range", [light, newValue]()
-	{	
-		light->SetRange(newValue);
-		light->componentChanged(nullptr);
-	}, [light, oldValue]()
-	{		
-		light->SetRange(oldValue);
-		light->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void LightPanelImpl::SpotCutoffChanged(wxCommandEvent& event)
-{
-	LightDescriptor *light = static_cast<LightDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	
-	double newValue;
-	event.GetString().ToDouble(&newValue);
-	newValue = newValue / 180.0f * PI;
-	float oldValue = light->GetSpotCutOff();
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Spot Cutoff", [light, newValue]()
-	{		
-		light->SetSpotCutOff(newValue);
-		light->componentChanged(nullptr);
-	}, [light, oldValue]()
-	{		
-		light->SetSpotCutOff(oldValue);
-		light->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void LightPanelImpl::MaskChanged(wxCommandEvent& event)
-{	
-	LightDescriptor *light = static_cast<LightDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	
-	unsigned int newValue = std::stoul(event.GetString().ToStdString(), 0, 16);		
-	unsigned int oldValue = light->GetLightMask();
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [light, newValue]()
-	{		
-		light->SetLightMask(newValue);
-		light->componentChanged(nullptr);
-	}, [light, oldValue]()
-	{		
-		light->SetLightMask(oldValue);
-		light->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
 void LightPanelImpl::UpdateUI()
 {
 	LightDescriptor *light = static_cast<LightDescriptor *>(parent->GetComponent());
@@ -262,4 +209,9 @@ void LightPanelImpl::UpdateUI()
 	std::stringstream stream;
 	stream << std::hex << light->GetLightMask();
 	maskTextCtrl->ChangeValue(stream.str());
+}
+
+void LightPanelImpl::UndoPerformed(Command *command)
+{
+	prevCommand = nullptr;
 }

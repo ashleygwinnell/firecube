@@ -3,6 +3,7 @@
 #include "../mainframe.h"
 
 class BaseComponentPanelImpl;
+class Command;
 
 class CharacterControllerPanelImpl : public CharacterControllerPanel, public FireCube::Object
 {
@@ -10,12 +11,11 @@ class CharacterControllerPanelImpl : public CharacterControllerPanel, public Fir
 public:
 	CharacterControllerPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine);
 	~CharacterControllerPanelImpl();
-private:	
-
-	virtual void RadiusChanged(wxCommandEvent& event);
-	virtual void HeightChanged(wxCommandEvent& event);	
-	virtual void ContactOffsetChanged(wxCommandEvent& event);
+private:		
 	void UpdateUI();
+	void UndoPerformed(Command *command);
 
 	BaseComponentPanelImpl *parent;
+	float prevFloatVal;
+	Command *prevCommand;
 };

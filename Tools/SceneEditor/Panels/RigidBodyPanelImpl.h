@@ -3,6 +3,7 @@
 #include "../mainframe.h"
 
 class BaseComponentPanelImpl;
+class Command;
 
 class RigidBodyPanelImpl : public RigidBodyPanel, public FireCube::Object
 {
@@ -11,9 +12,11 @@ public:
 	RigidBodyPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine);
 	~RigidBodyPanelImpl();
 private:
-	virtual void MassChanged(wxCommandEvent& event);	
+	void UndoPerformed(Command *command);
 	void UpdateUI();
 
 	BaseComponentPanelImpl *parent;
+	float prevMass;
+	Command *prevCommand;
 };
 

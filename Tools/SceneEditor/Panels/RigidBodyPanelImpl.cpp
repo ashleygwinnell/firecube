@@ -6,16 +6,29 @@
 #include "../Types.h"
 #include "../AssetUtils.h"
 #include "../Descriptors/RigidBodyDescriptor.h"
+#include "EventBindingHelpers.h"
 
 using namespace FireCube;
 
 RigidBodyPanelImpl::RigidBodyPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : RigidBodyPanel(parent), parent(parent), Object(engine)
 {
+	MyApp *theApp = ((MyApp *)wxTheApp);
 	RigidBodyDescriptor *rigidBody = static_cast<RigidBodyDescriptor *>(parent->GetComponent());
 
 	UpdateUI();
 
 	SubscribeToEvent(rigidBody->componentChanged, &RigidBodyPanelImpl::UpdateUI);
+	SubscribeToEvent(theApp->GetEditorState(), theApp->GetEditorState()->undoPerformed, &RigidBodyPanelImpl::UndoPerformed);
+
+	EventBindingHelpers::BindTextCtrl<float, RigidBodyDescriptor>(massTextCtrl, rigidBody, engine, theApp->GetEditorState(), "Change Mass", [](RigidBodyDescriptor *rigidBody) {
+		return rigidBody->GetMass();
+	}, [](RigidBodyDescriptor *rigidBody, const float &mass) {
+		rigidBody->SetMass(mass);
+	}, [](RigidBodyDescriptor *rigidBody, wxCommandEvent &evt) {
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+		return (float)newVal;
+	}, prevCommand, prevMass);
 }
 
 RigidBodyPanelImpl::~RigidBodyPanelImpl()
@@ -23,34 +36,14 @@ RigidBodyPanelImpl::~RigidBodyPanelImpl()
 
 }
 
-void RigidBodyPanelImpl::MassChanged(wxCommandEvent& event)
-{
-	RigidBodyDescriptor *rigidBody = static_cast<RigidBodyDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);	
-
-	double mass;
-	event.GetString().ToDouble(&mass);
-	float oldMass = rigidBody->GetMass();
-	float newMass = mass;
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mass", [rigidBody, newMass]()
-	{
-		rigidBody->SetMass(newMass);
-		rigidBody->componentChanged(false);
-	}, [rigidBody, oldMass]()
-	{
-		rigidBody->SetMass(oldMass);
-		rigidBody->componentChanged(false);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
 void RigidBodyPanelImpl::UpdateUI()
 {
 	RigidBodyDescriptor *rigidBody = static_cast<RigidBodyDescriptor *>(parent->GetComponent());
 
 	massTextCtrl->ChangeValue(wxString::FromDouble(rigidBody->GetMass()));
+}
+
+void RigidBodyPanelImpl::UndoPerformed(Command *command)
+{
+	prevCommand = nullptr;
 }

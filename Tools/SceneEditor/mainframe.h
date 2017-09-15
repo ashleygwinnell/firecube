@@ -179,8 +179,6 @@ class StaticModelPanel : public wxPanel
 		// Virtual event handlers, overide them in your derived class
 		virtual void FileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void CastShadowChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void LightMaskChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void CollisionQueryMaskChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -251,13 +249,8 @@ class SpherePanel : public wxPanel
 		wxTextCtrl* collisionQueryMaskTextCtrl;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void RadiusChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void ColumnsChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void RingsChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MaterialFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void CastShadowChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void LightMaskChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void CollisionQueryMaskChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -293,12 +286,8 @@ class PlanePanel : public wxPanel
 		wxTextCtrl* collisionQueryMaskTextCtrl;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void WidthChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void DepthChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MaterialFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void CastShadowChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void LightMaskChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void CollisionQueryMaskChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -321,10 +310,6 @@ class RigidBodyPanel : public wxPanel
 	
 	protected:
 		wxTextCtrl* massTextCtrl;
-		
-		// Virtual event handlers, overide them in your derived class
-		virtual void MassChanged( wxCommandEvent& event ) { event.Skip(); }
-		
 	
 	public:
 		wxString massText; 
@@ -414,11 +399,7 @@ class LightPanel : public wxPanel
 		// Virtual event handlers, overide them in your derived class
 		virtual void LightTypeChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void LightColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
-		virtual void MaskChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void CastShadowChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void ShadowIntensityChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void RangeChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void SpotCutoffChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -507,18 +488,7 @@ class CollisionShapePanel : public wxPanel
 		// Virtual event handlers, overide them in your derived class
 		virtual void ShapeTypeChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void TriggerChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void PlaneXChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void PlaneYChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void PlaneZChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void PlaneWChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void BBoxMinXChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void BBoxMinYChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void BBoxMinZChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void BBoxMaxXChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void BBoxMaxYChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void BBoxMaxZChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MeshFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
-		virtual void RadiusChanged( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -553,12 +523,6 @@ class CharacterControllerPanel : public wxPanel
 		wxTextCtrl* heightTextCtrl;
 		wxStaticText* m_staticText45;
 		wxTextCtrl* contactOffsetTextCtrl;
-		
-		// Virtual event handlers, overide them in your derived class
-		virtual void RadiusChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void HeightChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void ContactOffsetChanged( wxCommandEvent& event ) { event.Skip(); }
-		
 	
 	public:
 		wxString radiusText; 
@@ -724,17 +688,7 @@ class ParticleEmitterPanel : public wxPanel
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void ShapeTypeChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void BBoxWidthChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void BBoxHeightChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void BBoxDepthChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void RadiusChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void NumberOfParticlesChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void EmissionRateChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void PrewarmChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void MinLifeTimeChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void MaxLifeTimeChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void MinSpeedChanged( wxCommandEvent& event ) { event.Skip(); }
-		virtual void MaxSpeedChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MaterialFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void SimulationSpaceChanged( wxCommandEvent& event ) { event.Skip(); }
 		

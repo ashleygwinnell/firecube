@@ -6,11 +6,13 @@
 #include "../Types.h"
 #include "../AssetUtils.h"
 #include "../Descriptors/SphereDescriptor.h"
+#include "EventBindingHelpers.h"
 
 using namespace FireCube;
 
 SpherePanelImpl::SpherePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : SpherePanel(parent), parent(parent), Object(engine)
 {
+	MyApp *theApp = ((MyApp *)wxTheApp);
 	SphereDescriptor *sphere = static_cast<SphereDescriptor *>(parent->GetComponent());
 	
 	materialFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials");
@@ -18,89 +20,62 @@ SpherePanelImpl::SpherePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engin
 	UpdateUI();
 
 	SubscribeToEvent(sphere->componentChanged, &SpherePanelImpl::UpdateUI);
+	SubscribeToEvent(theApp->GetEditorState(), theApp->GetEditorState()->undoPerformed, &SpherePanelImpl::UndoPerformed);
+
+	EventBindingHelpers::BindTextCtrl<unsigned int, SphereDescriptor>(collisionQueryMaskTextCtrl, sphere, engine, theApp->GetEditorState(), "Change Mask", [](SphereDescriptor *sphere) {
+		return sphere->GetCollisionQueryMask();
+	}, [](SphereDescriptor *sphere, const unsigned int &mask) {
+		sphere->SetCollisionQueryMask(mask);
+	}, [](SphereDescriptor *sphere, wxCommandEvent &evt) {
+		unsigned long newVal;
+		evt.GetString().ToULong(&newVal);
+		return (unsigned int)newVal;
+	}, prevCommand, prevUIntVal);
+
+	EventBindingHelpers::BindTextCtrl<unsigned int, SphereDescriptor>(lightMaskTextCtrl, sphere, engine, theApp->GetEditorState(), "Change Mask", [](SphereDescriptor *sphere) {
+		return sphere->GetLightMask();
+	}, [](SphereDescriptor *sphere, const unsigned int &mask) {
+		sphere->SetLightMask(mask);
+	}, [](SphereDescriptor *sphere, wxCommandEvent &evt) {
+		unsigned long newVal;
+		evt.GetString().ToULong(&newVal);
+		return (unsigned int)newVal;
+	}, prevCommand, prevUIntVal);
+
+	EventBindingHelpers::BindTextCtrl<float, SphereDescriptor>(radiusTextCtrl, sphere, engine, theApp->GetEditorState(), "Change Radius", [](SphereDescriptor *sphere) {
+		return sphere->GetRadius();
+	}, [engine](SphereDescriptor *sphere, const float &radius) {
+		sphere->SetRadius(radius, engine);
+	}, [](SphereDescriptor *sphere, wxCommandEvent &evt) {
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+		return (float)newVal;
+	}, prevCommand, prevFloatVal);
+
+	EventBindingHelpers::BindTextCtrl<unsigned int, SphereDescriptor>(columnsTextCtrl, sphere, engine, theApp->GetEditorState(), "Change Columns", [](SphereDescriptor *sphere) {
+		return sphere->GetColumns();
+	}, [engine](SphereDescriptor *sphere, const unsigned int &columns) {
+		sphere->SetColumns(columns, engine);
+	}, [](SphereDescriptor *sphere, wxCommandEvent &evt) {
+		unsigned long newVal;
+		evt.GetString().ToULong(&newVal);
+		return (unsigned int)newVal;
+	}, prevCommand, prevUIntVal);
+
+	EventBindingHelpers::BindTextCtrl<unsigned int, SphereDescriptor>(ringsTextCtrl, sphere, engine, theApp->GetEditorState(), "Change Rings", [](SphereDescriptor *sphere) {
+		return sphere->GetRings();
+	}, [engine](SphereDescriptor *sphere, const unsigned int &rings) {
+		sphere->SetRings(rings, engine);
+	}, [](SphereDescriptor *sphere, wxCommandEvent &evt) {
+		unsigned long newVal;
+		evt.GetString().ToULong(&newVal);
+		return (unsigned int)newVal;
+	}, prevCommand, prevUIntVal);
 }
 
 SpherePanelImpl::~SpherePanelImpl()
 {
 
-}
-
-void SpherePanelImpl::RadiusChanged(wxCommandEvent& event)
-{
-	SphereDescriptor *sphere = static_cast<SphereDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	auto engine = theApp->fcApp.GetEngine();
-
-	double r;
-	event.GetString().ToDouble(&r);
-	float oldRadius = sphere->GetRadius();
-	float newRadius = r;
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Radius", [sphere, newRadius, engine]()
-	{
-		sphere->SetRadius(newRadius, engine);
-		sphere->componentChanged(nullptr);
-	}, [sphere, oldRadius, engine]()
-	{
-		sphere->SetRadius(oldRadius, engine);
-		sphere->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void SpherePanelImpl::ColumnsChanged(wxCommandEvent& event)
-{
-	SphereDescriptor *sphere = static_cast<SphereDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	auto engine = theApp->fcApp.GetEngine();
-
-	unsigned long columns;
-	event.GetString().ToULong(&columns);
-	unsigned int oldColumns = sphere->GetColumns();
-	unsigned int newColumns = columns;
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Columns", [sphere, newColumns, engine]()
-	{
-		sphere->SetColumns(newColumns, engine);
-		sphere->componentChanged(nullptr);
-	}, [sphere, oldColumns, engine]()
-	{
-		sphere->SetColumns(oldColumns, engine);
-		sphere->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void SpherePanelImpl::RingsChanged(wxCommandEvent& event)
-{
-	SphereDescriptor *sphere = static_cast<SphereDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	auto engine = theApp->fcApp.GetEngine();
-
-	unsigned long rings;
-	event.GetString().ToULong(&rings);
-	unsigned int oldRings = sphere->GetRings();
-	unsigned int newRings = rings;
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Rings", [sphere, newRings, engine]()
-	{
-		sphere->SetRings(newRings, engine);
-		sphere->componentChanged(nullptr);
-	}, [sphere, oldRings, engine]()
-	{
-		sphere->SetRings(oldRings, engine);
-		sphere->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
 void SpherePanelImpl::CastShadowChanged(wxCommandEvent& event)
@@ -119,52 +94,6 @@ void SpherePanelImpl::CastShadowChanged(wxCommandEvent& event)
 	}, [sphere, oldShadow]()
 	{
 		sphere->SetCastShadow(oldShadow);
-		sphere->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void SpherePanelImpl::LightMaskChanged(wxCommandEvent& event)
-{
-	SphereDescriptor *sphere = static_cast<SphereDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-
-	unsigned int newValue = std::stoul(event.GetString().ToStdString(), 0, 16);
-	unsigned int oldValue = sphere->GetLightMask();
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [sphere, newValue]()
-	{
-		sphere->SetLightMask(newValue);
-		sphere->componentChanged(nullptr);
-	}, [sphere, oldValue]()
-	{
-		sphere->SetLightMask(oldValue);
-		sphere->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void SpherePanelImpl::CollisionQueryMaskChanged(wxCommandEvent& event)
-{
-	SphereDescriptor *sphere = static_cast<SphereDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-
-	unsigned int newValue = std::stoul(event.GetString().ToStdString(), 0, 16);
-	unsigned int oldValue = sphere->GetCollisionQueryMask();
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Mask", [sphere, newValue]()
-	{
-		sphere->SetCollisionQueryMask(newValue);
-		sphere->componentChanged(nullptr);
-	}, [sphere, oldValue]()
-	{
-		sphere->SetCollisionQueryMask(oldValue);
 		sphere->componentChanged(nullptr);
 	});
 
@@ -214,4 +143,9 @@ void SpherePanelImpl::UpdateUI()
 	collisionQueryMaskTextCtrl->ChangeValue(collisionQueryMaskStream.str());
 
 	materialFilePicker->SetPath(sphere->GetMaterialFileName());
+}
+
+void SpherePanelImpl::UndoPerformed(Command *command)
+{
+	prevCommand = nullptr;
 }

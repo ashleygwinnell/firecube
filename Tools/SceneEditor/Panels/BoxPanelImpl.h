@@ -19,7 +19,6 @@ private:
 	void UndoPerformed(Command *command);
 	
 	FireCube::vec3 prevSize;	
-	bool prevCastShadow;
 	unsigned int prevCollisionQueryMask;
 	unsigned int prevLightMask;
 	

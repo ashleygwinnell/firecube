@@ -5,93 +5,54 @@
 #include "../Commands/CustomCommand.h"
 #include "../Types.h"
 #include "../Descriptors/CharacterControllerDescriptor.h"
+#include "EventBindingHelpers.h"
 
 using namespace FireCube;
 
 CharacterControllerPanelImpl::CharacterControllerPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : CharacterControllerPanel(parent), parent(parent), Object(engine)
 {
+	MyApp *theApp = ((MyApp *)wxTheApp);
 	CharacterControllerDescriptor *characterController = static_cast<CharacterControllerDescriptor *>(parent->GetComponent());
 	
 	UpdateUI();
 
 	SubscribeToEvent(characterController->componentChanged, &CharacterControllerPanelImpl::UpdateUI);
+	SubscribeToEvent(theApp->GetEditorState(), theApp->GetEditorState()->undoPerformed, &CharacterControllerPanelImpl::UndoPerformed);
+
+	EventBindingHelpers::BindTextCtrl<float, CharacterControllerDescriptor>(radiusTextCtrl, characterController, engine, theApp->GetEditorState(), "Change Radius", [](CharacterControllerDescriptor *characterController) {
+		return characterController->GetRadius();
+	}, [](CharacterControllerDescriptor *characterController, const float &newVal) {
+		characterController->SetRadius(newVal);
+	}, [](CharacterControllerDescriptor *characterController, wxCommandEvent &evt) {
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+		return (float)newVal;
+	}, prevCommand, prevFloatVal);
+
+	EventBindingHelpers::BindTextCtrl<float, CharacterControllerDescriptor>(heightTextCtrl, characterController, engine, theApp->GetEditorState(), "Change Height", [](CharacterControllerDescriptor *characterController) {
+		return characterController->GetHeight();
+	}, [](CharacterControllerDescriptor *characterController, const float &newVal) {
+		characterController->SetHeight(newVal);
+	}, [](CharacterControllerDescriptor *characterController, wxCommandEvent &evt) {
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+		return (float)newVal;
+	}, prevCommand, prevFloatVal);
+
+	EventBindingHelpers::BindTextCtrl<float, CharacterControllerDescriptor>(contactOffsetTextCtrl, characterController, engine, theApp->GetEditorState(), "Change Contact Offset", [](CharacterControllerDescriptor *characterController) {
+		return characterController->GetContactOffset();
+	}, [](CharacterControllerDescriptor *characterController, const float &newVal) {
+		characterController->SetContactOffset(newVal);
+	}, [](CharacterControllerDescriptor *characterController, wxCommandEvent &evt) {
+		double newVal;
+		evt.GetString().ToDouble(&newVal);
+		return (float)newVal;
+	}, prevCommand, prevFloatVal);
 }
 
 CharacterControllerPanelImpl::~CharacterControllerPanelImpl()
 {
 
-}
-
-void CharacterControllerPanelImpl::RadiusChanged(wxCommandEvent& event)
-{
-	CharacterControllerDescriptor *characterController = static_cast<CharacterControllerDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	double val;
-	event.GetString().ToDouble(&val);
-	float oldRadius = characterController->GetRadius();
-	float newRadius = val;
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Radius", [characterController, newRadius]()
-	{				
-		characterController->SetRadius(newRadius);
-		characterController->componentChanged(nullptr);
-	}, [characterController, oldRadius]()
-	{		
-		characterController->SetRadius(oldRadius);
-		characterController->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void CharacterControllerPanelImpl::HeightChanged(wxCommandEvent& event)
-{
-	CharacterControllerDescriptor *characterController = static_cast<CharacterControllerDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	double val;
-	event.GetString().ToDouble(&val);
-	float oldHeight = characterController->GetHeight();
-	float newHeight = val;
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Height", [characterController, newHeight]()
-	{		
-		characterController->SetHeight(newHeight);
-		characterController->componentChanged(nullptr);
-	}, [characterController, oldHeight]()
-	{	
-		characterController->SetHeight(oldHeight);
-		characterController->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void CharacterControllerPanelImpl::ContactOffsetChanged(wxCommandEvent& event)
-{
-	CharacterControllerDescriptor *characterController = static_cast<CharacterControllerDescriptor *>(parent->GetComponent());
-
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	double val;
-	event.GetString().ToDouble(&val);
-	float oldContactOffset = characterController->GetContactOffset();
-	float newContactOffset = val;
-
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Contact Offset", [characterController, newContactOffset]()
-	{	
-		characterController->SetContactOffset(newContactOffset);
-		characterController->componentChanged(nullptr);
-	}, [characterController, oldContactOffset]()
-	{		
-		characterController->SetContactOffset(oldContactOffset);
-		characterController->componentChanged(nullptr);
-	});
-
-	theApp->GetEditorState()->ExecuteCommand(command);
-	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
 }
 
 void CharacterControllerPanelImpl::UpdateUI()
@@ -100,5 +61,10 @@ void CharacterControllerPanelImpl::UpdateUI()
 	radiusTextCtrl->ChangeValue(wxString::FromDouble(characterController->GetRadius()));
 	heightTextCtrl->ChangeValue(wxString::FromDouble(characterController->GetHeight()));
 	contactOffsetTextCtrl->ChangeValue(wxString::FromDouble(characterController->GetContactOffset()));
+}
+
+void CharacterControllerPanelImpl::UndoPerformed(Command *command)
+{
+	prevCommand = nullptr;
 }
 

@@ -2202,7 +2202,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">LightMaskChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -2376,7 +2376,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">CollisionQueryMaskChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -3989,7 +3989,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">RadiusChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -4163,7 +4163,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">ColumnsChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -4337,7 +4337,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">RingsChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -4854,7 +4854,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">LightMaskChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -5028,7 +5028,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">CollisionQueryMaskChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -5360,7 +5360,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnText"></event>
-                                <event name="OnTextEnter">WidthChanged</event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
                                 <event name="OnUpdateUI"></event>
@@ -5534,7 +5534,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnText"></event>
-                                <event name="OnTextEnter">DepthChanged</event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
                                 <event name="OnUpdateUI"></event>
@@ -6053,7 +6053,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">LightMaskChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -6227,7 +6227,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">CollisionQueryMaskChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -6469,7 +6469,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnText"></event>
-                                <event name="OnTextEnter">MassChanged</event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
                                 <event name="OnUpdateUI"></event>
@@ -9263,7 +9263,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnText"></event>
-                                <event name="OnTextEnter">MaskChanged</event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
                                 <event name="OnUpdateUI"></event>
@@ -9557,7 +9557,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnText"></event>
-                                <event name="OnTextEnter">ShadowIntensityChanged</event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
                                 <event name="OnUpdateUI"></event>
@@ -9816,7 +9816,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">RangeChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -10076,7 +10076,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">SpotCutoffChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -11622,7 +11622,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">PlaneXChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -11796,7 +11796,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">PlaneYChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -11970,7 +11970,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">PlaneZChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -12144,7 +12144,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">PlaneWChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -12494,7 +12494,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">BBoxMinXChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -12668,7 +12668,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">BBoxMinYChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -12842,7 +12842,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">BBoxMinZChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -13016,7 +13016,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">BBoxMaxXChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -13190,7 +13190,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">BBoxMaxYChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -13364,7 +13364,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">BBoxMaxZChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -13713,7 +13713,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">RadiusChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -13953,7 +13953,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">RadiusChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -14127,7 +14127,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">HeightChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -14301,7 +14301,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">ContactOffsetChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -16736,7 +16736,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">BBoxWidthChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -16910,7 +16910,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">BBoxHeightChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -17084,7 +17084,7 @@
                                     <event name="OnSetFocus"></event>
                                     <event name="OnSize"></event>
                                     <event name="OnText"></event>
-                                    <event name="OnTextEnter">BBoxDepthChanged</event>
+                                    <event name="OnTextEnter"></event>
                                     <event name="OnTextMaxLen"></event>
                                     <event name="OnTextURL"></event>
                                     <event name="OnUpdateUI"></event>
@@ -17261,7 +17261,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">RadiusChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -17435,7 +17435,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">NumberOfParticlesChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -17609,7 +17609,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter">EmissionRateChanged</event>
+                        <event name="OnTextEnter"></event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>
@@ -18046,7 +18046,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnText"></event>
-                                <event name="OnTextEnter">MinLifeTimeChanged</event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
                                 <event name="OnUpdateUI"></event>
@@ -18220,7 +18220,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnText"></event>
-                                <event name="OnTextEnter">MaxLifeTimeChanged</event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
                                 <event name="OnUpdateUI"></event>
@@ -18488,7 +18488,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnText"></event>
-                                <event name="OnTextEnter">MinSpeedChanged</event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
                                 <event name="OnUpdateUI"></event>
@@ -18662,7 +18662,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnText"></event>
-                                <event name="OnTextEnter">MaxSpeedChanged</event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
                                 <event name="OnUpdateUI"></event>
@@ -19015,7 +19015,7 @@
                 </object>
             </object>
         </object>
-        <object class="Panel" expanded="1">
+        <object class="Panel" expanded="0">
             <property name="aui_managed">0</property>
             <property name="aui_manager_style">wxAUI_MGR_DEFAULT</property>
             <property name="bg"></property>
@@ -19067,7 +19067,7 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxFlexGridSizer" expanded="1">
+            <object class="wxFlexGridSizer" expanded="0">
                 <property name="cols">2</property>
                 <property name="flexible_direction">wxBOTH</property>
                 <property name="growablecols">1</property>
