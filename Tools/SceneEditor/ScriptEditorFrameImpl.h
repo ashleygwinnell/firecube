@@ -2,6 +2,7 @@
 
 #include "mainframe.h"
 #include "wx/stc/stc.h"
+#include "wx/fdrepdlg.h"
 
 class PageInfo
 {
@@ -14,6 +15,7 @@ class ScriptEditorFrameImpl : public ScriptEditorFrame
 {
 public:	
 	ScriptEditorFrameImpl(wxWindow* parent);
+	~ScriptEditorFrameImpl();
 
 	void OpenFile(const std::string &filename);
 
@@ -30,6 +32,10 @@ private:
 	virtual void OnNotebookPageChanged(wxAuiNotebookEvent& event) override;
 	void SaveScript();
 	void UpdateTitle();
+	void OnFindDialog(wxFindDialogEvent& event);
 	
 	std::vector<PageInfo> currentPages;
+	wxFindReplaceData findReplaceData;
+	wxFindReplaceDialog *findReplaceDlg;
+	wxStyledTextCtrl *sourceText;
 };

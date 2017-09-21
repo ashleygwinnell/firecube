@@ -10,9 +10,15 @@ enum
 	MARGIN_FOLD
 };
 
-ScriptEditorFrameImpl::ScriptEditorFrameImpl(wxWindow* parent) : ScriptEditorFrame(parent)
+ScriptEditorFrameImpl::ScriptEditorFrameImpl(wxWindow* parent) : ScriptEditorFrame(parent), findReplaceDlg(nullptr)
+{	
+	Bind(wxEVT_FIND, &ScriptEditorFrameImpl::OnFindDialog, this);
+	Bind(wxEVT_FIND_NEXT, &ScriptEditorFrameImpl::OnFindDialog, this);
+}
+
+ScriptEditorFrameImpl::~ScriptEditorFrameImpl()
 {
-	
+	delete findReplaceDlg;
 }
 
 void ScriptEditorFrameImpl::OpenFile(const std::string &filename)
@@ -41,7 +47,7 @@ void ScriptEditorFrameImpl::NewTab(const std::string &filename, const std::strin
 	auto panel = new wxPanel(notebook);
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 	
-	auto sourceText = new wxStyledTextCtrl(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER, wxEmptyString);
+	sourceText = new wxStyledTextCtrl(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER, wxEmptyString);
 	sourceText->SetUseTabs(true);
 	sourceText->SetTabWidth(4);
 	sourceText->SetIndent(4);
@@ -265,6 +271,13 @@ void ScriptEditorFrameImpl::OnKeyDown(wxKeyEvent& event)
 	{
 		event.Skip();
 	}
+
+	if (event.GetKeyCode() == 'F' && event.ControlDown())
+	{				
+		delete findReplaceDlg;
+		findReplaceDlg = new wxFindReplaceDialog(this, &findReplaceData, "Find");
+		findReplaceDlg->Show();
+	}
 }
 
 void ScriptEditorFrameImpl::SaveClicked(wxCommandEvent& event)
@@ -306,4 +319,39 @@ void ScriptEditorFrameImpl::OnNotebookPageClose(wxAuiNotebookEvent& event)
 	{
 		SetTitle("Script Editor");
 	}
+}
+
+void ScriptEditorFrameImpl::OnFindDialog(wxFindDialogEvent& event)
+{
+	if (event.GetEventType() == wxEVT_FIND || event.GetEventType() == wxEVT_FIND_NEXT)
+	{
+		int pos = -1;
+		if (event.GetFlags() & wxFR_DOWN)
+		{
+			sourceText->CharRight();
+			sourceText->SearchAnchor();
+			int pos = sourceText->SearchNext(0, event.GetFindString());
+			if (pos != -1)
+			{
+				int line = sourceText->LineFromPosition(pos);
+				if (!sourceText->GetLineVisible(line))
+				{
+					sourceText->ScrollToLine(line);
+				}
+			}
+		}
+		else
+		{
+			sourceText->SearchAnchor();
+			int pos = sourceText->SearchPrev(0, event.GetFindString());
+			if (pos != -1)
+			{
+				int line = sourceText->LineFromPosition(pos);
+				if (!sourceText->GetLineVisible(line))
+				{
+					sourceText->ScrollToLine(line);
+				}
+			}
+		}
+	}	
 }
