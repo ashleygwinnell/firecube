@@ -25,19 +25,19 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3
 	// Front
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, -halfSize.y, halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 0, 1);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, -halfSize.y, halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 0, 1);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, halfSize.y, halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 0, 1);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, halfSize.y, halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 0, 1);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
 	currentVertex++;
 	indices[0] = currentVertex - 4;
 	indices[1] = currentVertex - 3;
@@ -49,19 +49,19 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3
 	// Back
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, -halfSize.y, -halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 0, -1);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, -halfSize.y, -halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 0, -1);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, halfSize.y, -halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 0, -1);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, halfSize.y, -halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 0, -1);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
 	currentVertex++;
 	indices[6] = currentVertex - 4;
 	indices[7] = currentVertex - 3;
@@ -73,19 +73,19 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3
 	// Left
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, -halfSize.y, -halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(-1, 0, 0);
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, -halfSize.y, halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(-1, 0, 0);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, halfSize.y, -halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(-1, 0, 0);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, halfSize.y, halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(-1, 0, 0);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
 	currentVertex++;
 	indices[12] = currentVertex - 4;
 	indices[13] = currentVertex - 3;
@@ -97,19 +97,19 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3
 	// Right
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, -halfSize.y, halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(1, 0, 0);
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, -halfSize.y, -halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(1, 0, 0);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, halfSize.y, halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(1, 0, 0);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, halfSize.y, -halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(1, 0, 0);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
 	currentVertex++;
 	indices[18] = currentVertex - 4;
 	indices[19] = currentVertex - 3;
@@ -121,19 +121,19 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3
 	// Top
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, halfSize.y, halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 1, 0);
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, halfSize.y, halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 1, 0);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, halfSize.y, -halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 1, 0);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, halfSize.y, -halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 1, 0);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
 	currentVertex++;
 	indices[24] = currentVertex - 4;
 	indices[25] = currentVertex - 3;
@@ -145,19 +145,19 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateBox(Engine *engine, const vec3
 	// Bottom
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, -halfSize.y, -halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, -1, 0);
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, -halfSize.y, -halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, -1, 0);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(-halfSize.x, -halfSize.y, halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, -1, 0);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 0.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(0.0f, 1.0f);
 	currentVertex++;
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3(halfSize.x, -halfSize.y, halfSize.z);
 	*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, -1, 0);	
-	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 0.0f);
+	*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f, 1.0f);
 	currentVertex++;
 	indices[30] = currentVertex - 4;
 	indices[31] = currentVertex - 3;
@@ -207,7 +207,7 @@ Geometry *FIRECUBE_API GeometryGenerator::GenerateSphere(Engine *engine, float r
 		for(unsigned column = 0; column < columns + 1 ; column++)
 		{
 			vec3 pos(-r0 * std::sin(column * fDeltacolumnAngle), y0, -r0 * std::cos(column * fDeltacolumnAngle));
-			vec2 uv(column / (float)columns, ring / (float) rings);
+			vec2 uv(column / (float)columns, 1.0f - (ring / (float) rings));
 
 			*((vec3 *) &vertexData[currentVertex * vertexSize + 0]) = pos * radius;
 			*((vec3 *) &vertexData[currentVertex * vertexSize + 3]) = pos.Normalized();
@@ -401,7 +401,7 @@ Geometry *GeometryGenerator::GenerateCylinder(Engine *engine, float bottomRadius
 						
 			*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = pos;
 			*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = normal;
-			*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(u, v);
+			*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2(1.0f - u, v);
 			currentVertex++;
 		}
 	}
