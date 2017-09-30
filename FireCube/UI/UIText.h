@@ -42,6 +42,7 @@ public:
 private:
 
 	virtual void GetParts(std::vector<UIPart> &parts, std::vector<UIVertex> &vertexData) override;
+	void UpdateData();
 
 	FontFace *fontFace;	
 	std::string text;

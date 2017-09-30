@@ -35,15 +35,32 @@ void UIText::SetFontFace(FontFace *fontFace)
 
 void UIText::SetText(const std::string &text)
 {
+	this->text = text;
+	UpdateData();
+}
+
+void UIText::SetColor(vec4 color)
+{
+	this->color = color;
+	UpdateData();
+}
+
+vec4 UIText::GetColor() const
+{
+	return color;
+}
+
+void UIText::UpdateData()
+{
 	if (!fontFace || text.empty())
 		return;
-	
+
 	vertexData.resize(text.size() * 6);
-	
+
 	int numTris = 0;
-	
+
 	vec2 initialPosition = GetScreenPosition();
-	vec2 curPos = initialPosition;	
+	vec2 curPos = initialPosition;
 	char previous = 0;
 	for (std::string::const_iterator i = text.begin(); i != text.end(); i++)
 	{
@@ -91,20 +108,10 @@ void UIText::SetText(const std::string &text)
 			vertexData[numTris * 3 + 2].color = color;
 			numTris++;
 
-			curPos.x += fontFace->glyph[c].advance;			
+			curPos.x += fontFace->glyph[c].advance;
 			previous = c;
-		}		
-	}	
+		}
+	}
 
 	vertexData.resize(numTris * 3);
-}
-
-void UIText::SetColor(vec4 color)
-{
-	this->color = color;
-}
-
-vec4 UIText::GetColor() const
-{
-	return color;
 }
