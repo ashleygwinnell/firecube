@@ -14,7 +14,7 @@ class FIRECUBE_API UIText : public UIElement
 {
 	FIRECUBE_OBJECT(UIText);
 public:
-	UIText(Engine *engine, UIElement *parent);
+	UIText(Engine *engine);
 	~UIText();	
 	
 	/**

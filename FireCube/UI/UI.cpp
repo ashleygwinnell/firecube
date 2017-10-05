@@ -11,7 +11,7 @@
 
 using namespace FireCube;
 
-UI::UI(Engine *engine) : Object(engine), root(new UIElement(engine, nullptr))
+UI::UI(Engine *engine) : Object(engine), root(new UIElement(engine))
 {
 	vertexBuffer = new VertexBuffer(engine->GetRenderer());
 }

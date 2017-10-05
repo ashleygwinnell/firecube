@@ -3,7 +3,7 @@
 #include "Rendering/Texture2D.h"
 using namespace FireCube;
 
-UIImage::UIImage(Engine *engine, UIElement *parent) : UIElement(engine, parent), texture(nullptr)
+UIImage::UIImage(Engine *engine) : UIElement(engine), texture(nullptr)
 {
 
 }

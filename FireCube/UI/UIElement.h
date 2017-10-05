@@ -19,18 +19,22 @@ class FIRECUBE_API UIElement : public Object
 	friend class UI;
 	FIRECUBE_OBJECT(UIElement);
 public:
-	UIElement(Engine *engine, UIElement *parent);
+	UIElement(Engine *engine);
 	virtual ~UIElement();
 	
 	std::vector<UIElement *> &GetChildren();
 	void SetPosition(vec2 position);
 	vec2 GetPosition() const;
 	vec2 GetScreenPosition();
+	void Remove();
+	void AddChild(UIElement *element);
+	UIElement *GetParent();
+	void SetParent(UIElement *parent);
 
 	template <class T, typename... Args> T* CreateChild(Args... args)
 	{
-		T *child = new T(engine, this, args...);
-		children.push_back(child);
+		T *child = new T(engine, args...);
+		AddChild(child);
 		return child;
 	}
 	

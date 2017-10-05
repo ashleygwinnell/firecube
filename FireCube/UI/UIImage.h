@@ -14,7 +14,7 @@ namespace FireCube
 	{
 		FIRECUBE_OBJECT(UIImage);
 	public:
-		UIImage(Engine *engine, UIElement *parent);
+		UIImage(Engine *engine);
 		~UIImage();
 		
 		/**

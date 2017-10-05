@@ -3,7 +3,7 @@
 
 using namespace FireCube;
 
-UIText::UIText(Engine *engine, UIElement *parent) : UIElement(engine, parent), color(1.0f)
+UIText::UIText(Engine *engine) : UIElement(engine), color(1.0f)
 {	
 	
 }

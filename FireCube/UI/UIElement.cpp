@@ -2,7 +2,7 @@
 
 using namespace FireCube;
 
-UIElement::UIElement(Engine *engine, UIElement *parent) : Object(engine), parent(parent), position(0.0f), screenPosition(0.0f), positionChanged(false)
+UIElement::UIElement(Engine *engine) : Object(engine), parent(nullptr), position(0.0f), screenPosition(0.0f), positionChanged(false)
 {
 
 }
@@ -52,4 +52,38 @@ vec2 UIElement::GetScreenPosition()
 	}
 
 	return screenPosition;
+}
+
+void UIElement::Remove()
+{
+	if (parent)
+	{
+		parent->children.erase(std::remove(parent->children.begin(), parent->children.end(), this), parent->children.end());
+		parent = nullptr;
+	}
+}
+
+void UIElement::AddChild(UIElement *element)
+{
+	element->Remove();
+
+	element->parent = this;
+	this->children.push_back(element);
+}
+
+UIElement *UIElement::GetParent()
+{
+	return parent;
+}
+
+void UIElement::SetParent(UIElement *parent)
+{
+	Remove();
+	
+	this->parent = parent;
+
+	if (this->parent)
+	{
+		this->parent->children.push_back(this);
+	}
 }
