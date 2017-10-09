@@ -114,6 +114,8 @@ public:
 	*/
 	float GetPassedTime() const;
 
+	static void SetTimeScale(float timeScale);
+
 protected:
 	Renderer *renderer;	
 	ResourceCache *resourceCache;
@@ -142,6 +144,7 @@ private:
 
 	SDL_Window *mainWindow;
 	SDL_GLContext *context;
+	static float timeScale;
 };
 }
 #pragma warning(pop)

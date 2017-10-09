@@ -14,6 +14,8 @@
 
 using namespace FireCube;
 
+float Application::timeScale = 1.0f;
+
 Application::Application() : Object(new Engine), running(false), frameCount(0), fpsTime(0), fps(0), context(nullptr), mainWindow(nullptr), appInitialized(false), passedTime(0.0f)
 {
 	
@@ -139,7 +141,7 @@ void Application::Run()
 	while (running)
 	{
 		// Get time passed since last frame
-		deltaTime = (float) timer.Passed();
+		deltaTime = (float) timer.Passed() * Application::timeScale;
 		passedTime += deltaTime;
 		timer.Update();
 		inputManager.ResetInputState();
@@ -403,5 +405,10 @@ void Application::ProcessInput(const SDL_Event &event)
 		// Set the corresponding analog values of the input manager (mouse wheel)
 		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_WHEEL_Y_RELATIVE, ((float)event.wheel.y) / 60.0f);
 	}
+}
+
+void Application::SetTimeScale(float timeScale)
+{
+	Application::timeScale = timeScale;
 }
 
