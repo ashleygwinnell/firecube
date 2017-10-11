@@ -451,7 +451,7 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		}
 		else if (projection == "perspective")
 		{
-			float fov = Variant::FromString(e->Attribute("left")).GetFloat();
+			float fov = Variant::FromString(e->Attribute("fov")).GetFloat();
 			component->SetPerspectiveProjectionParameters(fov, 1.0f, nearPlane, farPlane);
 		}
 	}
