@@ -203,11 +203,11 @@ bool TranslateGizmo::CheckOperationStart(FireCube::Scene *scene, NodeDescriptor 
 		Node *node = result.renderable->GetNode();		
 		if (currentNode->GetNode()->GetParent())
 		{
-			parentRotationQuat = currentNode->GetNode()->GetParent()->GetWorldRotation();
+			parentRotationInverseQuat = currentNode->GetNode()->GetParent()->GetWorldRotation().Conjugate();
 		}
 		else
 		{
-			parentRotationQuat.Identity();
+			parentRotationInverseQuat.Identity();
 		}
 		currentAxis = node->GetName();
 		dragStart = query.ray.origin + query.ray.direction * result.distance;
@@ -323,10 +323,8 @@ void TranslateGizmo::PerformOperation(FireCube::Ray ray, FireCube::vec2 mousePos
 			std::modf(translation.y, &translation.y);
 			std::modf(translation.z, &translation.z);
 		}
-
-		quat temp = parentRotationQuat;
-		temp.Conjugate();
-		translation = temp * translation;
+		
+		translation = parentRotationInverseQuat * translation;
 		endPosition = startPosition + translation;
 		currentNode->SetTranslation(endPosition);		
 		node->SetTranslation(currentNode->GetNode()->GetWorldPosition());
