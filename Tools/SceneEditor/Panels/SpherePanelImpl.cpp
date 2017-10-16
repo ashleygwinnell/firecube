@@ -10,7 +10,7 @@
 
 using namespace FireCube;
 
-SpherePanelImpl::SpherePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : SpherePanel(parent), parent(parent), Object(engine)
+SpherePanelImpl::SpherePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : SpherePanel(parent), parent(parent), Object(engine), skipUiUpdate(false)
 {
 	MyApp *theApp = ((MyApp *)wxTheApp);
 	SphereDescriptor *sphere = static_cast<SphereDescriptor *>(parent->GetComponent());
@@ -26,7 +26,8 @@ SpherePanelImpl::SpherePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engin
 		return sphere->GetCollisionQueryMask();
 	}, [](SphereDescriptor *sphere, const unsigned int &mask) {
 		sphere->SetCollisionQueryMask(mask);
-	}, [](SphereDescriptor *sphere, wxCommandEvent &evt) {
+	}, [this](SphereDescriptor *sphere, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		unsigned long newVal;
 		evt.GetString().ToULong(&newVal);
 		return (unsigned int)newVal;
@@ -36,7 +37,8 @@ SpherePanelImpl::SpherePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engin
 		return sphere->GetLightMask();
 	}, [](SphereDescriptor *sphere, const unsigned int &mask) {
 		sphere->SetLightMask(mask);
-	}, [](SphereDescriptor *sphere, wxCommandEvent &evt) {
+	}, [this](SphereDescriptor *sphere, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		unsigned long newVal;
 		evt.GetString().ToULong(&newVal);
 		return (unsigned int)newVal;
@@ -46,7 +48,8 @@ SpherePanelImpl::SpherePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engin
 		return sphere->GetRadius();
 	}, [engine](SphereDescriptor *sphere, const float &radius) {
 		sphere->SetRadius(radius, engine);
-	}, [](SphereDescriptor *sphere, wxCommandEvent &evt) {
+	}, [this](SphereDescriptor *sphere, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		return (float)newVal;
@@ -56,7 +59,8 @@ SpherePanelImpl::SpherePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engin
 		return sphere->GetColumns();
 	}, [engine](SphereDescriptor *sphere, const unsigned int &columns) {
 		sphere->SetColumns(columns, engine);
-	}, [](SphereDescriptor *sphere, wxCommandEvent &evt) {
+	}, [this](SphereDescriptor *sphere, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		unsigned long newVal;
 		evt.GetString().ToULong(&newVal);
 		return (unsigned int)newVal;
@@ -66,7 +70,8 @@ SpherePanelImpl::SpherePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engin
 		return sphere->GetRings();
 	}, [engine](SphereDescriptor *sphere, const unsigned int &rings) {
 		sphere->SetRings(rings, engine);
-	}, [](SphereDescriptor *sphere, wxCommandEvent &evt) {
+	}, [this](SphereDescriptor *sphere, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		unsigned long newVal;
 		evt.GetString().ToULong(&newVal);
 		return (unsigned int)newVal;
@@ -127,6 +132,11 @@ void SpherePanelImpl::MaterialFileChanged(wxFileDirPickerEvent& event)
 
 void SpherePanelImpl::UpdateUI()
 {
+	if (skipUiUpdate)
+	{
+		skipUiUpdate = false;
+		return;
+	}
 	SphereDescriptor *sphere = static_cast<SphereDescriptor *>(parent->GetComponent());
 
 	radiusTextCtrl->ChangeValue(wxString::FromDouble(sphere->GetRadius()));

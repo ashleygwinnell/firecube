@@ -10,7 +10,7 @@
 
 using namespace FireCube;
 
-RigidBodyPanelImpl::RigidBodyPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : RigidBodyPanel(parent), parent(parent), Object(engine)
+RigidBodyPanelImpl::RigidBodyPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : RigidBodyPanel(parent), parent(parent), Object(engine), skipUiUpdate(false)
 {
 	MyApp *theApp = ((MyApp *)wxTheApp);
 	RigidBodyDescriptor *rigidBody = static_cast<RigidBodyDescriptor *>(parent->GetComponent());
@@ -24,7 +24,8 @@ RigidBodyPanelImpl::RigidBodyPanelImpl(BaseComponentPanelImpl* parent, FireCube:
 		return rigidBody->GetMass();
 	}, [](RigidBodyDescriptor *rigidBody, const float &mass) {
 		rigidBody->SetMass(mass);
-	}, [](RigidBodyDescriptor *rigidBody, wxCommandEvent &evt) {
+	}, [this](RigidBodyDescriptor *rigidBody, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		return (float)newVal;
@@ -38,6 +39,11 @@ RigidBodyPanelImpl::~RigidBodyPanelImpl()
 
 void RigidBodyPanelImpl::UpdateUI()
 {
+	if (skipUiUpdate)
+	{
+		skipUiUpdate = false;
+		return;
+	}
 	RigidBodyDescriptor *rigidBody = static_cast<RigidBodyDescriptor *>(parent->GetComponent());
 
 	massTextCtrl->ChangeValue(wxString::FromDouble(rigidBody->GetMass()));

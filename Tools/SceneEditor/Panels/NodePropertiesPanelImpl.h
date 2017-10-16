@@ -25,5 +25,6 @@ private:
 	FireCube::vec3 prevRotation;
 	FireCube::vec3 prevScale;
 	Command *prevCommand;
+	bool skipUiUpdate;
 
 };

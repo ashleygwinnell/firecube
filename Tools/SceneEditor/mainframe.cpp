@@ -412,7 +412,7 @@ BoxPanel::BoxPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const w
 	widthTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	widthTextCtrl->SetMinSize( wxSize( 1,-1 ) );
 	
-	widthTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &widthText ) );
+	widthTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &widthText ) );
 	
 	bSizer66->Add( widthTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
 	
@@ -424,7 +424,7 @@ BoxPanel::BoxPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const w
 	heightTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	heightTextCtrl->SetMinSize( wxSize( 1,-1 ) );
 	
-	heightTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &heightText ) );
+	heightTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &heightText ) );
 	
 	bSizer66->Add( heightTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
 	
@@ -436,7 +436,7 @@ BoxPanel::BoxPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const w
 	depthTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	depthTextCtrl->SetMinSize( wxSize( 1,-1 ) );
 	
-	depthTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &depthText ) );
+	depthTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &depthText ) );
 	
 	bSizer66->Add( depthTextCtrl, 1, wxALIGN_CENTER|wxALL, 5 );
 	
@@ -507,7 +507,7 @@ SpherePanel::SpherePanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, c
 	fgSizer9->Add( m_staticText2, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	radiusTextCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
-	radiusTextCtrl->SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC, &radiusText ) );
+	radiusTextCtrl->SetValidator( wxTextValidator( wxFILTER_NUMERIC, &radiusText ) );
 	
 	fgSizer9->Add( radiusTextCtrl, 1, wxALL|wxEXPAND, 5 );
 	

@@ -9,7 +9,7 @@
 using namespace FireCube;
 
 NodePropertiesPanelImpl::NodePropertiesPanelImpl(wxWindow* parent) : NodePropertiesPanel(parent), Object(((MyApp*)wxTheApp)->fcApp.GetEngine()), editorState(((MyApp*)wxTheApp)->GetEditorState()), 
-	prevCommand(nullptr)
+	prevCommand(nullptr), skipUiUpdate(false)
 {
 	SubscribeToEvent(editorState, editorState->nodeChanged, &NodePropertiesPanelImpl::UpdateUI);
 	SubscribeToEvent(editorState, editorState->nodeRenamed, &NodePropertiesPanelImpl::NodeRenamed);
@@ -27,6 +27,7 @@ NodePropertiesPanelImpl::NodePropertiesPanelImpl(wxWindow* parent) : NodePropert
 	};
 
 	auto positionEvtHandler = [this](NodeDescriptor *nodeDesc, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		vec3 translation = nodeDesc->GetTranslation();
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
@@ -60,6 +61,7 @@ NodePropertiesPanelImpl::NodePropertiesPanelImpl(wxWindow* parent) : NodePropert
 	};
 
 	auto rotationEvtHandler = [this](NodeDescriptor *nodeDesc, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		vec3 rotation = nodeDesc->GetRotation();
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
@@ -94,6 +96,7 @@ NodePropertiesPanelImpl::NodePropertiesPanelImpl(wxWindow* parent) : NodePropert
 	};
 
 	auto scaleEvtHandler = [this](NodeDescriptor *nodeDesc, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		vec3 scale = nodeDesc->GetScale();
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
@@ -126,6 +129,11 @@ NodePropertiesPanelImpl::~NodePropertiesPanelImpl()
 
 void NodePropertiesPanelImpl::UpdateUI()
 {
+	if (skipUiUpdate)
+	{
+		skipUiUpdate = false;
+		return;
+	}
 	auto nodeDesc = editorState->GetSelectedNode();
 	if (nodeDesc)
 	{

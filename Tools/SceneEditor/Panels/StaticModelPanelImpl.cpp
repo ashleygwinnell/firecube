@@ -10,7 +10,7 @@
 
 using namespace FireCube;
 
-StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : StaticModelPanel(parent), parent(parent), Object(engine)
+StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : StaticModelPanel(parent), parent(parent), Object(engine), skipUiUpdate(false)
 {
 	MyApp *theApp = ((MyApp *)wxTheApp);
 	StaticModelDescriptor *staticModel = static_cast<StaticModelDescriptor *>(parent->GetComponent());
@@ -26,7 +26,8 @@ StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent, FireC
 		return staticModel->GetCollisionQueryMask();
 	}, [](StaticModelDescriptor *staticModel, const unsigned int &mask) {
 		staticModel->SetCollisionQueryMask(mask);
-	}, [](StaticModelDescriptor *staticModel, wxCommandEvent &evt) -> unsigned int {
+	}, [this](StaticModelDescriptor *staticModel, wxCommandEvent &evt) -> unsigned int {
+		skipUiUpdate = true;
 		unsigned long newVal;
 		evt.GetString().ToULong(&newVal);
 		return (unsigned int)newVal;
@@ -36,7 +37,8 @@ StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent, FireC
 		return staticModel->GetLightMask();
 	}, [](StaticModelDescriptor *staticModel, const unsigned int &mask) {
 		staticModel->SetLightMask(mask);
-	}, [](StaticModelDescriptor *staticModel, wxCommandEvent &evt) -> unsigned int {
+	}, [this](StaticModelDescriptor *staticModel, wxCommandEvent &evt) -> unsigned int {
+		skipUiUpdate = true;
 		unsigned long newVal;
 		evt.GetString().ToULong(&newVal);
 		return (unsigned int)newVal;
@@ -110,6 +112,11 @@ void StaticModelPanelImpl::CastShadowChanged(wxCommandEvent& event)
 
 void StaticModelPanelImpl::UpdateUI()
 {
+	if (skipUiUpdate)
+	{
+		skipUiUpdate = false;
+		return;
+	}
 	StaticModelDescriptor *staticModel = static_cast<StaticModelDescriptor *>(parent->GetComponent());	
 
 	meshFilePicker->SetPath(staticModel->GetMeshFilename());

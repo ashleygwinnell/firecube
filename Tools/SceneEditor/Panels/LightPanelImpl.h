@@ -24,4 +24,5 @@ private:
 	Command *prevCommand;
 	unsigned int prevMask;
 	float prevFloatVal;
+	bool skipUiUpdate;
 };

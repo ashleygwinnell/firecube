@@ -10,7 +10,7 @@
 
 using namespace FireCube;
 
-ParticleEmitterPanelImpl::ParticleEmitterPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : ParticleEmitterPanel(parent), parent(parent), Object(engine)
+ParticleEmitterPanelImpl::ParticleEmitterPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : ParticleEmitterPanel(parent), parent(parent), Object(engine), skipUiUpdate(false)
 {
 	MyApp *theApp = ((MyApp *)wxTheApp);
 	ParticleEmitterDescriptor *particleEmitter = static_cast<ParticleEmitterDescriptor *>(parent->GetComponent());
@@ -24,7 +24,8 @@ ParticleEmitterPanelImpl::ParticleEmitterPanelImpl(BaseComponentPanelImpl* paren
 		return particleEmitter->GetRadius();
 	}, [](ParticleEmitterDescriptor *particleEmitter, const float &radius) {
 		particleEmitter->SetSphereEmitter(radius);
-	}, [](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
+	}, [this](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		return (float)newVal;
@@ -39,6 +40,7 @@ ParticleEmitterPanelImpl::ParticleEmitterPanelImpl(BaseComponentPanelImpl* paren
 	};
 
 	auto boxEvtHandler = [this](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		vec3 curBox = particleEmitter->GetBox();
@@ -66,7 +68,8 @@ ParticleEmitterPanelImpl::ParticleEmitterPanelImpl(BaseComponentPanelImpl* paren
 		return particleEmitter->GetNumberOfParticles();
 	}, [](ParticleEmitterDescriptor *particleEmitter, const unsigned int &newVal) {
 		particleEmitter->SetNumberOfParticles(newVal);
-	}, [](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
+	}, [this](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		unsigned long newVal;
 		evt.GetString().ToULong(&newVal);
 		return (unsigned int)newVal;
@@ -76,7 +79,8 @@ ParticleEmitterPanelImpl::ParticleEmitterPanelImpl(BaseComponentPanelImpl* paren
 		return particleEmitter->GetEmissionRate();
 	}, [](ParticleEmitterDescriptor *particleEmitter, const unsigned int &newVal) {
 		particleEmitter->SetEmissionRate(newVal);
-	}, [](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
+	}, [this](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		unsigned long newVal;
 		evt.GetString().ToULong(&newVal);
 		return (unsigned int)newVal;
@@ -91,6 +95,7 @@ ParticleEmitterPanelImpl::ParticleEmitterPanelImpl(BaseComponentPanelImpl* paren
 	};
 
 	auto lifeTimeEvtHandler = [this](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		vec2 curLifeTime = vec2(particleEmitter->GetMinLifeTime(), particleEmitter->GetMaxLifeTime());
@@ -118,6 +123,7 @@ ParticleEmitterPanelImpl::ParticleEmitterPanelImpl(BaseComponentPanelImpl* paren
 	};
 
 	auto speedEvtHandler = [this](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		vec2 curSpeed = vec2(particleEmitter->GetMinSpeed(), particleEmitter->GetMaxSpeed());
@@ -144,6 +150,11 @@ ParticleEmitterPanelImpl::~ParticleEmitterPanelImpl()
 
 void ParticleEmitterPanelImpl::UpdateUI()
 {
+	if (skipUiUpdate)
+	{
+		skipUiUpdate = false;
+		return;
+	}
 	ParticleEmitterDescriptor *particleEmitter = static_cast<ParticleEmitterDescriptor *>(parent->GetComponent());
 
 	ParticleEmitterShape shape = particleEmitter->GetEmitterShape();

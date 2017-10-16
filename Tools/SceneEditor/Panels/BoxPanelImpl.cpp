@@ -10,7 +10,7 @@
 
 using namespace FireCube;
 
-BoxPanelImpl::BoxPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : BoxPanel(parent), parent(parent), Object(engine), prevCommand(nullptr)
+BoxPanelImpl::BoxPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : BoxPanel(parent), parent(parent), Object(engine), prevCommand(nullptr), skipUiUpdate(false)
 {
 	MyApp *theApp = ((MyApp *)wxTheApp);
 	BoxDescriptor *box = static_cast<BoxDescriptor *>(parent->GetComponent());
@@ -30,6 +30,7 @@ BoxPanelImpl::BoxPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *eng
 	};
 
 	auto sizeEvtHandler = [this](BoxDescriptor *box, wxCommandEvent &evt) -> vec3 {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		vec3 oldSize = box->GetSize();
@@ -59,7 +60,8 @@ BoxPanelImpl::BoxPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *eng
 		return box->GetCollisionQueryMask();
 	}, [](BoxDescriptor *box, const unsigned int &mask) {
 		box->SetCollisionQueryMask(mask);
-	}, [](BoxDescriptor *box, wxCommandEvent &evt) -> unsigned int {
+	}, [this](BoxDescriptor *box, wxCommandEvent &evt) -> unsigned int {
+		skipUiUpdate = true;
 		unsigned long newVal;
 		evt.GetString().ToULong(&newVal);
 		return (unsigned int)newVal;
@@ -69,7 +71,8 @@ BoxPanelImpl::BoxPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *eng
 		return box->GetLightMask();
 	}, [](BoxDescriptor *box, const unsigned int &mask) {
 		box->SetLightMask(mask);
-	}, [](BoxDescriptor *box, wxCommandEvent &evt) -> unsigned int {
+	}, [this](BoxDescriptor *box, wxCommandEvent &evt) -> unsigned int {
+		skipUiUpdate = true;
 		unsigned long newVal;
 		evt.GetString().ToULong(&newVal);
 		return (unsigned int)newVal;
@@ -130,6 +133,11 @@ void BoxPanelImpl::MaterialFileChanged(wxFileDirPickerEvent& event)
 
 void BoxPanelImpl::UpdateUI()
 {
+	if (skipUiUpdate)
+	{
+		skipUiUpdate = false;
+		return;
+	}
 	BoxDescriptor *box = static_cast<BoxDescriptor *>(parent->GetComponent());
 
 	widthTextCtrl->ChangeValue(wxString::FromDouble(box->GetSize().x));

@@ -10,7 +10,7 @@
 
 using namespace FireCube;
 
-PlanePanelImpl::PlanePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : PlanePanel(parent), parent(parent), Object(engine)
+PlanePanelImpl::PlanePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : PlanePanel(parent), parent(parent), Object(engine), skipUiUpdate(false)
 {
 	MyApp *theApp = ((MyApp *)wxTheApp);
 	PlaneDescriptor *plane = static_cast<PlaneDescriptor *>(parent->GetComponent());
@@ -26,7 +26,8 @@ PlanePanelImpl::PlanePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine 
 		return plane->GetCollisionQueryMask();
 	}, [](PlaneDescriptor *plane, const unsigned int &mask) {
 		plane->SetCollisionQueryMask(mask);
-	}, [](PlaneDescriptor *plane, wxCommandEvent &evt) {
+	}, [this](PlaneDescriptor *plane, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		unsigned long newVal;
 		evt.GetString().ToULong(&newVal);
 		return (unsigned int)newVal;
@@ -36,7 +37,8 @@ PlanePanelImpl::PlanePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine 
 		return plane->GetLightMask();
 	}, [](PlaneDescriptor *plane, const unsigned int &mask) {
 		plane->SetLightMask(mask);
-	}, [](PlaneDescriptor *plane, wxCommandEvent &evt) {
+	}, [this](PlaneDescriptor *plane, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		unsigned long newVal;
 		evt.GetString().ToULong(&newVal);
 		return (unsigned int)newVal;
@@ -51,6 +53,7 @@ PlanePanelImpl::PlanePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine 
 	};
 
 	auto sizeEvtHandler = [this](PlaneDescriptor *plane, wxCommandEvent &evt) {		
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		if (evt.GetEventObject() == widthTextCtrl) 
@@ -123,6 +126,11 @@ void PlanePanelImpl::MaterialFileChanged(wxFileDirPickerEvent& event)
 
 void PlanePanelImpl::UpdateUI()
 {
+	if (skipUiUpdate)
+	{
+		skipUiUpdate = false;
+		return;
+	}
 	PlaneDescriptor *plane = static_cast<PlaneDescriptor *>(parent->GetComponent());
 
 	widthTextCtrl->ChangeValue(wxString::FromDouble(plane->GetSize().x));

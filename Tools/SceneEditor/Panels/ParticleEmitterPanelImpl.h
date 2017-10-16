@@ -26,4 +26,5 @@ private:
 	unsigned int prevUIntVal;
 	FireCube::vec2 prevVec2Val;
 	Command *prevCommand;
+	bool skipUiUpdate;
 };

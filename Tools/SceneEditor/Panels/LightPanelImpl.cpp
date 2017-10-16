@@ -9,7 +9,7 @@
 
 using namespace FireCube;
 
-LightPanelImpl::LightPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : LightPanel(parent), parent(parent), Object(engine)
+LightPanelImpl::LightPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : LightPanel(parent), parent(parent), Object(engine), skipUiUpdate(false)
 {	
 	MyApp *theApp = ((MyApp *)wxTheApp);
 	LightDescriptor *light = static_cast<LightDescriptor *>(parent->GetComponent());
@@ -23,7 +23,8 @@ LightPanelImpl::LightPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine 
 		return light->GetLightMask();
 	}, [](LightDescriptor *light, const unsigned int &mask) {
 		light->SetLightMask(mask);
-	}, [](LightDescriptor *light, wxCommandEvent &evt) {
+	}, [this](LightDescriptor *light, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		unsigned long newVal;
 		evt.GetString().ToULong(&newVal);
 		return (unsigned int)newVal;
@@ -33,7 +34,8 @@ LightPanelImpl::LightPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine 
 		return light->GetRange();
 	}, [](LightDescriptor *light, const float &range) {
 		light->SetRange(range);
-	}, [](LightDescriptor *light, wxCommandEvent &evt) {
+	}, [this](LightDescriptor *light, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		return (float)newVal;
@@ -43,7 +45,8 @@ LightPanelImpl::LightPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine 
 		return light->GetSpotCutOff();
 	}, [](LightDescriptor *light, const float &spotCutoff) {
 		light->SetSpotCutOff(spotCutoff);
-	}, [](LightDescriptor *light, wxCommandEvent &evt) {
+	}, [this](LightDescriptor *light, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		return (float)newVal / 180.0f * PI;
@@ -53,7 +56,8 @@ LightPanelImpl::LightPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine 
 		return light->GetShadowIntensity();
 	}, [](LightDescriptor *light, const float &shadowIntensity) {
 		light->SetShadowIntensity(shadowIntensity);
-	}, [](LightDescriptor *light, wxCommandEvent &evt) {
+	}, [this](LightDescriptor *light, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		return (float)newVal;
@@ -181,6 +185,11 @@ void LightPanelImpl::CastShadowChanged(wxCommandEvent& event)
 
 void LightPanelImpl::UpdateUI()
 {
+	if (skipUiUpdate)
+	{
+		skipUiUpdate = false;
+		return;
+	}
 	LightDescriptor *light = static_cast<LightDescriptor *>(parent->GetComponent());
 
 	switch (light->GetLightType())

@@ -24,4 +24,5 @@ private:
 	FireCube::Plane prevPlane;
 	FireCube::BoundingBox prevBoundingBox;
 	float prevRadius;
+	bool skipUiUpdate;
 };

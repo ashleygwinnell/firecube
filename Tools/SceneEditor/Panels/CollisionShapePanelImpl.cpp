@@ -9,7 +9,7 @@
 
 using namespace FireCube;
 
-CollisionShapePanelImpl::CollisionShapePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : CollisionShapePanel(parent), parent(parent), Object(engine)
+CollisionShapePanelImpl::CollisionShapePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : CollisionShapePanel(parent), parent(parent), Object(engine), skipUiUpdate(false)
 {	
 	MyApp *theApp = ((MyApp *)wxTheApp);
  	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
@@ -28,6 +28,7 @@ CollisionShapePanelImpl::CollisionShapePanelImpl(BaseComponentPanelImpl* parent,
 	};
 
 	auto planeEvtHandler = [this](CollisionShapeDescriptor *collisionShape, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 
@@ -66,6 +67,7 @@ CollisionShapePanelImpl::CollisionShapePanelImpl(BaseComponentPanelImpl* parent,
 	};
 
 	auto bboxEvtHandler = [this](CollisionShapeDescriptor *collisionShape, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 
@@ -110,7 +112,8 @@ CollisionShapePanelImpl::CollisionShapePanelImpl(BaseComponentPanelImpl* parent,
 		return collisionShape->GetRadius();
 	}, [](CollisionShapeDescriptor *collisionShape, const float &radius) {
 		collisionShape->SetSphere(radius);
-	}, [](CollisionShapeDescriptor *collisionShape, wxCommandEvent &evt) {
+	}, [this](CollisionShapeDescriptor *collisionShape, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		return (float)newVal;
@@ -124,6 +127,11 @@ CollisionShapePanelImpl::~CollisionShapePanelImpl()
 
 void CollisionShapePanelImpl::UpdateUI()
 {
+	if (skipUiUpdate)
+	{
+		skipUiUpdate = false;
+		return;
+	}
 	CollisionShapeDescriptor *collisionShape = static_cast<CollisionShapeDescriptor *>(parent->GetComponent());
 
 	CollisionShapeType type = collisionShape->GetShapeType();

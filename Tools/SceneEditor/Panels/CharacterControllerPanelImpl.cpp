@@ -9,7 +9,8 @@
 
 using namespace FireCube;
 
-CharacterControllerPanelImpl::CharacterControllerPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : CharacterControllerPanel(parent), parent(parent), Object(engine)
+CharacterControllerPanelImpl::CharacterControllerPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : CharacterControllerPanel(parent), parent(parent), Object(engine), 
+	skipUiUpdate(false)
 {
 	MyApp *theApp = ((MyApp *)wxTheApp);
 	CharacterControllerDescriptor *characterController = static_cast<CharacterControllerDescriptor *>(parent->GetComponent());
@@ -23,7 +24,8 @@ CharacterControllerPanelImpl::CharacterControllerPanelImpl(BaseComponentPanelImp
 		return characterController->GetRadius();
 	}, [](CharacterControllerDescriptor *characterController, const float &newVal) {
 		characterController->SetRadius(newVal);
-	}, [](CharacterControllerDescriptor *characterController, wxCommandEvent &evt) {
+	}, [this](CharacterControllerDescriptor *characterController, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		return (float)newVal;
@@ -33,7 +35,8 @@ CharacterControllerPanelImpl::CharacterControllerPanelImpl(BaseComponentPanelImp
 		return characterController->GetHeight();
 	}, [](CharacterControllerDescriptor *characterController, const float &newVal) {
 		characterController->SetHeight(newVal);
-	}, [](CharacterControllerDescriptor *characterController, wxCommandEvent &evt) {
+	}, [this](CharacterControllerDescriptor *characterController, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		return (float)newVal;
@@ -43,7 +46,8 @@ CharacterControllerPanelImpl::CharacterControllerPanelImpl(BaseComponentPanelImp
 		return characterController->GetContactOffset();
 	}, [](CharacterControllerDescriptor *characterController, const float &newVal) {
 		characterController->SetContactOffset(newVal);
-	}, [](CharacterControllerDescriptor *characterController, wxCommandEvent &evt) {
+	}, [this](CharacterControllerDescriptor *characterController, wxCommandEvent &evt) {
+		skipUiUpdate = true;
 		double newVal;
 		evt.GetString().ToDouble(&newVal);
 		return (float)newVal;
@@ -57,6 +61,11 @@ CharacterControllerPanelImpl::~CharacterControllerPanelImpl()
 
 void CharacterControllerPanelImpl::UpdateUI()
 {
+	if (skipUiUpdate)
+	{
+		skipUiUpdate = false;
+		return;
+	}
 	CharacterControllerDescriptor *characterController = static_cast<CharacterControllerDescriptor *>(parent->GetComponent());
 	radiusTextCtrl->ChangeValue(wxString::FromDouble(characterController->GetRadius()));
 	heightTextCtrl->ChangeValue(wxString::FromDouble(characterController->GetHeight()));

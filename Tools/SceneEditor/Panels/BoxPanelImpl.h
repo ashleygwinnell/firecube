@@ -24,4 +24,5 @@ private:
 	
 	BaseComponentPanelImpl *parent;
 	Command *prevCommand;
+	bool skipUiUpdate;
 };

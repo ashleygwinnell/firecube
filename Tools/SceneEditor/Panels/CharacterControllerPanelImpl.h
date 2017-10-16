@@ -18,4 +18,5 @@ private:
 	BaseComponentPanelImpl *parent;
 	float prevFloatVal;
 	Command *prevCommand;
+	bool skipUiUpdate;
 };

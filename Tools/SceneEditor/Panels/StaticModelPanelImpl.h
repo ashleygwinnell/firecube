@@ -20,4 +20,5 @@ private:
 	BaseComponentPanelImpl *parent;
 	Command *prevCommand;
 	unsigned int prevUIntVal;	
+	bool skipUiUpdate;
 };

@@ -21,4 +21,5 @@ private:
 	unsigned int prevUIntVal;
 	float prevFloatVal;
 	Command *prevCommand;
+	bool skipUiUpdate;
 };
