@@ -13,6 +13,7 @@ class BaseCallback
 {
 public:
 	virtual ~BaseCallback(){ }
+	virtual void *GetEvent() { return nullptr; }
 };
 
 template<class... Args> class AbstractCallback : public BaseCallback
@@ -28,6 +29,8 @@ protected:
 
 	virtual void Call(Args... args) = 0;
 
+	virtual void *GetEvent() override { return (void *)v; }
+
 	Event<Args...>* v;
 };
 
@@ -38,7 +41,7 @@ public:
 	virtual ~ConcreteCallback();
 private:
 	ConcreteCallback(const ConcreteCallback&);
-	void operator=(const ConcreteCallback&);
+	void operator=(const ConcreteCallback&) = delete;
 
 	friend class Event < Args... > ;
 
@@ -75,7 +78,7 @@ public:
 
 private:
 	Event(const Event&);
-	void operator=(const Event&);
+	void operator=(const Event&) = delete;
 
 	std::vector<std::pair<Object *, AbstractCallback<Args...>*>> v;
 };
@@ -100,10 +103,23 @@ public:
 	~Callback(){ for (auto i : v) delete i; }
 
 	template<class T, class... Args> void Connect(Object *sender, T *t, void(T::*f)(Args...), Event<Args...> &s){ v.push_back(new ConcreteCallback<T, Args...>(sender, t, f, s)); }
+	template<class... Args> void Disconnect(Event<Args...> &s) 
+	{ 
+		for (auto i = v.begin(); i != v.end(); ++i)
+		{
+			if ((*i)->GetEvent() == (void*)&s)
+			{
+				BaseCallback *c = *i;
+				v.erase(i);
+				delete c;
+				return;
+			}
+		}
+	}
 
 private:
 	Callback(const Callback&);
-	void operator=(const Callback&);
+	void operator=(const Callback&) = delete;
 
 	std::vector<BaseCallback*> v;
 };
