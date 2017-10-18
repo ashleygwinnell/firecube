@@ -173,3 +173,8 @@ void LuaState::AddPackagePath(const std::string &path)
 
 	luaState["package"]["path"] = originalPackagePath + additionalPaths;
 }
+
+sol::object LuaState::GetGlobal(const std::string &name)
+{
+	return luaState[name];
+}

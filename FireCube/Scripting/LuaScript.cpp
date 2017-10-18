@@ -25,6 +25,7 @@ LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(othe
 LuaScript::~LuaScript()
 {
 	CallMemberFunction("Destroy");
+	(*GetFunction("EventManager.UnSubscribeFromAllEvents"))(engine->GetLuaState()->GetGlobal("EventManager"), object);
 }
 
 void LuaScript::Update(float dt)

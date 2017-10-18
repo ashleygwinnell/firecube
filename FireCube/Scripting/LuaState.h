@@ -34,6 +34,7 @@ public:
 	sol::state &GetState();
 	LuaFunction *GetFunction(const std::string &functionName);
 	LuaFunction *GetFunction(int index = -1);
+	sol::object GetGlobal(const std::string &name);
 	
 	/**
 	* Registers a function
