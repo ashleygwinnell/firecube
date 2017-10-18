@@ -141,7 +141,6 @@ LuaFunction *LuaState::GetFunction(const std::string &functionName)
 	}
 	else
 	{
-		LOGERROR(functionName, " is not a function");
 		return nullptr;
 	}
 }
