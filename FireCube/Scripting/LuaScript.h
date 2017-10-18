@@ -30,6 +30,7 @@ class FIRECUBE_API LuaScript : public Component
 	FIRECUBE_OBJECT(LuaScript);
 public:
 	LuaScript(Engine *engine);
+	~LuaScript();
 	
 	/**
 	* Creates a script object

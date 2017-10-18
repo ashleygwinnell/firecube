@@ -22,6 +22,11 @@ LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(othe
 	CreateObject(objectName);
 }
 
+LuaScript::~LuaScript()
+{
+	CallMemberFunction("Destroy");
+}
+
 void LuaScript::Update(float dt)
 {	
 	if (awakeCalled == false && scene)

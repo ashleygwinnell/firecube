@@ -25,6 +25,17 @@ function EventManager:SubscribeToEvent(event, object, callback)
 	end
 end
 
+function EventManager:UnSubscribeToEvent(event, object)
+	local evt = self:_GetEvent(event)
+		
+	for index, value in ipairs (evt.listeners) do
+		if value[1] == object then
+			table.remove(evt.listeners, index)
+			break
+		end
+	end	
+end
+
 function EventManager:EmitEvent(event, ...)	
 	local evt = self:_GetEvent(event)
 		
