@@ -70,7 +70,7 @@ void LuaScript::SceneChanged(Scene *oldScene)
 {
 	if (!scene && oldScene)
 	{
-		UnSubscribeToEvent(Events::Update);
+		UnSubscribeFromEvent(Events::Update);
 	}
 
 	if (scene && !oldScene)

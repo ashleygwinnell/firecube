@@ -28,7 +28,7 @@ public:
 	}
 
 	template<class... Args>
-	void UnSubscribeToEvent(Event<Args...> &s)
+	void UnSubscribeFromEvent(Event<Args...> &s)
 	{
 		eventCallback.Disconnect(s);
 	}

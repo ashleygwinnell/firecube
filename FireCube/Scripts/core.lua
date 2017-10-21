@@ -25,7 +25,7 @@ function EventManager:SubscribeToEvent(event, object, callback)
 	end
 end
 
-function EventManager:UnSubscribeToEvent(event, object)
+function EventManager:UnSubscribeFromEvent(event, object)
 	local evt = self:_GetEvent(event)
 
 	for index, value in ipairs (evt.listeners) do
