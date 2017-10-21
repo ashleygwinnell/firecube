@@ -685,13 +685,16 @@ void Renderer::Render()
 	for (auto i = sceneViews.rbegin(); i != sceneViews.rend(); ++i)
 	{
 		SceneView *sceneView = *i;
-		Frame frame(engine, sceneView->GetScene(), sceneView->GetCamera(), sceneView->GetRenderSurface(), sceneView->GetRenderPath());
-		frame.Render(this);
-		
-		RenderSurface *renderSurface = sceneView->GetRenderSurface();
-		if (renderSurface && renderSurface->GetLinkedTexture() && renderSurface->GetLinkedTexture()->GetFiltering() == TextureFilter::MIPMAP)
+		if (sceneView)
 		{
-			renderSurface->GetLinkedTexture()->GenerateMipMaps();	
+			Frame frame(engine, sceneView->GetScene(), sceneView->GetCamera(), sceneView->GetRenderSurface(), sceneView->GetRenderPath());
+			frame.Render(this);
+
+			RenderSurface *renderSurface = sceneView->GetRenderSurface();
+			if (renderSurface && renderSurface->GetLinkedTexture() && renderSurface->GetLinkedTexture()->GetFiltering() == TextureFilter::MIPMAP)
+			{
+				renderSurface->GetLinkedTexture()->GenerateMipMaps();
+			}
 		}
 	}
 

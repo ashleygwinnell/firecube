@@ -13,12 +13,10 @@ using namespace FireCube;
 
 LuaScript::LuaScript(Engine *engine) : Component(engine), luaFile(nullptr), awakeCalled(false)
 {
-	SubscribeToEvent(Events::Update, &LuaScript::Update);
 }
 
 LuaScript::LuaScript(const LuaScript &other) : Component(other), objectName(other.objectName), luaFile(other.luaFile), initialProperties(other.initialProperties), awakeCalled(false)
 {
-	SubscribeToEvent(Events::Update, &LuaScript::Update);
 	CreateObject(objectName);
 }
 
@@ -70,7 +68,15 @@ void LuaScript::NodeChanged()
 
 void LuaScript::SceneChanged(Scene *oldScene)
 {
-	
+	if (!scene && oldScene)
+	{
+		UnSubscribeToEvent(Events::Update);
+	}
+
+	if (scene && !oldScene)
+	{
+		SubscribeToEvent(Events::Update, &LuaScript::Update);
+	}
 }
 
 void LuaScript::CreateObject(const std::string &objectName)

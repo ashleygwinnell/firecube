@@ -39,7 +39,6 @@ LuaState::LuaState(Engine *engine) : Object(engine)
 LuaState::~LuaState()
 {
 	functions.clear();
-	lua_close(luaState);
 }
 
 int LuaState::Print(lua_State *L)

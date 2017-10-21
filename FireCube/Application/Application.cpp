@@ -96,10 +96,9 @@ bool Application::InitializeNoWindow()
 
 void Application::Destroy()
 {
-	delete engine;
-
 	if (!appInitialized)
 	{
+		delete engine;
 		return;
 	}
 
@@ -110,6 +109,7 @@ void Application::Destroy()
 	delete debugRenderer;
 	delete ui;		
 	delete audio;
+	delete luaState;
 
 	if (context)
 	{
@@ -124,6 +124,8 @@ void Application::Destroy()
 	{
 		SDL_Quit();
 	}
+
+	delete engine;
 }
 
 bool Application::Close()
