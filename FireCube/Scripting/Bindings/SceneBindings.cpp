@@ -476,6 +476,7 @@ void LuaBindings::InitScene(sol::state &luaState)
 		"SetMaterial", &ParticleEmitter::SetMaterial,
 		"GetMaterial", &ParticleEmitter::GetMaterial,
 		"material", sol::property(&ParticleEmitter::GetMaterial, &ParticleEmitter::SetMaterial),
+		"emissionRate", sol::property(&ParticleEmitter::GetEmissionRate, &ParticleEmitter::SetEmissionRate),
 		sol::base_classes, sol::bases<Renderable, Component, Object, RefCounted>());
 
 	luaState.new_usertype<CustomGeometry>("CustomGeometry",

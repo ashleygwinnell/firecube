@@ -79,6 +79,11 @@ public:
 	* @param emissionRate The emission rate
 	*/
 	void SetEmissionRate(unsigned int emissionRate);
+
+	/**
+	* Gets the emission rate of new particles (number of particles per second)	
+	*/
+	unsigned int GetEmissionRate() const;
 	
 	/**
 	* Sets the life span of particles (in seconds)

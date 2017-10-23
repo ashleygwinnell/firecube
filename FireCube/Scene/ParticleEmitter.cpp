@@ -231,6 +231,11 @@ void ParticleEmitter::SetEmissionRate(unsigned int emissionRate)
 	this->emissionRate = emissionRate;
 }
 
+unsigned int ParticleEmitter::GetEmissionRate() const
+{
+	return emissionRate;
+}
+
 void ParticleEmitter::SetLifeTime(float minLifeTime, float maxLifeTime)
 {
 	this->minLifeTime = minLifeTime;
