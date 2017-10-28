@@ -80,18 +80,18 @@ void SpherePanelImpl::UpdateUI()
 {
 	SphereDescriptor *sphere = static_cast<SphereDescriptor *>(parent->GetComponent());
 
-	radiusTextCtrl->ChangeValue(wxString::FromDouble(sphere->GetRadius()));
-	ringsTextCtrl->ChangeValue(wxString::FromDouble(sphere->GetRings()));
-	columnsTextCtrl->ChangeValue(wxString::FromDouble(sphere->GetColumns()));
+	ChangeValue(radiusTextCtrl, wxString::FromDouble(sphere->GetRadius()));
+	ChangeValue(ringsTextCtrl, wxString::FromDouble(sphere->GetRings()));
+	ChangeValue(columnsTextCtrl, wxString::FromDouble(sphere->GetColumns()));
 	castShadowCheckBox->SetValue(sphere->GetCastShadow());
 
 	std::stringstream lightMaskStream;
 	lightMaskStream << std::hex << sphere->GetLightMask();
-	lightMaskTextCtrl->ChangeValue(lightMaskStream.str());
+	ChangeValue(lightMaskTextCtrl, lightMaskStream.str());
 
 	std::stringstream collisionQueryMaskStream;
 	collisionQueryMaskStream << std::hex << sphere->GetCollisionQueryMask();
-	collisionQueryMaskTextCtrl->ChangeValue(collisionQueryMaskStream.str());
+	ChangeValue(collisionQueryMaskTextCtrl, collisionQueryMaskStream.str());
 
 	materialFilePicker->SetPath(sphere->GetMaterialFileName());
 }

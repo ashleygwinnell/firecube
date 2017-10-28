@@ -78,17 +78,17 @@ void PlanePanelImpl::UpdateUI()
 {
 	PlaneDescriptor *plane = static_cast<PlaneDescriptor *>(parent->GetComponent());
 
-	widthTextCtrl->ChangeValue(wxString::FromDouble(plane->GetSize().x));
-	depthTextCtrl->ChangeValue(wxString::FromDouble(plane->GetSize().y));
+	ChangeValue(widthTextCtrl, wxString::FromDouble(plane->GetSize().x));
+	ChangeValue(depthTextCtrl, wxString::FromDouble(plane->GetSize().y));
 	castShadowCheckBox->SetValue(plane->GetCastShadow());
 
 	std::stringstream lightMaskStream;
 	lightMaskStream << std::hex << plane->GetLightMask();
-	lightMaskTextCtrl->ChangeValue(lightMaskStream.str());
+	ChangeValue(lightMaskTextCtrl, lightMaskStream.str());
 
 	std::stringstream collisionQueryMaskStream;
 	collisionQueryMaskStream << std::hex << plane->GetCollisionQueryMask();
-	collisionQueryMaskTextCtrl->ChangeValue(collisionQueryMaskStream.str());
+	ChangeValue(collisionQueryMaskTextCtrl, collisionQueryMaskStream.str());
 
 	materialFilePicker->SetPath(plane->GetMaterialFileName());
 }

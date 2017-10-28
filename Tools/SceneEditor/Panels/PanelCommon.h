@@ -3,6 +3,7 @@
 #include <FireCube.h>
 #include "EventBindingHelpers.h"
 #include "../app.h"
+#include <wx/textctrl.h>
 
 class Command;
 
@@ -399,11 +400,20 @@ protected:
 		BindTextCtrlBoundingBox(textCtrlMax0, description, valueGetter, valueSetter, valueEvtHandler);
 		BindTextCtrlBoundingBox(textCtrlMax1, description, valueGetter, valueSetter, valueEvtHandler);
 		BindTextCtrlBoundingBox(textCtrlMax2, description, valueGetter, valueSetter, valueEvtHandler);
-		
 	}
 protected:
 	Desc *component;
 	EditorState *editorState;
+
+	void ChangeValue(wxTextCtrl *textCtrl, const wxString &value)
+	{
+		wxString prevValue = textCtrl->GetValue();
+		if (prevValue != value)
+		{
+			textCtrl->ChangeValue(value);
+			textCtrl->SetInsertionPointEnd();
+		}
+	}
 private:
 	virtual void UpdateUI() = 0;
 	void UpdateUIInternal()

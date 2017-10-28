@@ -61,16 +61,16 @@ void ParticleEmitterPanelImpl::UpdateUI()
 		break;
 	}
 
-	radiusTextCtrl->ChangeValue(wxString::FromDouble(particleEmitter->GetRadius()));
-	bboxWidthTextCtrl->ChangeValue(wxString::FromDouble(particleEmitter->GetBox().x));
-	bboxHeightTextCtrl->ChangeValue(wxString::FromDouble(particleEmitter->GetBox().y));
-	bboxDepthTextCtrl->ChangeValue(wxString::FromDouble(particleEmitter->GetBox().z));
-	numberOfParticlesTextCtrl->ChangeValue(wxString::Format(wxT("%i"), particleEmitter->GetNumberOfParticles()));
-	emissionRateTextCtrl->ChangeValue(wxString::Format(wxT("%i"), particleEmitter->GetEmissionRate()));
-	minLifeTimeTextCtrl->ChangeValue(wxString::FromDouble(particleEmitter->GetMinLifeTime()));
-	maxLifeTimeTextCtrl->ChangeValue(wxString::FromDouble(particleEmitter->GetMaxLifeTime()));
-	minSpeedTextCtrl->ChangeValue(wxString::FromDouble(particleEmitter->GetMinSpeed()));
-	maxSpeedTextCtrl->ChangeValue(wxString::FromDouble(particleEmitter->GetMaxSpeed()));
+	ChangeValue(radiusTextCtrl, wxString::FromDouble(particleEmitter->GetRadius()));
+	ChangeValue(bboxWidthTextCtrl, wxString::FromDouble(particleEmitter->GetBox().x));
+	ChangeValue(bboxHeightTextCtrl, wxString::FromDouble(particleEmitter->GetBox().y));
+	ChangeValue(bboxDepthTextCtrl, wxString::FromDouble(particleEmitter->GetBox().z));
+	ChangeValue(numberOfParticlesTextCtrl, wxString::Format(wxT("%i"), particleEmitter->GetNumberOfParticles()));
+	ChangeValue(emissionRateTextCtrl, wxString::Format(wxT("%i"), particleEmitter->GetEmissionRate()));
+	ChangeValue(minLifeTimeTextCtrl, wxString::FromDouble(particleEmitter->GetMinLifeTime()));
+	ChangeValue(maxLifeTimeTextCtrl, wxString::FromDouble(particleEmitter->GetMaxLifeTime()));
+	ChangeValue(minSpeedTextCtrl, wxString::FromDouble(particleEmitter->GetMinSpeed()));
+	ChangeValue(maxSpeedTextCtrl, wxString::FromDouble(particleEmitter->GetMaxSpeed()));
 	materialFilePicker->SetPath(particleEmitter->GetMaterial());	
 	materialFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials");
 	prewarmCheckBox->SetValue(particleEmitter->GetPrewarm());

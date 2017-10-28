@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "BaseComponentPanelImpl.h"
 #include "BoxPanelImpl.h"
 #include "../app.h"
@@ -84,11 +85,11 @@ void BoxPanelImpl::UpdateUI()
 
 	std::stringstream lightMaskStream;
 	lightMaskStream << std::hex << box->GetLightMask();
-	lightMaskTextCtrl->ChangeValue(lightMaskStream.str());
+	ChangeValue(lightMaskTextCtrl, lightMaskStream.str());
 
 	std::stringstream collisionQueryMaskStream;
 	collisionQueryMaskStream << std::hex << box->GetCollisionQueryMask();
-	collisionQueryMaskTextCtrl->ChangeValue(collisionQueryMaskStream.str());
+	ChangeValue(collisionQueryMaskTextCtrl, collisionQueryMaskStream.str());
 
 	materialFilePicker->SetPath(box->GetMaterialFileName());	
 }

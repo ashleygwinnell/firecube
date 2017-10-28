@@ -170,11 +170,11 @@ void LightPanelImpl::UpdateUI()
 
 	lightColorPicker->SetColour(wxColor(light->GetColor().x * 255, light->GetColor().y * 255, light->GetColor().z * 255));
 	castShadowCheckBox->SetValue(light->GetCastShadow());
-	shadowIntensityTextCtrl->ChangeValue(wxString::FromDouble(light->GetShadowIntensity()));
-	rangeTextCtrl->ChangeValue(wxString::FromDouble(light->GetRange()));
-	spotCutoffTextCtrl->ChangeValue(wxString::FromDouble(light->GetSpotCutOff() / PI * 180.0f));
+	ChangeValue(shadowIntensityTextCtrl, wxString::FromDouble(light->GetShadowIntensity()));
+	ChangeValue(rangeTextCtrl, wxString::FromDouble(light->GetRange()));
+	ChangeValue(spotCutoffTextCtrl, wxString::FromDouble(light->GetSpotCutOff() / PI * 180.0f));
 
 	std::stringstream stream;
 	stream << std::hex << light->GetLightMask();
-	maskTextCtrl->ChangeValue(stream.str());
+	ChangeValue(maskTextCtrl, stream.str());
 }

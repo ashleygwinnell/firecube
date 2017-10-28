@@ -27,5 +27,5 @@ void RigidBodyPanelImpl::UpdateUI()
 {
 	RigidBodyDescriptor *rigidBody = static_cast<RigidBodyDescriptor *>(parent->GetComponent());
 
-	massTextCtrl->ChangeValue(wxString::FromDouble(rigidBody->GetMass()));
+	ChangeValue(massTextCtrl, wxString::FromDouble(rigidBody->GetMass()));
 }

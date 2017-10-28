@@ -95,9 +95,9 @@ void StaticModelPanelImpl::UpdateUI()
 
 	std::stringstream lightMaskStream;
 	lightMaskStream << std::hex << staticModel->GetLightMask();
-	lightMaskTextCtrl->ChangeValue(lightMaskStream.str());
+	ChangeValue(lightMaskTextCtrl, lightMaskStream.str());
 
 	std::stringstream collisionQueryMaskStream;
 	collisionQueryMaskStream << std::hex << staticModel->GetCollisionQueryMask();
-	collisionQueryMaskTextCtrl->ChangeValue(collisionQueryMaskStream.str());
+	ChangeValue(collisionQueryMaskTextCtrl, collisionQueryMaskStream.str());
 }

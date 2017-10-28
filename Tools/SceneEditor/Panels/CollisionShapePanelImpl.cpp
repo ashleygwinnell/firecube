@@ -50,20 +50,20 @@ void CollisionShapePanelImpl::UpdateUI()
 
 	UpdateVisibility(type);
 
-	planeXTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetPlane().GetNormal().x));
-	planeYTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetPlane().GetNormal().y));
-	planeZTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetPlane().GetNormal().z));
-	planeWTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetPlane().GetDistance()));
+	ChangeValue(planeXTextCtrl, wxString::FromDouble(collisionShape->GetPlane().GetNormal().x));
+	ChangeValue(planeYTextCtrl, wxString::FromDouble(collisionShape->GetPlane().GetNormal().y));
+	ChangeValue(planeZTextCtrl, wxString::FromDouble(collisionShape->GetPlane().GetNormal().z));
+	ChangeValue(planeWTextCtrl, wxString::FromDouble(collisionShape->GetPlane().GetDistance()));
 
-	bboxMinXTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetBox().GetMin().x));
-	bboxMinYTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetBox().GetMin().y));
-	bboxMinZTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetBox().GetMin().z));
+	ChangeValue(bboxMinXTextCtrl, wxString::FromDouble(collisionShape->GetBox().GetMin().x));
+	ChangeValue(bboxMinYTextCtrl, wxString::FromDouble(collisionShape->GetBox().GetMin().y));
+	ChangeValue(bboxMinZTextCtrl, wxString::FromDouble(collisionShape->GetBox().GetMin().z));
 
-	bboxMaxXTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetBox().GetMax().x));
-	bboxMaxYTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetBox().GetMax().y));
-	bboxMaxZTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetBox().GetMax().z));
+	ChangeValue(bboxMaxXTextCtrl, wxString::FromDouble(collisionShape->GetBox().GetMax().x));
+	ChangeValue(bboxMaxYTextCtrl, wxString::FromDouble(collisionShape->GetBox().GetMax().y));
+	ChangeValue(bboxMaxZTextCtrl, wxString::FromDouble(collisionShape->GetBox().GetMax().z));
 
-	radiusTextCtrl->ChangeValue(wxString::FromDouble(collisionShape->GetRadius()));
+	ChangeValue(radiusTextCtrl, wxString::FromDouble(collisionShape->GetRadius()));
 
 	meshFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Models");
 	if (collisionShape->GetMeshFilename().empty() == false)

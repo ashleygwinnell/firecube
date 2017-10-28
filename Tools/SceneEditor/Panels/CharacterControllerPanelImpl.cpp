@@ -27,7 +27,7 @@ CharacterControllerPanelImpl::~CharacterControllerPanelImpl()
 void CharacterControllerPanelImpl::UpdateUI()
 {
 	CharacterControllerDescriptor *characterController = static_cast<CharacterControllerDescriptor *>(parent->GetComponent());
-	radiusTextCtrl->ChangeValue(wxString::FromDouble(characterController->GetRadius()));
-	heightTextCtrl->ChangeValue(wxString::FromDouble(characterController->GetHeight()));
-	contactOffsetTextCtrl->ChangeValue(wxString::FromDouble(characterController->GetContactOffset()));
+	ChangeValue(radiusTextCtrl, wxString::FromDouble(characterController->GetRadius()));
+	ChangeValue(heightTextCtrl, wxString::FromDouble(characterController->GetHeight()));
+	ChangeValue(contactOffsetTextCtrl, wxString::FromDouble(characterController->GetContactOffset()));
 }
