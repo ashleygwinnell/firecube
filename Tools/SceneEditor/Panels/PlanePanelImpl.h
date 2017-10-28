@@ -1,11 +1,12 @@
 #pragma once
 
 #include "../mainframe.h"
+#include "PanelCommon.h"
 
 class BaseComponentPanelImpl;
-class Command;
+class PlaneDescriptor;
 
-class PlanePanelImpl : public PlanePanel, public FireCube::Object
+class PlanePanelImpl : public PlanePanel, public PanelCommon<PlaneDescriptor>
 {
 	FIRECUBE_OBJECT(PlanePanelImpl);
 public:
@@ -13,13 +14,8 @@ public:
 	~PlanePanelImpl();
 private:
 	virtual void CastShadowChanged(wxCommandEvent& event) override;
-	virtual void MaterialFileChanged(wxFileDirPickerEvent& event) override;
-	void UndoPerformed(Command *command);
-	void UpdateUI();
+	virtual void MaterialFileChanged(wxFileDirPickerEvent& event) override;	
+	virtual void UpdateUI() override;
 
-	BaseComponentPanelImpl *parent;
-	unsigned int prevUIntVal;
-	FireCube::vec2 prevSize;
-	Command *prevCommand;
-	bool skipUiUpdate;
+	BaseComponentPanelImpl *parent;	
 };

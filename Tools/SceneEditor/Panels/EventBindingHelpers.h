@@ -2,6 +2,10 @@
 
 #include "../Commands/CustomCommand.h"
 
+class wxTextCtrl;
+class wxCommandEvent;
+class NodeDescriptor;
+
 namespace EventBindingHelpers
 {
 	template <class T, class Desc>

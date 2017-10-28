@@ -10,137 +10,19 @@
 
 using namespace FireCube;
 
-ParticleEmitterPanelImpl::ParticleEmitterPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : ParticleEmitterPanel(parent), parent(parent), Object(engine), skipUiUpdate(false)
+ParticleEmitterPanelImpl::ParticleEmitterPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : ParticleEmitterPanel(parent), parent(parent), 
+	PanelCommon(engine, static_cast<ParticleEmitterDescriptor *>(parent->GetComponent()))
 {
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	ParticleEmitterDescriptor *particleEmitter = static_cast<ParticleEmitterDescriptor *>(parent->GetComponent());
-	
 	UpdateUI();
-	
-	SubscribeToEvent(particleEmitter->componentChanged, &ParticleEmitterPanelImpl::UpdateUI);
-	SubscribeToEvent(theApp->GetEditorState(), theApp->GetEditorState()->undoPerformed, &ParticleEmitterPanelImpl::UndoPerformed);
-
-	EventBindingHelpers::BindTextCtrl<float, ParticleEmitterDescriptor>(radiusTextCtrl, particleEmitter, engine, theApp->GetEditorState(), "Change Radius", [](ParticleEmitterDescriptor *particleEmitter) {
-		return particleEmitter->GetRadius();
-	}, [](ParticleEmitterDescriptor *particleEmitter, const float &radius) {
-		particleEmitter->SetSphereEmitter(radius);
-	}, [this](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
-		skipUiUpdate = true;
-		double newVal;
-		evt.GetString().ToDouble(&newVal);
-		return (float)newVal;
-	}, prevCommand, prevFloatVal);
-
-	auto boxGetter = [](ParticleEmitterDescriptor *particleEmitter) {
-		return particleEmitter->GetBox();
-	};
-
-	auto boxSetter = [](ParticleEmitterDescriptor *particleEmitter, const vec3 &box) {
-		return particleEmitter->SetBoxEmitter(box);
-	};
-
-	auto boxEvtHandler = [this](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
-		skipUiUpdate = true;
-		double newVal;
-		evt.GetString().ToDouble(&newVal);
-		vec3 curBox = particleEmitter->GetBox();
-		if (evt.GetEventObject() == bboxWidthTextCtrl)
-		{
-			curBox.x = newVal;
-		}
-		else if (evt.GetEventObject() == bboxHeightTextCtrl)
-		{
-			curBox.y = newVal;
-		}
-		else if (evt.GetEventObject() == bboxDepthTextCtrl)
-		{
-			curBox.z = newVal;
-		}
-
-		return curBox;
-	};
-
-	EventBindingHelpers::BindTextCtrl<vec3, ParticleEmitterDescriptor>(bboxWidthTextCtrl, particleEmitter, engine, theApp->GetEditorState(), "Change Box", boxGetter, boxSetter, boxEvtHandler, prevCommand, prevBox);
-	EventBindingHelpers::BindTextCtrl<vec3, ParticleEmitterDescriptor>(bboxHeightTextCtrl, particleEmitter, engine, theApp->GetEditorState(), "Change Box", boxGetter, boxSetter, boxEvtHandler, prevCommand, prevBox);
-	EventBindingHelpers::BindTextCtrl<vec3, ParticleEmitterDescriptor>(bboxDepthTextCtrl, particleEmitter, engine, theApp->GetEditorState(), "Change Box", boxGetter, boxSetter, boxEvtHandler, prevCommand, prevBox);
-
-	EventBindingHelpers::BindTextCtrl<unsigned int, ParticleEmitterDescriptor>(numberOfParticlesTextCtrl, particleEmitter, engine, theApp->GetEditorState(), "Change Number Of Particles", [](ParticleEmitterDescriptor *particleEmitter) {
-		return particleEmitter->GetNumberOfParticles();
-	}, [](ParticleEmitterDescriptor *particleEmitter, const unsigned int &newVal) {
-		particleEmitter->SetNumberOfParticles(newVal);
-	}, [this](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
-		skipUiUpdate = true;
-		unsigned long newVal;
-		evt.GetString().ToULong(&newVal);
-		return (unsigned int)newVal;
-	}, prevCommand, prevUIntVal);
-
-	EventBindingHelpers::BindTextCtrl<unsigned int, ParticleEmitterDescriptor>(emissionRateTextCtrl, particleEmitter, engine, theApp->GetEditorState(), "Change Emission Rate", [](ParticleEmitterDescriptor *particleEmitter) {
-		return particleEmitter->GetEmissionRate();
-	}, [](ParticleEmitterDescriptor *particleEmitter, const unsigned int &newVal) {
-		particleEmitter->SetEmissionRate(newVal);
-	}, [this](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
-		skipUiUpdate = true;
-		unsigned long newVal;
-		evt.GetString().ToULong(&newVal);
-		return (unsigned int)newVal;
-	}, prevCommand, prevUIntVal);
-
-	auto lifeTimeGetter = [](ParticleEmitterDescriptor *particleEmitter) {
-		return vec2(particleEmitter->GetMinLifeTime(), particleEmitter->GetMaxLifeTime());
-	};
-
-	auto lifeTimeSetter = [](ParticleEmitterDescriptor *particleEmitter, const vec2 &newVal) {
-		return particleEmitter->SetLifeTime(newVal.x, newVal.y);
-	};
-
-	auto lifeTimeEvtHandler = [this](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
-		skipUiUpdate = true;
-		double newVal;
-		evt.GetString().ToDouble(&newVal);
-		vec2 curLifeTime = vec2(particleEmitter->GetMinLifeTime(), particleEmitter->GetMaxLifeTime());
-		if (evt.GetEventObject() == minLifeTimeTextCtrl)
-		{
-			curLifeTime.x = newVal;
-		}
-		else if (evt.GetEventObject() == maxLifeTimeTextCtrl)
-		{
-			curLifeTime.y = newVal;
-		}		
-
-		return curLifeTime;
-	};
-
-	EventBindingHelpers::BindTextCtrl<vec2, ParticleEmitterDescriptor>(minLifeTimeTextCtrl, particleEmitter, engine, theApp->GetEditorState(), "Change Life Time", lifeTimeGetter, lifeTimeSetter, lifeTimeEvtHandler, prevCommand, prevVec2Val);
-	EventBindingHelpers::BindTextCtrl<vec2, ParticleEmitterDescriptor>(maxLifeTimeTextCtrl, particleEmitter, engine, theApp->GetEditorState(), "Change Life Time", lifeTimeGetter, lifeTimeSetter, lifeTimeEvtHandler, prevCommand, prevVec2Val);
-
-	auto speedGetter = [](ParticleEmitterDescriptor *particleEmitter) {
-		return vec2(particleEmitter->GetMinSpeed(), particleEmitter->GetMaxSpeed());
-	};
-
-	auto speedSetter = [](ParticleEmitterDescriptor *particleEmitter, const vec2 &newVal) {
-		return particleEmitter->SetSpeed(newVal.x, newVal.y);
-	};
-
-	auto speedEvtHandler = [this](ParticleEmitterDescriptor *particleEmitter, wxCommandEvent &evt) {
-		skipUiUpdate = true;
-		double newVal;
-		evt.GetString().ToDouble(&newVal);
-		vec2 curSpeed = vec2(particleEmitter->GetMinSpeed(), particleEmitter->GetMaxSpeed());
-		if (evt.GetEventObject() == minSpeedTextCtrl)
-		{
-			curSpeed.x = newVal;
-		}
-		else if (evt.GetEventObject() == maxSpeedTextCtrl)
-		{
-			curSpeed.y = newVal;
-		}
-
-		return curSpeed;
-	};
-
-	EventBindingHelpers::BindTextCtrl<vec2, ParticleEmitterDescriptor>(minSpeedTextCtrl, particleEmitter, engine, theApp->GetEditorState(), "Change Speed", speedGetter, speedSetter, speedEvtHandler, prevCommand, prevVec2Val);
-	EventBindingHelpers::BindTextCtrl<vec2, ParticleEmitterDescriptor>(maxSpeedTextCtrl, particleEmitter, engine, theApp->GetEditorState(), "Change Speed", speedGetter, speedSetter, speedEvtHandler, prevCommand, prevVec2Val);
+		
+	BindTextCtrl(radiusTextCtrl, "Change Radius", &ParticleEmitterDescriptor::GetRadius, &ParticleEmitterDescriptor::SetSphereEmitter);
+	BindTextCtrl(bboxWidthTextCtrl, bboxHeightTextCtrl, bboxDepthTextCtrl, "Change Box", &ParticleEmitterDescriptor::GetBox, &ParticleEmitterDescriptor::SetBoxEmitter);	
+	BindTextCtrl(numberOfParticlesTextCtrl, "Change Number Of Particles", &ParticleEmitterDescriptor::GetNumberOfParticles, &ParticleEmitterDescriptor::SetNumberOfParticles);
+	BindTextCtrl(emissionRateTextCtrl, "Change Emission Rate", &ParticleEmitterDescriptor::GetEmissionRate, &ParticleEmitterDescriptor::SetEmissionRate);
+	BindTextCtrl(minLifeTimeTextCtrl, "Change Life Time", &ParticleEmitterDescriptor::GetMinLifeTime, &ParticleEmitterDescriptor::SetMinLifeTime);
+	BindTextCtrl(maxLifeTimeTextCtrl, "Change Life Time", &ParticleEmitterDescriptor::GetMaxLifeTime, &ParticleEmitterDescriptor::SetMaxLifeTime);	
+	BindTextCtrl(minSpeedTextCtrl, "Change Speed", &ParticleEmitterDescriptor::GetMinSpeed, &ParticleEmitterDescriptor::SetMinSpeed);
+	BindTextCtrl(maxSpeedTextCtrl, "Change Speed", &ParticleEmitterDescriptor::GetMaxSpeed, &ParticleEmitterDescriptor::SetMaxSpeed);
 }
 
 ParticleEmitterPanelImpl::~ParticleEmitterPanelImpl()
@@ -150,11 +32,6 @@ ParticleEmitterPanelImpl::~ParticleEmitterPanelImpl()
 
 void ParticleEmitterPanelImpl::UpdateUI()
 {
-	if (skipUiUpdate)
-	{
-		skipUiUpdate = false;
-		return;
-	}
 	ParticleEmitterDescriptor *particleEmitter = static_cast<ParticleEmitterDescriptor *>(parent->GetComponent());
 
 	ParticleEmitterShape shape = particleEmitter->GetEmitterShape();
@@ -364,9 +241,4 @@ void ParticleEmitterPanelImpl::SimulationSpaceChanged(wxCommandEvent& event)
 
 	theApp->GetEditorState()->ExecuteCommand(command);
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
-}
-
-void ParticleEmitterPanelImpl::UndoPerformed(Command *command)
-{
-	prevCommand = nullptr;
 }

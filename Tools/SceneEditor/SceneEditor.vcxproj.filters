@@ -383,5 +383,8 @@
     <ClInclude Include="Panels\EventBindingHelpers.h">
       <Filter>Panels</Filter>
     </ClInclude>
+    <ClInclude Include="Panels\PanelCommon.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

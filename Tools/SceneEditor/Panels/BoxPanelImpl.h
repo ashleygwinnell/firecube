@@ -1,12 +1,12 @@
 #pragma once
 
 #include "../mainframe.h"
+#include "PanelCommon.h"
 
 class BaseComponentPanelImpl;
 class BoxDescriptor;
-class Command;
 
-class BoxPanelImpl : public BoxPanel, public FireCube::Object
+class BoxPanelImpl : public BoxPanel, public PanelCommon<BoxDescriptor>
 {
 	FIRECUBE_OBJECT(BoxPanelImpl);
 public:
@@ -15,14 +15,7 @@ public:
 private:	
 	virtual void CastShadowChanged(wxCommandEvent& event);	
 	virtual void MaterialFileChanged(wxFileDirPickerEvent& event);
-	void UpdateUI();
-	void UndoPerformed(Command *command);
-	
-	FireCube::vec3 prevSize;	
-	unsigned int prevCollisionQueryMask;
-	unsigned int prevLightMask;
+	virtual void UpdateUI() override;
 	
 	BaseComponentPanelImpl *parent;
-	Command *prevCommand;
-	bool skipUiUpdate;
 };

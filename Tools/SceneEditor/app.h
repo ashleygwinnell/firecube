@@ -1,3 +1,6 @@
+#pragma once
+
+#include "wx/app.h"
 #include "EditorState.h"
 class MainFrameImpl;
 class wxGLContext;

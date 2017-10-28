@@ -1,11 +1,12 @@
 #pragma once
 
 #include "../mainframe.h"
+#include "PanelCommon.h"
 
 class BaseComponentPanelImpl;
-class Command;
+class RigidBodyDescriptor;
 
-class RigidBodyPanelImpl : public RigidBodyPanel, public FireCube::Object
+class RigidBodyPanelImpl : public RigidBodyPanel, PanelCommon<RigidBodyDescriptor>
 {
 	FIRECUBE_OBJECT(RigidBodyPanelImpl);
 public:
@@ -13,11 +14,8 @@ public:
 	~RigidBodyPanelImpl();
 private:
 	void UndoPerformed(Command *command);
-	void UpdateUI();
+	virtual void UpdateUI() override;
 
-	BaseComponentPanelImpl *parent;
-	float prevMass;
-	Command *prevCommand;
-	bool skipUiUpdate;
+	BaseComponentPanelImpl *parent;	
 };
 

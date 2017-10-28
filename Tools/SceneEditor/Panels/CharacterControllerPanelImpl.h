@@ -1,22 +1,19 @@
 #pragma once
 
 #include "../mainframe.h"
+#include "PanelCommon.h"
 
 class BaseComponentPanelImpl;
-class Command;
+class CharacterControllerDescriptor;
 
-class CharacterControllerPanelImpl : public CharacterControllerPanel, public FireCube::Object
+class CharacterControllerPanelImpl : public CharacterControllerPanel, public PanelCommon<CharacterControllerDescriptor>
 {
 	FIRECUBE_OBJECT(CharacterControllerPanelImpl);
 public:
 	CharacterControllerPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine);
 	~CharacterControllerPanelImpl();
 private:		
-	void UpdateUI();
-	void UndoPerformed(Command *command);
-
+	virtual void UpdateUI() override;
+	
 	BaseComponentPanelImpl *parent;
-	float prevFloatVal;
-	Command *prevCommand;
-	bool skipUiUpdate;
 };

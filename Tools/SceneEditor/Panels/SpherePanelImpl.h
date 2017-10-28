@@ -1,11 +1,12 @@
 #pragma once
 
 #include "../mainframe.h"
+#include "PanelCommon.h"
 
 class BaseComponentPanelImpl;
-class Command;
+class SphereDescriptor;
 
-class SpherePanelImpl : public SpherePanel, public FireCube::Object
+class SpherePanelImpl : public SpherePanel, public PanelCommon<SphereDescriptor>
 {
 	FIRECUBE_OBJECT(SpherePanelImpl)
 public:
@@ -13,13 +14,8 @@ public:
 	~SpherePanelImpl();
 private:	
 	virtual void CastShadowChanged(wxCommandEvent& event) override;
-	virtual void MaterialFileChanged(wxFileDirPickerEvent& event) override;
-	void UndoPerformed(Command *command);
-	void UpdateUI();
+	virtual void MaterialFileChanged(wxFileDirPickerEvent& event) override;	
+	virtual void UpdateUI() override;
 
-	BaseComponentPanelImpl *parent;
-	unsigned int prevUIntVal;
-	float prevFloatVal;
-	Command *prevCommand;
-	bool skipUiUpdate;
+	BaseComponentPanelImpl *parent;	
 };

@@ -94,6 +94,16 @@ float ParticleEmitterDescriptor::GetMaxLifeTime() const
 	return maxLifeTime;
 }
 
+void ParticleEmitterDescriptor::SetMinLifeTime(float minLifeTime)
+{
+	this->minLifeTime = minLifeTime;
+}
+
+void ParticleEmitterDescriptor::SetMaxLifeTime(float maxLifeTime)
+{	
+	this->maxLifeTime = maxLifeTime;
+}
+
 void ParticleEmitterDescriptor::SetLifeTime(float minLifeTime, float maxLifeTime)
 {
 	this->minLifeTime = minLifeTime;
@@ -108,6 +118,16 @@ float ParticleEmitterDescriptor::GetMinSpeed() const
 float ParticleEmitterDescriptor::GetMaxSpeed() const
 {
 	return maxSpeed;
+}
+
+void ParticleEmitterDescriptor::SetMinSpeed(float minSpeed)
+{
+	this->minSpeed = minSpeed;
+}
+
+void ParticleEmitterDescriptor::SetMaxSpeed(float maxSpeed)
+{	
+	this->maxSpeed = maxSpeed;
 }
 
 void ParticleEmitterDescriptor::SetSpeed(float minSpeed, float maxSpeed)

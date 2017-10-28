@@ -10,72 +10,18 @@
 
 using namespace FireCube;
 
-SpherePanelImpl::SpherePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : SpherePanel(parent), parent(parent), Object(engine), skipUiUpdate(false)
+SpherePanelImpl::SpherePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : SpherePanel(parent), parent(parent),
+	PanelCommon(engine, static_cast<SphereDescriptor *>(parent->GetComponent()))
 {
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	SphereDescriptor *sphere = static_cast<SphereDescriptor *>(parent->GetComponent());
-	
 	materialFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials");
 
 	UpdateUI();
 
-	SubscribeToEvent(sphere->componentChanged, &SpherePanelImpl::UpdateUI);
-	SubscribeToEvent(theApp->GetEditorState(), theApp->GetEditorState()->undoPerformed, &SpherePanelImpl::UndoPerformed);
-
-	EventBindingHelpers::BindTextCtrl<unsigned int, SphereDescriptor>(collisionQueryMaskTextCtrl, sphere, engine, theApp->GetEditorState(), "Change Mask", [](SphereDescriptor *sphere) {
-		return sphere->GetCollisionQueryMask();
-	}, [](SphereDescriptor *sphere, const unsigned int &mask) {
-		sphere->SetCollisionQueryMask(mask);
-	}, [this](SphereDescriptor *sphere, wxCommandEvent &evt) {
-		skipUiUpdate = true;
-		unsigned long newVal;
-		evt.GetString().ToULong(&newVal);
-		return (unsigned int)newVal;
-	}, prevCommand, prevUIntVal);
-
-	EventBindingHelpers::BindTextCtrl<unsigned int, SphereDescriptor>(lightMaskTextCtrl, sphere, engine, theApp->GetEditorState(), "Change Mask", [](SphereDescriptor *sphere) {
-		return sphere->GetLightMask();
-	}, [](SphereDescriptor *sphere, const unsigned int &mask) {
-		sphere->SetLightMask(mask);
-	}, [this](SphereDescriptor *sphere, wxCommandEvent &evt) {
-		skipUiUpdate = true;
-		unsigned long newVal;
-		evt.GetString().ToULong(&newVal);
-		return (unsigned int)newVal;
-	}, prevCommand, prevUIntVal);
-
-	EventBindingHelpers::BindTextCtrl<float, SphereDescriptor>(radiusTextCtrl, sphere, engine, theApp->GetEditorState(), "Change Radius", [](SphereDescriptor *sphere) {
-		return sphere->GetRadius();
-	}, [engine](SphereDescriptor *sphere, const float &radius) {
-		sphere->SetRadius(radius, engine);
-	}, [this](SphereDescriptor *sphere, wxCommandEvent &evt) {
-		skipUiUpdate = true;
-		double newVal;
-		evt.GetString().ToDouble(&newVal);
-		return (float)newVal;
-	}, prevCommand, prevFloatVal);
-
-	EventBindingHelpers::BindTextCtrl<unsigned int, SphereDescriptor>(columnsTextCtrl, sphere, engine, theApp->GetEditorState(), "Change Columns", [](SphereDescriptor *sphere) {
-		return sphere->GetColumns();
-	}, [engine](SphereDescriptor *sphere, const unsigned int &columns) {
-		sphere->SetColumns(columns, engine);
-	}, [this](SphereDescriptor *sphere, wxCommandEvent &evt) {
-		skipUiUpdate = true;
-		unsigned long newVal;
-		evt.GetString().ToULong(&newVal);
-		return (unsigned int)newVal;
-	}, prevCommand, prevUIntVal);
-
-	EventBindingHelpers::BindTextCtrl<unsigned int, SphereDescriptor>(ringsTextCtrl, sphere, engine, theApp->GetEditorState(), "Change Rings", [](SphereDescriptor *sphere) {
-		return sphere->GetRings();
-	}, [engine](SphereDescriptor *sphere, const unsigned int &rings) {
-		sphere->SetRings(rings, engine);
-	}, [this](SphereDescriptor *sphere, wxCommandEvent &evt) {
-		skipUiUpdate = true;
-		unsigned long newVal;
-		evt.GetString().ToULong(&newVal);
-		return (unsigned int)newVal;
-	}, prevCommand, prevUIntVal);
+	BindTextCtrl(collisionQueryMaskTextCtrl, "Change Mask", &SphereDescriptor::GetCollisionQueryMask, &SphereDescriptor::SetCollisionQueryMask);
+	BindTextCtrl(lightMaskTextCtrl, "Change Mask", &SphereDescriptor::GetLightMask, &SphereDescriptor::SetLightMask);
+	BindTextCtrl(radiusTextCtrl, "Change Radius", &SphereDescriptor::GetRadius, &SphereDescriptor::SetRadius);
+	BindTextCtrl(columnsTextCtrl, "Change Columns", &SphereDescriptor::GetColumns, &SphereDescriptor::SetColumns);
+	BindTextCtrl(ringsTextCtrl, "Change Rings", &SphereDescriptor::GetRings, &SphereDescriptor::SetRings);
 }
 
 SpherePanelImpl::~SpherePanelImpl()
@@ -132,11 +78,6 @@ void SpherePanelImpl::MaterialFileChanged(wxFileDirPickerEvent& event)
 
 void SpherePanelImpl::UpdateUI()
 {
-	if (skipUiUpdate)
-	{
-		skipUiUpdate = false;
-		return;
-	}
 	SphereDescriptor *sphere = static_cast<SphereDescriptor *>(parent->GetComponent());
 
 	radiusTextCtrl->ChangeValue(wxString::FromDouble(sphere->GetRadius()));
@@ -153,9 +94,4 @@ void SpherePanelImpl::UpdateUI()
 	collisionQueryMaskTextCtrl->ChangeValue(collisionQueryMaskStream.str());
 
 	materialFilePicker->SetPath(sphere->GetMaterialFileName());
-}
-
-void SpherePanelImpl::UndoPerformed(Command *command)
-{
-	prevCommand = nullptr;
 }

@@ -1,11 +1,12 @@
 #pragma once
 
 #include "../mainframe.h"
+#include "PanelCommon.h"
 
 class BaseComponentPanelImpl;
-class Command;
+class LightDescriptor;
 
-class LightPanelImpl : public LightPanel, public FireCube::Object
+class LightPanelImpl : public LightPanel, public PanelCommon<LightDescriptor>
 {
 	FIRECUBE_OBJECT(LightPanelImpl);
 public:
@@ -16,13 +17,8 @@ private:
 	virtual void LightTypeChanged(wxCommandEvent& event) override;
 	virtual void LightColorChanged(wxColourPickerEvent& event) override;
 	virtual void CastShadowChanged(wxCommandEvent& event) override;	
-	void UpdatePanelsVisibility(FireCube::LightType type);
-	void UndoPerformed(Command *command);
-	void UpdateUI();
+	void UpdatePanelsVisibility(FireCube::LightType type);	
+	virtual void UpdateUI() override;
 
-	BaseComponentPanelImpl *parent;
-	Command *prevCommand;
-	unsigned int prevMask;
-	float prevFloatVal;
-	bool skipUiUpdate;
+	BaseComponentPanelImpl *parent;	
 };

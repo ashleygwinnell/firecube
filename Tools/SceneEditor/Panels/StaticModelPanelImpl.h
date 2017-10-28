@@ -1,11 +1,12 @@
 #pragma once
 
 #include "../mainframe.h"
+#include "PanelCommon.h"
 
 class BaseComponentPanelImpl;
-class Command;
+class StaticModelDescriptor;
 
-class StaticModelPanelImpl : public StaticModelPanel, public FireCube::Object
+class StaticModelPanelImpl : public StaticModelPanel, PanelCommon<StaticModelDescriptor>
 {
 	FIRECUBE_OBJECT(StaticModelPanelImpl);
 public:
@@ -13,12 +14,8 @@ public:
 	~StaticModelPanelImpl();
 private:
 	virtual void FileChanged(wxFileDirPickerEvent& event);
-	virtual void CastShadowChanged(wxCommandEvent& event);
-	void UndoPerformed(Command *command);
-	void UpdateUI();
+	virtual void CastShadowChanged(wxCommandEvent& event);	
+	virtual void UpdateUI() override;
 
-	BaseComponentPanelImpl *parent;
-	Command *prevCommand;
-	unsigned int prevUIntVal;	
-	bool skipUiUpdate;
+	BaseComponentPanelImpl *parent;	
 };

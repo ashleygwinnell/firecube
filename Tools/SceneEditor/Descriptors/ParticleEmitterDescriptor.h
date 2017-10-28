@@ -24,9 +24,13 @@ public:
 	void SetMaterial(std::string val);
 	float GetMinLifeTime() const;
 	float GetMaxLifeTime() const;
+	void SetMinLifeTime(float minLifeTime);
+	void SetMaxLifeTime(float maxLifeTime);
 	void SetLifeTime(float minLifeTime, float maxLifeTime);
 	float GetMinSpeed() const;
 	float GetMaxSpeed() const;
+	void SetMinSpeed(float minSpeed);
+	void SetMaxSpeed(float maxSpeed);
 	void SetSpeed(float minSpeed, float maxSpeed);
 	bool GetPrewarm() const;
 	void SetPrewarm(bool val);

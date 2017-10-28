@@ -1,28 +1,23 @@
 #pragma once
 
 #include "../mainframe.h"
+#include "PanelCommon.h"
 
 class BaseComponentPanelImpl;
-class Command;
+class CollisionShapeDescriptor;
 
-class CollisionShapePanelImpl : public CollisionShapePanel, public FireCube::Object
+class CollisionShapePanelImpl : public CollisionShapePanel, public PanelCommon<CollisionShapeDescriptor>
 {
 	FIRECUBE_OBJECT(CollisionShapePanelImpl);
 public:
 	CollisionShapePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine);
 	~CollisionShapePanelImpl();
 private:
-	void UpdateUI();
-	void UpdateVisibility(FireCube::CollisionShapeType type);	
-	virtual void ShapeTypeChanged(wxCommandEvent& event) override;		
+	virtual void UpdateUI() override;
+	void UpdateVisibility(FireCube::CollisionShapeType type);
+	virtual void ShapeTypeChanged(wxCommandEvent& event) override;
 	virtual void TriggerChanged(wxCommandEvent& event) override;
 	virtual void MeshFileChanged(wxFileDirPickerEvent& event) override;
-	void UndoPerformed(Command *command);
 
 	BaseComponentPanelImpl *parent;
-	Command *prevCommand;	
-	FireCube::Plane prevPlane;
-	FireCube::BoundingBox prevBoundingBox;
-	float prevRadius;
-	bool skipUiUpdate;
 };

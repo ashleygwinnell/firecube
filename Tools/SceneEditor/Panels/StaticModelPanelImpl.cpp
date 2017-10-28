@@ -10,39 +10,15 @@
 
 using namespace FireCube;
 
-StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : StaticModelPanel(parent), parent(parent), Object(engine), skipUiUpdate(false)
+StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine) : StaticModelPanel(parent), parent(parent),
+	PanelCommon(engine, static_cast<StaticModelDescriptor *>(parent->GetComponent()))
 {
-	MyApp *theApp = ((MyApp *)wxTheApp);
-	StaticModelDescriptor *staticModel = static_cast<StaticModelDescriptor *>(parent->GetComponent());
-	
 	meshFilePicker->SetInitialDirectory(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Models");
 
 	UpdateUI();
 
-	SubscribeToEvent(staticModel->componentChanged, &StaticModelPanelImpl::UpdateUI);
-	SubscribeToEvent(theApp->GetEditorState(), theApp->GetEditorState()->undoPerformed, &StaticModelPanelImpl::UndoPerformed);
-
-	EventBindingHelpers::BindTextCtrl<unsigned int, StaticModelDescriptor>(collisionQueryMaskTextCtrl, staticModel, engine, theApp->GetEditorState(), "Change Mask", [](StaticModelDescriptor *staticModel) -> unsigned int {
-		return staticModel->GetCollisionQueryMask();
-	}, [](StaticModelDescriptor *staticModel, const unsigned int &mask) {
-		staticModel->SetCollisionQueryMask(mask);
-	}, [this](StaticModelDescriptor *staticModel, wxCommandEvent &evt) -> unsigned int {
-		skipUiUpdate = true;
-		unsigned long newVal;
-		evt.GetString().ToULong(&newVal);
-		return (unsigned int)newVal;
-	}, prevCommand, prevUIntVal);
-
-	EventBindingHelpers::BindTextCtrl<unsigned int, StaticModelDescriptor>(lightMaskTextCtrl, staticModel, engine, theApp->GetEditorState(), "Change Mask", [](StaticModelDescriptor *staticModel) -> unsigned int {
-		return staticModel->GetLightMask();
-	}, [](StaticModelDescriptor *staticModel, const unsigned int &mask) {
-		staticModel->SetLightMask(mask);
-	}, [this](StaticModelDescriptor *staticModel, wxCommandEvent &evt) -> unsigned int {
-		skipUiUpdate = true;
-		unsigned long newVal;
-		evt.GetString().ToULong(&newVal);
-		return (unsigned int)newVal;
-	}, prevCommand, prevUIntVal);
+	BindTextCtrl(collisionQueryMaskTextCtrl, "Change Mask", &StaticModelDescriptor::GetCollisionQueryMask, &StaticModelDescriptor::SetCollisionQueryMask);
+	BindTextCtrl(lightMaskTextCtrl, "Change Mask", &StaticModelDescriptor::GetLightMask, &StaticModelDescriptor::SetLightMask);
 }
 
 StaticModelPanelImpl::~StaticModelPanelImpl()
@@ -112,11 +88,6 @@ void StaticModelPanelImpl::CastShadowChanged(wxCommandEvent& event)
 
 void StaticModelPanelImpl::UpdateUI()
 {
-	if (skipUiUpdate)
-	{
-		skipUiUpdate = false;
-		return;
-	}
 	StaticModelDescriptor *staticModel = static_cast<StaticModelDescriptor *>(parent->GetComponent());	
 
 	meshFilePicker->SetPath(staticModel->GetMeshFilename());
@@ -129,9 +100,4 @@ void StaticModelPanelImpl::UpdateUI()
 	std::stringstream collisionQueryMaskStream;
 	collisionQueryMaskStream << std::hex << staticModel->GetCollisionQueryMask();
 	collisionQueryMaskTextCtrl->ChangeValue(collisionQueryMaskStream.str());
-}
-
-void StaticModelPanelImpl::UndoPerformed(Command *command)
-{
-	prevCommand = nullptr;
 }

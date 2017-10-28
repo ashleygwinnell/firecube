@@ -1,30 +1,24 @@
 #pragma once
 
 #include "../mainframe.h"
+#include "PanelCommon.h"
 
 class BaseComponentPanelImpl;
-class Command;
+class ParticleEmitterDescriptor;
 
-class ParticleEmitterPanelImpl : public ParticleEmitterPanel, public FireCube::Object
+class ParticleEmitterPanelImpl : public ParticleEmitterPanel, public PanelCommon<ParticleEmitterDescriptor>
 {
 	FIRECUBE_OBJECT(ParticleEmitterPanelImpl);
 public:
 	ParticleEmitterPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *engine);
 	~ParticleEmitterPanelImpl();
 private:
-	void UpdateUI();
+	virtual void UpdateUI() override;
 	void UpdateVisibility(FireCube::ParticleEmitterShape shape);
 	virtual void ShapeTypeChanged(wxCommandEvent& event) override;
 	virtual void MaterialFileChanged(wxFileDirPickerEvent& event) override;	
 	virtual void PrewarmChanged(wxCommandEvent& event) override;
-	virtual void SimulationSpaceChanged(wxCommandEvent& event) override;
-	void UndoPerformed(Command *command);
+	virtual void SimulationSpaceChanged(wxCommandEvent& event) override;	
 
-	BaseComponentPanelImpl *parent;
-	FireCube::vec3 prevBox;
-	float prevFloatVal;
-	unsigned int prevUIntVal;
-	FireCube::vec2 prevVec2Val;
-	Command *prevCommand;
-	bool skipUiUpdate;
+	BaseComponentPanelImpl *parent;	
 };
