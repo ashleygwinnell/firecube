@@ -14,7 +14,7 @@ LightPanelImpl::LightPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine 
 {	
 	UpdateUI();	
 
-	BindTextCtrl(maskTextCtrl, "Change Mask", &LightDescriptor::GetLightMask, &LightDescriptor::SetLightMask);
+	BindTextCtrlHex(maskTextCtrl, "Change Mask", &LightDescriptor::GetLightMask, &LightDescriptor::SetLightMask);
 	BindTextCtrl(rangeTextCtrl, "Change Range", &LightDescriptor::GetRange, &LightDescriptor::SetRange);
 	BindTextCtrl(shadowIntensityTextCtrl, "Change Shadow Intensity", &LightDescriptor::GetShadowIntensity, &LightDescriptor::SetShadowIntensity);
 	BindTextCtrlFloat(spotCutoffTextCtrl, "Change Spot Cutoff", [](LightDescriptor *light) {

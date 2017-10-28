@@ -17,8 +17,8 @@ BoxPanelImpl::BoxPanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine *eng
 	
 
 	BindTextCtrl(widthTextCtrl, "Change Width", heightTextCtrl, "Change Height", depthTextCtrl, "Change Depth", &BoxDescriptor::GetSize, &BoxDescriptor::SetSize);
-	BindTextCtrl(collisionQueryMaskTextCtrl, "Change Mask", &BoxDescriptor::GetCollisionQueryMask, &BoxDescriptor::SetCollisionQueryMask);
-	BindTextCtrl(lightMaskTextCtrl, "Change Mask", &BoxDescriptor::GetLightMask, &BoxDescriptor::SetLightMask);
+	BindTextCtrlHex(collisionQueryMaskTextCtrl, "Change Mask", &BoxDescriptor::GetCollisionQueryMask, &BoxDescriptor::SetCollisionQueryMask);
+	BindTextCtrlHex(lightMaskTextCtrl, "Change Mask", &BoxDescriptor::GetLightMask, &BoxDescriptor::SetLightMask);
 }
 
 BoxPanelImpl::~BoxPanelImpl()

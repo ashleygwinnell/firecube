@@ -17,8 +17,8 @@ PlanePanelImpl::PlanePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engine 
 
 	UpdateUI();
 
-	BindTextCtrl(collisionQueryMaskTextCtrl, "Change Mask", &PlaneDescriptor::GetCollisionQueryMask, &PlaneDescriptor::SetCollisionQueryMask);
-	BindTextCtrl(lightMaskTextCtrl, "Change Mask", &PlaneDescriptor::GetLightMask, &PlaneDescriptor::SetLightMask);
+	BindTextCtrlHex(collisionQueryMaskTextCtrl, "Change Mask", &PlaneDescriptor::GetCollisionQueryMask, &PlaneDescriptor::SetCollisionQueryMask);
+	BindTextCtrlHex(lightMaskTextCtrl, "Change Mask", &PlaneDescriptor::GetLightMask, &PlaneDescriptor::SetLightMask);
 	BindTextCtrl(widthTextCtrl, "Change Width", depthTextCtrl, "Change Depth", &PlaneDescriptor::GetSize, &PlaneDescriptor::SetSize);
 }
 

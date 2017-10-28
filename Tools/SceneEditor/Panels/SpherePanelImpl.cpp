@@ -17,8 +17,8 @@ SpherePanelImpl::SpherePanelImpl(BaseComponentPanelImpl* parent, FireCube::Engin
 
 	UpdateUI();
 
-	BindTextCtrl(collisionQueryMaskTextCtrl, "Change Mask", &SphereDescriptor::GetCollisionQueryMask, &SphereDescriptor::SetCollisionQueryMask);
-	BindTextCtrl(lightMaskTextCtrl, "Change Mask", &SphereDescriptor::GetLightMask, &SphereDescriptor::SetLightMask);
+	BindTextCtrlHex(collisionQueryMaskTextCtrl, "Change Mask", &SphereDescriptor::GetCollisionQueryMask, &SphereDescriptor::SetCollisionQueryMask);
+	BindTextCtrlHex(lightMaskTextCtrl, "Change Mask", &SphereDescriptor::GetLightMask, &SphereDescriptor::SetLightMask);
 	BindTextCtrl(radiusTextCtrl, "Change Radius", &SphereDescriptor::GetRadius, &SphereDescriptor::SetRadius);
 	BindTextCtrl(columnsTextCtrl, "Change Columns", &SphereDescriptor::GetColumns, &SphereDescriptor::SetColumns);
 	BindTextCtrl(ringsTextCtrl, "Change Rings", &SphereDescriptor::GetRings, &SphereDescriptor::SetRings);

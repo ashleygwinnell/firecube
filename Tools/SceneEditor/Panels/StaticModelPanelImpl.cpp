@@ -17,8 +17,8 @@ StaticModelPanelImpl::StaticModelPanelImpl(BaseComponentPanelImpl* parent, FireC
 
 	UpdateUI();
 
-	BindTextCtrl(collisionQueryMaskTextCtrl, "Change Mask", &StaticModelDescriptor::GetCollisionQueryMask, &StaticModelDescriptor::SetCollisionQueryMask);
-	BindTextCtrl(lightMaskTextCtrl, "Change Mask", &StaticModelDescriptor::GetLightMask, &StaticModelDescriptor::SetLightMask);
+	BindTextCtrlHex(collisionQueryMaskTextCtrl, "Change Mask", &StaticModelDescriptor::GetCollisionQueryMask, &StaticModelDescriptor::SetCollisionQueryMask);
+	BindTextCtrlHex(lightMaskTextCtrl, "Change Mask", &StaticModelDescriptor::GetLightMask, &StaticModelDescriptor::SetLightMask);
 }
 
 StaticModelPanelImpl::~StaticModelPanelImpl()

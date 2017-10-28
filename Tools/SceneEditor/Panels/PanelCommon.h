@@ -56,6 +56,19 @@ protected:
 		});
 	}
 
+	void BindTextCtrlHex(wxTextCtrl *textCtrl, const std::string &description, unsigned int (Desc::*getter)() const, void (Desc::*setter)(unsigned int))
+	{
+		BindTextCtrlUInt(textCtrl, description, [getter](Desc *component) -> unsigned int {
+			return (component->*getter)();
+		}, [setter](Desc *component, const unsigned int &newVal) {
+			(component->*setter)(newVal);
+		}, [](Desc *desc, wxCommandEvent &evt) -> unsigned int {
+			unsigned long newVal;
+			evt.GetString().ToULong(&newVal, 16);
+			return (unsigned int)newVal;
+		});
+	}
+
 	// float helper functions
 	void BindTextCtrlFloat(wxTextCtrl *textCtrl, const std::string &description, std::function<float(Desc *)> getValue, std::function<void(Desc *, const float &)> setValue, std::function<float(Desc *, wxCommandEvent &)> getNewValue)
 	{
