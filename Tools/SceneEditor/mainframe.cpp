@@ -1477,6 +1477,9 @@ TexturePreviewPanel::~TexturePreviewPanel()
 
 ParticleEmitterPanel::ParticleEmitterPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
+	wxBoxSizer* bSizer41;
+	bSizer41 = new wxBoxSizer( wxVERTICAL );
+	
 	wxFlexGridSizer* fgSizer3;
 	fgSizer3 = new wxFlexGridSizer( 0, 2, 0, 0 );
 	fgSizer3->AddGrowableCol( 1 );
@@ -1656,15 +1659,36 @@ ParticleEmitterPanel::ParticleEmitterPanel( wxWindow* parent, wxWindowID id, con
 	fgSizer3->Add( simulationSpaceChoice, 0, wxALL|wxEXPAND, 5 );
 	
 	
-	this->SetSizer( fgSizer3 );
+	bSizer41->Add( fgSizer3, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer42;
+	bSizer42 = new wxBoxSizer( wxHORIZONTAL );
+	
+	playButton = new wxButton( this, wxID_ANY, wxT("Play"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer42->Add( playButton, 1, wxALL, 5 );
+	
+	resetButton = new wxButton( this, wxID_ANY, wxT("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer42->Add( resetButton, 1, wxALL, 5 );
+	
+	stopButton = new wxButton( this, wxID_ANY, wxT("Stop"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer42->Add( stopButton, 1, wxALL, 5 );
+	
+	
+	bSizer41->Add( bSizer42, 0, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer41 );
 	this->Layout();
-	fgSizer3->Fit( this );
+	bSizer41->Fit( this );
 	
 	// Connect Events
 	shapeTypeChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ParticleEmitterPanel::ShapeTypeChanged ), NULL, this );
 	prewarmCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ParticleEmitterPanel::PrewarmChanged ), NULL, this );
 	materialFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ParticleEmitterPanel::MaterialFileChanged ), NULL, this );
 	simulationSpaceChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ParticleEmitterPanel::SimulationSpaceChanged ), NULL, this );
+	playButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ParticleEmitterPanel::OnPlayClicked ), NULL, this );
+	resetButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ParticleEmitterPanel::OnResetClicked ), NULL, this );
+	stopButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ParticleEmitterPanel::OnStopClicked ), NULL, this );
 }
 
 ParticleEmitterPanel::~ParticleEmitterPanel()
@@ -1674,6 +1698,9 @@ ParticleEmitterPanel::~ParticleEmitterPanel()
 	prewarmCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ParticleEmitterPanel::PrewarmChanged ), NULL, this );
 	materialFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ParticleEmitterPanel::MaterialFileChanged ), NULL, this );
 	simulationSpaceChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ParticleEmitterPanel::SimulationSpaceChanged ), NULL, this );
+	playButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ParticleEmitterPanel::OnPlayClicked ), NULL, this );
+	resetButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ParticleEmitterPanel::OnResetClicked ), NULL, this );
+	stopButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ParticleEmitterPanel::OnStopClicked ), NULL, this );
 	
 }
 

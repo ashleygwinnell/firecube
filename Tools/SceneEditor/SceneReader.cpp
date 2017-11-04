@@ -382,7 +382,7 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 		particleEmitterDescriptor->SetNumberOfParticles((unsigned int) Variant::FromString(e->Attribute("number_of_particles")).GetFloat());		
 		if (e->Attribute("material"))
 		{
-			particleEmitterDescriptor->SetMaterial(e->Attribute("material"));
+			particleEmitterDescriptor->SetMaterial(e->Attribute("material"), engine);
 		}
 		
 		particleEmitterDescriptor->SetEmissionRate((unsigned int) Variant::FromString(e->Attribute("emission_rate")).GetFloat());

@@ -62,6 +62,11 @@ unsigned int ParticleEmitterDescriptor::GetNumberOfParticles() const
 void ParticleEmitterDescriptor::SetNumberOfParticles(unsigned int val)
 {
 	numberOfParticles = val;
+
+	if (component)
+	{
+		((ParticleEmitter *)component)->SetNumberOfParticles(val);
+	}
 }
 
 unsigned int ParticleEmitterDescriptor::GetEmissionRate() const
@@ -72,6 +77,11 @@ unsigned int ParticleEmitterDescriptor::GetEmissionRate() const
 void ParticleEmitterDescriptor::SetEmissionRate(unsigned int val)
 {
 	emissionRate = val;
+
+	if (component)
+	{
+		((ParticleEmitter *)component)->SetEmissionRate(val);
+	}
 }
 
 std::string ParticleEmitterDescriptor::GetMaterial() const
@@ -79,9 +89,14 @@ std::string ParticleEmitterDescriptor::GetMaterial() const
 	return material;
 }
 
-void ParticleEmitterDescriptor::SetMaterial(std::string val)
+void ParticleEmitterDescriptor::SetMaterial(const std::string &val, FireCube::Engine *engine)
 {
 	material = val;
+
+	if (component)
+	{
+		((ParticleEmitter *)component)->SetMaterial(engine->GetResourceCache()->GetResource<Material>(val));
+	}
 }
 
 float ParticleEmitterDescriptor::GetMinLifeTime() const
@@ -97,17 +112,32 @@ float ParticleEmitterDescriptor::GetMaxLifeTime() const
 void ParticleEmitterDescriptor::SetMinLifeTime(float minLifeTime)
 {
 	this->minLifeTime = minLifeTime;
+
+	if (component)
+	{
+		((ParticleEmitter *)component)->SetLifeTime(minLifeTime, maxLifeTime);
+	}
 }
 
 void ParticleEmitterDescriptor::SetMaxLifeTime(float maxLifeTime)
 {	
 	this->maxLifeTime = maxLifeTime;
+
+	if (component)
+	{
+		((ParticleEmitter *)component)->SetLifeTime(minLifeTime, maxLifeTime);
+	}
 }
 
 void ParticleEmitterDescriptor::SetLifeTime(float minLifeTime, float maxLifeTime)
 {
 	this->minLifeTime = minLifeTime;
 	this->maxLifeTime = maxLifeTime;
+
+	if (component)
+	{
+		((ParticleEmitter *)component)->SetLifeTime(minLifeTime, maxLifeTime);
+	}
 }
 
 float ParticleEmitterDescriptor::GetMinSpeed() const
@@ -123,17 +153,32 @@ float ParticleEmitterDescriptor::GetMaxSpeed() const
 void ParticleEmitterDescriptor::SetMinSpeed(float minSpeed)
 {
 	this->minSpeed = minSpeed;
+
+	if (component)
+	{
+		((ParticleEmitter *)component)->SetSpeed(minSpeed, maxSpeed);
+	}
 }
 
 void ParticleEmitterDescriptor::SetMaxSpeed(float maxSpeed)
 {	
 	this->maxSpeed = maxSpeed;
+
+	if (component)
+	{
+		((ParticleEmitter *)component)->SetSpeed(minSpeed, maxSpeed);
+	}
 }
 
 void ParticleEmitterDescriptor::SetSpeed(float minSpeed, float maxSpeed)
 {
 	this->minSpeed = minSpeed;
 	this->maxSpeed = maxSpeed;
+
+	if (component)
+	{
+		((ParticleEmitter *)component)->SetSpeed(minSpeed, maxSpeed);
+	}
 }
 
 bool ParticleEmitterDescriptor::GetPrewarm() const
@@ -144,6 +189,11 @@ bool ParticleEmitterDescriptor::GetPrewarm() const
 void ParticleEmitterDescriptor::SetPrewarm(bool val)
 {
 	prewarm = val;
+
+	if (component)
+	{
+		((ParticleEmitter *)component)->SetPrewarm(val);
+	}
 }
 
 void ParticleEmitterDescriptor::CreateComponent(Node *node, Engine *engine)
@@ -157,17 +207,58 @@ void ParticleEmitterDescriptor::CreateComponent(Node *node, Engine *engine)
 	{
 		particleEmitter->SetSphereEmitter(radius);
 	}
+
+	particleEmitter->SetBoundingBox(BoundingBox(vec3(-1000.0f), vec3(1000.0f)));	
+	particleEmitter->SetMaterial(engine->GetResourceCache()->GetResource<Material>(material));
+	particleEmitter->SetEmissionRate(emissionRate);
+	particleEmitter->SetLifeTime(minLifeTime, maxLifeTime);
+	particleEmitter->SetPrewarm(prewarm);
+	particleEmitter->SetSimulationSpace(simulationSpace);
+	particleEmitter->SetSpeed(minSpeed, maxSpeed);
+	particleEmitter->SetEnabled(false);
+	
 	component = particleEmitter;
 }
 
 void ParticleEmitterDescriptor::SetSimulationSpace(ParticleEmitterSimulationSpace simulationSpace)
 {
 	this->simulationSpace = simulationSpace;
+
+	if (component)
+	{
+		((ParticleEmitter *)component)->SetSimulationSpace(simulationSpace);
+	}
 }
 
 ParticleEmitterSimulationSpace ParticleEmitterDescriptor::GetSimulationSpace() const
 {
 	return simulationSpace;
+}
+
+void ParticleEmitterDescriptor::SetEnabled(bool enable)
+{
+	if (component)
+	{
+		((ParticleEmitter *)component)->SetEnabled(enable);		
+	}
+}
+
+bool ParticleEmitterDescriptor::IsEnabled() const
+{
+	if (component)
+	{
+		return ((ParticleEmitter *)component)->IsEnabled();
+	}
+
+	return false;
+}
+
+void ParticleEmitterDescriptor::Reset()
+{
+	if (component)
+	{
+		((ParticleEmitter *)component)->Reset();
+	}
 }
 
 ComponentDescriptor *ParticleEmitterDescriptor::Clone()

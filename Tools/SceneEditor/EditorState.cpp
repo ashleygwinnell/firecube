@@ -3,7 +3,7 @@
 
 using namespace FireCube;
 
-EditorState::EditorState(Engine *engine) : Object(engine), lastExecutedCommand(-1), selectedNode(nullptr)
+EditorState::EditorState(Engine *engine) : Object(engine), lastExecutedCommand(-1), selectedNode(nullptr), renderingLoopState(RenderingLoopState::STOPPED)
 {
 
 }
@@ -129,4 +129,14 @@ Command *EditorState::GetCurrentRedoCommand() const
 std::map<FireCube::Node *, NodeDescriptor *> &EditorState::GetNodeMap()
 {
 	return nodeMap;
+}
+
+RenderingLoopState EditorState::GetRenderingLoopState() const
+{
+	return renderingLoopState;
+}
+
+void EditorState::SetRenderingLoopState(RenderingLoopState state)
+{
+	renderingLoopState = state;
 }

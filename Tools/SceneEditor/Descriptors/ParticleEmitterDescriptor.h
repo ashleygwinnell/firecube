@@ -21,7 +21,7 @@ public:
 	unsigned int GetEmissionRate() const;
 	void SetEmissionRate(unsigned int val);
 	std::string GetMaterial() const;
-	void SetMaterial(std::string val);
+	void SetMaterial(const std::string &val, FireCube::Engine *engine);
 	float GetMinLifeTime() const;
 	float GetMaxLifeTime() const;
 	void SetMinLifeTime(float minLifeTime);
@@ -36,6 +36,9 @@ public:
 	void SetPrewarm(bool val);
 	void SetSimulationSpace(FireCube::ParticleEmitterSimulationSpace simulationSpace);
 	FireCube::ParticleEmitterSimulationSpace GetSimulationSpace() const;
+	void SetEnabled(bool enable);
+	bool IsEnabled() const;
+	void Reset();
 
 private:
 	FireCube::ParticleEmitterShape shape;

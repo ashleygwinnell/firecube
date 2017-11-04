@@ -50,6 +50,7 @@ void BaseGLCanvas::InitCanvas()
 		init = true;
 		theApp->InitEngine();
 		Init();
+		glEnable(GL_POINT_SPRITE); // Needed since wxWidgets 3.0 creates an old OpenGL context (not using wglCreateContextAttribs)
 	}
 }
 

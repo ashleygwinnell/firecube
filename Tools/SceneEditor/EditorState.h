@@ -7,6 +7,11 @@ class Command;
 class NodeDescriptor;
 class ComponentDescriptor;
 
+enum class RenderingLoopState
+{
+	RUNNING, PAUSED, STOPPED
+};
+
 class EditorState : public FireCube::Object
 {
 	FIRECUBE_OBJECT(EditorState)
@@ -26,6 +31,8 @@ public:
 	Command *GetCurrentUndoCommand() const;
 	Command *GetCurrentRedoCommand() const;
 	std::map<FireCube::Node *, NodeDescriptor *> &GetNodeMap();
+	void SetRenderingLoopState(RenderingLoopState state);
+	RenderingLoopState GetRenderingLoopState() const;
 
 	FireCube::Event<NodeDescriptor *> selectedNodeChanged;
 	FireCube::Event<NodeDescriptor *> nodeAdded;
@@ -49,6 +56,10 @@ public:
 	FireCube::Event<> switchedToTranslateGizmo;
 	FireCube::Event<> switchedToRotateGizmo;
 	FireCube::Event<> switchedToScaleGizmo;
+	FireCube::Event<> startRenderLoop;
+	FireCube::Event<> pauseRenderLoop;
+	FireCube::Event<> stopRenderLoop;
+	FireCube::Event<> resetParticleEmitters;
 
 private:
 	
@@ -57,4 +68,5 @@ private:
 	int lastExecutedCommand;
 	std::string currentSceneFile;
 	std::map<FireCube::Node *, NodeDescriptor *> nodeMap;
+	RenderingLoopState renderingLoopState;
 };

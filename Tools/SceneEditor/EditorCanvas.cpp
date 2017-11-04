@@ -19,6 +19,7 @@ using namespace FireCube;
 #include "Descriptors/PhysicsWorldDescriptor.h"
 #include "Descriptors/StaticModelDescriptor.h"
 #include "Descriptors/CameraDescriptor.h"
+#include "Descriptors/ParticleEmitterDescriptor.h"
 #include "AssetUtils.h"
 #include "SceneReader.h"
 
@@ -32,6 +33,8 @@ EditorCanvas::EditorCanvas(wxWindow *parent, wxWindowID id, const wxPoint& pos, 
 	Bind(wxEVT_LEFT_UP, &EditorCanvas::OnLeftUp, this);
 	Bind(wxEVT_LEFT_DOWN, &EditorCanvas::OnLeftDown, this);
 	Bind(wxEVT_KEY_UP, &EditorCanvas::OnKeyUp, this);
+
+	timer.Init();
 
 	SetDropTarget(new CanvasDropTarget(this));
 }
@@ -55,6 +58,10 @@ void EditorCanvas::Init()
 	SubscribeToEvent(editorState->startMaterialPick, &EditorCanvas::StartMaterialPick);
 	SubscribeToEvent(editorState->addMesh, &EditorCanvas::AddMesh);
 	SubscribeToEvent(editorState->addPrefab, &EditorCanvas::AddPrefab);
+	SubscribeToEvent(editorState->startRenderLoop, &EditorCanvas::StartRenderLoop);
+	SubscribeToEvent(editorState->pauseRenderLoop, &EditorCanvas::PauseRenderLoop);
+	SubscribeToEvent(editorState->stopRenderLoop, &EditorCanvas::StopRenderLoop);
+	SubscribeToEvent(editorState->resetParticleEmitters, &EditorCanvas::OnResetParticleEmitters);
 
 	theApp->InitScene();
 	scene = theApp->GetScene();
@@ -524,6 +531,83 @@ void EditorCanvas::AddPrefab(const std::string &path)
 void EditorCanvas::UseCamera(CameraDescriptor *camera)
 {
 	UseCamera((Camera *) camera->GetComponent());
+}
+
+void EditorCanvas::StartRenderLoop()
+{	
+	if (editorState->GetRenderingLoopState() == RenderingLoopState::STOPPED)
+	{
+		EnableParticleEmitters(rootDesc, true);
+	}
+
+	timer.Update();
+	Bind(wxEVT_IDLE, &EditorCanvas::OnIdle, this);
+	editorState->SetRenderingLoopState(RenderingLoopState::RUNNING);
+}
+
+void EditorCanvas::StopRenderLoop()
+{
+	editorState->SetRenderingLoopState(RenderingLoopState::STOPPED);
+	EnableParticleEmitters(rootDesc, false);
+	Unbind(wxEVT_IDLE, &EditorCanvas::OnIdle, this);
+	this->Refresh(false);
+}
+
+void EditorCanvas::PauseRenderLoop()
+{
+	editorState->SetRenderingLoopState(RenderingLoopState::PAUSED);
+	Unbind(wxEVT_IDLE, &EditorCanvas::OnIdle, this);
+}
+
+void EditorCanvas::OnIdle(wxIdleEvent &evt)
+{
+	float deltaTime = (float)timer.Passed();	
+	timer.Update();
+	engine->GetRenderer()->SetTimeStep(deltaTime);
+	Events::Update(this, deltaTime);
+	this->Refresh(false);
+	evt.RequestMore();
+}
+
+void EditorCanvas::EnableParticleEmitters(NodeDescriptor *node, bool enable)
+{
+	for (auto comp : node->GetComponents())
+	{
+		if (comp->GetType() == ComponentType::PARTICLE_EMITTER)
+		{
+			static_cast<ParticleEmitterDescriptor *>(comp)->SetEnabled(enable);
+		}
+	}
+
+	for (auto child : node->GetChildren())
+	{
+		EnableParticleEmitters(child, enable);
+	}
+}
+
+void EditorCanvas::ResetParticleEmitters(NodeDescriptor *node)
+{
+	for (auto comp : node->GetComponents())
+	{
+		if (comp->GetType() == ComponentType::PARTICLE_EMITTER)
+		{
+			static_cast<ParticleEmitterDescriptor *>(comp)->Reset();
+		}
+	}
+
+	for (auto child : node->GetChildren())
+	{
+		ResetParticleEmitters(child);
+	}
+}
+
+void EditorCanvas::OnResetParticleEmitters()
+{
+	ResetParticleEmitters(rootDesc);
+	if (editorState->GetRenderingLoopState() == RenderingLoopState::PAUSED)
+	{
+		this->Refresh(false);
+	}
 }
 
 void EditorCanvas::UseDefaultCamera()

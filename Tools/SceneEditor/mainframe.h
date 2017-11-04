@@ -685,12 +685,18 @@ class ParticleEmitterPanel : public wxPanel
 		wxFilePickerCtrl* materialFilePicker;
 		wxStaticText* m_staticText85;
 		wxChoice* simulationSpaceChoice;
+		wxButton* playButton;
+		wxButton* resetButton;
+		wxButton* stopButton;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void ShapeTypeChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void PrewarmChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void MaterialFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void SimulationSpaceChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnPlayClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnResetClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnStopClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

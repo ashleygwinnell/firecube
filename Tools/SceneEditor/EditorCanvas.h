@@ -68,6 +68,13 @@ private:
 	void AddMesh(const std::string &path);
 	void AddPrefab(const std::string &path);
 	void UseCamera(FireCube::Camera *camera);
+	void StartRenderLoop();
+	void StopRenderLoop();
+	void PauseRenderLoop();
+	void OnIdle(wxIdleEvent &evt);
+	void EnableParticleEmitters(NodeDescriptor *node, bool enable);
+	void ResetParticleEmitters(NodeDescriptor *node);
+	void OnResetParticleEmitters();
 	
 	FireCube::Scene *scene, *editorScene;
 	FireCube::OrbitCamera *defaultCamera;
@@ -83,4 +90,5 @@ private:
 	Operation currentOperation;	
 	EditorState *editorState;	
 	NodeDescriptor *rootDesc;
+	FireCube::Timer timer;
 };

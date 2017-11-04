@@ -19,6 +19,9 @@ private:
 	virtual void MaterialFileChanged(wxFileDirPickerEvent& event) override;	
 	virtual void PrewarmChanged(wxCommandEvent& event) override;
 	virtual void SimulationSpaceChanged(wxCommandEvent& event) override;	
+	virtual void OnPlayClicked(wxCommandEvent& event) override;
+	virtual void OnStopClicked(wxCommandEvent& event) override;
+	virtual void OnResetClicked(wxCommandEvent& event) override;
 
 	BaseComponentPanelImpl *parent;	
 };

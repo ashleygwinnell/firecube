@@ -23,6 +23,11 @@ ParticleEmitterPanelImpl::ParticleEmitterPanelImpl(BaseComponentPanelImpl* paren
 	BindTextCtrl(maxLifeTimeTextCtrl, "Change Life Time", &ParticleEmitterDescriptor::GetMaxLifeTime, &ParticleEmitterDescriptor::SetMaxLifeTime);	
 	BindTextCtrl(minSpeedTextCtrl, "Change Speed", &ParticleEmitterDescriptor::GetMinSpeed, &ParticleEmitterDescriptor::SetMinSpeed);
 	BindTextCtrl(maxSpeedTextCtrl, "Change Speed", &ParticleEmitterDescriptor::GetMaxSpeed, &ParticleEmitterDescriptor::SetMaxSpeed);
+
+	if (editorState->GetRenderingLoopState() == RenderingLoopState::RUNNING)
+	{
+		playButton->SetLabel("Pause");
+	}
 }
 
 ParticleEmitterPanelImpl::~ParticleEmitterPanelImpl()
@@ -174,13 +179,13 @@ void ParticleEmitterPanelImpl::MaterialFileChanged(wxFileDirPickerEvent& event)
 	std::string newValue = AssetUtils::ImportMaterialIfNeeded(event.GetPath().ToStdString());
 	std::string oldValue = particleEmitter->GetMaterial();
 
-	auto command = new CustomCommand(theApp->GetEditorState(), "Change Material", [particleEmitter, newValue]()
+	auto command = new CustomCommand(theApp->GetEditorState(), "Change Material", [this, particleEmitter, newValue]()
 	{
-		particleEmitter->SetMaterial(newValue);
+		particleEmitter->SetMaterial(newValue, engine);
 		particleEmitter->componentChanged(nullptr);
-	}, [particleEmitter, oldValue]()
+	}, [this, particleEmitter, oldValue]()
 	{
-		particleEmitter->SetMaterial(oldValue);
+		particleEmitter->SetMaterial(oldValue, engine);
 		particleEmitter->componentChanged(nullptr);
 	});
 
@@ -241,4 +246,30 @@ void ParticleEmitterPanelImpl::SimulationSpaceChanged(wxCommandEvent& event)
 
 	theApp->GetEditorState()->ExecuteCommand(command);
 	theApp->GetEditorState()->sceneChanged(theApp->GetEditorState());
+}
+
+void ParticleEmitterPanelImpl::OnPlayClicked(wxCommandEvent& event)
+{
+	if (playButton->GetLabel() == "Play")
+	{
+		editorState->startRenderLoop(this);
+		playButton->SetLabel("Pause");
+	}
+	else
+	{
+		editorState->pauseRenderLoop(this);
+		playButton->SetLabel("Play");
+	}	
+}
+
+void ParticleEmitterPanelImpl::OnStopClicked(wxCommandEvent& event)
+{
+	editorState->stopRenderLoop(this);
+	editorState->resetParticleEmitters(editorState);
+	playButton->SetLabel("Play");
+}
+
+void ParticleEmitterPanelImpl::OnResetClicked(wxCommandEvent& event)
+{	
+	editorState->resetParticleEmitters(editorState);
 }
