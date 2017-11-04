@@ -207,8 +207,7 @@ void ParticleEmitterDescriptor::CreateComponent(Node *node, Engine *engine)
 	{
 		particleEmitter->SetSphereEmitter(radius);
 	}
-
-	particleEmitter->SetBoundingBox(BoundingBox(vec3(-1000.0f), vec3(1000.0f)));	
+	
 	particleEmitter->SetMaterial(engine->GetResourceCache()->GetResource<Material>(material));
 	particleEmitter->SetEmissionRate(emissionRate);
 	particleEmitter->SetLifeTime(minLifeTime, maxLifeTime);

@@ -431,8 +431,6 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			float radius = Variant::FromString(e->Attribute("radius")).GetFloat();
 			component->SetSphereEmitter(radius);
 		}
-
-		component->SetBoundingBox(BoundingBox(-vec3(1e6), vec3(1e6)));
 	}
 	else if (type == "Camera")
 	{

@@ -225,12 +225,16 @@ void ParticleEmitter::SetBoxEmitter(vec3 box)
 {
 	emitterShape = ParticleEmitterShape::BOX;
 	this->box = box;
+
+	UpdateBoundingBox();
 }
 
 void ParticleEmitter::SetSphereEmitter(float radius)
 {
 	emitterShape = ParticleEmitterShape::SPHERE;
 	this->radius = radius;
+
+	UpdateBoundingBox();
 }
 
 void ParticleEmitter::SetEmissionRate(unsigned int emissionRate)
@@ -247,6 +251,8 @@ void ParticleEmitter::SetLifeTime(float minLifeTime, float maxLifeTime)
 {
 	this->minLifeTime = minLifeTime;
 	this->maxLifeTime = maxLifeTime;
+
+	UpdateBoundingBox();
 }
 
 void ParticleEmitter::RandomPositionAndDirection(vec3 &position, vec3 &direction) const
@@ -304,6 +310,8 @@ void ParticleEmitter::SetSpeed(float minSpeed, float maxSpeed)
 {
 	this->minSpeed = minSpeed;
 	this->maxSpeed = maxSpeed;
+
+	UpdateBoundingBox();
 }
 
 void ParticleEmitter::SetPrewarm(bool prewarm)
@@ -356,6 +364,22 @@ void FireCube::ParticleEmitter::Prewarm()
 
 		time += timeStep;
 	}
+}
+
+void FireCube::ParticleEmitter::UpdateBoundingBox()
+{
+	float maxDistance = maxLifeTime * maxSpeed;
+
+	if (emitterShape == ParticleEmitterShape::BOX)
+	{
+		maxDistance += std::max(std::max(box.x * 0.5f, box.y * 0.5f), box.z * 0.5f);
+	}
+	else if (emitterShape == ParticleEmitterShape::SPHERE)
+	{
+		maxDistance += radius;
+	}
+
+	SetBoundingBox(BoundingBox(vec3(-maxDistance), vec3(maxDistance)));
 }
 
 void ParticleEmitter::SetSimulationSpace(ParticleEmitterSimulationSpace simulationSpace)
