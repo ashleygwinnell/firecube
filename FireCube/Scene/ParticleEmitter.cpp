@@ -45,10 +45,8 @@ void ParticleEmitter::Init(unsigned int numberOfParticles, Material *material)
 	geometry->SetVertexBuffer(particleBuffers[0]);
 	geometry->SetPrimitiveType(PrimitiveType::POINTS);
 	geometry->SetPrimitiveCount(numberOfParticles);
-
-	renderableParts.resize(1);
-	renderableParts[0].geometry = geometry;
-	renderableParts[0].material = material;
+	this->material = material;
+	
 	castShadow = false;
 
 	SubscribeToEvent(Events::Update, &ParticleEmitter::Update);
@@ -93,7 +91,8 @@ void ParticleEmitter::UpdateRenderableParts()
 }
 
 void ParticleEmitter::Reset()
-{	
+{
+	deadParticles.clear();
 	emissionLeftOver = 0;
 	particleLife.resize(numberOfParticles);	
 
@@ -125,7 +124,11 @@ void ParticleEmitter::Reset()
 	if (prewarm)
 	{
 		Prewarm();
-	}	
+	}
+
+	renderableParts.resize(1);
+	renderableParts[0].geometry = geometry;
+	renderableParts[0].material = material;
 }
 
 Component *ParticleEmitter::Clone() const
@@ -136,12 +139,16 @@ Component *ParticleEmitter::Clone() const
 
 void ParticleEmitter::SetMaterial(Material *material)
 {
-	renderableParts[0].material = material;
+	this->material = material;
+	if (renderableParts.empty() == false)
+	{
+		renderableParts[0].material = material;
+	}	
 }
 
 Material *ParticleEmitter::GetMaterial() const
 {
-	return renderableParts[0].material;
+	return material;
 }
 
 void ParticleEmitter::Update(float dt)
@@ -182,7 +189,7 @@ void ParticleEmitter::Update(float dt)
 				deadParticles.push_back(i);
 			}
 		}
-	}	
+	}
 }
 
 void ParticleEmitter::EmitParticles(unsigned int count)
@@ -302,6 +309,13 @@ void ParticleEmitter::SetSpeed(float minSpeed, float maxSpeed)
 void ParticleEmitter::SetPrewarm(bool prewarm)
 {
 	this->prewarm = prewarm;
+}
+
+void ParticleEmitter::SetNumberOfParticles(unsigned int numberOfParticles)
+{
+	this->numberOfParticles = numberOfParticles;
+	geometry->SetPrimitiveCount(numberOfParticles);
+	Reset();
 }
 
 void FireCube::ParticleEmitter::Prewarm()

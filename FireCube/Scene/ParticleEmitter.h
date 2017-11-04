@@ -123,6 +123,8 @@ public:
 	*/
 	ParticleEmitterSimulationSpace GetSimulationSpace() const;
 
+	void SetNumberOfParticles(unsigned int numberOfParticles);
+
 protected:	
 	virtual void UpdateWorldBoundingBox();
 	virtual void UpdateRenderableParts();	
@@ -157,6 +159,7 @@ private:
 	float emissionLeftOver;
 	bool prewarm;
 	ParticleEmitterSimulationSpace simulationSpace;
+	SharedPtr<Material> material;
 };
 
 }
