@@ -25,7 +25,7 @@ ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : Renderable(othe
 																 numberOfParticles(other.numberOfParticles), needToReset(true), emitterShape(other.emitterShape), box(other.box), radius(other.radius), 
 																 boundingBox(other.boundingBox), emissionRate(other.emissionRate), prewarm(other.prewarm), simulationSpace(other.simulationSpace)
 {
-	Init(numberOfParticles, other.renderableParts[0].material);	
+	Init(numberOfParticles, other.material);
 }
 
 void ParticleEmitter::Init(unsigned int numberOfParticles, Material *material)
