@@ -17,8 +17,12 @@ bool TextureCube::Load(const std::string &filename)
 	std::string baseFilename = Filesystem::RemoveFileExtension(filename);
 
 	std::array<std::string, 6> cubeFacesFilePostfix = { "_posx", "_negx", "_posy", "_negy", "_posz", "_negz"};
-	std::array<GLenum, 6> cubeFacesTargets = { GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 
-		GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z};
+	std::array<GLenum, 6> cubeFacesTargets = { GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 
+		GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z}; // pos/neg y are flipped since in OpenGL, sampling a cube map assumes the
+																										 // origin of the texture to be in the upper left instead of lower left is
+																										 // in all other texture sampling
+
+
 
 	glBindTexture(target, objectId);
 

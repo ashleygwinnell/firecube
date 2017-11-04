@@ -7,6 +7,6 @@ uniform vec3 cameraPos;
 void  main()
 {	
 	vec3 worldSpacePos = atrPosition + cameraPos;
-	texcoord = atrPosition;
+	texcoord = vec3(atrPosition.x, -atrPosition.y, atrPosition.z);
 	gl_Position = (viewProjectionMatrix * vec4(worldSpacePos, 1.0)).xyww;	
 }

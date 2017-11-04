@@ -54,7 +54,6 @@ bool App::Prepare()
 
 	node = root->CreateChild();
 	auto particleEmitter = node->CreateComponent<ParticleEmitter>(1000, engine->GetResourceCache()->GetResource<Material>("Materials/ParticleNoTexture.xml"));
-	particleEmitter->SetBoundingBox(BoundingBox(-vec3(10), vec3(10)));
 	particleEmitter->SetBoxEmitter(vec3(5, 5, 5));
 	//particleEmitter->SetSphereEmitter(20);
 	particleEmitter->SetEmissionRate(100);
