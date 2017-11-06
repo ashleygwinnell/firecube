@@ -49,6 +49,7 @@ void AssetBrowserPanelImpl::PopulateDirectoryTree()
 
 void AssetBrowserPanelImpl::PopulateDirectoryNode(wxTreeItemId item, const std::string &path)
 {
+	directoryTreeCtrl->DeleteChildren(item);
 	wxDir dir(path);
 	wxString dirName;
 	bool cont = dir.GetFirst(&dirName, wxEmptyString, wxDIR_DIRS);
@@ -387,27 +388,40 @@ void AssetBrowserPanelImpl::FileListRightUp(wxMouseEvent& event)
 	if (AssetUtils::GetAssetTypeByPath(currentFileListPath) == AssetType::SCRIPT)
 	{
 		wxMenu* menu = new wxMenu;
+		auto newFolderItem = menu->Append(wxID_ANY, wxT("New Folder"));
 		auto newScriptItem = menu->Append(wxID_ANY, wxT("New Script"));
 
-		menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [newScriptItem, this](wxCommandEvent &event) {
-		if (event.GetId() == newScriptItem->GetId())
-		{
-			std::string scriptName = wxGetTextFromUser("Enter name of script object", "New Script").ToStdString();
-			if (scriptName.empty() == false)
+		menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [newFolderItem, newScriptItem, this](wxCommandEvent &event) {
+			if (event.GetId() == newFolderItem->GetId())
 			{
-				std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts" + Filesystem::PATH_SEPARATOR + scriptName + ".lua";
-				std::ofstream f(targetPath, std::ofstream::trunc);
-				f << scriptName << " = Script()" << std::endl << std::endl;
-				f << "function " << scriptName << ":Init()" << std::endl << std::endl;
-				f << "end" << std::endl << std::endl;
-				f << "function " << scriptName << ":Awake()" << std::endl << std::endl;
-				f << "end" << std::endl << std::endl;
-				f << "function " << scriptName << ":Update(dt)" << std::endl << std::endl;
-				f << "end" << std::endl;
-				f.close();
-				editorState->showScriptEditor(editorState, "Scripts" + Filesystem::PATH_SEPARATOR + scriptName + ".lua");
+				wxTextEntryDialog folderNameDialog(this, "Enter Folder Name");
+				if (folderNameDialog.ShowModal() == wxID_OK)
+				{
+					std::string name = folderNameDialog.GetValue();
+					Filesystem::CreateFolder(Filesystem::JoinPath(currentFileListPath, name));
+					wxTreeItemId item = pathToTreeItem[currentFileListPath];
+					PopulateDirectoryNode(item, currentFileListPath);
+					directoryTreeCtrl->Expand(item);
+				}
 			}
-		}
+			else if (event.GetId() == newScriptItem->GetId())
+			{
+				std::string scriptName = wxGetTextFromUser("Enter name of script object", "New Script").ToStdString();
+				if (scriptName.empty() == false)
+				{
+					std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts" + Filesystem::PATH_SEPARATOR + scriptName + ".lua";
+					std::ofstream f(targetPath, std::ofstream::trunc);
+					f << scriptName << " = Script()" << std::endl << std::endl;
+					f << "function " << scriptName << ":Init()" << std::endl << std::endl;
+					f << "end" << std::endl << std::endl;
+					f << "function " << scriptName << ":Awake()" << std::endl << std::endl;
+					f << "end" << std::endl << std::endl;
+					f << "function " << scriptName << ":Update(dt)" << std::endl << std::endl;
+					f << "end" << std::endl;
+					f.close();
+					editorState->showScriptEditor(editorState, "Scripts" + Filesystem::PATH_SEPARATOR + scriptName + ".lua");
+				}
+			}
 		});
 		PopupMenu(menu);
 		delete menu;
@@ -415,10 +429,23 @@ void AssetBrowserPanelImpl::FileListRightUp(wxMouseEvent& event)
 	else if (AssetUtils::GetAssetTypeByPath(currentFileListPath) == AssetType::MATERIAL)
 	{
 		wxMenu* menu = new wxMenu;
+		auto newFolderItem = menu->Append(wxID_ANY, wxT("New Folder"));
 		auto newMaterialItem = menu->Append(wxID_ANY, wxT("New Material"));
 
-		menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [newMaterialItem, this](wxCommandEvent &event) {
-			if (event.GetId() == newMaterialItem->GetId())
+		menu->Bind(wxEVT_COMMAND_MENU_SELECTED, [newFolderItem, newMaterialItem, this](wxCommandEvent &event) {
+			if (event.GetId() == newFolderItem->GetId())
+			{
+				wxTextEntryDialog folderNameDialog(this, "Enter Folder Name");
+				if (folderNameDialog.ShowModal() == wxID_OK)
+				{
+					std::string name = folderNameDialog.GetValue();
+					Filesystem::CreateFolder(Filesystem::JoinPath(currentFileListPath, name));
+					wxTreeItemId item = pathToTreeItem[currentFileListPath];
+					PopulateDirectoryNode(item, currentFileListPath);
+					directoryTreeCtrl->Expand(item);
+				}
+			}
+			else if (event.GetId() == newMaterialItem->GetId())
 			{
 				std::string materialName = wxGetTextFromUser("Enter name of material", "New Material").ToStdString();
 				if (materialName.empty() == false)
