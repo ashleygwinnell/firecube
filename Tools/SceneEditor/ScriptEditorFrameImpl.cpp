@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include <fstream>
 #include "ScriptEditorFrameImpl.h"
 #include "FireCube.h"
@@ -273,7 +274,7 @@ void ScriptEditorFrameImpl::OnKeyDown(wxKeyEvent& event)
 	}
 
 	if (event.GetKeyCode() == 'F' && event.ControlDown())
-	{				
+	{
 		delete findReplaceDlg;
 		findReplaceDlg = new wxFindReplaceDialog(this, &findReplaceData, "Find");
 		findReplaceDlg->Show();
@@ -285,10 +286,34 @@ void ScriptEditorFrameImpl::SaveClicked(wxCommandEvent& event)
 	SaveScript();
 }
 
+std::string Trim(const std::string& str, const std::string& whitespace = " \t")
+{
+	auto lineEnd = str.find_last_of("\r");
+	if (lineEnd == std::string::npos)
+	{
+		lineEnd = str.find_last_of("\n");
+	}
+	const auto strEnd = str.find_last_not_of(whitespace + "\r\n");
+	if (strEnd == std::string::npos)
+	{
+		return str;
+	}
+
+	if (lineEnd == std::string::npos)
+	{
+		return str.substr(0, strEnd + 1);
+	}
+	else
+	{
+		return str.substr(0, strEnd + 1) + str.substr(lineEnd);
+	}
+	
+}
+
 void ScriptEditorFrameImpl::SaveScript()
 {
-	int id = notebook->GetSelection();
-
+	int id = notebook->GetSelection();	
+	TrimTrailingWhiteSpace(id);
 	std::ofstream out(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentPages[id].filename, std::ios_base::binary);
 	out << currentPages[id].sourceText->GetTextRaw();
 }
@@ -354,4 +379,24 @@ void ScriptEditorFrameImpl::OnFindDialog(wxFindDialogEvent& event)
 			}
 		}
 	}	
+}
+
+void ScriptEditorFrameImpl::TrimTrailingWhiteSpace(int id)
+{
+	std::string newText;
+	currentPages[id].sourceText->BeginUndoAction();
+	int curLine = currentPages[id].sourceText->GetCurrentLine();
+	int posInLine = currentPages[id].sourceText->GetCurrentPos() - currentPages[id].sourceText->GetLineIndentPosition(curLine);
+	int firstVisibleLine = currentPages[id].sourceText->GetFirstVisibleLine();
+	for (int i = 0; i < currentPages[id].sourceText->GetLineCount(); ++i)
+	{
+		std::string text = Trim(currentPages[id].sourceText->GetLine(i).ToStdString());
+		newText += text;
+	}
+
+	currentPages[id].sourceText->SetText(newText);
+	currentPages[id].sourceText->SetFirstVisibleLine(firstVisibleLine);
+	int pos = std::min(currentPages[id].sourceText->GetLineIndentPosition(curLine) + posInLine, currentPages[id].sourceText->GetLineEndPosition(curLine));
+	currentPages[id].sourceText->SetSelection(pos, pos);
+	currentPages[id].sourceText->EndUndoAction();
 }

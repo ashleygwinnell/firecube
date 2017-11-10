@@ -33,6 +33,7 @@ private:
 	void SaveScript();
 	void UpdateTitle();
 	void OnFindDialog(wxFindDialogEvent& event);
+	void TrimTrailingWhiteSpace(int id);
 	
 	std::vector<PageInfo> currentPages;
 	wxFindReplaceData findReplaceData;
