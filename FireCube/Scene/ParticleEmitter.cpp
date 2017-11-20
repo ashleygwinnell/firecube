@@ -162,34 +162,7 @@ void ParticleEmitter::Update(float dt)
 		needToReset = false;
 	}
 
-	float particlesToEmitExact = (float)emissionRate * dt + emissionLeftOver;
-	unsigned int particlesToEmit = (unsigned int)std::floor(particlesToEmitExact);
-	emissionLeftOver = particlesToEmitExact - particlesToEmit;
-	EmitParticles(particlesToEmit);
-
-	Program *program = engine->GetRenderer()->SetShaders(updateShader, nullptr);
-	program->SetUniform(PARAM_TIME_STEP, dt);
-	glEnable(GL_RASTERIZER_DISCARD);
-	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, particleBuffers[1]->GetObjectId());
-	glBeginTransformFeedback(GL_POINTS);
-	geometry->Render();
-	glEndTransformFeedback();
-	glDisable(GL_RASTERIZER_DISCARD);
-	std::swap(particleBuffers[0], particleBuffers[1]);
-	geometry->SetVertexBuffer(particleBuffers[0]);
-	geometry->Update();
-
-	for (unsigned int i = 0; i < numberOfParticles; ++i)
-	{
-		if (particleLife[i] > 0)
-		{
-			particleLife[i] -= dt;
-			if (particleLife[i] < 0)
-			{
-				deadParticles.push_back(i);
-			}
-		}
-	}
+	UpdateParticles(dt);
 }
 
 void ParticleEmitter::EmitParticles(unsigned int count)
@@ -333,34 +306,7 @@ void FireCube::ParticleEmitter::Prewarm()
 	float time = 0.0f;
 	while (time < totalTime)
 	{
-		float particlesToEmitExact = (float)emissionRate * timeStep + emissionLeftOver;
-		unsigned int particlesToEmit = (unsigned int)std::floor(particlesToEmitExact);
-		emissionLeftOver = particlesToEmitExact - particlesToEmit;
-		EmitParticles(particlesToEmit);
-
-		Program *program = engine->GetRenderer()->SetShaders(updateShader, nullptr);
-		program->SetUniform(PARAM_TIME_STEP, timeStep);
-		glEnable(GL_RASTERIZER_DISCARD);
-		glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, particleBuffers[1]->GetObjectId());
-		glBeginTransformFeedback(GL_POINTS);
-		geometry->Render();
-		glEndTransformFeedback();
-		glDisable(GL_RASTERIZER_DISCARD);
-		std::swap(particleBuffers[0], particleBuffers[1]);
-		geometry->SetVertexBuffer(particleBuffers[0]);
-		geometry->Update();
-
-		for (unsigned int i = 0; i < numberOfParticles; ++i)
-		{
-			if (particleLife[i] > 0)
-			{
-				particleLife[i] -= timeStep;
-				if (particleLife[i] < 0)
-				{
-					deadParticles.push_back(i);
-				}
-			}
-		}		
+		UpdateParticles(timeStep);
 
 		time += timeStep;
 	}
@@ -380,6 +326,38 @@ void FireCube::ParticleEmitter::UpdateBoundingBox()
 	}
 
 	SetBoundingBox(BoundingBox(vec3(-maxDistance), vec3(maxDistance)));
+}
+
+void ParticleEmitter::UpdateParticles(float dt)
+{
+	float particlesToEmitExact = (float)emissionRate * dt + emissionLeftOver;
+	unsigned int particlesToEmit = (unsigned int)std::floor(particlesToEmitExact);
+	emissionLeftOver = particlesToEmitExact - particlesToEmit;
+	EmitParticles(particlesToEmit);
+
+	Program *program = engine->GetRenderer()->SetShaders(updateShader, nullptr);
+	program->SetUniform(PARAM_TIME_STEP, dt);
+	glEnable(GL_RASTERIZER_DISCARD);
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, particleBuffers[1]->GetObjectId());
+	glBeginTransformFeedback(GL_POINTS);
+	geometry->Render();
+	glEndTransformFeedback();
+	glDisable(GL_RASTERIZER_DISCARD);
+	std::swap(particleBuffers[0], particleBuffers[1]);
+	geometry->SetVertexBuffer(particleBuffers[0]);
+	geometry->Update();
+
+	for (unsigned int i = 0; i < numberOfParticles; ++i)
+	{
+		if (particleLife[i] > 0)
+		{
+			particleLife[i] -= dt;
+			if (particleLife[i] < 0)
+			{
+				deadParticles.push_back(i);
+			}
+		}
+	}
 }
 
 void ParticleEmitter::SetSimulationSpace(ParticleEmitterSimulationSpace simulationSpace)

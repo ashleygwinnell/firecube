@@ -140,6 +140,7 @@ private:
 	inline void RandomPositionAndDirection(vec3 &position, vec3 &direction) const;	
 	void Prewarm();
 	void UpdateBoundingBox();
+	void UpdateParticles(float dt);
 
 	BoundingBox boundingBox;
 	Shader *updateShader;
