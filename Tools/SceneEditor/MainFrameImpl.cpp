@@ -501,8 +501,11 @@ void MainFrameImpl::SceneTreeSelectionChanged(wxTreeEvent& event)
 
 void MainFrameImpl::SceneTreeEndLabelEdit(wxTreeEvent& event)
 {
-	auto renameNodeCommand = new RenameNodeCommand(editorState, "Rename", treeItemToNode[event.GetItem()], event.GetLabel().ToStdString());
-	editorState->ExecuteCommand(renameNodeCommand);
+	if (event.IsEditCancelled() == false)
+	{
+		auto renameNodeCommand = new RenameNodeCommand(editorState, "Rename", treeItemToNode[event.GetItem()], event.GetLabel().ToStdString());
+		editorState->ExecuteCommand(renameNodeCommand);
+	}
 }
 
 void MainFrameImpl::SceneTreeBeginDrag(wxTreeEvent& event)
