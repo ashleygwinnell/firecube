@@ -22,6 +22,7 @@ RotateGizmo::RotateGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Obj
 	// X Axis
 	xAxisMaterial = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml")->Clone();
 	xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
+	xAxisMaterial->SetParameter(PARAM_MATERIAL_OPACITY, 1.0f);
 	mesh = new Mesh(engine);
 	meshIntersection = new Mesh(engine);
 	mesh->AddGeometry(CreateArc(arcRadius, PI * 0.5f, PI * 1.5f, arcTesselation), BoundingBox(vec3(-0.05f, -0.5f, -0.05f), vec3(0.05f, 0.5f, 0.05f)), xAxisMaterial);

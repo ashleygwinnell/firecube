@@ -97,6 +97,8 @@ public:
 	*/
 	virtual void Render(float time) = 0;
 
+	virtual void HandleSDLEvent(SDL_Event &) {}
+
 	/**
 	* Called once initialization is complete to execute user specific initialization.
 	*/
@@ -115,6 +117,8 @@ public:
 	float GetPassedTime() const;
 
 	static void SetTimeScale(float timeScale);
+
+	SDL_Window *GetWindow() const;
 
 protected:
 	Renderer *renderer;	

@@ -26,6 +26,7 @@ TranslateGizmo::TranslateGizmo(FireCube::Engine *engine, FireCube::Node *parent)
 	// X Axis
 	xAxisMaterial = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml")->Clone();
 	xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
+	xAxisMaterial->SetParameter(PARAM_MATERIAL_OPACITY, 1.0f);
 	mesh = new Mesh(engine);
 	meshLine = new Mesh(engine);
 	meshIntersection = new Mesh(engine);	

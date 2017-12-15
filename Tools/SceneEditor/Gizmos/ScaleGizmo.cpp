@@ -21,6 +21,7 @@ ScaleGizmo::ScaleGizmo(FireCube::Engine *engine, FireCube::Node *parent) : Objec
 	// X Axis
 	xAxisMaterial = engine->GetResourceCache()->GetResource<Material>("Materials/Unlit.xml")->Clone();
 	xAxisMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f, 0.0f, 0.0f));
+	xAxisMaterial->SetParameter(PARAM_MATERIAL_OPACITY, 1.0f);
 
 	mesh = new Mesh(engine);
 	mesh->AddGeometry(GeometryGenerator::GenerateBox(engine, vec3(boxSize)), BoundingBox(vec3(-boxSize), vec3(boxSize)), xAxisMaterial);

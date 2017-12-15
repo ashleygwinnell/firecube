@@ -56,8 +56,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_STL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib\mswud;C:\Dev\wxWidgets-3.0.2\include;$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_STL;IMGUI_INCLUDE_IMGUI_USER_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib\mswud;C:\Dev\wxWidgets-3.0.2\include;$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;$(ProjectDir)\ThirdParty\imgui;$(SolutionDir)\FireCube\ThirdParty\SDL\include;$(SolutionDir)\FireCube\ThirdParty\glew;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -74,8 +74,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TIXML_USE_STL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib\mswu;C:\Dev\wxWidgets-3.0.2\include;$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TIXML_USE_STL;IMGUI_INCLUDE_IMGUI_USER_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib\mswu;C:\Dev\wxWidgets-3.0.2\include;$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;$(ProjectDir)\ThirdParty\imgui;$(SolutionDir)\FireCube\ThirdParty\SDL\include;$(SolutionDir)\FireCube\ThirdParty\glew;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -117,6 +117,7 @@
     <ClCompile Include="Descriptors\SphereDescriptor.cpp" />
     <ClCompile Include="Descriptors\StaticModelDescriptor.cpp" />
     <ClCompile Include="EditorState.cpp" />
+    <ClCompile Include="EditorWindow.cpp" />
     <ClCompile Include="Gizmos\RotateGizmo.cpp" />
     <ClCompile Include="Gizmos\ScaleGizmo.cpp" />
     <ClCompile Include="Gizmos\TranslateGizmo.cpp" />
@@ -144,6 +145,10 @@
     <ClCompile Include="SceneReader.cpp" />
     <ClCompile Include="SceneWriter.cpp" />
     <ClCompile Include="ScriptEditorFrameImpl.cpp" />
+    <ClCompile Include="ThirdParty\imgui\imgui.cpp" />
+    <ClCompile Include="ThirdParty\imgui\imguidock.cpp" />
+    <ClCompile Include="ThirdParty\imgui\imgui_draw.cpp" />
+    <ClCompile Include="ThirdParty\imgui\imgui_impl_sdl_gl3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\FireCube\ThirdParty\TinyXML\tinyxml.h" />
@@ -176,6 +181,7 @@
     <ClInclude Include="Descriptors\SphereDescriptor.h" />
     <ClInclude Include="Descriptors\StaticModelDescriptor.h" />
     <ClInclude Include="EditorState.h" />
+    <ClInclude Include="EditorWindow.h" />
     <ClInclude Include="Gizmos\RotateGizmo.h" />
     <ClInclude Include="Gizmos\ScaleGizmo.h" />
     <ClInclude Include="Gizmos\TransformGizmo.h" />
@@ -205,6 +211,15 @@
     <ClInclude Include="SceneReader.h" />
     <ClInclude Include="SceneWriter.h" />
     <ClInclude Include="ScriptEditorFrameImpl.h" />
+    <ClInclude Include="ThirdParty\imgui\imconfig.h" />
+    <ClInclude Include="ThirdParty\imgui\imgui.h" />
+    <ClInclude Include="ThirdParty\imgui\imguidock.h" />
+    <ClInclude Include="ThirdParty\imgui\imgui_impl_sdl_gl3.h" />
+    <ClInclude Include="ThirdParty\imgui\imgui_internal.h" />
+    <ClInclude Include="ThirdParty\imgui\imgui_user.h" />
+    <ClInclude Include="ThirdParty\imgui\stb_rect_pack.h" />
+    <ClInclude Include="ThirdParty\imgui\stb_textedit.h" />
+    <ClInclude Include="ThirdParty\imgui\stb_truetype.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

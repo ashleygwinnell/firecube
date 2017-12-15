@@ -2,16 +2,35 @@
 
 #include "wx/app.h"
 #include "EditorState.h"
+#include "Descriptors/NodeDescriptor.h"
+
 class MainFrameImpl;
 class wxGLContext;
 class wxGLCanvas;
+class TranslateGizmo;
+class RotateGizmo;
+class TransformGizmo;
+class ScaleGizmo;
+class EditorState;
+class NodeDescriptor;
+class EditorCanvas;
+class CameraDescriptor;
+class EditorWindow;
 
 class FireCubeApp : public FireCube::Application
 {
 public:
-	void Render(float t) {};
+	FireCubeApp();
+	void Render(float t);
 	void Update(float t) {};
+	void HandleSDLEvent(SDL_Event &event);
+	virtual bool Prepare() override;
+	
+	FireCube::Scene *scene;	
+	EditorState *editorState;
+	NodeDescriptor rootDesc;	
 
+	EditorWindow *editorWindow;	
 };
 
 class MyApp : public wxApp

@@ -149,6 +149,7 @@ void Application::Run()
 		inputManager.ResetInputState();
 		while(SDL_PollEvent(&event))
 		{
+			HandleSDLEvent(event);
 			if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP || event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEMOTION || event.type == SDL_MOUSEWHEEL)
 			{
 				ProcessInput(event);
@@ -412,5 +413,10 @@ void Application::ProcessInput(const SDL_Event &event)
 void Application::SetTimeScale(float timeScale)
 {
 	Application::timeScale = timeScale;
+}
+
+SDL_Window *Application::GetWindow() const
+{
+	return mainWindow;
 }
 
