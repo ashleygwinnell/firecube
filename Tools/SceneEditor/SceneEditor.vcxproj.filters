@@ -222,6 +222,9 @@
     <ClCompile Include="EditorWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HierarchyWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -432,6 +435,9 @@
       <Filter>ThirdParty\imgui</Filter>
     </ClInclude>
     <ClInclude Include="EditorWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HierarchyWindow.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

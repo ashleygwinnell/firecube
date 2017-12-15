@@ -16,6 +16,7 @@ class NodeDescriptor;
 class EditorCanvas;
 class CameraDescriptor;
 class EditorWindow;
+class HierarchyWindow;
 
 class FireCubeApp : public FireCube::Application
 {
@@ -31,6 +32,7 @@ public:
 	NodeDescriptor rootDesc;	
 
 	EditorWindow *editorWindow;	
+	HierarchyWindow *hierarchyWindow;
 };
 
 class MyApp : public wxApp

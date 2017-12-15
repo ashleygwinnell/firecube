@@ -8,7 +8,7 @@
 #include "app.h"
 #include <imgui.h>
 #include "imgui_impl_sdl_gl3.h"
-
+#include "HierarchyWindow.h"
 #include "EditorWindow.h"
 
 using namespace FireCube;
@@ -123,6 +123,7 @@ void FireCubeApp::Render(float t)
 	ImGui::BeginDockspace();	
 	{
 		editorWindow->Render();
+		hierarchyWindow->Render();
 	}
 	ImGui::EndDockspace();
 	ImGui::End();		
@@ -147,11 +148,13 @@ bool FireCubeApp::Prepare()
 {
 	editorState = new EditorState(GetEngine());
 	editorWindow = new EditorWindow(engine);
+	hierarchyWindow = new HierarchyWindow(engine);
 	
 	ImGui_ImplSdlGL3_Init(GetWindow());
 	scene = new FireCube::Scene(GetEngine());	
 		
 	editorWindow->SetScene(scene, &rootDesc, editorState);
+	hierarchyWindow->SetScene(&rootDesc, editorState);
 
 	return true;
 }
