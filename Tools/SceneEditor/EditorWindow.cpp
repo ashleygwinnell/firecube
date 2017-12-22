@@ -16,6 +16,7 @@ EditorWindow::EditorWindow(Engine *engine) : Object(engine), gridNode(nullptr), 
 
 void EditorWindow::Render()
 {
+	ImGui::SetNextDock(ImGuiDockSlot_Right);
 	if (ImGui::BeginDock("Scene"))
 	{
 		ImGui::BeginChild("TT");
@@ -48,6 +49,7 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 
 	SubscribeToEvent(Events::HandleInput, &EditorWindow::HandleInput);
 	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &EditorWindow::SelectedNodeChanged);
+	SubscribeToEvent(editorState, editorState->stateChanged, &EditorWindow::StateChanged);
 	engine->GetInputManager()->AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "RotateCamera", KeyModifier::SHIFT);
 	engine->GetInputManager()->AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "LeftDown", KeyModifier::NONE);
 	engine->GetInputManager()->AddMapping(AnalogInput::MOUSE_AXIS_X_RELATIVE, "MouseXDelta");
@@ -358,4 +360,9 @@ void EditorWindow::UseScaleGizmo()
 
 		editorState->switchedToScaleGizmo(editorState);
 	}
+}
+
+void EditorWindow::StateChanged()
+{
+	UpdateGizmo();	
 }

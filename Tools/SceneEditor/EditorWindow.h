@@ -34,6 +34,7 @@ private:
 	void UseTranslateGizmo();
 	void UseRotateGizmo();
 	void UseScaleGizmo();
+	void StateChanged();
 
 	FireCube::Scene *scene;
 	FireCube::Scene *editorScene;

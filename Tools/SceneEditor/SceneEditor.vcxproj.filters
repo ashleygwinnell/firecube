@@ -225,6 +225,12 @@
     <ClCompile Include="HierarchyWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InspectorWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImguiHelpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -438,6 +444,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="HierarchyWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImguiHelpers.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

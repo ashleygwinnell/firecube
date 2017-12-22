@@ -17,6 +17,7 @@ class EditorCanvas;
 class CameraDescriptor;
 class EditorWindow;
 class HierarchyWindow;
+class InspectorWindow;
 
 class FireCubeApp : public FireCube::Application
 {
@@ -26,6 +27,7 @@ public:
 	void Update(float t) {};
 	void HandleSDLEvent(SDL_Event &event);
 	virtual bool Prepare() override;
+	void HandleInput(float dt, const FireCube::MappedInput &input);
 	
 	FireCube::Scene *scene;	
 	EditorState *editorState;
@@ -33,6 +35,7 @@ public:
 
 	EditorWindow *editorWindow;	
 	HierarchyWindow *hierarchyWindow;
+	InspectorWindow *inspectorWindow;
 };
 
 class MyApp : public wxApp

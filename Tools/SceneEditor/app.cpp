@@ -10,6 +10,7 @@
 #include "imgui_impl_sdl_gl3.h"
 #include "HierarchyWindow.h"
 #include "EditorWindow.h"
+#include "InspectorWindow.h"
 
 using namespace FireCube;
 
@@ -97,7 +98,7 @@ int main(int argc, char *argv[])
 	FireCubeApp app;
 	Filesystem::SetCoreDataFolder("../../FireCube");	
 
-	if (!app.Initialize())
+	if (!app.Initialize(WindowProperties().Maximized(true)))
 		return 0;
 		
 	app.Run();
@@ -122,8 +123,9 @@ void FireCubeApp::Render(float t)
 	ImGui::GetStyle().WindowRounding = oldWindowRounding;
 	ImGui::BeginDockspace();	
 	{
-		editorWindow->Render();
 		hierarchyWindow->Render();
+		editorWindow->Render();		
+		inspectorWindow->Render();
 	}
 	ImGui::EndDockspace();
 	ImGui::End();		
@@ -146,15 +148,33 @@ void FireCubeApp::HandleSDLEvent(SDL_Event &event)
 
 bool FireCubeApp::Prepare()
 {
+	SubscribeToEvent(Events::HandleInput, &FireCubeApp::HandleInput);
+	GetInputManager().AddMapping(Key::Z, InputMappingType::ACTION, "Undo", KeyModifier::CTRL);
+	GetInputManager().AddMapping(Key::Y, InputMappingType::ACTION, "Redo", KeyModifier::CTRL);
 	editorState = new EditorState(GetEngine());
 	editorWindow = new EditorWindow(engine);
 	hierarchyWindow = new HierarchyWindow(engine);
+	inspectorWindow = new InspectorWindow(engine);
 	
 	ImGui_ImplSdlGL3_Init(GetWindow());
 	scene = new FireCube::Scene(GetEngine());	
 		
 	editorWindow->SetScene(scene, &rootDesc, editorState);
 	hierarchyWindow->SetScene(&rootDesc, editorState);
+	inspectorWindow->SetScene(&rootDesc, editorState);
 
 	return true;
+}
+
+void FireCubeApp::HandleInput(float dt, const MappedInput &input)
+{
+	if (input.IsActionTriggered("Undo"))
+	{
+		editorState->Undo();
+	}
+
+	if (input.IsActionTriggered("Redo"))
+	{
+		editorState->Redo();
+	}
 }
