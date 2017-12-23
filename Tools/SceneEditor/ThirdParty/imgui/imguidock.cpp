@@ -70,6 +70,7 @@ struct DockContext
             , active(true)
             , pos(0, 0)
             , size(-1, -1)
+	    , floatmode_size(-1,-1)
             , status(Status_Float)
 	    , last_frame(0)
 	    , invalid_frames(0)
@@ -217,6 +218,7 @@ struct DockContext
         bool active;
         ImVec2 pos;
         ImVec2 size;
+	ImVec2 floatmode_size;
         Status_ status;
         int last_frame;
         int invalid_frames;
@@ -254,7 +256,7 @@ struct DockContext
     Dock& getDock(const char* label, bool opened, const ImVec2& default_size)
     {
         ImU32 id = ImHash(label, 0);
-        for (int i = 0; i < m_docks.size(); ++i)
+	for (int i = 0,iSz = m_docks.size(); i < iSz; ++i)
         {
             if (m_docks[i]->id == id) return *m_docks[i];
         }
@@ -271,7 +273,9 @@ struct DockContext
 	//new_dock->size = GetIO().DisplaySize;
 	new_dock->size.x = default_size.x < 0 ? GetIO().DisplaySize.x : default_size.x;
 	new_dock->size.y = default_size.y < 0 ? GetIO().DisplaySize.y : default_size.y;
-        new_dock->opened = opened;
+	new_dock->floatmode_size.x = default_size.x;
+	new_dock->floatmode_size.y = default_size.y;
+	new_dock->opened = opened;
         new_dock->first = true;
         new_dock->last_frame = 0;
         new_dock->invalid_frames = 0;
@@ -516,6 +520,7 @@ struct DockContext
 	    color_hovered = (color_hovered & 0x00FFFFFF) | 0x90000000;
 	    docked_rect_color = (docked_rect_color &  0x00FFFFFF) | 0x80000000;
 
+	    // The whole part of channel split has been removed (because it stopped working)
 	    //canvas->ChannelsSplit(2);	// Solves overlay order. But won't it break something else ?
 	}
 #	endif ////IMGUITABWINDOW_H_
@@ -1052,16 +1057,35 @@ struct DockContext
     }
 
 
+    void cleanDocks()	{
+    restart:
+	for (int i = 0, c = m_docks.size(); i < c; ++i)
+	{
+	    Dock& dock = *m_docks[i];
+	    if (dock.last_frame == 0 && dock.status != Status_Float && !dock.children[0])
+	    {
+		fillLocation(*m_docks[i]);
+		doUndock(*m_docks[i]);
+		m_docks[i]->status = Status_Float;
+		goto restart;
+	    }
+	}
+    }
+
     bool begin(const char* label, bool* opened, ImGuiWindowFlags extra_flags, const ImVec2& default_size)
     {
 	IM_ASSERT(!m_is_begin_open);
 	m_is_begin_open = true;
+	Dock& dock = getDock(label, !opened || *opened, default_size);
+	if (dock.last_frame != 0 && m_last_frame != ImGui::GetFrameCount())
+	{
+	    cleanDocks();
+	}
+	dock.last_frame = ImGui::GetFrameCount();
         ImGuiDockSlot next_slot = m_next_dock_slot;
         m_next_dock_slot = ImGuiDockSlot_Tab;
-	Dock& dock = getDock(label, !opened || *opened, default_size);
-        if (!dock.opened && (!opened || *opened)) tryDockToStoredLocation(dock);
-        dock.last_frame = ImGui::GetFrameCount();
-        if (strcmp(dock.label, label) != 0)
+	if (!dock.opened && (!opened || *opened)) tryDockToStoredLocation(dock);
+	if (strcmp(dock.label, label) != 0)
         {
             MemFree(dock.label);
             dock.label = ImStrdup(label);
@@ -1104,15 +1128,21 @@ struct DockContext
         if (is_float)
         {
             SetNextWindowPos(dock.pos);
-	    SetNextWindowSize(dock.size, ImGuiCond_FirstUseEver);
+	    const ImVec2 old_size(dock.floatmode_size.x>0 ? dock.floatmode_size.x : dock.size.x,
+				  dock.floatmode_size.y>0 ? dock.floatmode_size.y : dock.size.y);
+	    SetNextWindowSize(old_size);
+	    dock.size = old_size;
             bool ret = Begin(label,
                              opened,
-                             dock.size,
-                             -1.0f,
 			     ImGuiWindowFlags_NoCollapse | extra_flags);
             m_end_action = EndAction_End;
             dock.pos = GetWindowPos();
-            dock.size = GetWindowSize();
+	    dock.size = GetWindowSize();
+	    if (dock.size.x!=old_size.x) dock.floatmode_size.x = dock.size.x;
+	    if (dock.size.y!=old_size.y) dock.floatmode_size.y = dock.size.y;
+
+	    // Dbg (to remove)
+	    //if (ImGui::IsWindowHovered()) ImGui::SetTooltip("dock.size:\t(%1.f,%1.f)\\ndock.floatmode_size\t(%1.f,%1.f)\n",dock.size.x,dock.size.y,dock.floatmode_size.x,dock.floatmode_size.y);
 
             ImGuiContext& g = *GImGui;
 
@@ -1133,9 +1163,9 @@ struct DockContext
         
         splits();
 
-        PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
-        float tabbar_height = GetTextLineHeightWithSpacing();
-        if (tabbar(dock.getFirstTab(), opened != NULL))
+	PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
+	float tabbar_height = GetTextLineHeightWithSpacing();
+	if (tabbar(dock.getFirstTab(), opened != NULL))
         {
             fillLocation(dock);
             *opened = false;
@@ -1150,9 +1180,12 @@ struct DockContext
                 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
                 ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBringToFrontOnFocus |
                 extra_flags;
-        bool ret = BeginChild(label, size, true, flags);
-        PopStyleColor();
-        
+	char tmp[256];
+	strcpy(tmp, label);
+	strcat(tmp, "_docked"); // to avoid https://github.com/ocornut/imgui/issues/713
+	bool ret = BeginChild(tmp, size, true, flags);
+	PopStyleColor();
+
         return ret;
     }
 
@@ -1163,13 +1196,13 @@ struct DockContext
         if (m_end_action != EndAction_None) {
             if (m_end_action == EndAction_End)
             {
-                End();
+                End();                
             }
             else if (m_end_action == EndAction_EndChild)
             {
-                PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
-                EndChild();
-                PopStyleColor();
+		PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
+		EndChild();
+		PopStyleColor();
             }
             //endPanel();
         }
@@ -1282,6 +1315,7 @@ void DockDebugWindow()
 	    if (dock.label) s.save(dock.label,"label");
 	    s.save(&dock.pos.x,"pos",2);
 	    s.save(&dock.size.x,"size",2);
+	    s.save(&dock.floatmode_size.x,"floatmode_size",2);
 	    id = (int) dock.status;s.save(ImGui::FT_ENUM,&id,"status");
 	    s.save(&dock.active,"active");
 	    s.save(&dock.opened,"opened");
@@ -1329,6 +1363,7 @@ void DockDebugWindow()
 	    }
 	    else if (strcmp(name,"pos")==0) m_docks[P.curIndex]->pos = *((ImVec2*) pValue);
 	    else if (strcmp(name,"size")==0) m_docks[P.curIndex]->size = *((ImVec2*) pValue);
+	    else if (strcmp(name,"floatmode_size")==0) m_docks[P.curIndex]->floatmode_size = *((ImVec2*) pValue);
 	    else if (strcmp(name,"status")==0) m_docks[P.curIndex]->status = (DockContext::Status_) (*pValueInt);
 	    else if (strcmp(name,"active")==0) m_docks[P.curIndex]->active = (*pValueInt) ? true : false;
 	    else if (strcmp(name,"opened")==0) m_docks[P.curIndex]->opened = (*pValueInt) ? true : false;
