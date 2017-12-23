@@ -277,6 +277,7 @@ void Application::InitKeyMap()
 	keyMap[SDLK_TAB] = Key::TAB;
 	keyMap[SDLK_SPACE] = Key::SPACE;
 	keyMap[SDLK_RETURN] = Key::RETURN;
+	keyMap[SDLK_DELETE] = Key::DELETE;
 	keyMap[SDLK_F1] = Key::F1;
 	keyMap[SDLK_F2] = Key::F2;
 	keyMap[SDLK_F3] = Key::F3;
