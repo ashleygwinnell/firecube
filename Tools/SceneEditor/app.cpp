@@ -124,7 +124,7 @@ void FireCubeApp::Render(float t)
 	ImGui::BeginDockspace();	
 	{
 		hierarchyWindow->Render();
-		editorWindow->Render();		
+		editorWindow->Render();
 		inspectorWindow->Render();
 	}
 	ImGui::EndDockspace();
@@ -151,6 +151,8 @@ bool FireCubeApp::Prepare()
 	SubscribeToEvent(Events::HandleInput, &FireCubeApp::HandleInput);
 	GetInputManager().AddMapping(Key::Z, InputMappingType::ACTION, "Undo", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::Y, InputMappingType::ACTION, "Redo", KeyModifier::CTRL);
+	GetInputManager().AddMapping(Key::B, InputMappingType::ACTION, "SaveLayout");
+	GetInputManager().AddMapping(Key::N, InputMappingType::ACTION, "LoadLayout");
 	editorState = new EditorState(GetEngine());
 	editorWindow = new EditorWindow(engine);
 	hierarchyWindow = new HierarchyWindow(engine);
@@ -162,6 +164,8 @@ bool FireCubeApp::Prepare()
 	editorWindow->SetScene(scene, &rootDesc, editorState);
 	hierarchyWindow->SetScene(&rootDesc, editorState);
 	inspectorWindow->SetScene(&rootDesc, editorState);
+
+	ImGui::LoadDock("default.ini");
 
 	return true;
 }
@@ -176,5 +180,15 @@ void FireCubeApp::HandleInput(float dt, const MappedInput &input)
 	if (input.IsActionTriggered("Redo"))
 	{
 		editorState->Redo();
+	}
+
+	if (input.IsActionTriggered("SaveLayout"))
+	{
+		ImGui::SaveDock("default.ini");
+	}
+
+	if (input.IsActionTriggered("LoadLayout"))
+	{
+		ImGui::LoadDock("default.ini");
 	}
 }
