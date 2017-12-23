@@ -9,7 +9,7 @@
 
 using namespace FireCube;
 
-EditorWindow::EditorWindow(Engine *engine) : Object(engine), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), currentOperation(Operation3::NONE), leftButtonDown(false)
+EditorWindow::EditorWindow(Engine *engine) : Object(engine), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), currentOperation(Operation3::NONE), leftButtonDown(false), firstLeftDownOutside(true)
 {
 	
 }
@@ -198,11 +198,13 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 		UpdateGizmo();
 	}
 
-	if (mouseOverView)
-	{
-		if (input.IsStateOn("LeftDown"))
+	if (input.IsStateOn("LeftDown"))
+	{		
+		if (leftButtonDown == false)
 		{
-			if (leftButtonDown == false)
+			firstLeftDownOutside = !mouseOverView;
+			
+			if (mouseOverView)
 			{
 				vec2 mousePos(input.GetValue("MouseX"), input.GetValue("MouseY"));
 				mousePos = mousePos - canvasPos;
@@ -223,7 +225,10 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 					UpdateGizmo();
 				}
 			}
-			else
+		}
+		else
+		{
+			if (mouseOverView)
 			{
 				vec2 mousePos(input.GetValue("MouseX"), input.GetValue("MouseY"));
 				mousePos = mousePos - canvasPos;
@@ -235,10 +240,13 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 					UpdateGizmo();
 				}
 			}
-
-			leftButtonDown = true;
 		}
-		else if (leftButtonDown)
+
+		leftButtonDown = true;
+	}
+	else if (leftButtonDown)
+	{
+		if (mouseOverView && !firstLeftDownOutside)
 		{
 			leftButtonDown = false;
 

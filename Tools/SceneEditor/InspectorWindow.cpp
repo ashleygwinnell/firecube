@@ -18,8 +18,8 @@ void InspectorWindow::Render()
 	ImGui::SetNextDock(ImGuiDockSlot_Right);
 	if (ImGui::BeginDock("Inspector", nullptr, 0, ImVec2(50, -1)))
 	{
-		if (selectedNode)
-		{			
+		if (selectedNode && ImGui::CollapsingHeader("Node", ImGuiTreeNodeFlags_DefaultOpen))
+		{
 			translationInput.Render();
 			rotationInput.Render();
 			scaleInput.Render();

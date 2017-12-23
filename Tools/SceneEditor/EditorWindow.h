@@ -58,4 +58,5 @@ private:
 	bool mouseOverView;
 	FireCube::vec2 canvasPos, canvasSize;
 	bool leftButtonDown;
+	bool firstLeftDownOutside;
 };
