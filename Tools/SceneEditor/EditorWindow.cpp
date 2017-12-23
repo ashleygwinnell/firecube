@@ -6,6 +6,9 @@
 #include "Gizmos/ScaleGizmo.h"
 #include "Descriptors/PhysicsWorldDescriptor.h"
 #include "SceneReader.h"
+#include "Commands/AddNodeCommand.h"
+#include "Commands/TransformCommands.h"
+#include "Commands/RemoveNodeCommand.h"
 
 using namespace FireCube;
 
@@ -60,6 +63,11 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 	engine->GetInputManager()->AddMapping(Key::Q, InputMappingType::ACTION, "UseTranslateGizmo");
 	engine->GetInputManager()->AddMapping(Key::W, InputMappingType::ACTION, "UseRotateGizmo");
 	engine->GetInputManager()->AddMapping(Key::E, InputMappingType::ACTION, "UseScaleGizmo");
+	engine->GetInputManager()->AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Esc");
+	engine->GetInputManager()->AddMapping(Key::SPACE, InputMappingType::ACTION, "Clone");
+	engine->GetInputManager()->AddMapping(Key::G, InputMappingType::ACTION, "MoveToGround");
+	engine->GetInputManager()->AddMapping(Key::Z, InputMappingType::ACTION, "OrbitSelection", KeyModifier::NONE);
+	engine->GetInputManager()->AddMapping(Key::DELETE, InputMappingType::ACTION, "Delete");
 
 	editorScene = new FireCube::Scene(engine);
 	root = scene->GetRootNode();
@@ -312,9 +320,61 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 	{
 		UseScaleGizmo();
 	}
+	else if (input.IsActionTriggered("Esc"))
+	{
+		editorState->SetSelectedNode(nullptr);
+		UpdateGizmo();
+		currentOperation = Operation3::NONE;
+	}
+	else if (input.IsActionTriggered("Clone"))
+	{
+		auto nodeDesc = editorState->GetSelectedNode();
+		if (nodeDesc)
+		{
+			auto clonedNode = nodeDesc->Clone();
+
+			auto command = new AddNodeCommand(editorState, "Clone", clonedNode, nodeDesc->GetParent());
+			editorState->ExecuteCommand(command);
+			editorState->SetSelectedNode(clonedNode);
+			UpdateGizmo();			
+		}
+
+	}
+	else if (input.IsActionTriggered("MoveToGround"))
+	{
+		if (editorState->GetSelectedNode())
+		{
+			std::vector<StaticModel *> models;
+			editorState->GetSelectedNode()->GetNode()->GetComponents<StaticModel>(models, true);
+			if (models.empty() == false)
+			{
+				BoundingBox bbox;
+				for (auto &m : models)
+					bbox.Expand(m->GetWorldBoundingBox());
+				vec3 newPos = editorState->GetSelectedNode()->GetNode()->GetWorldPosition();
+				newPos.y += -bbox.GetMin().y;
+				editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", editorState->GetSelectedNode(), editorState->GetSelectedNode()->GetNode()->GetWorldPosition(), newPos));
+				UpdateGizmo();				
+			}
+		}
+	}
+	else if (input.IsActionTriggered("OrbitSelection") && currentCamera == defaultCamera)	
+	{
+		if (editorState->GetSelectedNode())
+		{
+			cameraTarget->SetTranslation(editorState->GetSelectedNode()->GetNode()->GetWorldPosition());
+			UpdateGizmo();			
+		}
+	}
+	else if (input.IsActionTriggered("Delete"))
+	{
+		if (editorState->GetSelectedNode())
+		{
+			editorState->ExecuteCommand(new RemoveNodeCommand(editorState, "Remove Node", editorState->GetSelectedNode()));
+			editorState->SetSelectedNode(nullptr);
+		}
+	}
 }
-
-
 
 void EditorWindow::UpdateGizmo()
 {
