@@ -188,9 +188,6 @@ void EditorWindow::Reset()
 
 void EditorWindow::HandleInput(float dt, const MappedInput &input)
 {
-	/*if (input.IsActionTriggered("Close"))
-	Close();*/
-
 	if (mouseOverView && input.IsStateOn("RotateCamera") && currentCamera == defaultCamera)
 	{
 		float deltaX = input.GetValue("MouseXDelta");

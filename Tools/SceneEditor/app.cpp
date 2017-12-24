@@ -117,10 +117,31 @@ void FireCubeApp::Render(float t)
 	ImGui::StyleColorsDark();
 	
 	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
-	const ImGuiWindowFlags flags = (ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar);
+	const ImGuiWindowFlags flags = (ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize | 
+									ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar);
 	const float oldWindowRounding = ImGui::GetStyle().WindowRounding; ImGui::GetStyle().WindowRounding = 0;	
-	ImGui::Begin("MainWindow", NULL, ImVec2(0, 0), 1.0f, flags);	
+	ImGui::Begin("MainWindow", nullptr, ImVec2(0, 0), 1.0f, flags);	
 	ImGui::GetStyle().WindowRounding = oldWindowRounding;
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Exit"))
+			{
+				Close();
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("View"))
+		{
+			if (ImGui::MenuItem("Save Layout"))
+			{
+				ImGui::SaveDock("default.ini");
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
 	ImGui::BeginDockspace();	
 	{
 		hierarchyWindow->Render();
@@ -151,8 +172,6 @@ bool FireCubeApp::Prepare()
 	SubscribeToEvent(Events::HandleInput, &FireCubeApp::HandleInput);
 	GetInputManager().AddMapping(Key::Z, InputMappingType::ACTION, "Undo", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::Y, InputMappingType::ACTION, "Redo", KeyModifier::CTRL);
-	GetInputManager().AddMapping(Key::B, InputMappingType::ACTION, "SaveLayout");
-	GetInputManager().AddMapping(Key::N, InputMappingType::ACTION, "LoadLayout");
 	editorState = new EditorState(GetEngine());
 	editorWindow = new EditorWindow(engine);
 	hierarchyWindow = new HierarchyWindow(engine);
@@ -180,15 +199,5 @@ void FireCubeApp::HandleInput(float dt, const MappedInput &input)
 	if (input.IsActionTriggered("Redo"))
 	{
 		editorState->Redo();
-	}
-
-	if (input.IsActionTriggered("SaveLayout"))
-	{
-		ImGui::SaveDock("default.ini");
-	}
-
-	if (input.IsActionTriggered("LoadLayout"))
-	{
-		ImGui::LoadDock("default.ini");
 	}
 }
