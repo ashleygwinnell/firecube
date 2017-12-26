@@ -24,10 +24,8 @@ public:
 	EditorWindow(FireCube::Engine *engine);
 	void Render();
 	void SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, EditorState *editorState);
-	void OpenSceneFile(const std::string &filename);
 private:
 	void CreateGrid(float size, unsigned int numberOfCells);
-	void Reset();
 	void HandleInput(float t, const FireCube::MappedInput &input);
 	void UpdateGizmo();
 	void SelectedNodeChanged(NodeDescriptor *nodeDesc);

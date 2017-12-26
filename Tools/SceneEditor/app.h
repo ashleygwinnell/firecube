@@ -28,6 +28,8 @@ public:
 	void HandleSDLEvent(SDL_Event &event);
 	virtual bool Prepare() override;
 	void HandleInput(float dt, const FireCube::MappedInput &input);
+	void OpenSceneFile(const std::string &filename);
+	void Reset();
 	
 	FireCube::Scene *scene;	
 	EditorState *editorState;

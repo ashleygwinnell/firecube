@@ -234,6 +234,9 @@
     <ClCompile Include="ThirdParty\imgui\imguihelper.cpp">
       <Filter>ThirdParty\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="ThirdParty\imgui\imguifilesystem.cpp">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -456,6 +459,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ThirdParty\imgui\imguihelper.h">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\imgui\dirent_portable.h">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\imgui\imguifilesystem.h">
       <Filter>ThirdParty\imgui</Filter>
     </ClInclude>
   </ItemGroup>

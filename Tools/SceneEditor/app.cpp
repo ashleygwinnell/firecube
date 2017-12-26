@@ -8,9 +8,11 @@
 #include "app.h"
 #include <imgui.h>
 #include "imgui_impl_sdl_gl3.h"
+#include "imguifilesystem.h"
 #include "HierarchyWindow.h"
 #include "EditorWindow.h"
 #include "InspectorWindow.h"
+#include "SceneReader.h"
 
 using namespace FireCube;
 
@@ -122,10 +124,15 @@ void FireCubeApp::Render(float t)
 	const float oldWindowRounding = ImGui::GetStyle().WindowRounding; ImGui::GetStyle().WindowRounding = 0;	
 	ImGui::Begin("MainWindow", nullptr, ImVec2(0, 0), 1.0f, flags);	
 	ImGui::GetStyle().WindowRounding = oldWindowRounding;
+	bool showFileOpen = false;
 	if (ImGui::BeginMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
+			if (ImGui::MenuItem("Open"))
+			{
+				showFileOpen = true;
+			}
 			if (ImGui::MenuItem("Exit"))
 			{
 				Close();
@@ -148,8 +155,18 @@ void FireCubeApp::Render(float t)
 		editorWindow->Render();
 		inspectorWindow->Render();
 	}
+
+	static ImGuiFs::Dialog dlg;
+	const char* chosenPath = dlg.chooseFileDialog(showFileOpen, nullptr, ".xml", "Open Scene file", ImVec2(600, 400), ImVec2(100, 100));
+	std::string path = chosenPath;
+	if (path.empty() == false)
+	{
+		std::replace(path.begin(), path.end(), '/', '\\');
+		OpenSceneFile(path);
+	}
+
 	ImGui::EndDockspace();
-	ImGui::End();		
+	ImGui::End();
 
 	for (unsigned int i = 0; i < MAX_RENDER_TARGETS; ++i)
 	{
@@ -200,4 +217,52 @@ void FireCubeApp::HandleInput(float dt, const MappedInput &input)
 	{
 		editorState->Redo();
 	}
+}
+
+void FireCubeApp::OpenSceneFile(const std::string &filename)
+{	
+	editorState->SetCurrentSceneFile(filename);
+
+	Filesystem::SetAssetsFolder(Filesystem::GetDirectoryName(Filesystem::GetDirectoryName(filename)));
+
+	::SceneReader sceneReader(engine);
+
+	Reset();
+
+	if (sceneReader.Read(&rootDesc, filename))
+	{
+		Node *root = rootDesc.Instantiate(nullptr, engine, editorState->GetNodeMap());
+		rootDesc.SetNode(root);
+		scene->GetRootNode()->AddChild(root);
+		//NodeAdded(&rootDesc);
+	}
+
+	//SetTitle("SceneEditor - " + filename);
+
+	//assetBrowserPanel->PopulateDirectoryTree();
+	//assetBrowserPanel->SetAssetsPath(Filesystem::GetAssetsFolder());
+
+	//UpdateCamerasList();
+
+	editorState->sceneChanged(editorState);
+}
+
+void FireCubeApp::Reset()
+{
+	editorState->ClearCommands();
+	//sceneTreeCtrl->Freeze();
+	//sceneTreeCtrl->DeleteAllItems();
+	//sceneTreeCtrl->Thaw();
+	//nodeToTreeItem.clear();
+	//treeItemToNode.clear();
+	editorState->GetNodeMap().clear();
+
+	if (scene)
+	{
+		scene->GetRootNode()->RemoveAllComponents();
+		rootDesc.RemoveAllComponents();
+		rootDesc.RemoveAllChildren();
+	}
+
+	editorState->SetSelectedNode(nullptr);
 }

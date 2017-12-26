@@ -113,36 +113,6 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 	editorState->newSceneCreated(editorState);	
 }
 
-void EditorWindow::OpenSceneFile(const std::string &filename)
-{
-	//SetAllPanelsVisibility(true);
-
-	editorState->SetCurrentSceneFile(filename);
-
-	Filesystem::SetAssetsFolder(Filesystem::GetDirectoryName(Filesystem::GetDirectoryName(filename)));
-
-	::SceneReader sceneReader(engine);
-
-	Reset();
-
-	if (sceneReader.Read(rootDesc, filename))
-	{
-		root = rootDesc->Instantiate(nullptr, engine, editorState->GetNodeMap());
-		rootDesc->SetNode(root);
-		scene->GetRootNode()->AddChild(root);
-		//NodeAdded(&rootDesc);
-	}
-
-	//SetTitle("SceneEditor - " + filename);
-
-	//assetBrowserPanel->PopulateDirectoryTree();
-	//assetBrowserPanel->SetAssetsPath(Filesystem::GetAssetsFolder());
-
-	//UpdateCamerasList();
-
-	editorState->sceneChanged(editorState);
-}
-
 void EditorWindow::CreateGrid(float size, unsigned int numberOfCells)
 {
 	if (!gridNode)
@@ -166,26 +136,6 @@ void EditorWindow::CreateGrid(float size, unsigned int numberOfCells)
 	gridGeometry->SetCollisionQueryMask(0);
 }
 
-void EditorWindow::Reset()
-{
-	editorState->ClearCommands();
-	//sceneTreeCtrl->Freeze();
-	//sceneTreeCtrl->DeleteAllItems();
-	//sceneTreeCtrl->Thaw();
-	//nodeToTreeItem.clear();
-	//treeItemToNode.clear();
-	editorState->GetNodeMap().clear();
-
-	if (scene)
-	{
-		scene->GetRootNode()->RemoveAllComponents();
-		rootDesc->RemoveAllComponents();
-		rootDesc->RemoveAllChildren();
-	}
-
-	editorState->SetSelectedNode(nullptr);
-}
-
 void EditorWindow::HandleInput(float dt, const MappedInput &input)
 {
 	if (mouseOverView && input.IsStateOn("RotateCamera") && currentCamera == defaultCamera)
@@ -204,7 +154,7 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 	}
 
 	if (input.IsStateOn("LeftDown"))
-	{		
+	{
 		if (leftButtonDown == false)
 		{
 			firstLeftDownOutside = !mouseOverView;
@@ -251,10 +201,10 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 	}
 	else if (leftButtonDown)
 	{
+		leftButtonDown = false;
+
 		if (mouseOverView && !firstLeftDownOutside)
 		{
-			leftButtonDown = false;
-
 			vec2 mousePos(input.GetValue("MouseX"), input.GetValue("MouseY"));
 			mousePos = mousePos - canvasPos;
 			Ray ray = currentCamera->GetPickingRay(vec2(mousePos.x, canvasSize.y - mousePos.y), canvasSize.x, canvasSize.y);
