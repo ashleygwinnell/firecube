@@ -30,10 +30,13 @@ public:
 	void HandleInput(float dt, const FireCube::MappedInput &input);
 	void OpenSceneFile(const std::string &filename);
 	void Reset();
+	void LoadSettingsFile();
+	void WriteSettingsFile();
 	
 	FireCube::Scene *scene;	
 	EditorState *editorState;
 	NodeDescriptor rootDesc;	
+	std::vector<std::string> recentSceneFiles;
 
 	EditorWindow *editorWindow;	
 	HierarchyWindow *hierarchyWindow;

@@ -13,6 +13,7 @@
 #include "EditorWindow.h"
 #include "InspectorWindow.h"
 #include "SceneReader.h"
+#include "tinyxml.h"
 
 using namespace FireCube;
 
@@ -98,7 +99,7 @@ wxGLContext *MyApp::GetMainContext(wxGLCanvas *glCanvas)
 int main(int argc, char *argv[])
 {
 	FireCubeApp app;
-	Filesystem::SetCoreDataFolder("../../FireCube");	
+	Filesystem::SetCoreDataFolder("../../FireCube");
 
 	if (!app.Initialize(WindowProperties().Maximized(true)))
 		return 0;
@@ -133,8 +134,33 @@ void FireCubeApp::Render(float t)
 			{
 				showFileOpen = true;
 			}
+
+			if (recentSceneFiles.empty() == false)
+			{
+				ImGui::Separator();
+				std::string selectedFile;
+				for (auto &filename : recentSceneFiles)
+				{
+					if (ImGui::MenuItem(filename.c_str()))
+					{
+						selectedFile = filename;
+					}
+				}
+
+				if (selectedFile.empty() == false && selectedFile != editorState->GetCurrentSceneFile())
+				{									
+					recentSceneFiles.erase(std::remove(recentSceneFiles.begin(), recentSceneFiles.end(), selectedFile), recentSceneFiles.end());
+					recentSceneFiles.insert(recentSceneFiles.begin(), selectedFile);
+
+					OpenSceneFile(selectedFile);
+				}
+			}
+
+			ImGui::Separator();
+
 			if (ImGui::MenuItem("Exit"))
 			{
+				WriteSettingsFile();
 				Close();
 			}
 			ImGui::EndMenu();
@@ -186,6 +212,8 @@ void FireCubeApp::HandleSDLEvent(SDL_Event &event)
 
 bool FireCubeApp::Prepare()
 {
+	LoadSettingsFile();
+
 	SubscribeToEvent(Events::HandleInput, &FireCubeApp::HandleInput);
 	GetInputManager().AddMapping(Key::Z, InputMappingType::ACTION, "Undo", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::Y, InputMappingType::ACTION, "Redo", KeyModifier::CTRL);
@@ -265,4 +293,48 @@ void FireCubeApp::Reset()
 	}
 
 	editorState->SetSelectedNode(nullptr);
+}
+
+void FireCubeApp::LoadSettingsFile()
+{
+	TiXmlDocument xmlDocument;
+	if (!xmlDocument.LoadFile("settings.xml"))
+		return;
+
+	TiXmlElement *settings = xmlDocument.FirstChildElement("settings");
+	if (settings == nullptr)
+		return;
+
+	TiXmlElement *e = settings->FirstChildElement("recent");
+	if (e)
+	{
+		for (TiXmlElement *element = e->FirstChildElement("file"); element != nullptr; element = element->NextSiblingElement("file"))
+		{
+			std::string filename = element->Attribute("name");
+			if (!wxFileExists(filename))
+			{
+				continue;
+			}
+			recentSceneFiles.push_back(filename);
+		}
+	}
+}
+
+void FireCubeApp::WriteSettingsFile()
+{
+	TiXmlDocument doc;
+	TiXmlElement *settingsElement = new TiXmlElement("settings");
+	doc.LinkEndChild(settingsElement);
+
+	TiXmlElement *recentFilesElement = new TiXmlElement("recent");
+	settingsElement->LinkEndChild(recentFilesElement);
+
+	for (auto &sceneFile : recentSceneFiles)
+	{
+		TiXmlElement *element = new TiXmlElement("file");
+		recentFilesElement->LinkEndChild(element);
+		element->SetAttribute("name", sceneFile);
+	}
+
+	doc.SaveFile("settings.xml");
 }
