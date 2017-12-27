@@ -49,3 +49,4 @@ FireCube.VC.VC.opendb
 .vs
 FireCube/ThirdParty/Release
 FireCube/ThirdParty/Debug
+/Tools/SceneEditor/imgui.ini

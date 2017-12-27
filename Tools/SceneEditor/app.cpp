@@ -15,6 +15,7 @@
 #include "SceneReader.h"
 #include "tinyxml.h"
 #include "Commands/Command.h"
+#include "Commands/AddNodeCommand.h"
 #include "SceneWriter.h"
 
 using namespace FireCube;
@@ -218,6 +219,17 @@ void FireCubeApp::Render(float t)
 				ImGui::MenuItem("Redo", "Ctrl+Y", false, false);
 			}
 
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Add"))
+		{
+			if (ImGui::MenuItem("Node"))
+			{
+				auto nodeDesc = new NodeDescriptor("Node");
+				auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, &rootDesc);
+				editorState->ExecuteCommand(addNodeCommand);
+			}
 			ImGui::EndMenu();
 		}
 
