@@ -214,6 +214,8 @@ bool FireCubeApp::Prepare()
 {
 	LoadSettingsFile();
 
+	SetTitle("SceneEditor");
+
 	SubscribeToEvent(Events::HandleInput, &FireCubeApp::HandleInput);
 	GetInputManager().AddMapping(Key::Z, InputMappingType::ACTION, "Undo", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::Y, InputMappingType::ACTION, "Redo", KeyModifier::CTRL);
@@ -262,10 +264,9 @@ void FireCubeApp::OpenSceneFile(const std::string &filename)
 		Node *root = rootDesc.Instantiate(nullptr, engine, editorState->GetNodeMap());
 		rootDesc.SetNode(root);
 		scene->GetRootNode()->AddChild(root);
-		//NodeAdded(&rootDesc);
 	}
 
-	//SetTitle("SceneEditor - " + filename);
+	SetTitle("SceneEditor - " + filename);
 
 	//assetBrowserPanel->PopulateDirectoryTree();
 	//assetBrowserPanel->SetAssetsPath(Filesystem::GetAssetsFolder());
@@ -278,11 +279,6 @@ void FireCubeApp::OpenSceneFile(const std::string &filename)
 void FireCubeApp::Reset()
 {
 	editorState->ClearCommands();
-	//sceneTreeCtrl->Freeze();
-	//sceneTreeCtrl->DeleteAllItems();
-	//sceneTreeCtrl->Thaw();
-	//nodeToTreeItem.clear();
-	//treeItemToNode.clear();
 	editorState->GetNodeMap().clear();
 
 	if (scene)

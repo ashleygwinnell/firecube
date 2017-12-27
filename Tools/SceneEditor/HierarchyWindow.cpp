@@ -37,7 +37,15 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 		}
 		
 		ImGui::PushID(child);
+		if (child->IsPrefab())
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor(1.0f, 0.0f, 0.0));
+		}
 		bool nodeOpen = ImGui::TreeNodeEx(child->GetName().c_str(), nodeFlags);
+		if (child->IsPrefab())
+		{
+			ImGui::PopStyleColor();
+		}
 		ImGui::PopID();
 		if (ImGui::IsItemClicked())
 		{
