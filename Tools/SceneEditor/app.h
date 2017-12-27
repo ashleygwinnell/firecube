@@ -32,6 +32,8 @@ public:
 	void Reset();
 	void LoadSettingsFile();
 	void WriteSettingsFile();
+	void SavePrefabs(NodeDescriptor *node);
+	void Exit();
 	
 	FireCube::Scene *scene;	
 	EditorState *editorState;
@@ -41,6 +43,10 @@ public:
 	EditorWindow *editorWindow;	
 	HierarchyWindow *hierarchyWindow;
 	InspectorWindow *inspectorWindow;
+
+	bool showFileOpen;
+	bool showNewDialog;
+	bool showSaveAs;
 };
 
 class MyApp : public wxApp

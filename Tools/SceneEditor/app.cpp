@@ -15,6 +15,7 @@
 #include "SceneReader.h"
 #include "tinyxml.h"
 #include "Commands/Command.h"
+#include "SceneWriter.h"
 
 using namespace FireCube;
 
@@ -109,7 +110,7 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-FireCubeApp::FireCubeApp()
+FireCubeApp::FireCubeApp() : showFileOpen(false), showNewDialog(false), showSaveAs(false)
 {
 
 }
@@ -125,20 +126,38 @@ void FireCubeApp::Render(float t)
 									ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar);
 	const float oldWindowRounding = ImGui::GetStyle().WindowRounding; ImGui::GetStyle().WindowRounding = 0;	
 	ImGui::Begin("MainWindow", nullptr, ImVec2(0, 0), 1.0f, flags);	
-	ImGui::GetStyle().WindowRounding = oldWindowRounding;
-	bool showFileOpen = false;
-	bool showNewDialog = false;
+	ImGui::GetStyle().WindowRounding = oldWindowRounding;	
+
 	if (ImGui::BeginMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("New"))
+			if (ImGui::MenuItem("New", "Ctrl+N"))
 			{
 				showNewDialog = true;
 			}
-			if (ImGui::MenuItem("Open"))
+			if (ImGui::MenuItem("Open", "Ctrl+O"))
 			{
 				showFileOpen = true;
+			}
+
+			if (ImGui::MenuItem("Save", "Ctrl+S"))
+			{
+				if (editorState->GetCurrentSceneFile().empty())
+				{
+					showSaveAs = true;
+				}
+				else
+				{
+					SceneWriter sceneWriter;
+					sceneWriter.Serialize(&rootDesc, editorState->GetCurrentSceneFile());
+					SavePrefabs(&rootDesc);
+				}
+			}
+
+			if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
+			{
+				showSaveAs = true;
 			}
 
 			if (recentSceneFiles.empty() == false)
@@ -164,10 +183,9 @@ void FireCubeApp::Render(float t)
 
 			ImGui::Separator();
 
-			if (ImGui::MenuItem("Exit"))
+			if (ImGui::MenuItem("Exit", "Ctrl+X"))
 			{
-				WriteSettingsFile();
-				Close();
+				Exit();
 			}
 			ImGui::EndMenu();
 		}
@@ -256,8 +274,26 @@ void FireCubeApp::Render(float t)
 		}
 	}
 
+	{
+		static ImGuiFs::Dialog dialog;
+		const char* chosenPath = dialog.saveFileDialog(showSaveAs, nullptr, nullptr, ".xml", "Save Scene file", ImVec2(600, 400), ImVec2(100, 100));
+		std::string path = chosenPath;
+		if (path.empty() == false)
+		{
+			SceneWriter sceneWriter;
+			sceneWriter.Serialize(&rootDesc, path);
+			SavePrefabs(&rootDesc);
+			editorState->SetCurrentSceneFile(path);
+			SetTitle("SceneEditor - " + path);
+		}
+	}
+
 	ImGui::EndDockspace();
 	ImGui::End();
+
+	showFileOpen = false;
+	showNewDialog = false;
+	showSaveAs = false;
 
 	for (unsigned int i = 0; i < MAX_RENDER_TARGETS; ++i)
 	{
@@ -284,6 +320,11 @@ bool FireCubeApp::Prepare()
 	SubscribeToEvent(Events::HandleInput, &FireCubeApp::HandleInput);
 	GetInputManager().AddMapping(Key::Z, InputMappingType::ACTION, "Undo", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::Y, InputMappingType::ACTION, "Redo", KeyModifier::CTRL);
+	GetInputManager().AddMapping(Key::N, InputMappingType::ACTION, "New", KeyModifier::CTRL);
+	GetInputManager().AddMapping(Key::O, InputMappingType::ACTION, "Open", KeyModifier::CTRL);
+	GetInputManager().AddMapping(Key::S, InputMappingType::ACTION, "Save", KeyModifier::CTRL);
+	GetInputManager().AddMapping(Key::S, InputMappingType::ACTION, "SaveAs", KeyModifier::CTRL | KeyModifier::SHIFT);
+	GetInputManager().AddMapping(Key::X, InputMappingType::ACTION, "Exit", KeyModifier::CTRL);
 	editorState = new EditorState(GetEngine());
 	editorWindow = new EditorWindow(engine);
 	hierarchyWindow = new HierarchyWindow(engine);
@@ -311,6 +352,40 @@ void FireCubeApp::HandleInput(float dt, const MappedInput &input)
 	if (input.IsActionTriggered("Redo"))
 	{
 		editorState->Redo();
+	}
+
+	if (input.IsActionTriggered("New"))
+	{
+		showNewDialog = true;
+	}
+
+	if (input.IsActionTriggered("Open"))
+	{
+		showFileOpen = true;
+	}
+
+	if (input.IsActionTriggered("Save"))
+	{
+		if (editorState->GetCurrentSceneFile().empty())
+		{
+			showSaveAs = true;
+		}
+		else
+		{
+			SceneWriter sceneWriter;
+			sceneWriter.Serialize(&rootDesc, editorState->GetCurrentSceneFile());
+			SavePrefabs(&rootDesc);
+		}
+	}
+
+	if (input.IsActionTriggered("SaveAs"))
+	{
+		showSaveAs = true;
+	}
+
+	if (input.IsActionTriggered("Exit"))
+	{
+		Exit();
 	}
 }
 
@@ -398,4 +473,36 @@ void FireCubeApp::WriteSettingsFile()
 	}
 
 	doc.SaveFile("settings.xml");
+}
+
+void FireCubeApp::SavePrefabs(NodeDescriptor *node)
+{
+	if (node->IsPrefab())
+	{
+		std::string tragetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + node->GetPrefabPath();
+		SceneWriter sceneWriter;
+		sceneWriter.SerializePrefab(node, tragetPath);
+	}
+	else
+	{
+		for (auto child : node->GetChildren())
+		{
+			SavePrefabs(child);
+		}
+	}
+}
+
+void FireCubeApp::Exit()
+{
+	/*if (editorCanvas->IsInitialized())
+	{
+		editorCanvas->UseDefaultCamera(); // Use default camera to prevent rendering from a soon to be deleted camera
+	}*/
+	Reset();
+
+	// Prevent destructor of NodeDescriptor from deleting the node itself since it is owned by the Scene
+	rootDesc.SetNode(nullptr);
+
+	WriteSettingsFile();
+	Close();
 }
