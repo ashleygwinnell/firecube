@@ -3,6 +3,7 @@
 #include "Descriptors/NodeDescriptor.h"
 #include "EditorState.h"
 #include "Commands/TransformCommands.h"
+#include "Commands/RenameNodeCommand.h"
 
 using namespace FireCube;
 
@@ -20,6 +21,16 @@ void InspectorWindow::Render()
 	{
 		if (selectedNode && ImGui::CollapsingHeader("Node", ImGuiTreeNodeFlags_DefaultOpen))
 		{
+			char name[1024];
+			std::string nameStr = selectedNode->GetName();
+			std::copy(nameStr.begin(), nameStr.end(), name);
+			name[nameStr.size()] = '\0';
+			if (ImGui::InputText("Name", name, 1024, ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				auto command = new RenameNodeCommand(editorState, "Rename", selectedNode, name);
+				editorState->ExecuteCommand(command);
+			}
+
 			translationInput.Render();
 			rotationInput.Render();
 			scaleInput.Render();
