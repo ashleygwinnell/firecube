@@ -14,6 +14,7 @@
 #include "InspectorWindow.h"
 #include "SceneReader.h"
 #include "tinyxml.h"
+#include "Commands/Command.h"
 
 using namespace FireCube;
 
@@ -165,6 +166,38 @@ void FireCubeApp::Render(float t)
 			}
 			ImGui::EndMenu();
 		}
+
+		if (ImGui::BeginMenu("Edit"))
+		{
+			if (editorState->HasUndo())
+			{
+				std::string label = "Undo \"" + editorState->GetCurrentUndoCommand()->GetDescription() + "\"";
+				if (ImGui::MenuItem(label.c_str(), "Ctrl+Z"))
+				{
+					editorState->Undo();
+				}
+			}
+			else
+			{
+				ImGui::MenuItem("Undo", "Ctrl+Z", false, false);
+			}
+
+			if (editorState->HasRedo())
+			{
+				std::string label = "Redo \"" + editorState->GetCurrentRedoCommand()->GetDescription() + "\"";
+				if (ImGui::MenuItem(label.c_str(), "Ctrl+Y"))
+				{
+					editorState->Redo();
+				}
+			}
+			else
+			{
+				ImGui::MenuItem("Redo", "Ctrl+Y", false, false);
+			}
+
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("View"))
 		{
 			if (ImGui::MenuItem("Save Layout"))
