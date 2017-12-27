@@ -127,10 +127,15 @@ void FireCubeApp::Render(float t)
 	ImGui::Begin("MainWindow", nullptr, ImVec2(0, 0), 1.0f, flags);	
 	ImGui::GetStyle().WindowRounding = oldWindowRounding;
 	bool showFileOpen = false;
+	bool showNewDialog = false;
 	if (ImGui::BeginMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
+			if (ImGui::MenuItem("New"))
+			{
+				showNewDialog = true;
+			}
 			if (ImGui::MenuItem("Open"))
 			{
 				showFileOpen = true;
@@ -214,14 +219,41 @@ void FireCubeApp::Render(float t)
 		editorWindow->Render();
 		inspectorWindow->Render();
 	}
-
-	static ImGuiFs::Dialog dlg;
-	const char* chosenPath = dlg.chooseFileDialog(showFileOpen, nullptr, ".xml", "Open Scene file", ImVec2(600, 400), ImVec2(100, 100));
-	std::string path = chosenPath;
-	if (path.empty() == false)
+	
 	{
-		std::replace(path.begin(), path.end(), '/', '\\');
-		OpenSceneFile(path);
+		static ImGuiFs::Dialog openDialog;
+		const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, nullptr, ".xml", "Open Scene file", ImVec2(600, 400), ImVec2(100, 100));
+		std::string path = chosenPath;
+		if (path.empty() == false)
+		{
+			std::replace(path.begin(), path.end(), '/', '\\');
+			OpenSceneFile(path);
+		}
+	}
+
+	{
+		static ImGuiFs::Dialog newDialog;
+		const char* chosenPath = newDialog.chooseFolderDialog(showNewDialog, nullptr, "Choose root assets directory", ImVec2(600, 400), ImVec2(100, 100));
+		std::string path = chosenPath;
+		if (path.empty() == false)
+		{
+			std::replace(path.begin(), path.end(), '/', '\\');
+
+			Filesystem::SetAssetsFolder(path);
+
+			Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Scenes");
+			Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Materials");
+			Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Prefabs");
+
+			//SetAllPanelsVisibility(true);
+
+			Reset();
+
+			//assetBrowserPanel->PopulateDirectoryTree();
+			//assetBrowserPanel->SetAssetsPath(Filesystem::GetAssetsFolder());
+
+			editorState->SetCurrentSceneFile("");
+		}
 	}
 
 	ImGui::EndDockspace();
