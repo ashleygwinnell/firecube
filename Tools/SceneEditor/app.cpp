@@ -17,6 +17,7 @@
 #include "Commands/Command.h"
 #include "Commands/AddNodeCommand.h"
 #include "SceneWriter.h"
+#include "AssetBrowserWindow.h"
 
 using namespace FireCube;
 
@@ -248,6 +249,7 @@ void FireCubeApp::Render(float t)
 		hierarchyWindow->Render();
 		editorWindow->Render();
 		inspectorWindow->Render();
+		assetBrowserWindow->Render();
 	}
 	
 	{
@@ -341,6 +343,7 @@ bool FireCubeApp::Prepare()
 	editorWindow = new EditorWindow(engine);
 	hierarchyWindow = new HierarchyWindow(engine);
 	inspectorWindow = new InspectorWindow(engine);
+	assetBrowserWindow = new AssetBrowserWindow(engine);
 	
 	ImGui_ImplSdlGL3_Init(GetWindow());
 	scene = new FireCube::Scene(GetEngine());	
@@ -348,6 +351,7 @@ bool FireCubeApp::Prepare()
 	editorWindow->SetScene(scene, &rootDesc, editorState);
 	hierarchyWindow->SetScene(&rootDesc, editorState);
 	inspectorWindow->SetScene(&rootDesc, editorState);
+	assetBrowserWindow->SetScene(&rootDesc, editorState);
 
 	ImGui::LoadDock("default.ini");
 

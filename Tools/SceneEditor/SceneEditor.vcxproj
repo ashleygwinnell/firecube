@@ -90,6 +90,7 @@
     <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxml.cpp" />
     <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlparser.cpp" />
+    <ClCompile Include="AssetBrowserWindow.cpp" />
     <ClCompile Include="AssetUtils.cpp" />
     <ClCompile Include="AuxGLCanvas.cpp" />
     <ClCompile Include="BaseGLCanvas.cpp" />
@@ -158,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\FireCube\ThirdParty\TinyXML\tinyxml.h" />
     <ClInclude Include="app.h" />
+    <ClInclude Include="AssetBrowserWindow.h" />
     <ClInclude Include="AssetUtils.h" />
     <ClInclude Include="AuxGLCanvas.h" />
     <ClInclude Include="BaseGLCanvas.h" />

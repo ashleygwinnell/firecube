@@ -237,6 +237,9 @@
     <ClCompile Include="ThirdParty\imgui\imguifilesystem.cpp">
       <Filter>ThirdParty\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="AssetBrowserWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -466,6 +469,9 @@
     </ClInclude>
     <ClInclude Include="ThirdParty\imgui\imguifilesystem.h">
       <Filter>ThirdParty\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetBrowserWindow.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

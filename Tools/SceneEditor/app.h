@@ -18,6 +18,7 @@ class CameraDescriptor;
 class EditorWindow;
 class HierarchyWindow;
 class InspectorWindow;
+class AssetBrowserWindow;
 
 class FireCubeApp : public FireCube::Application
 {
@@ -43,6 +44,7 @@ public:
 	EditorWindow *editorWindow;	
 	HierarchyWindow *hierarchyWindow;
 	InspectorWindow *inspectorWindow;
+	AssetBrowserWindow *assetBrowserWindow;
 
 	bool showFileOpen;
 	bool showNewDialog;
