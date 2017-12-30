@@ -29,8 +29,9 @@ private:
 
 	NodeDescriptor *rootDesc;
 	EditorState *editorState;	
-
+	bool firstRender;
 	std::string selectedPath;
 	FileInfo *selectedItem;
 	std::vector<FileInfo> itemsInSelectedPath;
+	FireCube::Texture2D *texturePreview;
 };

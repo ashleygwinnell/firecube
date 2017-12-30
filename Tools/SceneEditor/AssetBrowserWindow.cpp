@@ -1,10 +1,11 @@
+#define NOMINMAX
 #include "AssetBrowserWindow.h"
 #include "imgui.h"
 #include "EditorState.h"
 
 using namespace FireCube;
 
-AssetBrowserWindow::AssetBrowserWindow(Engine *engine) : Object(engine), selectedItem(nullptr)
+AssetBrowserWindow::AssetBrowserWindow(Engine *engine) : Object(engine), selectedItem(nullptr), texturePreview(nullptr), firstRender(true)
 {
 
 }
@@ -18,6 +19,11 @@ void AssetBrowserWindow::Render()
 	{
 		ImGui::Columns(3, "assetBrowserColumns", true);
 		
+		if (firstRender)
+		{
+			ImGui::SetColumnWidth(-1, 200);
+		}
+
 		auto assetsFolder = Filesystem::GetAssetsFolder();
 		if (assetsFolder.empty() == false)
 		{
@@ -28,7 +34,7 @@ void AssetBrowserWindow::Render()
 		{
 			for (auto &item : itemsInSelectedPath)
 			{
-				if (ImGui::Selectable(item.label.c_str(), false, ImGuiSelectableFlags_AllowDoubleClick))
+				if (ImGui::Selectable(item.label.c_str(), selectedItem == &item, ImGuiSelectableFlags_AllowDoubleClick))
 				{
 					if (ImGui::IsMouseDoubleClicked(0))
 					{
@@ -43,17 +49,51 @@ void AssetBrowserWindow::Render()
 					else
 					{
 						selectedItem = &item;
+						texturePreview = nullptr;
+						if (item.isDirectory == false && item.assetType == AssetType::TEXTURE)
+						{
+							texturePreview = engine->GetResourceCache()->GetResource<Texture2D>(item.path);
+						}
 					}
 				}
 			}
 		}
 		ImGui::NextColumn();
+
 		if (selectedItem)
 		{
-			ImGui::Text(selectedItem->label.c_str());
+			if (texturePreview)
+			{
+				ImVec2 size = ImGui::GetContentRegionAvail();
+				int width = texturePreview->GetWidth();
+				int height = texturePreview->GetHeight();
+				float maxDimension = std::min(size.x, size.y);
+				
+				if (width > maxDimension || height > maxDimension)
+				{
+					if (width > height)
+					{
+						size.x = maxDimension;
+						size.y = (float)height / (float)width * maxDimension;
+					}
+					else
+					{
+						size.y = maxDimension;
+						size.x = (float)width / (float)height * maxDimension;
+					}
+				}
+				else
+				{
+					size = ImVec2((float)width, (float)height);
+				}
+
+				ImGui::Image((void *)(texturePreview->GetObjectId()), size, ImVec2(0, 1), ImVec2(1, 0));
+			}
 		}
 	}
 	ImGui::EndDock();
+
+	firstRender = false;
 }
 
 void AssetBrowserWindow::RenderDirectoryTree(const std::string &path)
