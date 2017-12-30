@@ -4,7 +4,7 @@
 
 using namespace FireCube;
 
-AssetBrowserWindow::AssetBrowserWindow(Engine *engine) : Object(engine)
+AssetBrowserWindow::AssetBrowserWindow(Engine *engine) : Object(engine), selectedItem(nullptr)
 {
 
 }
@@ -17,24 +17,40 @@ void AssetBrowserWindow::Render()
 	if (ImGui::BeginDock("Asset Browser", nullptr, 0, ImVec2(50, -1)))
 	{
 		ImGui::Columns(3, "assetBrowserColumns", true);
-		ImGui::Separator();
-
+		
 		auto assetsFolder = Filesystem::GetAssetsFolder();
 		if (assetsFolder.empty() == false)
 		{
 			RenderDirectoryTree(assetsFolder);
 		}
 		ImGui::NextColumn();
-		if (filesInSelectedPath.empty() == false)
+		if (itemsInSelectedPath.empty() == false)
 		{
-			for (auto &file : filesInSelectedPath)
+			for (auto &item : itemsInSelectedPath)
 			{
-				std::string label = Filesystem::GetLastPathComponent(file);
-				if (ImGui::Selectable(label.c_str())) 
+				if (ImGui::Selectable(item.label.c_str(), false, ImGuiSelectableFlags_AllowDoubleClick))
 				{
-
+					if (ImGui::IsMouseDoubleClicked(0))
+					{
+						if (item.isDirectory)
+						{
+							selectedPath = item.path;
+							selectedItem = nullptr;
+							itemsInSelectedPath = GetItemsInPath(selectedPath);
+							break;
+						}
+					}
+					else
+					{
+						selectedItem = &item;
+					}
 				}
 			}
+		}
+		ImGui::NextColumn();
+		if (selectedItem)
+		{
+			ImGui::Text(selectedItem->label.c_str());
 		}
 	}
 	ImGui::EndDock();
@@ -60,12 +76,14 @@ void AssetBrowserWindow::RenderDirectoryTree(const std::string &path)
 	{
 		label = Filesystem::GetLastPathComponent(path);
 	}
+
 	bool nodeOpen = ImGui::TreeNodeEx(label.c_str(), nodeFlags);
 	ImGui::PopID();
 	if (ImGui::IsItemClicked())
 	{
 		selectedPath = path;
-		filesInSelectedPath = GetFilesInPath(path);
+		selectedItem = nullptr;
+		itemsInSelectedPath = GetItemsInPath(path);
 	}
 
 	if (nodeOpen && items.empty() == false)
@@ -110,9 +128,9 @@ std::vector<std::string> AssetBrowserWindow::GetDirectoriesInPath(const std::str
 	return ret;
 }
 
-std::vector<std::string> AssetBrowserWindow::GetFilesInPath(const std::string &path)
+std::vector<AssetBrowserWindow::FileInfo> AssetBrowserWindow::GetItemsInPath(const std::string &path)
 {
-	std::vector<std::string> ret;
+	std::vector<FileInfo> ret;
 	std::string pattern(path);
 	pattern.append("\\*");
 	WIN32_FIND_DATAA data;
@@ -121,10 +139,18 @@ std::vector<std::string> AssetBrowserWindow::GetFilesInPath(const std::string &p
 	{
 		do
 		{
-			if ((data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)
+			std::string p = data.cFileName;
+			if (p != "." && p != "..")
 			{
-				std::string p = data.cFileName;
-				ret.push_back(Filesystem::JoinPath(path, p));
+				FileInfo item;
+				item.path = Filesystem::JoinPath(path, p);
+				item.label = Filesystem::GetLastPathComponent(p);
+				item.isDirectory = data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
+				if (!item.isDirectory)
+				{
+					item.assetType = AssetUtils::GetAssetTypeByPath(item.path);
+				}
+				ret.push_back(item);
 			}
 		} while (FindNextFileA(hFind, &data) != 0);
 		FindClose(hFind);
