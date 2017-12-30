@@ -48,8 +48,18 @@ void AssetBrowserWindow::RenderDirectoryTree(const std::string &path)
 	{
 		nodeFlags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 	}
+	
 	ImGui::PushID(path.c_str());
-	std::string label = path == Filesystem::GetAssetsFolder() ? "Assets" : Filesystem::GetLastPathComponent(path);
+	std::string label;
+	if (path == Filesystem::GetAssetsFolder())
+	{
+		nodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
+		label = "Assets";
+	}
+	else
+	{
+		label = Filesystem::GetLastPathComponent(path);
+	}
 	bool nodeOpen = ImGui::TreeNodeEx(label.c_str(), nodeFlags);
 	ImGui::PopID();
 	if (ImGui::IsItemClicked())
