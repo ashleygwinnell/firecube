@@ -29,11 +29,14 @@ void AssetBrowserWindow::Render()
 		auto assetsFolder = Filesystem::GetAssetsFolder();
 		if (assetsFolder.empty() == false)
 		{
+			ImGui::BeginChild("Tree", ImVec2(0, 0), false);
 			RenderDirectoryTree(assetsFolder);
+			ImGui::EndChild();
 		}
 		ImGui::NextColumn();
 		if (itemsInSelectedPath.empty() == false)
 		{
+			ImGui::BeginChild("List", ImVec2(0, 0), false);
 			for (auto &item : itemsInSelectedPath)
 			{
 				if (ImGui::Selectable(item.label.c_str(), selectedItem == &item, ImGuiSelectableFlags_AllowDoubleClick))
@@ -159,11 +162,13 @@ void AssetBrowserWindow::Render()
 					}
 				}
 			}
+			ImGui::EndChild();
 		}
 		ImGui::NextColumn();
 
 		if (selectedItem)
 		{
+			ImGui::BeginChild("Preview", ImVec2(0, 0), false);
 			if (selectedItem->assetType == AssetType::TEXTURE)
 			{
 				ImVec2 size = ImGui::GetContentRegionAvail();
@@ -195,6 +200,7 @@ void AssetBrowserWindow::Render()
 			{
 				auxRenderWindow.Render();
 			}
+			ImGui::EndChild();
 		}
 	}
 	ImGui::EndDock();
