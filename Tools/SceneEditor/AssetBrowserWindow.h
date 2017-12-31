@@ -2,6 +2,7 @@
 
 #include "FireCube.h"
 #include "AssetUtils.h"
+#include "AuxRenderWindow.h"
 
 class NodeDescriptor;
 class EditorState;
@@ -34,4 +35,5 @@ private:
 	FileInfo *selectedItem;
 	std::vector<FileInfo> itemsInSelectedPath;
 	FireCube::Texture2D *texturePreview;
+	AuxRenderWindow auxRenderWindow;
 };
