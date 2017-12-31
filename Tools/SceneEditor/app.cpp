@@ -260,6 +260,14 @@ void FireCubeApp::Render(float t)
 		{
 			std::replace(path.begin(), path.end(), '/', '\\');
 			OpenSceneFile(path);
+
+			const unsigned int maxRecentFiles = 10;
+			recentSceneFiles.erase(std::remove(recentSceneFiles.begin(), recentSceneFiles.end(), path), recentSceneFiles.end());
+			recentSceneFiles.insert(recentSceneFiles.begin(), path);
+			if (recentSceneFiles.size() > maxRecentFiles)
+			{
+				recentSceneFiles.pop_back();
+			}
 		}
 	}
 
@@ -424,8 +432,7 @@ void FireCubeApp::OpenSceneFile(const std::string &filename)
 
 	SetTitle("SceneEditor - " + filename);
 
-	//assetBrowserPanel->PopulateDirectoryTree();
-	//assetBrowserPanel->SetAssetsPath(Filesystem::GetAssetsFolder());
+	assetBrowserWindow->Reset();	
 
 	//UpdateCamerasList();
 

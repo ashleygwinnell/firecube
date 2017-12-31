@@ -248,6 +248,13 @@ void AssetBrowserWindow::RenderDirectoryTree(const std::string &path)
 	}
 }
 
+void AssetBrowserWindow::Reset()
+{
+	selectedPath = "";
+	selectedItem = nullptr;
+	itemsInSelectedPath.clear();
+}
+
 void AssetBrowserWindow::SetScene(NodeDescriptor *rootDesc, EditorState *editorState)
 {
 	this->rootDesc = rootDesc;

@@ -16,6 +16,7 @@ public:
 	void Render();
 	void SetScene(NodeDescriptor *rootDesc, EditorState *editorState);
 	void RenderDirectoryTree(const std::string &path);
+	void Reset();
 private:
 	class FileInfo
 	{
