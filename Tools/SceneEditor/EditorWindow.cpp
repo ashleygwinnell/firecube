@@ -149,7 +149,7 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 
 	if (mouseOverView && input.HasValue("MouseWheelY"))
 	{
-		defaultCamera->Zoom(dt * input.GetValue("MouseWheelY") * 600.0f);
+		defaultCamera->Zoom(input.GetValue("MouseWheelY") * 80.0f);
 		UpdateGizmo();
 	}
 
