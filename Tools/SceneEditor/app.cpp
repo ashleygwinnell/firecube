@@ -18,6 +18,8 @@
 #include "Commands/AddNodeCommand.h"
 #include "SceneWriter.h"
 #include "AssetBrowserWindow.h"
+#include "Descriptors/StaticModelDescriptor.h"
+#include "Commands/AddComponentCommand.h"
 
 using namespace FireCube;
 
@@ -231,6 +233,20 @@ void FireCubeApp::Render(float t)
 				auto nodeDesc = new NodeDescriptor("Node");
 				auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, &rootDesc);
 				editorState->ExecuteCommand(addNodeCommand);
+			}
+			if (ImGui::BeginMenu("Component"))
+			{
+				if (ImGui::MenuItem("StaticModel"))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					if (nodeDesc)
+					{
+						auto staticModelDescriptor = new StaticModelDescriptor();
+						auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel", nodeDesc, staticModelDescriptor, engine);
+						editorState->ExecuteCommand(addComponentCommand);
+					}
+				}
+				ImGui::EndMenu();
 			}
 			ImGui::EndMenu();
 		}

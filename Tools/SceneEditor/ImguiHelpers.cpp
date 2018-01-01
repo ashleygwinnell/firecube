@@ -1,6 +1,7 @@
 #include "ImguiHelpers.h"
 #include "imgui.h"
 #include "EditorState.h"
+#include "Commands/CustomCommand.h"
 
 using namespace FireCube;
 
@@ -47,4 +48,108 @@ void Vec3InputHelper::Init(const std::string &label, EditorState *editorState, s
 	this->editorState = editorState;
 	this->getValue = getValue;
 	this->setValue = setValue;
+}
+
+HexInputHelper::HexInputHelper() : prevCommand(nullptr), isActive(false)
+{
+
+}
+
+void HexInputHelper::Render(const std::string &label, EditorState *editorState, std::function<unsigned int()> getValue, std::function<Command *(unsigned int, unsigned int)> setValue)
+{
+	unsigned int value = getValue();
+	
+	std::stringstream stream;
+	stream << std::uppercase << std::hex << value;
+	std::string result(stream.str());
+	strcpy_s(val, 9, result.c_str());
+
+	ImGui::InputText(label.c_str(), val, 9, ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_CharsUppercase);
+	if (strcmp(val, result.c_str()) != 0)
+	{
+		unsigned int newVal;
+		std::stringstream ss;
+		ss << std::uppercase << std::hex << val;
+		ss >> newVal;
+		Command *command = setValue(newVal, prevValue);
+		editorState->ExecuteCommand(command, prevCommand);
+		prevCommand = command;
+	}
+
+	if (ImGui::IsItemActive())
+	{
+		if (isActive == false)
+		{
+			prevValue = getValue();
+		}
+		isActive = true;
+	}
+	else
+	{
+		if (isActive)
+		{
+			prevCommand = nullptr;
+		}
+
+		isActive = false;
+	}
+}
+
+void HexInputHelper::Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<unsigned int()> getValue, std::function<void(unsigned int)> setValue)
+{
+	Render(label, editorState, getValue, [editorState, description, setValue](unsigned int newValue, unsigned int prevValue) -> Command * {
+		return new CustomCommand(editorState, description, [setValue, newValue]() {
+			setValue(newValue);
+		}, [setValue, prevValue]() {
+			setValue(prevValue);
+		});
+	});	
+}
+
+CheckBoxHelper::CheckBoxHelper() : prevCommand(nullptr), isActive(false)
+{
+
+}
+
+void CheckBoxHelper::Render(const std::string &label, EditorState *editorState, std::function<bool()> getValue, std::function<Command *(bool, bool)> setValue)
+{
+	bool curValue = getValue();
+	bool value = curValue;
+	
+	ImGui::Checkbox(label.c_str(), &value);
+	if (curValue != value)
+	{
+		Command *command = setValue(value, prevValue);
+		editorState->ExecuteCommand(command, prevCommand);
+		prevCommand = command;
+	}
+
+	if (ImGui::IsItemActive())
+	{
+		if (isActive == false)
+		{
+			prevValue = getValue();
+		}
+		isActive = true;
+	}
+	else
+	{
+		if (isActive)
+		{
+			prevCommand = nullptr;
+		}
+
+		isActive = false;
+	}
+}
+
+void CheckBoxHelper::Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<bool()> getValue, std::function<void(bool)> setValue)
+{
+	Render(label, editorState, getValue, [editorState, description, setValue](bool newValue, bool prevValue) -> Command * {
+		return new CustomCommand(editorState, description, [setValue, newValue]() {
+			setValue(newValue);
+		}, [setValue, prevValue]() {
+			setValue(prevValue);
+		});
+	});
 }

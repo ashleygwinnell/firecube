@@ -4,10 +4,11 @@
 #include "EditorState.h"
 #include "Commands/TransformCommands.h"
 #include "Commands/RenameNodeCommand.h"
+#include "Descriptors/StaticModelDescriptor.h"
 
 using namespace FireCube;
 
-InspectorWindow::InspectorWindow(Engine *engine) : Object(engine), isActive(false)
+InspectorWindow::InspectorWindow(Engine *engine) : Object(engine), staticModelWindow(engine)
 {
 
 }
@@ -35,6 +36,19 @@ void InspectorWindow::Render()
 			rotationInput.Render();
 			scaleInput.Render();
 		}
+
+		if (selectedNode)
+		{
+			auto components = selectedNode->GetComponents();
+			for (auto component : components)
+			{
+				if (component->GetType() == ComponentType::STATIC_MODEL)
+				{
+					staticModelWindow.Render(editorState, (StaticModelDescriptor *)component);
+				}
+			}
+		}
+
 	}
 	ImGui::EndDock();
 }

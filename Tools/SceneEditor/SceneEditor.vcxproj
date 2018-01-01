@@ -150,6 +150,7 @@
     <ClCompile Include="SceneReader.cpp" />
     <ClCompile Include="SceneWriter.cpp" />
     <ClCompile Include="ScriptEditorFrameImpl.cpp" />
+    <ClCompile Include="StaticModelWindow.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui.cpp" />
     <ClCompile Include="ThirdParty\imgui\imguidock.cpp" />
     <ClCompile Include="ThirdParty\imgui\imguifilesystem.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="SceneReader.h" />
     <ClInclude Include="SceneWriter.h" />
     <ClInclude Include="ScriptEditorFrameImpl.h" />
+    <ClInclude Include="StaticModelWindow.h" />
     <ClInclude Include="ThirdParty\imgui\dirent_portable.h" />
     <ClInclude Include="ThirdParty\imgui\imconfig.h" />
     <ClInclude Include="ThirdParty\imgui\imgui.h" />

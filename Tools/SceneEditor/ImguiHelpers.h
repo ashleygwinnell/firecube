@@ -21,3 +21,30 @@ private:
 	Command *prevCommand;
 	std::string label;
 };
+
+class HexInputHelper
+{
+public:
+	HexInputHelper();
+
+	void Render(const std::string &label, EditorState *editorState, std::function<unsigned int()> getValue, std::function<Command *(unsigned int, unsigned int)> setValue);	
+	void Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<unsigned int()> getValue, std::function<void(unsigned int)> setValue);
+private:	
+	unsigned int prevValue;
+	bool isActive;
+	Command *prevCommand;
+	char val[9];
+};
+
+class CheckBoxHelper
+{
+public:
+	CheckBoxHelper();
+
+	void Render(const std::string &label, EditorState *editorState, std::function<bool()> getValue, std::function<Command *(bool, bool)> setValue);
+	void Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<bool()> getValue, std::function<void(bool)> setValue);
+private:
+	bool prevValue;
+	bool isActive;
+	Command *prevCommand;
+};

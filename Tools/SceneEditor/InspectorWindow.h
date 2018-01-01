@@ -2,6 +2,7 @@
 
 #include "FireCube.h"
 #include "ImguiHelpers.h"
+#include "StaticModelWindow.h"
 
 class NodeDescriptor;
 class EditorState;
@@ -18,9 +19,9 @@ private:
 	NodeDescriptor * rootDesc;
 	EditorState *editorState;
 	FireCube::vec3 prevValue;
-	bool isActive;
-	Command *prevCommand;
 	Vec3InputHelper translationInput;
 	Vec3InputHelper rotationInput;
 	Vec3InputHelper scaleInput;
+
+	StaticModelWindow staticModelWindow;
 };
