@@ -255,15 +255,15 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 		}
 	}
 
-	if (input.IsActionTriggered("UseTranslateGizmo"))
+	if (input.IsActionTriggered("UseTranslateGizmo") && !ImGui::GetIO().WantCaptureKeyboard)
 	{
 		UseTranslateGizmo();
 	}
-	else if (input.IsActionTriggered("UseRotateGizmo"))
+	else if (input.IsActionTriggered("UseRotateGizmo") && !ImGui::GetIO().WantCaptureKeyboard)
 	{
 		UseRotateGizmo();
 	}
-	else if (input.IsActionTriggered("UseScaleGizmo"))
+	else if (input.IsActionTriggered("UseScaleGizmo") && !ImGui::GetIO().WantCaptureKeyboard)
 	{
 		UseScaleGizmo();
 	}
@@ -273,7 +273,7 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 		UpdateGizmo();
 		currentOperation = Operation3::NONE;
 	}
-	else if (input.IsActionTriggered("Clone"))
+	else if (input.IsActionTriggered("Clone") && !ImGui::GetIO().WantCaptureKeyboard)
 	{
 		auto nodeDesc = editorState->GetSelectedNode();
 		if (nodeDesc)
@@ -287,7 +287,7 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 		}
 
 	}
-	else if (input.IsActionTriggered("MoveToGround"))
+	else if (input.IsActionTriggered("MoveToGround") && !ImGui::GetIO().WantCaptureKeyboard)
 	{
 		if (editorState->GetSelectedNode())
 		{
@@ -305,7 +305,7 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 			}
 		}
 	}
-	else if (input.IsActionTriggered("OrbitSelection") && currentCamera == defaultCamera)	
+	else if (input.IsActionTriggered("OrbitSelection") && currentCamera == defaultCamera && !ImGui::GetIO().WantCaptureKeyboard)
 	{
 		if (editorState->GetSelectedNode())
 		{
@@ -313,7 +313,7 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 			UpdateGizmo();			
 		}
 	}
-	else if (input.IsActionTriggered("Delete"))
+	else if (input.IsActionTriggered("Delete") && !ImGui::GetIO().WantCaptureKeyboard)
 	{
 		if (editorState->GetSelectedNode())
 		{
