@@ -109,6 +109,7 @@ int main(int argc, char *argv[])
 		return 0;
 		
 	app.Run();
+	app.WriteSettingsFile();
 	return 0;
 }
 
@@ -525,7 +526,6 @@ void FireCubeApp::Exit()
 
 	// Prevent destructor of NodeDescriptor from deleting the node itself since it is owned by the Scene
 	rootDesc.SetNode(nullptr);
-
-	WriteSettingsFile();
+	
 	Close();
 }
