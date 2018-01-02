@@ -35,11 +35,14 @@ public:
 	void WriteSettingsFile();
 	void SavePrefabs(NodeDescriptor *node);
 	void Exit();
-	
+	void CollectCameras(NodeDescriptor *node);
+	void UpdateCamerasList();
+
 	FireCube::Scene *scene;	
 	EditorState *editorState;
 	NodeDescriptor rootDesc;	
 	std::vector<std::string> recentSceneFiles;
+	std::vector<std::pair<std::string, CameraDescriptor *>> cameras;
 
 	EditorWindow *editorWindow;	
 	HierarchyWindow *hierarchyWindow;

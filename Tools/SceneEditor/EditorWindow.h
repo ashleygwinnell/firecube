@@ -24,6 +24,11 @@ public:
 	EditorWindow(FireCube::Engine *engine);
 	void Render();
 	void SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, EditorState *editorState);
+	void UseDefaultCamera();
+	void UseCamera(FireCube::Camera *camera);
+	void UseCamera(CameraDescriptor *camera);
+	FireCube::Camera *GetCurrentCamera();
+	bool IsUsingDefaultCamera() const;
 private:
 	void CreateGrid(float size, unsigned int numberOfCells);
 	void HandleInput(float t, const FireCube::MappedInput &input);

@@ -18,6 +18,7 @@
 #include "Commands/AddNodeCommand.h"
 #include "SceneWriter.h"
 #include "AssetBrowserWindow.h"
+#include "Descriptors/CameraDescriptor.h"
 #include "Descriptors/StaticModelDescriptor.h"
 #include "Commands/AddComponentCommand.h"
 
@@ -259,6 +260,40 @@ void FireCubeApp::Render(float t)
 			}
 			ImGui::EndMenu();
 		}
+
+		ImGui::PushItemWidth(200.0f);
+		std::string selectedCameraName;
+		if (editorWindow->IsUsingDefaultCamera())
+		{
+			selectedCameraName = "Default";
+		}
+		else
+		{
+			for (auto &camera : cameras)
+			{
+				if (camera.second->GetComponent() == editorWindow->GetCurrentCamera())
+				{
+					selectedCameraName = camera.first;
+					break;
+				}
+			}
+		}
+		if (ImGui::BeginCombo("", selectedCameraName.c_str()))
+		{			
+			if (ImGui::Selectable("Default", editorWindow->IsUsingDefaultCamera()))
+			{			
+				editorWindow->UseDefaultCamera();
+			}
+			for (auto &camera : cameras)
+			{
+				if (ImGui::Selectable(camera.first.c_str(), editorWindow->GetCurrentCamera() == camera.second->GetComponent()))
+				{
+					editorWindow->UseCamera(camera.second);
+				}
+			}
+			ImGui::EndCombo();
+		}
+		ImGui::PopItemWidth();
 		ImGui::EndMenuBar();
 	}
 	ImGui::BeginDockspace();	
@@ -451,7 +486,7 @@ void FireCubeApp::OpenSceneFile(const std::string &filename)
 
 	assetBrowserWindow->Reset();	
 
-	//UpdateCamerasList();
+	UpdateCamerasList();
 
 	editorState->sceneChanged(editorState);
 }
@@ -544,4 +579,25 @@ void FireCubeApp::Exit()
 	rootDesc.SetNode(nullptr);
 	
 	Close();
+}
+
+void FireCubeApp::CollectCameras(NodeDescriptor *node)
+{
+	for (auto &componentDesc : node->GetComponents())
+	{
+		if (componentDesc->GetType() == ComponentType::CAMERA)
+		{
+			cameras.push_back(std::make_pair(node->GetName(), (CameraDescriptor *)componentDesc));
+		}
+	}
+
+	for (auto &child : node->GetChildren())
+	{
+		CollectCameras(child);
+	}
+}
+
+void FireCubeApp::UpdateCamerasList()
+{	
+	CollectCameras(&rootDesc);	
 }

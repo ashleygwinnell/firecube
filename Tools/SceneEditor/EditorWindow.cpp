@@ -9,6 +9,7 @@
 #include "Commands/AddNodeCommand.h"
 #include "Commands/TransformCommands.h"
 #include "Commands/RemoveNodeCommand.h"
+#include "Descriptors/CameraDescriptor.h"
 
 using namespace FireCube;
 
@@ -380,4 +381,32 @@ void EditorWindow::UseScaleGizmo()
 void EditorWindow::StateChanged()
 {
 	UpdateGizmo();	
+}
+
+void EditorWindow::UseDefaultCamera()
+{
+	UseCamera(defaultCamera);
+}
+
+void EditorWindow::UseCamera(Camera *camera)
+{
+	currentCamera = camera;
+
+	engine->GetRenderer()->SetSceneView(1, new SceneView(engine, scene, currentCamera, renderSurface));
+	engine->GetRenderer()->SetSceneView(0, new SceneView(engine, editorScene, currentCamera, renderSurface, engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/ForwardNoClear.xml")));
+}
+
+FireCube::Camera * EditorWindow::GetCurrentCamera()
+{
+	return currentCamera;
+}
+
+bool EditorWindow::IsUsingDefaultCamera() const
+{
+	return currentCamera == defaultCamera;
+}
+
+void EditorWindow::UseCamera(CameraDescriptor *camera)
+{
+	UseCamera((Camera *)camera->GetComponent());
 }
