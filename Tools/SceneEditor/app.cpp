@@ -261,7 +261,9 @@ void FireCubeApp::Render(float t)
 			ImGui::EndMenu();
 		}
 
-		ImGui::PushItemWidth(200.0f);
+		const float CameraComboWidth = 200.0f;
+		ImGui::PushItemWidth(CameraComboWidth);
+		ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - CameraComboWidth, 0));
 		std::string selectedCameraName;
 		if (editorWindow->IsUsingDefaultCamera())
 		{
