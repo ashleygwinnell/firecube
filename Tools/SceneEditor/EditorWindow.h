@@ -39,6 +39,9 @@ private:
 	void UseScaleGizmo();
 	void StateChanged();
 	void RenderDebugGeometry(NodeDescriptor *nodeDesc, FireCube::DebugRenderer *debugRenderer);
+	void StartMaterialPick();
+	void AddMesh(const std::string &path);
+	void AddPrefab(const std::string &path);
 
 	FireCube::Scene *scene;
 	FireCube::Scene *editorScene;

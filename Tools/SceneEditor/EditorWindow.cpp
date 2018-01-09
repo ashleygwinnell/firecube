@@ -9,7 +9,10 @@
 #include "Commands/AddNodeCommand.h"
 #include "Commands/TransformCommands.h"
 #include "Commands/RemoveNodeCommand.h"
+#include "Commands/GroupCommand.h"
+#include "Commands/AddComponentCommand.h"
 #include "Descriptors/CameraDescriptor.h"
+#include "Descriptors/StaticModelDescriptor.h"
 
 using namespace FireCube;
 
@@ -64,6 +67,9 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 	SubscribeToEvent(Events::HandleInput, &EditorWindow::HandleInput);
 	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &EditorWindow::SelectedNodeChanged);
 	SubscribeToEvent(editorState, editorState->stateChanged, &EditorWindow::StateChanged);
+	SubscribeToEvent(editorState->startMaterialPick, &EditorWindow::StartMaterialPick);
+	SubscribeToEvent(editorState->addMesh, &EditorWindow::AddMesh);
+	SubscribeToEvent(editorState->addPrefab, &EditorWindow::AddPrefab);
 	engine->GetInputManager()->AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "RotateCamera", KeyModifier::SHIFT);
 	engine->GetInputManager()->AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "LeftDown", KeyModifier::NONE);
 	engine->GetInputManager()->AddMapping(AnalogInput::MOUSE_AXIS_X_RELATIVE, "MouseXDelta");
@@ -457,5 +463,35 @@ void EditorWindow::RenderDebugGeometry(NodeDescriptor *nodeDesc, DebugRenderer *
 	for (auto c : cameras)
 	{
 		c->RenderDebugGeometry(debugRenderer);
+	}
+}
+
+void EditorWindow::StartMaterialPick()
+{
+	currentOperation = Operation3::PICK_MATERIAL;
+}
+
+void EditorWindow::AddMesh(const std::string &path)
+{
+	auto nodeDesc = new NodeDescriptor("Node");
+	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, rootDesc);
+	auto staticModelDescriptor = new StaticModelDescriptor();
+	staticModelDescriptor->SetMeshFilename(path, engine);
+
+	auto addComponentCommand = new AddComponentCommand(editorState, "Add Component", nodeDesc, staticModelDescriptor, engine);
+
+	GroupCommand *groupCommand = new GroupCommand(editorState, "Add Mesh", { addNodeCommand, addComponentCommand });
+	editorState->ExecuteCommand(groupCommand);
+}
+
+void EditorWindow::AddPrefab(const std::string &path)
+{
+	::SceneReader sceneReader(engine);
+	auto prefab = sceneReader.ReadPrefab(path);
+	if (prefab)
+	{
+		auto prefabInstance = prefab->Clone();
+		auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", prefabInstance, rootDesc);
+		editorState->ExecuteCommand(addNodeCommand);
 	}
 }
