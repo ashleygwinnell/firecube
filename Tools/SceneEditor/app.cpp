@@ -536,6 +536,8 @@ bool FireCubeApp::Prepare()
 	SetTitle("SceneEditor");
 
 	SubscribeToEvent(Events::HandleInput, &FireCubeApp::HandleInput);
+	SubscribeToEvent(editorState, editorState->componentAdded, &FireCubeApp::ComponentAdded);
+	SubscribeToEvent(editorState, editorState->componentRemoved, &FireCubeApp::ComponentRemoved);
 	GetInputManager().AddMapping(Key::Z, InputMappingType::ACTION, "Undo", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::Y, InputMappingType::ACTION, "Redo", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::N, InputMappingType::ACTION, "New", KeyModifier::CTRL);
@@ -745,3 +747,32 @@ void FireCubeApp::UpdateCamerasList()
 {	
 	CollectCameras(&rootDesc);	
 }
+
+void FireCubeApp::ComponentAdded(ComponentDescriptor *componentDesc)
+{	
+	if (componentDesc->GetType() == ComponentType::CAMERA)
+	{
+		cameras.push_back(std::make_pair(componentDesc->GetParent()->GetName(), (CameraDescriptor *)componentDesc));		
+	}
+}
+
+void FireCubeApp::ComponentRemoved(ComponentDescriptor *componentDesc)
+{	
+	if (componentDesc->GetType() == ComponentType::CAMERA)
+	{
+		for (unsigned int i = 0; i < cameras.size(); ++i)
+		{
+			if (cameras[i].second == componentDesc)
+			{
+				if (editorWindow->GetCurrentCamera() == componentDesc->GetComponent())
+				{					
+					editorWindow->UseDefaultCamera();
+				}
+
+				cameras.erase(cameras.begin() + i);
+				break;
+			}
+		}		
+	}
+}
+

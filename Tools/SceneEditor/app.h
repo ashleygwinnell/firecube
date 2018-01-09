@@ -37,6 +37,8 @@ public:
 	void Exit();
 	void CollectCameras(NodeDescriptor *node);
 	void UpdateCamerasList();
+	void ComponentAdded(ComponentDescriptor *componentDesc);
+	void ComponentRemoved(ComponentDescriptor *componentDesc);
 
 	FireCube::Scene *scene;	
 	EditorState *editorState;
