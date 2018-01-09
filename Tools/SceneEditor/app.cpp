@@ -20,6 +20,15 @@
 #include "AssetBrowserWindow.h"
 #include "Descriptors/CameraDescriptor.h"
 #include "Descriptors/StaticModelDescriptor.h"
+#include "Descriptors/BoxDescriptor.h"
+#include "Descriptors/SphereDescriptor.h"
+#include "Descriptors/PlaneDescriptor.h"
+#include "Descriptors/CollisionShapeDescriptor.h"
+#include "Descriptors/CharacterControllerDescriptor.h"
+#include "Descriptors/LightDescriptor.h"
+#include "Descriptors/LuaScriptDescriptor.h"
+#include "Descriptors/ParticleEmitterDescriptor.h"
+#include "Descriptors/RigidBodyDescriptor.h"
 #include "Commands/AddComponentCommand.h"
 
 using namespace FireCube;
@@ -244,6 +253,139 @@ void FireCubeApp::Render(float t)
 					{
 						auto staticModelDescriptor = new StaticModelDescriptor();
 						auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel", nodeDesc, staticModelDescriptor, engine);
+						editorState->ExecuteCommand(addComponentCommand);
+					}
+				}
+				if (ImGui::MenuItem("Light"))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					if (nodeDesc)
+					{
+						auto lightDescriptor = new LightDescriptor();
+						lightDescriptor->SetLightType(LightType::DIRECTIONAL);
+						lightDescriptor->SetColor(vec3(1.0f));
+						auto addComponentCommand = new AddComponentCommand(editorState, "Add Light", nodeDesc, lightDescriptor, engine);
+						editorState->ExecuteCommand(addComponentCommand);
+					}
+				}
+				if (ImGui::MenuItem("LuaScript"))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					if (nodeDesc)
+					{
+						auto luaScriptDescriptor = new LuaScriptDescriptor();
+						auto addComponentCommand = new AddComponentCommand(editorState, "Add LuaScript", nodeDesc, luaScriptDescriptor, engine);
+
+						editorState->ExecuteCommand(addComponentCommand);
+					}
+				}
+				if (ImGui::MenuItem("CollisionShape"))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					if (nodeDesc)
+					{
+						auto collisionShapeDescriptor = new CollisionShapeDescriptor();
+						collisionShapeDescriptor->SetBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
+						collisionShapeDescriptor->SetPlane(Plane(vec3(0.0f, 1.0f, 0.0f), 0.0f));
+						collisionShapeDescriptor->SetIsTrigger(false);
+						auto addComponentCommand = new AddComponentCommand(editorState, "Add CollisionShape", nodeDesc, collisionShapeDescriptor, engine);
+
+						editorState->ExecuteCommand(addComponentCommand);
+					}
+				}
+				if (ImGui::MenuItem("CharacterController"))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					if (nodeDesc)
+					{
+						auto characterControllerDescriptor = new CharacterControllerDescriptor();
+						characterControllerDescriptor->SetRadius(0.5f);
+						characterControllerDescriptor->SetHeight(1.0f);
+						characterControllerDescriptor->SetContactOffset(0.1f);
+						auto addComponentCommand = new AddComponentCommand(editorState, "Add CharacterController", nodeDesc, characterControllerDescriptor, engine);
+
+						editorState->ExecuteCommand(addComponentCommand);
+					}
+				}
+				if (ImGui::MenuItem("Box"))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					if (nodeDesc)
+					{
+						auto boxDescriptor = new BoxDescriptor();
+						boxDescriptor->SetSize(vec3(1.0f), engine);
+						boxDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
+						auto addComponentCommand = new AddComponentCommand(editorState, "Add Box", nodeDesc, boxDescriptor, engine);
+
+						editorState->ExecuteCommand(addComponentCommand);
+					}
+				}
+				if (ImGui::MenuItem("RigidBody"))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					if (nodeDesc)
+					{
+						auto rigidBodyDescriptor = new RigidBodyDescriptor();
+						auto addComponentCommand = new AddComponentCommand(editorState, "Add RigidBody", nodeDesc, rigidBodyDescriptor, engine);
+
+						editorState->ExecuteCommand(addComponentCommand);
+					}
+				}
+				if (ImGui::MenuItem("Plane"))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					if (nodeDesc)
+					{
+						auto planeDescriptor = new PlaneDescriptor();
+						planeDescriptor->SetSize(vec2(1.0f), engine);
+						planeDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
+						auto addComponentCommand = new AddComponentCommand(editorState, "Add Plane", nodeDesc, planeDescriptor, engine);
+
+						editorState->ExecuteCommand(addComponentCommand);
+					}
+				}
+				if (ImGui::MenuItem("Sphere"))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					if (nodeDesc)
+					{
+						auto sphereDescriptor = new SphereDescriptor();
+						sphereDescriptor->SetRadius(1.0f, engine);
+						sphereDescriptor->SetColumns(16, engine);
+						sphereDescriptor->SetRings(16, engine);
+						sphereDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
+						auto addComponentCommand = new AddComponentCommand(editorState, "Add Sphere", nodeDesc, sphereDescriptor, engine);
+
+						editorState->ExecuteCommand(addComponentCommand);
+					}
+				}
+				if (ImGui::MenuItem("ParticleEmitter"))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					if (nodeDesc)
+					{
+						auto particleEmitterDescriptor = new ParticleEmitterDescriptor();
+						auto addComponentCommand = new AddComponentCommand(editorState, "Add ParticleEmitter", nodeDesc, particleEmitterDescriptor, engine);
+
+						editorState->ExecuteCommand(addComponentCommand);
+					}
+				}
+				if (ImGui::MenuItem("Camera"))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					if (nodeDesc)
+					{
+						auto cameraDescriptor = new CameraDescriptor();
+						cameraDescriptor->SetOrthographic(false);
+						cameraDescriptor->SetFOV(60.0f);
+						cameraDescriptor->SetNearPlane(0.1f);
+						cameraDescriptor->SetFarPlane(200.0f);
+						cameraDescriptor->SetLeftPlane(-100.0f);
+						cameraDescriptor->SetRightPlane(100.0f);
+						cameraDescriptor->SetTopPlane(100.0f);
+						cameraDescriptor->SetBottomPlane(-100.0f);
+						auto addComponentCommand = new AddComponentCommand(editorState, "Add Camera", nodeDesc, cameraDescriptor, engine);
+
 						editorState->ExecuteCommand(addComponentCommand);
 					}
 				}
