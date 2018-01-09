@@ -20,6 +20,16 @@ EditorWindow::EditorWindow(Engine *engine) : Object(engine), gridNode(nullptr), 
 
 void EditorWindow::Render()
 {
+	engine->GetRenderer()->SetRenderTarget(0, renderSurface);
+	engine->GetRenderer()->UpdateFrameBuffer();
+	if (editorState->GetSelectedNode())
+	{
+		if (editorState->GetSelectedNode())
+		{
+			RenderDebugGeometry(editorState->GetSelectedNode(), engine->GetDebugRenderer());
+		}
+		engine->GetDebugRenderer()->Render(currentCamera);
+	}
 	ImGui::SetNextDock(ImGuiDockSlot_Right);
 	if (ImGui::BeginDock("Scene"))
 	{
@@ -409,4 +419,43 @@ bool EditorWindow::IsUsingDefaultCamera() const
 void EditorWindow::UseCamera(CameraDescriptor *camera)
 {
 	UseCamera((Camera *)camera->GetComponent());
+}
+
+void EditorWindow::RenderDebugGeometry(NodeDescriptor *nodeDesc, DebugRenderer *debugRenderer)
+{
+	auto node = nodeDesc->GetNode();
+	std::vector<CollisionShape *> collisionShapes;
+	node->GetComponents(collisionShapes);
+	for (auto c : collisionShapes)
+	{
+		c->RenderDebugGeometry(debugRenderer);
+	}
+
+	std::vector<CharacterController *> characterControllers;
+	node->GetComponents(characterControllers);
+	for (auto c : characterControllers)
+	{
+		c->RenderDebugGeometry(debugRenderer);
+	}
+
+	std::vector<Light *> lights;
+	node->GetComponents(lights);
+	for (auto l : lights)
+	{
+		l->RenderDebugGeometry(debugRenderer);
+	}
+
+	std::vector<ParticleEmitter *> particleEmitters;
+	node->GetComponents(particleEmitters);
+	for (auto p : particleEmitters)
+	{
+		p->RenderDebugGeometry(debugRenderer);
+	}
+
+	std::vector<Camera *> cameras;
+	node->GetComponents(cameras);
+	for (auto c : cameras)
+	{
+		c->RenderDebugGeometry(debugRenderer);
+	}
 }

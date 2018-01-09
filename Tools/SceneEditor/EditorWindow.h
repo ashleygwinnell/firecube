@@ -38,6 +38,7 @@ private:
 	void UseRotateGizmo();
 	void UseScaleGizmo();
 	void StateChanged();
+	void RenderDebugGeometry(NodeDescriptor *nodeDesc, FireCube::DebugRenderer *debugRenderer);
 
 	FireCube::Scene *scene;
 	FireCube::Scene *editorScene;
