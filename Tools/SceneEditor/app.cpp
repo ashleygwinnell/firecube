@@ -531,6 +531,8 @@ void FireCubeApp::HandleSDLEvent(SDL_Event &event)
 
 bool FireCubeApp::Prepare()
 {
+	editorState = new EditorState(GetEngine());
+
 	LoadSettingsFile();
 
 	SetTitle("SceneEditor");
@@ -545,7 +547,7 @@ bool FireCubeApp::Prepare()
 	GetInputManager().AddMapping(Key::S, InputMappingType::ACTION, "Save", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::S, InputMappingType::ACTION, "SaveAs", KeyModifier::CTRL | KeyModifier::SHIFT);
 	GetInputManager().AddMapping(Key::X, InputMappingType::ACTION, "Exit", KeyModifier::CTRL);
-	editorState = new EditorState(GetEngine());
+	
 	editorWindow = new EditorWindow(engine);
 	hierarchyWindow = new HierarchyWindow(engine);
 	inspectorWindow = new InspectorWindow(engine);
