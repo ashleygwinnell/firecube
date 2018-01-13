@@ -128,6 +128,7 @@
     <ClCompile Include="HierarchyWindow.cpp" />
     <ClCompile Include="ImguiHelpers.cpp" />
     <ClCompile Include="InspectorWindow.cpp" />
+    <ClCompile Include="LightWindow.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="MainFrameImpl.cpp" />
     <ClCompile Include="MathUtils.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="ImguiHelpers.h" />
     <ClInclude Include="InspectorWindow.h" />
+    <ClInclude Include="LightWindow.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="MainFrameImpl.h" />
     <ClInclude Include="MathUtils.h" />

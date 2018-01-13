@@ -3,6 +3,7 @@
 #include "FireCube.h"
 #include "ImguiHelpers.h"
 #include "StaticModelWindow.h"
+#include "LightWindow.h"
 
 class NodeDescriptor;
 class EditorState;
@@ -24,4 +25,5 @@ private:
 	Vec3InputHelper scaleInput;
 
 	StaticModelWindow staticModelWindow;
+	LightWindow lightWindow;
 };

@@ -246,6 +246,9 @@
     <ClCompile Include="StaticModelWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LightWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -483,6 +486,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="StaticModelWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LightWindow.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
