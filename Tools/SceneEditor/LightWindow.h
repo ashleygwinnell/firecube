@@ -17,4 +17,5 @@ private:
 	HexInputHelper lightMaskInput;
 	HexInputHelper collisionQueryMaskInput;
 	CheckBoxHelper castShadowCheckBox;	
+	ColorInputHelper colorInput;
 };

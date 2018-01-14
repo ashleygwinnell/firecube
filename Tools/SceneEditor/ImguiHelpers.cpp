@@ -153,3 +153,53 @@ void CheckBoxHelper::Render(const std::string &label, EditorState *editorState, 
 		});
 	});
 }
+
+ColorInputHelper::ColorInputHelper() : prevCommand(nullptr), isActive(false)
+{
+
+}
+
+void ColorInputHelper::Render(const std::string &label, EditorState *editorState, std::function<vec3()> getValue, std::function<Command *(vec3, vec3)> setValue)
+{
+	vec3 value = getValue();
+
+	float color[3] = { value.x, value.y, value.z };
+	bool  modified = ImGui::ColorEdit3(label.c_str(), color);
+	
+	if (modified)
+	{
+		vec3 newVal = vec3(color[0], color[1], color[2]);
+		Command *command = setValue(newVal, prevValue);
+		editorState->ExecuteCommand(command, prevCommand);
+		prevCommand = command;
+	}
+
+	if (ImGui::IsItemActive())
+	{
+		if (isActive == false)
+		{
+			prevValue = getValue();
+		}
+		isActive = true;
+	}
+	else
+	{
+		if (isActive)
+		{
+			prevCommand = nullptr;
+		}
+
+		isActive = false;
+	}
+}
+
+void ColorInputHelper::Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<vec3()> getValue, std::function<void(vec3)> setValue)
+{
+	Render(label, editorState, getValue, [editorState, description, setValue](vec3 newValue, vec3 prevValue) -> Command * {
+		return new CustomCommand(editorState, description, [setValue, newValue]() {
+			setValue(newValue);
+		}, [setValue, prevValue]() {
+			setValue(prevValue);
+		});
+	});
+}

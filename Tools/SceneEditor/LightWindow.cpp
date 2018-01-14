@@ -60,8 +60,10 @@ void LightWindow::Render(EditorState *editorState, LightDescriptor *descriptor)
 			ImGui::EndCombo();
 		}
 
-		float color[3] = { descriptor->GetColor().x, descriptor->GetColor().y, descriptor->GetColor().z };
-		ImGui::ColorEdit3("Color", color);
-		descriptor->SetColor(vec3(color[0], color[1], color[2]));
+		colorInput.Render("Color", editorState, "Change Light Color", [descriptor]() {
+			return descriptor->GetColor();
+		}, [descriptor](vec3 color) {
+			descriptor->SetColor(color);
+		});
 	}
 }
