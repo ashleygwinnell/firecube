@@ -14,7 +14,7 @@
     <ProjectGuid>{902B23A0-5ADD-4183-A0E3-9B5E3E1F998E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SceneEditor</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

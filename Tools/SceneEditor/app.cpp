@@ -112,6 +112,7 @@ wxGLContext *MyApp::GetMainContext(wxGLCanvas *glCanvas)
 	return mainContext;
 }
 
+#ifdef _DEBUG
 int main(int argc, char *argv[])
 {
 	FireCubeApp app;
@@ -119,11 +120,26 @@ int main(int argc, char *argv[])
 
 	if (!app.Initialize(WindowProperties().Maximized(true)))
 		return 0;
-		
+
 	app.Run();
 	app.WriteSettingsFile();
 	return 0;
 }
+#else
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	FireCubeApp app;
+	Filesystem::SetCoreDataFolder("../../FireCube");
+
+	if (!app.Initialize(WindowProperties().Maximized(true)))
+		return 0;
+
+	app.Run();
+	app.WriteSettingsFile();
+	return 0;
+}
+#endif
+
 
 FireCubeApp::FireCubeApp() : showFileOpen(false), showNewDialog(false), showSaveAs(false)
 {
