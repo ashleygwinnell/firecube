@@ -5,12 +5,12 @@
 
 using namespace FireCube;
 
-Vec3InputHelper::Vec3InputHelper() : prevCommand(nullptr), isActive(false), editorState(nullptr)
+Vec3InputHelper::Vec3InputHelper() : prevCommand(nullptr), isActive(false)
 {
 
 }
 
-void Vec3InputHelper::Render()
+void Vec3InputHelper::Render(const std::string &label, EditorState *editorState, std::function<FireCube::vec3()> getValue, std::function<Command *(FireCube::vec3, FireCube::vec3)> setValue)
 {
 	vec3 value = getValue();
 	float v[3] = { value.x, value.y, value.z };	
@@ -42,12 +42,15 @@ void Vec3InputHelper::Render()
 	}
 }
 
-void Vec3InputHelper::Init(const std::string &label, EditorState *editorState, std::function<FireCube::vec3()> getValue, std::function<Command *(FireCube::vec3, FireCube::vec3)> setValue)
+void Vec3InputHelper::Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<FireCube::vec3()> getValue, std::function<void(FireCube::vec3)> setValue)
 {
-	this->label = label;
-	this->editorState = editorState;
-	this->getValue = getValue;
-	this->setValue = setValue;
+	Render(label, editorState, getValue, [editorState, description, setValue](vec3 newValue, vec3 prevValue) -> Command * {
+		return new CustomCommand(editorState, description, [setValue, newValue]() {
+			setValue(newValue);
+		}, [setValue, prevValue]() {
+			setValue(prevValue);
+		});
+	});
 }
 
 HexInputHelper::HexInputHelper() : prevCommand(nullptr), isActive(false)

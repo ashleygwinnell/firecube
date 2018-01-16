@@ -32,9 +32,22 @@ void InspectorWindow::Render()
 				editorState->ExecuteCommand(command);
 			}
 
-			translationInput.Render();
-			rotationInput.Render();
-			scaleInput.Render();
+			translationInput.Render("Position", editorState, [this]() {
+				return this->editorState->GetSelectedNode()->GetTranslation();
+			}, [this](vec3 newValue, vec3 prevValue) -> Command * {
+				return new SetTranslationCommand(this->editorState, "Translate", this->editorState->GetSelectedNode(), prevValue, newValue);
+			});
+			rotationInput.Render("Rotation", editorState, [this]() {
+				vec3 rotationAngles = this->editorState->GetSelectedNode()->GetNode()->GetRotation().GetMatrix().ExtractEulerAngles();
+				return vec3(rotationAngles.x / PI * 180.0f, rotationAngles.y / PI * 180.0f, rotationAngles.z / PI * 180.0f);
+			}, [this](vec3 newValue, vec3 prevValue) -> Command * {
+				return new SetRotationCommand(this->editorState, "Rotate", this->editorState->GetSelectedNode(), prevValue / 180.0f * PI, newValue / 180.0f * PI);
+			});
+			scaleInput.Render("Scale", editorState, [this]() {
+				return this->editorState->GetSelectedNode()->GetScale();
+			}, [this](vec3 newValue, vec3 prevValue) -> Command * {
+				return new SetScaleCommand(this->editorState, "Scale", this->editorState->GetSelectedNode(), prevValue, newValue);
+			});
 		}
 
 		if (selectedNode)
@@ -60,24 +73,5 @@ void InspectorWindow::Render()
 void InspectorWindow::SetScene(NodeDescriptor *rootDesc, EditorState *editorState)
 {
 	this->rootDesc = rootDesc;
-	this->editorState = editorState;
-
-	translationInput.Init("Position", editorState, [this]() {
-		return this->editorState->GetSelectedNode()->GetTranslation();
-	}, [this](vec3 newValue, vec3 prevValue) -> Command * {
-		return new SetTranslationCommand(this->editorState, "Translate", this->editorState->GetSelectedNode(), prevValue, newValue);
-	});
-
-	rotationInput.Init("Rotation", editorState, [this]() {
-		vec3 rotationAngles = this->editorState->GetSelectedNode()->GetNode()->GetRotation().GetMatrix().ExtractEulerAngles();
-		return vec3(rotationAngles.x / PI * 180.0f, rotationAngles.y / PI * 180.0f, rotationAngles.z / PI * 180.0f);
-	}, [this](vec3 newValue, vec3 prevValue) -> Command * {
-		return new SetRotationCommand(this->editorState, "Rotate", this->editorState->GetSelectedNode(), prevValue / 180.0f * PI, newValue / 180.0f * PI);
-	});
-
-	scaleInput.Init("Scale", editorState, [this]() {
-		return this->editorState->GetSelectedNode()->GetScale();
-	}, [this](vec3 newValue, vec3 prevValue) -> Command * {
-		return new SetScaleCommand(this->editorState, "Scale", this->editorState->GetSelectedNode(), prevValue, newValue);
-	});
+	this->editorState = editorState;	
 }

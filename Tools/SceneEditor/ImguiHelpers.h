@@ -10,16 +10,12 @@ class Vec3InputHelper
 public:
 	Vec3InputHelper();
 
-	void Render();
-	void Init(const std::string &label, EditorState *editorState, std::function<FireCube::vec3()> getValue, std::function<Command *(FireCube::vec3, FireCube::vec3)> setValue);
+	void Render(const std::string &label, EditorState *editorState, std::function<FireCube::vec3()> getValue, std::function<Command *(FireCube::vec3, FireCube::vec3)> setValue);	
+	void Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<FireCube::vec3()> getValue, std::function<void(FireCube::vec3)> setValue);
 private:
-	std::function<FireCube::vec3()> getValue;
-	std::function<Command *(FireCube::vec3, FireCube::vec3)> setValue;
-	EditorState *editorState;
 	FireCube::vec3 prevValue;
 	bool isActive;
 	Command *prevCommand;
-	std::string label;
 };
 
 class HexInputHelper
