@@ -109,6 +109,54 @@ void HexInputHelper::Render(const std::string &label, EditorState *editorState, 
 	});	
 }
 
+FloatInputHelper::FloatInputHelper() : prevCommand(nullptr), isActive(false)
+{
+
+}
+
+void FloatInputHelper::Render(const std::string &label, EditorState *editorState, std::function<float()> getValue, std::function<Command *(float, float)> setValue)
+{
+	float value = getValue();
+	float v = value;
+	
+	ImGui::InputFloat(label.c_str(), &v);
+	if (v != value)
+	{		
+		Command *command = setValue(v, prevValue);
+		editorState->ExecuteCommand(command, prevCommand);
+		prevCommand = command;
+	}
+
+	if (ImGui::IsItemActive())
+	{
+		if (isActive == false)
+		{
+			prevValue = getValue();
+		}
+		isActive = true;
+	}
+	else
+	{
+		if (isActive)
+		{
+			prevCommand = nullptr;
+		}
+
+		isActive = false;
+	}
+}
+
+void FloatInputHelper::Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<float()> getValue, std::function<void(float)> setValue)
+{
+	Render(label, editorState, getValue, [editorState, description, setValue](float newValue, float prevValue) -> Command * {
+		return new CustomCommand(editorState, description, [setValue, newValue]() {
+			setValue(newValue);
+		}, [setValue, prevValue]() {
+			setValue(prevValue);
+		});
+	});
+}
+
 CheckBoxHelper::CheckBoxHelper() : prevCommand(nullptr), isActive(false)
 {
 

@@ -32,6 +32,20 @@ private:
 	char val[9];
 };
 
+class FloatInputHelper
+{
+public:
+	FloatInputHelper();
+
+	void Render(const std::string &label, EditorState *editorState, std::function<float()> getValue, std::function<Command *(float, float)> setValue);
+	void Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<float()> getValue, std::function<void(float)> setValue);
+private:
+	float prevValue;
+	bool isActive;
+	Command *prevCommand;
+	char val[9];
+};
+
 class CheckBoxHelper
 {
 public:

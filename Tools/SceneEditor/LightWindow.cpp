@@ -65,5 +65,41 @@ void LightWindow::Render(EditorState *editorState, LightDescriptor *descriptor)
 		}, [descriptor](vec3 color) {
 			descriptor->SetColor(color);
 		});
+
+		lightMaskInput.Render("Mask", editorState, "Change Mask", [descriptor]() {
+			return descriptor->GetLightMask();
+		}, [descriptor](unsigned int newValue) {
+			descriptor->SetLightMask(newValue);
+		});
+
+		castShadowCheckBox.Render("Cast Shadow", editorState, "Change Cast Shadow", [descriptor]() {
+			return descriptor->GetCastShadow();
+		}, [descriptor](bool newValue) {
+			descriptor->SetCastShadow(newValue);
+		});
+
+		shadowIntensityInput.Render("Intensity", editorState, "Change Shadow Intensity", [descriptor]() {
+			return descriptor->GetShadowIntensity();
+		}, [descriptor](float newValue) {
+			descriptor->SetShadowIntensity(newValue);
+		});
+
+		if (descriptor->GetLightType() == LightType::POINT || descriptor->GetLightType() == LightType::SPOT)
+		{
+			rangeInput.Render("Range", editorState, "Change Range", [descriptor]() {
+				return descriptor->GetRange();
+			}, [descriptor](float newValue) {
+				descriptor->SetRange(newValue);
+			});
+		}
+
+		if (descriptor->GetLightType() == LightType::SPOT)
+		{
+			rangeInput.Render("Spot Cutoff", editorState, "Change Spot Cutoff", [descriptor]() {
+				return descriptor->GetSpotCutOff() / PI * 180.0f;
+			}, [descriptor](float newValue) {				
+				descriptor->SetSpotCutOff(newValue / 180.0f * PI);
+			});
+		}
 	}
 }

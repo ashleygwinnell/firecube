@@ -18,4 +18,6 @@ private:
 	HexInputHelper collisionQueryMaskInput;
 	CheckBoxHelper castShadowCheckBox;	
 	ColorInputHelper colorInput;
+	FloatInputHelper shadowIntensityInput;
+	FloatInputHelper rangeInput;
 };
