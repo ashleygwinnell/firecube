@@ -95,6 +95,7 @@
     <ClCompile Include="AuxGLCanvas.cpp" />
     <ClCompile Include="AuxRenderWindow.cpp" />
     <ClCompile Include="BaseGLCanvas.cpp" />
+    <ClCompile Include="CollisionShapeWindow.cpp" />
     <ClCompile Include="Commands\AddComponentCommand.cpp" />
     <ClCompile Include="Commands\AddNodeCommand.cpp" />
     <ClCompile Include="Commands\CustomCommand.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="AuxGLCanvas.h" />
     <ClInclude Include="AuxRenderWindow.h" />
     <ClInclude Include="BaseGLCanvas.h" />
+    <ClInclude Include="CollisionShapeWindow.h" />
     <ClInclude Include="Commands\AddComponentCommand.h" />
     <ClInclude Include="Commands\AddNodeCommand.h" />
     <ClInclude Include="Commands\Command.h" />

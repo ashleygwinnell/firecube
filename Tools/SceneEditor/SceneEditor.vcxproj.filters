@@ -252,6 +252,9 @@
     <ClCompile Include="LuaScriptWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionShapeWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -495,6 +498,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="LuaScriptWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionShapeWindow.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

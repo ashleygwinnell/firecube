@@ -8,7 +8,7 @@
 
 using namespace FireCube;
 
-InspectorWindow::InspectorWindow(Engine *engine) : Object(engine), staticModelWindow(engine), lightWindow(engine), luaScriptWindow(engine)
+InspectorWindow::InspectorWindow(Engine *engine) : Object(engine), staticModelWindow(engine), lightWindow(engine), luaScriptWindow(engine), collisionShapeWindow(engine)
 {
 
 }
@@ -66,6 +66,10 @@ void InspectorWindow::Render()
 				else if (component->GetType() == ComponentType::LUA_SCRIPT)
 				{
 					luaScriptWindow.Render(editorState, (LuaScriptDescriptor *)component);
+				}
+				else if (component->GetType() == ComponentType::COLLISION_SHAPE)
+				{
+					collisionShapeWindow.Render(editorState, (CollisionShapeDescriptor *)component);
 				}
 			}
 		}

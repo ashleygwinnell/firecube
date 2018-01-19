@@ -54,6 +54,54 @@ void Vec3InputHelper::Render(const std::string &label, EditorState *editorState,
 	});
 }
 
+Vec4InputHelper::Vec4InputHelper() : prevCommand(nullptr), isActive(false)
+{
+
+}
+
+void Vec4InputHelper::Render(const std::string &label, EditorState *editorState, std::function<FireCube::vec4()> getValue, std::function<Command *(FireCube::vec4, FireCube::vec4)> setValue)
+{
+	vec4 value = getValue();
+	float v[4] = { value.x, value.y, value.z, value.w };
+	ImGui::InputFloat4(label.c_str(), v, 2, ImGuiInputTextFlags_NoUndoRedo);
+	if (v[0] != value.x || v[1] != value.y || v[2] != value.z || v[3] != value.w)
+	{
+		vec4 newVal(v[0], v[1], v[2], v[3]);
+		Command *command = setValue(newVal, prevValue);
+		editorState->ExecuteCommand(command, prevCommand);
+		prevCommand = command;
+	}
+
+	if (ImGui::IsItemActive())
+	{
+		if (isActive == false)
+		{
+			prevValue = getValue();
+		}
+		isActive = true;
+	}
+	else
+	{
+		if (isActive)
+		{
+			prevCommand = nullptr;
+		}
+
+		isActive = false;
+	}
+}
+
+void Vec4InputHelper::Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<FireCube::vec4()> getValue, std::function<void(FireCube::vec4)> setValue)
+{
+	Render(label, editorState, getValue, [editorState, description, setValue](vec4 newValue, vec4 prevValue) -> Command * {
+		return new CustomCommand(editorState, description, [setValue, newValue]() {
+			setValue(newValue);
+		}, [setValue, prevValue]() {
+			setValue(prevValue);
+		});
+	});
+}
+
 HexInputHelper::HexInputHelper() : prevCommand(nullptr), isActive(false)
 {
 
