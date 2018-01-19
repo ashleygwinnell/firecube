@@ -129,6 +129,7 @@
     <ClCompile Include="ImguiHelpers.cpp" />
     <ClCompile Include="InspectorWindow.cpp" />
     <ClCompile Include="LightWindow.cpp" />
+    <ClCompile Include="LuaScriptWindow.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="MainFrameImpl.cpp" />
     <ClCompile Include="MathUtils.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="ImguiHelpers.h" />
     <ClInclude Include="InspectorWindow.h" />
     <ClInclude Include="LightWindow.h" />
+    <ClInclude Include="LuaScriptWindow.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="MainFrameImpl.h" />
     <ClInclude Include="MathUtils.h" />

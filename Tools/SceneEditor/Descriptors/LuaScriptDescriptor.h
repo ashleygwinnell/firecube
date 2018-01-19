@@ -18,11 +18,12 @@ public:
 	void SetProperty(const std::string &name, const std::string &value);
 	void RemoveProperty(const std::string &name);
 	void ClearProperties();
-	std::map<std::string, std::string> &GetProperties();
+	std::vector<std::pair<std::string, std::string>> &GetProperties();
 	std::string GetProperty(const std::string &name) const;
+	void RenameProperty(int index, const std::string &newName);
 private:
 	std::string scriptFilename;
 	std::string objectName;
-	std::map<std::string, std::string> properties;
+	std::vector<std::pair<std::string, std::string>> properties;
 	
 };

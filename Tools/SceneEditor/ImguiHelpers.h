@@ -71,3 +71,17 @@ private:
 	Command *prevCommand;
 
 };
+
+class TextInputHelper
+{
+public:
+	TextInputHelper();
+
+	void Render(const std::string &label, EditorState *editorState, std::function<std::string()> getValue, std::function<Command *(const std::string &, const std::string &)> setValue);
+	void Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<std::string()> getValue, std::function<void(const std::string &)> setValue);
+private:
+	std::string prevValue;
+	bool isActive;
+	Command *prevCommand;
+	char val[256];
+};

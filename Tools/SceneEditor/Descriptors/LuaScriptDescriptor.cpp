@@ -49,16 +49,27 @@ std::string LuaScriptDescriptor::GetObjectName() const
 
 void LuaScriptDescriptor::SetProperty(const std::string &name, const std::string &value)
 {
-	properties[name] = value;
+	auto i = std::find_if(properties.begin(), properties.end(), [name](const std::pair<std::string, std::string> &property) {
+		return property.first == name;
+	});
+
+	if (i == properties.end())
+	{
+		properties.push_back(std::make_pair(name, value));
+	}
+	else
+	{
+		i->second = value;
+	}
 }
 
 void LuaScriptDescriptor::RemoveProperty(const std::string &name)
 {
-	auto i = properties.find(name);
-	if (i != properties.end())
-	{
-		properties.erase(i);
-	}
+	auto newEnd = std::remove_if(properties.begin(), properties.end(), [name](const std::pair<std::string, std::string> &property) { 
+		return property.first == name;
+	});
+
+	properties.erase(newEnd, properties.end());	
 }
 
 void LuaScriptDescriptor::ClearProperties()
@@ -66,20 +77,28 @@ void LuaScriptDescriptor::ClearProperties()
 	properties.clear();
 }
 
-std::map<std::string, std::string> &LuaScriptDescriptor::GetProperties()
+std::vector<std::pair<std::string, std::string>> &LuaScriptDescriptor::GetProperties()
 {
 	return properties;
 }
 
 std::string LuaScriptDescriptor::GetProperty(const std::string &name) const
 {
-	auto i = properties.find(name);
-	if (i != properties.end())
-	{
-		return i->second;
-	}
-	else
+	auto i = std::find_if(properties.begin(), properties.end(), [name](const std::pair<std::string, std::string> &property) {
+		return property.first == name;
+	});
+
+	if (i == properties.end())
 	{
 		return "";
 	}
+	else
+	{
+		return i->second;
+	}
+}
+
+void LuaScriptDescriptor::RenameProperty(int index, const std::string &newName)
+{
+	properties[index].first = newName;
 }

@@ -1,3 +1,4 @@
+#include <iostream>
 #include "ImguiHelpers.h"
 #include "imgui.h"
 #include "EditorState.h"
@@ -67,7 +68,7 @@ void HexInputHelper::Render(const std::string &label, EditorState *editorState, 
 	std::string result(stream.str());
 	strcpy_s(val, 9, result.c_str());
 
-	ImGui::InputText(label.c_str(), val, 9, ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_CharsUppercase);
+	ImGui::InputText(label.c_str(), val, 9, ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_CharsUppercase | ImGuiInputTextFlags_NoUndoRedo);
 	if (strcmp(val, result.c_str()) != 0)
 	{
 		unsigned int newVal;
@@ -119,7 +120,7 @@ void FloatInputHelper::Render(const std::string &label, EditorState *editorState
 	float value = getValue();
 	float v = value;
 	
-	ImGui::InputFloat(label.c_str(), &v);
+	ImGui::InputFloat(label.c_str(), &v, 0.0f, 0.0f, -1, ImGuiInputTextFlags_NoUndoRedo);
 	if (v != value)
 	{		
 		Command *command = setValue(v, prevValue);
@@ -247,6 +248,54 @@ void ColorInputHelper::Render(const std::string &label, EditorState *editorState
 void ColorInputHelper::Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<vec3()> getValue, std::function<void(vec3)> setValue)
 {
 	Render(label, editorState, getValue, [editorState, description, setValue](vec3 newValue, vec3 prevValue) -> Command * {
+		return new CustomCommand(editorState, description, [setValue, newValue]() {
+			setValue(newValue);
+		}, [setValue, prevValue]() {
+			setValue(prevValue);
+		});
+	});
+}
+
+TextInputHelper::TextInputHelper() : prevCommand(nullptr), isActive(false)
+{
+
+}
+
+void TextInputHelper::Render(const std::string &label, EditorState *editorState, std::function<std::string()> getValue, std::function<Command *(const std::string &, const std::string &)> setValue)
+{
+	std::string value = getValue();	
+	strcpy_s(val, 256, value.c_str());
+	
+	ImGui::InputText(label.c_str(), val, 256, ImGuiInputTextFlags_NoUndoRedo);	
+	if (strcmp(val, value.c_str()) != 0)
+	{		
+		Command *command = setValue(val, prevValue);
+		editorState->ExecuteCommand(command, prevCommand);
+		prevCommand = command;
+	}
+
+	if (ImGui::IsItemActive())
+	{
+		if (isActive == false)
+		{
+			prevValue = getValue();
+		}
+		isActive = true;
+	}
+	else
+	{
+		if (isActive)
+		{
+			prevCommand = nullptr;
+		}
+
+		isActive = false;
+	}
+}
+
+void TextInputHelper::Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<std::string()> getValue, std::function<void(const std::string &)> setValue)
+{
+	Render(label, editorState, getValue, [editorState, description, setValue](const std::string &newValue, const std::string &prevValue) -> Command * {
 		return new CustomCommand(editorState, description, [setValue, newValue]() {
 			setValue(newValue);
 		}, [setValue, prevValue]() {

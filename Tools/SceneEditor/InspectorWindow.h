@@ -4,6 +4,7 @@
 #include "ImguiHelpers.h"
 #include "StaticModelWindow.h"
 #include "LightWindow.h"
+#include "LuaScriptWindow.h"
 
 class NodeDescriptor;
 class EditorState;
@@ -26,4 +27,5 @@ private:
 
 	StaticModelWindow staticModelWindow;
 	LightWindow lightWindow;
+	LuaScriptWindow luaScriptWindow;
 };

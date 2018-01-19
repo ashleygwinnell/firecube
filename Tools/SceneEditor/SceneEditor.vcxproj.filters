@@ -249,6 +249,9 @@
     <ClCompile Include="LightWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LuaScriptWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -489,6 +492,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="LightWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaScriptWindow.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
