@@ -6,6 +6,7 @@
 #include "LightWindow.h"
 #include "LuaScriptWindow.h"
 #include "CollisionShapeWindow.h"
+#include "CharacterControllerWindow.h"
 
 class NodeDescriptor;
 class EditorState;
@@ -30,4 +31,5 @@ private:
 	LightWindow lightWindow;
 	LuaScriptWindow luaScriptWindow;
 	CollisionShapeWindow collisionShapeWindow;
+	CharacterControllerWindow characterControllerWindow;
 };
