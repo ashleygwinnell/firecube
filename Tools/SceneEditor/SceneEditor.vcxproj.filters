@@ -264,6 +264,12 @@
     <ClCompile Include="RigidBodyWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PlaneWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -519,6 +525,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="RigidBodyWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaneWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereWindow.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

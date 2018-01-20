@@ -152,10 +152,12 @@
     <ClCompile Include="Panels\SpherePanelImpl.cpp" />
     <ClCompile Include="Panels\StaticModelPanelImpl.cpp" />
     <ClCompile Include="Panels\TexturePreviewPanelImpl.cpp" />
+    <ClCompile Include="PlaneWindow.cpp" />
     <ClCompile Include="RigidBodyWindow.cpp" />
     <ClCompile Include="SceneReader.cpp" />
     <ClCompile Include="SceneWriter.cpp" />
     <ClCompile Include="ScriptEditorFrameImpl.cpp" />
+    <ClCompile Include="SphereWindow.cpp" />
     <ClCompile Include="StaticModelWindow.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui.cpp" />
     <ClCompile Include="ThirdParty\imgui\imguidock.cpp" />
@@ -232,10 +234,12 @@
     <ClInclude Include="Panels\SpherePanelImpl.h" />
     <ClInclude Include="Panels\StaticModelPanelImpl.h" />
     <ClInclude Include="Panels\TexturePreviewPanelImpl.h" />
+    <ClInclude Include="PlaneWindow.h" />
     <ClInclude Include="RigidBodyWindow.h" />
     <ClInclude Include="SceneReader.h" />
     <ClInclude Include="SceneWriter.h" />
     <ClInclude Include="ScriptEditorFrameImpl.h" />
+    <ClInclude Include="SphereWindow.h" />
     <ClInclude Include="StaticModelWindow.h" />
     <ClInclude Include="ThirdParty\imgui\dirent_portable.h" />
     <ClInclude Include="ThirdParty\imgui\imconfig.h" />

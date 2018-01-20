@@ -5,6 +5,19 @@
 class EditorState;
 class Command;
 
+class Vec2InputHelper
+{
+public:
+	Vec2InputHelper();
+
+	void Render(const std::string &label, EditorState *editorState, std::function<FireCube::vec2()> getValue, std::function<Command *(FireCube::vec2, FireCube::vec2)> setValue);
+	void Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<FireCube::vec2()> getValue, std::function<void(FireCube::vec2)> setValue);
+private:
+	FireCube::vec2 prevValue;
+	bool isActive;
+	Command *prevCommand;
+};
+
 class Vec3InputHelper
 {
 public:
@@ -31,6 +44,19 @@ private:
 	Command *prevCommand;
 };
 
+class UIntInputHelper
+{
+public:
+	UIntInputHelper();
+
+	void Render(const std::string &label, EditorState *editorState, std::function<unsigned int()> getValue, std::function<Command *(unsigned int, unsigned int)> setValue);
+	void Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<unsigned int()> getValue, std::function<void(unsigned int)> setValue);
+private:
+	unsigned int prevValue;
+	bool isActive;
+	Command *prevCommand;
+	char val[9];
+};
 
 class HexInputHelper
 {

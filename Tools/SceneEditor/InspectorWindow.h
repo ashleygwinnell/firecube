@@ -9,6 +9,8 @@
 #include "CharacterControllerWindow.h"
 #include "BoxWindow.h"
 #include "RigidBodyWindow.h"
+#include "PlaneWindow.h"
+#include "SphereWindow.h"
 
 class NodeDescriptor;
 class EditorState;
@@ -36,4 +38,6 @@ private:
 	CharacterControllerWindow characterControllerWindow;
 	BoxWindow boxWindow;
 	RigidBodyWindow rigidBodyWindow;
+	PlaneWindow planeWindow;
+	SphereWindow sphereWindow;
 };

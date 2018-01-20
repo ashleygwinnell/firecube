@@ -6,6 +6,54 @@
 
 using namespace FireCube;
 
+Vec2InputHelper::Vec2InputHelper() : prevCommand(nullptr), isActive(false)
+{
+
+}
+
+void Vec2InputHelper::Render(const std::string &label, EditorState *editorState, std::function<FireCube::vec2()> getValue, std::function<Command *(FireCube::vec2, FireCube::vec2)> setValue)
+{
+	vec2 value = getValue();
+	float v[2] = { value.x, value.y};
+	ImGui::InputFloat2(label.c_str(), v, 2, ImGuiInputTextFlags_NoUndoRedo);
+	if (v[0] != value.x || v[1] != value.y)
+	{
+		vec2 newVal = vec2(v[0], v[1]);
+		Command *command = setValue(newVal, prevValue);
+		editorState->ExecuteCommand(command, prevCommand);
+		prevCommand = command;
+	}
+
+	if (ImGui::IsItemActive())
+	{
+		if (isActive == false)
+		{
+			prevValue = getValue();
+		}
+		isActive = true;
+	}
+	else
+	{
+		if (isActive)
+		{
+			prevCommand = nullptr;
+		}
+
+		isActive = false;
+	}
+}
+
+void Vec2InputHelper::Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<FireCube::vec2()> getValue, std::function<void(FireCube::vec2)> setValue)
+{
+	Render(label, editorState, getValue, [editorState, description, setValue](vec2 newValue, vec2 prevValue) -> Command * {
+		return new CustomCommand(editorState, description, [setValue, newValue]() {
+			setValue(newValue);
+		}, [setValue, prevValue]() {
+			setValue(prevValue);
+		});
+	});
+}
+
 Vec3InputHelper::Vec3InputHelper() : prevCommand(nullptr), isActive(false)
 {
 
@@ -94,6 +142,62 @@ void Vec4InputHelper::Render(const std::string &label, EditorState *editorState,
 void Vec4InputHelper::Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<FireCube::vec4()> getValue, std::function<void(FireCube::vec4)> setValue)
 {
 	Render(label, editorState, getValue, [editorState, description, setValue](vec4 newValue, vec4 prevValue) -> Command * {
+		return new CustomCommand(editorState, description, [setValue, newValue]() {
+			setValue(newValue);
+		}, [setValue, prevValue]() {
+			setValue(prevValue);
+		});
+	});
+}
+
+UIntInputHelper::UIntInputHelper() : prevCommand(nullptr), isActive(false)
+{
+
+}
+
+void UIntInputHelper::Render(const std::string &label, EditorState *editorState, std::function<unsigned int()> getValue, std::function<Command *(unsigned int, unsigned int)> setValue)
+{
+	unsigned int value = getValue();
+
+	std::stringstream stream;
+	stream << value;
+	std::string result(stream.str());
+	strcpy_s(val, 9, result.c_str());
+
+	ImGui::InputText(label.c_str(), val, 9, ImGuiInputTextFlags_NoUndoRedo);
+	if (strcmp(val, result.c_str()) != 0)
+	{
+		unsigned int newVal;
+		std::stringstream ss;
+		ss << val;
+		ss >> newVal;
+		Command *command = setValue(newVal, prevValue);
+		editorState->ExecuteCommand(command, prevCommand);
+		prevCommand = command;
+	}
+
+	if (ImGui::IsItemActive())
+	{
+		if (isActive == false)
+		{
+			prevValue = getValue();
+		}
+		isActive = true;
+	}
+	else
+	{
+		if (isActive)
+		{
+			prevCommand = nullptr;
+		}
+
+		isActive = false;
+	}
+}
+
+void UIntInputHelper::Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<unsigned int()> getValue, std::function<void(unsigned int)> setValue)
+{
+	Render(label, editorState, getValue, [editorState, description, setValue](unsigned int newValue, unsigned int prevValue) -> Command * {
 		return new CustomCommand(editorState, description, [setValue, newValue]() {
 			setValue(newValue);
 		}, [setValue, prevValue]() {
