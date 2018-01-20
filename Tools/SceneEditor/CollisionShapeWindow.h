@@ -21,4 +21,5 @@ private:
 	Vec3InputHelper boxMaxInput;
 	Vec4InputHelper planeInput;
 	FloatInputHelper sphereRadiusInput;
+	CheckBoxHelper triggerCheckBox;
 };

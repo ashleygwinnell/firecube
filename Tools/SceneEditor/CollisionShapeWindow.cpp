@@ -97,7 +97,13 @@ void CollisionShapeWindow::Render(EditorState *editorState, CollisionShapeDescri
 				}
 			}
 			ImGui::EndCombo();
-		}	
+		}
+
+		triggerCheckBox.Render("Trigger", editorState, "Change Trigger", [descriptor]() {
+			return descriptor->IsTrigger();
+		}, [descriptor](bool newValue) {
+			descriptor->SetIsTrigger(newValue);
+		});
 
 		if (descriptor->GetShapeType() == CollisionShapeType::BOX)
 		{
