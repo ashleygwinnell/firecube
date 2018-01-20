@@ -8,6 +8,7 @@
 #include "CollisionShapeWindow.h"
 #include "CharacterControllerWindow.h"
 #include "BoxWindow.h"
+#include "RigidBodyWindow.h"
 
 class NodeDescriptor;
 class EditorState;
@@ -34,4 +35,5 @@ private:
 	CollisionShapeWindow collisionShapeWindow;
 	CharacterControllerWindow characterControllerWindow;
 	BoxWindow boxWindow;
+	RigidBodyWindow rigidBodyWindow;
 };

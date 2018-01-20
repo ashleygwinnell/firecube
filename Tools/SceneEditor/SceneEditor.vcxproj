@@ -152,6 +152,7 @@
     <ClCompile Include="Panels\SpherePanelImpl.cpp" />
     <ClCompile Include="Panels\StaticModelPanelImpl.cpp" />
     <ClCompile Include="Panels\TexturePreviewPanelImpl.cpp" />
+    <ClCompile Include="RigidBodyWindow.cpp" />
     <ClCompile Include="SceneReader.cpp" />
     <ClCompile Include="SceneWriter.cpp" />
     <ClCompile Include="ScriptEditorFrameImpl.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="Panels\SpherePanelImpl.h" />
     <ClInclude Include="Panels\StaticModelPanelImpl.h" />
     <ClInclude Include="Panels\TexturePreviewPanelImpl.h" />
+    <ClInclude Include="RigidBodyWindow.h" />
     <ClInclude Include="SceneReader.h" />
     <ClInclude Include="SceneWriter.h" />
     <ClInclude Include="ScriptEditorFrameImpl.h" />
