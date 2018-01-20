@@ -9,7 +9,7 @@
 using namespace FireCube;
 
 InspectorWindow::InspectorWindow(Engine *engine) : Object(engine), staticModelWindow(engine), lightWindow(engine), luaScriptWindow(engine), collisionShapeWindow(engine),
-characterControllerWindow(engine)
+characterControllerWindow(engine), boxWindow(engine)
 {
 
 }
@@ -75,6 +75,10 @@ void InspectorWindow::Render()
 				else if (component->GetType() == ComponentType::CHARACTER_CONTROLLER)
 				{
 					characterControllerWindow.Render(editorState, (CharacterControllerDescriptor *)component);
+				}
+				else if (component->GetType() == ComponentType::BOX)
+				{
+					boxWindow.Render(editorState, (BoxDescriptor *)component);
 				}
 			}
 		}
