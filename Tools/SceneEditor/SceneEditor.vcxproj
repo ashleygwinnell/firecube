@@ -152,6 +152,7 @@
     <ClCompile Include="Panels\SpherePanelImpl.cpp" />
     <ClCompile Include="Panels\StaticModelPanelImpl.cpp" />
     <ClCompile Include="Panels\TexturePreviewPanelImpl.cpp" />
+    <ClCompile Include="ParticleEmitterWindow.cpp" />
     <ClCompile Include="PlaneWindow.cpp" />
     <ClCompile Include="RigidBodyWindow.cpp" />
     <ClCompile Include="SceneReader.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="Panels\SpherePanelImpl.h" />
     <ClInclude Include="Panels\StaticModelPanelImpl.h" />
     <ClInclude Include="Panels\TexturePreviewPanelImpl.h" />
+    <ClInclude Include="ParticleEmitterWindow.h" />
     <ClInclude Include="PlaneWindow.h" />
     <ClInclude Include="RigidBodyWindow.h" />
     <ClInclude Include="SceneReader.h" />

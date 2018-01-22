@@ -270,6 +270,9 @@
     <ClCompile Include="SphereWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleEmitterWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -531,6 +534,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="SphereWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitterWindow.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

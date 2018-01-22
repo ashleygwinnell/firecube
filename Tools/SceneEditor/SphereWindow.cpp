@@ -39,7 +39,7 @@ void SphereWindow::Render(EditorState *editorState, SphereDescriptor *descriptor
 		bool showFileOpen = ImGui::Button("...");
 		ImGui::SameLine();
 		ImGui::Text("Material");
-		const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Models").c_str(), nullptr, "Select a file", ImVec2(600, 400), ImVec2(100, 100));
+		const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Materials").c_str(), nullptr, "Select a file", ImVec2(600, 400), ImVec2(100, 100));
 		std::string newMaterialFileName = chosenPath;
 		if (newMaterialFileName.empty() == false)
 		{
