@@ -9,7 +9,7 @@
 using namespace FireCube;
 
 InspectorWindow::InspectorWindow(Engine *engine) : Object(engine), staticModelWindow(engine), lightWindow(engine), luaScriptWindow(engine), collisionShapeWindow(engine),
-characterControllerWindow(engine), boxWindow(engine), rigidBodyWindow(engine), planeWindow(engine), sphereWindow(engine), particleEmitterWindow(engine)
+characterControllerWindow(engine), boxWindow(engine), rigidBodyWindow(engine), planeWindow(engine), sphereWindow(engine), particleEmitterWindow(engine), cameraWindow(engine)
 {
 
 }
@@ -95,6 +95,10 @@ void InspectorWindow::Render()
 				else if (component->GetType() == ComponentType::PARTICLE_EMITTER)
 				{
 					particleEmitterWindow.Render(editorState, (ParticleEmitterDescriptor *)component);
+				}
+				else if (component->GetType() == ComponentType::CAMERA)
+				{
+					cameraWindow.Render(editorState, (CameraDescriptor *)component);
 				}
 			}
 		}

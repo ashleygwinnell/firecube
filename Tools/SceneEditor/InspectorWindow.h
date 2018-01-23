@@ -12,6 +12,7 @@
 #include "PlaneWindow.h"
 #include "SphereWindow.h"
 #include "ParticleEmitterWindow.h"
+#include "CameraWindow.h"
 
 class NodeDescriptor;
 class EditorState;
@@ -42,4 +43,5 @@ private:
 	PlaneWindow planeWindow;
 	SphereWindow sphereWindow;
 	ParticleEmitterWindow particleEmitterWindow;
+	CameraWindow cameraWindow;
 };
