@@ -129,6 +129,8 @@ void LuaScriptWindow::Render(EditorState *editorState, LuaScriptDescriptor *desc
 			++idx;
 		}
 
+		ImGui::Columns(1);
+
 		if (ImGui::Button("Add")) 
 		{
 			auto command = new CustomCommand(editorState, "Add Property", [descriptor]()
