@@ -50,13 +50,23 @@ void AssetBrowserWindow::Render()
 							itemsInSelectedPath = GetItemsInPath(selectedPath);
 							break;
 						}
-					}
-					else if (item.assetType == AssetType::MATERIAL)
-					{
-						std::string materialFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), item.path);
-						std::replace(materialFileName.begin(), materialFileName.end(), '\\', '/');
-						editorState->materialPicked(editorState, engine->GetResourceCache()->GetResource<Material>(materialFileName));
-						editorState->showMaterialEditor(editorState);
+						else if (item.assetType == AssetType::MATERIAL)
+						{
+							std::string materialFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), item.path);
+							std::replace(materialFileName.begin(), materialFileName.end(), '\\', '/');
+							editorState->materialPicked(editorState, engine->GetResourceCache()->GetResource<Material>(materialFileName));
+							editorState->showMaterialEditor(editorState);
+						}
+						else if (item.assetType == AssetType::MESH)
+						{
+							std::string meshFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), item.path);
+							editorState->addMesh(editorState, meshFileName);
+						}						
+						else if (item.assetType == AssetType::PREFAB)
+						{
+							std::string prefabFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), item.path);
+							editorState->addPrefab(editorState, prefabFileName);
+						}
 					}
 					else
 					{
