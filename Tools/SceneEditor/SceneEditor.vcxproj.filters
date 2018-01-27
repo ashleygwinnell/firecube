@@ -276,6 +276,9 @@
     <ClCompile Include="CameraWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MaterialEditorWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -543,6 +546,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="CameraWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialEditorWindow.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

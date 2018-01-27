@@ -136,6 +136,7 @@
     <ClCompile Include="LuaScriptWindow.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="MainFrameImpl.cpp" />
+    <ClCompile Include="MaterialEditorWindow.cpp" />
     <ClCompile Include="MathUtils.cpp" />
     <ClCompile Include="Panels\AssetBrowserPanelImpl.cpp" />
     <ClCompile Include="Panels\BaseComponentPanelImpl.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="LuaScriptWindow.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="MainFrameImpl.h" />
+    <ClInclude Include="MaterialEditorWindow.h" />
     <ClInclude Include="MathUtils.h" />
     <ClInclude Include="Panels\AssetBrowserPanelImpl.h" />
     <ClInclude Include="Panels\BaseComponentPanelImpl.h" />

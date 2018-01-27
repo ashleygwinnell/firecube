@@ -30,6 +30,7 @@
 #include "Descriptors/ParticleEmitterDescriptor.h"
 #include "Descriptors/RigidBodyDescriptor.h"
 #include "Commands/AddComponentCommand.h"
+#include "MaterialEditorWindow.h"
 
 using namespace FireCube;
 
@@ -380,6 +381,7 @@ void FireCubeApp::Render(float t)
 
 		if (ImGui::BeginMenu("View"))
 		{
+			ImGui::MenuItem("Material Editor", nullptr, materialEditorWindow->GetIsOpenPtr());
 			if (ImGui::MenuItem("Save Layout"))
 			{
 				ImGui::SaveDock("default.ini");
@@ -430,6 +432,7 @@ void FireCubeApp::Render(float t)
 		editorWindow->Render();
 		inspectorWindow->Render();
 		assetBrowserWindow->Render();
+		materialEditorWindow->Render();
 	}
 	
 	{
@@ -536,6 +539,7 @@ bool FireCubeApp::Prepare()
 	hierarchyWindow = new HierarchyWindow(engine);
 	inspectorWindow = new InspectorWindow(engine);
 	assetBrowserWindow = new AssetBrowserWindow(engine);
+	materialEditorWindow = new MaterialEditorWindow(engine);
 	
 	ImGui_ImplSdlGL3_Init(GetWindow());
 	scene = new FireCube::Scene(GetEngine());	
@@ -544,6 +548,7 @@ bool FireCubeApp::Prepare()
 	hierarchyWindow->SetScene(&rootDesc, editorState);
 	inspectorWindow->SetScene(&rootDesc, editorState);
 	assetBrowserWindow->SetScene(&rootDesc, editorState);
+	materialEditorWindow->SetScene(&rootDesc, editorState);
 
 	ImGui::LoadDock("default.ini");
 

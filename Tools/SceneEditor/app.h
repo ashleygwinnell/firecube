@@ -19,6 +19,7 @@ class EditorWindow;
 class HierarchyWindow;
 class InspectorWindow;
 class AssetBrowserWindow;
+class MaterialEditorWindow;
 
 class FireCubeApp : public FireCube::Application
 {
@@ -50,6 +51,7 @@ public:
 	HierarchyWindow *hierarchyWindow;
 	InspectorWindow *inspectorWindow;
 	AssetBrowserWindow *assetBrowserWindow;
+	MaterialEditorWindow *materialEditorWindow;
 
 	bool showFileOpen;
 	bool showNewDialog;
