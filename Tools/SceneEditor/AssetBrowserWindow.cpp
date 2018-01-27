@@ -4,6 +4,7 @@
 #include "EditorState.h"
 #include "SceneReader.h"
 #include "Descriptors/NodeDescriptor.h"
+#include <fstream>
 
 using namespace FireCube;
 
@@ -34,9 +35,10 @@ void AssetBrowserWindow::Render()
 			ImGui::EndChild();
 		}
 		ImGui::NextColumn();
+		
+		ImGui::BeginChild("List", ImVec2(0, 0), false);
 		if (itemsInSelectedPath.empty() == false)
 		{
-			ImGui::BeginChild("List", ImVec2(0, 0), false);
 			for (auto &item : itemsInSelectedPath)
 			{
 				if (ImGui::Selectable(item.label.c_str(), selectedItem == &item, ImGuiSelectableFlags_AllowDoubleClick))
@@ -61,7 +63,7 @@ void AssetBrowserWindow::Render()
 						{
 							std::string meshFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), item.path);
 							editorState->addMesh(editorState, meshFileName);
-						}						
+						}
 						else if (item.assetType == AssetType::PREFAB)
 						{
 							std::string prefabFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), item.path);
@@ -179,7 +181,152 @@ void AssetBrowserWindow::Render()
 					}
 				}
 			}
-			ImGui::EndChild();
+		}
+		ImGui::EndChild();
+
+		static char folderName[256] = "";
+		static char scriptName[256] = "";
+		static char materialName[256] = "";
+		bool showEnterFolderName = false;
+		bool showEnterScriptName = false;
+		bool showEnterMaterialName = false;
+		if (ImGui::BeginPopupContextItem("context menu"))
+		{
+			if (ImGui::Selectable("New Folder"))
+			{
+				showEnterFolderName = true;
+			}
+
+			if (AssetUtils::GetAssetTypeByPath(selectedPath) == AssetType::SCRIPT)
+			{
+				if (ImGui::Selectable("New Script"))
+				{
+					showEnterScriptName = true;
+				}
+			}
+
+			if (AssetUtils::GetAssetTypeByPath(selectedPath) == AssetType::MATERIAL)
+			{
+				if (ImGui::Selectable("New Material"))
+				{
+					showEnterMaterialName = true;
+				}
+			}
+
+			ImGui::EndPopup();
+		}
+		static bool firstShow = false;
+		if (showEnterFolderName)
+		{
+			folderName[0] = 0;
+			firstShow = true;
+			ImGui::OpenPopup("New Folder");
+		}
+
+		if (showEnterScriptName)
+		{
+			scriptName[0] = 0;
+			firstShow = true;
+			ImGui::OpenPopup("New Script");
+		}
+
+		if (showEnterMaterialName)
+		{
+			materialName[0] = 0;
+			firstShow = true;
+			ImGui::OpenPopup("New Material");
+		}
+
+		if (ImGui::BeginPopupModal("New Folder", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			if (firstShow)
+			{
+				ImGui::SetKeyboardFocusHere();
+				firstShow = false;
+			}
+			bool textAccepted = ImGui::InputText("Enter Folder Name", folderName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::Separator();
+			if (ImGui::Button("OK", ImVec2(120, 0)) || textAccepted)
+			{
+				Filesystem::CreateFolder(Filesystem::JoinPath(selectedPath, folderName));
+				itemsInSelectedPath = GetItemsInPath(selectedPath);
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+
+		if (ImGui::BeginPopupModal("New Script", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			if (firstShow)
+			{
+				ImGui::SetKeyboardFocusHere();
+				firstShow = false;
+			}
+			bool textAccepted = ImGui::InputText("Enter name of script object", scriptName, 256, ImGuiInputTextFlags_EnterReturnsTrue);			
+			ImGui::Separator();			
+			if (ImGui::Button("OK", ImVec2(120, 0)) || textAccepted)
+			{
+				std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts" + Filesystem::PATH_SEPARATOR + scriptName + ".lua";
+				std::ofstream f(targetPath, std::ofstream::trunc);
+				f << scriptName << " = Script()" << std::endl << std::endl;
+				f << "function " << scriptName << ":Init()" << std::endl << std::endl;
+				f << "end" << std::endl << std::endl;
+				f << "function " << scriptName << ":Awake()" << std::endl << std::endl;
+				f << "end" << std::endl << std::endl;
+				f << "function " << scriptName << ":Update(dt)" << std::endl << std::endl;
+				f << "end" << std::endl;
+				f.close();
+				editorState->showScriptEditor(editorState, "Scripts" + Filesystem::PATH_SEPARATOR + scriptName + ".lua");
+				itemsInSelectedPath = GetItemsInPath(selectedPath);
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+
+		if (ImGui::BeginPopupModal("New Material", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			if (firstShow)
+			{
+				ImGui::SetKeyboardFocusHere();
+				firstShow = false;
+			}
+			bool textAccepted = ImGui::InputText("Enter name of material", materialName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::Separator();
+			if (ImGui::Button("OK", ImVec2(120, 0)) || textAccepted)
+			{
+				std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials" + Filesystem::PATH_SEPARATOR + materialName + ".xml";
+				std::ofstream f(targetPath, std::ofstream::trunc);
+				f << "<material name=\"" << materialName << "\">" << std::endl;
+				f << "\t<technique name=\"Techniques/NoTexture.xml\" />" << std::endl;
+				f << "\t<parameter name=\"materialDiffuse\" value=\"0.7 0.7 0.7\" />" << std::endl;
+				f << "\t<parameter name=\"materialSpecular\" value=\"0 0 0\" />" << std::endl;
+				f << "\t<parameter name=\"materialShininess\" value=\"0.000000\" />" << std::endl;
+				f << "\t<parameter name=\"uOffset\" value=\"1 0 0\" />" << std::endl;
+				f << "\t<parameter name=\"vOffset\" value=\"0 1 0\" />" << std::endl;
+				f << "</material>" << std::endl;
+
+				f.close();
+				editorState->materialPicked(editorState, engine->GetResourceCache()->GetResource<Material>("Materials" + Filesystem::PATH_SEPARATOR + materialName + ".xml"));
+				editorState->showMaterialEditor(editorState);
+				itemsInSelectedPath = GetItemsInPath(selectedPath);
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
 		}
 		ImGui::NextColumn();
 
