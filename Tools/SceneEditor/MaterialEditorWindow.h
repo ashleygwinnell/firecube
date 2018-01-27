@@ -22,6 +22,7 @@ public:
 	bool IsOpen() const;	
 	void UpdatePreview(FireCube::Material *material);
 	bool *GetIsOpenPtr();
+	void Show();
 private:
 	void MaterialPicked(FireCube::Material *material);
 

@@ -5,7 +5,7 @@
 
 using namespace FireCube;
 
-MaterialEditorWindow::MaterialEditorWindow(Engine *engine) : Object(engine), auxRenderWindow(engine), isOpen(true)
+MaterialEditorWindow::MaterialEditorWindow(Engine *engine) : Object(engine), auxRenderWindow(engine), isOpen(false)
 {
 	standardParametersProperties = {
 		{ PARAM_MATERIAL_DIFFUSE, std::make_pair("Diffuse", PropertyType2::COLOR) },
@@ -395,6 +395,11 @@ void MaterialEditorWindow::UpdatePreview(FireCube::Material *material)
 bool *MaterialEditorWindow::GetIsOpenPtr()
 {
 	return &isOpen;
+}
+
+void MaterialEditorWindow::Show()
+{
+	isOpen = true;
 }
 
 void MaterialEditorWindow::MaterialPicked(Material *material)

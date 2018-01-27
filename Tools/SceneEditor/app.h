@@ -40,6 +40,7 @@ public:
 	void UpdateCamerasList();
 	void ComponentAdded(ComponentDescriptor *componentDesc);
 	void ComponentRemoved(ComponentDescriptor *componentDesc);
+	void ShowMaterialEditor();
 
 	FireCube::Scene *scene;	
 	EditorState *editorState;

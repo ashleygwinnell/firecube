@@ -527,6 +527,7 @@ bool FireCubeApp::Prepare()
 	SubscribeToEvent(Events::HandleInput, &FireCubeApp::HandleInput);
 	SubscribeToEvent(editorState, editorState->componentAdded, &FireCubeApp::ComponentAdded);
 	SubscribeToEvent(editorState, editorState->componentRemoved, &FireCubeApp::ComponentRemoved);
+	SubscribeToEvent(editorState, editorState->showMaterialEditor, &FireCubeApp::ShowMaterialEditor);
 	GetInputManager().AddMapping(Key::Z, InputMappingType::ACTION, "Undo", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::Y, InputMappingType::ACTION, "Redo", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::N, InputMappingType::ACTION, "New", KeyModifier::CTRL);
@@ -765,5 +766,10 @@ void FireCubeApp::ComponentRemoved(ComponentDescriptor *componentDesc)
 			}
 		}		
 	}
+}
+
+void FireCubeApp::ShowMaterialEditor()
+{
+	materialEditorWindow->Show();
 }
 
