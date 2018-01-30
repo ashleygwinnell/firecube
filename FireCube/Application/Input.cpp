@@ -142,7 +142,6 @@ void InputManager::SetRawKeyState(Key key, bool pressed, bool previouslyPressed,
 		if (i != pressedKeys.end())
 			pressedKeys.erase(i);
 	}
-		
 
 	std::map<Key, std::vector<InputMapping>>::iterator i = mappedKeys.find(key);
 	if (i == mappedKeys.end())
@@ -184,4 +183,9 @@ void InputManager::ResetInputState()
 	
 	// Trigger no key input (mainly used to detect mouse movement)
 	SetRawKeyState(Key::NO_KEY, true, false);
+}
+
+bool InputManager::IsKeyPressed(Key key) const
+{
+	return std::find(pressedKeys.begin(), pressedKeys.end(), key)  != pressedKeys.end();
 }

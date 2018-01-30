@@ -150,6 +150,8 @@ public:
 	*/
 	void RemoveMapping(AnalogInput analogInput, const std::string &name);			
 	
+	bool IsKeyPressed(Key key) const;
+	
 private:
 	class InputMapping
 	{
