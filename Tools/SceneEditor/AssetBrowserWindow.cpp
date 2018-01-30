@@ -15,6 +15,7 @@ AssetBrowserWindow::AssetBrowserWindow(Engine *engine) : Object(engine), selecte
 
 void AssetBrowserWindow::Render()
 {
+	static FileInfo itemToDelete;
 	NodeDescriptor *selectedNode = editorState->GetSelectedNode();
 
 	ImGui::SetNextDock(ImGuiDockSlot_Bottom);
@@ -202,8 +203,34 @@ void AssetBrowserWindow::Render()
 							ImGui::EndDragDropSource();
 						}
 					}
-					
 				}
+
+				if (ImGui::IsItemHovered())
+				{
+					if (item.isDirectory == false && engine->GetInputManager()->IsKeyPressed(Key::DELETE))
+					{
+						itemToDelete = item;
+						ImGui::OpenPopup("Confirm");
+					}
+				}
+			}
+
+			if (ImGui::BeginPopupModal("Confirm", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+			{
+				ImGui::Text("Delete %s?", itemToDelete.path.c_str());
+				ImGui::Separator();
+				if (ImGui::Button("OK", ImVec2(120, 0)))
+				{
+					remove(itemToDelete.path.c_str());
+					itemsInSelectedPath = GetItemsInPath(selectedPath);
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Cancel", ImVec2(120, 0)))
+				{
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
 			}
 		}
 		ImGui::EndChild();
