@@ -13,6 +13,7 @@
 #include "Commands/AddComponentCommand.h"
 #include "Descriptors/CameraDescriptor.h"
 #include "Descriptors/StaticModelDescriptor.h"
+#include "AssetUtils.h"
 
 using namespace FireCube;
 
@@ -56,6 +57,28 @@ void EditorWindow::Render()
 		ImGui::End();
 	}
 	ImGui::EndDock();
+	if (ImGui::BeginDragDropTarget())
+	{
+		const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("asset");
+		if (payload)
+		{
+			AssetType type;
+			std::string path;
+			AssetUtils::DeserializeAssetDescription((const char *)payload->Data, type, path);
+			std::replace(path.begin(), path.end(), '\\', '/');
+			path = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
+
+			if (type == AssetType::MESH)
+			{
+				AddMesh(path);
+			}
+			else if (type == AssetType::PREFAB)
+			{
+				AddPrefab(path);
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
 }
 
 void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, EditorState *editorState)

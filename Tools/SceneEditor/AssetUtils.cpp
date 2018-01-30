@@ -264,7 +264,7 @@ char *AssetUtils::SerializeAssetDescription(AssetType type, const std::string &p
 	return ret;
 }
 
-void AssetUtils::DeserializeAssetDescription(char *data, AssetType &type, std::string &path)
+void AssetUtils::DeserializeAssetDescription(const char *data, AssetType &type, std::string &path)
 {
 	unsigned int i = 0;
 	type = *((AssetType *)&data[i]);

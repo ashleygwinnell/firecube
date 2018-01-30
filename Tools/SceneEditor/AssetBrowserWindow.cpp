@@ -180,6 +180,30 @@ void AssetBrowserWindow::Render()
 						}
 					}
 				}
+
+				if (ImGui::IsItemActive())
+				{
+					if (item.assetType == AssetType::MESH || item.assetType == AssetType::PREFAB)
+					{
+						if (ImGui::BeginDragDropSource())
+						{
+							unsigned int size;
+							char *data = AssetUtils::SerializeAssetDescription(item.assetType, item.path, size);							
+							ImGui::SetDragDropPayload("asset", data, size);
+							if (item.assetType == AssetType::MESH)
+							{
+								ImGui::Text("Mesh");
+							}
+							else if (item.assetType == AssetType::PREFAB)
+							{
+								ImGui::Text("Prefab");
+							}
+							delete[] data;
+							ImGui::EndDragDropSource();
+						}
+					}
+					
+				}
 			}
 		}
 		ImGui::EndChild();

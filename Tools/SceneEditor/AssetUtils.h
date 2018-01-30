@@ -20,5 +20,5 @@ namespace AssetUtils
 	std::string ToString(FireCube::vec4 v);
 	AssetType GetAssetTypeByPath(const std::string &path);
 	char *SerializeAssetDescription(AssetType type, const std::string &path, unsigned int &size);	
-	void DeserializeAssetDescription(char *data, AssetType &type, std::string &path);
+	void DeserializeAssetDescription(const char *data, AssetType &type, std::string &path);
 }
