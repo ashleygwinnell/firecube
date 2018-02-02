@@ -469,14 +469,19 @@ void FireCubeApp::Render(float t)
 
 			Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Scenes");
 			Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Materials");
-			Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Prefabs");
+			Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Prefabs");			
 
-			//SetAllPanelsVisibility(true);
+			std::string targetMaterialPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials" + Filesystem::PATH_SEPARATOR + "Default.xml";
+			SharedPtr<Material> defaultMaterial = new Material(engine);
+			defaultMaterial->SetName("Default");
+			defaultMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
+			defaultMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.7f));
+			defaultMaterial->SetParameter(PARAM_MATERIAL_OPACITY, 1.0f);
+			defaultMaterial->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.0f));
+			defaultMaterial->SetParameter(PARAM_MATERIAL_SHININESS, 0.0f);
+			AssetUtils::SerializeMaterial(defaultMaterial, targetMaterialPath);
 
 			Reset();
-
-			//assetBrowserPanel->PopulateDirectoryTree();
-			//assetBrowserPanel->SetAssetsPath(Filesystem::GetAssetsFolder());
 
 			editorState->SetCurrentSceneFile("");
 		}
