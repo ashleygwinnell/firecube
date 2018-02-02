@@ -189,7 +189,7 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 
 	if (mouseOverView && input.HasValue("MouseWheelY"))
 	{
-		defaultCamera->Zoom(input.GetValue("MouseWheelY") * (engine->GetInputManager()->IsKeyPressed(Key::LEFT_SHIFT) ? 20.0f : 80.0f));
+		defaultCamera->Zoom(input.GetValue("MouseWheelY") * (engine->GetInputManager()->IsKeyDown(Key::LEFT_SHIFT) ? 20.0f : 80.0f));
 		UpdateGizmo();
 	}
 
