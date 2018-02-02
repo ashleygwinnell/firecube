@@ -57,13 +57,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_STL;IMGUI_INCLUDE_IMGUI_USER_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib\mswud;C:\Dev\wxWidgets-3.0.2\include;$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;$(ProjectDir)\ThirdParty\imgui;$(SolutionDir)\FireCube\ThirdParty\SDL\include;$(SolutionDir)\FireCube\ThirdParty\glew;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;$(ProjectDir)\ThirdParty\imgui;$(SolutionDir)\FireCube\ThirdParty\SDL\include;$(SolutionDir)\FireCube\ThirdParty\glew;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib;$(SolutionDir)\FireCube\Debug Static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>wxbase30ud.lib;wxmsw30ud_core.lib;wxmsw30ud_gl.lib;wxmsw30ud_adv.lib;wxpngd.lib;wxzlibd.lib;wxmsw30ud_propgrid.lib;wxmsw30ud_aui.lib;wxmsw30ud_stc.lib;wxscintillad.lib;wxtiffd.lib;wxjpegd.lib;opengl32.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;firecube.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\FireCube\Debug Static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;firecube.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -75,15 +75,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TIXML_USE_STL;IMGUI_INCLUDE_IMGUI_USER_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib\mswu;C:\Dev\wxWidgets-3.0.2\include;$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;$(ProjectDir)\ThirdParty\imgui;$(SolutionDir)\FireCube\ThirdParty\SDL\include;$(SolutionDir)\FireCube\ThirdParty\glew;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;$(ProjectDir)\ThirdParty\imgui;$(SolutionDir)\FireCube\ThirdParty\SDL\include;$(SolutionDir)\FireCube\ThirdParty\glew;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Dev\wxWidgets-3.0.2\lib\vc_lib;$(SolutionDir)\FireCube\Release Static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>wxbase30u.lib;wxmsw30u_core.lib;wxmsw30u_gl.lib;wxmsw30u_adv.lib;wxpng.lib;wxzlib.lib;wxmsw30u_propgrid.lib;wxmsw30u_aui.lib;wxmsw30u_stc.lib;wxscintilla.lib;wxtiff.lib;wxjpeg.lib;opengl32.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;firecube.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\FireCube\Release Static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;firecube.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -92,9 +92,7 @@
     <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlparser.cpp" />
     <ClCompile Include="AssetBrowserWindow.cpp" />
     <ClCompile Include="AssetUtils.cpp" />
-    <ClCompile Include="AuxGLCanvas.cpp" />
     <ClCompile Include="AuxRenderWindow.cpp" />
-    <ClCompile Include="BaseGLCanvas.cpp" />
     <ClCompile Include="BoxWindow.cpp" />
     <ClCompile Include="CameraWindow.cpp" />
     <ClCompile Include="CharacterControllerWindow.cpp" />
@@ -127,39 +125,19 @@
     <ClCompile Include="Gizmos\RotateGizmo.cpp" />
     <ClCompile Include="Gizmos\ScaleGizmo.cpp" />
     <ClCompile Include="Gizmos\TranslateGizmo.cpp" />
-    <ClCompile Include="EditorCanvas.cpp" />
     <ClCompile Include="app.cpp" />
     <ClCompile Include="HierarchyWindow.cpp" />
     <ClCompile Include="ImguiHelpers.cpp" />
     <ClCompile Include="InspectorWindow.cpp" />
     <ClCompile Include="LightWindow.cpp" />
     <ClCompile Include="LuaScriptWindow.cpp" />
-    <ClCompile Include="mainframe.cpp" />
-    <ClCompile Include="MainFrameImpl.cpp" />
     <ClCompile Include="MaterialEditorWindow.cpp" />
     <ClCompile Include="MathUtils.cpp" />
-    <ClCompile Include="Panels\AssetBrowserPanelImpl.cpp" />
-    <ClCompile Include="Panels\BaseComponentPanelImpl.cpp" />
-    <ClCompile Include="Panels\BoxPanelImpl.cpp" />
-    <ClCompile Include="Panels\CameraPanelImpl.cpp" />
-    <ClCompile Include="Panels\CharacterControllerPanelImpl.cpp" />
-    <ClCompile Include="Panels\CollisionShapePanelImpl.cpp" />
-    <ClCompile Include="Panels\LightPanelImpl.cpp" />
-    <ClCompile Include="Panels\LuaScriptPanelImpl.cpp" />
-    <ClCompile Include="Panels\MaterialEditorPanelImpl.cpp" />
-    <ClCompile Include="Panels\NodePropertiesPanelImpl.cpp" />
-    <ClCompile Include="Panels\ParticleEmitterPanelImpl.cpp" />
-    <ClCompile Include="Panels\PlanePanelImpl.cpp" />
-    <ClCompile Include="Panels\RigidBodyPanelImpl.cpp" />
-    <ClCompile Include="Panels\SpherePanelImpl.cpp" />
-    <ClCompile Include="Panels\StaticModelPanelImpl.cpp" />
-    <ClCompile Include="Panels\TexturePreviewPanelImpl.cpp" />
     <ClCompile Include="ParticleEmitterWindow.cpp" />
     <ClCompile Include="PlaneWindow.cpp" />
     <ClCompile Include="RigidBodyWindow.cpp" />
     <ClCompile Include="SceneReader.cpp" />
     <ClCompile Include="SceneWriter.cpp" />
-    <ClCompile Include="ScriptEditorFrameImpl.cpp" />
     <ClCompile Include="SphereWindow.cpp" />
     <ClCompile Include="StaticModelWindow.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui.cpp" />
@@ -174,9 +152,7 @@
     <ClInclude Include="app.h" />
     <ClInclude Include="AssetBrowserWindow.h" />
     <ClInclude Include="AssetUtils.h" />
-    <ClInclude Include="AuxGLCanvas.h" />
     <ClInclude Include="AuxRenderWindow.h" />
-    <ClInclude Include="BaseGLCanvas.h" />
     <ClInclude Include="BoxWindow.h" />
     <ClInclude Include="CameraWindow.h" />
     <ClInclude Include="CharacterControllerWindow.h" />
@@ -211,40 +187,18 @@
     <ClInclude Include="Gizmos\ScaleGizmo.h" />
     <ClInclude Include="Gizmos\TransformGizmo.h" />
     <ClInclude Include="Gizmos\TranslateGizmo.h" />
-    <ClInclude Include="EditorCanvas.h" />
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="ImguiHelpers.h" />
     <ClInclude Include="InspectorWindow.h" />
     <ClInclude Include="LightWindow.h" />
     <ClInclude Include="LuaScriptWindow.h" />
-    <ClInclude Include="mainframe.h" />
-    <ClInclude Include="MainFrameImpl.h" />
     <ClInclude Include="MaterialEditorWindow.h" />
     <ClInclude Include="MathUtils.h" />
-    <ClInclude Include="Panels\AssetBrowserPanelImpl.h" />
-    <ClInclude Include="Panels\BaseComponentPanelImpl.h" />
-    <ClInclude Include="Panels\BoxPanelImpl.h" />
-    <ClInclude Include="Panels\CameraPanelImpl.h" />
-    <ClInclude Include="Panels\CharacterControllerPanelImpl.h" />
-    <ClInclude Include="Panels\CollisionShapePanelImpl.h" />
-    <ClInclude Include="Panels\EventBindingHelpers.h" />
-    <ClInclude Include="Panels\LightPanelImpl.h" />
-    <ClInclude Include="Panels\LuaScriptPanelImpl.h" />
-    <ClInclude Include="Panels\MaterialEditorPanelImpl.h" />
-    <ClInclude Include="Panels\NodePropertiesPanelImpl.h" />
-    <ClInclude Include="Panels\PanelCommon.h" />
-    <ClInclude Include="Panels\ParticleEmitterPanelImpl.h" />
-    <ClInclude Include="Panels\PlanePanelImpl.h" />
-    <ClInclude Include="Panels\RigidBodyPanelImpl.h" />
-    <ClInclude Include="Panels\SpherePanelImpl.h" />
-    <ClInclude Include="Panels\StaticModelPanelImpl.h" />
-    <ClInclude Include="Panels\TexturePreviewPanelImpl.h" />
     <ClInclude Include="ParticleEmitterWindow.h" />
     <ClInclude Include="PlaneWindow.h" />
     <ClInclude Include="RigidBodyWindow.h" />
     <ClInclude Include="SceneReader.h" />
     <ClInclude Include="SceneWriter.h" />
-    <ClInclude Include="ScriptEditorFrameImpl.h" />
     <ClInclude Include="SphereWindow.h" />
     <ClInclude Include="StaticModelWindow.h" />
     <ClInclude Include="ThirdParty\imgui\dirent_portable.h" />

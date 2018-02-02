@@ -1,7 +1,5 @@
 #include "SceneWriter.h"
 #include "tinyxml.h"
-#include "wx/filename.h"
-#include "wx/wx.h"
 #include "app.h"
 #include "Descriptors/NodeDescriptor.h"
 #include "Descriptors/ComponentDescriptor.h"
