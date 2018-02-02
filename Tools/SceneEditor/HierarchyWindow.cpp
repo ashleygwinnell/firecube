@@ -2,6 +2,7 @@
 #include <imgui.h>
 #include "Descriptors/NodeDescriptor.h"
 #include "EditorState.h"
+#include "SceneWriter.h"
 
 using namespace FireCube;
 
@@ -45,6 +46,35 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 		if (child->IsPrefab())
 		{
 			ImGui::PopStyleColor();
+		}
+		if (ImGui::BeginPopupContextItem("context menu"))
+		{
+			if (child->IsPrefab())
+			{
+				if (ImGui::Selectable("Update Prefab"))
+				{
+					std::string tragetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + child->GetPrefabPath();
+					SceneWriter sceneWriter;
+					sceneWriter.SerializePrefab(child, tragetPath);
+				}
+				if (ImGui::Selectable("Unlink From Prefab"))
+				{
+					child->SetIsPrefab(false);
+				}
+			}
+			else
+			{
+				if (ImGui::Selectable("Create Prefab"))
+				{
+					std::string tragetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Prefabs" + Filesystem::PATH_SEPARATOR + child->GetName() + ".xml";
+					SceneWriter sceneWriter;
+					sceneWriter.SerializePrefab(child, tragetPath);
+					child->SetIsPrefab(true);
+					child->SetPrefabPath("Prefabs" + Filesystem::PATH_SEPARATOR + child->GetName() + ".xml");
+				}
+			}
+
+			ImGui::EndPopup();
 		}
 		ImGui::PopID();
 		if (ImGui::IsItemClicked())
