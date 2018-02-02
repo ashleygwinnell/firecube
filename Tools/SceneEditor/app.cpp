@@ -381,7 +381,10 @@ void FireCubeApp::Render(float t)
 
 		if (ImGui::BeginMenu("View"))
 		{
+			ImGui::MenuItem("Scene Hierarchy", nullptr, hierarchyWindow->GetIsOpenPtr());
+			ImGui::MenuItem("Inspector", nullptr, inspectorWindow->GetIsOpenPtr());
 			ImGui::MenuItem("Material Editor", nullptr, materialEditorWindow->GetIsOpenPtr());
+			ImGui::MenuItem("Asset Browser", nullptr, assetBrowserWindow->GetIsOpenPtr());
 			if (ImGui::MenuItem("Save Layout"))
 			{
 				ImGui::SaveDock("default.ini");

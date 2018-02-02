@@ -25,6 +25,8 @@ public:
 	InspectorWindow(FireCube::Engine *engine);
 	void Render();
 	void SetScene(NodeDescriptor *rootDesc, EditorState *editorState);
+	bool *GetIsOpenPtr();
+
 private:
 	NodeDescriptor * rootDesc;
 	EditorState *editorState;
@@ -44,4 +46,5 @@ private:
 	SphereWindow sphereWindow;
 	ParticleEmitterWindow particleEmitterWindow;
 	CameraWindow cameraWindow;
+	bool isOpen;
 };

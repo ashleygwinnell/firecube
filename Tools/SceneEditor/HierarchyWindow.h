@@ -12,10 +12,12 @@ public:
 	HierarchyWindow(FireCube::Engine *engine);
 	void Render();
 	void SetScene(NodeDescriptor *rootDesc, EditorState *editorState);
+	bool *GetIsOpenPtr();
 private:
 
 	void RenderChildren(NodeDescriptor *root);
 
 	NodeDescriptor *rootDesc;
 	EditorState *editorState;
+	bool isOpen;
 };

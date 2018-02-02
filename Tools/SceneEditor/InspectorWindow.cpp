@@ -19,7 +19,7 @@ void InspectorWindow::Render()
 	NodeDescriptor *selectedNode = editorState->GetSelectedNode();
 
 	ImGui::SetNextDock(ImGuiDockSlot_Right);
-	if (ImGui::BeginDock("Inspector", nullptr, 0, ImVec2(50, -1)))
+	if (ImGui::BeginDock("Inspector", &isOpen, 0, ImVec2(50, -1)))
 	{
 		if (selectedNode && ImGui::CollapsingHeader("Node", ImGuiTreeNodeFlags_DefaultOpen))
 		{
@@ -111,4 +111,9 @@ void InspectorWindow::SetScene(NodeDescriptor *rootDesc, EditorState *editorStat
 {
 	this->rootDesc = rootDesc;
 	this->editorState = editorState;	
+}
+
+bool *InspectorWindow::GetIsOpenPtr()
+{
+	return &isOpen;
 }

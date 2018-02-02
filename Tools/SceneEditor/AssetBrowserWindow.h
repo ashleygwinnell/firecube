@@ -17,6 +17,8 @@ public:
 	void SetScene(NodeDescriptor *rootDesc, EditorState *editorState);
 	void RenderDirectoryTree(const std::string &path);
 	void Reset();
+	bool *GetIsOpenPtr();
+
 private:
 	class FileInfo
 	{
@@ -37,4 +39,5 @@ private:
 	std::vector<FileInfo> itemsInSelectedPath;
 	FireCube::Texture2D *texturePreview;
 	AuxRenderWindow auxRenderWindow;
+	bool isOpen;
 };

@@ -15,7 +15,7 @@ HierarchyWindow::HierarchyWindow(Engine *engine) : Object(engine), rootDesc(null
 void HierarchyWindow::Render()
 {
 	ImGui::SetNextDock(ImGuiDockSlot_Left);	
-	if (ImGui::BeginDock("Hierarchy", nullptr, 0, ImVec2(50, -1)))
+	if (ImGui::BeginDock("Hierarchy", &isOpen, 0, ImVec2(50, -1)))
 	{
 		RenderChildren(rootDesc);
 	}
@@ -26,6 +26,11 @@ void HierarchyWindow::SetScene(NodeDescriptor *rootDesc, EditorState *editorStat
 {
 	this->rootDesc = rootDesc;
 	this->editorState = editorState;
+}
+
+bool *HierarchyWindow::GetIsOpenPtr()
+{
+	return &isOpen;
 }
 
 void HierarchyWindow::RenderChildren(NodeDescriptor *root)
