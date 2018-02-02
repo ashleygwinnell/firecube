@@ -8,7 +8,7 @@
 
 using namespace FireCube;
 
-AssetBrowserWindow::AssetBrowserWindow(Engine *engine) : Object(engine), selectedItem(nullptr), texturePreview(nullptr), firstRender(true), auxRenderWindow(engine)
+AssetBrowserWindow::AssetBrowserWindow(Engine *engine) : Object(engine), selectedItem(nullptr), texturePreview(nullptr), firstRender(true), auxRenderWindow(engine), isOpen(true)
 {
 
 }

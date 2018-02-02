@@ -7,7 +7,7 @@
 
 using namespace FireCube;
 
-HierarchyWindow::HierarchyWindow(Engine *engine) : Object(engine), rootDesc(nullptr)
+HierarchyWindow::HierarchyWindow(Engine *engine) : Object(engine), rootDesc(nullptr), isOpen(true)
 {
 
 }

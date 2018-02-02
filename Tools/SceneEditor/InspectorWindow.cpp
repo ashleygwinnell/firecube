@@ -9,7 +9,7 @@
 using namespace FireCube;
 
 InspectorWindow::InspectorWindow(Engine *engine) : Object(engine), staticModelWindow(engine), lightWindow(engine), luaScriptWindow(engine), collisionShapeWindow(engine),
-characterControllerWindow(engine), boxWindow(engine), rigidBodyWindow(engine), planeWindow(engine), sphereWindow(engine), particleEmitterWindow(engine), cameraWindow(engine)
+characterControllerWindow(engine), boxWindow(engine), rigidBodyWindow(engine), planeWindow(engine), sphereWindow(engine), particleEmitterWindow(engine), cameraWindow(engine), isOpen(true)
 {
 
 }
