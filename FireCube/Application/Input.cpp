@@ -133,19 +133,33 @@ void InputManager::SetRawKeyState(Key key, bool pressed, bool previouslyPressed,
 			}
 		}
 	}
-
-	if (pressed && !previouslyPressed)
-		pressedKeys.push_back(key);
-	else if (!pressed && previouslyPressed)
+	
+	if (key != Key::NO_KEY)
 	{
-		std::vector<Key>::iterator i = find(pressedKeys.begin(), pressedKeys.end(), key);
-		if (i != pressedKeys.end())
-			pressedKeys.erase(i);
+		if (!pressed && previouslyPressed)
+		{
+			releasedKeys.push_back(key);
+		}
+
+		if (pressed && !previouslyPressed)
+		{
+			pressedKeys.push_back(key);
+		}
+		else if (!pressed && previouslyPressed)
+		{
+			std::vector<Key>::iterator i = find(pressedKeys.begin(), pressedKeys.end(), key);
+			if (i != pressedKeys.end())
+			{
+				pressedKeys.erase(i);
+			}
+		}
 	}
 
 	std::map<Key, std::vector<InputMapping>>::iterator i = mappedKeys.find(key);
 	if (i == mappedKeys.end())
+	{
 		return;
+	}
 	
 	for (unsigned int j = 0; j < i->second.size(); j++)
 	{
@@ -180,12 +194,20 @@ void InputManager::ResetInputState()
 {
 	mappedInput.actions.clear();
 	mappedInput.values.clear();
+	releasedKeys.clear();
 	
 	// Trigger no key input (mainly used to detect mouse movement)
 	SetRawKeyState(Key::NO_KEY, true, false);
 }
 
-bool InputManager::IsKeyPressed(Key key) const
+bool InputManager::IsKeyPressed(Key key, KeyModifier modifier) const
 {
-	return std::find(pressedKeys.begin(), pressedKeys.end(), key)  != pressedKeys.end();
+	bool ret = std::find(releasedKeys.begin(), releasedKeys.end(), key) != releasedKeys.end();
+	return ret && (modifier == KeyModifier::ANY ||
+			((modifier & KeyModifier::LEFT_ALT) != KeyModifier::NONE) && (std::find(pressedKeys.begin(), pressedKeys.end(), Key::LEFT_ALT) != pressedKeys.end()) ||
+			((modifier & KeyModifier::RIGHT_ALT) != KeyModifier::NONE) && (std::find(pressedKeys.begin(), pressedKeys.end(), Key::RIGHT_ALT) != pressedKeys.end()) ||
+			((modifier & KeyModifier::LEFT_CTRL) != KeyModifier::NONE) && (std::find(pressedKeys.begin(), pressedKeys.end(), Key::LEFT_CTRL) != pressedKeys.end()) ||
+			((modifier & KeyModifier::RIGHT_CTRL) != KeyModifier::NONE) && (std::find(pressedKeys.begin(), pressedKeys.end(), Key::RIGHT_CTRL) != pressedKeys.end()) ||
+			((modifier & KeyModifier::LEFT_SHIFT) != KeyModifier::NONE) && (std::find(pressedKeys.begin(), pressedKeys.end(), Key::LEFT_SHIFT) != pressedKeys.end()) ||
+			((modifier & KeyModifier::RIGHT_SHIFT) != KeyModifier::NONE) && (std::find(pressedKeys.begin(), pressedKeys.end(), Key::RIGHT_SHIFT) != pressedKeys.end()));
 }

@@ -150,7 +150,7 @@ public:
 	*/
 	void RemoveMapping(AnalogInput analogInput, const std::string &name);			
 	
-	bool IsKeyPressed(Key key) const;
+	bool IsKeyPressed(Key key, KeyModifier modifier = KeyModifier::ANY) const;
 	
 private:
 	class InputMapping
@@ -183,6 +183,7 @@ private:
 	std::map<Key, std::vector<InputMapping>> mappedKeys;
 	std::map<AnalogInput, std::vector<std::string>> mappedAnalogs;	
 	std::vector<Key> pressedKeys;
+	std::vector<Key> releasedKeys;
 	MappedInput mappedInput;
 };
 
