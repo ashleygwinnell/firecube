@@ -3,6 +3,7 @@
 #include "Descriptors/NodeDescriptor.h"
 #include "EditorState.h"
 #include "SceneWriter.h"
+#include <iostream>
 
 using namespace FireCube;
 
@@ -29,7 +30,8 @@ void HierarchyWindow::SetScene(NodeDescriptor *rootDesc, EditorState *editorStat
 
 void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 {	
-	for (auto child : root->GetChildren())
+	auto children = root->GetChildren();
+	for (auto child : children)
 	{
 		ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | (editorState->GetSelectedNode() == child ? ImGuiTreeNodeFlags_Selected : 0);
 		if (child->GetChildren().empty())
@@ -47,6 +49,34 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 		{
 			ImGui::PopStyleColor();
 		}
+		if (editorState->GetSelectedNode() == child && ImGui::IsWindowFocused())
+		{
+			if (engine->GetInputManager()->IsKeyPressed(Key::U, KeyModifier::LEFT_ALT) || engine->GetInputManager()->IsKeyPressed(Key::D, KeyModifier::LEFT_ALT))
+			{				
+				auto parent = child->GetParent();
+				if (parent)
+				{
+					int childrenCount = parent->GetChildren().size();					
+					int index = std::distance(parent->GetChildren().begin(), std::find(parent->GetChildren().begin(), parent->GetChildren().end(), child));					
+
+					if ((engine->GetInputManager()->IsKeyPressed(Key::U) && index > 0) || (engine->GetInputManager()->IsKeyPressed(Key::D) && index < childrenCount - 1))
+					{
+						int newIndex;
+						if (engine->GetInputManager()->IsKeyPressed(Key::U))
+						{
+							newIndex = index - 1;
+						}
+						else
+						{
+							newIndex = index + 1;
+						}						
+						parent->SetChildIndex(child, newIndex);						
+					}
+				}
+			}
+			
+		}
+		
 		if (ImGui::BeginPopupContextItem("context menu"))
 		{
 			if (child->IsPrefab())
@@ -85,7 +115,7 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 		if (nodeOpen && child->GetChildren().empty() == false)
 		{
 			RenderChildren(child);
-			ImGui::TreePop();
+			ImGui::TreePop();			
 		}		
 	}
 }
