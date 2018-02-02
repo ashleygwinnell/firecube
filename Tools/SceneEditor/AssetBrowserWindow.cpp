@@ -184,13 +184,15 @@ void AssetBrowserWindow::Render()
 
 				if (ImGui::IsItemActive())
 				{
-					if (item.assetType == AssetType::MESH || item.assetType == AssetType::PREFAB)
+					if (item.assetType == AssetType::MESH || item.assetType == AssetType::PREFAB || item.assetType == AssetType::TEXTURE || item.assetType == AssetType::TECHNIQUE)
 					{
 						if (ImGui::BeginDragDropSource())
 						{
 							unsigned int size;
 							char *data = AssetUtils::SerializeAssetDescription(item.assetType, item.path, size);							
-							ImGui::SetDragDropPayload("asset", data, size);
+							std::string payloadType = item.assetType == AssetType::MESH || item.assetType == AssetType::PREFAB ? "asset" : "me_asset";
+							ImGui::SetDragDropPayload(payloadType.c_str(), data, size);
+							delete[] data;
 							if (item.assetType == AssetType::MESH)
 							{
 								ImGui::Text("Mesh");
@@ -199,7 +201,14 @@ void AssetBrowserWindow::Render()
 							{
 								ImGui::Text("Prefab");
 							}
-							delete[] data;
+							else if (item.assetType == AssetType::TEXTURE)
+							{
+								ImGui::Text("Texture");
+							}
+							else if (item.assetType == AssetType::TECHNIQUE)
+							{
+								ImGui::Text("Technique");
+							}
 							ImGui::EndDragDropSource();
 						}
 					}

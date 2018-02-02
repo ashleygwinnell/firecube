@@ -302,6 +302,7 @@ void MaterialEditorWindow::Render()
 			TextureUnit textureUnit = textureTypes[i];
 			std::string label = textureTypesLabels[i];
 
+			ImGui::BeginGroup();
 			ImGui::PushID(i);
 			std::string filename = material->GetTexture(textureUnit) ? material->GetTexture(textureUnit)->GetFileName() : "";
 			ImGui::InputText("", &filename[0], filename.size() + 1, ImGuiInputTextFlags_ReadOnly);
@@ -319,9 +320,29 @@ void MaterialEditorWindow::Render()
 				material->SetTexture(textureUnit, engine->GetResourceCache()->GetResource<Texture2D>(newFileName));
 			}
 			ImGui::PopID();
+			ImGui::EndGroup();
+			if (ImGui::BeginDragDropTarget())
+			{
+				const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("me_asset");
+				if (payload)
+				{
+					AssetType type;
+					std::string path;
+					AssetUtils::DeserializeAssetDescription((const char *)payload->Data, type, path);
+					std::replace(path.begin(), path.end(), '\\', '/');
+					path = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
+
+					if (type == AssetType::TEXTURE)
+					{
+						material->SetTexture(textureUnit, engine->GetResourceCache()->GetResource<Texture2D>(path));
+					}
+				}
+				ImGui::EndDragDropTarget();
+			}
 		}
 
 		{
+			ImGui::BeginGroup();
 			ImGui::PushID("technique");
 			std::string filename = material->GetTechnique() ? material->GetTechnique()->GetFileName() : "";
 			ImGui::InputText("", &filename[0], filename.size() + 1, ImGuiInputTextFlags_ReadOnly);
@@ -339,6 +360,25 @@ void MaterialEditorWindow::Render()
 				material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>(newFileName));
 			}
 			ImGui::PopID();
+			ImGui::EndGroup();
+			if (ImGui::BeginDragDropTarget())
+			{
+				const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("me_asset");
+				if (payload)
+				{
+					AssetType type;
+					std::string path;
+					AssetUtils::DeserializeAssetDescription((const char *)payload->Data, type, path);
+					std::replace(path.begin(), path.end(), '\\', '/');
+					path = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
+
+					if (type == AssetType::TECHNIQUE)
+					{
+						material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>(path));
+					}
+				}
+				ImGui::EndDragDropTarget();
+			}
 		}
 	}
 
