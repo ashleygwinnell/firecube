@@ -256,7 +256,7 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlNode *paren
 		auto sphere = static_cast<SphereDescriptor *>(componentDesc);
 
 		element->SetDoubleAttribute("radius", sphere->GetRadius());
-		element->SetAttribute("tessellation", ToString(vec2(sphere->GetRings(), sphere->GetColumns())));
+		element->SetAttribute("tessellation", ToString(vec2((float) sphere->GetRings(), (float) sphere->GetColumns())));
 		element->SetAttribute("material", sphere->GetMaterialFileName());
 		element->SetAttribute("cast_shadow", sphere->GetCastShadow() ? "true" : "false");
 
