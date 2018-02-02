@@ -668,7 +668,7 @@ void FireCubeApp::LoadSettingsFile()
 		for (TiXmlElement *element = e->FirstChildElement("file"); element != nullptr; element = element->NextSiblingElement("file"))
 		{
 			std::string filename = element->Attribute("name");
-			if (!wxFileExists(filename))
+			if (!Filesystem::FileExists(filename))
 			{
 				continue;
 			}
