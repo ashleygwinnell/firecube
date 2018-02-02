@@ -211,3 +211,8 @@ bool InputManager::IsKeyPressed(Key key, KeyModifier modifier) const
 			((modifier & KeyModifier::LEFT_SHIFT) != KeyModifier::NONE) && (std::find(pressedKeys.begin(), pressedKeys.end(), Key::LEFT_SHIFT) != pressedKeys.end()) ||
 			((modifier & KeyModifier::RIGHT_SHIFT) != KeyModifier::NONE) && (std::find(pressedKeys.begin(), pressedKeys.end(), Key::RIGHT_SHIFT) != pressedKeys.end()));
 }
+
+bool InputManager::IsKeyDown(Key key) const
+{
+	return std::find(pressedKeys.begin(), pressedKeys.end(), key) != pressedKeys.end();
+}
