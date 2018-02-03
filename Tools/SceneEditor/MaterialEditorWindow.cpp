@@ -170,219 +170,219 @@ void MaterialEditorWindow::Render()
 				ImGui::EndPopup();
 			}
 		}
-	}
 
-	if (material)
-	{
-		char name[256];
-		strcpy_s(name, 256, material->GetName().c_str());
-		if (ImGui::InputText("Name", name, 256))
+		if (material)
 		{
-			material->SetName(name);
-		}
-
-		std::map<StringHash, std::string> paramters = material->GetParametersNames();
-
-		for (auto &p : paramters)
-		{
-			std::string parameterName = p.second;
-			StringHash nameHash(parameterName);
-			std::string label;
-			auto standardParamProperties = standardParametersProperties.find(nameHash);
-			PropertyType2 type;
-
-			if (standardParamProperties != standardParametersProperties.end())
+			char name[256];
+			strcpy_s(name, 256, material->GetName().c_str());
+			if (ImGui::InputText("Name", name, 256))
 			{
-				label = standardParamProperties->second.first;
-				type = standardParamProperties->second.second;
+				material->SetName(name);
 			}
-			else
+
+			std::map<StringHash, std::string> paramters = material->GetParametersNames();
+
+			for (auto &p : paramters)
 			{
-				label = parameterName;
-				switch (material->GetParameter(nameHash).GetType())
+				std::string parameterName = p.second;
+				StringHash nameHash(parameterName);
+				std::string label;
+				auto standardParamProperties = standardParametersProperties.find(nameHash);
+				PropertyType2 type;
+
+				if (standardParamProperties != standardParametersProperties.end())
 				{
-				case VariantType::FLOAT:
-					type = PropertyType2::FLOAT;
-					break;
-				case VariantType::VEC2:
-					type = PropertyType2::VEC2;
-					break;
-				case VariantType::VEC3:
-					type = PropertyType2::VEC3;
-					break;
-				case VariantType::VEC4:
-					type = PropertyType2::VEC4;
-					break;
-				default:
-					break;
+					label = standardParamProperties->second.first;
+					type = standardParamProperties->second.second;
 				}
-			}
+				else
+				{
+					label = parameterName;
+					switch (material->GetParameter(nameHash).GetType())
+					{
+					case VariantType::FLOAT:
+						type = PropertyType2::FLOAT;
+						break;
+					case VariantType::VEC2:
+						type = PropertyType2::VEC2;
+						break;
+					case VariantType::VEC3:
+						type = PropertyType2::VEC3;
+						break;
+					case VariantType::VEC4:
+						type = PropertyType2::VEC4;
+						break;
+					default:
+						break;
+					}
+				}
 			
-			if (type == PropertyType2::COLOR)
-			{
-				vec3 value = material->GetParameter(nameHash).GetVec3();
-				if (ImGui::ColorEdit3(label.c_str(), &value.x))
-				{
-					material->SetParameter(parameterName, value);
-				}
-			}
-			else if (type == PropertyType2::FLOAT)
-			{
-				float value = material->GetParameter(nameHash).GetFloat();
-				if (ImGui::InputFloat(label.c_str(), &value))
-				{
-					material->SetParameter(parameterName, value);
-				}
-			}
-			else if (type == PropertyType2::VEC2)
-			{
-				vec2 value = material->GetParameter(nameHash).GetVec2();
-				if (ImGui::InputFloat2(label.c_str(), &value.x))
-				{
-					material->SetParameter(parameterName, value);
-				}
-			}
-			else if (type == PropertyType2::VEC3)
-			{
-				vec3 value = material->GetParameter(nameHash).GetVec3();
-				if (ImGui::InputFloat3(label.c_str(), &value.x))
-				{
-					material->SetParameter(parameterName, value);
-				}
-			}
-			else if (type == PropertyType2::VEC4)
-			{
-				vec4 value = material->GetParameter(nameHash).GetVec4();
-				if (ImGui::InputFloat4(label.c_str(), &value.x))
-				{
-					material->SetParameter(parameterName, value);
-				}
-			}
-
-			ImGui::PushID(parameterName.c_str());
-			static float color[3];
-			bool showColorPicker = false;
-			if (ImGui::BeginPopupContextItem("item context menu"))
-			{
-				if (ImGui::Selectable("Remove"))
-				{
-					material->RemoveParameter(parameterName);
-				}
-				if (type == PropertyType2::VEC3 && ImGui::Selectable("Set From Color"))
+				if (type == PropertyType2::COLOR)
 				{
 					vec3 value = material->GetParameter(nameHash).GetVec3();
-					color[0] = value.x;
-					color[1] = value.y;
-					color[2] = value.z;
-					showColorPicker = true;
-				}
-				ImGui::EndPopup();
-			}
-
-			if (showColorPicker)
-			{
-				ImGui::OpenPopup("Color Picker");
-			}
-
-			if (ImGui::BeginPopup("Color Picker"))
-			{
-				ImGui::ColorPicker3("##picker", (float*)&color, ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
-				material->SetParameter(parameterName, vec3(color[0], color[1], color[2]));
-				ImGui::EndPopup();
-			}
-
-			ImGui::PopID();
-		}
-
-		const TextureUnit textureTypes[] = { TextureUnit::DIFFUSE, TextureUnit::NORMAL, TextureUnit::SPECULAR };
-		const std::string textureTypesLabels[] = { "Diffuse texture" , "Normal texture", "Specular texture" };
-
-		for (int i = 0; i < 3; ++i)
-		{			
-			TextureUnit textureUnit = textureTypes[i];
-			std::string label = textureTypesLabels[i];
-
-			ImGui::BeginGroup();
-			ImGui::PushID(i);
-			std::string filename = material->GetTexture(textureUnit) ? material->GetTexture(textureUnit)->GetFileName() : "";
-			ImGui::InputText("", &filename[0], filename.size() + 1, ImGuiInputTextFlags_ReadOnly);
-			ImGui::SameLine();
-			bool showFileOpen = ImGui::Button("...");
-			ImGui::SameLine();
-			ImGui::Text(label.c_str());
-			const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Textures").c_str(), nullptr, "Select a file", ImVec2(600, 400), ImVec2(100, 100));
-			std::string newFileName = chosenPath;
-			if (newFileName.empty() == false)
-			{
-				std::replace(newFileName.begin(), newFileName.end(), '/', '\\');
-
-				newFileName = AssetUtils::ImportTextureIfNeeded(newFileName);				
-				material->SetTexture(textureUnit, engine->GetResourceCache()->GetResource<Texture2D>(newFileName));
-			}
-			ImGui::PopID();
-			ImGui::EndGroup();
-			if (ImGui::BeginDragDropTarget())
-			{
-				const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("me_asset");
-				if (payload)
-				{
-					AssetType type;
-					std::string path;
-					AssetUtils::DeserializeAssetDescription((const char *)payload->Data, type, path);
-					std::replace(path.begin(), path.end(), '\\', '/');
-					path = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
-
-					if (type == AssetType::TEXTURE)
+					if (ImGui::ColorEdit3(label.c_str(), &value.x))
 					{
-						material->SetTexture(textureUnit, engine->GetResourceCache()->GetResource<Texture2D>(path));
+						material->SetParameter(parameterName, value);
 					}
 				}
-				ImGui::EndDragDropTarget();
-			}
-		}
-
-		{
-			ImGui::BeginGroup();
-			ImGui::PushID("technique");
-			std::string filename = material->GetTechnique() ? material->GetTechnique()->GetFileName() : "";
-			ImGui::InputText("", &filename[0], filename.size() + 1, ImGuiInputTextFlags_ReadOnly);
-			ImGui::SameLine();
-			bool showFileOpen = ImGui::Button("...");
-			ImGui::SameLine();
-			ImGui::Text("Technique");
-			const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Techniques").c_str(), nullptr, "Select a file", ImVec2(600, 400), ImVec2(100, 100));
-			std::string newFileName = chosenPath;
-			if (newFileName.empty() == false)
-			{
-				std::replace(newFileName.begin(), newFileName.end(), '/', '\\');
-
-				newFileName = AssetUtils::ImportTechniqueIfNeeded(newFileName);
-				material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>(newFileName));
-			}
-			ImGui::PopID();
-			ImGui::EndGroup();
-			if (ImGui::BeginDragDropTarget())
-			{
-				const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("me_asset");
-				if (payload)
+				else if (type == PropertyType2::FLOAT)
 				{
-					AssetType type;
-					std::string path;
-					AssetUtils::DeserializeAssetDescription((const char *)payload->Data, type, path);
-					std::replace(path.begin(), path.end(), '\\', '/');
-					path = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
-
-					if (type == AssetType::TECHNIQUE)
+					float value = material->GetParameter(nameHash).GetFloat();
+					if (ImGui::InputFloat(label.c_str(), &value))
 					{
-						material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>(path));
+						material->SetParameter(parameterName, value);
 					}
 				}
-				ImGui::EndDragDropTarget();
+				else if (type == PropertyType2::VEC2)
+				{
+					vec2 value = material->GetParameter(nameHash).GetVec2();
+					if (ImGui::InputFloat2(label.c_str(), &value.x))
+					{
+						material->SetParameter(parameterName, value);
+					}
+				}
+				else if (type == PropertyType2::VEC3)
+				{
+					vec3 value = material->GetParameter(nameHash).GetVec3();
+					if (ImGui::InputFloat3(label.c_str(), &value.x))
+					{
+						material->SetParameter(parameterName, value);
+					}
+				}
+				else if (type == PropertyType2::VEC4)
+				{
+					vec4 value = material->GetParameter(nameHash).GetVec4();
+					if (ImGui::InputFloat4(label.c_str(), &value.x))
+					{
+						material->SetParameter(parameterName, value);
+					}
+				}
+
+				ImGui::PushID(parameterName.c_str());
+				static float color[3];
+				bool showColorPicker = false;
+				if (ImGui::BeginPopupContextItem("item context menu"))
+				{
+					if (ImGui::Selectable("Remove"))
+					{
+						material->RemoveParameter(parameterName);
+					}
+					if (type == PropertyType2::VEC3 && ImGui::Selectable("Set From Color"))
+					{
+						vec3 value = material->GetParameter(nameHash).GetVec3();
+						color[0] = value.x;
+						color[1] = value.y;
+						color[2] = value.z;
+						showColorPicker = true;
+					}
+					ImGui::EndPopup();
+				}
+
+				if (showColorPicker)
+				{
+					ImGui::OpenPopup("Color Picker");
+				}
+
+				if (ImGui::BeginPopup("Color Picker"))
+				{
+					ImGui::ColorPicker3("##picker", (float*)&color, ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
+					material->SetParameter(parameterName, vec3(color[0], color[1], color[2]));
+					ImGui::EndPopup();
+				}
+
+				ImGui::PopID();
+			}
+
+			const TextureUnit textureTypes[] = { TextureUnit::DIFFUSE, TextureUnit::NORMAL, TextureUnit::SPECULAR };
+			const std::string textureTypesLabels[] = { "Diffuse texture" , "Normal texture", "Specular texture" };
+
+			for (int i = 0; i < 3; ++i)
+			{			
+				TextureUnit textureUnit = textureTypes[i];
+				std::string label = textureTypesLabels[i];
+
+				ImGui::BeginGroup();
+				ImGui::PushID(i);
+				std::string filename = material->GetTexture(textureUnit) ? material->GetTexture(textureUnit)->GetFileName() : "";
+				ImGui::InputText("", &filename[0], filename.size() + 1, ImGuiInputTextFlags_ReadOnly);
+				ImGui::SameLine();
+				bool showFileOpen = ImGui::Button("...");
+				ImGui::SameLine();
+				ImGui::Text(label.c_str());
+				const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Textures").c_str(), nullptr, "Select a file", ImVec2(600, 400), ImVec2(100, 100));
+				std::string newFileName = chosenPath;
+				if (newFileName.empty() == false)
+				{
+					std::replace(newFileName.begin(), newFileName.end(), '/', '\\');
+
+					newFileName = AssetUtils::ImportTextureIfNeeded(newFileName);				
+					material->SetTexture(textureUnit, engine->GetResourceCache()->GetResource<Texture2D>(newFileName));
+				}
+				ImGui::PopID();
+				ImGui::EndGroup();
+				if (ImGui::BeginDragDropTarget())
+				{
+					const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("me_asset");
+					if (payload)
+					{
+						AssetType type;
+						std::string path;
+						AssetUtils::DeserializeAssetDescription((const char *)payload->Data, type, path);
+						std::replace(path.begin(), path.end(), '\\', '/');
+						path = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
+
+						if (type == AssetType::TEXTURE)
+						{
+							material->SetTexture(textureUnit, engine->GetResourceCache()->GetResource<Texture2D>(path));
+						}
+					}
+					ImGui::EndDragDropTarget();
+				}
+			}
+
+			{
+				ImGui::BeginGroup();
+				ImGui::PushID("technique");
+				std::string filename = material->GetTechnique() ? material->GetTechnique()->GetFileName() : "";
+				ImGui::InputText("", &filename[0], filename.size() + 1, ImGuiInputTextFlags_ReadOnly);
+				ImGui::SameLine();
+				bool showFileOpen = ImGui::Button("...");
+				ImGui::SameLine();
+				ImGui::Text("Technique");
+				const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Techniques").c_str(), nullptr, "Select a file", ImVec2(600, 400), ImVec2(100, 100));
+				std::string newFileName = chosenPath;
+				if (newFileName.empty() == false)
+				{
+					std::replace(newFileName.begin(), newFileName.end(), '/', '\\');
+
+					newFileName = AssetUtils::ImportTechniqueIfNeeded(newFileName);
+					material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>(newFileName));
+				}
+				ImGui::PopID();
+				ImGui::EndGroup();
+				if (ImGui::BeginDragDropTarget())
+				{
+					const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("me_asset");
+					if (payload)
+					{
+						AssetType type;
+						std::string path;
+						AssetUtils::DeserializeAssetDescription((const char *)payload->Data, type, path);
+						std::replace(path.begin(), path.end(), '\\', '/');
+						path = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
+
+						if (type == AssetType::TECHNIQUE)
+						{
+							material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>(path));
+						}
+					}
+					ImGui::EndDragDropTarget();
+				}
 			}
 		}
+
+		auxRenderWindow.Render();
 	}
-
-	auxRenderWindow.Render();
 	ImGui::EndDock();
 
 	if (prevIsOpen && !isOpen)
