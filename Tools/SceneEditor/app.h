@@ -24,30 +24,15 @@ class FireCubeApp : public FireCube::Application
 {
 public:
 	FireCubeApp();
-	void Render(float t);
-	void Update(float t) {};
-	void HandleSDLEvent(SDL_Event &event);
-	virtual bool Prepare() override;
-	void HandleInput(float dt, const FireCube::MappedInput &input);
-	void OpenSceneFile(const std::string &filename);
-	void Reset();
-	void LoadSettingsFile();
 	void WriteSettingsFile();
-	void SavePrefabs(NodeDescriptor *node);
-	void Exit();
-	void CollectCameras(NodeDescriptor *node);
-	void UpdateCamerasList();
-	void ComponentAdded(ComponentDescriptor *componentDesc);
-	void ComponentRemoved(ComponentDescriptor *componentDesc);
-	void ShowMaterialEditor();
 
-	FireCube::Scene *scene;	
+	FireCube::Scene *scene;
 	EditorState *editorState;
-	NodeDescriptor rootDesc;	
+	NodeDescriptor rootDesc;
 	std::vector<std::string> recentSceneFiles;
 	std::vector<std::pair<std::string, CameraDescriptor *>> cameras;
 
-	EditorWindow *editorWindow;	
+	EditorWindow *editorWindow;
 	HierarchyWindow *hierarchyWindow;
 	InspectorWindow *inspectorWindow;
 	AssetBrowserWindow *assetBrowserWindow;
@@ -61,6 +46,21 @@ public:
 	bool showNewDialog;
 	bool showSaveAs;
 private:
+	void Render(float t);
+	void Update(float t) {};
+	void HandleSDLEvent(SDL_Event &event);
+	virtual bool Prepare() override;
+	void HandleInput(float dt, const FireCube::MappedInput &input);
+	void OpenSceneFile(const std::string &filename);
+	void Reset();
+	void LoadSettingsFile();
+	void SavePrefabs(NodeDescriptor *node);
+	void Exit();
+	void CollectCameras(NodeDescriptor *node);
+	void UpdateCamerasList();
+	void ComponentAdded(ComponentDescriptor *componentDesc);
+	void ComponentRemoved(ComponentDescriptor *componentDesc);
+	void ShowMaterialEditor();
 	void RenderMenuBar();
 	void RenderToolbar();
 	void RenderOpenDialog();
