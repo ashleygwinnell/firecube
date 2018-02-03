@@ -78,294 +78,9 @@ void FireCubeApp::Render(float t)
 	ImGui::Begin("MainWindow", nullptr, ImVec2(0, 0), 1.0f, flags);	
 	ImGui::GetStyle().WindowRounding = oldWindowRounding;	
 
-	if (ImGui::BeginMenuBar())
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("New", "Ctrl+N"))
-			{
-				showNewDialog = true;
-			}
-			if (ImGui::MenuItem("Open", "Ctrl+O"))
-			{
-				showFileOpen = true;
-			}
-
-			if (ImGui::MenuItem("Save", "Ctrl+S"))
-			{
-				if (editorState->GetCurrentSceneFile().empty())
-				{
-					showSaveAs = true;
-				}
-				else
-				{
-					SceneWriter sceneWriter;
-					sceneWriter.Serialize(&rootDesc, editorState->GetCurrentSceneFile());
-					SavePrefabs(&rootDesc);
-				}
-			}
-
-			if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
-			{
-				showSaveAs = true;
-			}
-
-			if (recentSceneFiles.empty() == false)
-			{
-				ImGui::Separator();
-				std::string selectedFile;
-				for (auto &filename : recentSceneFiles)
-				{
-					if (ImGui::MenuItem(filename.c_str()))
-					{
-						selectedFile = filename;
-					}
-				}
-
-				if (selectedFile.empty() == false && selectedFile != editorState->GetCurrentSceneFile())
-				{									
-					recentSceneFiles.erase(std::remove(recentSceneFiles.begin(), recentSceneFiles.end(), selectedFile), recentSceneFiles.end());
-					recentSceneFiles.insert(recentSceneFiles.begin(), selectedFile);
-
-					OpenSceneFile(selectedFile);
-				}
-			}
-
-			ImGui::Separator();
-
-			if (ImGui::MenuItem("Exit", "Ctrl+X"))
-			{
-				Exit();
-			}
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Edit"))
-		{
-			if (editorState->HasUndo())
-			{
-				std::string label = "Undo \"" + editorState->GetCurrentUndoCommand()->GetDescription() + "\"";
-				if (ImGui::MenuItem(label.c_str(), "Ctrl+Z"))
-				{
-					editorState->Undo();
-				}
-			}
-			else
-			{
-				ImGui::MenuItem("Undo", "Ctrl+Z", false, false);
-			}
-
-			if (editorState->HasRedo())
-			{
-				std::string label = "Redo \"" + editorState->GetCurrentRedoCommand()->GetDescription() + "\"";
-				if (ImGui::MenuItem(label.c_str(), "Ctrl+Y"))
-				{
-					editorState->Redo();
-				}
-			}
-			else
-			{
-				ImGui::MenuItem("Redo", "Ctrl+Y", false, false);
-			}
-
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Add"))
-		{
-			if (ImGui::MenuItem("Node"))
-			{
-				auto nodeDesc = new NodeDescriptor("Node");
-				auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, &rootDesc);
-				editorState->ExecuteCommand(addNodeCommand);
-			}
-			if (ImGui::BeginMenu("Component"))
-			{
-				if (ImGui::MenuItem("StaticModel", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
-				{
-					auto nodeDesc = editorState->GetSelectedNode();
-					auto staticModelDescriptor = new StaticModelDescriptor();
-					auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel", nodeDesc, staticModelDescriptor, engine);
-					editorState->ExecuteCommand(addComponentCommand);
-				}
-				if (ImGui::MenuItem("Light", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
-				{
-					auto nodeDesc = editorState->GetSelectedNode();
-					auto lightDescriptor = new LightDescriptor();
-					lightDescriptor->SetLightType(LightType::DIRECTIONAL);
-					lightDescriptor->SetColor(vec3(1.0f));
-					auto addComponentCommand = new AddComponentCommand(editorState, "Add Light", nodeDesc, lightDescriptor, engine);
-					editorState->ExecuteCommand(addComponentCommand);
-				}
-				if (ImGui::MenuItem("LuaScript", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
-				{
-					auto nodeDesc = editorState->GetSelectedNode();
-					
-					auto luaScriptDescriptor = new LuaScriptDescriptor();
-					auto addComponentCommand = new AddComponentCommand(editorState, "Add LuaScript", nodeDesc, luaScriptDescriptor, engine);
-
-					editorState->ExecuteCommand(addComponentCommand);
-				}
-				if (ImGui::MenuItem("CollisionShape", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
-				{
-					auto nodeDesc = editorState->GetSelectedNode();
-					auto collisionShapeDescriptor = new CollisionShapeDescriptor();
-					collisionShapeDescriptor->SetBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
-					collisionShapeDescriptor->SetPlane(Plane(vec3(0.0f, 1.0f, 0.0f), 0.0f));
-					collisionShapeDescriptor->SetIsTrigger(false);
-					auto addComponentCommand = new AddComponentCommand(editorState, "Add CollisionShape", nodeDesc, collisionShapeDescriptor, engine);
-
-					editorState->ExecuteCommand(addComponentCommand);
-				}
-				if (ImGui::MenuItem("CharacterController", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
-				{
-					auto nodeDesc = editorState->GetSelectedNode();
-					auto characterControllerDescriptor = new CharacterControllerDescriptor();
-					characterControllerDescriptor->SetRadius(0.5f);
-					characterControllerDescriptor->SetHeight(1.0f);
-					characterControllerDescriptor->SetContactOffset(0.1f);
-					auto addComponentCommand = new AddComponentCommand(editorState, "Add CharacterController", nodeDesc, characterControllerDescriptor, engine);
-
-					editorState->ExecuteCommand(addComponentCommand);
-				}
-				if (ImGui::MenuItem("Box", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
-				{
-					auto nodeDesc = editorState->GetSelectedNode();					
-					auto boxDescriptor = new BoxDescriptor();
-					boxDescriptor->SetSize(vec3(1.0f), engine);
-					boxDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
-					auto addComponentCommand = new AddComponentCommand(editorState, "Add Box", nodeDesc, boxDescriptor, engine);
-
-					editorState->ExecuteCommand(addComponentCommand);
-				}
-				if (ImGui::MenuItem("RigidBody", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
-				{
-					auto nodeDesc = editorState->GetSelectedNode();					
-					auto rigidBodyDescriptor = new RigidBodyDescriptor();
-					auto addComponentCommand = new AddComponentCommand(editorState, "Add RigidBody", nodeDesc, rigidBodyDescriptor, engine);
-
-					editorState->ExecuteCommand(addComponentCommand);
-				}
-				if (ImGui::MenuItem("Plane", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
-				{
-					auto nodeDesc = editorState->GetSelectedNode();
-					auto planeDescriptor = new PlaneDescriptor();
-					planeDescriptor->SetSize(vec2(1.0f), engine);
-					planeDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
-					auto addComponentCommand = new AddComponentCommand(editorState, "Add Plane", nodeDesc, planeDescriptor, engine);
-
-					editorState->ExecuteCommand(addComponentCommand);
-				}
-				if (ImGui::MenuItem("Sphere", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
-				{
-					auto nodeDesc = editorState->GetSelectedNode();
-					auto sphereDescriptor = new SphereDescriptor();
-					sphereDescriptor->SetRadius(1.0f, engine);
-					sphereDescriptor->SetColumns(16, engine);
-					sphereDescriptor->SetRings(16, engine);
-					sphereDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
-					auto addComponentCommand = new AddComponentCommand(editorState, "Add Sphere", nodeDesc, sphereDescriptor, engine);
-
-					editorState->ExecuteCommand(addComponentCommand);
-				}
-				if (ImGui::MenuItem("ParticleEmitter", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
-				{
-					auto nodeDesc = editorState->GetSelectedNode();
-					auto particleEmitterDescriptor = new ParticleEmitterDescriptor();
-					auto addComponentCommand = new AddComponentCommand(editorState, "Add ParticleEmitter", nodeDesc, particleEmitterDescriptor, engine);
-
-					editorState->ExecuteCommand(addComponentCommand);
-				}
-				if (ImGui::MenuItem("Camera", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
-				{
-					auto nodeDesc = editorState->GetSelectedNode();					
-					auto cameraDescriptor = new CameraDescriptor();
-					cameraDescriptor->SetOrthographic(false);
-					cameraDescriptor->SetFOV(60.0f);
-					cameraDescriptor->SetNearPlane(0.1f);
-					cameraDescriptor->SetFarPlane(200.0f);
-					cameraDescriptor->SetLeftPlane(-100.0f);
-					cameraDescriptor->SetRightPlane(100.0f);
-					cameraDescriptor->SetTopPlane(100.0f);
-					cameraDescriptor->SetBottomPlane(-100.0f);
-					auto addComponentCommand = new AddComponentCommand(editorState, "Add Camera", nodeDesc, cameraDescriptor, engine);
-
-					editorState->ExecuteCommand(addComponentCommand);
-				}
-				ImGui::EndMenu();
-			}
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("View"))
-		{
-			ImGui::MenuItem("Scene Hierarchy", nullptr, hierarchyWindow->GetIsOpenPtr());
-			ImGui::MenuItem("Inspector", nullptr, inspectorWindow->GetIsOpenPtr());
-			ImGui::MenuItem("Material Editor", nullptr, materialEditorWindow->GetIsOpenPtr());
-			ImGui::MenuItem("Asset Browser", nullptr, assetBrowserWindow->GetIsOpenPtr());
-			if (ImGui::MenuItem("Save Layout"))
-			{
-				ImGui::SaveDock();
-			}
-			ImGui::EndMenu();
-		}
-
-		const float CameraComboWidth = 200.0f;
-		ImGui::PushItemWidth(CameraComboWidth);
-		ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - CameraComboWidth, 0));
-		std::string selectedCameraName;
-		if (editorWindow->IsUsingDefaultCamera())
-		{
-			selectedCameraName = "Default";
-		}
-		else
-		{
-			for (auto &camera : cameras)
-			{
-				if (camera.second->GetComponent() == editorWindow->GetCurrentCamera())
-				{
-					selectedCameraName = camera.first;
-					break;
-				}
-			}
-		}
-		if (ImGui::BeginCombo("", selectedCameraName.c_str()))
-		{			
-			if (ImGui::Selectable("Default", editorWindow->IsUsingDefaultCamera()))
-			{			
-				editorWindow->UseDefaultCamera();
-			}
-			for (auto &camera : cameras)
-			{
-				if (ImGui::Selectable(camera.first.c_str(), editorWindow->GetCurrentCamera() == camera.second->GetComponent()))
-				{
-					editorWindow->UseCamera(camera.second);
-				}
-			}
-			ImGui::EndCombo();
-		}
-		ImGui::PopItemWidth();
-		ImGui::EndMenuBar();
-	}
-
-	ImVec2 pos = ImGui::GetCursorScreenPos();
-	if (ImGui::BeginToolbar("main_tool_bar", pos, ImVec2(0, 24)))
-	{
-		if (ImGui::ToolbarButton((ImTextureID)translateTexture->GetObjectId(), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Translate"))
-		{
-			editorWindow->UseTranslateGizmo();
-		}
-		if (ImGui::ToolbarButton((ImTextureID)rotateTexture->GetObjectId(), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Rotate"))
-		{
-			editorWindow->UseRotateGizmo();
-		}
-		if (ImGui::ToolbarButton((ImTextureID)scaleTexture->GetObjectId(), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Scale"))
-		{
-			editorWindow->UseScaleGizmo();
-		}
-
-		ImGui::EndToolbar();
-	}
+	
+	RenderMenuBar();
+	RenderToolbar();	
 
 	ImGui::BeginDockspace();	
 	{
@@ -376,68 +91,9 @@ void FireCubeApp::Render(float t)
 		materialEditorWindow->Render();
 	}
 	
-	{
-		static ImGuiFs::Dialog openDialog;
-		const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, nullptr, ".xml", "Open Scene file", ImVec2(600, 400), ImVec2(100, 100));
-		std::string path = chosenPath;
-		if (path.empty() == false)
-		{
-			std::replace(path.begin(), path.end(), '/', '\\');
-			OpenSceneFile(path);
-
-			const unsigned int maxRecentFiles = 10;
-			recentSceneFiles.erase(std::remove(recentSceneFiles.begin(), recentSceneFiles.end(), path), recentSceneFiles.end());
-			recentSceneFiles.insert(recentSceneFiles.begin(), path);
-			if (recentSceneFiles.size() > maxRecentFiles)
-			{
-				recentSceneFiles.pop_back();
-			}
-		}
-	}
-
-	{
-		static ImGuiFs::Dialog newDialog;
-		const char* chosenPath = newDialog.chooseFolderDialog(showNewDialog, nullptr, "Choose root assets directory", ImVec2(600, 400), ImVec2(100, 100));
-		std::string path = chosenPath;
-		if (path.empty() == false)
-		{
-			std::replace(path.begin(), path.end(), '/', '\\');
-
-			Filesystem::SetAssetsFolder(path);
-
-			Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Scenes");
-			Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Materials");
-			Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Prefabs");			
-
-			std::string targetMaterialPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials" + Filesystem::PATH_SEPARATOR + "Default.xml";
-			SharedPtr<Material> defaultMaterial = new Material(engine);
-			defaultMaterial->SetName("Default");
-			defaultMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
-			defaultMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.7f));
-			defaultMaterial->SetParameter(PARAM_MATERIAL_OPACITY, 1.0f);
-			defaultMaterial->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.0f));
-			defaultMaterial->SetParameter(PARAM_MATERIAL_SHININESS, 0.0f);
-			AssetUtils::SerializeMaterial(defaultMaterial, targetMaterialPath);
-
-			Reset();
-
-			editorState->SetCurrentSceneFile("");
-		}
-	}
-
-	{
-		static ImGuiFs::Dialog dialog;
-		const char* chosenPath = dialog.saveFileDialog(showSaveAs, nullptr, nullptr, ".xml", "Save Scene file", ImVec2(600, 400), ImVec2(100, 100));
-		std::string path = chosenPath;
-		if (path.empty() == false)
-		{
-			SceneWriter sceneWriter;
-			sceneWriter.Serialize(&rootDesc, path);
-			SavePrefabs(&rootDesc);
-			editorState->SetCurrentSceneFile(path);
-			SetTitle("SceneEditor - " + path);
-		}
-	}
+	RenderOpenDialog();
+	RenderNewDialog();
+	RenderSaveDialog();		
 
 	ImGui::EndDockspace();
 	ImGui::End();
@@ -657,10 +313,6 @@ void FireCubeApp::SavePrefabs(NodeDescriptor *node)
 
 void FireCubeApp::Exit()
 {
-	/*if (editorCanvas->IsInitialized())
-	{
-		editorCanvas->UseDefaultCamera(); // Use default camera to prevent rendering from a soon to be deleted camera
-	}*/
 	Reset();
 
 	// Prevent destructor of NodeDescriptor from deleting the node itself since it is owned by the Scene
@@ -723,3 +375,363 @@ void FireCubeApp::ShowMaterialEditor()
 	materialEditorWindow->Show();
 }
 
+void FireCubeApp::RenderMenuBar()
+{
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("New", "Ctrl+N"))
+			{
+				showNewDialog = true;
+			}
+			if (ImGui::MenuItem("Open", "Ctrl+O"))
+			{
+				showFileOpen = true;
+			}
+
+			if (ImGui::MenuItem("Save", "Ctrl+S"))
+			{
+				if (editorState->GetCurrentSceneFile().empty())
+				{
+					showSaveAs = true;
+				}
+				else
+				{
+					SceneWriter sceneWriter;
+					sceneWriter.Serialize(&rootDesc, editorState->GetCurrentSceneFile());
+					SavePrefabs(&rootDesc);
+				}
+			}
+
+			if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
+			{
+				showSaveAs = true;
+			}
+
+			if (recentSceneFiles.empty() == false)
+			{
+				ImGui::Separator();
+				std::string selectedFile;
+				for (auto &filename : recentSceneFiles)
+				{
+					if (ImGui::MenuItem(filename.c_str()))
+					{
+						selectedFile = filename;
+					}
+				}
+
+				if (selectedFile.empty() == false && selectedFile != editorState->GetCurrentSceneFile())
+				{
+					recentSceneFiles.erase(std::remove(recentSceneFiles.begin(), recentSceneFiles.end(), selectedFile), recentSceneFiles.end());
+					recentSceneFiles.insert(recentSceneFiles.begin(), selectedFile);
+
+					OpenSceneFile(selectedFile);
+				}
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::MenuItem("Exit", "Ctrl+X"))
+			{
+				Exit();
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Edit"))
+		{
+			if (editorState->HasUndo())
+			{
+				std::string label = "Undo \"" + editorState->GetCurrentUndoCommand()->GetDescription() + "\"";
+				if (ImGui::MenuItem(label.c_str(), "Ctrl+Z"))
+				{
+					editorState->Undo();
+				}
+			}
+			else
+			{
+				ImGui::MenuItem("Undo", "Ctrl+Z", false, false);
+			}
+
+			if (editorState->HasRedo())
+			{
+				std::string label = "Redo \"" + editorState->GetCurrentRedoCommand()->GetDescription() + "\"";
+				if (ImGui::MenuItem(label.c_str(), "Ctrl+Y"))
+				{
+					editorState->Redo();
+				}
+			}
+			else
+			{
+				ImGui::MenuItem("Redo", "Ctrl+Y", false, false);
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Add"))
+		{
+			if (ImGui::MenuItem("Node"))
+			{
+				auto nodeDesc = new NodeDescriptor("Node");
+				auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, &rootDesc);
+				editorState->ExecuteCommand(addNodeCommand);
+			}
+			if (ImGui::BeginMenu("Component"))
+			{
+				if (ImGui::MenuItem("StaticModel", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					auto staticModelDescriptor = new StaticModelDescriptor();
+					auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel", nodeDesc, staticModelDescriptor, engine);
+					editorState->ExecuteCommand(addComponentCommand);
+				}
+				if (ImGui::MenuItem("Light", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					auto lightDescriptor = new LightDescriptor();
+					lightDescriptor->SetLightType(LightType::DIRECTIONAL);
+					lightDescriptor->SetColor(vec3(1.0f));
+					auto addComponentCommand = new AddComponentCommand(editorState, "Add Light", nodeDesc, lightDescriptor, engine);
+					editorState->ExecuteCommand(addComponentCommand);
+				}
+				if (ImGui::MenuItem("LuaScript", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+
+					auto luaScriptDescriptor = new LuaScriptDescriptor();
+					auto addComponentCommand = new AddComponentCommand(editorState, "Add LuaScript", nodeDesc, luaScriptDescriptor, engine);
+
+					editorState->ExecuteCommand(addComponentCommand);
+				}
+				if (ImGui::MenuItem("CollisionShape", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					auto collisionShapeDescriptor = new CollisionShapeDescriptor();
+					collisionShapeDescriptor->SetBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
+					collisionShapeDescriptor->SetPlane(Plane(vec3(0.0f, 1.0f, 0.0f), 0.0f));
+					collisionShapeDescriptor->SetIsTrigger(false);
+					auto addComponentCommand = new AddComponentCommand(editorState, "Add CollisionShape", nodeDesc, collisionShapeDescriptor, engine);
+
+					editorState->ExecuteCommand(addComponentCommand);
+				}
+				if (ImGui::MenuItem("CharacterController", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					auto characterControllerDescriptor = new CharacterControllerDescriptor();
+					characterControllerDescriptor->SetRadius(0.5f);
+					characterControllerDescriptor->SetHeight(1.0f);
+					characterControllerDescriptor->SetContactOffset(0.1f);
+					auto addComponentCommand = new AddComponentCommand(editorState, "Add CharacterController", nodeDesc, characterControllerDescriptor, engine);
+
+					editorState->ExecuteCommand(addComponentCommand);
+				}
+				if (ImGui::MenuItem("Box", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					auto boxDescriptor = new BoxDescriptor();
+					boxDescriptor->SetSize(vec3(1.0f), engine);
+					boxDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
+					auto addComponentCommand = new AddComponentCommand(editorState, "Add Box", nodeDesc, boxDescriptor, engine);
+
+					editorState->ExecuteCommand(addComponentCommand);
+				}
+				if (ImGui::MenuItem("RigidBody", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					auto rigidBodyDescriptor = new RigidBodyDescriptor();
+					auto addComponentCommand = new AddComponentCommand(editorState, "Add RigidBody", nodeDesc, rigidBodyDescriptor, engine);
+
+					editorState->ExecuteCommand(addComponentCommand);
+				}
+				if (ImGui::MenuItem("Plane", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					auto planeDescriptor = new PlaneDescriptor();
+					planeDescriptor->SetSize(vec2(1.0f), engine);
+					planeDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
+					auto addComponentCommand = new AddComponentCommand(editorState, "Add Plane", nodeDesc, planeDescriptor, engine);
+
+					editorState->ExecuteCommand(addComponentCommand);
+				}
+				if (ImGui::MenuItem("Sphere", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					auto sphereDescriptor = new SphereDescriptor();
+					sphereDescriptor->SetRadius(1.0f, engine);
+					sphereDescriptor->SetColumns(16, engine);
+					sphereDescriptor->SetRings(16, engine);
+					sphereDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
+					auto addComponentCommand = new AddComponentCommand(editorState, "Add Sphere", nodeDesc, sphereDescriptor, engine);
+
+					editorState->ExecuteCommand(addComponentCommand);
+				}
+				if (ImGui::MenuItem("ParticleEmitter", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					auto particleEmitterDescriptor = new ParticleEmitterDescriptor();
+					auto addComponentCommand = new AddComponentCommand(editorState, "Add ParticleEmitter", nodeDesc, particleEmitterDescriptor, engine);
+
+					editorState->ExecuteCommand(addComponentCommand);
+				}
+				if (ImGui::MenuItem("Camera", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					auto cameraDescriptor = new CameraDescriptor();
+					cameraDescriptor->SetOrthographic(false);
+					cameraDescriptor->SetFOV(60.0f);
+					cameraDescriptor->SetNearPlane(0.1f);
+					cameraDescriptor->SetFarPlane(200.0f);
+					cameraDescriptor->SetLeftPlane(-100.0f);
+					cameraDescriptor->SetRightPlane(100.0f);
+					cameraDescriptor->SetTopPlane(100.0f);
+					cameraDescriptor->SetBottomPlane(-100.0f);
+					auto addComponentCommand = new AddComponentCommand(editorState, "Add Camera", nodeDesc, cameraDescriptor, engine);
+
+					editorState->ExecuteCommand(addComponentCommand);
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("View"))
+		{
+			ImGui::MenuItem("Scene Hierarchy", nullptr, hierarchyWindow->GetIsOpenPtr());
+			ImGui::MenuItem("Inspector", nullptr, inspectorWindow->GetIsOpenPtr());
+			ImGui::MenuItem("Material Editor", nullptr, materialEditorWindow->GetIsOpenPtr());
+			ImGui::MenuItem("Asset Browser", nullptr, assetBrowserWindow->GetIsOpenPtr());
+			if (ImGui::MenuItem("Save Layout"))
+			{
+				ImGui::SaveDock();
+			}
+			ImGui::EndMenu();
+		}
+
+		const float CameraComboWidth = 200.0f;
+		ImGui::PushItemWidth(CameraComboWidth);
+		ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - CameraComboWidth, 0));
+		std::string selectedCameraName;
+		if (editorWindow->IsUsingDefaultCamera())
+		{
+			selectedCameraName = "Default";
+		}
+		else
+		{
+			for (auto &camera : cameras)
+			{
+				if (camera.second->GetComponent() == editorWindow->GetCurrentCamera())
+				{
+					selectedCameraName = camera.first;
+					break;
+				}
+			}
+		}
+		if (ImGui::BeginCombo("", selectedCameraName.c_str()))
+		{
+			if (ImGui::Selectable("Default", editorWindow->IsUsingDefaultCamera()))
+			{
+				editorWindow->UseDefaultCamera();
+			}
+			for (auto &camera : cameras)
+			{
+				if (ImGui::Selectable(camera.first.c_str(), editorWindow->GetCurrentCamera() == camera.second->GetComponent()))
+				{
+					editorWindow->UseCamera(camera.second);
+				}
+			}
+			ImGui::EndCombo();
+		}
+		ImGui::PopItemWidth();
+		ImGui::EndMenuBar();
+	}
+}
+
+void FireCubeApp::RenderToolbar()
+{
+	ImVec2 pos = ImGui::GetCursorScreenPos();
+	if (ImGui::BeginToolbar("main_tool_bar", pos, ImVec2(0, 24)))
+	{
+		if (ImGui::ToolbarButton((ImTextureID)translateTexture->GetObjectId(), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Translate"))
+		{
+			editorWindow->UseTranslateGizmo();
+		}
+		if (ImGui::ToolbarButton((ImTextureID)rotateTexture->GetObjectId(), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Rotate"))
+		{
+			editorWindow->UseRotateGizmo();
+		}
+		if (ImGui::ToolbarButton((ImTextureID)scaleTexture->GetObjectId(), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Scale"))
+		{
+			editorWindow->UseScaleGizmo();
+		}
+
+		ImGui::EndToolbar();
+	}
+}
+
+void FireCubeApp::RenderOpenDialog()
+{
+	static ImGuiFs::Dialog openDialog;
+	const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, nullptr, ".xml", "Open Scene file", ImVec2(600, 400), ImVec2(100, 100));
+	std::string path = chosenPath;
+	if (path.empty() == false)
+	{
+		std::replace(path.begin(), path.end(), '/', '\\');
+		OpenSceneFile(path);
+
+		const unsigned int maxRecentFiles = 10;
+		recentSceneFiles.erase(std::remove(recentSceneFiles.begin(), recentSceneFiles.end(), path), recentSceneFiles.end());
+		recentSceneFiles.insert(recentSceneFiles.begin(), path);
+		if (recentSceneFiles.size() > maxRecentFiles)
+		{
+			recentSceneFiles.pop_back();
+		}
+	}
+}
+
+void FireCubeApp::RenderNewDialog()
+{
+	static ImGuiFs::Dialog newDialog;
+	const char* chosenPath = newDialog.chooseFolderDialog(showNewDialog, nullptr, "Choose root assets directory", ImVec2(600, 400), ImVec2(100, 100));
+	std::string path = chosenPath;
+	if (path.empty() == false)
+	{
+		std::replace(path.begin(), path.end(), '/', '\\');
+
+		Filesystem::SetAssetsFolder(path);
+
+		Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Scenes");
+		Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Materials");
+		Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Prefabs");
+
+		std::string targetMaterialPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials" + Filesystem::PATH_SEPARATOR + "Default.xml";
+		SharedPtr<Material> defaultMaterial = new Material(engine);
+		defaultMaterial->SetName("Default");
+		defaultMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
+		defaultMaterial->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(0.7f));
+		defaultMaterial->SetParameter(PARAM_MATERIAL_OPACITY, 1.0f);
+		defaultMaterial->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.0f));
+		defaultMaterial->SetParameter(PARAM_MATERIAL_SHININESS, 0.0f);
+		AssetUtils::SerializeMaterial(defaultMaterial, targetMaterialPath);
+
+		Reset();
+
+		editorState->SetCurrentSceneFile("");
+	}
+}
+
+void FireCubeApp::RenderSaveDialog()
+{
+	static ImGuiFs::Dialog dialog;
+	const char* chosenPath = dialog.saveFileDialog(showSaveAs, nullptr, nullptr, ".xml", "Save Scene file", ImVec2(600, 400), ImVec2(100, 100));
+	std::string path = chosenPath;
+	if (path.empty() == false)
+	{
+		SceneWriter sceneWriter;
+		sceneWriter.Serialize(&rootDesc, path);
+		SavePrefabs(&rootDesc);
+		editorState->SetCurrentSceneFile(path);
+		SetTitle("SceneEditor - " + path);
+	}
+}

@@ -60,4 +60,10 @@ public:
 	bool showFileOpen;
 	bool showNewDialog;
 	bool showSaveAs;
+private:
+	void RenderMenuBar();
+	void RenderToolbar();
+	void RenderOpenDialog();
+	void RenderNewDialog();
+	void RenderSaveDialog();
 };
