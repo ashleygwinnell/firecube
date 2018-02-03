@@ -19,15 +19,13 @@ AddNodeCommand::~AddNodeCommand()
 void AddNodeCommand::Do()
 {
 	nodeDesc->SetParent(parent);
-	shouldDelete = false;	
-	editorState->nodeAdded(editorState, nodeDesc);
+	shouldDelete = false;
 	editorState->SetSelectedNode(nodeDesc);
 }
 
 void AddNodeCommand::Undo()
 {
 	nodeDesc->Remove();
-	shouldDelete = true;	
-	editorState->nodeRemoved(editorState, nodeDesc);
+	shouldDelete = true;
 	editorState->SetSelectedNode(nullptr);	
 }

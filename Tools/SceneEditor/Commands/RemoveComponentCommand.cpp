@@ -28,7 +28,6 @@ void RemoveComponentCommand::Do()
 	}
 	componentDesc->SetParent(nullptr);
 	shouldDelete = true;
-	editorState->sceneChanged(editorState);
 }
 
 void RemoveComponentCommand::Undo()
@@ -38,5 +37,4 @@ void RemoveComponentCommand::Undo()
 	componentDesc->SetParent(nodeDesc);
 	shouldDelete = false;
 	editorState->componentAdded(editorState, componentDesc);
-	editorState->sceneChanged(editorState);
 }

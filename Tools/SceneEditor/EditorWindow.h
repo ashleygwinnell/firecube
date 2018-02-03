@@ -36,8 +36,6 @@ private:
 	void CreateGrid(float size, unsigned int numberOfCells);
 	void HandleInput(float t, const FireCube::MappedInput &input);
 	void UpdateGizmo();
-	void SelectedNodeChanged(NodeDescriptor *nodeDesc);
-	void StateChanged();
 	void RenderDebugGeometry(NodeDescriptor *nodeDesc, FireCube::DebugRenderer *debugRenderer);
 	void StartMaterialPick();
 	void AddMesh(const std::string &path);

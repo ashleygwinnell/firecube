@@ -33,20 +33,9 @@ public:
 	std::map<FireCube::Node *, NodeDescriptor *> &GetNodeMap();
 	void SetRenderingLoopState(RenderingLoopState state);
 	RenderingLoopState GetRenderingLoopState() const;
-
-	FireCube::Event<NodeDescriptor *> selectedNodeChanged;
-	FireCube::Event<NodeDescriptor *> nodeAdded;
-	FireCube::Event<NodeDescriptor *> nodeRemoved;
-	FireCube::Event<NodeDescriptor *> nodeRenamed;
-	FireCube::Event<> stateChanged;	
-	FireCube::Event<> sceneChanged;
-	FireCube::Event<> nodeChanged;
-	FireCube::Event<> newSceneCreated;
+							
 	FireCube::Event<ComponentDescriptor *> componentRemoved;
 	FireCube::Event<ComponentDescriptor *> componentAdded;
-	FireCube::Event<Command *> commandExecuted;
-	FireCube::Event<Command *> undoPerformed;
-	FireCube::Event<Command *> redoPerformed;
 	FireCube::Event<> startMaterialPick;
 	FireCube::Event<FireCube::Material *> materialPicked;
 	FireCube::Event<> showMaterialEditor;

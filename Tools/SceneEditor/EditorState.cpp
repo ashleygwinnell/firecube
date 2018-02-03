@@ -32,9 +32,6 @@ void EditorState::ExecuteCommand(Command *command, Command *commandToReplace)
 		commands.push_back(command);
 		lastExecutedCommand = commands.size() - 1;
 	}
-
-	commandExecuted(this, command);
-	
 }
 
 void EditorState::Undo()
@@ -43,10 +40,7 @@ void EditorState::Undo()
 	{
 		commands[lastExecutedCommand]->Undo();
 		lastExecutedCommand--;
-		undoPerformed(this, commands[lastExecutedCommand + 1]);
 	}
-
-	stateChanged(this);
 }
 
 void EditorState::Redo()
@@ -54,17 +48,13 @@ void EditorState::Redo()
 	if (lastExecutedCommand < ((int) commands.size()) - 1 && commands.empty() == false)
 	{
 		lastExecutedCommand++;
-		commands[lastExecutedCommand]->Do();		
-		redoPerformed(this, commands[lastExecutedCommand]);
+		commands[lastExecutedCommand]->Do();
 	}
-
-	stateChanged(this);
 }
 
 void EditorState::SetSelectedNode(NodeDescriptor *selectedNode)
 {
 	this->selectedNode = selectedNode;
-	selectedNodeChanged(this, selectedNode);
 }
 
 NodeDescriptor *EditorState::GetSelectedNode()

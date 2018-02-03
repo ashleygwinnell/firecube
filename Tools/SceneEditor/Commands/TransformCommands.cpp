@@ -12,13 +12,11 @@ SetTranslationCommand::SetTranslationCommand(EditorState *editorState, const std
 void SetTranslationCommand::Do()
 {
 	target->SetTranslation(newTranslation);
-	editorState->nodeChanged(editorState);
 }
 
 void SetTranslationCommand::Undo()
 {
 	target->SetTranslation(oldTranslation);
-	editorState->nodeChanged(editorState);
 }
 
 SetRotationCommand::SetRotationCommand(EditorState *editorState, const std::string &description, NodeDescriptor *target, vec3 oldRotation, vec3 newRotation) : Command(editorState, description), target(target), oldRotation(oldRotation), newRotation(newRotation)
@@ -29,13 +27,11 @@ SetRotationCommand::SetRotationCommand(EditorState *editorState, const std::stri
 void SetRotationCommand::Do()
 {
 	target->SetRotation(newRotation);
-	editorState->nodeChanged(editorState);
 }
 
 void SetRotationCommand::Undo()
 {
 	target->SetRotation(oldRotation);
-	editorState->nodeChanged(editorState);
 }
 
 SetScaleCommand::SetScaleCommand(EditorState *editorState, const std::string &description, NodeDescriptor *target, vec3 oldScale, vec3 newScale) : Command(editorState, description), target(target), oldScale(oldScale), newScale(newScale)
@@ -46,11 +42,9 @@ SetScaleCommand::SetScaleCommand(EditorState *editorState, const std::string &de
 void SetScaleCommand::Do()
 {
 	target->SetScale(newScale);
-	editorState->nodeChanged(editorState);
 }
 
 void SetScaleCommand::Undo()
 {
 	target->SetScale(oldScale);
-	editorState->nodeChanged(editorState);
 }

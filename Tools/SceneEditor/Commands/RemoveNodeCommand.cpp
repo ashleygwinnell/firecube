@@ -20,7 +20,6 @@ void RemoveNodeCommand::Do()
 	node = nodeDesc->GetNode();
 	nodeDesc->Remove();
 	shouldDelete = true;
-	editorState->nodeRemoved(editorState, nodeDesc);
 	for (auto &component : nodeDesc->GetComponents())
 	{
 		editorState->componentRemoved(editorState, component);
@@ -32,7 +31,6 @@ void RemoveNodeCommand::Undo()
 {
 	nodeDesc->SetParent(parent);
 	shouldDelete = false;
-	editorState->nodeAdded(editorState, nodeDesc);
 	for (auto &component : nodeDesc->GetComponents())
 	{
 		editorState->componentAdded(editorState, component);

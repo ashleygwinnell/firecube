@@ -24,6 +24,7 @@ EditorWindow::EditorWindow(Engine *engine) : Object(engine), gridNode(nullptr), 
 
 void EditorWindow::Render()
 {
+	UpdateGizmo();
 	engine->GetRenderer()->SetRenderTarget(0, renderSurface);
 	engine->GetRenderer()->UpdateFrameBuffer();
 	if (editorState->GetSelectedNode())
@@ -57,6 +58,7 @@ void EditorWindow::Render()
 		ImGui::End();
 	}
 	ImGui::EndDock();
+
 	if (ImGui::BeginDragDropTarget())
 	{
 		const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("asset");
@@ -88,8 +90,6 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 	this->rootDesc = rootDesc;	
 
 	SubscribeToEvent(Events::HandleInput, &EditorWindow::HandleInput);
-	SubscribeToEvent(editorState, editorState->selectedNodeChanged, &EditorWindow::SelectedNodeChanged);
-	SubscribeToEvent(editorState, editorState->stateChanged, &EditorWindow::StateChanged);
 	SubscribeToEvent(editorState->startMaterialPick, &EditorWindow::StartMaterialPick);
 	SubscribeToEvent(editorState->addMesh, &EditorWindow::AddMesh);
 	SubscribeToEvent(editorState->addPrefab, &EditorWindow::AddPrefab);
@@ -121,8 +121,7 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 	editorState->GetNodeMap()[root]->AddComponent(physicsWorldDescriptor);
 	physicsWorldDescriptor->SetParent(editorState->GetNodeMap()[root]);
 	physicsWorldDescriptor->CreateComponent(root, engine);
-	editorState->nodeAdded(editorState, editorState->GetNodeMap()[root]);
-
+	
 	cameraTarget = root->CreateChild("Editor_CameraTarget");
 	Node *cameraNode = cameraTarget->CreateChild("Camera");
 	defaultCamera = cameraNode->CreateComponent<OrbitCamera>();
@@ -149,8 +148,6 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 	renderSurface = engine->GetRenderer()->GetRenderSurface(128, 128, RenderSurfaceType::COLOR);
 	engine->GetRenderer()->SetSceneView(1, new SceneView(engine, scene, currentCamera, renderSurface));
 	engine->GetRenderer()->SetSceneView(0, new SceneView(engine, editorScene, currentCamera, renderSurface, engine->GetResourceCache()->GetResource<RenderPath>("RenderPaths/ForwardNoClear.xml")));
-
-	editorState->newSceneCreated(editorState);	
 }
 
 void EditorWindow::CreateGrid(float size, unsigned int numberOfCells)
@@ -184,13 +181,11 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 		float deltaY = input.GetValue("MouseYDelta");
 		defaultCamera->RotateX(-deltaY / 60.0f);
 		defaultCamera->RotateY(-deltaX / 60.0f);
-		UpdateGizmo();
 	}
 
 	if (mouseOverView && input.HasValue("MouseWheelY"))
 	{
 		defaultCamera->Zoom(input.GetValue("MouseWheelY") * (engine->GetInputManager()->IsKeyDown(Key::LEFT_SHIFT) ? 20.0f : 80.0f));
-		UpdateGizmo();
 	}
 
 	if (input.IsStateOn("LeftDown"))
@@ -217,7 +212,6 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 				if (currentOperation == Operation3::OBJECT_TRANSFORM)
 				{
 					transformGizmo->PerformOperation(ray, vec2(mousePos.x, mousePos.y), editorState->GetSelectedNode());
-					UpdateGizmo();
 				}
 			}
 		}
@@ -232,7 +226,6 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 				if (currentOperation == Operation3::OBJECT_TRANSFORM)
 				{
 					transformGizmo->PerformOperation(ray, vec2(mousePos.x, mousePos.y), editorState->GetSelectedNode());
-					UpdateGizmo();
 				}
 			}
 		}
@@ -268,7 +261,6 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 				else
 				{
 					editorState->SetSelectedNode(nullptr);
-					UpdateGizmo();
 				}
 			}
 			else if (currentOperation == Operation3::OBJECT_TRANSFORM)
@@ -310,7 +302,6 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 	else if (input.IsActionTriggered("Esc"))
 	{
 		editorState->SetSelectedNode(nullptr);
-		UpdateGizmo();
 		currentOperation = Operation3::NONE;
 	}
 	else if (input.IsActionTriggered("Clone") && !ImGui::GetIO().WantCaptureKeyboard)
@@ -323,7 +314,6 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 			auto command = new AddNodeCommand(editorState, "Clone", clonedNode, nodeDesc->GetParent());
 			editorState->ExecuteCommand(command);
 			editorState->SetSelectedNode(clonedNode);
-			UpdateGizmo();			
 		}
 
 	}
@@ -341,7 +331,6 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 				vec3 newPos = editorState->GetSelectedNode()->GetNode()->GetWorldPosition();
 				newPos.y += -bbox.GetMin().y;
 				editorState->ExecuteCommand(new SetTranslationCommand(editorState, "Translate", editorState->GetSelectedNode(), editorState->GetSelectedNode()->GetNode()->GetWorldPosition(), newPos));
-				UpdateGizmo();				
 			}
 		}
 	}
@@ -350,7 +339,6 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 		if (editorState->GetSelectedNode())
 		{
 			cameraTarget->SetTranslation(editorState->GetSelectedNode()->GetNode()->GetWorldPosition());
-			UpdateGizmo();			
 		}
 	}
 	else if (input.IsActionTriggered("Delete") && !ImGui::GetIO().WantCaptureKeyboard)
@@ -376,18 +364,12 @@ void EditorWindow::UpdateGizmo()
 	}
 }
 
-void EditorWindow::SelectedNodeChanged(NodeDescriptor *nodeDesc)
-{
-	UpdateGizmo();
-}
-
 void EditorWindow::UseTranslateGizmo()
 {
 	if (transformGizmo != translateGizmo.Get())
 	{
 		transformGizmo->Hide();
-		transformGizmo = translateGizmo.Get();
-		UpdateGizmo();
+		transformGizmo = translateGizmo.Get();		
 
 		editorState->switchedToTranslateGizmo(editorState);
 	}
@@ -399,7 +381,6 @@ void EditorWindow::UseRotateGizmo()
 	{
 		transformGizmo->Hide();
 		transformGizmo = rotateGizmo.Get();
-		UpdateGizmo();
 
 		editorState->switchedToRotateGizmo(editorState);
 	}
@@ -411,15 +392,9 @@ void EditorWindow::UseScaleGizmo()
 	{
 		transformGizmo->Hide();
 		transformGizmo = scaleGizmo.Get();
-		UpdateGizmo();
 
 		editorState->switchedToScaleGizmo(editorState);
 	}
-}
-
-void EditorWindow::StateChanged()
-{
-	UpdateGizmo();	
 }
 
 void EditorWindow::UseDefaultCamera()

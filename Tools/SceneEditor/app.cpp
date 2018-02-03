@@ -231,8 +231,6 @@ void FireCubeApp::OpenSceneFile(const std::string &filename)
 	assetBrowserWindow->Reset();	
 
 	UpdateCamerasList();
-
-	editorState->sceneChanged(editorState);
 }
 
 void FireCubeApp::Reset()

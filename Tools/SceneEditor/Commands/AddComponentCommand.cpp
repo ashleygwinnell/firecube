@@ -24,7 +24,6 @@ void AddComponentCommand::Do()
 	componentDesc->SetParent(nodeDesc);
 	shouldDelete = false;
 	editorState->componentAdded(editorState, componentDesc);
-	editorState->sceneChanged(editorState);
 }
 
 void AddComponentCommand::Undo()
@@ -34,5 +33,4 @@ void AddComponentCommand::Undo()
 	nodeDesc->GetNode()->RemoveComponent(componentDesc->GetComponent());
 	componentDesc->SetParent(nullptr);
 	shouldDelete = true;
-	editorState->sceneChanged(editorState);
 }
