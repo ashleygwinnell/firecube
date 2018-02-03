@@ -3,7 +3,7 @@
 #include "Descriptors/NodeDescriptor.h"
 #include "EditorState.h"
 #include "SceneWriter.h"
-#include <iostream>
+#include "Commands/ReparentNodeCommand.h"
 
 using namespace FireCube;
 
@@ -38,6 +38,7 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 	auto children = root->GetChildren();
 	for (auto child : children)
 	{
+		bool renderChildren = true;
 		ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | (editorState->GetSelectedNode() == child ? ImGuiTreeNodeFlags_Selected : 0);
 		if (child->GetChildren().empty())
 		{
@@ -54,6 +55,33 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 		{
 			ImGui::PopStyleColor();
 		}
+
+		if (ImGui::IsItemActive())
+		{
+			if (ImGui::BeginDragDropSource())
+			{
+				ImGui::SetDragDropPayload("h_node", &child, sizeof(NodeDescriptor *));				
+				ImGui::Text(child->GetName().c_str());
+				ImGui::EndDragDropSource();
+			}
+		}
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("h_node");
+			if (payload)
+			{
+				NodeDescriptor *draggedNode = *((NodeDescriptor ** )payload->Data);
+				if (draggedNode != child && draggedNode->GetParent() != child)
+				{
+					auto reparentNodeCommand = new ReparentNodeCommand(editorState, "Reparent", draggedNode, child);
+					editorState->ExecuteCommand(reparentNodeCommand);
+					renderChildren = false;
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
+
 		if (editorState->GetSelectedNode() == child && ImGui::IsWindowFocused())
 		{
 			if (engine->GetInputManager()->IsKeyPressed(Key::U, KeyModifier::LEFT_ALT) || engine->GetInputManager()->IsKeyPressed(Key::D, KeyModifier::LEFT_ALT))
@@ -117,7 +145,7 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 			editorState->SetSelectedNode(child);
 		}
 
-		if (nodeOpen && child->GetChildren().empty() == false)
+		if (renderChildren && nodeOpen && child->GetChildren().empty() == false)
 		{
 			RenderChildren(child);
 			ImGui::TreePop();			
