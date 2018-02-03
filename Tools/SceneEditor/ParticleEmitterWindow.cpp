@@ -3,6 +3,7 @@
 #include "Commands/CustomCommand.h"
 #include "EditorState.h"
 #include "AssetUtils.h"
+#include "imgui_internal.h"
 
 using namespace FireCube;
 
@@ -202,6 +203,20 @@ void ParticleEmitterWindow::Render(EditorState *editorState, ParticleEmitterDesc
 				ImGui::EndCombo();
 			}
 		}
+		
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha *  (descriptor->IsEnabled() ? 0.5f : 1.0f));
+		if (ImGui::ButtonEx("Play", ImVec2(0, 0), descriptor->IsEnabled() ? ImGuiButtonFlags_Disabled : 0))
+		{
+			descriptor->SetEnabled(true);
+		}
+		ImGui::PopStyleVar();
+		ImGui::SameLine();
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha *  (descriptor->IsEnabled() ? 1.0f : 0.5f));
+		if (ImGui::ButtonEx("Stop", ImVec2(0, 0), descriptor->IsEnabled() ? 0 : ImGuiButtonFlags_Disabled))
+		{
+			descriptor->SetEnabled(false);
+		}
+		ImGui::PopStyleVar();
 	}
 }
 
