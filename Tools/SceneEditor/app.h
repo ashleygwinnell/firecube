@@ -53,6 +53,10 @@ public:
 	AssetBrowserWindow *assetBrowserWindow;
 	MaterialEditorWindow *materialEditorWindow;
 
+	FireCube::Texture2D *rotateTexture;
+	FireCube::Texture2D *translateTexture;
+	FireCube::Texture2D *scaleTexture;
+
 	bool showFileOpen;
 	bool showNewDialog;
 	bool showSaveAs;

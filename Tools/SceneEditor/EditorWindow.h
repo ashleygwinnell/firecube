@@ -29,14 +29,14 @@ public:
 	void UseCamera(CameraDescriptor *camera);
 	FireCube::Camera *GetCurrentCamera();
 	bool IsUsingDefaultCamera() const;
+	void UseTranslateGizmo();
+	void UseRotateGizmo();
+	void UseScaleGizmo();
 private:
 	void CreateGrid(float size, unsigned int numberOfCells);
 	void HandleInput(float t, const FireCube::MappedInput &input);
 	void UpdateGizmo();
 	void SelectedNodeChanged(NodeDescriptor *nodeDesc);
-	void UseTranslateGizmo();
-	void UseRotateGizmo();
-	void UseScaleGizmo();
 	void StateChanged();
 	void RenderDebugGeometry(NodeDescriptor *nodeDesc, FireCube::DebugRenderer *debugRenderer);
 	void StartMaterialPick();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "FireCube.h"
+#include "imgui.h"
 
 class EditorState;
 class Command;
@@ -125,3 +126,10 @@ private:
 	Command *prevCommand;
 	char val[256];
 };
+
+namespace ImGui
+{
+	IMGUI_API bool BeginToolbar(const char* str_id, ImVec2 screen_pos, ImVec2 size);
+	IMGUI_API void EndToolbar();
+	IMGUI_API bool ToolbarButton(ImTextureID texture, const ImVec4& bg_color, const char* tooltip);
+}

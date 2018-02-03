@@ -347,6 +347,26 @@ void FireCubeApp::Render(float t)
 		ImGui::PopItemWidth();
 		ImGui::EndMenuBar();
 	}
+
+	ImVec2 pos = ImGui::GetCursorScreenPos();
+	if (ImGui::BeginToolbar("main_tool_bar", pos, ImVec2(0, 24)))
+	{
+		if (ImGui::ToolbarButton((ImTextureID)translateTexture->GetObjectId(), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Translate"))
+		{
+			editorWindow->UseTranslateGizmo();
+		}
+		if (ImGui::ToolbarButton((ImTextureID)rotateTexture->GetObjectId(), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Rotate"))
+		{
+			editorWindow->UseRotateGizmo();
+		}
+		if (ImGui::ToolbarButton((ImTextureID)scaleTexture->GetObjectId(), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Scale"))
+		{
+			editorWindow->UseScaleGizmo();
+		}
+
+		ImGui::EndToolbar();
+	}
+
 	ImGui::BeginDockspace();	
 	{
 		hierarchyWindow->Render();
@@ -476,6 +496,10 @@ bool FireCubeApp::Prepare()
 	inspectorWindow->SetScene(&rootDesc, editorState);
 	assetBrowserWindow->SetScene(&rootDesc, editorState);
 	materialEditorWindow->SetScene(&rootDesc, editorState);
+
+	translateTexture = engine->GetResourceCache()->GetResource<Texture2D>("./Data/Icons/move.png");
+	rotateTexture = engine->GetResourceCache()->GetResource<Texture2D>("./Data/Icons/loop.png");
+	scaleTexture = engine->GetResourceCache()->GetResource<Texture2D>("./Data/Icons/resize.png");
 
 	ImGui::LoadDock();
 
