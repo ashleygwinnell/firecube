@@ -147,9 +147,6 @@
     <ClCompile Include="ThirdParty\imgui\imgui_impl_sdl_gl3.cpp">
       <Filter>ThirdParty\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="ThirdParty\imgui\imguidock.cpp">
-      <Filter>ThirdParty\imgui</Filter>
-    </ClCompile>
     <ClCompile Include="EditorWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -209,6 +206,9 @@
     </ClCompile>
     <ClCompile Include="MaterialEditorWindow.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\imgui\imgui_dock.cpp">
+      <Filter>ThirdParty\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -344,9 +344,6 @@
     <ClInclude Include="ThirdParty\imgui\imgui_user.h">
       <Filter>ThirdParty\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="ThirdParty\imgui\imguidock.h">
-      <Filter>ThirdParty\imgui</Filter>
-    </ClInclude>
     <ClInclude Include="EditorWindow.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -409,6 +406,9 @@
     </ClInclude>
     <ClInclude Include="MaterialEditorWindow.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\imgui\imgui_dock.h">
+      <Filter>ThirdParty\imgui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

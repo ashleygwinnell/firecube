@@ -19,7 +19,7 @@ void AssetBrowserWindow::Render()
 	NodeDescriptor *selectedNode = editorState->GetSelectedNode();
 
 	ImGui::SetNextDock(ImGuiDockSlot_Bottom);
-	if (ImGui::BeginDock("Asset Browser", &isOpen, 0, ImVec2(50, -1)))
+	if (ImGui::BeginDock("Asset Browser", &isOpen))
 	{
 		ImGui::Columns(3, "assetBrowserColumns", true);
 

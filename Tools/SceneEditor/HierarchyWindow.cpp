@@ -15,7 +15,7 @@ HierarchyWindow::HierarchyWindow(Engine *engine) : Object(engine), rootDesc(null
 void HierarchyWindow::Render()
 {
 	ImGui::SetNextDock(ImGuiDockSlot_Left);	
-	if (ImGui::BeginDock("Hierarchy", &isOpen, 0, ImVec2(50, -1)))
+	if (ImGui::BeginDock("Hierarchy", &isOpen))
 	{
 		RenderChildren(rootDesc);
 	}

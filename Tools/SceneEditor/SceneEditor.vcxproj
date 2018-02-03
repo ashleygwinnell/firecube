@@ -141,9 +141,9 @@
     <ClCompile Include="SphereWindow.cpp" />
     <ClCompile Include="StaticModelWindow.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui.cpp" />
-    <ClCompile Include="ThirdParty\imgui\imguidock.cpp" />
     <ClCompile Include="ThirdParty\imgui\imguifilesystem.cpp" />
     <ClCompile Include="ThirdParty\imgui\imguihelper.cpp" />
+    <ClCompile Include="ThirdParty\imgui\imgui_dock.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui_draw.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui_impl_sdl_gl3.cpp" />
   </ItemGroup>
@@ -204,9 +204,9 @@
     <ClInclude Include="ThirdParty\imgui\dirent_portable.h" />
     <ClInclude Include="ThirdParty\imgui\imconfig.h" />
     <ClInclude Include="ThirdParty\imgui\imgui.h" />
-    <ClInclude Include="ThirdParty\imgui\imguidock.h" />
     <ClInclude Include="ThirdParty\imgui\imguifilesystem.h" />
     <ClInclude Include="ThirdParty\imgui\imguihelper.h" />
+    <ClInclude Include="ThirdParty\imgui\imgui_dock.h" />
     <ClInclude Include="ThirdParty\imgui\imgui_impl_sdl_gl3.h" />
     <ClInclude Include="ThirdParty\imgui\imgui_internal.h" />
     <ClInclude Include="ThirdParty\imgui\imgui_user.h" />

@@ -20,7 +20,7 @@ void MaterialEditorWindow::Render()
 {	
 	bool prevIsOpen = isOpen;
 
-	if (ImGui::BeginDock("Material Editor", &isOpen, 0, ImVec2(350, 600)))
+	if (ImGui::BeginDock("Material Editor", &isOpen))
 	{
 		if (ImGui::Button("New"))
 		{

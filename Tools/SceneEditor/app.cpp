@@ -305,7 +305,7 @@ void FireCubeApp::Render(float t)
 			ImGui::MenuItem("Asset Browser", nullptr, assetBrowserWindow->GetIsOpenPtr());
 			if (ImGui::MenuItem("Save Layout"))
 			{
-				ImGui::SaveDock("default.ini");
+				ImGui::SaveDock();
 			}
 			ImGui::EndMenu();
 		}
@@ -477,7 +477,7 @@ bool FireCubeApp::Prepare()
 	assetBrowserWindow->SetScene(&rootDesc, editorState);
 	materialEditorWindow->SetScene(&rootDesc, editorState);
 
-	ImGui::LoadDock("default.ini");
+	ImGui::LoadDock();
 
 	return true;
 }
