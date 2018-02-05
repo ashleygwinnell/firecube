@@ -60,7 +60,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 #endif
 
 
-FireCubeApp::FireCubeApp() : showFileOpen(false), showNewDialog(false), showSaveAs(false)
+FireCubeApp::FireCubeApp() : showFileOpen(false), showNewDialog(false), showSaveAs(false), showSettingsPopup(false)
 {
 
 }
@@ -78,7 +78,6 @@ void FireCubeApp::Render(float t)
 	ImGui::Begin("MainWindow", nullptr, ImVec2(0, 0), 1.0f, flags);	
 	ImGui::GetStyle().WindowRounding = oldWindowRounding;	
 
-	
 	RenderMenuBar();
 	RenderToolbar();	
 
@@ -93,7 +92,32 @@ void FireCubeApp::Render(float t)
 	
 	RenderOpenDialog();
 	RenderNewDialog();
-	RenderSaveDialog();		
+	RenderSaveDialog();
+
+	static char externalCodeEditorPath[1024];
+	if (showSettingsPopup == true)
+	{
+		ImGui::OpenPopup("Settings");
+		std::copy(settings->externalCodeEditorPath.begin(), settings->externalCodeEditorPath.end(), externalCodeEditorPath);
+		externalCodeEditorPath[settings->externalCodeEditorPath.size()] = '\0';
+		showSettingsPopup = false;
+	}
+
+	if (ImGui::BeginPopupModal("Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::InputText("External Code Editor", externalCodeEditorPath, 1024);
+		if (ImGui::Button("Ok"))
+		{
+			settings->externalCodeEditorPath = externalCodeEditorPath;
+			ImGui::CloseCurrentPopup();
+		}
+
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
 
 	ImGui::EndDockspace();
 	ImGui::End();
@@ -121,6 +145,7 @@ void FireCubeApp::HandleSDLEvent(SDL_Event &event)
 bool FireCubeApp::Prepare()
 {
 	editorState = new EditorState(GetEngine());
+	settings = &editorState->GetSettings();
 
 	LoadSettingsFile();
 
@@ -254,11 +279,17 @@ void FireCubeApp::LoadSettingsFile()
 	if (!xmlDocument.LoadFile("settings.xml"))
 		return;
 
-	TiXmlElement *settings = xmlDocument.FirstChildElement("settings");
-	if (settings == nullptr)
+	TiXmlElement *settingsElement = xmlDocument.FirstChildElement("settings");
+	if (settingsElement == nullptr)
 		return;
 
-	TiXmlElement *e = settings->FirstChildElement("recent");
+	TiXmlElement *e = settingsElement->FirstChildElement("external_code_editor");
+	if (e)
+	{
+		settings->externalCodeEditorPath = e->Attribute("path");
+	}
+
+	e = settingsElement->FirstChildElement("recent");
 	if (e)
 	{
 		for (TiXmlElement *element = e->FirstChildElement("file"); element != nullptr; element = element->NextSiblingElement("file"))
@@ -268,7 +299,7 @@ void FireCubeApp::LoadSettingsFile()
 			{
 				continue;
 			}
-			recentSceneFiles.push_back(filename);
+			settings->recentSceneFiles.push_back(filename);
 		}
 	}
 }
@@ -279,10 +310,14 @@ void FireCubeApp::WriteSettingsFile()
 	TiXmlElement *settingsElement = new TiXmlElement("settings");
 	doc.LinkEndChild(settingsElement);
 
+	TiXmlElement *element = new TiXmlElement("external_code_editor");
+	settingsElement->LinkEndChild(element);
+	element->SetAttribute("path", settings->externalCodeEditorPath);
+
 	TiXmlElement *recentFilesElement = new TiXmlElement("recent");
 	settingsElement->LinkEndChild(recentFilesElement);
 
-	for (auto &sceneFile : recentSceneFiles)
+	for (auto &sceneFile : settings->recentSceneFiles)
 	{
 		TiXmlElement *element = new TiXmlElement("file");
 		recentFilesElement->LinkEndChild(element);
@@ -407,11 +442,11 @@ void FireCubeApp::RenderMenuBar()
 				showSaveAs = true;
 			}
 
-			if (recentSceneFiles.empty() == false)
+			if (settings->recentSceneFiles.empty() == false)
 			{
 				ImGui::Separator();
 				std::string selectedFile;
-				for (auto &filename : recentSceneFiles)
+				for (auto &filename : settings->recentSceneFiles)
 				{
 					if (ImGui::MenuItem(filename.c_str()))
 					{
@@ -421,8 +456,8 @@ void FireCubeApp::RenderMenuBar()
 
 				if (selectedFile.empty() == false && selectedFile != editorState->GetCurrentSceneFile())
 				{
-					recentSceneFiles.erase(std::remove(recentSceneFiles.begin(), recentSceneFiles.end(), selectedFile), recentSceneFiles.end());
-					recentSceneFiles.insert(recentSceneFiles.begin(), selectedFile);
+					settings->recentSceneFiles.erase(std::remove(settings->recentSceneFiles.begin(), settings->recentSceneFiles.end(), selectedFile), settings->recentSceneFiles.end());
+					settings->recentSceneFiles.insert(settings->recentSceneFiles.begin(), selectedFile);
 
 					OpenSceneFile(selectedFile);
 				}
@@ -600,6 +635,10 @@ void FireCubeApp::RenderMenuBar()
 			ImGui::MenuItem("Inspector", nullptr, inspectorWindow->GetIsOpenPtr());
 			ImGui::MenuItem("Material Editor", nullptr, materialEditorWindow->GetIsOpenPtr());
 			ImGui::MenuItem("Asset Browser", nullptr, assetBrowserWindow->GetIsOpenPtr());
+			if (ImGui::MenuItem("Settings"))
+			{
+				showSettingsPopup = true;
+			}
 			if (ImGui::MenuItem("Save Layout"))
 			{
 				ImGui::SaveDock();
@@ -679,11 +718,11 @@ void FireCubeApp::RenderOpenDialog()
 		OpenSceneFile(path);
 
 		const unsigned int maxRecentFiles = 10;
-		recentSceneFiles.erase(std::remove(recentSceneFiles.begin(), recentSceneFiles.end(), path), recentSceneFiles.end());
-		recentSceneFiles.insert(recentSceneFiles.begin(), path);
-		if (recentSceneFiles.size() > maxRecentFiles)
+		settings->recentSceneFiles.erase(std::remove(settings->recentSceneFiles.begin(), settings->recentSceneFiles.end(), path), settings->recentSceneFiles.end());
+		settings->recentSceneFiles.insert(settings->recentSceneFiles.begin(), path);
+		if (settings->recentSceneFiles.size() > maxRecentFiles)
 		{
-			recentSceneFiles.pop_back();
+			settings->recentSceneFiles.pop_back();
 		}
 	}
 }

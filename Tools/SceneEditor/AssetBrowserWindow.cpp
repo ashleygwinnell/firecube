@@ -70,6 +70,13 @@ void AssetBrowserWindow::Render()
 							std::string prefabFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), item.path);
 							editorState->addPrefab(editorState, prefabFileName);
 						}
+						else if (item.assetType == AssetType::SCRIPT)
+						{							
+							if (editorState->GetSettings().externalCodeEditorPath.empty() == false)
+							{
+								ShellExecuteA(nullptr, nullptr, editorState->GetSettings().externalCodeEditorPath.c_str(), item.path.c_str(), nullptr, SW_SHOW);
+							}
+						}
 					}
 					else
 					{

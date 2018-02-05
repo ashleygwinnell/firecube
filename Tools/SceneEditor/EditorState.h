@@ -12,6 +12,13 @@ enum class RenderingLoopState
 	RUNNING, PAUSED, STOPPED
 };
 
+class Settings
+{
+public:
+	std::vector<std::string> recentSceneFiles;
+	std::string externalCodeEditorPath;
+};
+
 class EditorState : public FireCube::Object
 {
 	FIRECUBE_OBJECT(EditorState)
@@ -33,6 +40,7 @@ public:
 	std::map<FireCube::Node *, NodeDescriptor *> &GetNodeMap();
 	void SetRenderingLoopState(RenderingLoopState state);
 	RenderingLoopState GetRenderingLoopState() const;
+	Settings &GetSettings();
 							
 	FireCube::Event<ComponentDescriptor *> componentRemoved;
 	FireCube::Event<ComponentDescriptor *> componentAdded;
@@ -51,7 +59,7 @@ public:
 	FireCube::Event<> resetParticleEmitters;
 
 private:
-	
+	Settings settings;
 	NodeDescriptor *selectedNode;
 	std::vector<Command *> commands;
 	int lastExecutedCommand;

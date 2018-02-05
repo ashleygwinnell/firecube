@@ -29,7 +29,6 @@ public:
 	FireCube::Scene *scene;
 	EditorState *editorState;
 	NodeDescriptor rootDesc;
-	std::vector<std::string> recentSceneFiles;
 	std::vector<std::pair<std::string, CameraDescriptor *>> cameras;
 
 	EditorWindow *editorWindow;
@@ -45,6 +44,7 @@ public:
 	bool showFileOpen;
 	bool showNewDialog;
 	bool showSaveAs;
+	bool showSettingsPopup;
 private:
 	void Render(float t);
 	void Update(float t) {};
@@ -66,4 +66,6 @@ private:
 	void RenderOpenDialog();
 	void RenderNewDialog();
 	void RenderSaveDialog();
+
+	Settings *settings;
 };

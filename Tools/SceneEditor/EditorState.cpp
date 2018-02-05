@@ -126,6 +126,11 @@ RenderingLoopState EditorState::GetRenderingLoopState() const
 	return renderingLoopState;
 }
 
+Settings &EditorState::GetSettings()
+{
+	return settings;
+}
+
 void EditorState::SetRenderingLoopState(RenderingLoopState state)
 {
 	renderingLoopState = state;
