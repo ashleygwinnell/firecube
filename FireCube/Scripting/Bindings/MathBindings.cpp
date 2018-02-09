@@ -100,6 +100,8 @@ void LuaBindings::InitMath(sol::state &luaState)
 		"GetDirection", &mat4::GetDirection,
 		"Identity", &mat4::Identity,
 		"Translate", sol::resolve<void(const vec3 &)>(&mat4::Translate),		
+		"Inverse", &mat4::Inverse,
+		sol::meta_function::multiplication, sol::resolve<vec3(const vec3&) const>(&mat4::operator*),
 		"m00", sol::property(&MatHelper<mat4>::Get<0>, &MatHelper<mat4>::Set<0>),
 		"m10", sol::property(&MatHelper<mat4>::Get<1>, &MatHelper<mat4>::Set<1>),
 		"m20", sol::property(&MatHelper<mat4>::Get<2>, &MatHelper<mat4>::Set<2>),
