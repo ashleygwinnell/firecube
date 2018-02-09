@@ -164,12 +164,29 @@ void InputManager::SetRawKeyState(Key key, bool pressed, bool previouslyPressed,
 	for (unsigned int j = 0; j < i->second.size(); j++)
 	{
 		InputMapping &keyMapping = i->second[j];
-		if (keyMapping.inputMappingType == InputMappingType::ACTION && ((keyMapping.modifier == KeyModifier::ANY) || (keyMapping.modifier == KeyModifier::NONE && modifier == KeyModifier::NONE) || ((keyMapping.modifier & modifier) != KeyModifier::NONE)) && !pressed && previouslyPressed)
+		bool shiftOk = (keyMapping.modifier & KeyModifier::SHIFT) != KeyModifier::NONE ? ((keyMapping.modifier & KeyModifier::SHIFT & modifier) != KeyModifier::NONE) : 
+			(modifier & KeyModifier::SHIFT) == KeyModifier::NONE;
+		
+		bool ctrlOk = (keyMapping.modifier & KeyModifier::CTRL) != KeyModifier::NONE ? ((keyMapping.modifier & KeyModifier::CTRL & modifier) != KeyModifier::NONE) : 
+			(modifier & KeyModifier::CTRL) == KeyModifier::NONE;
+		
+		bool altOk = (keyMapping.modifier & KeyModifier::ALT) != KeyModifier::NONE ? ((keyMapping.modifier & KeyModifier::ALT & modifier) != KeyModifier::NONE) : 
+			(modifier & KeyModifier::ALT) == KeyModifier::NONE;
+		
+		if (keyMapping.inputMappingType == InputMappingType::ACTION && ((keyMapping.modifier == KeyModifier::ANY)			
+			|| (altOk && shiftOk && ctrlOk)) && !pressed && previouslyPressed)
+		{
 			mappedInput.actions.insert(keyMapping.actionName);
-		else if (keyMapping.inputMappingType == InputMappingType::STATE && ((keyMapping.modifier == KeyModifier::ANY) || (keyMapping.modifier == KeyModifier::NONE && modifier == KeyModifier::NONE) || ((keyMapping.modifier & modifier) != KeyModifier::NONE)) && pressed)
+		}
+		else if (keyMapping.inputMappingType == InputMappingType::STATE && ((keyMapping.modifier == KeyModifier::ANY)			
+			|| (altOk && shiftOk && ctrlOk)) && pressed)
+		{
 			mappedInput.states.insert(keyMapping.actionName);
+		}
 		else if (keyMapping.inputMappingType == InputMappingType::STATE && !pressed)
+		{
 			mappedInput.states.erase(keyMapping.actionName);
+		}
 	}	
 }
 
