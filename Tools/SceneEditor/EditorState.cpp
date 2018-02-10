@@ -55,6 +55,7 @@ void EditorState::Redo()
 void EditorState::SetSelectedNode(NodeDescriptor *selectedNode)
 {
 	this->selectedNode = selectedNode;
+	selectedNodeChanged(this, selectedNode);
 }
 
 NodeDescriptor *EditorState::GetSelectedNode()

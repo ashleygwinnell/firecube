@@ -41,7 +41,8 @@ public:
 	void SetRenderingLoopState(RenderingLoopState state);
 	RenderingLoopState GetRenderingLoopState() const;
 	Settings &GetSettings();
-							
+
+	FireCube::Event<NodeDescriptor *> selectedNodeChanged;
 	FireCube::Event<ComponentDescriptor *> componentRemoved;
 	FireCube::Event<ComponentDescriptor *> componentAdded;
 	FireCube::Event<> startMaterialPick;

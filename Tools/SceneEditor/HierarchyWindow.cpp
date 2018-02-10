@@ -7,7 +7,7 @@
 
 using namespace FireCube;
 
-HierarchyWindow::HierarchyWindow(Engine *engine) : Object(engine), rootDesc(nullptr), isOpen(true)
+HierarchyWindow::HierarchyWindow(Engine *engine) : Object(engine), rootDesc(nullptr), isOpen(true), newSelectedNode(nullptr)
 {
 
 }
@@ -36,12 +36,16 @@ void HierarchyWindow::Render()
 		}
 	}
 	ImGui::EndDock();
+
+	newSelectedNode = nullptr;
 }
 
 void HierarchyWindow::SetScene(NodeDescriptor *rootDesc, EditorState *editorState)
 {
 	this->rootDesc = rootDesc;
 	this->editorState = editorState;
+
+	SubscribeToEvent(editorState->selectedNodeChanged, &HierarchyWindow::SelectedNodeChanged);
 }
 
 bool *HierarchyWindow::GetIsOpenPtr()
@@ -60,12 +64,26 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 		{
 			nodeFlags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 		}
+
+		{
+			NodeDescriptor *t = newSelectedNode ? newSelectedNode->GetParent() : nullptr;
+			while (t)
+			{
+				if (t == child)
+				{
+					ImGui::SetNextTreeNodeOpen(true, ImGuiCond_Once);
+					break;
+				}
+				t = t->GetParent();
+			}
+		}
 		
 		ImGui::PushID(child);
 		if (child->IsPrefab())
 		{
 			ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor(1.0f, 0.0f, 0.0));
 		}
+		
 		bool nodeOpen = ImGui::TreeNodeEx(child->GetName().c_str(), nodeFlags);
 		if (child->IsPrefab())
 		{
@@ -166,4 +184,9 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 			ImGui::TreePop();			
 		}		
 	}
+}
+
+void HierarchyWindow::SelectedNodeChanged(NodeDescriptor *node)
+{
+	newSelectedNode = node;
 }

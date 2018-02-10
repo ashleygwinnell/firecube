@@ -16,8 +16,10 @@ public:
 private:
 
 	void RenderChildren(NodeDescriptor *root);
+	void SelectedNodeChanged(NodeDescriptor *node);
 
 	NodeDescriptor *rootDesc;
+	NodeDescriptor *newSelectedNode;
 	EditorState *editorState;
 	bool isOpen;
 };
