@@ -508,7 +508,7 @@ void FireCubeApp::RenderMenuBar()
 			if (ImGui::MenuItem("Node"))
 			{
 				auto nodeDesc = new NodeDescriptor("Node");
-				auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, &rootDesc);
+				auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, editorState->GetSelectedNode() ? editorState->GetSelectedNode() : &rootDesc);
 				editorState->ExecuteCommand(addNodeCommand);
 			}
 			if (ImGui::BeginMenu("Component"))
