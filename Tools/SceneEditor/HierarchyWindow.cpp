@@ -17,7 +17,23 @@ void HierarchyWindow::Render()
 	ImGui::SetNextDock(ImGuiDockSlot_Left);	
 	if (ImGui::BeginDock("Hierarchy", &isOpen))
 	{
+		ImGui::BeginChild("hierarchy_list");
 		RenderChildren(rootDesc);
+		ImGui::EndChild();
+		if (ImGui::BeginDragDropTarget())
+		{
+			const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("h_node");
+			if (payload)
+			{
+				NodeDescriptor *draggedNode = *((NodeDescriptor **)payload->Data);
+				if (draggedNode->GetParent() != rootDesc)
+				{
+					auto reparentNodeCommand = new ReparentNodeCommand(editorState, "Reparent", draggedNode, rootDesc);
+					editorState->ExecuteCommand(reparentNodeCommand);
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
 	}
 	ImGui::EndDock();
 }
@@ -107,7 +123,6 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 					}
 				}
 			}
-			
 		}
 		
 		if (ImGui::BeginPopupContextItem("context menu"))
