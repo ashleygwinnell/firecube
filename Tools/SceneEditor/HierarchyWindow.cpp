@@ -58,9 +58,10 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 	auto children = root->GetChildren();
 	for (auto child : children)
 	{
+		bool childHasChildren = child->GetChildren().empty() == false;
 		bool renderChildren = true;
 		ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | (editorState->GetSelectedNode() == child ? ImGuiTreeNodeFlags_Selected : 0);
-		if (child->GetChildren().empty())
+		if (!childHasChildren)
 		{
 			nodeFlags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 		}
@@ -178,9 +179,12 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 			editorState->SetSelectedNode(child);
 		}
 
-		if (renderChildren && nodeOpen && child->GetChildren().empty() == false)
+		if (nodeOpen && childHasChildren)
 		{
-			RenderChildren(child);
+			if (renderChildren)
+			{
+				RenderChildren(child);
+			}
 			ImGui::TreePop();			
 		}		
 	}
