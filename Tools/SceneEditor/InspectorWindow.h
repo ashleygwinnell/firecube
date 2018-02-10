@@ -13,6 +13,7 @@
 #include "SphereWindow.h"
 #include "ParticleEmitterWindow.h"
 #include "CameraWindow.h"
+#include "Descriptors/ComponentDescriptor.h"
 
 class NodeDescriptor;
 class EditorState;
@@ -47,4 +48,5 @@ private:
 	ParticleEmitterWindow particleEmitterWindow;
 	CameraWindow cameraWindow;
 	bool isOpen;
+	std::map<ComponentType, std::string> componentTypeToLabel;
 };

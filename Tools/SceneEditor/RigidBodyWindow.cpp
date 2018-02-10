@@ -12,13 +12,10 @@ RigidBodyWindow::RigidBodyWindow(FireCube::Engine *engine) : Object(engine)
 
 void RigidBodyWindow::Render(EditorState *editorState, RigidBodyDescriptor *descriptor)
 {
-	if (ImGui::CollapsingHeader("RigidBody", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		massInput.Render("Mass", editorState, "Change Mass", [descriptor]() {
-			return descriptor->GetMass();
-		}, [descriptor](float newValue) {
-			descriptor->SetMass(newValue);
-		});
-	}
+	massInput.Render("Mass", editorState, "Change Mass", [descriptor]() {
+		return descriptor->GetMass();
+	}, [descriptor](float newValue) {
+		descriptor->SetMass(newValue);
+	});
 }
 

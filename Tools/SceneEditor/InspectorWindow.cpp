@@ -5,13 +5,27 @@
 #include "Commands/TransformCommands.h"
 #include "Commands/RenameNodeCommand.h"
 #include "Descriptors/ComponentDescriptor.h"
+#include "Commands/RemoveComponentCommand.h"
 
 using namespace FireCube;
 
 InspectorWindow::InspectorWindow(Engine *engine) : Object(engine), staticModelWindow(engine), lightWindow(engine), luaScriptWindow(engine), collisionShapeWindow(engine),
 characterControllerWindow(engine), boxWindow(engine), rigidBodyWindow(engine), planeWindow(engine), sphereWindow(engine), particleEmitterWindow(engine), cameraWindow(engine), isOpen(true)
 {
-
+	componentTypeToLabel = { 
+		{ ComponentType::BOX, "Box"},
+		{ ComponentType::PLANE, "Plane" },
+		{ ComponentType::SPHERE, "Sphere" },
+		{ ComponentType::STATIC_MODEL, "StaticModel" },
+		{ ComponentType::LIGHT, "Light" },
+		{ ComponentType::PARTICLE_EMITTER, "ParticleEmitter" },
+		{ ComponentType::COLLISION_SHAPE, "CollisionShape" },
+		{ ComponentType::LUA_SCRIPT, "LuaScript" },
+		{ ComponentType::CAMERA, "Camera" },
+		{ ComponentType::CHARACTER_CONTROLLER, "CharacterController" },
+		{ ComponentType::PHYSICS_WORLD, "PhysicsWorld" },
+		{ ComponentType::RIGID_BODY, "RigidBody" },	
+	};
 }
 
 void InspectorWindow::Render()
@@ -56,49 +70,60 @@ void InspectorWindow::Render()
 			auto components = selectedNode->GetComponents();
 			for (auto component : components)
 			{
-				if (component->GetType() == ComponentType::STATIC_MODEL)
+				bool componentOpen = true;
+				bool isOpen = true;
+				if (ImGui::CollapsingHeader(componentTypeToLabel[component->GetType()].c_str(), &componentOpen, ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					staticModelWindow.Render(editorState, (StaticModelDescriptor *)component);
+					if (component->GetType() == ComponentType::STATIC_MODEL)
+					{
+						staticModelWindow.Render(editorState, (StaticModelDescriptor *)component);
+					}
+					else if (component->GetType() == ComponentType::LIGHT)
+					{
+						lightWindow.Render(editorState, (LightDescriptor *)component);
+					}
+					else if (component->GetType() == ComponentType::LUA_SCRIPT)
+					{
+						luaScriptWindow.Render(editorState, (LuaScriptDescriptor *)component);
+					}
+					else if (component->GetType() == ComponentType::COLLISION_SHAPE)
+					{
+						collisionShapeWindow.Render(editorState, (CollisionShapeDescriptor *)component);
+					}
+					else if (component->GetType() == ComponentType::CHARACTER_CONTROLLER)
+					{
+						characterControllerWindow.Render(editorState, (CharacterControllerDescriptor *)component);
+					}
+					else if (component->GetType() == ComponentType::BOX)
+					{
+						boxWindow.Render(editorState, (BoxDescriptor *)component);
+					}
+					else if (component->GetType() == ComponentType::RIGID_BODY)
+					{
+						rigidBodyWindow.Render(editorState, (RigidBodyDescriptor *)component);
+					}
+					else if (component->GetType() == ComponentType::PLANE)
+					{
+						planeWindow.Render(editorState, (PlaneDescriptor *)component);
+					}
+					else if (component->GetType() == ComponentType::SPHERE)
+					{
+						sphereWindow.Render(editorState, (SphereDescriptor *)component);
+					}
+					else if (component->GetType() == ComponentType::PARTICLE_EMITTER)
+					{
+						particleEmitterWindow.Render(editorState, (ParticleEmitterDescriptor *)component);
+					}
+					else if (component->GetType() == ComponentType::CAMERA)
+					{
+						cameraWindow.Render(editorState, (CameraDescriptor *)component);
+					}
 				}
-				else if (component->GetType() == ComponentType::LIGHT)
+
+				if (componentOpen == false)
 				{
-					lightWindow.Render(editorState, (LightDescriptor *)component);
-				}
-				else if (component->GetType() == ComponentType::LUA_SCRIPT)
-				{
-					luaScriptWindow.Render(editorState, (LuaScriptDescriptor *)component);
-				}
-				else if (component->GetType() == ComponentType::COLLISION_SHAPE)
-				{
-					collisionShapeWindow.Render(editorState, (CollisionShapeDescriptor *)component);
-				}
-				else if (component->GetType() == ComponentType::CHARACTER_CONTROLLER)
-				{
-					characterControllerWindow.Render(editorState, (CharacterControllerDescriptor *)component);
-				}
-				else if (component->GetType() == ComponentType::BOX)
-				{
-					boxWindow.Render(editorState, (BoxDescriptor *)component);
-				}
-				else if (component->GetType() == ComponentType::RIGID_BODY)
-				{
-					rigidBodyWindow.Render(editorState, (RigidBodyDescriptor *)component);
-				}
-				else if (component->GetType() == ComponentType::PLANE)
-				{
-					planeWindow.Render(editorState, (PlaneDescriptor *)component);
-				}
-				else if (component->GetType() == ComponentType::SPHERE)
-				{
-					sphereWindow.Render(editorState, (SphereDescriptor *)component);
-				}
-				else if (component->GetType() == ComponentType::PARTICLE_EMITTER)
-				{
-					particleEmitterWindow.Render(editorState, (ParticleEmitterDescriptor *)component);
-				}
-				else if (component->GetType() == ComponentType::CAMERA)
-				{
-					cameraWindow.Render(editorState, (CameraDescriptor *)component);
+					auto removeComponentCommand = new RemoveComponentCommand(editorState, "Remove Component", component->GetParent(), component, engine);
+					editorState->ExecuteCommand(removeComponentCommand);
 				}
 			}
 		}
