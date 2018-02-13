@@ -106,11 +106,13 @@ void FireCubeApp::Render(float t)
 	if (ImGui::BeginPopupModal("Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 	{
 		ImGui::InputText("External Code Editor", externalCodeEditorPath, 1024);
+		ImGui::Separator();
 		if (ImGui::Button("Ok"))
 		{
 			settings->externalCodeEditorPath = externalCodeEditorPath;
 			ImGui::CloseCurrentPopup();
 		}
+		ImGui::SameLine();
 
 		if (ImGui::Button("Cancel"))
 		{
