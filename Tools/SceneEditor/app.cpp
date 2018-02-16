@@ -60,7 +60,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 #endif
 
 
-FireCubeApp::FireCubeApp() : showFileOpen(false), showNewDialog(false), showSaveAs(false), showSettingsPopup(false)
+FireCubeApp::FireCubeApp() : showFileOpen(false), showNewDialog(false), showSaveAs(false), showSettingsPopup(false), showImportMeshPopup(false)
 {
 
 }
@@ -113,7 +113,59 @@ void FireCubeApp::Render(float t)
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
 
+	static char importAssetPath[1024] = "";
+
+	if (showImportMeshPopup == true)
+	{
+		ImGui::OpenPopup("Import Mesh");
+		importAssetPath[0] = '\0';
+		showImportMeshPopup = false;
+	}
+
+	if (ImGui::BeginPopupModal("Import Mesh", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Path");
+		ImGui::SameLine();
+		ImGui::InputText("##Path", importAssetPath, 1024);
+		ImGui::SameLine();
+		if (ImGui::Button("..."))
+		{
+			OPENFILENAMEA ofn;
+			ZeroMemory(&ofn, sizeof(ofn));
+			ofn.lStructSize = sizeof(ofn);
+			ofn.hwndOwner = NULL;
+			ofn.lpstrFile = importAssetPath;
+			ofn.lpstrFile[0] = '\0';
+			ofn.nMaxFile = sizeof(importAssetPath);
+			ofn.lpstrFilter = "All\0*.*\0";
+			ofn.nFilterIndex = 1;
+			ofn.lpstrFileTitle = NULL;
+			ofn.nMaxFileTitle = 0;
+			ofn.lpstrInitialDir = NULL;
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+			GetOpenFileNameA(&ofn);
+
+		}
+		ImGui::Separator();
+		if (ImGui::Button("Import"))
+		{
+			std::string meshFileName = importAssetPath;
+			std::replace(meshFileName.begin(), meshFileName.end(), '/', '\\');
+
+			if (!Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), meshFileName))
+			{
+				AssetUtils::ImportMesh(engine, meshFileName);
+			}
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
 		if (ImGui::Button("Cancel"))
 		{
 			ImGui::CloseCurrentPopup();
@@ -627,6 +679,15 @@ void FireCubeApp::RenderMenuBar()
 					editorState->ExecuteCommand(addComponentCommand);
 				}
 				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Import"))
+		{
+			if (ImGui::MenuItem("Mesh"))
+			{
+				showImportMeshPopup = true;
 			}
 			ImGui::EndMenu();
 		}
