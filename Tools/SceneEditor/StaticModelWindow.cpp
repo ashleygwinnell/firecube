@@ -15,32 +15,22 @@ StaticModelWindow::StaticModelWindow(Engine *engine) : Object(engine)
 void StaticModelWindow::Render(EditorState *editorState, StaticModelDescriptor *descriptor)
 {
 	std::string meshFileName = descriptor->GetMeshFilename();
+	std::string selectedPath;
 	ImGui::InputText("", &meshFileName[0], meshFileName.size() + 1, ImGuiInputTextFlags_ReadOnly);
 	ImGui::SameLine();
-	bool showFileOpen = ImGui::Button("...##meshOpenButton");
+	if (ImGui::Button("...##meshOpenButton"))
+	{
+		ImGuiHelpers::ShowAssetSelectionPopup("Select Mesh");
+	}
 	ImGui::SameLine();
 	ImGui::Text("Mesh");
-	const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Models").c_str(), nullptr, "Select a file", ImVec2(600, 400), ImVec2(100, 100));
-	std::string newMeshFileName = chosenPath;
-	if (newMeshFileName.empty() == false)
+	if (ImGuiHelpers::AssetSelectionPopup("Select Mesh", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Models"), selectedPath))
 	{
-		std::replace(newMeshFileName.begin(), newMeshFileName.end(), '/', '\\');
-
-		if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), newMeshFileName))
-		{
-			newMeshFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), newMeshFileName);
-		}
-		else
-		{
-			AssetUtils::ImportMesh(engine, newMeshFileName);
-			newMeshFileName = "Models" + Filesystem::PATH_SEPARATOR + Filesystem::GetLastPathComponent(newMeshFileName);
-		}
-
+		selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
 		std::string oldMeshFileName = descriptor->GetMeshFilename();
-		//meshFilePicker->SetPath(newMeshFileName);
-		auto command = new CustomCommand(editorState, "Change Mesh", [descriptor, newMeshFileName, this]()
+		auto command = new CustomCommand(editorState, "Change Mesh", [descriptor, selectedPath, this]()
 		{
-			descriptor->SetMeshFilename(newMeshFileName, engine);
+			descriptor->SetMeshFilename(selectedPath, engine);
 			descriptor->componentChanged(nullptr);
 		}, [descriptor, oldMeshFileName, this]()
 		{

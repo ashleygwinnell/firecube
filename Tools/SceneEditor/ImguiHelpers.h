@@ -127,6 +127,12 @@ private:
 	char val[256];
 };
 
+namespace ImGuiHelpers
+{
+	void ShowAssetSelectionPopup(const std::string &title);
+	bool AssetSelectionPopup(const std::string &title, const std::string &basePath, std::string &selectedPath);
+}
+
 namespace ImGui
 {
 	IMGUI_API bool BeginToolbar(const char* str_id, ImVec2 screen_pos, ImVec2 size);

@@ -16,39 +16,29 @@ LuaScriptWindow::LuaScriptWindow(Engine *engine) : Object(engine)
 
 void LuaScriptWindow::Render(EditorState *editorState, LuaScriptDescriptor *descriptor)
 {
+	std::string selectedPath;
 	std::string scriptFileName = descriptor->GetScriptFilename();
 	ImGui::InputText("", &scriptFileName[0], scriptFileName.size() + 1, ImGuiInputTextFlags_ReadOnly);
 	ImGui::SameLine();
-	bool showFileOpen = ImGui::Button("...");
+	if (ImGui::Button("...##scriptOpenButton"))
+	{
+		ImGuiHelpers::ShowAssetSelectionPopup("Select Script");
+	}
 	ImGui::SameLine();
 	ImGui::Text("Script");
-	const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Scripts").c_str(), nullptr, "Select a file", ImVec2(600, 400), ImVec2(100, 100));
-	std::string newScriptFileName = chosenPath;
-	if (newScriptFileName.empty() == false)
+	if (ImGuiHelpers::AssetSelectionPopup("Select Script", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Scripts"), selectedPath))
 	{
-		std::replace(newScriptFileName.begin(), newScriptFileName.end(), '/', '\\');
+		selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
+		std::replace(selectedPath.begin(), selectedPath.end(), '/', '\\');
 
-		if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), newScriptFileName))
-		{
-			newScriptFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), newScriptFileName);
-		}
-		else
-		{
-			std::string filename = Filesystem::GetLastPathComponent(newScriptFileName);
-			std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts";
-			Filesystem::CreateFolder(targetPath);
-			Filesystem::CopyPath(newScriptFileName, targetPath + Filesystem::PATH_SEPARATOR + filename);
-			newScriptFileName = "Scripts" + Filesystem::PATH_SEPARATOR + filename;
-		}
-
-		std::string oldScriptFileName = descriptor->GetScriptFilename();			
+		std::string oldScriptFileName = descriptor->GetScriptFilename();
 		std::string oldObjectName = descriptor->GetObjectName();
 
-		std::string newObjectName = GetObjectNameFromScript(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + newScriptFileName);
+		std::string newObjectName = GetObjectNameFromScript(Filesystem::JoinPath(Filesystem::GetAssetsFolder(), selectedPath));
 
-		auto command = new CustomCommand(editorState, "Change Script", [descriptor, newScriptFileName, newObjectName]()
+		auto command = new CustomCommand(editorState, "Change Script", [descriptor, selectedPath, newObjectName]()
 		{
-			descriptor->SetScriptFilename(newScriptFileName);
+			descriptor->SetScriptFilename(selectedPath);
 			if (newObjectName.empty() == false)
 			{
 				descriptor->SetObjectName(newObjectName);

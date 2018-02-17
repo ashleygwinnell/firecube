@@ -16,8 +16,7 @@ public:
 	void Render(EditorState *editorState, LuaScriptDescriptor *descriptor);
 private:
 	std::string GetObjectNameFromScript(const std::string &filename);
-
-	ImGuiFs::Dialog openDialog;
+	
 	TextInputHelper objectNameInput;	
 	std::map<int, TextInputHelper> propertyNameInputs;
 	std::map<int, TextInputHelper> propertyValueInputs;

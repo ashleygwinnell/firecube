@@ -18,5 +18,4 @@ private:
 	HexInputHelper lightMaskInput;	
 	HexInputHelper collisionQueryMaskInput;
 	CheckBoxHelper castShadowCheckBox;
-	ImGuiFs::Dialog openDialog;
 };

@@ -524,3 +524,95 @@ namespace ImGui
 		if (GImGui->CurrentWindowStack.Size > 1) SetCursorScreenPos(pos + ImVec2(0, size.y + GetStyle().FramePadding.y * 2));
 	}
 }
+
+std::vector<std::tuple<std::string, std::string, bool>> GetItemsInPath(const std::string &path)
+{
+	std::vector<std::tuple<std::string, std::string, bool>> ret;
+	std::string pattern(path);
+	pattern.append("\\*");
+	WIN32_FIND_DATAA data;
+	HANDLE hFind;
+	if ((hFind = FindFirstFileA(pattern.c_str(), &data)) != INVALID_HANDLE_VALUE)
+	{
+		do
+		{
+			std::string p = data.cFileName;
+			if (p != "." && p != "..")
+			{
+				bool isDirectory = (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
+				std::string label = isDirectory ? "[" + Filesystem::GetLastPathComponent(p) + "]" : Filesystem::GetLastPathComponent(p);
+				std::tuple<std::string, std::string, bool> item = { label, Filesystem::JoinPath(path, p), isDirectory };
+				ret.push_back(item);
+			}
+		} while (FindNextFileA(hFind, &data) != 0);
+		FindClose(hFind);
+	}
+
+	return ret;
+}
+
+void ImGuiHelpers::ShowAssetSelectionPopup(const std::string &title)
+{
+	ImGui::OpenPopup(title.c_str());
+}
+
+bool ImGuiHelpers::AssetSelectionPopup(const std::string &title, const std::string &basePath, std::string &selectedPath)
+{
+	if (!ImGui::IsPopupOpen(title.c_str()))
+	{
+		return false;
+	}
+	static std::string curBasePath;
+	static std::string curPath;
+	static std::string lastPath;
+	static std::vector<std::tuple<std::string, std::string, bool>> curItems;
+	bool ret = false;
+	if (curBasePath != basePath || lastPath != curPath)
+	{
+		if (curBasePath != basePath)
+		{
+			curBasePath = curPath = lastPath = basePath;
+		}
+
+		if (lastPath != curPath)
+		{
+			lastPath = curPath;
+		}
+		curItems = GetItemsInPath(curPath);
+	}
+	if (ImGui::BeginPopup(title.c_str()))
+	{
+		if (curPath != curBasePath)
+		{
+			if (ImGui::Selectable("..", false, ImGuiSelectableFlags_DontClosePopups))
+			{
+				curPath = Filesystem::GetDirectoryName(curPath);
+			}
+		}
+		for (auto &item : curItems)
+		{
+			if (std::get<2>(item))
+			{
+				if (ImGui::Selectable(std::get<0>(item).c_str(), false, ImGuiSelectableFlags_DontClosePopups))
+				{
+					curPath = std::get<1>(item);
+				}
+			}
+		}
+
+		for (auto &item : curItems)
+		{
+			if (!std::get<2>(item))
+			{
+				if (ImGui::Selectable(std::get<0>(item).c_str()))
+				{
+					ret = true;
+					selectedPath = std::get<1>(item);
+				}
+			}
+		}
+		ImGui::EndPopup();
+	}
+
+	return ret;
+}
