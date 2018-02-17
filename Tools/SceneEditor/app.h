@@ -49,6 +49,7 @@ public:
 	bool showImportScriptPopup;
 	bool showImportMaterialPopup;
 	bool showImportTexturePopup;
+	bool showImportTechniquePopup;
 private:
 	void Render(float t);
 	void Update(float t) {};
