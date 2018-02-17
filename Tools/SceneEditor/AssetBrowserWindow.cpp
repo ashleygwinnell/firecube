@@ -191,13 +191,14 @@ void AssetBrowserWindow::Render()
 
 				if (ImGui::IsItemActive())
 				{
-					if (item.assetType == AssetType::MESH || item.assetType == AssetType::PREFAB || item.assetType == AssetType::TEXTURE || item.assetType == AssetType::TECHNIQUE)
+					if (item.isDirectory == false && (item.assetType == AssetType::MESH || item.assetType == AssetType::PREFAB || item.assetType == AssetType::TEXTURE 
+						|| item.assetType == AssetType::TECHNIQUE || item.assetType == AssetType::SCRIPT))
 					{
 						if (ImGui::BeginDragDropSource())
 						{
 							unsigned int size;
 							char *data = AssetUtils::SerializeAssetDescription(item.assetType, item.path, size);							
-							std::string payloadType = item.assetType == AssetType::MESH || item.assetType == AssetType::PREFAB ? "asset" : "me_asset";
+							std::string payloadType = item.assetType == AssetType::MESH || item.assetType == AssetType::PREFAB || item.assetType == AssetType::SCRIPT ? "asset" : "me_asset";
 							ImGui::SetDragDropPayload(payloadType.c_str(), data, size);
 							delete[] data;
 							if (item.assetType == AssetType::MESH)
@@ -215,6 +216,10 @@ void AssetBrowserWindow::Render()
 							else if (item.assetType == AssetType::TECHNIQUE)
 							{
 								ImGui::Text("Technique");
+							}
+							else if (item.assetType == AssetType::SCRIPT)
+							{
+								ImGui::Text("Script");
 							}
 							ImGui::EndDragDropSource();
 						}

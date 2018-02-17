@@ -18,6 +18,7 @@ void LuaScriptWindow::Render(EditorState *editorState, LuaScriptDescriptor *desc
 {
 	std::string selectedPath;
 	std::string scriptFileName = descriptor->GetScriptFilename();
+	ImGui::BeginGroup();
 	ImGui::InputText("", &scriptFileName[0], scriptFileName.size() + 1, ImGuiInputTextFlags_ReadOnly);
 	ImGui::SameLine();
 	if (ImGui::Button("...##scriptOpenButton"))
@@ -26,6 +27,46 @@ void LuaScriptWindow::Render(EditorState *editorState, LuaScriptDescriptor *desc
 	}
 	ImGui::SameLine();
 	ImGui::Text("Script");
+	ImGui::EndGroup();
+	if (ImGui::BeginDragDropTarget())
+	{
+		const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("asset");
+		if (payload)
+		{
+			AssetType type;
+			std::string path;
+			AssetUtils::DeserializeAssetDescription((const char *)payload->Data, type, path);
+			std::replace(path.begin(), path.end(), '\\', '/');
+			path = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
+
+			if (type == AssetType::SCRIPT)
+			{
+				std::string oldScriptFileName = descriptor->GetScriptFilename();
+				std::string oldObjectName = descriptor->GetObjectName();
+
+				std::string newObjectName = GetObjectNameFromScript(Filesystem::JoinPath(Filesystem::GetAssetsFolder(), path));
+
+				auto command = new CustomCommand(editorState, "Change Script", [descriptor, path, newObjectName]()
+				{
+					descriptor->SetScriptFilename(path);
+					if (newObjectName.empty() == false)
+					{
+						descriptor->SetObjectName(newObjectName);
+					}
+					descriptor->componentChanged(nullptr);
+				}, [descriptor, oldScriptFileName, oldObjectName]()
+				{
+					descriptor->SetScriptFilename(oldScriptFileName);
+					descriptor->SetObjectName(oldObjectName);
+					descriptor->componentChanged(nullptr);
+				});
+
+				editorState->ExecuteCommand(command);
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+
 	if (ImGuiHelpers::AssetSelectionPopup("Select Script", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Scripts"), selectedPath))
 	{
 		selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);

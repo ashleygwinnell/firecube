@@ -8,6 +8,7 @@
 #include "Commands/RemoveComponentCommand.h"
 #include "AssetUtils.h"
 #include "Descriptors/StaticModelDescriptor.h"
+#include "Descriptors/LuaScriptDescriptor.h"
 #include "Commands/AddComponentCommand.h"
 
 using namespace FireCube;
@@ -132,7 +133,7 @@ void InspectorWindow::Render()
 		}
 	}
 	ImGui::EndDock();
-	if (ImGui::BeginDragDropTarget())
+	if (selectedNode && ImGui::BeginDragDropTarget())
 	{
 		const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("asset");
 		if (payload)
@@ -148,6 +149,13 @@ void InspectorWindow::Render()
 				auto staticModelDescriptor = new StaticModelDescriptor();
 				staticModelDescriptor->SetMeshFilename(path, engine);
 				auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel", selectedNode, staticModelDescriptor, engine);
+				editorState->ExecuteCommand(addComponentCommand);
+			}
+			else if (type == AssetType::SCRIPT)
+			{
+				auto luaScriptDescriptor = new LuaScriptDescriptor();
+				luaScriptDescriptor->SetScriptFilename(path);
+				auto addComponentCommand = new AddComponentCommand(editorState, "Add LuaScript", selectedNode, luaScriptDescriptor, engine);
 				editorState->ExecuteCommand(addComponentCommand);
 			}
 		}
