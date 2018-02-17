@@ -2,6 +2,7 @@
 #include "imgui.h"
 #include "AssetUtils.h"
 #include "EditorState.h"
+#include "ImguiHelpers.h"
 
 using namespace FireCube;
 
@@ -297,7 +298,8 @@ void MaterialEditorWindow::Render()
 			const std::string textureTypesLabels[] = { "Diffuse texture" , "Normal texture", "Specular texture" };
 
 			for (int i = 0; i < 3; ++i)
-			{			
+			{
+				std::string selectedPath;
 				TextureUnit textureUnit = textureTypes[i];
 				std::string label = textureTypesLabels[i];
 
@@ -306,17 +308,17 @@ void MaterialEditorWindow::Render()
 				std::string filename = material->GetTexture(textureUnit) ? material->GetTexture(textureUnit)->GetFileName() : "";
 				ImGui::InputText("", &filename[0], filename.size() + 1, ImGuiInputTextFlags_ReadOnly);
 				ImGui::SameLine();
-				bool showFileOpen = ImGui::Button("...");
+				if (ImGui::Button("..."))
+				{
+					ImGuiHelpers::ShowAssetSelectionPopup("Select Texture");
+				}
 				ImGui::SameLine();
 				ImGui::Text(label.c_str());
-				const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Textures").c_str(), nullptr, "Select a file", ImVec2(600, 400), ImVec2(100, 100));
-				std::string newFileName = chosenPath;
-				if (newFileName.empty() == false)
+				if (ImGuiHelpers::AssetSelectionPopup("Select Texture", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Textures"), selectedPath))
 				{
-					std::replace(newFileName.begin(), newFileName.end(), '/', '\\');
-
-					newFileName = AssetUtils::ImportTextureIfNeeded(newFileName);				
-					material->SetTexture(textureUnit, engine->GetResourceCache()->GetResource<Texture2D>(newFileName));
+					selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
+					std::replace(selectedPath.begin(), selectedPath.end(), '/', '\\');
+					material->SetTexture(textureUnit, engine->GetResourceCache()->GetResource<Texture2D>(selectedPath));
 				}
 				ImGui::PopID();
 				ImGui::EndGroup();
@@ -341,22 +343,23 @@ void MaterialEditorWindow::Render()
 			}
 
 			{
+				std::string selectedPath;
 				ImGui::BeginGroup();
 				ImGui::PushID("technique");
 				std::string filename = material->GetTechnique() ? material->GetTechnique()->GetFileName() : "";
 				ImGui::InputText("", &filename[0], filename.size() + 1, ImGuiInputTextFlags_ReadOnly);
 				ImGui::SameLine();
-				bool showFileOpen = ImGui::Button("...");
+				if (ImGui::Button("..."))
+				{
+					ImGuiHelpers::ShowAssetSelectionPopup("Select Technique");
+				}
 				ImGui::SameLine();
 				ImGui::Text("Technique");
-				const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Techniques").c_str(), nullptr, "Select a file", ImVec2(600, 400), ImVec2(100, 100));
-				std::string newFileName = chosenPath;
-				if (newFileName.empty() == false)
+				if (ImGuiHelpers::AssetSelectionPopup("Select Technique", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Techniques"), selectedPath))
 				{
-					std::replace(newFileName.begin(), newFileName.end(), '/', '\\');
-
-					newFileName = AssetUtils::ImportTechniqueIfNeeded(newFileName);
-					material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>(newFileName));
+					selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
+					std::replace(selectedPath.begin(), selectedPath.end(), '/', '\\');
+					material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>(selectedPath));
 				}
 				ImGui::PopID();
 				ImGui::EndGroup();

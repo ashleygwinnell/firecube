@@ -48,6 +48,7 @@ public:
 	bool showImportMeshPopup;
 	bool showImportScriptPopup;
 	bool showImportMaterialPopup;
+	bool showImportTexturePopup;
 private:
 	void Render(float t);
 	void Update(float t) {};

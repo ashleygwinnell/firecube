@@ -61,7 +61,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 
 FireCubeApp::FireCubeApp() : showFileOpen(false), showNewDialog(false), showSaveAs(false), showSettingsPopup(false), showImportMeshPopup(false), 
-	showImportScriptPopup(false), showImportMaterialPopup(false)
+	showImportScriptPopup(false), showImportMaterialPopup(false), showImportTexturePopup(false)
 {
 
 }
@@ -142,6 +142,13 @@ void FireCubeApp::Render(float t)
 		ImGui::OpenPopup("Import Material");
 		importAssetPath[0] = '\0';
 		showImportMaterialPopup = false;
+	}
+
+	if (showImportTexturePopup == true)
+	{
+		ImGui::OpenPopup("Import Texture");
+		importAssetPath[0] = '\0';
+		showImportTexturePopup = false;
 	}
 
 	if (ImGui::BeginPopupModal("Import Mesh", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
@@ -263,6 +270,46 @@ void FireCubeApp::Render(float t)
 			std::replace(materialFileName.begin(), materialFileName.end(), '/', '\\');
 
 			AssetUtils::ImportMaterialIfNeeded(materialFileName);
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
+
+	if (ImGui::BeginPopupModal("Import Texture", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Path");
+		ImGui::SameLine();
+		ImGui::InputText("##Path", importAssetPath, 1024);
+		ImGui::SameLine();
+		if (ImGui::Button("..."))
+		{
+			OPENFILENAMEA ofn;
+			ZeroMemory(&ofn, sizeof(ofn));
+			ofn.lStructSize = sizeof(ofn);
+			ofn.hwndOwner = NULL;
+			ofn.lpstrFile = importAssetPath;
+			ofn.lpstrFile[0] = '\0';
+			ofn.nMaxFile = sizeof(importAssetPath);
+			ofn.lpstrFilter = "Images\0*.*\0";
+			ofn.nFilterIndex = 1;
+			ofn.lpstrFileTitle = NULL;
+			ofn.nMaxFileTitle = 0;
+			ofn.lpstrInitialDir = NULL;
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+			GetOpenFileNameA(&ofn);
+		}
+		ImGui::Separator();
+		if (ImGui::Button("Import"))
+		{
+			std::string textureFileName = importAssetPath;
+			std::replace(textureFileName.begin(), textureFileName.end(), '/', '\\');
+
+			AssetUtils::ImportTextureIfNeeded(textureFileName);
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::SameLine();
@@ -796,6 +843,10 @@ void FireCubeApp::RenderMenuBar()
 			if (ImGui::MenuItem("Material"))
 			{
 				showImportMaterialPopup = true;
+			}
+			if (ImGui::MenuItem("Texture"))
+			{
+				showImportTexturePopup = true;
 			}
 			ImGui::EndMenu();
 		}
