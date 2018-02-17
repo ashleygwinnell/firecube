@@ -6,6 +6,9 @@
 #include "Commands/RenameNodeCommand.h"
 #include "Descriptors/ComponentDescriptor.h"
 #include "Commands/RemoveComponentCommand.h"
+#include "AssetUtils.h"
+#include "Descriptors/StaticModelDescriptor.h"
+#include "Commands/AddComponentCommand.h"
 
 using namespace FireCube;
 
@@ -127,9 +130,29 @@ void InspectorWindow::Render()
 				}
 			}
 		}
-
 	}
 	ImGui::EndDock();
+	if (ImGui::BeginDragDropTarget())
+	{
+		const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("asset");
+		if (payload)
+		{
+			AssetType type;
+			std::string path;
+			AssetUtils::DeserializeAssetDescription((const char *)payload->Data, type, path);
+			std::replace(path.begin(), path.end(), '\\', '/');
+			path = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
+
+			if (type == AssetType::MESH)
+			{
+				auto staticModelDescriptor = new StaticModelDescriptor();
+				staticModelDescriptor->SetMeshFilename(path, engine);
+				auto addComponentCommand = new AddComponentCommand(editorState, "Add StaticModel", selectedNode, staticModelDescriptor, engine);
+				editorState->ExecuteCommand(addComponentCommand);
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
 }
 
 void InspectorWindow::SetScene(NodeDescriptor *rootDesc, EditorState *editorState)
