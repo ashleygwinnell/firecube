@@ -556,5 +556,20 @@ std::vector<AssetBrowserWindow::FileInfo> AssetBrowserWindow::GetItemsInPath(con
 		FindClose(hFind);
 	}
 
+	std::sort(ret.begin(), ret.end(), [](const FileInfo &first, const FileInfo &second) {
+		if (first.isDirectory && !second.isDirectory)
+		{
+			return true;
+		}
+		else if (!first.isDirectory && second.isDirectory)
+		{
+			return false;
+		}
+		else
+		{
+			return first.label < second.label;
+		}
+	});
+
 	return ret;
 }
