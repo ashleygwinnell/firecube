@@ -127,21 +127,25 @@ void CollisionShapeWindow::Render(EditorState *editorState, CollisionShapeDescri
 	}
 	else if (descriptor->GetShapeType() == CollisionShapeType::TRIANGLE_MESH)
 	{
+		std::string selectedPath;
 		std::string meshFileName = descriptor->GetMeshFilename();
 		ImGui::InputText("", &meshFileName[0], meshFileName.size() + 1, ImGuiInputTextFlags_ReadOnly);
 		ImGui::SameLine();
-		bool showFileOpen = ImGui::Button("...");
+		if (ImGui::Button("..."))
+		{
+			ImGuiHelpers::ShowAssetSelectionPopup("Select Mesh");
+		}
 		ImGui::SameLine();
 		ImGui::Text("Mesh");
-		const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Models").c_str(), nullptr, "Select a file", ImVec2(600, 400), ImVec2(100, 100));
-		std::string newMeshFileName = chosenPath;
-		if (newMeshFileName.empty() == false)
+		if (ImGuiHelpers::AssetSelectionPopup("Select Mesh", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Models"), selectedPath))
 		{
+			selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
+			std::replace(selectedPath.begin(), selectedPath.end(), '/', '\\');
 			std::string oldMeshFileName = descriptor->GetMeshFilename();
 
-			auto command = new CustomCommand(editorState, "Change Mesh", [descriptor, newMeshFileName, this]()
+			auto command = new CustomCommand(editorState, "Change Mesh", [descriptor, selectedPath, this]()
 			{
-				descriptor->SetMesh(newMeshFileName, engine);
+				descriptor->SetMesh(selectedPath, engine);
 				descriptor->componentChanged(nullptr);
 			}, [descriptor, oldMeshFileName, this]()
 			{

@@ -15,8 +15,6 @@ public:
 	CollisionShapeWindow(FireCube::Engine *engine);
 	void Render(EditorState *editorState, CollisionShapeDescriptor *descriptor);
 private:	
-
-	ImGuiFs::Dialog openDialog;
 	Vec3InputHelper boxMinInput;
 	Vec3InputHelper boxMaxInput;
 	Vec4InputHelper planeInput;

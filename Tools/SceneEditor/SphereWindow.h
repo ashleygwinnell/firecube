@@ -18,7 +18,6 @@ private:
 	FloatInputHelper radiusInput;
 	UIntInputHelper columnsInput;
 	UIntInputHelper ringsInput;
-	ImGuiFs::Dialog openDialog;
 	HexInputHelper lightMaskInput;
 	HexInputHelper collisionQueryMaskInput;
 	CheckBoxHelper castShadowCheckBox;

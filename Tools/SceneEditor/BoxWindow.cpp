@@ -13,6 +13,7 @@ BoxWindow::BoxWindow(FireCube::Engine *engine) : Object(engine)
 
 void BoxWindow::Render(EditorState *editorState, BoxDescriptor *descriptor)
 {
+	std::string selectedPath;
 	sizeInput.Render("Size", editorState, "Change Size", [descriptor]() {
 		return descriptor->GetSize();
 	}, [descriptor, this](vec3 newValue) {
@@ -22,19 +23,21 @@ void BoxWindow::Render(EditorState *editorState, BoxDescriptor *descriptor)
 	std::string materialFileName = descriptor->GetMaterialFileName();
 	ImGui::InputText("", &materialFileName[0], materialFileName.size() + 1, ImGuiInputTextFlags_ReadOnly);
 	ImGui::SameLine();
-	bool showFileOpen = ImGui::Button("...");
+	if (ImGui::Button("..."))
+	{
+		ImGuiHelpers::ShowAssetSelectionPopup("Select Material");
+	}
 	ImGui::SameLine();
 	ImGui::Text("Material");
-	const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Materials").c_str(), nullptr, "Select a file", ImVec2(600, 400), ImVec2(100, 100));
-	std::string newMaterialFileName = chosenPath;
-	if (newMaterialFileName.empty() == false)
+	if (ImGuiHelpers::AssetSelectionPopup("Select Material", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Materials"), selectedPath))
 	{
-		std::string newValue = AssetUtils::ImportMaterialIfNeeded(newMaterialFileName);
+		selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
+		std::replace(selectedPath.begin(), selectedPath.end(), '/', '\\');
 		std::string oldValue = descriptor->GetMaterialFileName();
 
-		auto command = new CustomCommand(editorState, "Change Material", [descriptor, newValue, this]()
+		auto command = new CustomCommand(editorState, "Change Material", [descriptor, selectedPath, this]()
 		{
-			descriptor->SetMaterialFileName(newValue, engine);
+			descriptor->SetMaterialFileName(selectedPath, engine);
 			descriptor->componentChanged(nullptr);
 		}, [descriptor, oldValue, this]()
 		{

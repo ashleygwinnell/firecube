@@ -20,7 +20,6 @@ private:
 	UIntInputHelper particleCountInput;
 	UIntInputHelper emissionRateInput;
 	UIntInputHelper ringsInput;
-	ImGuiFs::Dialog openDialog;
 	CheckBoxHelper prewarmCheckBox;
 	Vec2InputHelper lifeTimeInput;
 	Vec2InputHelper speedInput;

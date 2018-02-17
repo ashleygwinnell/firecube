@@ -131,22 +131,25 @@ void ParticleEmitterWindow::Render(EditorState *editorState, ParticleEmitterDesc
 	});
 
 	{
+		std::string selectedPath;
 		std::string materialFileName = descriptor->GetMaterial();
 		ImGui::InputText("", &materialFileName[0], materialFileName.size() + 1, ImGuiInputTextFlags_ReadOnly);
 		ImGui::SameLine();
-		bool showFileOpen = ImGui::Button("...");
+		if (ImGui::Button("..."))
+		{
+			ImGuiHelpers::ShowAssetSelectionPopup("Select Material");
+		}
 		ImGui::SameLine();
 		ImGui::Text("Material");
-		const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Materials").c_str(), nullptr, "Select a file", ImVec2(600, 400), ImVec2(100, 100));
-		std::string newMaterialFileName = chosenPath;
-		if (newMaterialFileName.empty() == false)
+		if (ImGuiHelpers::AssetSelectionPopup("Select Material", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Materials"), selectedPath))
 		{
-			std::string newValue = AssetUtils::ImportMaterialIfNeeded(newMaterialFileName);
+			selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
+			std::replace(selectedPath.begin(), selectedPath.end(), '/', '\\');
 			std::string oldValue = descriptor->GetMaterial();
 
-			auto command = new CustomCommand(editorState, "Change Material", [descriptor, newValue, this]()
+			auto command = new CustomCommand(editorState, "Change Material", [descriptor, selectedPath, this]()
 			{
-				descriptor->SetMaterial(newValue, engine);
+				descriptor->SetMaterial(selectedPath, engine);
 				descriptor->componentChanged(nullptr);
 			}, [descriptor, oldValue, this]()
 			{

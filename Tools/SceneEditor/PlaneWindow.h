@@ -16,7 +16,6 @@ public:
 	void Render(EditorState *editorState, PlaneDescriptor *descriptor);
 private:
 	Vec2InputHelper sizeInput;
-	ImGuiFs::Dialog openDialog;
 	HexInputHelper lightMaskInput;
 	HexInputHelper collisionQueryMaskInput;
 	CheckBoxHelper castShadowCheckBox;
