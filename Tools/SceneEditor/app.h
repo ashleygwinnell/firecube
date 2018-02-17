@@ -46,6 +46,7 @@ public:
 	bool showSaveAs;
 	bool showSettingsPopup;
 	bool showImportMeshPopup;
+	bool showImportScriptPopup;
 private:
 	void Render(float t);
 	void Update(float t) {};
