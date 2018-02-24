@@ -21,7 +21,7 @@ typedef struct _SDL_Haptic SDL_Haptic;
 class GameControllerState
 {
 public:
-	int deviceId;
+	int joystickId;
 	SDL_GameController *gameController;
 	SDL_Haptic *haptic;
 };
@@ -145,7 +145,7 @@ private:
 	void InitKeyMap();
 	void ProcessInput(const SDL_Event &event);
 	void AddGameController(int deviceId);
-	void RemoveGameController(int deviceId);
+	void RemoveGameController(int joystickId);
 
 	std::map<int, Key> keyMap;
 	std::map<int, bool> keyState;

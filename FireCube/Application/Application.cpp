@@ -511,8 +511,9 @@ void Application::AddGameController(int deviceId)
 {
 	GameControllerState state;
 	state.gameController = SDL_GameControllerOpen(deviceId);
-	state.deviceId = deviceId;
 	SDL_Joystick *joystickHandle = SDL_GameControllerGetJoystick(state.gameController);
+	state.joystickId = SDL_JoystickInstanceID(joystickHandle);
+
 	if (SDL_JoystickIsHaptic(joystickHandle))
 	{
 		state.haptic = SDL_HapticOpenFromJoystick(joystickHandle);
@@ -528,10 +529,10 @@ void Application::AddGameController(int deviceId)
 	gameControllers.push_back(state);
 }
 
-void Application::RemoveGameController(int deviceId)
+void Application::RemoveGameController(int joystickId)
 {
-	auto newEnd = std::remove_if(gameControllers.begin(), gameControllers.end(), [deviceId](const GameControllerState &state) {
-		return state.deviceId == deviceId;
+	auto newEnd = std::remove_if(gameControllers.begin(), gameControllers.end(), [joystickId](const GameControllerState &state) {
+		return state.joystickId == joystickId;
 	});
 
 	gameControllers.erase(newEnd, gameControllers.end());
