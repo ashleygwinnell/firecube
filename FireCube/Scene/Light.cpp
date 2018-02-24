@@ -153,7 +153,9 @@ void Light::RenderDebugGeometry(DebugRenderer *debugRenderer)
 	case FireCube::LightType::SPOT:
 	{
 		Frustum frustum;
-		frustum.Extract(camera->GetViewMatrix(), camera->GetProjectionMatrix());
+		mat4 projection = mat4::IDENTITY;
+		projection.GeneratePerspective(spotCutOff * 180.0f / PI, 1.0f, 0.1f, range);
+		frustum.Extract(camera->GetViewMatrix(), projection);
 		debugRenderer->AddFrustum(frustum, vec3(0, 1, 0));
 		break;
 	}
