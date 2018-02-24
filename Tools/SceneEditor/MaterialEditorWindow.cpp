@@ -314,10 +314,8 @@ void MaterialEditorWindow::Render()
 				}
 				ImGui::SameLine();
 				ImGui::Text(label.c_str());
-				if (ImGuiHelpers::AssetSelectionPopup("Select Texture", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Textures"), selectedPath))
+				if (ImGuiHelpers::AssetSelectionPopup("Select Texture", AssetType::TEXTURE, selectedPath))
 				{
-					selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
-					std::replace(selectedPath.begin(), selectedPath.end(), '/', '\\');
 					material->SetTexture(textureUnit, engine->GetResourceCache()->GetResource<Texture2D>(selectedPath));
 				}
 				ImGui::PopID();
@@ -355,10 +353,8 @@ void MaterialEditorWindow::Render()
 				}
 				ImGui::SameLine();
 				ImGui::Text("Technique");
-				if (ImGuiHelpers::AssetSelectionPopup("Select Technique", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Techniques"), selectedPath))
+				if (ImGuiHelpers::AssetSelectionPopup("Select Technique", AssetType::TECHNIQUE, selectedPath))
 				{
-					selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
-					std::replace(selectedPath.begin(), selectedPath.end(), '/', '\\');
 					material->SetTechnique(engine->GetResourceCache()->GetResource<Technique>(selectedPath));
 				}
 				ImGui::PopID();

@@ -67,11 +67,8 @@ void LuaScriptWindow::Render(EditorState *editorState, LuaScriptDescriptor *desc
 		ImGui::EndDragDropTarget();
 	}
 
-	if (ImGuiHelpers::AssetSelectionPopup("Select Script", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Scripts"), selectedPath))
+	if (ImGuiHelpers::AssetSelectionPopup("Select Script", AssetType::SCRIPT, selectedPath))
 	{
-		selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
-		std::replace(selectedPath.begin(), selectedPath.end(), '/', '\\');
-
 		std::string oldScriptFileName = descriptor->GetScriptFilename();
 		std::string oldObjectName = descriptor->GetObjectName();
 

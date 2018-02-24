@@ -58,9 +58,8 @@ void StaticModelWindow::Render(EditorState *editorState, StaticModelDescriptor *
 		}
 		ImGui::EndDragDropTarget();
 	}
-	if (ImGuiHelpers::AssetSelectionPopup("Select Mesh", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Models"), selectedPath))
+	if (ImGuiHelpers::AssetSelectionPopup("Select Mesh", AssetType::MESH, selectedPath))
 	{
-		selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
 		std::string oldMeshFileName = descriptor->GetMeshFilename();
 		auto command = new CustomCommand(editorState, "Change Mesh", [descriptor, selectedPath, this]()
 		{

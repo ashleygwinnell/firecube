@@ -141,10 +141,8 @@ void ParticleEmitterWindow::Render(EditorState *editorState, ParticleEmitterDesc
 		}
 		ImGui::SameLine();
 		ImGui::Text("Material");
-		if (ImGuiHelpers::AssetSelectionPopup("Select Material", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Materials"), selectedPath))
+		if (ImGuiHelpers::AssetSelectionPopup("Select Material", AssetType::MATERIAL, selectedPath))
 		{
-			selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
-			std::replace(selectedPath.begin(), selectedPath.end(), '/', '\\');
 			std::string oldValue = descriptor->GetMaterial();
 
 			auto command = new CustomCommand(editorState, "Change Material", [descriptor, selectedPath, this]()

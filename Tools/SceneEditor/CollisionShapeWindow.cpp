@@ -137,10 +137,8 @@ void CollisionShapeWindow::Render(EditorState *editorState, CollisionShapeDescri
 		}
 		ImGui::SameLine();
 		ImGui::Text("Mesh");
-		if (ImGuiHelpers::AssetSelectionPopup("Select Mesh", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Models"), selectedPath))
+		if (ImGuiHelpers::AssetSelectionPopup("Select Mesh", AssetType::MESH, selectedPath))
 		{
-			selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
-			std::replace(selectedPath.begin(), selectedPath.end(), '/', '\\');
 			std::string oldMeshFileName = descriptor->GetMeshFilename();
 
 			auto command = new CustomCommand(editorState, "Change Mesh", [descriptor, selectedPath, this]()

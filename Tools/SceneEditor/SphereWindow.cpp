@@ -41,10 +41,8 @@ void SphereWindow::Render(EditorState *editorState, SphereDescriptor *descriptor
 	}
 	ImGui::SameLine();
 	ImGui::Text("Material");
-	if (ImGuiHelpers::AssetSelectionPopup("Select Material", Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Materials"), selectedPath))
+	if (ImGuiHelpers::AssetSelectionPopup("Select Material", AssetType::MATERIAL, selectedPath))
 	{
-		selectedPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), selectedPath);
-		std::replace(selectedPath.begin(), selectedPath.end(), '/', '\\');
 		std::string oldValue = descriptor->GetMaterialFileName();
 
 		auto command = new CustomCommand(editorState, "Change Material", [descriptor, selectedPath, this]()

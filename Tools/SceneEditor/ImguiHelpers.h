@@ -2,6 +2,7 @@
 
 #include "FireCube.h"
 #include "imgui.h"
+#include "AssetUtils.h"
 
 class EditorState;
 class Command;
@@ -130,7 +131,7 @@ private:
 namespace ImGuiHelpers
 {
 	void ShowAssetSelectionPopup(const std::string &title);
-	bool AssetSelectionPopup(const std::string &title, const std::string &basePath, std::string &selectedPath);
+	bool AssetSelectionPopup(const std::string &title, AssetType type, std::string &selectedPath);
 }
 
 namespace ImGui

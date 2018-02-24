@@ -525,9 +525,19 @@ namespace ImGui
 	}
 }
 
-std::vector<std::tuple<std::string, std::string, bool>> GetItemsInPath(const std::string &path)
+struct ItemInfo
 {
-	std::vector<std::tuple<std::string, std::string, bool>> ret;
+	std::string label;
+	std::string relPath;
+	std::string absPath;
+	bool isDirectory;
+};
+
+std::vector<ItemInfo> GetItemsInPath(const std::string &path)
+{
+	std::string basePath = Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), path) ? Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path) : 
+		Filesystem::MakeRelativeTo(Filesystem::GetCoreDataFolder(), path);	
+	std::vector<ItemInfo> ret;
 	std::string pattern(path);
 	pattern.append("\\*");
 	WIN32_FIND_DATAA data;
@@ -539,9 +549,11 @@ std::vector<std::tuple<std::string, std::string, bool>> GetItemsInPath(const std
 			std::string p = data.cFileName;
 			if (p != "." && p != "..")
 			{
-				bool isDirectory = (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
-				std::string label = isDirectory ? "[" + Filesystem::GetLastPathComponent(p) + "]" : Filesystem::GetLastPathComponent(p);
-				std::tuple<std::string, std::string, bool> item = { label, Filesystem::JoinPath(path, p), isDirectory };
+				ItemInfo item;
+				item.isDirectory = (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
+				item.label = item.isDirectory ? "[" + Filesystem::GetLastPathComponent(p) + "]" : Filesystem::GetLastPathComponent(p);				
+				item.relPath = Filesystem::JoinPath(basePath, p);
+				item.absPath = Filesystem::JoinPath(path, p);				
 				ret.push_back(item);
 			}
 		} while (FindNextFileA(hFind, &data) != 0);
@@ -551,27 +563,106 @@ std::vector<std::tuple<std::string, std::string, bool>> GetItemsInPath(const std
 	return ret;
 }
 
+std::string GetAssetsPath(AssetType type)
+{
+	switch (type)
+	{
+	case AssetType::MATERIAL:
+		return Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Materials");
+		break;
+	case AssetType::TEXTURE:
+		return Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Textures");
+		break;
+	case AssetType::SHADER:
+		return Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Shaders");
+		break;
+	case AssetType::TECHNIQUE:
+		return Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Techniques");
+		break;
+	case AssetType::MESH:
+		return Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Models");
+		break;
+	case AssetType::SOUND:
+		return Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Sounds");
+		break;
+	case AssetType::SCRIPT:
+		return Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Scripts");
+		break;
+	case AssetType::SCENE:
+		return Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Scenes");
+		break;
+	case AssetType::PREFAB:
+		return Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Prefabs");
+		break;
+	default:
+		break;
+	}
+
+	return "";
+}
+
+std::string GetCoreAssetsPath(AssetType type)
+{
+	switch (type)
+	{
+	case AssetType::MATERIAL:
+		return Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Materials");
+		break;
+	case AssetType::TEXTURE:
+		return Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Textures");
+		break;
+	case AssetType::SHADER:
+		return Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Shaders");
+		break;
+	case AssetType::TECHNIQUE:
+		return Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Techniques");
+		break;
+	case AssetType::MESH:
+		return Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Models");
+		break;
+	case AssetType::SOUND:
+		return Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Sounds");
+		break;
+	case AssetType::SCRIPT:
+		return Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Scripts");
+		break;
+	case AssetType::SCENE:
+		return Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Scenes");
+		break;
+	case AssetType::PREFAB:
+		return Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Prefabs");
+		break;
+	default:
+		break;
+	}
+
+	return "";
+}
+
 void ImGuiHelpers::ShowAssetSelectionPopup(const std::string &title)
 {
 	ImGui::OpenPopup(title.c_str());
 }
 
-bool ImGuiHelpers::AssetSelectionPopup(const std::string &title, const std::string &basePath, std::string &selectedPath)
+bool ImGuiHelpers::AssetSelectionPopup(const std::string &title, AssetType type, std::string &selectedPath)
 {
 	if (!ImGui::IsPopupOpen(title.c_str()))
 	{
 		return false;
 	}
+
+	static AssetType curType = AssetType::UNKNOWN;
 	static std::string curBasePath;
 	static std::string curPath;
 	static std::string lastPath;
-	static std::vector<std::tuple<std::string, std::string, bool>> curItems;
+	static std::vector<ItemInfo> curItems;
 	bool ret = false;
-	if (curBasePath != basePath || lastPath != curPath)
+	if (curType != type || lastPath != curPath)
 	{
-		if (curBasePath != basePath)
+		if (curType != type)
 		{
-			curBasePath = curPath = lastPath = basePath;
+			curType = type;
+			curBasePath = curPath = lastPath = GetAssetsPath(type);
 		}
 
 		if (lastPath != curPath)
@@ -579,6 +670,37 @@ bool ImGuiHelpers::AssetSelectionPopup(const std::string &title, const std::stri
 			lastPath = curPath;
 		}
 		curItems = GetItemsInPath(curPath);
+		if (curPath == curBasePath)
+		{
+			if (type == AssetType::MATERIAL || type == AssetType::SHADER || type == AssetType::TECHNIQUE)
+			{
+				auto extraItems = GetItemsInPath(GetCoreAssetsPath(type));
+				for (auto &extraItem : extraItems)
+				{
+					if (std::find_if(curItems.begin(), curItems.end(), [&extraItem](const ItemInfo &item) {
+						return item.relPath == extraItem.relPath;
+					}) == curItems.end())
+					{
+						curItems.push_back(extraItem);
+					}
+				}
+			}
+		}
+
+		std::sort(curItems.begin(), curItems.end(), [](const ItemInfo &first, const ItemInfo &second) {
+			if (first.isDirectory && !second.isDirectory)
+			{
+				return true;
+			}
+			else if (!first.isDirectory && second.isDirectory)
+			{
+				return false;
+			}
+			else
+			{
+				return first.label < second.label;
+			}
+		});
 	}
 	if (ImGui::BeginPopup(title.c_str()))
 	{
@@ -591,23 +713,19 @@ bool ImGuiHelpers::AssetSelectionPopup(const std::string &title, const std::stri
 		}
 		for (auto &item : curItems)
 		{
-			if (std::get<2>(item))
+			if (item.isDirectory)
 			{
-				if (ImGui::Selectable(std::get<0>(item).c_str(), false, ImGuiSelectableFlags_DontClosePopups))
+				if (ImGui::Selectable(item.label.c_str(), false, ImGuiSelectableFlags_DontClosePopups))
 				{
-					curPath = std::get<1>(item);
+					curPath = item.absPath;
 				}
 			}
-		}
-
-		for (auto &item : curItems)
-		{
-			if (!std::get<2>(item))
+			else
 			{
-				if (ImGui::Selectable(std::get<0>(item).c_str()))
+				if (ImGui::Selectable(item.label.c_str()))
 				{
 					ret = true;
-					selectedPath = std::get<1>(item);
+					selectedPath = item.relPath;
 				}
 			}
 		}
