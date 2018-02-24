@@ -13,6 +13,18 @@
 struct SDL_Window;
 typedef void *SDL_GLContext;
 union SDL_Event;
+struct _SDL_GameController;
+typedef struct _SDL_GameController SDL_GameController;
+struct _SDL_Haptic;
+typedef struct _SDL_Haptic SDL_Haptic;
+
+class GameControllerState
+{
+public:
+	int deviceId;
+	SDL_GameController *gameController;
+	SDL_Haptic *haptic;
+};
 
 namespace FireCube
 {
@@ -120,6 +132,8 @@ public:
 
 	SDL_Window *GetWindow() const;
 
+	void InitGameControllers();
+
 protected:
 	Renderer *renderer;	
 	ResourceCache *resourceCache;
@@ -130,11 +144,15 @@ protected:
 private:
 	void InitKeyMap();
 	void ProcessInput(const SDL_Event &event);
+	void AddGameController(int deviceId);
+	void RemoveGameController(int deviceId);
 
 	std::map<int, Key> keyMap;
 	std::map<int, bool> keyState;
 	std::map<int, Key> mouseMap;
 	std::map<int, bool> mouseState;
+	std::map<int, Key> gameControllerMap;
+	std::map<int, bool> gameControllerState;
 	Timer timer;
 	bool running;
 	float deltaTime;
@@ -149,6 +167,8 @@ private:
 	SDL_Window *mainWindow;
 	SDL_GLContext *context;
 	static float timeScale;
+
+	std::vector<GameControllerState> gameControllers;
 };
 }
 #pragma warning(pop)

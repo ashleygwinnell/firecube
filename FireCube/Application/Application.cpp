@@ -28,7 +28,7 @@ Application::~Application()
 
 bool Application::Initialize(WindowProperties windowPrperties)
 {    
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC) < 0)
 		return false;
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -56,6 +56,9 @@ bool Application::Initialize(WindowProperties windowPrperties)
 	*context = SDL_GL_CreateContext(mainWindow);		
 	this->width = windowPrperties.width;
 	this->height = windowPrperties.height;
+
+	InitGameControllers();
+
 	return InitializeNoWindow();
 }
 
@@ -150,7 +153,8 @@ void Application::Run()
 		while(SDL_PollEvent(&event))
 		{
 			HandleSDLEvent(event);
-			if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP || event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEMOTION || event.type == SDL_MOUSEWHEEL)
+			if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP || event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEMOTION 
+				|| event.type == SDL_MOUSEWHEEL || event.type == SDL_CONTROLLERAXISMOTION || event.type == SDL_CONTROLLERBUTTONDOWN || event.type == SDL_CONTROLLERBUTTONUP)
 			{
 				ProcessInput(event);
 			}
@@ -163,7 +167,17 @@ void Application::Run()
 				renderer->SetHeight(height);				
 			}
 			else if (event.type == SDL_QUIT)
+			{
 				running = false;
+			}
+			else if (event.type == SDL_CONTROLLERDEVICEADDED)
+			{
+				AddGameController(event.cdevice.which);
+			}
+			else if (event.type == SDL_CONTROLLERDEVICEREMOVED)
+			{
+				RemoveGameController(event.cdevice.which);
+			}
 		}		
 		int x,y;
 		SDL_GetMouseState(&x, &y);
@@ -293,6 +307,21 @@ void Application::InitKeyMap()
 	mouseMap[1] = Key::MOUSE_LEFT_BUTTON;
 	mouseMap[2] = Key::MOUSE_MIDDLE_BUTTON;
 	mouseMap[3] = Key::MOUSE_RIGHT_BUTTON;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_A] = Key::GAME_CONTROLLER_BUTTON_A;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_B] = Key::GAME_CONTROLLER_BUTTON_B;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_X] = Key::GAME_CONTROLLER_BUTTON_X;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_Y] = Key::GAME_CONTROLLER_BUTTON_Y;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_BACK] = Key::GAME_CONTROLLER_BUTTON_BACK;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_GUIDE] = Key::GAME_CONTROLLER_BUTTON_GUIDE;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_START] = Key::GAME_CONTROLLER_BUTTON_START;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_LEFTSTICK] = Key::GAME_CONTROLLER_BUTTON_LEFT_STICK;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_RIGHTSTICK] = Key::GAME_CONTROLLER_BUTTON_RIGHT_STICK;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_LEFTSHOULDER] = Key::GAME_CONTROLLER_BUTTON_LEFT_SHOULDER;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_RIGHTSHOULDER] = Key::GAME_CONTROLLER_BUTTON_RIGHT_SHOULDER;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_DPAD_UP] = Key::GAME_CONTROLLER_BUTTON_DPAD_UP;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_DPAD_DOWN] = Key::GAME_CONTROLLER_BUTTON_DPAD_DOWN;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_DPAD_LEFT] = Key::GAME_CONTROLLER_BUTTON_DPAD_LEFT;
+	gameControllerMap[SDL_CONTROLLER_BUTTON_DPAD_RIGHT] = Key::GAME_CONTROLLER_BUTTON_DPAD_RIGHT;
 }
 
 Engine *Application::GetEngine()
@@ -328,7 +357,6 @@ void Application::ProcessInput(const SDL_Event &event)
 			modifier = (KeyModifier)(modifier | ((keyMod & KMOD_RALT) ? KeyModifier::RIGHT_ALT : KeyModifier::NONE));
 			// Update the input manager's state
 			inputManager.SetRawKeyState(k->second, true, previouslyPressed, modifier);
-
 		}
 	}
 	else if (event.type == SDL_KEYUP)
@@ -409,6 +437,52 @@ void Application::ProcessInput(const SDL_Event &event)
 		// Set the corresponding analog values of the input manager (mouse wheel)
 		inputManager.SetRawAnalogValue(AnalogInput::MOUSE_WHEEL_Y_RELATIVE, ((float)event.wheel.y) / 60.0f);
 	}
+	else if (event.type == SDL_CONTROLLERAXISMOTION)
+	{
+		switch (event.caxis.axis)
+		{
+		case SDL_CONTROLLER_AXIS_LEFTX:
+			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_LEFT_X, (float)event.caxis.value);
+			break;
+		case SDL_CONTROLLER_AXIS_RIGHTX:
+			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_RIGHT_X, (float)event.caxis.value);
+			break;
+		case SDL_CONTROLLER_AXIS_LEFTY:
+			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_LEFT_Y, (float)event.caxis.value);
+			break;
+		case SDL_CONTROLLER_AXIS_RIGHTY:
+			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_RIGHT_Y, (float)event.caxis.value);
+			break;
+		default:
+			break;
+		}
+	}
+	else if (event.type == SDL_CONTROLLERBUTTONDOWN)
+	{
+		// Get the mapping between SDL button code and the engine's key enum
+		std::map<int, Key>::iterator k = gameControllerMap.find(event.cbutton.button);
+		if (k != gameControllerMap.end())
+		{
+			// Check if previously pressed and update the game controller state
+			std::map<int, bool>::iterator i = gameControllerState.find(event.cbutton.button);
+			bool previouslyPressed = i != gameControllerState.end() && i->second == true;
+			gameControllerState[event.cbutton.button] = true;
+			// Update the input manager's state
+			inputManager.SetRawKeyState(k->second, true, previouslyPressed, KeyModifier::NONE);
+		}
+	}
+	else if (event.type == SDL_CONTROLLERBUTTONUP)
+	{
+		// Get the mapping between SDL button code and the engine's key enum
+		std::map<int, Key>::iterator k = gameControllerMap.find(event.cbutton.button);
+		if (k != gameControllerMap.end())
+		{
+			// Update the input manager's state
+			inputManager.SetRawKeyState(k->second, false, true, KeyModifier::NONE);
+			// Update the game controller state
+			gameControllerState[event.cbutton.button] = false;
+		}
+	}
 }
 
 void Application::SetTimeScale(float timeScale)
@@ -419,5 +493,47 @@ void Application::SetTimeScale(float timeScale)
 SDL_Window *Application::GetWindow() const
 {
 	return mainWindow;
+}
+
+void Application::InitGameControllers()
+{
+	int numJoysticks = SDL_NumJoysticks();
+	for (int i = 0; i < numJoysticks; ++i)
+	{
+		if (SDL_IsGameController(i))
+		{
+			AddGameController(i);
+		}
+	}
+}
+
+void Application::AddGameController(int deviceId)
+{
+	GameControllerState state;
+	state.gameController = SDL_GameControllerOpen(deviceId);
+	state.deviceId = deviceId;
+	SDL_Joystick *joystickHandle = SDL_GameControllerGetJoystick(state.gameController);
+	if (SDL_JoystickIsHaptic(joystickHandle))
+	{
+		state.haptic = SDL_HapticOpenFromJoystick(joystickHandle);
+		if (SDL_HapticRumbleSupported(state.haptic))
+		{
+			if (SDL_HapticRumbleInit(state.haptic))
+			{
+				SDL_HapticClose(state.haptic);
+				state.haptic = nullptr;
+			}
+		}
+	}
+	gameControllers.push_back(state);
+}
+
+void Application::RemoveGameController(int deviceId)
+{
+	auto newEnd = std::remove_if(gameControllers.begin(), gameControllers.end(), [deviceId](const GameControllerState &state) {
+		return state.deviceId == deviceId;
+	});
+
+	gameControllers.erase(newEnd, gameControllers.end());
 }
 
