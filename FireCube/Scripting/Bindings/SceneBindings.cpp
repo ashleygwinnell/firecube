@@ -272,6 +272,7 @@ void LuaBindings::InitScene(sol::state &luaState)
 		"GetComponent", &GetComponent,
 		"GetComponents", &GetComponents,
 		"CreateComponent", &CreateComponent,
+		"RemoveComponent", &Node::RemoveComponent,
 		"Remove", &Node::Remove,
 		"name", sol::property(&Node::GetName, &Node::SetName),
 		"children", sol::property(&Node::GetChildren),
