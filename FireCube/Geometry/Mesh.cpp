@@ -53,7 +53,7 @@ bool Mesh::Load(const std::string &filename)
 
 	if (!scene)
 	{
-		LOGERROR("Failed loading model: ", filename);
+		LOGERROR("Failed loading model: ", filename, " Reason: ", importer.GetErrorString());		
 		return false;
 	}	
 
