@@ -1,12 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug Static|Win32">
-      <Configuration>Debug Static</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release Static|Win32">
-      <Configuration>Release Static</Configuration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
@@ -23,40 +19,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGUID>{A4542E1C-AA8D-4797-B2BB-E81DBBE55285}</ProjectGUID>
+    <ProjectGuid>{4B156394-E2C0-33EF-A46F-ECC3C3BC4E25}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>Assimp</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
@@ -69,43 +56,30 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">Debug\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">$(ProjectName)</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">.lib</TargetExt>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">true</LinkIncremental>
-    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Downloads\assimp-3.1.1\bin\Release\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">assimp.dir\Release\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">Release\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">assimp</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">$(ProjectName)</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.dll</TargetExt>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">.lib</TargetExt>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">false</LinkIncremental>
-    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
-    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\Downloads\assimp-3.1.1\bin\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectName)</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">lib\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">assimp.dir\MinSizeRel\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">assimp</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.dll</TargetExt>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkIncremental>
-    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\Downloads\assimp-3.1.1\bin\RelWithDebInfo\</OutDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">assimp-vc140-mt</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">lib\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">assimp.dir\RelWithDebInfo\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">assimp</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.dll</TargetExt>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</LinkIncremental>
-    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</GenerateManifest>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">assimp-vc140-mt</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.lib</TargetExt>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\;include;code\BoostWorkaround;contrib\zlib;contrib\unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;include;D:\Downloads\assimp-4.1.0;contrib\zlib;code\..\contrib\rapidjson\include;code\..\contrib;code\..\contrib\unzip;contrib\irrXML;code\..\contrib\openddlparser\include;code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsCpp</CompileAs>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -114,41 +88,29 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;ASSIMP_BUILD_BOOST_WORKAROUND;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug";assimp_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>Debug</AssemblerListingLocation>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;ASSIMP_BUILD_NO_AMF_IMPORTER;ASSIMP_BUILD_NO_AMF_EXPORTER;ASSIMP_BUILD_NO_3DS_IMPORTER;ASSIMP_BUILD_NO_3DS_EXPORTER;ASSIMP_BUILD_NO_AC_IMPORTER;ASSIMP_BUILD_NO_AC_EXPORTER;ASSIMP_BUILD_NO_ASE_IMPORTER;ASSIMP_BUILD_NO_ASE_EXPORTER;ASSIMP_BUILD_NO_ASSBIN_IMPORTER;ASSIMP_BUILD_NO_ASSBIN_EXPORTER;ASSIMP_BUILD_NO_ASSXML_IMPORTER;ASSIMP_BUILD_NO_ASSXML_EXPORTER;ASSIMP_BUILD_NO_B3D_IMPORTER;ASSIMP_BUILD_NO_B3D_EXPORTER;ASSIMP_BUILD_NO_BVH_IMPORTER;ASSIMP_BUILD_NO_BVH_EXPORTER;ASSIMP_BUILD_NO_COLLADA_IMPORTER;ASSIMP_BUILD_NO_COLLADA_EXPORTER;ASSIMP_BUILD_NO_DXF_IMPORTER;ASSIMP_BUILD_NO_DXF_EXPORTER;ASSIMP_BUILD_NO_CSM_IMPORTER;ASSIMP_BUILD_NO_CSM_EXPORTER;ASSIMP_BUILD_NO_HMP_IMPORTER;ASSIMP_BUILD_NO_HMP_EXPORTER;ASSIMP_BUILD_NO_IRRMESH_IMPORTER;ASSIMP_BUILD_NO_IRRMESH_EXPORTER;ASSIMP_BUILD_NO_IRR_IMPORTER;ASSIMP_BUILD_NO_IRR_EXPORTER;ASSIMP_BUILD_NO_LWO_IMPORTER;ASSIMP_BUILD_NO_LWO_EXPORTER;ASSIMP_BUILD_NO_LWS_IMPORTER;ASSIMP_BUILD_NO_LWS_EXPORTER;ASSIMP_BUILD_NO_MD2_IMPORTER;ASSIMP_BUILD_NO_MD2_EXPORTER;ASSIMP_BUILD_NO_MD3_IMPORTER;ASSIMP_BUILD_NO_MD3_EXPORTER;ASSIMP_BUILD_NO_MD5_IMPORTER;ASSIMP_BUILD_NO_MD5_EXPORTER;ASSIMP_BUILD_NO_MDC_IMPORTER;ASSIMP_BUILD_NO_MDC_EXPORTER;ASSIMP_BUILD_NO_MDL_IMPORTER;ASSIMP_BUILD_NO_MDL_EXPORTER;ASSIMP_BUILD_NO_NFF_IMPORTER;ASSIMP_BUILD_NO_NFF_EXPORTER;ASSIMP_BUILD_NO_NDO_IMPORTER;ASSIMP_BUILD_NO_NDO_EXPORTER;ASSIMP_BUILD_NO_OFF_IMPORTER;ASSIMP_BUILD_NO_OFF_EXPORTER;ASSIMP_BUILD_NO_OGRE_IMPORTER;ASSIMP_BUILD_NO_OGRE_EXPORTER;ASSIMP_BUILD_NO_OPENGEX_IMPORTER;ASSIMP_BUILD_NO_OPENGEX_EXPORTER;ASSIMP_BUILD_NO_PLY_IMPORTER;ASSIMP_BUILD_NO_PLY_EXPORTER;ASSIMP_BUILD_NO_MS3D_IMPORTER;ASSIMP_BUILD_NO_MS3D_EXPORTER;ASSIMP_BUILD_NO_COB_IMPORTER;ASSIMP_BUILD_NO_COB_EXPORTER;ASSIMP_BUILD_NO_BLEND_IMPORTER;ASSIMP_BUILD_NO_BLEND_EXPORTER;ASSIMP_BUILD_NO_IFC_IMPORTER;ASSIMP_BUILD_NO_IFC_EXPORTER;ASSIMP_BUILD_NO_XGL_IMPORTER;ASSIMP_BUILD_NO_XGL_EXPORTER;ASSIMP_BUILD_NO_Q3D_IMPORTER;ASSIMP_BUILD_NO_Q3D_EXPORTER;ASSIMP_BUILD_NO_Q3BSP_IMPORTER;ASSIMP_BUILD_NO_Q3BSP_EXPORTER;ASSIMP_BUILD_NO_RAW_IMPORTER;ASSIMP_BUILD_NO_RAW_EXPORTER;ASSIMP_BUILD_NO_SIB_IMPORTER;ASSIMP_BUILD_NO_SIB_EXPORTER;ASSIMP_BUILD_NO_SMD_IMPORTER;ASSIMP_BUILD_NO_SMD_EXPORTER;ASSIMP_BUILD_NO_STL_IMPORTER;ASSIMP_BUILD_NO_STL_EXPORTER;ASSIMP_BUILD_NO_TERRAGEN_IMPORTER;ASSIMP_BUILD_NO_TERRAGEN_EXPORTER;ASSIMP_BUILD_NO_3D_IMPORTER;ASSIMP_BUILD_NO_3D_EXPORTER;ASSIMP_BUILD_NO_X_IMPORTER;ASSIMP_BUILD_NO_X_EXPORTER;ASSIMP_BUILD_NO_X3D_IMPORTER;ASSIMP_BUILD_NO_X3D_EXPORTER;ASSIMP_BUILD_NO_3MF_IMPORTER;ASSIMP_BUILD_NO_3MF_EXPORTER;ASSIMP_BUILD_NO_MMD_IMPORTER;ASSIMP_BUILD_NO_MMD_EXPORTER;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;ASSIMP_BUILD_BOOST_WORKAROUND;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\";assimp_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:/Downloads/assimp-3.1.1;D:/Downloads/assimp-3.1.1/include;D:/Downloads/assimp-3.1.1/code/BoostWorkaround;D:/Downloads/assimp-3.1.1/contrib/zlib;D:/Downloads/assimp-3.1.1/code/../contrib/unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;ASSIMP_BUILD_NO_AMF_IMPORTER;ASSIMP_BUILD_NO_AMF_EXPORTER;ASSIMP_BUILD_NO_3DS_IMPORTER;ASSIMP_BUILD_NO_3DS_EXPORTER;ASSIMP_BUILD_NO_AC_IMPORTER;ASSIMP_BUILD_NO_AC_EXPORTER;ASSIMP_BUILD_NO_ASE_IMPORTER;ASSIMP_BUILD_NO_ASE_EXPORTER;ASSIMP_BUILD_NO_ASSBIN_IMPORTER;ASSIMP_BUILD_NO_ASSBIN_EXPORTER;ASSIMP_BUILD_NO_ASSXML_IMPORTER;ASSIMP_BUILD_NO_ASSXML_EXPORTER;ASSIMP_BUILD_NO_B3D_IMPORTER;ASSIMP_BUILD_NO_B3D_EXPORTER;ASSIMP_BUILD_NO_BVH_IMPORTER;ASSIMP_BUILD_NO_BVH_EXPORTER;ASSIMP_BUILD_NO_COLLADA_IMPORTER;ASSIMP_BUILD_NO_COLLADA_EXPORTER;ASSIMP_BUILD_NO_DXF_IMPORTER;ASSIMP_BUILD_NO_DXF_EXPORTER;ASSIMP_BUILD_NO_CSM_IMPORTER;ASSIMP_BUILD_NO_CSM_EXPORTER;ASSIMP_BUILD_NO_HMP_IMPORTER;ASSIMP_BUILD_NO_HMP_EXPORTER;ASSIMP_BUILD_NO_IRRMESH_IMPORTER;ASSIMP_BUILD_NO_IRRMESH_EXPORTER;ASSIMP_BUILD_NO_IRR_IMPORTER;ASSIMP_BUILD_NO_IRR_EXPORTER;ASSIMP_BUILD_NO_LWO_IMPORTER;ASSIMP_BUILD_NO_LWO_EXPORTER;ASSIMP_BUILD_NO_LWS_IMPORTER;ASSIMP_BUILD_NO_LWS_EXPORTER;ASSIMP_BUILD_NO_MD2_IMPORTER;ASSIMP_BUILD_NO_MD2_EXPORTER;ASSIMP_BUILD_NO_MD3_IMPORTER;ASSIMP_BUILD_NO_MD3_EXPORTER;ASSIMP_BUILD_NO_MD5_IMPORTER;ASSIMP_BUILD_NO_MD5_EXPORTER;ASSIMP_BUILD_NO_MDC_IMPORTER;ASSIMP_BUILD_NO_MDC_EXPORTER;ASSIMP_BUILD_NO_MDL_IMPORTER;ASSIMP_BUILD_NO_MDL_EXPORTER;ASSIMP_BUILD_NO_NFF_IMPORTER;ASSIMP_BUILD_NO_NFF_EXPORTER;ASSIMP_BUILD_NO_NDO_IMPORTER;ASSIMP_BUILD_NO_NDO_EXPORTER;ASSIMP_BUILD_NO_OFF_IMPORTER;ASSIMP_BUILD_NO_OFF_EXPORTER;ASSIMP_BUILD_NO_OGRE_IMPORTER;ASSIMP_BUILD_NO_OGRE_EXPORTER;ASSIMP_BUILD_NO_OPENGEX_IMPORTER;ASSIMP_BUILD_NO_OPENGEX_EXPORTER;ASSIMP_BUILD_NO_PLY_IMPORTER;ASSIMP_BUILD_NO_PLY_EXPORTER;ASSIMP_BUILD_NO_MS3D_IMPORTER;ASSIMP_BUILD_NO_MS3D_EXPORTER;ASSIMP_BUILD_NO_COB_IMPORTER;ASSIMP_BUILD_NO_COB_EXPORTER;ASSIMP_BUILD_NO_BLEND_IMPORTER;ASSIMP_BUILD_NO_BLEND_EXPORTER;ASSIMP_BUILD_NO_IFC_IMPORTER;ASSIMP_BUILD_NO_IFC_EXPORTER;ASSIMP_BUILD_NO_XGL_IMPORTER;ASSIMP_BUILD_NO_XGL_EXPORTER;ASSIMP_BUILD_NO_Q3D_IMPORTER;ASSIMP_BUILD_NO_Q3D_EXPORTER;ASSIMP_BUILD_NO_Q3BSP_IMPORTER;ASSIMP_BUILD_NO_Q3BSP_EXPORTER;ASSIMP_BUILD_NO_RAW_IMPORTER;ASSIMP_BUILD_NO_RAW_EXPORTER;ASSIMP_BUILD_NO_SIB_IMPORTER;ASSIMP_BUILD_NO_SIB_EXPORTER;ASSIMP_BUILD_NO_SMD_IMPORTER;ASSIMP_BUILD_NO_SMD_EXPORTER;ASSIMP_BUILD_NO_STL_IMPORTER;ASSIMP_BUILD_NO_STL_EXPORTER;ASSIMP_BUILD_NO_TERRAGEN_IMPORTER;ASSIMP_BUILD_NO_TERRAGEN_EXPORTER;ASSIMP_BUILD_NO_3D_IMPORTER;ASSIMP_BUILD_NO_3D_EXPORTER;ASSIMP_BUILD_NO_X_IMPORTER;ASSIMP_BUILD_NO_X_EXPORTER;ASSIMP_BUILD_NO_X3D_IMPORTER;ASSIMP_BUILD_NO_X3D_EXPORTER;ASSIMP_BUILD_NO_3MF_IMPORTER;ASSIMP_BUILD_NO_3MF_EXPORTER;ASSIMP_BUILD_NO_MMD_IMPORTER;ASSIMP_BUILD_NO_MMD_EXPORTER;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;include;D:\Downloads\assimp-4.1.0;contrib\zlib;code\..\contrib\rapidjson\include;code\..\contrib;code\..\contrib\unzip;contrib\irrXML;code\..\contrib\openddlparser\include;code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:/Downloads/assimp-3.1.1;D:/Downloads/assimp-3.1.1/include;D:/Downloads/assimp-3.1.1/code/BoostWorkaround;D:/Downloads/assimp-3.1.1/contrib/zlib;D:/Downloads/assimp-3.1.1/code/../contrib/unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <AdditionalIncludeDirectories>.;include;D:\Downloads\assimp-4.1.0;contrib\zlib;code\..\contrib\rapidjson\include;code\..\contrib;code\..\contrib\unzip;contrib\irrXML;code\..\contrib\openddlparser\include;code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
-    <Link>
-      <AdditionalOptions> /machine:X86 /debug %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ImportLibrary>D:/Downloads/assimp-3.1.1/lib/Debug/assimpd.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/Downloads/assimp-3.1.1/bin/Debug/assimpd.pdb</ProgramDataBaseFile>
-      <SubSystem>Console</SubSystem>
-      <Version>
-      </Version>
-    </Link>
-    <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:/Downloads/assimp-3.1.1;D:/Downloads/assimp-3.1.1/include;D:/Downloads/assimp-3.1.1/code/BoostWorkaround;D:/Downloads/assimp-3.1.1/contrib/zlib;D:/Downloads/assimp-3.1.1/code/../contrib/unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;include;D:\Downloads\assimp-4.1.0;contrib\zlib;code\..\contrib\rapidjson\include;code\..\contrib;code\..\contrib\unzip;contrib\irrXML;code\..\contrib\openddlparser\include;code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -158,89 +120,31 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;ASSIMP_BUILD_NO_AMF_IMPORTER;ASSIMP_BUILD_NO_AMF_EXPORTER;ASSIMP_BUILD_NO_3DS_IMPORTER;ASSIMP_BUILD_NO_3DS_EXPORTER;ASSIMP_BUILD_NO_AC_IMPORTER;ASSIMP_BUILD_NO_AC_EXPORTER;ASSIMP_BUILD_NO_ASE_IMPORTER;ASSIMP_BUILD_NO_ASE_EXPORTER;ASSIMP_BUILD_NO_ASSBIN_IMPORTER;ASSIMP_BUILD_NO_ASSBIN_EXPORTER;ASSIMP_BUILD_NO_ASSXML_IMPORTER;ASSIMP_BUILD_NO_ASSXML_EXPORTER;ASSIMP_BUILD_NO_B3D_IMPORTER;ASSIMP_BUILD_NO_B3D_EXPORTER;ASSIMP_BUILD_NO_BVH_IMPORTER;ASSIMP_BUILD_NO_BVH_EXPORTER;ASSIMP_BUILD_NO_COLLADA_IMPORTER;ASSIMP_BUILD_NO_COLLADA_EXPORTER;ASSIMP_BUILD_NO_DXF_IMPORTER;ASSIMP_BUILD_NO_DXF_EXPORTER;ASSIMP_BUILD_NO_CSM_IMPORTER;ASSIMP_BUILD_NO_CSM_EXPORTER;ASSIMP_BUILD_NO_HMP_IMPORTER;ASSIMP_BUILD_NO_HMP_EXPORTER;ASSIMP_BUILD_NO_IRRMESH_IMPORTER;ASSIMP_BUILD_NO_IRRMESH_EXPORTER;ASSIMP_BUILD_NO_IRR_IMPORTER;ASSIMP_BUILD_NO_IRR_EXPORTER;ASSIMP_BUILD_NO_LWO_IMPORTER;ASSIMP_BUILD_NO_LWO_EXPORTER;ASSIMP_BUILD_NO_LWS_IMPORTER;ASSIMP_BUILD_NO_LWS_EXPORTER;ASSIMP_BUILD_NO_MD2_IMPORTER;ASSIMP_BUILD_NO_MD2_EXPORTER;ASSIMP_BUILD_NO_MD3_IMPORTER;ASSIMP_BUILD_NO_MD3_EXPORTER;ASSIMP_BUILD_NO_MD5_IMPORTER;ASSIMP_BUILD_NO_MD5_EXPORTER;ASSIMP_BUILD_NO_MDC_IMPORTER;ASSIMP_BUILD_NO_MDC_EXPORTER;ASSIMP_BUILD_NO_MDL_IMPORTER;ASSIMP_BUILD_NO_MDL_EXPORTER;ASSIMP_BUILD_NO_NFF_IMPORTER;ASSIMP_BUILD_NO_NFF_EXPORTER;ASSIMP_BUILD_NO_NDO_IMPORTER;ASSIMP_BUILD_NO_NDO_EXPORTER;ASSIMP_BUILD_NO_OFF_IMPORTER;ASSIMP_BUILD_NO_OFF_EXPORTER;ASSIMP_BUILD_NO_OGRE_IMPORTER;ASSIMP_BUILD_NO_OGRE_EXPORTER;ASSIMP_BUILD_NO_OPENGEX_IMPORTER;ASSIMP_BUILD_NO_OPENGEX_EXPORTER;ASSIMP_BUILD_NO_PLY_IMPORTER;ASSIMP_BUILD_NO_PLY_EXPORTER;ASSIMP_BUILD_NO_MS3D_IMPORTER;ASSIMP_BUILD_NO_MS3D_EXPORTER;ASSIMP_BUILD_NO_COB_IMPORTER;ASSIMP_BUILD_NO_COB_EXPORTER;ASSIMP_BUILD_NO_BLEND_IMPORTER;ASSIMP_BUILD_NO_BLEND_EXPORTER;ASSIMP_BUILD_NO_IFC_IMPORTER;ASSIMP_BUILD_NO_IFC_EXPORTER;ASSIMP_BUILD_NO_XGL_IMPORTER;ASSIMP_BUILD_NO_XGL_EXPORTER;ASSIMP_BUILD_NO_Q3D_IMPORTER;ASSIMP_BUILD_NO_Q3D_EXPORTER;ASSIMP_BUILD_NO_Q3BSP_IMPORTER;ASSIMP_BUILD_NO_Q3BSP_EXPORTER;ASSIMP_BUILD_NO_RAW_IMPORTER;ASSIMP_BUILD_NO_RAW_EXPORTER;ASSIMP_BUILD_NO_SIB_IMPORTER;ASSIMP_BUILD_NO_SIB_EXPORTER;ASSIMP_BUILD_NO_SMD_IMPORTER;ASSIMP_BUILD_NO_SMD_EXPORTER;ASSIMP_BUILD_NO_STL_IMPORTER;ASSIMP_BUILD_NO_STL_EXPORTER;ASSIMP_BUILD_NO_TERRAGEN_IMPORTER;ASSIMP_BUILD_NO_TERRAGEN_EXPORTER;ASSIMP_BUILD_NO_3D_IMPORTER;ASSIMP_BUILD_NO_3D_EXPORTER;ASSIMP_BUILD_NO_X_IMPORTER;ASSIMP_BUILD_NO_X_EXPORTER;ASSIMP_BUILD_NO_X3D_IMPORTER;ASSIMP_BUILD_NO_X3D_EXPORTER;ASSIMP_BUILD_NO_3MF_IMPORTER;ASSIMP_BUILD_NO_3MF_EXPORTER;ASSIMP_BUILD_NO_MMD_IMPORTER;ASSIMP_BUILD_NO_MMD_EXPORTER;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ASSIMP_BUILD_BOOST_WORKAROUND;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release";assimp_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>Release</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>D:/Downloads/assimp-3.1.1/bin/Release/assimp.pdb</ProgramDataBaseFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ASSIMP_BUILD_BOOST_WORKAROUND;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\";assimp_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:/Downloads/assimp-3.1.1;D:/Downloads/assimp-3.1.1/include;D:/Downloads/assimp-3.1.1/code/BoostWorkaround;D:/Downloads/assimp-3.1.1/contrib/zlib;D:/Downloads/assimp-3.1.1/code/../contrib/unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;ASSIMP_BUILD_NO_AMF_IMPORTER;ASSIMP_BUILD_NO_AMF_EXPORTER;ASSIMP_BUILD_NO_3DS_IMPORTER;ASSIMP_BUILD_NO_3DS_EXPORTER;ASSIMP_BUILD_NO_AC_IMPORTER;ASSIMP_BUILD_NO_AC_EXPORTER;ASSIMP_BUILD_NO_ASE_IMPORTER;ASSIMP_BUILD_NO_ASE_EXPORTER;ASSIMP_BUILD_NO_ASSBIN_IMPORTER;ASSIMP_BUILD_NO_ASSBIN_EXPORTER;ASSIMP_BUILD_NO_ASSXML_IMPORTER;ASSIMP_BUILD_NO_ASSXML_EXPORTER;ASSIMP_BUILD_NO_B3D_IMPORTER;ASSIMP_BUILD_NO_B3D_EXPORTER;ASSIMP_BUILD_NO_BVH_IMPORTER;ASSIMP_BUILD_NO_BVH_EXPORTER;ASSIMP_BUILD_NO_COLLADA_IMPORTER;ASSIMP_BUILD_NO_COLLADA_EXPORTER;ASSIMP_BUILD_NO_DXF_IMPORTER;ASSIMP_BUILD_NO_DXF_EXPORTER;ASSIMP_BUILD_NO_CSM_IMPORTER;ASSIMP_BUILD_NO_CSM_EXPORTER;ASSIMP_BUILD_NO_HMP_IMPORTER;ASSIMP_BUILD_NO_HMP_EXPORTER;ASSIMP_BUILD_NO_IRRMESH_IMPORTER;ASSIMP_BUILD_NO_IRRMESH_EXPORTER;ASSIMP_BUILD_NO_IRR_IMPORTER;ASSIMP_BUILD_NO_IRR_EXPORTER;ASSIMP_BUILD_NO_LWO_IMPORTER;ASSIMP_BUILD_NO_LWO_EXPORTER;ASSIMP_BUILD_NO_LWS_IMPORTER;ASSIMP_BUILD_NO_LWS_EXPORTER;ASSIMP_BUILD_NO_MD2_IMPORTER;ASSIMP_BUILD_NO_MD2_EXPORTER;ASSIMP_BUILD_NO_MD3_IMPORTER;ASSIMP_BUILD_NO_MD3_EXPORTER;ASSIMP_BUILD_NO_MD5_IMPORTER;ASSIMP_BUILD_NO_MD5_EXPORTER;ASSIMP_BUILD_NO_MDC_IMPORTER;ASSIMP_BUILD_NO_MDC_EXPORTER;ASSIMP_BUILD_NO_MDL_IMPORTER;ASSIMP_BUILD_NO_MDL_EXPORTER;ASSIMP_BUILD_NO_NFF_IMPORTER;ASSIMP_BUILD_NO_NFF_EXPORTER;ASSIMP_BUILD_NO_NDO_IMPORTER;ASSIMP_BUILD_NO_NDO_EXPORTER;ASSIMP_BUILD_NO_OFF_IMPORTER;ASSIMP_BUILD_NO_OFF_EXPORTER;ASSIMP_BUILD_NO_OGRE_IMPORTER;ASSIMP_BUILD_NO_OGRE_EXPORTER;ASSIMP_BUILD_NO_OPENGEX_IMPORTER;ASSIMP_BUILD_NO_OPENGEX_EXPORTER;ASSIMP_BUILD_NO_PLY_IMPORTER;ASSIMP_BUILD_NO_PLY_EXPORTER;ASSIMP_BUILD_NO_MS3D_IMPORTER;ASSIMP_BUILD_NO_MS3D_EXPORTER;ASSIMP_BUILD_NO_COB_IMPORTER;ASSIMP_BUILD_NO_COB_EXPORTER;ASSIMP_BUILD_NO_BLEND_IMPORTER;ASSIMP_BUILD_NO_BLEND_EXPORTER;ASSIMP_BUILD_NO_IFC_IMPORTER;ASSIMP_BUILD_NO_IFC_EXPORTER;ASSIMP_BUILD_NO_XGL_IMPORTER;ASSIMP_BUILD_NO_XGL_EXPORTER;ASSIMP_BUILD_NO_Q3D_IMPORTER;ASSIMP_BUILD_NO_Q3D_EXPORTER;ASSIMP_BUILD_NO_Q3BSP_IMPORTER;ASSIMP_BUILD_NO_Q3BSP_EXPORTER;ASSIMP_BUILD_NO_RAW_IMPORTER;ASSIMP_BUILD_NO_RAW_EXPORTER;ASSIMP_BUILD_NO_SIB_IMPORTER;ASSIMP_BUILD_NO_SIB_EXPORTER;ASSIMP_BUILD_NO_SMD_IMPORTER;ASSIMP_BUILD_NO_SMD_EXPORTER;ASSIMP_BUILD_NO_STL_IMPORTER;ASSIMP_BUILD_NO_STL_EXPORTER;ASSIMP_BUILD_NO_TERRAGEN_IMPORTER;ASSIMP_BUILD_NO_TERRAGEN_EXPORTER;ASSIMP_BUILD_NO_3D_IMPORTER;ASSIMP_BUILD_NO_3D_EXPORTER;ASSIMP_BUILD_NO_X_IMPORTER;ASSIMP_BUILD_NO_X_EXPORTER;ASSIMP_BUILD_NO_X3D_IMPORTER;ASSIMP_BUILD_NO_X3D_EXPORTER;ASSIMP_BUILD_NO_3MF_IMPORTER;ASSIMP_BUILD_NO_3MF_EXPORTER;ASSIMP_BUILD_NO_MMD_IMPORTER;ASSIMP_BUILD_NO_MMD_EXPORTER;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;include;D:\Downloads\assimp-4.1.0;contrib\zlib;code\..\contrib\rapidjson\include;code\..\contrib;code\..\contrib\unzip;contrib\irrXML;code\..\contrib\openddlparser\include;code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:/Downloads/assimp-3.1.1;D:/Downloads/assimp-3.1.1/include;D:/Downloads/assimp-3.1.1/code/BoostWorkaround;D:/Downloads/assimp-3.1.1/contrib/zlib;D:/Downloads/assimp-3.1.1/code/../contrib/unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <AdditionalIncludeDirectories>.;include;D:\Downloads\assimp-4.1.0;contrib\zlib;code\..\contrib\rapidjson\include;code\..\contrib;code\..\contrib\unzip;contrib\irrXML;code\..\contrib\openddlparser\include;code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
-    <Link>
-      <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\lib\Release\zlibstatic.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-      <ImportLibrary>D:/Downloads/assimp-3.1.1/lib/Release/assimp.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/Downloads/assimp-3.1.1/bin/Release/assimp.pdb</ProgramDataBaseFile>
-      <SubSystem>Console</SubSystem>
-      <Version>
-      </Version>
-    </Link>
-    <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>.\;include;code\BoostWorkaround;contrib\zlib;contrib\unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <CompileAs>CompileAsCpp</CompileAs>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <Optimization>MaxSpeed</Optimization>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>
-      </DebugInformationFormat>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ASSIMP_BUILD_BOOST_WORKAROUND;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release";assimp_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>Release</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
-    </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ASSIMP_BUILD_BOOST_WORKAROUND;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\";assimp_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:/Downloads/assimp-3.1.1;D:/Downloads/assimp-3.1.1/include;D:/Downloads/assimp-3.1.1/code/BoostWorkaround;D:/Downloads/assimp-3.1.1/contrib/zlib;D:/Downloads/assimp-3.1.1/code/../contrib/unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ResourceCompile>
-    <Midl>
-      <AdditionalIncludeDirectories>D:/Downloads/assimp-3.1.1;D:/Downloads/assimp-3.1.1/include;D:/Downloads/assimp-3.1.1/code/BoostWorkaround;D:/Downloads/assimp-3.1.1/contrib/zlib;D:/Downloads/assimp-3.1.1/code/../contrib/unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <OutputDirectory>$(IntDir)</OutputDirectory>
-      <HeaderFileName>%(Filename).h</HeaderFileName>
-      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
-      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
-    </Midl>
-    <Link>
-      <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\lib\Release\zlibstatic.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-      <ImportLibrary>D:/Downloads/assimp-3.1.1/lib/Release/assimp.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/Downloads/assimp-3.1.1/bin/Release/assimp.pdb</ProgramDataBaseFile>
-      <SubSystem>Console</SubSystem>
-      <Version>
-      </Version>
-    </Link>
-    <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:/Downloads/assimp-3.1.1;D:/Downloads/assimp-3.1.1/include;D:/Downloads/assimp-3.1.1/code/BoostWorkaround;D:/Downloads/assimp-3.1.1/contrib/zlib;D:/Downloads/assimp-3.1.1/code/../contrib/unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;include;D:\Downloads\assimp-4.1.0;contrib\zlib;code\..\contrib\rapidjson\include;code\..\contrib;code\..\contrib\unzip;contrib\irrXML;code\..\contrib\openddlparser\include;code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -250,43 +154,31 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;ASSIMP_BUILD_NO_AMF_IMPORTER;ASSIMP_BUILD_NO_AMF_EXPORTER;ASSIMP_BUILD_NO_3DS_IMPORTER;ASSIMP_BUILD_NO_3DS_EXPORTER;ASSIMP_BUILD_NO_AC_IMPORTER;ASSIMP_BUILD_NO_AC_EXPORTER;ASSIMP_BUILD_NO_ASE_IMPORTER;ASSIMP_BUILD_NO_ASE_EXPORTER;ASSIMP_BUILD_NO_ASSBIN_IMPORTER;ASSIMP_BUILD_NO_ASSBIN_EXPORTER;ASSIMP_BUILD_NO_ASSXML_IMPORTER;ASSIMP_BUILD_NO_ASSXML_EXPORTER;ASSIMP_BUILD_NO_B3D_IMPORTER;ASSIMP_BUILD_NO_B3D_EXPORTER;ASSIMP_BUILD_NO_BVH_IMPORTER;ASSIMP_BUILD_NO_BVH_EXPORTER;ASSIMP_BUILD_NO_COLLADA_IMPORTER;ASSIMP_BUILD_NO_COLLADA_EXPORTER;ASSIMP_BUILD_NO_DXF_IMPORTER;ASSIMP_BUILD_NO_DXF_EXPORTER;ASSIMP_BUILD_NO_CSM_IMPORTER;ASSIMP_BUILD_NO_CSM_EXPORTER;ASSIMP_BUILD_NO_HMP_IMPORTER;ASSIMP_BUILD_NO_HMP_EXPORTER;ASSIMP_BUILD_NO_IRRMESH_IMPORTER;ASSIMP_BUILD_NO_IRRMESH_EXPORTER;ASSIMP_BUILD_NO_IRR_IMPORTER;ASSIMP_BUILD_NO_IRR_EXPORTER;ASSIMP_BUILD_NO_LWO_IMPORTER;ASSIMP_BUILD_NO_LWO_EXPORTER;ASSIMP_BUILD_NO_LWS_IMPORTER;ASSIMP_BUILD_NO_LWS_EXPORTER;ASSIMP_BUILD_NO_MD2_IMPORTER;ASSIMP_BUILD_NO_MD2_EXPORTER;ASSIMP_BUILD_NO_MD3_IMPORTER;ASSIMP_BUILD_NO_MD3_EXPORTER;ASSIMP_BUILD_NO_MD5_IMPORTER;ASSIMP_BUILD_NO_MD5_EXPORTER;ASSIMP_BUILD_NO_MDC_IMPORTER;ASSIMP_BUILD_NO_MDC_EXPORTER;ASSIMP_BUILD_NO_MDL_IMPORTER;ASSIMP_BUILD_NO_MDL_EXPORTER;ASSIMP_BUILD_NO_NFF_IMPORTER;ASSIMP_BUILD_NO_NFF_EXPORTER;ASSIMP_BUILD_NO_NDO_IMPORTER;ASSIMP_BUILD_NO_NDO_EXPORTER;ASSIMP_BUILD_NO_OFF_IMPORTER;ASSIMP_BUILD_NO_OFF_EXPORTER;ASSIMP_BUILD_NO_OGRE_IMPORTER;ASSIMP_BUILD_NO_OGRE_EXPORTER;ASSIMP_BUILD_NO_OPENGEX_IMPORTER;ASSIMP_BUILD_NO_OPENGEX_EXPORTER;ASSIMP_BUILD_NO_PLY_IMPORTER;ASSIMP_BUILD_NO_PLY_EXPORTER;ASSIMP_BUILD_NO_MS3D_IMPORTER;ASSIMP_BUILD_NO_MS3D_EXPORTER;ASSIMP_BUILD_NO_COB_IMPORTER;ASSIMP_BUILD_NO_COB_EXPORTER;ASSIMP_BUILD_NO_BLEND_IMPORTER;ASSIMP_BUILD_NO_BLEND_EXPORTER;ASSIMP_BUILD_NO_IFC_IMPORTER;ASSIMP_BUILD_NO_IFC_EXPORTER;ASSIMP_BUILD_NO_XGL_IMPORTER;ASSIMP_BUILD_NO_XGL_EXPORTER;ASSIMP_BUILD_NO_Q3D_IMPORTER;ASSIMP_BUILD_NO_Q3D_EXPORTER;ASSIMP_BUILD_NO_Q3BSP_IMPORTER;ASSIMP_BUILD_NO_Q3BSP_EXPORTER;ASSIMP_BUILD_NO_RAW_IMPORTER;ASSIMP_BUILD_NO_RAW_EXPORTER;ASSIMP_BUILD_NO_SIB_IMPORTER;ASSIMP_BUILD_NO_SIB_EXPORTER;ASSIMP_BUILD_NO_SMD_IMPORTER;ASSIMP_BUILD_NO_SMD_EXPORTER;ASSIMP_BUILD_NO_STL_IMPORTER;ASSIMP_BUILD_NO_STL_EXPORTER;ASSIMP_BUILD_NO_TERRAGEN_IMPORTER;ASSIMP_BUILD_NO_TERRAGEN_EXPORTER;ASSIMP_BUILD_NO_3D_IMPORTER;ASSIMP_BUILD_NO_3D_EXPORTER;ASSIMP_BUILD_NO_X_IMPORTER;ASSIMP_BUILD_NO_X_EXPORTER;ASSIMP_BUILD_NO_X3D_IMPORTER;ASSIMP_BUILD_NO_X3D_EXPORTER;ASSIMP_BUILD_NO_3MF_IMPORTER;ASSIMP_BUILD_NO_3MF_EXPORTER;ASSIMP_BUILD_NO_MMD_IMPORTER;ASSIMP_BUILD_NO_MMD_EXPORTER;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ASSIMP_BUILD_BOOST_WORKAROUND;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="MinSizeRel";assimp_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>MinSizeRel</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>D:/Downloads/assimp-3.1.1/bin/MinSizeRel/assimp.pdb</ProgramDataBaseFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ASSIMP_BUILD_BOOST_WORKAROUND;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"MinSizeRel\";assimp_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:/Downloads/assimp-3.1.1;D:/Downloads/assimp-3.1.1/include;D:/Downloads/assimp-3.1.1/code/BoostWorkaround;D:/Downloads/assimp-3.1.1/contrib/zlib;D:/Downloads/assimp-3.1.1/code/../contrib/unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;ASSIMP_BUILD_NO_AMF_IMPORTER;ASSIMP_BUILD_NO_AMF_EXPORTER;ASSIMP_BUILD_NO_3DS_IMPORTER;ASSIMP_BUILD_NO_3DS_EXPORTER;ASSIMP_BUILD_NO_AC_IMPORTER;ASSIMP_BUILD_NO_AC_EXPORTER;ASSIMP_BUILD_NO_ASE_IMPORTER;ASSIMP_BUILD_NO_ASE_EXPORTER;ASSIMP_BUILD_NO_ASSBIN_IMPORTER;ASSIMP_BUILD_NO_ASSBIN_EXPORTER;ASSIMP_BUILD_NO_ASSXML_IMPORTER;ASSIMP_BUILD_NO_ASSXML_EXPORTER;ASSIMP_BUILD_NO_B3D_IMPORTER;ASSIMP_BUILD_NO_B3D_EXPORTER;ASSIMP_BUILD_NO_BVH_IMPORTER;ASSIMP_BUILD_NO_BVH_EXPORTER;ASSIMP_BUILD_NO_COLLADA_IMPORTER;ASSIMP_BUILD_NO_COLLADA_EXPORTER;ASSIMP_BUILD_NO_DXF_IMPORTER;ASSIMP_BUILD_NO_DXF_EXPORTER;ASSIMP_BUILD_NO_CSM_IMPORTER;ASSIMP_BUILD_NO_CSM_EXPORTER;ASSIMP_BUILD_NO_HMP_IMPORTER;ASSIMP_BUILD_NO_HMP_EXPORTER;ASSIMP_BUILD_NO_IRRMESH_IMPORTER;ASSIMP_BUILD_NO_IRRMESH_EXPORTER;ASSIMP_BUILD_NO_IRR_IMPORTER;ASSIMP_BUILD_NO_IRR_EXPORTER;ASSIMP_BUILD_NO_LWO_IMPORTER;ASSIMP_BUILD_NO_LWO_EXPORTER;ASSIMP_BUILD_NO_LWS_IMPORTER;ASSIMP_BUILD_NO_LWS_EXPORTER;ASSIMP_BUILD_NO_MD2_IMPORTER;ASSIMP_BUILD_NO_MD2_EXPORTER;ASSIMP_BUILD_NO_MD3_IMPORTER;ASSIMP_BUILD_NO_MD3_EXPORTER;ASSIMP_BUILD_NO_MD5_IMPORTER;ASSIMP_BUILD_NO_MD5_EXPORTER;ASSIMP_BUILD_NO_MDC_IMPORTER;ASSIMP_BUILD_NO_MDC_EXPORTER;ASSIMP_BUILD_NO_MDL_IMPORTER;ASSIMP_BUILD_NO_MDL_EXPORTER;ASSIMP_BUILD_NO_NFF_IMPORTER;ASSIMP_BUILD_NO_NFF_EXPORTER;ASSIMP_BUILD_NO_NDO_IMPORTER;ASSIMP_BUILD_NO_NDO_EXPORTER;ASSIMP_BUILD_NO_OFF_IMPORTER;ASSIMP_BUILD_NO_OFF_EXPORTER;ASSIMP_BUILD_NO_OGRE_IMPORTER;ASSIMP_BUILD_NO_OGRE_EXPORTER;ASSIMP_BUILD_NO_OPENGEX_IMPORTER;ASSIMP_BUILD_NO_OPENGEX_EXPORTER;ASSIMP_BUILD_NO_PLY_IMPORTER;ASSIMP_BUILD_NO_PLY_EXPORTER;ASSIMP_BUILD_NO_MS3D_IMPORTER;ASSIMP_BUILD_NO_MS3D_EXPORTER;ASSIMP_BUILD_NO_COB_IMPORTER;ASSIMP_BUILD_NO_COB_EXPORTER;ASSIMP_BUILD_NO_BLEND_IMPORTER;ASSIMP_BUILD_NO_BLEND_EXPORTER;ASSIMP_BUILD_NO_IFC_IMPORTER;ASSIMP_BUILD_NO_IFC_EXPORTER;ASSIMP_BUILD_NO_XGL_IMPORTER;ASSIMP_BUILD_NO_XGL_EXPORTER;ASSIMP_BUILD_NO_Q3D_IMPORTER;ASSIMP_BUILD_NO_Q3D_EXPORTER;ASSIMP_BUILD_NO_Q3BSP_IMPORTER;ASSIMP_BUILD_NO_Q3BSP_EXPORTER;ASSIMP_BUILD_NO_RAW_IMPORTER;ASSIMP_BUILD_NO_RAW_EXPORTER;ASSIMP_BUILD_NO_SIB_IMPORTER;ASSIMP_BUILD_NO_SIB_EXPORTER;ASSIMP_BUILD_NO_SMD_IMPORTER;ASSIMP_BUILD_NO_SMD_EXPORTER;ASSIMP_BUILD_NO_STL_IMPORTER;ASSIMP_BUILD_NO_STL_EXPORTER;ASSIMP_BUILD_NO_TERRAGEN_IMPORTER;ASSIMP_BUILD_NO_TERRAGEN_EXPORTER;ASSIMP_BUILD_NO_3D_IMPORTER;ASSIMP_BUILD_NO_3D_EXPORTER;ASSIMP_BUILD_NO_X_IMPORTER;ASSIMP_BUILD_NO_X_EXPORTER;ASSIMP_BUILD_NO_X3D_IMPORTER;ASSIMP_BUILD_NO_X3D_EXPORTER;ASSIMP_BUILD_NO_3MF_IMPORTER;ASSIMP_BUILD_NO_3MF_EXPORTER;ASSIMP_BUILD_NO_MMD_IMPORTER;ASSIMP_BUILD_NO_MMD_EXPORTER;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;include;D:\Downloads\assimp-4.1.0;contrib\zlib;code\..\contrib\rapidjson\include;code\..\contrib;code\..\contrib\unzip;contrib\irrXML;code\..\contrib\openddlparser\include;code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:/Downloads/assimp-3.1.1;D:/Downloads/assimp-3.1.1/include;D:/Downloads/assimp-3.1.1/code/BoostWorkaround;D:/Downloads/assimp-3.1.1/contrib/zlib;D:/Downloads/assimp-3.1.1/code/../contrib/unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <AdditionalIncludeDirectories>.;include;D:\Downloads\assimp-4.1.0;contrib\zlib;code\..\contrib\rapidjson\include;code\..\contrib;code\..\contrib\unzip;contrib\irrXML;code\..\contrib\openddlparser\include;code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
-    <Link>
-      <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\lib\MinSizeRel\zlibstatic.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-      <ImportLibrary>D:/Downloads/assimp-3.1.1/lib/MinSizeRel/assimp.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/Downloads/assimp-3.1.1/bin/MinSizeRel/assimp.pdb</ProgramDataBaseFile>
-      <SubSystem>Console</SubSystem>
-      <Version>
-      </Version>
-    </Link>
-    <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:/Downloads/assimp-3.1.1;D:/Downloads/assimp-3.1.1/include;D:/Downloads/assimp-3.1.1/code/BoostWorkaround;D:/Downloads/assimp-3.1.1/contrib/zlib;D:/Downloads/assimp-3.1.1/code/../contrib/unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;include;D:\Downloads\assimp-4.1.0;contrib\zlib;code\..\contrib\rapidjson\include;code\..\contrib;code\..\contrib\unzip;contrib\irrXML;code\..\contrib\openddlparser\include;code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -297,246 +189,346 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ASSIMP_BUILD_BOOST_WORKAROUND;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="RelWithDebInfo";assimp_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>RelWithDebInfo</AssemblerListingLocation>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;ASSIMP_BUILD_NO_AMF_IMPORTER;ASSIMP_BUILD_NO_AMF_EXPORTER;ASSIMP_BUILD_NO_3DS_IMPORTER;ASSIMP_BUILD_NO_3DS_EXPORTER;ASSIMP_BUILD_NO_AC_IMPORTER;ASSIMP_BUILD_NO_AC_EXPORTER;ASSIMP_BUILD_NO_ASE_IMPORTER;ASSIMP_BUILD_NO_ASE_EXPORTER;ASSIMP_BUILD_NO_ASSBIN_IMPORTER;ASSIMP_BUILD_NO_ASSBIN_EXPORTER;ASSIMP_BUILD_NO_ASSXML_IMPORTER;ASSIMP_BUILD_NO_ASSXML_EXPORTER;ASSIMP_BUILD_NO_B3D_IMPORTER;ASSIMP_BUILD_NO_B3D_EXPORTER;ASSIMP_BUILD_NO_BVH_IMPORTER;ASSIMP_BUILD_NO_BVH_EXPORTER;ASSIMP_BUILD_NO_COLLADA_IMPORTER;ASSIMP_BUILD_NO_COLLADA_EXPORTER;ASSIMP_BUILD_NO_DXF_IMPORTER;ASSIMP_BUILD_NO_DXF_EXPORTER;ASSIMP_BUILD_NO_CSM_IMPORTER;ASSIMP_BUILD_NO_CSM_EXPORTER;ASSIMP_BUILD_NO_HMP_IMPORTER;ASSIMP_BUILD_NO_HMP_EXPORTER;ASSIMP_BUILD_NO_IRRMESH_IMPORTER;ASSIMP_BUILD_NO_IRRMESH_EXPORTER;ASSIMP_BUILD_NO_IRR_IMPORTER;ASSIMP_BUILD_NO_IRR_EXPORTER;ASSIMP_BUILD_NO_LWO_IMPORTER;ASSIMP_BUILD_NO_LWO_EXPORTER;ASSIMP_BUILD_NO_LWS_IMPORTER;ASSIMP_BUILD_NO_LWS_EXPORTER;ASSIMP_BUILD_NO_MD2_IMPORTER;ASSIMP_BUILD_NO_MD2_EXPORTER;ASSIMP_BUILD_NO_MD3_IMPORTER;ASSIMP_BUILD_NO_MD3_EXPORTER;ASSIMP_BUILD_NO_MD5_IMPORTER;ASSIMP_BUILD_NO_MD5_EXPORTER;ASSIMP_BUILD_NO_MDC_IMPORTER;ASSIMP_BUILD_NO_MDC_EXPORTER;ASSIMP_BUILD_NO_MDL_IMPORTER;ASSIMP_BUILD_NO_MDL_EXPORTER;ASSIMP_BUILD_NO_NFF_IMPORTER;ASSIMP_BUILD_NO_NFF_EXPORTER;ASSIMP_BUILD_NO_NDO_IMPORTER;ASSIMP_BUILD_NO_NDO_EXPORTER;ASSIMP_BUILD_NO_OFF_IMPORTER;ASSIMP_BUILD_NO_OFF_EXPORTER;ASSIMP_BUILD_NO_OGRE_IMPORTER;ASSIMP_BUILD_NO_OGRE_EXPORTER;ASSIMP_BUILD_NO_OPENGEX_IMPORTER;ASSIMP_BUILD_NO_OPENGEX_EXPORTER;ASSIMP_BUILD_NO_PLY_IMPORTER;ASSIMP_BUILD_NO_PLY_EXPORTER;ASSIMP_BUILD_NO_MS3D_IMPORTER;ASSIMP_BUILD_NO_MS3D_EXPORTER;ASSIMP_BUILD_NO_COB_IMPORTER;ASSIMP_BUILD_NO_COB_EXPORTER;ASSIMP_BUILD_NO_BLEND_IMPORTER;ASSIMP_BUILD_NO_BLEND_EXPORTER;ASSIMP_BUILD_NO_IFC_IMPORTER;ASSIMP_BUILD_NO_IFC_EXPORTER;ASSIMP_BUILD_NO_XGL_IMPORTER;ASSIMP_BUILD_NO_XGL_EXPORTER;ASSIMP_BUILD_NO_Q3D_IMPORTER;ASSIMP_BUILD_NO_Q3D_EXPORTER;ASSIMP_BUILD_NO_Q3BSP_IMPORTER;ASSIMP_BUILD_NO_Q3BSP_EXPORTER;ASSIMP_BUILD_NO_RAW_IMPORTER;ASSIMP_BUILD_NO_RAW_EXPORTER;ASSIMP_BUILD_NO_SIB_IMPORTER;ASSIMP_BUILD_NO_SIB_EXPORTER;ASSIMP_BUILD_NO_SMD_IMPORTER;ASSIMP_BUILD_NO_SMD_EXPORTER;ASSIMP_BUILD_NO_STL_IMPORTER;ASSIMP_BUILD_NO_STL_EXPORTER;ASSIMP_BUILD_NO_TERRAGEN_IMPORTER;ASSIMP_BUILD_NO_TERRAGEN_EXPORTER;ASSIMP_BUILD_NO_3D_IMPORTER;ASSIMP_BUILD_NO_3D_EXPORTER;ASSIMP_BUILD_NO_X_IMPORTER;ASSIMP_BUILD_NO_X_EXPORTER;ASSIMP_BUILD_NO_X3D_IMPORTER;ASSIMP_BUILD_NO_X3D_EXPORTER;ASSIMP_BUILD_NO_3MF_IMPORTER;ASSIMP_BUILD_NO_3MF_EXPORTER;ASSIMP_BUILD_NO_MMD_IMPORTER;ASSIMP_BUILD_NO_MMD_EXPORTER;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>D:/Downloads/assimp-3.1.1/bin/RelWithDebInfo/assimp.pdb</ProgramDataBaseFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ASSIMP_BUILD_BOOST_WORKAROUND;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"RelWithDebInfo\";assimp_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:/Downloads/assimp-3.1.1;D:/Downloads/assimp-3.1.1/include;D:/Downloads/assimp-3.1.1/code/BoostWorkaround;D:/Downloads/assimp-3.1.1/contrib/zlib;D:/Downloads/assimp-3.1.1/code/../contrib/unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;ASSIMP_BUILD_NO_AMF_IMPORTER;ASSIMP_BUILD_NO_AMF_EXPORTER;ASSIMP_BUILD_NO_3DS_IMPORTER;ASSIMP_BUILD_NO_3DS_EXPORTER;ASSIMP_BUILD_NO_AC_IMPORTER;ASSIMP_BUILD_NO_AC_EXPORTER;ASSIMP_BUILD_NO_ASE_IMPORTER;ASSIMP_BUILD_NO_ASE_EXPORTER;ASSIMP_BUILD_NO_ASSBIN_IMPORTER;ASSIMP_BUILD_NO_ASSBIN_EXPORTER;ASSIMP_BUILD_NO_ASSXML_IMPORTER;ASSIMP_BUILD_NO_ASSXML_EXPORTER;ASSIMP_BUILD_NO_B3D_IMPORTER;ASSIMP_BUILD_NO_B3D_EXPORTER;ASSIMP_BUILD_NO_BVH_IMPORTER;ASSIMP_BUILD_NO_BVH_EXPORTER;ASSIMP_BUILD_NO_COLLADA_IMPORTER;ASSIMP_BUILD_NO_COLLADA_EXPORTER;ASSIMP_BUILD_NO_DXF_IMPORTER;ASSIMP_BUILD_NO_DXF_EXPORTER;ASSIMP_BUILD_NO_CSM_IMPORTER;ASSIMP_BUILD_NO_CSM_EXPORTER;ASSIMP_BUILD_NO_HMP_IMPORTER;ASSIMP_BUILD_NO_HMP_EXPORTER;ASSIMP_BUILD_NO_IRRMESH_IMPORTER;ASSIMP_BUILD_NO_IRRMESH_EXPORTER;ASSIMP_BUILD_NO_IRR_IMPORTER;ASSIMP_BUILD_NO_IRR_EXPORTER;ASSIMP_BUILD_NO_LWO_IMPORTER;ASSIMP_BUILD_NO_LWO_EXPORTER;ASSIMP_BUILD_NO_LWS_IMPORTER;ASSIMP_BUILD_NO_LWS_EXPORTER;ASSIMP_BUILD_NO_MD2_IMPORTER;ASSIMP_BUILD_NO_MD2_EXPORTER;ASSIMP_BUILD_NO_MD3_IMPORTER;ASSIMP_BUILD_NO_MD3_EXPORTER;ASSIMP_BUILD_NO_MD5_IMPORTER;ASSIMP_BUILD_NO_MD5_EXPORTER;ASSIMP_BUILD_NO_MDC_IMPORTER;ASSIMP_BUILD_NO_MDC_EXPORTER;ASSIMP_BUILD_NO_MDL_IMPORTER;ASSIMP_BUILD_NO_MDL_EXPORTER;ASSIMP_BUILD_NO_NFF_IMPORTER;ASSIMP_BUILD_NO_NFF_EXPORTER;ASSIMP_BUILD_NO_NDO_IMPORTER;ASSIMP_BUILD_NO_NDO_EXPORTER;ASSIMP_BUILD_NO_OFF_IMPORTER;ASSIMP_BUILD_NO_OFF_EXPORTER;ASSIMP_BUILD_NO_OGRE_IMPORTER;ASSIMP_BUILD_NO_OGRE_EXPORTER;ASSIMP_BUILD_NO_OPENGEX_IMPORTER;ASSIMP_BUILD_NO_OPENGEX_EXPORTER;ASSIMP_BUILD_NO_PLY_IMPORTER;ASSIMP_BUILD_NO_PLY_EXPORTER;ASSIMP_BUILD_NO_MS3D_IMPORTER;ASSIMP_BUILD_NO_MS3D_EXPORTER;ASSIMP_BUILD_NO_COB_IMPORTER;ASSIMP_BUILD_NO_COB_EXPORTER;ASSIMP_BUILD_NO_BLEND_IMPORTER;ASSIMP_BUILD_NO_BLEND_EXPORTER;ASSIMP_BUILD_NO_IFC_IMPORTER;ASSIMP_BUILD_NO_IFC_EXPORTER;ASSIMP_BUILD_NO_XGL_IMPORTER;ASSIMP_BUILD_NO_XGL_EXPORTER;ASSIMP_BUILD_NO_Q3D_IMPORTER;ASSIMP_BUILD_NO_Q3D_EXPORTER;ASSIMP_BUILD_NO_Q3BSP_IMPORTER;ASSIMP_BUILD_NO_Q3BSP_EXPORTER;ASSIMP_BUILD_NO_RAW_IMPORTER;ASSIMP_BUILD_NO_RAW_EXPORTER;ASSIMP_BUILD_NO_SIB_IMPORTER;ASSIMP_BUILD_NO_SIB_EXPORTER;ASSIMP_BUILD_NO_SMD_IMPORTER;ASSIMP_BUILD_NO_SMD_EXPORTER;ASSIMP_BUILD_NO_STL_IMPORTER;ASSIMP_BUILD_NO_STL_EXPORTER;ASSIMP_BUILD_NO_TERRAGEN_IMPORTER;ASSIMP_BUILD_NO_TERRAGEN_EXPORTER;ASSIMP_BUILD_NO_3D_IMPORTER;ASSIMP_BUILD_NO_3D_EXPORTER;ASSIMP_BUILD_NO_X_IMPORTER;ASSIMP_BUILD_NO_X_EXPORTER;ASSIMP_BUILD_NO_X3D_IMPORTER;ASSIMP_BUILD_NO_X3D_EXPORTER;ASSIMP_BUILD_NO_3MF_IMPORTER;ASSIMP_BUILD_NO_3MF_EXPORTER;ASSIMP_BUILD_NO_MMD_IMPORTER;ASSIMP_BUILD_NO_MMD_EXPORTER;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;include;D:\Downloads\assimp-4.1.0;contrib\zlib;code\..\contrib\rapidjson\include;code\..\contrib;code\..\contrib\unzip;contrib\irrXML;code\..\contrib\openddlparser\include;code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:/Downloads/assimp-3.1.1;D:/Downloads/assimp-3.1.1/include;D:/Downloads/assimp-3.1.1/code/BoostWorkaround;D:/Downloads/assimp-3.1.1/contrib/zlib;D:/Downloads/assimp-3.1.1/code/../contrib/unzip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <AdditionalIncludeDirectories>.;include;D:\Downloads\assimp-4.1.0;contrib\zlib;code\..\contrib\rapidjson\include;code\..\contrib;code\..\contrib\unzip;contrib\irrXML;code\..\contrib\openddlparser\include;code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
-    <Link>
-      <AdditionalOptions> /machine:X86 /debug %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\lib\RelWithDebInfo\zlibstatic.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ImportLibrary>D:/Downloads/assimp-3.1.1/lib/RelWithDebInfo/assimp.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/Downloads/assimp-3.1.1/bin/RelWithDebInfo/assimp.pdb</ProgramDataBaseFile>
-      <SubSystem>Console</SubSystem>
-      <Version>
-      </Version>
-    </Link>
-    <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="contrib\zlib\crc32.h" />
-    <ClInclude Include="contrib\zlib\deflate.h" />
-    <ClInclude Include="contrib\zlib\gzguts.h" />
-    <ClInclude Include="contrib\zlib\inffast.h" />
-    <ClInclude Include="contrib\zlib\inffixed.h" />
-    <ClInclude Include="contrib\zlib\inflate.h" />
-    <ClInclude Include="contrib\zlib\inftrees.h" />
-    <ClInclude Include="contrib\zlib\trees.h" />
-    <ClInclude Include="contrib\zlib\zconf.h" />
-    <ClInclude Include="contrib\zlib\zlib.h" />
-    <ClInclude Include="contrib\zlib\zutil.h" />
+    <ClCompile Include="code\Assimp.cpp" />
+    <ClCompile Include="contrib\zlib\adler32.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\compress.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\crc32.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\deflate.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\gzclose.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\gzlib.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\gzread.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\gzwrite.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\infback.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\inffast.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\inflate.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\inftrees.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\trees.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\uncompr.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="contrib\zlib\zutil.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
     <ClInclude Include="code\fast_atof.h" />
     <ClInclude Include="code\qnan.h" />
+    <ClCompile Include="code\BaseImporter.cpp" />
     <ClInclude Include="code\BaseImporter.h" />
+    <ClCompile Include="code\BaseProcess.cpp" />
     <ClInclude Include="code\BaseProcess.h" />
     <ClInclude Include="code\Importer.h" />
     <ClInclude Include="code\ScenePrivate.h" />
-    <ClInclude Include="code\ByteSwap.h" />
+    <ClCompile Include="code\PostStepRegistry.cpp" />
+    <ClCompile Include="code\ImporterRegistry.cpp" />
+    <ClInclude Include="code\ByteSwapper.h" />
     <ClInclude Include="code\DefaultProgressHandler.h" />
-    <ClInclude Include="code\DefaultIOStream.h" />
-    <ClInclude Include="code\DefaultIOSystem.h" />
+    <ClCompile Include="code\DefaultIOStream.cpp" />
+    <ClCompile Include="code\DefaultIOSystem.cpp" />
+    <ClCompile Include="code\CInterfaceIOWrapper.cpp" />
     <ClInclude Include="code\CInterfaceIOWrapper.h" />
     <ClInclude Include="code\Hash.h" />
+    <ClCompile Include="code\Importer.cpp" />
     <ClInclude Include="code\IFF.h" />
     <ClInclude Include="code\MemoryIOWrapper.h" />
     <ClInclude Include="code\ParsingUtils.h" />
     <ClInclude Include="code\StreamReader.h" />
+    <ClInclude Include="code\StreamWriter.h" />
     <ClInclude Include="code\StringComparison.h" />
+    <ClInclude Include="code\StringUtils.h" />
+    <ClCompile Include="code\SGSpatialSort.cpp" />
     <ClInclude Include="code\SGSpatialSort.h" />
+    <ClCompile Include="code\VertexTriangleAdjacency.cpp" />
     <ClInclude Include="code\VertexTriangleAdjacency.h" />
     <ClInclude Include="code\GenericProperty.h" />
+    <ClCompile Include="code\SpatialSort.cpp" />
     <ClInclude Include="code\SpatialSort.h" />
-    <ClInclude Include="code\SceneCombiner.h" />
+    <ClCompile Include="code\SceneCombiner.cpp" />
+    <ClCompile Include="code\ScenePreprocessor.cpp" />
     <ClInclude Include="code\ScenePreprocessor.h" />
+    <ClCompile Include="code\SkeletonMeshBuilder.cpp" />
     <ClInclude Include="code\SkeletonMeshBuilder.h" />
+    <ClCompile Include="code\SplitByBoneCountProcess.cpp" />
     <ClInclude Include="code\SplitByBoneCountProcess.h" />
+    <ClCompile Include="code\ScaleProcess.cpp" />
+    <ClInclude Include="code\ScaleProcess.h" />
     <ClInclude Include="code\SmoothingGroups.h" />
+    <ClCompile Include="code\StandardShapes.cpp" />
     <ClInclude Include="code\StandardShapes.h" />
+    <ClCompile Include="code\TargetAnimation.cpp" />
     <ClInclude Include="code\TargetAnimation.h" />
+    <ClCompile Include="code\RemoveComments.cpp" />
     <ClInclude Include="code\RemoveComments.h" />
+    <ClCompile Include="code\Subdivision.cpp" />
     <ClInclude Include="code\Subdivision.h" />
+    <ClCompile Include="code\scene.cpp" />
     <ClInclude Include="code\Vertex.h" />
     <ClInclude Include="code\LineSplitter.h" />
     <ClInclude Include="code\TinyFormatter.h" />
     <ClInclude Include="code\Profiler.h" />
     <ClInclude Include="code\LogAux.h" />
+    <ClCompile Include="code\Bitmap.cpp" />
     <ClInclude Include="code\Bitmap.h" />
+    <ClInclude Include="code\XMLTools.h" />
+    <ClCompile Include="code\Version.cpp" />
+    <ClInclude Include="code\IOStreamBuffer.h" />
+    <ClInclude Include="code\CreateAnimMesh.h" />
+    <ClCompile Include="code\CreateAnimMesh.cpp" />
     <ClInclude Include="include\assimp\DefaultLogger.hpp" />
     <ClInclude Include="include\assimp\LogStream.hpp" />
     <ClInclude Include="include\assimp\Logger.hpp" />
     <ClInclude Include="include\assimp\NullLogger.hpp" />
     <ClInclude Include="code\Win32DebugLogStream.h" />
+    <ClCompile Include="code\DefaultLogger.cpp" />
     <ClInclude Include="code\FileLogStream.h" />
     <ClInclude Include="code\StdOStreamLogStream.h" />
+    <ClCompile Include="code\Exporter.cpp" />
+    <ClCompile Include="code\AssimpCExport.cpp" />
     <ClInclude Include="code\BlobIOSystem.h" />
+    <ClCompile Include="code\CalcTangentsProcess.cpp" />
     <ClInclude Include="code\CalcTangentsProcess.h" />
+    <ClCompile Include="code\ComputeUVMappingProcess.cpp" />
     <ClInclude Include="code\ComputeUVMappingProcess.h" />
+    <ClCompile Include="code\ConvertToLHProcess.cpp" />
     <ClInclude Include="code\ConvertToLHProcess.h" />
+    <ClCompile Include="code\FindDegenerates.cpp" />
     <ClInclude Include="code\FindDegenerates.h" />
+    <ClCompile Include="code\FindInstancesProcess.cpp" />
     <ClInclude Include="code\FindInstancesProcess.h" />
+    <ClCompile Include="code\FindInvalidDataProcess.cpp" />
     <ClInclude Include="code\FindInvalidDataProcess.h" />
+    <ClCompile Include="code\FixNormalsStep.cpp" />
     <ClInclude Include="code\FixNormalsStep.h" />
+    <ClCompile Include="code\GenFaceNormalsProcess.cpp" />
     <ClInclude Include="code\GenFaceNormalsProcess.h" />
+    <ClCompile Include="code\GenVertexNormalsProcess.cpp" />
     <ClInclude Include="code\GenVertexNormalsProcess.h" />
+    <ClCompile Include="code\PretransformVertices.cpp" />
     <ClInclude Include="code\PretransformVertices.h" />
+    <ClCompile Include="code\ImproveCacheLocality.cpp" />
     <ClInclude Include="code\ImproveCacheLocality.h" />
+    <ClCompile Include="code\JoinVerticesProcess.cpp" />
     <ClInclude Include="code\JoinVerticesProcess.h" />
+    <ClCompile Include="code\LimitBoneWeightsProcess.cpp" />
     <ClInclude Include="code\LimitBoneWeightsProcess.h" />
+    <ClCompile Include="code\RemoveRedundantMaterials.cpp" />
     <ClInclude Include="code\RemoveRedundantMaterials.h" />
+    <ClCompile Include="code\RemoveVCProcess.cpp" />
     <ClInclude Include="code\RemoveVCProcess.h" />
+    <ClCompile Include="code\SortByPTypeProcess.cpp" />
     <ClInclude Include="code\SortByPTypeProcess.h" />
+    <ClCompile Include="code\SplitLargeMeshes.cpp" />
     <ClInclude Include="code\SplitLargeMeshes.h" />
+    <ClCompile Include="code\TextureTransform.cpp" />
     <ClInclude Include="code\TextureTransform.h" />
+    <ClCompile Include="code\TriangulateProcess.cpp" />
     <ClInclude Include="code\TriangulateProcess.h" />
+    <ClCompile Include="code\ValidateDataStructure.cpp" />
     <ClInclude Include="code\ValidateDataStructure.h" />
+    <ClCompile Include="code\OptimizeGraph.cpp" />
     <ClInclude Include="code\OptimizeGraph.h" />
+    <ClCompile Include="code\OptimizeMeshes.cpp" />
     <ClInclude Include="code\OptimizeMeshes.h" />
+    <ClCompile Include="code\DeboneProcess.cpp" />
     <ClInclude Include="code\DeboneProcess.h" />
     <ClInclude Include="code\ProcessHelper.h" />
+    <ClCompile Include="code\ProcessHelper.cpp" />
     <ClInclude Include="code\PolyTools.h" />
+    <ClCompile Include="code\MakeVerboseFormat.cpp" />
     <ClInclude Include="code\MakeVerboseFormat.h" />
-    <ClInclude Include="code\3DSHelper.h" />
-    <ClInclude Include="code\3DSLoader.h" />
-    <ClInclude Include="code\ACLoader.h" />
-    <ClInclude Include="code\ASELoader.h" />
-    <ClInclude Include="code\ASEParser.h" />
-    <ClInclude Include="code\B3DImporter.h" />
-    <ClInclude Include="code\BVHLoader.h" />
-    <ClInclude Include="code\ColladaHelper.h" />
-    <ClInclude Include="code\ColladaLoader.h" />
-    <ClInclude Include="code\ColladaParser.h" />
-    <ClInclude Include="code\ColladaExporter.h" />
-    <ClInclude Include="code\DXFLoader.h" />
-    <ClInclude Include="code\DXFHelper.h" />
-    <ClInclude Include="code\CSMLoader.h" />
-    <ClInclude Include="code\HMPFileData.h" />
-    <ClInclude Include="code\HMPLoader.h" />
-    <ClInclude Include="code\HalfLifeFileData.h" />
-    <ClInclude Include="code\IRRLoader.h" />
-    <ClInclude Include="code\IRRMeshLoader.h" />
-    <ClInclude Include="code\IRRShared.h" />
-    <ClInclude Include="code\LWOAnimation.h" />
-    <ClInclude Include="code\LWOFileData.h" />
-    <ClInclude Include="code\LWOLoader.h" />
-    <ClInclude Include="code\LWSLoader.h" />
-    <ClInclude Include="code\MD2FileData.h" />
-    <ClInclude Include="code\MD2Loader.h" />
-    <ClInclude Include="code\MD2NormalTable.h" />
-    <ClInclude Include="code\MD3FileData.h" />
-    <ClInclude Include="code\MD3Loader.h" />
-    <ClInclude Include="code\MD5Loader.h" />
-    <ClInclude Include="code\MD5Parser.h" />
-    <ClInclude Include="code\MDCFileData.h" />
-    <ClInclude Include="code\MDCLoader.h" />
-    <ClInclude Include="code\MDCNormalTable.h" />
-    <ClInclude Include="code\MDLDefaultColorMap.h" />
-    <ClInclude Include="code\MDLFileData.h" />
-    <ClInclude Include="code\MDLLoader.h" />
+    <ClCompile Include="code\MaterialSystem.cpp" />
     <ClInclude Include="code\MaterialSystem.h" />
-    <ClInclude Include="code\NFFLoader.h" />
-    <ClInclude Include="code\OFFLoader.h" />
+    <ClInclude Include="code\StepExporter.h" />
+    <ClCompile Include="code\StepExporter.cpp" />
     <ClInclude Include="code\ObjFileData.h" />
+    <ClCompile Include="code\ObjFileImporter.cpp" />
     <ClInclude Include="code\ObjFileImporter.h" />
+    <ClCompile Include="code\ObjFileMtlImporter.cpp" />
     <ClInclude Include="code\ObjFileMtlImporter.h" />
+    <ClCompile Include="code\ObjFileParser.cpp" />
     <ClInclude Include="code\ObjFileParser.h" />
     <ClInclude Include="code\ObjTools.h" />
     <ClInclude Include="code\ObjExporter.h" />
-    <ClInclude Include="code\OgreImporter.h" />
-    <ClInclude Include="code\OgreStructs.h" />
-    <ClInclude Include="code\OgreParsingUtils.h" />
-    <ClInclude Include="code\OgreBinarySerializer.h" />
-    <ClInclude Include="code\OgreXmlSerializer.h" />
-    <ClInclude Include="code\PlyLoader.h" />
-    <ClInclude Include="code\PlyParser.h" />
-    <ClInclude Include="code\PlyExporter.h" />
-    <ClInclude Include="code\Q3DLoader.h" />
-    <ClInclude Include="code\Q3BSPFileData.h" />
-    <ClInclude Include="code\Q3BSPFileParser.h" />
-    <ClInclude Include="code\Q3BSPFileImporter.h" />
-    <ClInclude Include="code\Q3BSPZipArchive.h" />
-    <ClInclude Include="code\RawLoader.h" />
-    <ClInclude Include="code\SMDLoader.h" />
-    <ClInclude Include="code\STLLoader.h" />
-    <ClInclude Include="code\STLExporter.h" />
-    <ClInclude Include="code\TerragenLoader.h" />
-    <ClInclude Include="code\UnrealLoader.h" />
-    <ClInclude Include="code\XFileHelper.h" />
-    <ClInclude Include="code\XFileImporter.h" />
-    <ClInclude Include="code\XFileParser.h" />
-    <ClInclude Include="code\MD4FileData.h" />
-    <ClInclude Include="code\MS3DLoader.h" />
-    <ClInclude Include="code\COBLoader.h" />
-    <ClInclude Include="code\COBScene.h" />
-    <ClInclude Include="code\BlenderLoader.h" />
-    <ClInclude Include="code\BlenderDNA.h" />
-    <ClInclude Include="code\BlenderDNA.inl" />
-    <ClInclude Include="code\BlenderScene.h" />
-    <ClInclude Include="code\BlenderSceneGen.h" />
-    <ClInclude Include="code\BlenderIntermediate.h" />
-    <ClInclude Include="code\BlenderModifier.h" />
-    <ClInclude Include="code\BlenderBMesh.h" />
-    <ClInclude Include="code\BlenderTessellator.h" />
-    <ClInclude Include="code\NDOLoader.h" />
-    <ClInclude Include="code\IFCLoader.h" />
-    <ClInclude Include="code\IFCReaderGen.h" />
-    <ClInclude Include="code\IFCUtil.h" />
-    <ClInclude Include="code\STEPFile.h" />
-    <ClInclude Include="code\STEPFileReader.h" />
-    <ClInclude Include="code\STEPFileEncoding.h" />
-    <ClInclude Include="code\XGLLoader.h" />
+    <ClCompile Include="code\ObjExporter.cpp" />
+    <ClCompile Include="code\FBXImporter.cpp" />
     <ClInclude Include="code\FBXCompileConfig.h" />
     <ClInclude Include="code\FBXImporter.h" />
+    <ClCompile Include="code\FBXParser.cpp" />
     <ClInclude Include="code\FBXParser.h" />
+    <ClCompile Include="code\FBXTokenizer.cpp" />
     <ClInclude Include="code\FBXTokenizer.h" />
     <ClInclude Include="code\FBXImportSettings.h" />
     <ClInclude Include="code\FBXConverter.h" />
+    <ClCompile Include="code\FBXConverter.cpp" />
     <ClInclude Include="code\FBXUtil.h" />
+    <ClCompile Include="code\FBXUtil.cpp" />
     <ClInclude Include="code\FBXDocument.h" />
+    <ClCompile Include="code\FBXDocument.cpp" />
     <ClInclude Include="code\FBXProperties.h" />
+    <ClCompile Include="code\FBXProperties.cpp" />
+    <ClInclude Include="code\FBXMeshGeometry.h" />
+    <ClCompile Include="code\FBXMeshGeometry.cpp" />
+    <ClCompile Include="code\FBXMaterial.cpp" />
+    <ClCompile Include="code\FBXModel.cpp" />
+    <ClCompile Include="code\FBXAnimation.cpp" />
+    <ClCompile Include="code\FBXNodeAttribute.cpp" />
+    <ClCompile Include="code\FBXDeformer.cpp" />
+    <ClCompile Include="code\FBXBinaryTokenizer.cpp" />
+    <ClCompile Include="code\FBXDocumentUtil.cpp" />
+    <ClInclude Include="code\glTFAsset.h" />
+    <ClInclude Include="code\glTFAsset.inl" />
+    <ClInclude Include="code\glTFAssetWriter.h" />
+    <ClInclude Include="code\glTFAssetWriter.inl" />
+    <ClCompile Include="code\glTFImporter.cpp" />
+    <ClInclude Include="code\glTFImporter.h" />
+    <ClInclude Include="code\glTFExporter.h" />
+    <ClCompile Include="code\glTFExporter.cpp" />
+    <ClInclude Include="code\glTF2Asset.h" />
+    <ClInclude Include="code\glTF2Asset.inl" />
+    <ClInclude Include="code\glTF2AssetWriter.h" />
+    <ClInclude Include="code\glTF2AssetWriter.inl" />
+    <ClCompile Include="code\glTF2Importer.cpp" />
+    <ClInclude Include="code\glTF2Importer.h" />
+    <ClInclude Include="code\glTF2Exporter.h" />
+    <ClCompile Include="code\glTF2Exporter.cpp" />
     <ClInclude Include="code\irrXMLWrapper.h" />
-    <ClInclude Include="contrib\irrXML\CXMLReaderImpl.h" />
-    <ClInclude Include="contrib\irrXML\heapsort.h" />
-    <ClInclude Include="contrib\irrXML\irrArray.h" />
-    <ClInclude Include="contrib\irrXML\irrString.h" />
-    <ClInclude Include="contrib\irrXML\irrTypes.h" />
-    <ClInclude Include="contrib\irrXML\irrXML.h" />
-    <ClInclude Include="contrib\ConvertUTF\ConvertUTF.h" />
     <ClInclude Include="contrib\unzip\crypt.h" />
+    <ClCompile Include="contrib\unzip\ioapi.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
     <ClInclude Include="contrib\unzip\ioapi.h" />
+    <ClCompile Include="contrib\unzip\unzip.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
     <ClInclude Include="contrib\unzip\unzip.h" />
+    <ClCompile Include="contrib\poly2tri\poly2tri\common\shapes.cc" />
     <ClInclude Include="contrib\poly2tri\poly2tri\common\shapes.h" />
     <ClInclude Include="contrib\poly2tri\poly2tri\common\utils.h" />
     <ClInclude Include="contrib\poly2tri\poly2tri\sweep\advancing_front.h" />
+    <ClCompile Include="contrib\poly2tri\poly2tri\sweep\advancing_front.cc" />
+    <ClCompile Include="contrib\poly2tri\poly2tri\sweep\cdt.cc" />
     <ClInclude Include="contrib\poly2tri\poly2tri\sweep\cdt.h" />
+    <ClCompile Include="contrib\poly2tri\poly2tri\sweep\sweep.cc" />
     <ClInclude Include="contrib\poly2tri\poly2tri\sweep\sweep.h" />
+    <ClCompile Include="contrib\poly2tri\poly2tri\sweep\sweep_context.cc" />
     <ClInclude Include="contrib\poly2tri\poly2tri\sweep\sweep_context.h" />
     <ClInclude Include="contrib\clipper\clipper.hpp" />
-    <ClInclude Include="code\BoostWorkaround\boost\math\common_factor_rt.hpp" />
-    <ClInclude Include="code\BoostWorkaround\boost\foreach.hpp" />
-    <ClInclude Include="code\BoostWorkaround\boost\format.hpp" />
-    <ClInclude Include="code\BoostWorkaround\boost\scoped_array.hpp" />
-    <ClInclude Include="code\BoostWorkaround\boost\scoped_ptr.hpp" />
-    <ClInclude Include="code\BoostWorkaround\boost\shared_array.hpp" />
-    <ClInclude Include="code\BoostWorkaround\boost\shared_ptr.hpp" />
-    <ClInclude Include="code\BoostWorkaround\boost\make_shared.hpp" />
-    <ClInclude Include="code\BoostWorkaround\boost\static_assert.hpp" />
-    <ClInclude Include="code\BoostWorkaround\boost\tuple\tuple.hpp" />
+    <ClCompile Include="contrib\clipper\clipper.cpp" />
+    <ClCompile Include="contrib\openddlparser\code\OpenDDLParser.cpp" />
+    <ClCompile Include="contrib\openddlparser\code\DDLNode.cpp" />
+    <ClCompile Include="contrib\openddlparser\code\OpenDDLCommon.cpp" />
+    <ClCompile Include="contrib\openddlparser\code\OpenDDLExport.cpp" />
+    <ClCompile Include="contrib\openddlparser\code\Value.cpp" />
+    <ClCompile Include="contrib\openddlparser\code\OpenDDLStream.cpp" />
+    <ClInclude Include="contrib\openddlparser\include\openddlparser\OpenDDLParser.h" />
+    <ClInclude Include="contrib\openddlparser\include\openddlparser\OpenDDLParserUtils.h" />
+    <ClInclude Include="contrib\openddlparser\include\openddlparser\OpenDDLCommon.h" />
+    <ClInclude Include="contrib\openddlparser\include\openddlparser\OpenDDLExport.h" />
+    <ClInclude Include="contrib\openddlparser\include\openddlparser\OpenDDLStream.h" />
+    <ClInclude Include="contrib\openddlparser\include\openddlparser\DDLNode.h" />
+    <ClInclude Include="contrib\openddlparser\include\openddlparser\Value.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcAdjacencyInfo.h" />
+    <ClCompile Include="contrib\Open3DGC\o3dgcArithmeticCodec.cpp" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcArithmeticCodec.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcBinaryStream.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcCommon.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcDVEncodeParams.h" />
+    <ClCompile Include="contrib\Open3DGC\o3dgcDynamicVectorDecoder.cpp" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcDynamicVectorDecoder.h" />
+    <ClCompile Include="contrib\Open3DGC\o3dgcDynamicVectorEncoder.cpp" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcDynamicVectorEncoder.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcDynamicVector.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcFIFO.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcIndexedFaceSet.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcIndexedFaceSet.inl" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcSC3DMCDecoder.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcSC3DMCDecoder.inl" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcSC3DMCEncodeParams.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcSC3DMCEncoder.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcSC3DMCEncoder.inl" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcTimer.h" />
+    <ClCompile Include="contrib\Open3DGC\o3dgcTools.cpp" />
+    <ClCompile Include="contrib\Open3DGC\o3dgcTriangleFans.cpp" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcTriangleFans.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcTriangleListDecoder.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcTriangleListDecoder.inl" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcTriangleListEncoder.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcTriangleListEncoder.inl" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcVector.h" />
+    <ClInclude Include="contrib\Open3DGC\o3dgcVector.inl" />
+    <ClInclude Include="contrib\zip\src\miniz.h" />
+    <ClCompile Include="contrib\zip\src\zip.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClInclude Include="contrib\zip\src\zip.h" />
     <ClInclude Include="include\assimp\anim.h" />
     <ClInclude Include="include\assimp\ai_assert.h" />
     <ClInclude Include="include\assimp\camera.h" />
@@ -544,6 +536,7 @@
     <ClInclude Include="include\assimp\color4.inl" />
     <ClInclude Include="include\assimp\config.h" />
     <ClInclude Include="include\assimp\defs.h" />
+    <ClInclude Include="include\assimp\Defines.h" />
     <ClInclude Include="include\assimp\cfileio.h" />
     <ClInclude Include="include\assimp\light.h" />
     <ClInclude Include="include\assimp\material.h" />
@@ -573,237 +566,12 @@
     <ClInclude Include="include\assimp\IOSystem.hpp" />
     <ClInclude Include="include\assimp\cexport.h" />
     <ClInclude Include="include\assimp\Exporter.hpp" />
+    <ClInclude Include="include\assimp\DefaultIOStream.h" />
+    <ClInclude Include="include\assimp\DefaultIOSystem.h" />
+    <ClInclude Include="include\assimp\SceneCombiner.h" />
     <ClInclude Include="include\assimp\Compiler\pushpack1.h" />
     <ClInclude Include="include\assimp\Compiler\poppack1.h" />
     <ClInclude Include="include\assimp\Compiler\pstdint.h" />
-    <ClCompile Include="contrib\zlib\adler32.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\compress.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\crc32.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\deflate.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\gzclose.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\gzlib.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\gzread.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\gzwrite.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\infback.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\inffast.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\inflate.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\inftrees.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\trees.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\uncompr.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\zlib\zutil.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="code\Assimp.cpp" />
-    <ClCompile Include="code\BaseImporter.cpp" />
-    <ClCompile Include="code\BaseProcess.cpp" />
-    <ClCompile Include="code\PostStepRegistry.cpp" />
-    <ClCompile Include="code\ImporterRegistry.cpp" />
-    <ClCompile Include="code\DefaultIOStream.cpp" />
-    <ClCompile Include="code\DefaultIOSystem.cpp" />
-    <ClCompile Include="code\Importer.cpp" />
-    <ClCompile Include="code\SGSpatialSort.cpp" />
-    <ClCompile Include="code\VertexTriangleAdjacency.cpp" />
-    <ClCompile Include="code\SpatialSort.cpp" />
-    <ClCompile Include="code\SceneCombiner.cpp" />
-    <ClCompile Include="code\ScenePreprocessor.cpp" />
-    <ClCompile Include="code\SkeletonMeshBuilder.cpp" />
-    <ClCompile Include="code\SplitByBoneCountProcess.cpp" />
-    <ClCompile Include="code\StandardShapes.cpp" />
-    <ClCompile Include="code\TargetAnimation.cpp" />
-    <ClCompile Include="code\RemoveComments.cpp" />
-    <ClCompile Include="code\Subdivision.cpp" />
-    <ClCompile Include="code\Bitmap.cpp" />
-    <ClCompile Include="code\DefaultLogger.cpp" />
-    <ClCompile Include="code\Exporter.cpp" />
-    <ClCompile Include="code\AssimpCExport.cpp" />
-    <ClCompile Include="code\CalcTangentsProcess.cpp" />
-    <ClCompile Include="code\ComputeUVMappingProcess.cpp" />
-    <ClCompile Include="code\ConvertToLHProcess.cpp" />
-    <ClCompile Include="code\FindDegenerates.cpp" />
-    <ClCompile Include="code\FindInstancesProcess.cpp" />
-    <ClCompile Include="code\FindInvalidDataProcess.cpp" />
-    <ClCompile Include="code\FixNormalsStep.cpp" />
-    <ClCompile Include="code\GenFaceNormalsProcess.cpp" />
-    <ClCompile Include="code\GenVertexNormalsProcess.cpp" />
-    <ClCompile Include="code\PretransformVertices.cpp" />
-    <ClCompile Include="code\ImproveCacheLocality.cpp" />
-    <ClCompile Include="code\JoinVerticesProcess.cpp" />
-    <ClCompile Include="code\LimitBoneWeightsProcess.cpp" />
-    <ClCompile Include="code\RemoveRedundantMaterials.cpp" />
-    <ClCompile Include="code\RemoveVCProcess.cpp" />
-    <ClCompile Include="code\SortByPTypeProcess.cpp" />
-    <ClCompile Include="code\SplitLargeMeshes.cpp" />
-    <ClCompile Include="code\TextureTransform.cpp" />
-    <ClCompile Include="code\TriangulateProcess.cpp" />
-    <ClCompile Include="code\ValidateDataStructure.cpp" />
-    <ClCompile Include="code\OptimizeGraph.cpp" />
-    <ClCompile Include="code\OptimizeMeshes.cpp" />
-    <ClCompile Include="code\DeboneProcess.cpp" />
-    <ClCompile Include="code\ProcessHelper.cpp" />
-    <ClCompile Include="code\MakeVerboseFormat.cpp" />
-    <ClCompile Include="code\3DSConverter.cpp" />
-    <ClCompile Include="code\3DSLoader.cpp" />
-    <ClCompile Include="code\ACLoader.cpp" />
-    <ClCompile Include="code\ASELoader.cpp" />
-    <ClCompile Include="code\ASEParser.cpp" />
-    <ClCompile Include="code\B3DImporter.cpp" />
-    <ClCompile Include="code\BVHLoader.cpp" />
-    <ClCompile Include="code\ColladaLoader.cpp" />
-    <ClCompile Include="code\ColladaParser.cpp" />
-    <ClCompile Include="code\ColladaExporter.cpp" />
-    <ClCompile Include="code\DXFLoader.cpp" />
-    <ClCompile Include="code\CSMLoader.cpp" />
-    <ClCompile Include="code\HMPLoader.cpp" />
-    <ClCompile Include="code\IRRLoader.cpp" />
-    <ClCompile Include="code\IRRMeshLoader.cpp" />
-    <ClCompile Include="code\IRRShared.cpp" />
-    <ClCompile Include="code\LWOAnimation.cpp" />
-    <ClCompile Include="code\LWOBLoader.cpp" />
-    <ClCompile Include="code\LWOLoader.cpp" />
-    <ClCompile Include="code\LWOMaterial.cpp" />
-    <ClCompile Include="code\LWSLoader.cpp" />
-    <ClCompile Include="code\MD2Loader.cpp" />
-    <ClCompile Include="code\MD3Loader.cpp" />
-    <ClCompile Include="code\MD5Loader.cpp" />
-    <ClCompile Include="code\MD5Parser.cpp" />
-    <ClCompile Include="code\MDCLoader.cpp" />
-    <ClCompile Include="code\MDLLoader.cpp" />
-    <ClCompile Include="code\MDLMaterialLoader.cpp" />
-    <ClCompile Include="code\MaterialSystem.cpp" />
-    <ClCompile Include="code\NFFLoader.cpp" />
-    <ClCompile Include="code\OFFLoader.cpp" />
-    <ClCompile Include="code\ObjFileImporter.cpp" />
-    <ClCompile Include="code\ObjFileMtlImporter.cpp" />
-    <ClCompile Include="code\ObjFileParser.cpp" />
-    <ClCompile Include="code\ObjExporter.cpp" />
-    <ClCompile Include="code\OgreImporter.cpp" />
-    <ClCompile Include="code\OgreStructs.cpp" />
-    <ClCompile Include="code\OgreBinarySerializer.cpp" />
-    <ClCompile Include="code\OgreXmlSerializer.cpp" />
-    <ClCompile Include="code\OgreMaterial.cpp" />
-    <ClCompile Include="code\PlyLoader.cpp" />
-    <ClCompile Include="code\PlyParser.cpp" />
-    <ClCompile Include="code\PlyExporter.cpp" />
-    <ClCompile Include="code\Q3DLoader.cpp" />
-    <ClCompile Include="code\Q3BSPFileParser.cpp" />
-    <ClCompile Include="code\Q3BSPFileImporter.cpp" />
-    <ClCompile Include="code\Q3BSPZipArchive.cpp" />
-    <ClCompile Include="code\RawLoader.cpp" />
-    <ClCompile Include="code\SMDLoader.cpp" />
-    <ClCompile Include="code\STLLoader.cpp" />
-    <ClCompile Include="code\STLExporter.cpp" />
-    <ClCompile Include="code\TerragenLoader.cpp" />
-    <ClCompile Include="code\UnrealLoader.cpp" />
-    <ClCompile Include="code\XFileImporter.cpp" />
-    <ClCompile Include="code\XFileParser.cpp" />
-    <ClCompile Include="code\MS3DLoader.cpp" />
-    <ClCompile Include="code\COBLoader.cpp" />
-    <ClCompile Include="code\BlenderLoader.cpp" />
-    <ClCompile Include="code\BlenderDNA.cpp" />
-    <ClCompile Include="code\BlenderScene.cpp" />
-    <ClCompile Include="code\BlenderModifier.cpp" />
-    <ClCompile Include="code\BlenderBMesh.cpp" />
-    <ClCompile Include="code\BlenderTessellator.cpp" />
-    <ClCompile Include="code\NDOLoader.cpp" />
-    <ClCompile Include="code\IFCLoader.cpp" />
-    <ClCompile Include="code\IFCReaderGen.cpp" />
-    <ClCompile Include="code\IFCUtil.cpp" />
-    <ClCompile Include="code\IFCGeometry.cpp" />
-    <ClCompile Include="code\IFCMaterial.cpp" />
-    <ClCompile Include="code\IFCProfile.cpp" />
-    <ClCompile Include="code\IFCCurve.cpp" />
-    <ClCompile Include="code\IFCBoolean.cpp" />
-    <ClCompile Include="code\IFCOpenings.cpp" />
-    <ClCompile Include="code\STEPFileReader.cpp" />
-    <ClCompile Include="code\STEPFileEncoding.cpp" />
-    <ClCompile Include="code\XGLLoader.cpp" />
-    <ClCompile Include="code\FBXImporter.cpp" />
-    <ClCompile Include="code\FBXParser.cpp" />
-    <ClCompile Include="code\FBXTokenizer.cpp" />
-    <ClCompile Include="code\FBXConverter.cpp" />
-    <ClCompile Include="code\FBXUtil.cpp" />
-    <ClCompile Include="code\FBXDocument.cpp" />
-    <ClCompile Include="code\FBXProperties.cpp" />
-    <ClCompile Include="code\FBXMeshGeometry.cpp" />
-    <ClCompile Include="code\FBXMaterial.cpp" />
-    <ClCompile Include="code\FBXModel.cpp" />
-    <ClCompile Include="code\FBXAnimation.cpp" />
-    <ClCompile Include="code\FBXNodeAttribute.cpp" />
-    <ClCompile Include="code\FBXDeformer.cpp" />
-    <ClCompile Include="code\FBXBinaryTokenizer.cpp" />
-    <ClCompile Include="code\FBXDocumentUtil.cpp" />
-    <ClCompile Include="contrib\irrXML\irrXML.cpp" />
-    <ClCompile Include="contrib\ConvertUTF\ConvertUTF.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\unzip\ioapi.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\unzip\unzip.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release Static|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">CompileAsC</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="contrib\poly2tri\poly2tri\common\shapes.cc" />
-    <ClCompile Include="contrib\poly2tri\poly2tri\sweep\advancing_front.cc" />
-    <ClCompile Include="contrib\poly2tri\poly2tri\sweep\cdt.cc" />
-    <ClCompile Include="contrib\poly2tri\poly2tri\sweep\sweep.cc" />
-    <ClCompile Include="contrib\poly2tri\poly2tri\sweep\sweep_context.cc" />
-    <ClCompile Include="contrib\clipper\clipper.cpp" />
-    <ClCompile Include="code\AssimpPCH.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

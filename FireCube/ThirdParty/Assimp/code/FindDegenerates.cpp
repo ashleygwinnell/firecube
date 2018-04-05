@@ -3,12 +3,13 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2012, assimp team
+Copyright (c) 2006-2017, assimp team
+
 
 All rights reserved.
 
-Redistribution and use of this software in source and binary forms, 
-with or without modification, are permitted provided that the following 
+Redistribution and use of this software in source and binary forms,
+with or without modification, are permitted provided that the following
 conditions are met:
 
 * Redistributions of source code must retain the above
@@ -25,16 +26,16 @@ conditions are met:
   derived from this software without specific prior
   written permission of the assimp team.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
 OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
 LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---------------------------------------------------------------------------
 */
@@ -43,174 +44,215 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *  @brief Implementation of the FindDegenerates post-process step.
 */
 
-#include "AssimpPCH.h"
+
 
 // internal headers
 #include "ProcessHelper.h"
 #include "FindDegenerates.h"
+#include "Exceptional.h"
 
 using namespace Assimp;
 
 // ------------------------------------------------------------------------------------------------
 // Constructor to be privately used by Importer
 FindDegeneratesProcess::FindDegeneratesProcess()
-: configRemoveDegenerates (false)
-{}
+: mConfigRemoveDegenerates( false )
+, mConfigCheckAreaOfTriangle( false ){
+    // empty
+}
 
 // ------------------------------------------------------------------------------------------------
 // Destructor, private as well
-FindDegeneratesProcess::~FindDegeneratesProcess()
-{
-	// nothing to do here
+FindDegeneratesProcess::~FindDegeneratesProcess() {
+    // nothing to do here
 }
 
 // ------------------------------------------------------------------------------------------------
 // Returns whether the processing step is present in the given flag field.
-bool FindDegeneratesProcess::IsActive( unsigned int pFlags) const
-{
-	return 0 != (pFlags & aiProcess_FindDegenerates);
+bool FindDegeneratesProcess::IsActive( unsigned int pFlags) const {
+    return 0 != (pFlags & aiProcess_FindDegenerates);
 }
 
 // ------------------------------------------------------------------------------------------------
 // Setup import configuration
-void FindDegeneratesProcess::SetupProperties(const Importer* pImp)
-{
-	// Get the current value of AI_CONFIG_PP_FD_REMOVE
-	configRemoveDegenerates = (0 != pImp->GetPropertyInteger(AI_CONFIG_PP_FD_REMOVE,0));
+void FindDegeneratesProcess::SetupProperties(const Importer* pImp) {
+    // Get the current value of AI_CONFIG_PP_FD_REMOVE
+    mConfigRemoveDegenerates = (0 != pImp->GetPropertyInteger(AI_CONFIG_PP_FD_REMOVE,0));
+    mConfigCheckAreaOfTriangle = ( 0 != pImp->GetPropertyInteger(AI_CONFIG_PP_FD_CHECKAREA) );
 }
 
 // ------------------------------------------------------------------------------------------------
 // Executes the post processing step on the given imported data.
-void FindDegeneratesProcess::Execute( aiScene* pScene)
-{
-	DefaultLogger::get()->debug("FindDegeneratesProcess begin");
-	for (unsigned int i = 0; i < pScene->mNumMeshes;++i){
-		ExecuteOnMesh( pScene->mMeshes[i]);
-	}
-	DefaultLogger::get()->debug("FindDegeneratesProcess finished");
+void FindDegeneratesProcess::Execute( aiScene* pScene) {
+    DefaultLogger::get()->debug("FindDegeneratesProcess begin");
+    for (unsigned int i = 0; i < pScene->mNumMeshes;++i){
+        ExecuteOnMesh( pScene->mMeshes[ i ] );
+    }
+    DefaultLogger::get()->debug("FindDegeneratesProcess finished");
+}
+
+static ai_real heron( ai_real a, ai_real b, ai_real c ) {
+    ai_real s = (a + b + c) / 2;
+    ai_real area = pow((s * ( s - a ) * ( s - b ) * ( s - c ) ), (ai_real)0.5 );
+    return area;
+}
+
+static ai_real distance3D( const aiVector3D &vA, aiVector3D &vB ) {
+    const ai_real lx = ( vB.x - vA.x );
+    const ai_real ly = ( vB.y - vA.y );
+    const ai_real lz = ( vB.z - vA.z );
+    ai_real a = lx*lx + ly*ly + lz*lz;
+    ai_real d = pow( a, (ai_real)0.5 );
+
+    return d;
+}
+
+static ai_real calculateAreaOfTriangle( const aiFace& face, aiMesh* mesh ) {
+    ai_real area = 0;
+
+    aiVector3D vA( mesh->mVertices[ face.mIndices[ 0 ] ] );
+    aiVector3D vB( mesh->mVertices[ face.mIndices[ 1 ] ] );
+    aiVector3D vC( mesh->mVertices[ face.mIndices[ 2 ] ] );
+
+    ai_real a( distance3D( vA, vB ) );
+    ai_real b( distance3D( vB, vC ) );
+    ai_real c( distance3D( vC, vA ) );
+    area = heron( a, b, c );
+
+    return area;
 }
 
 // ------------------------------------------------------------------------------------------------
 // Executes the post processing step on the given imported mesh
-void FindDegeneratesProcess::ExecuteOnMesh( aiMesh* mesh)
-{
-	mesh->mPrimitiveTypes = 0;
+void FindDegeneratesProcess::ExecuteOnMesh( aiMesh* mesh) {
+    mesh->mPrimitiveTypes = 0;
 
-	std::vector<bool> remove_me; 
-	if (configRemoveDegenerates)
-		remove_me.resize(mesh->mNumFaces,false);
+    std::vector<bool> remove_me;
+    if (mConfigRemoveDegenerates) {
+        remove_me.resize( mesh->mNumFaces, false );
+    }
 
-	unsigned int deg = 0, limit;
-	for (unsigned int a = 0; a < mesh->mNumFaces; ++a)
-	{
-		aiFace& face = mesh->mFaces[a];
-		bool first = true;
+    unsigned int deg = 0, limit;
+    for ( unsigned int a = 0; a < mesh->mNumFaces; ++a ) {
+        aiFace& face = mesh->mFaces[a];
+        bool first = true;
 
-		// check whether the face contains degenerated entries
-		for (register unsigned int i = 0; i < face.mNumIndices; ++i)
-		{
-			// Polygons with more than 4 points are allowed to have double points, that is
-			// simulating polygons with holes just with concave polygons. However,
-			// double points may not come directly after another.
-			limit = face.mNumIndices;
-			if (face.mNumIndices > 4)
-				limit = std::min(limit,i+2);
+        // check whether the face contains degenerated entries
+        for (unsigned int i = 0; i < face.mNumIndices; ++i) {
+            // Polygons with more than 4 points are allowed to have double points, that is
+            // simulating polygons with holes just with concave polygons. However,
+            // double points may not come directly after another.
+            limit = face.mNumIndices;
+            if (face.mNumIndices > 4) {
+                limit = std::min( limit, i+2 );
+            }
 
-			for (register unsigned int t = i+1; t < limit; ++t)
-			{
-				if (mesh->mVertices[face.mIndices[i]] == mesh->mVertices[face.mIndices[t]])
-				{
-					// we have found a matching vertex position
-					// remove the corresponding index from the array
-					--face.mNumIndices;--limit;
-					for (unsigned int m = t; m < face.mNumIndices; ++m)
-					{
-						face.mIndices[m] = face.mIndices[m+1];
-					}
-					--t; 
+            for (unsigned int t = i+1; t < limit; ++t) {
+                if (mesh->mVertices[face.mIndices[ i ] ] == mesh->mVertices[ face.mIndices[ t ] ]) {
+                    // we have found a matching vertex position
+                    // remove the corresponding index from the array
+                    --face.mNumIndices;
+                    --limit;
+                    for (unsigned int m = t; m < face.mNumIndices; ++m) {
+                        face.mIndices[ m ] = face.mIndices[ m+1 ];
+                    }
+                    --t;
 
-					// NOTE: we set the removed vertex index to an unique value
-					// to make sure the developer gets notified when his
-					// application attemps to access this data.
-					face.mIndices[face.mNumIndices] = 0xdeadbeef;
+                    // NOTE: we set the removed vertex index to an unique value
+                    // to make sure the developer gets notified when his
+                    // application attemps to access this data.
+                    face.mIndices[ face.mNumIndices ] = 0xdeadbeef;
 
-					if(first)
-					{
-						++deg;
-						first = false;
-					}
+                    if(first) {
+                        ++deg;
+                        first = false;
+                    }
 
-					if (configRemoveDegenerates) {
-						remove_me[a] = true;
-						goto evil_jump_outside; // hrhrhrh ... yeah, this rocks baby!
-					}
-				}
-			}
-		}
+                    if ( mConfigRemoveDegenerates ) {
+                        remove_me[ a ] = true;
+                        goto evil_jump_outside; // hrhrhrh ... yeah, this rocks baby!
+                    }
+                }
+            }
 
-		// We need to update the primitive flags array of the mesh.
-		switch (face.mNumIndices)
-		{
-		case 1u:
-			mesh->mPrimitiveTypes |= aiPrimitiveType_POINT;
-			break;
-		case 2u:
-			mesh->mPrimitiveTypes |= aiPrimitiveType_LINE;
-			break;
-		case 3u:
-			mesh->mPrimitiveTypes |= aiPrimitiveType_TRIANGLE;
-			break;
-		default:
-			mesh->mPrimitiveTypes |= aiPrimitiveType_POLYGON;
-			break;
-		};
+            if ( mConfigCheckAreaOfTriangle ) {
+                if ( face.mNumIndices == 3 ) {
+                    ai_real area = calculateAreaOfTriangle( face, mesh );
+                    if ( area < 1e-6 ) {
+                        if ( mConfigRemoveDegenerates ) {
+                            remove_me[ a ] = true;
+                            goto evil_jump_outside;
+                        }
+
+                        // todo: check for index which is corrupt.
+                    }
+                }
+            }
+        }
+
+        // We need to update the primitive flags array of the mesh.
+        switch (face.mNumIndices)
+        {
+        case 1u:
+            mesh->mPrimitiveTypes |= aiPrimitiveType_POINT;
+            break;
+        case 2u:
+            mesh->mPrimitiveTypes |= aiPrimitiveType_LINE;
+            break;
+        case 3u:
+            mesh->mPrimitiveTypes |= aiPrimitiveType_TRIANGLE;
+            break;
+        default:
+            mesh->mPrimitiveTypes |= aiPrimitiveType_POLYGON;
+            break;
+        };
 evil_jump_outside:
-		continue;
-	}
+        continue;
+    }
 
-	// If AI_CONFIG_PP_FD_REMOVE is true, remove degenerated faces from the import
-	if (configRemoveDegenerates && deg) {
-		unsigned int n = 0;
-		for (unsigned int a = 0; a < mesh->mNumFaces; ++a)
-		{
-			aiFace& face_src = mesh->mFaces[a];
-			if (!remove_me[a]) {
-				aiFace& face_dest = mesh->mFaces[n++];
+    // If AI_CONFIG_PP_FD_REMOVE is true, remove degenerated faces from the import
+    if (mConfigRemoveDegenerates && deg) {
+        unsigned int n = 0;
+        for (unsigned int a = 0; a < mesh->mNumFaces; ++a)
+        {
+            aiFace& face_src = mesh->mFaces[a];
+            if (!remove_me[a]) {
+                aiFace& face_dest = mesh->mFaces[n++];
 
-				// Do a manual copy, keep the index array
-				face_dest.mNumIndices = face_src.mNumIndices;
-				face_dest.mIndices    = face_src.mIndices;
+                // Do a manual copy, keep the index array
+                face_dest.mNumIndices = face_src.mNumIndices;
+                face_dest.mIndices    = face_src.mIndices;
 
-				if (&face_src != &face_dest) {
-					// clear source
-					face_src.mNumIndices = 0;
-					face_src.mIndices = NULL;
-				}
-			}
-			else {
-				// Otherwise delete it if we don't need this face
-				delete[] face_src.mIndices;
-				face_src.mIndices = NULL;
-				face_src.mNumIndices = 0;
-			}
-		}
-		// Just leave the rest of the array unreferenced, we don't care for now
-		mesh->mNumFaces = n;
-		if (!mesh->mNumFaces) {
-			// WTF!? 
-			// OK ... for completeness and because I'm not yet tired,
-			// let's write code that willl hopefully never be called
-			// (famous last words)
+                if (&face_src != &face_dest) {
+                    // clear source
+                    face_src.mNumIndices = 0;
+                    face_src.mIndices = NULL;
+                }
+            }
+            else {
+                // Otherwise delete it if we don't need this face
+                delete[] face_src.mIndices;
+                face_src.mIndices = NULL;
+                face_src.mNumIndices = 0;
+            }
+        }
+        // Just leave the rest of the array unreferenced, we don't care for now
+        mesh->mNumFaces = n;
+        if (!mesh->mNumFaces) {
+            // WTF!?
+            // OK ... for completeness and because I'm not yet tired,
+            // let's write code that willl hopefully never be called
+            // (famous last words)
 
-			// OK ... bad idea.
-			throw DeadlyImportError("Mesh is empty after removal of degenerated primitives ... WTF!?");
-		}
-	}
+            // OK ... bad idea.
+            throw DeadlyImportError("Mesh is empty after removal of degenerated primitives ... WTF!?");
+        }
+    }
 
-	if (deg && !DefaultLogger::isNullLogger())
-	{
-		char s[64];
-		ASSIMP_itoa10(s,deg); 
-		DefaultLogger::get()->warn(std::string("Found ") + s + " degenerated primitives");
-	}
+    if (deg && !DefaultLogger::isNullLogger())
+    {
+        char s[64];
+        ASSIMP_itoa10(s,deg);
+        DefaultLogger::get()->warn(std::string("Found ") + s + " degenerated primitives");
+    }
 }

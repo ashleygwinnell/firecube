@@ -2,11 +2,12 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2012, assimp team
+Copyright (c) 2006-2017, assimp team
+
 All rights reserved.
 
-Redistribution and use of this software in source and binary forms, 
-with or without modification, are permitted provided that the 
+Redistribution and use of this software in source and binary forms,
+with or without modification, are permitted provided that the
 following conditions are met:
 
 * Redistributions of source code must retain the above
@@ -23,35 +24,36 @@ following conditions are met:
   derived from this software without specific prior
   written permission of the assimp team.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
 OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
 LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ----------------------------------------------------------------------
 */
 
 /** @file  FBXProperties.h
- *  @brief FBX dynamic properties 
+ *  @brief FBX dynamic properties
  */
 #ifndef INCLUDED_AI_FBX_PROPERTIES_H
 #define INCLUDED_AI_FBX_PROPERTIES_H
 
-#include <map>
+#include "FBXCompileConfig.h"
+#include <memory>
 #include <string>
 
 namespace Assimp {
 namespace FBX {
 
-	class Element;
-
+// Forward declarations
+class Element;
 
 /** Represents a dynamic property. Type info added by deriving classes,
  *  see #TypedProperty.
@@ -59,133 +61,112 @@ namespace FBX {
  @verbatim
    P: "ShininessExponent", "double", "Number", "",0.5
  @endvebatim
-
 */
-class Property
-{
+class Property {
 protected:
-
-	Property();
-
-public:
-
-	virtual ~Property();
+    Property();
 
 public:
+    virtual ~Property();
 
-	template <typename T>
-	const T* As() const {
-		return dynamic_cast<const T*>(this);
-	}
+public:
+    template <typename T>
+    const T* As() const {
+        return dynamic_cast<const T*>(this);
+    }
 };
-
 
 template<typename T>
-class TypedProperty : public Property
-{
+class TypedProperty : public Property {
 public:
+    explicit TypedProperty(const T& value)
+    : value(value) {
+        // empty
+    }
 
-	TypedProperty(const T& value) 
-		: value(value)
-	{
-	}
-
-public:
-
-	const T& Value() const {
-		return value;
-	}
+    const T& Value() const {
+        return value;
+    }
 
 private:
-	T value;
+    T value;
 };
 
 
-typedef std::fbx_unordered_map<std::string,boost::shared_ptr<Property> > DirectPropertyMap;
-typedef std::fbx_unordered_map<std::string,const Property*> PropertyMap;
-typedef std::fbx_unordered_map<std::string,const Element*> LazyPropertyMap;
+typedef std::fbx_unordered_map<std::string,std::shared_ptr<Property> > DirectPropertyMap;
+typedef std::fbx_unordered_map<std::string,const Property*>            PropertyMap;
+typedef std::fbx_unordered_map<std::string,const Element*>             LazyPropertyMap;
 
-/** Represents a property table as can be found in the newer FBX files (Properties60, Properties70)*/
-class PropertyTable
-{
+/** 
+ *  Represents a property table as can be found in the newer FBX files (Properties60, Properties70)
+ */
+class PropertyTable {
 public:
+    // in-memory property table with no source element
+    PropertyTable();
+    PropertyTable(const Element& element, std::shared_ptr<const PropertyTable> templateProps);
+    ~PropertyTable();
 
-	// in-memory property table with no source element
-	PropertyTable();
-	
-	PropertyTable(const Element& element, boost::shared_ptr<const PropertyTable> templateProps);
-	~PropertyTable();
+    const Property* Get(const std::string& name) const;
 
-public:
+    // PropertyTable's need not be coupled with FBX elements so this can be NULL
+    const Element* GetElement() const {
+        return element;
+    }
 
-	const Property* Get(const std::string& name) const;
+    const PropertyTable* TemplateProps() const {
+        return templateProps.get();
+    }
 
-	// PropertyTable's need not be coupled with FBX elements so this can be NULL
-	const Element* GetElement() const {
-		return element;
-	}
-
-	const PropertyTable* TemplateProps() const {
-		return templateProps.get();
-	}
-
-	DirectPropertyMap GetUnparsedProperties() const;
+    DirectPropertyMap GetUnparsedProperties() const;
 
 private:
-
-	LazyPropertyMap lazyProps;
-	mutable PropertyMap props;
-	const boost::shared_ptr<const PropertyTable> templateProps;
-	const Element* const element;
+    LazyPropertyMap lazyProps;
+    mutable PropertyMap props;
+    const std::shared_ptr<const PropertyTable> templateProps;
+    const Element* const element;
 };
 
+// ------------------------------------------------------------------------------------------------
+template <typename T>
+inline 
+T PropertyGet(const PropertyTable& in, const std::string& name, const T& defaultValue) {
+    const Property* const prop = in.Get(name);
+    if( nullptr == prop) {
+        return defaultValue;
+    }
+
+    // strong typing, no need to be lenient
+    const TypedProperty<T>* const tprop = prop->As< TypedProperty<T> >();
+    if( nullptr == tprop) {
+        return defaultValue;
+    }
+
+    return tprop->Value();
+}
 
 // ------------------------------------------------------------------------------------------------
 template <typename T>
-inline T PropertyGet(const PropertyTable& in, const std::string& name, 
-	const T& defaultValue, 
-	bool ignoreTemplate = false)
-{
-	const Property* const prop = in.Get(name);
-	if(!prop) {
-		return defaultValue;
-	}
+inline 
+T PropertyGet(const PropertyTable& in, const std::string& name, bool& result) {
+    const Property* const prop = in.Get(name);
+    if( nullptr == prop) {
+        result = false;
+        return T();
+    }
 
-	// strong typing, no need to be lenient 
-	const TypedProperty<T>* const tprop = prop->As< TypedProperty<T> >();
-	if(!tprop) {
-		return defaultValue;
-	}
+    // strong typing, no need to be lenient
+    const TypedProperty<T>* const tprop = prop->As< TypedProperty<T> >();
+    if( nullptr == tprop) {
+        result = false;
+        return T();
+    }
 
-	return tprop->Value();
+    result = true;
+    return tprop->Value();
 }
-
-
-// ------------------------------------------------------------------------------------------------
-template <typename T>
-inline T PropertyGet(const PropertyTable& in, const std::string& name, 
-	bool& result, 
-	bool ignoreTemplate = false)
-{
-	const Property* const prop = in.Get(name);
-	if(!prop) {
-		result = false;
-		return T();
-	}
-
-	// strong typing, no need to be lenient 
-	const TypedProperty<T>* const tprop = prop->As< TypedProperty<T> >();
-	if(!tprop) {
-		result = false;
-		return T();
-	}
-
-	result = true;
-	return tprop->Value();
-}
-
 
 } //! FBX
 } //! Assimp
 
-#endif //
+#endif // INCLUDED_AI_FBX_PROPERTIES_H
