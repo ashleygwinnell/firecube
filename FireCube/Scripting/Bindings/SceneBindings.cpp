@@ -138,7 +138,7 @@ sol::object GetComponents(Node *node, const std::string &type, bool recursive, s
 	std::vector<Component *> components;
 	node->GetComponents(type, components, recursive);
 
-	return sol::object(s, sol::in_place, components);	
+	return sol::object(s, sol::in_place, components);
 }
 
 sol::object GetScriptObject(Node *node, const std::string &objectName, sol::this_state s)
@@ -248,6 +248,18 @@ Node *NodeNew(Engine *engine, const std::string &name)
 	return new Node(engine, name);
 }
 
+std::vector<Node *> GetChildren(const Node &node, sol::this_state s)
+{
+	std::vector<Node *> ret;
+	ret.reserve(node.GetChildren().size());
+	for (auto &child : node.GetChildren())
+	{
+		ret.push_back(child.Get());
+	}
+	
+	return ret;
+}
+
 void LuaBindings::InitScene(sol::state &luaState)
 {
 	luaState.new_usertype<Scene>("Scene",
@@ -275,7 +287,7 @@ void LuaBindings::InitScene(sol::state &luaState)
 		"RemoveComponent", &Node::RemoveComponent,
 		"Remove", &Node::Remove,
 		"name", sol::property(&Node::GetName, &Node::SetName),
-		"children", sol::property(&Node::GetChildren),
+		"children", sol::property(&GetChildren),
 		"CreateChild", &Node::CreateChild,
 		"new", &NodeNew,
 		"LookAt", &Node::LookAt,
