@@ -248,18 +248,6 @@ Node *NodeNew(Engine *engine, const std::string &name)
 	return new Node(engine, name);
 }
 
-std::vector<Node *> GetChildren(const Node &node, sol::this_state s)
-{
-	std::vector<Node *> ret;
-	ret.reserve(node.GetChildren().size());
-	for (auto &child : node.GetChildren())
-	{
-		ret.push_back(child.Get());
-	}
-	
-	return ret;
-}
-
 void LuaBindings::InitScene(sol::state &luaState)
 {
 	luaState.new_usertype<Scene>("Scene",
@@ -287,7 +275,16 @@ void LuaBindings::InitScene(sol::state &luaState)
 		"RemoveComponent", &Node::RemoveComponent,
 		"Remove", &Node::Remove,
 		"name", sol::property(&Node::GetName, &Node::SetName),
-		"children", sol::property(&GetChildren),
+		"children", sol::property([](const Node &self) {
+			std::vector<Node *> ret;
+			ret.reserve(self.GetChildren().size());
+			for (auto &child : self.GetChildren())
+			{
+				ret.push_back(child.Get());
+			}
+
+			return ret;
+		}),
 		"CreateChild", &Node::CreateChild,
 		"new", &NodeNew,
 		"LookAt", &Node::LookAt,
