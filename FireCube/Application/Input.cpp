@@ -207,9 +207,12 @@ void InputManager::ResetInputState()
 	const AnalogInput valuesToClear[] = { AnalogInput::MOUSE_AXIS_X_RELATIVE, AnalogInput::MOUSE_AXIS_Y_RELATIVE, AnalogInput::MOUSE_WHEEL_Y_RELATIVE };
 	for (auto v : valuesToClear) {
 		auto i = mappedAnalogs.find(v);
-		for (auto j : i->second)
+		if (i != mappedAnalogs.end())
 		{
-			mappedInput.values[j] = 0.0f;
+			for (auto j : i->second)
+			{
+				mappedInput.values[j] = 0.0f;
+			}
 		}
 	}
 	releasedKeys.clear();
