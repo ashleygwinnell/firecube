@@ -73,7 +73,7 @@ KeyModifier operator & (const KeyModifier &lhs, const KeyModifier &rhs);
 enum class AnalogInput
 {
 	MOUSE_AXIS_X_RELATIVE, MOUSE_AXIS_Y_RELATIVE, MOUSE_AXIS_X_ABSOLUTE, MOUSE_AXIS_Y_ABSOLUTE, MOUSE_WHEEL_Y_RELATIVE,
-	GAME_CONTROLLER_LEFT_X, GAME_CONTROLLER_RIGHT_X, GAME_CONTROLLER_LEFT_Y, GAME_CONTROLLER_RIGHT_Y
+	GAME_CONTROLLER_LEFT_X, GAME_CONTROLLER_RIGHT_X, GAME_CONTROLLER_LEFT_Y, GAME_CONTROLLER_RIGHT_Y, GAME_CONTROLLER_TRIGGER_LEFT, GAME_CONTROLLER_TRIGGER_RIGHT
 };
 
 /**
@@ -104,13 +104,6 @@ public:
 	* @return The value of a mapped analog input.
 	*/
 	float GetValue(const std::string &name) const;
-
-	/**
-	* Checks whether a given analog input has a value.
-	* @param name The name of the mapped analog input.
-	* @return True if the given analog input currently has a value.
-	*/
-	bool HasValue(const std::string &name) const;
 private:
 	std::set<std::string> states;
 	std::set<std::string> actions;

@@ -183,7 +183,7 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 		defaultCamera->RotateY(-deltaX / 60.0f);
 	}
 
-	if (mouseOverView && input.HasValue("MouseWheelY"))
+	if (mouseOverView && std::abs(input.GetValue("MouseWheelY")) > 0.0f)
 	{
 		defaultCamera->Zoom(input.GetValue("MouseWheelY") * (engine->GetInputManager()->IsKeyDown(Key::LEFT_SHIFT) ? 20.0f : 80.0f));
 	}

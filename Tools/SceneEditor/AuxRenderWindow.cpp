@@ -100,7 +100,7 @@ void AuxRenderWindow::HandleInput(float dt, const MappedInput &input)
 		camera->RotateY(-deltaX / 60.0f);
 	}
 
-	if (mouseOverView && input.HasValue("MouseWheelY"))
+	if (mouseOverView && std::abs(input.GetValue("MouseWheelY")) > 0.0f)
 	{
 		camera->Zoom(dt * input.GetValue("MouseWheelY") * 600.0f);
 	}

@@ -33,12 +33,6 @@ float MappedInput::GetValue(const std::string &name) const
 	return i->second;
 }
 
-bool MappedInput::HasValue(const std::string &name) const
-{
-	std::map<std::string, float>::const_iterator i = values.find(name);
-	return i != values.end();
-}
-
 void InputManager::AddMapping(Key key, InputMappingType inputMappingType, const std::string &actionName, KeyModifier modifier)
 {
 	// Add a mapping to the list of mappings of the given key
@@ -210,7 +204,14 @@ const MappedInput &InputManager::GetMappedInput() const
 void InputManager::ResetInputState()
 {
 	mappedInput.actions.clear();
-	mappedInput.values.clear();
+	const AnalogInput valuesToClear[] = { AnalogInput::MOUSE_AXIS_X_RELATIVE, AnalogInput::MOUSE_AXIS_Y_RELATIVE, AnalogInput::MOUSE_WHEEL_Y_RELATIVE };
+	for (auto v : valuesToClear) {
+		auto i = mappedAnalogs.find(v);
+		for (auto j : i->second)
+		{
+			mappedInput.values[j] = 0.0f;
+		}
+	}
 	releasedKeys.clear();
 	
 	// Trigger no key input (mainly used to detect mouse movement)

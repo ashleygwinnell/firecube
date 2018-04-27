@@ -442,16 +442,22 @@ void Application::ProcessInput(const SDL_Event &event)
 		switch (event.caxis.axis)
 		{
 		case SDL_CONTROLLER_AXIS_LEFTX:
-			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_LEFT_X, (float)event.caxis.value);
+			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_LEFT_X, (float)event.caxis.value / 32768.0f);
 			break;
 		case SDL_CONTROLLER_AXIS_RIGHTX:
-			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_RIGHT_X, (float)event.caxis.value);
+			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_RIGHT_X, (float)event.caxis.value / 32768.0f);
 			break;
 		case SDL_CONTROLLER_AXIS_LEFTY:
-			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_LEFT_Y, (float)event.caxis.value);
+			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_LEFT_Y, (float)event.caxis.value / 32768.0f);
 			break;
 		case SDL_CONTROLLER_AXIS_RIGHTY:
-			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_RIGHT_Y, (float)event.caxis.value);
+			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_RIGHT_Y, (float)event.caxis.value / 32768.0f);
+			break;
+		case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
+			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_TRIGGER_LEFT, (float)event.caxis.value / 32768.0f);
+			break;
+		case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
+			inputManager.SetRawAnalogValue(AnalogInput::GAME_CONTROLLER_TRIGGER_RIGHT, (float)event.caxis.value / 32768.0f);
 			break;
 		default:
 			break;

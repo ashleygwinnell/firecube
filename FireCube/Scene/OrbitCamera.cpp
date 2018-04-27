@@ -150,7 +150,7 @@ void OrbitCamera::SetRotation(vec3 rotation)
 void OrbitCamera::HandleInput(float dt, const MappedInput &input)
 {
 	bool shouldUpdateNode = false;
-	if (input.HasValue("OrbitCamera_MouseWheelY"))
+	if (std::abs(input.GetValue("OrbitCamera_MouseWheelY")) > 0.0f)
 	{
 		Zoom(dt * input.GetValue("OrbitCamera_MouseWheelY") * zoomFactor);
 		shouldUpdateNode = true;

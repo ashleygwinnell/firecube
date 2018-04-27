@@ -14,6 +14,5 @@ void LuaBindings::InitUtils(sol::state &luaState)
 	luaState.new_usertype<MappedInput>("MappedInput",
 		"IsStateOn", &MappedInput::IsStateOn,
 		"IsActionTriggered", &MappedInput::IsActionTriggered,
-		"GetValue", &MappedInput::GetValue,
-		"HasValue", &MappedInput::HasValue);	
+		"GetValue", &MappedInput::GetValue);
 }
