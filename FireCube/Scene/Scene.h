@@ -23,6 +23,7 @@ class Scene : public Object
 	friend class Renderable;
 	friend class Light;
 	friend class Frame;
+	friend class Node;
 public:
 	Scene(Engine *engine);
 	~Scene();			
@@ -109,9 +110,12 @@ private:
 	*/
 	void RemoveLight(Light *light);
 
+	void AddDelayedRemoveNode(Node *node);
+
 	std::vector<Renderable *> &GetRenderables();
 	std::vector<Light *> &GetLights();
 	void UpdateRenderables();
+	void PostRender(float deltaTime);
 
 	Octree<Renderable> &GetOctree();
 	
@@ -123,7 +127,8 @@ private:
 	vec3 fogParameters;
 	vec3 fogColor;		
 
-	Octree<Renderable> octree;	
+	Octree<Renderable> octree;
+	std::vector<Node *> delayedRemoveNodes;
 };
 
 }

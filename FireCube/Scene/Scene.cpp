@@ -14,12 +14,14 @@
 #include "Scene.h"
 #include "Utils/Logger.h"
 #include "Core/Engine.h"
+#include "Core/Events.h"
 
 using namespace FireCube;
 
 Scene::Scene(Engine *engine) : Object(engine), ambientColor(0.1f), fogEnabled(false), rootNode(engine), fogColor(1.0f), octree(engine, vec3(2000), 8)
 {
 	rootNode.scene = this;
+	SubscribeToEvent(Events::PostRender, &Scene::PostRender);
 }
 
 Scene::~Scene()
@@ -163,4 +165,19 @@ vec3 Scene::GetAmbientColor() const
 Octree<Renderable> &Scene::GetOctree()
 {
 	return octree;
+}
+
+void Scene::PostRender(float deltaTime)
+{
+	for (auto node : delayedRemoveNodes)
+	{
+		node->Remove();
+	}
+
+	delayedRemoveNodes.clear();
+}
+
+void Scene::AddDelayedRemoveNode(Node *node)
+{
+	delayedRemoveNodes.push_back(node);
 }

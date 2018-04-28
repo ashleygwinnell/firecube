@@ -293,6 +293,11 @@ public:
 	*/
 	void Remove();
 
+	/**
+	* Removes the node at the end of the current frame
+	*/
+	void DelayedRemove();
+
 protected:		
 
 	template <class T>

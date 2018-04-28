@@ -196,6 +196,7 @@ void Application::Run()
 		Render(deltaTime);
 		// Render UI
 		ui->Render(renderer);
+		Events::PostRender(this, deltaTime);
 		SDL_GL_SwapWindow(mainWindow);
 		frameCount += 1.0f;
 		fpsTime += deltaTime;

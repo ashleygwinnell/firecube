@@ -434,3 +434,8 @@ void Node::GetComponentsRecursive(const StringHash &type, std::vector<Component 
 		c->GetComponentsRecursive(type, components);
 	}
 }
+
+void Node::DelayedRemove()
+{
+	scene->AddDelayedRemoveNode(this);
+}

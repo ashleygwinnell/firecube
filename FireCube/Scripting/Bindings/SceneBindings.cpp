@@ -274,6 +274,7 @@ void LuaBindings::InitScene(sol::state &luaState)
 		"CreateComponent", &CreateComponent,
 		"RemoveComponent", &Node::RemoveComponent,
 		"Remove", &Node::Remove,
+		"DelayedRemove", &Node::DelayedRemove,
 		"name", sol::property(&Node::GetName, &Node::SetName),
 		"children", sol::property([](const Node &self) {
 			std::vector<Node *> ret;
