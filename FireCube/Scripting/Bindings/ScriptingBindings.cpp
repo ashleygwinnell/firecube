@@ -15,5 +15,15 @@ void LuaBindings::InitScripting(sol::state &luaState)
 		"SubscribeToEvent", &LuaScript::SubscribeToEventFromLua,
 		"CreateObject", sol::resolve<void(LuaFile *, const std::string &)>(&LuaScript::CreateObject),		
 		"objectName", sol::property(&LuaScript::GetObjectName),
-		sol::base_classes, sol::bases<Component, Object, RefCounted>());	
+		sol::base_classes, sol::bases<Component, Object, RefCounted>());
+
+	sol::table ScriptPropertyTypeTable = luaState.create_named_table("ScriptPropertyType");
+	ScriptPropertyTypeTable["STRING"] = static_cast<unsigned int>(ScriptPropertyType::STRING);
+	ScriptPropertyTypeTable["BOOL"] = static_cast<unsigned int>(ScriptPropertyType::BOOL);
+	ScriptPropertyTypeTable["FLOAT"] = static_cast<unsigned int>(ScriptPropertyType::FLOAT);
+	ScriptPropertyTypeTable["VEC2"] = static_cast<unsigned int>(ScriptPropertyType::VEC2);
+	ScriptPropertyTypeTable["VEC3"] = static_cast<unsigned int>(ScriptPropertyType::VEC3);
+	ScriptPropertyTypeTable["VEC4"] = static_cast<unsigned int>(ScriptPropertyType::VEC4);
+	ScriptPropertyTypeTable["RGB"] = static_cast<unsigned int>(ScriptPropertyType::RGB);
+	ScriptPropertyTypeTable["RGBA"] = static_cast<unsigned int>(ScriptPropertyType::RGBA);
 }

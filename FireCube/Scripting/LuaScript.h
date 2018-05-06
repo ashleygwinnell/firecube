@@ -21,6 +21,11 @@ enum class ScriptFunction
 	INIT, UPDATE, AWAKE, HANDLE_INPUT, CHARACTER_CONTROLLER_COLLISION
 };
 
+enum class ScriptPropertyType
+{
+	STRING, BOOL, FLOAT, VEC2, VEC3, VEC4, RGB, RGBA
+};
+
 /**
 * This components is used to create script objects
 */
