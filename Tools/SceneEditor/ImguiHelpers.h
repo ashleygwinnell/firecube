@@ -107,8 +107,12 @@ public:
 	ColorInputHelper();
 	void Render(const std::string &label, EditorState *editorState, std::function<FireCube::vec3()> getValue, std::function<Command *(FireCube::vec3, FireCube::vec3)> setValue);
 	void Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<FireCube::vec3()> getValue, std::function<void(FireCube::vec3)> setValue);
+
+	void Render(const std::string &label, EditorState *editorState, std::function<FireCube::vec4()> getValue, std::function<Command *(FireCube::vec4, FireCube::vec4)> setValue);
+	void Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<FireCube::vec4()> getValue, std::function<void(FireCube::vec4)> setValue);
 private:
 	FireCube::vec3 prevValue;
+	FireCube::vec4 prevValueVec4;
 	bool isActive;
 	Command *prevCommand;
 

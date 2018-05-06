@@ -410,6 +410,51 @@ void ColorInputHelper::Render(const std::string &label, EditorState *editorState
 	});
 }
 
+void ColorInputHelper::Render(const std::string &label, EditorState *editorState, std::function<vec4()> getValue, std::function<Command *(vec4, vec4)> setValue)
+{
+	vec4 value = getValue();
+
+	float color[4] = { value.x, value.y, value.z, value.w };
+	bool  modified = ImGui::ColorEdit4(label.c_str(), color);
+
+	if (modified)
+	{
+		vec4 newVal = vec4(color[0], color[1], color[2], color[3]);
+		Command *command = setValue(newVal, prevValueVec4);
+		editorState->ExecuteCommand(command, prevCommand);
+		prevCommand = command;
+	}
+
+	if (ImGui::IsItemActive())
+	{
+		if (isActive == false)
+		{
+			prevValueVec4 = getValue();
+		}
+		isActive = true;
+	}
+	else
+	{
+		if (isActive)
+		{
+			prevCommand = nullptr;
+		}
+
+		isActive = false;
+	}
+}
+
+void ColorInputHelper::Render(const std::string &label, EditorState *editorState, const std::string &description, std::function<vec4()> getValue, std::function<void(vec4)> setValue)
+{
+	Render(label, editorState, getValue, [editorState, description, setValue](vec4 newValue, vec4 prevValue) -> Command * {
+		return new CustomCommand(editorState, description, [setValue, newValue]() {
+			setValue(newValue);
+		}, [setValue, prevValue]() {
+			setValue(prevValue);
+		});
+	});
+}
+
 TextInputHelper::TextInputHelper() : prevCommand(nullptr), isActive(false)
 {
 
