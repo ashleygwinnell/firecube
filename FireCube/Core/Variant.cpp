@@ -152,3 +152,35 @@ Variant Variant::FromString(const std::string &v)
 	}
 	return ret;
 }
+
+std::string Variant::ToString() const
+{
+	switch (type)
+	{
+	case VariantType::NONE:
+		return "";
+		break;
+	case VariantType::INT:
+		return std::to_string(value.int0);
+		break;
+	case VariantType::FLOAT:
+		return std::to_string(value.float0);
+		break;
+	case VariantType::BOOL:
+		return value.bool0 ? "true" : "false";
+		break;
+	case VariantType::VEC2:
+		return std::to_string(value.float0) + " " + std::to_string(value.float1);
+		break;
+	case VariantType::VEC3:
+		return std::to_string(value.float0) + " " + std::to_string(value.float1) + " " + std::to_string(value.float2);
+		break;
+	case VariantType::VEC4:
+		return std::to_string(value.float0) + " " + std::to_string(value.float1) + " " + std::to_string(value.float2) + " " + std::to_string(value.float3);
+		break;
+	default:
+		break;
+	}
+
+	return "";
+}

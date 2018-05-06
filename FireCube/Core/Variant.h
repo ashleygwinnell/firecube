@@ -68,6 +68,7 @@ public:
 	const vec4 &GetVec4() const;
 
 	static Variant FromString(const std::string &v);
+	std::string ToString() const;
 private:
 	VariantType type;
 	VariantValue value;
