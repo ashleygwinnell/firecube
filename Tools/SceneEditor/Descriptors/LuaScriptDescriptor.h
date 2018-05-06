@@ -21,6 +21,8 @@ public:
 	std::vector<std::pair<std::string, std::string>> &GetProperties();
 	std::string GetProperty(const std::string &name) const;
 	void RenameProperty(int index, const std::string &newName);
+	bool HasProperty(const std::string &name) const;
+	void SetProperties(const std::vector<std::pair<std::string, std::string>> &properties);
 private:
 	std::string scriptFilename;
 	std::string objectName;

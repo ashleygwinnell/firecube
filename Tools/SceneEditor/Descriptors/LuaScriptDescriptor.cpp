@@ -102,3 +102,15 @@ void LuaScriptDescriptor::RenameProperty(int index, const std::string &newName)
 {
 	properties[index].first = newName;
 }
+
+bool LuaScriptDescriptor::HasProperty(const std::string &name) const
+{
+	return std::find_if(properties.begin(), properties.end(), [name](const std::pair<std::string, std::string> &prop) {
+		return prop.first == name;
+	}) != properties.end();
+}
+
+void LuaScriptDescriptor::SetProperties(const std::vector<std::pair<std::string, std::string>> &properties)
+{
+	this->properties = properties;
+}
