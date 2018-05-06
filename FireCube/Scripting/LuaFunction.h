@@ -15,21 +15,22 @@ class FIRECUBE_API LuaFunction : public RefCounted
 {
 public:
 	LuaFunction(const sol::function &ref);
-	template<class... Args>
-	
+
 	/**
 	* Invokes the function
 	*/
-	void operator ()(Args&&... args)
+	template<class... Args>	
+	sol::object operator ()(Args&&... args)
 	{
 		try 
 		{
-			ref(std::forward<Args>(args)...);
+			return ref(std::forward<Args>(args)...);
 		}
 		catch (const std::exception &e)
 		{
 			(void)e; // Disable warning about e not being used
 			LOGERROR(e.what());
+			return sol::make_object(ref.lua_state(), sol::nil);
 		}
 	}
 	
