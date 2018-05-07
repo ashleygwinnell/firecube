@@ -41,6 +41,10 @@ int main(int argc, char *argv[])
 		return 0;
 
 	app.Run();
+
+	ImGui_ImplSdlGL3_Shutdown();
+	ImGui::DestroyContext();
+
 	app.WriteSettingsFile();
 	return 0;
 }
@@ -54,6 +58,10 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		return 0;
 
 	app.Run();
+	
+	ImGui_ImplSdlGL3_Shutdown();
+	ImGui::DestroyContext();
+	
 	app.WriteSettingsFile();
 	return 0;
 }
@@ -69,15 +77,16 @@ FireCubeApp::FireCubeApp() : showFileOpen(false), showNewDialog(false), showSave
 void FireCubeApp::Render(float t)
 {
 	ImGui_ImplSdlGL3_NewFrame(GetWindow());
-
-	ImGui::StyleColorsDark();
 	
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
 	const ImGuiWindowFlags flags = (ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize | 
 									ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar);
 	const float oldWindowRounding = ImGui::GetStyle().WindowRounding; ImGui::GetStyle().WindowRounding = 0;	
+	const float oldWindowBorderSize = ImGui::GetStyle().WindowBorderSize; ImGui::GetStyle().WindowBorderSize = 0;
 	ImGui::Begin("MainWindow", nullptr, ImVec2(0, 0), 1.0f, flags);	
 	ImGui::GetStyle().WindowRounding = oldWindowRounding;	
+	ImGui::GetStyle().WindowBorderSize = oldWindowBorderSize;
 
 	RenderMenuBar();
 	RenderToolbar();	
@@ -383,6 +392,7 @@ void FireCubeApp::Render(float t)
 	glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);		
 	renderer->Clear(vec4(0.0f, 0.0f, 0.0f, 1.0f), 1.0, ClearBufferType::COLOR | ClearBufferType::DEPTH);
 	ImGui::Render();
+	ImGui_ImplSdlGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void FireCubeApp::HandleSDLEvent(SDL_Event &event)
@@ -417,7 +427,9 @@ bool FireCubeApp::Prepare()
 	assetBrowserWindow = new AssetBrowserWindow(engine);
 	materialEditorWindow = new MaterialEditorWindow(engine);
 	
+	ImGui::CreateContext();
 	ImGui_ImplSdlGL3_Init(GetWindow());
+	ImGui::StyleColorsDark();
 	scene = new FireCube::Scene(GetEngine());	
 		
 	editorWindow->SetScene(scene, &rootDesc, editorState);
