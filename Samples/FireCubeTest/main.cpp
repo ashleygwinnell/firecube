@@ -3,11 +3,12 @@
 #include <FireCube.h>
 using namespace FireCube;
 #include "app.h"
-App app;
 int main(int argc, char *argv[])
 {	
 	Filesystem::SetCoreDataFolder("../../FireCube");
 	Filesystem::SetAssetsFolder("../../Assets");
+
+	App app;
 	
 	if (!app.Initialize())
 		return 0;
