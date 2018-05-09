@@ -631,7 +631,8 @@ void FireCubeApp::CollectCameras(NodeDescriptor *node)
 }
 
 void FireCubeApp::UpdateCamerasList()
-{	
+{
+	cameras.clear();
 	CollectCameras(&rootDesc);	
 }
 
