@@ -120,20 +120,20 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	
 	if (aMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aColor) == AI_SUCCESS)
 	{
-		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(aColor.r, aColor.g, aColor.b));
+		material->SetRGBParameter(PARAM_MATERIAL_DIFFUSE, vec3(aColor.r, aColor.g, aColor.b));
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
+		material->SetRGBParameter(PARAM_MATERIAL_DIFFUSE, vec3(1.0f));
 	}
 
 	if (aMaterial->Get(AI_MATKEY_COLOR_SPECULAR, aColor) == AI_SUCCESS)
 	{
-		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(aColor.r, aColor.g, aColor.b));
+		material->SetRGBParameter(PARAM_MATERIAL_SPECULAR, vec3(aColor.r, aColor.g, aColor.b));
 	}
 	else
 	{
-		material->SetParameter(PARAM_MATERIAL_SPECULAR, vec3(0.0f));
+		material->SetRGBParameter(PARAM_MATERIAL_SPECULAR, vec3(0.0f));
 	}
 	
 	if (aMaterial->Get(AI_MATKEY_SHININESS, value) == AI_SUCCESS)

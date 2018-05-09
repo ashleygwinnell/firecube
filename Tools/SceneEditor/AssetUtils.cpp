@@ -130,21 +130,22 @@ bool AssetUtils::SerializeMaterial(FireCube::Material *material, const std::stri
 	for (auto &p : material->GetParameters())
 	{
 		element = new TiXmlElement("parameter");
-		element->SetAttribute("name", material->GetParameterName(p.first));
+		element->SetAttribute("name", p.second.name);
+		element->SetAttribute("type", Material::ParameterTypeToString(p.second.type));
 
-		switch (p.second.GetType())
+		switch (p.second.value.GetType())
 		{
 		case VariantType::FLOAT:
-			element->SetDoubleAttribute("value", p.second.GetFloat());
+			element->SetDoubleAttribute("value", p.second.value.GetFloat());
 			break;
 		case VariantType::VEC2:
-			element->SetAttribute("value", ToString(p.second.GetVec2()));
+			element->SetAttribute("value", ToString(p.second.value.GetVec2()));
 			break;
 		case VariantType::VEC3:
-			element->SetAttribute("value", ToString(p.second.GetVec3()));
+			element->SetAttribute("value", ToString(p.second.value.GetVec3()));
 			break;
 		case VariantType::VEC4:
-			element->SetAttribute("value", ToString(p.second.GetVec4()));
+			element->SetAttribute("value", ToString(p.second.value.GetVec4()));
 			break;
 		default:
 			break;

@@ -20,6 +20,22 @@ class Material;
 class Technique;
 class Renderer;
 
+enum class MaterialParameterType
+{
+	NONE, FLOAT, VEC2, VEC3, VEC4, RGB, RGBA, INT, BOOL
+};
+
+/**
+* A class representing a material parameter.
+*/
+class FIRECUBE_API MaterialParameter
+{
+public:
+	std::string name;
+	MaterialParameterType type;
+	Variant value;
+};
+
 /**
 * A class representing a material.
 */
@@ -61,12 +77,12 @@ public:
 	/**
 	* @returns All the shader parameters stored in this material
 	*/
-	const std::map<StringHash, Variant> &GetParameters() const;
+	const std::map<StringHash, MaterialParameter> &GetParameters() const;
 	
 	/**
 	* @returns All the shader parameters stored in this material
 	*/	
-	std::map<StringHash, Variant> &GetParameters();	
+	std::map<StringHash, MaterialParameter> &GetParameters();
 
 	/**
 	* Checks whether the material has a given parameter
@@ -75,10 +91,16 @@ public:
 	bool HasParameter(const StringHash &nameHash) const;
 	
 	/**
+	* Returns the parameter info of a give parameter
+	* @param nameHash The hash of the parameter name
+	*/
+	MaterialParameter &GetParameter(const StringHash &nameHash);
+
+	/**
 	* Returns the value of a give parameter
 	* @param nameHash The hash of the parameter name
 	*/
-	Variant &GetParameter(const StringHash &nameHash);
+	Variant &GetParameterValue(const StringHash &nameHash);
 
 	/**
 	* Sets an int parameter
@@ -125,9 +147,24 @@ public:
 	/**
 	* Sets a parameter from a Variant
 	* @param name The name of the parameter
+	* @param type The type of the parameter
 	* @value The value to set
 	*/
-	void SetParameter(const std::string &name, const Variant &value);
+	void SetParameter(const std::string &name, MaterialParameterType type, const Variant &value);
+
+	/**
+	* Sets an rgb parameter
+	* @param name The name of the parameter
+	* @value The value to set
+	*/
+	void SetRGBParameter(const std::string &name, const vec3 &value);
+
+	/**
+	* Sets an rgba parameter
+	* @param name The name of the parameter
+	* @value The value to set
+	*/
+	void SetRGBAParameter(const std::string &name, const vec4 &value);
 
 	/**
 	* Removes a parameter
@@ -172,14 +209,9 @@ public:
 	CullMode GetCullMode() const;
 	
 	/**
-	* @returns A map between the hash of a parameter name and its name
-	*/
-	const std::map<StringHash, std::string> &GetParametersNames() const;
-	
-	/**
 	* @returns The name of a parameter given its hash
 	*/
-	std::string Material::GetParameterName(StringHash nameHash) const;
+	std::string GetParameterName(StringHash nameHash) const;
 	
 	/**
 	* Returns a texture unit from string
@@ -198,14 +230,16 @@ public:
 	* @param cullMode The name of the culling mode
 	*/
 	static CullMode ParseCullMode(const std::string &cullMode);
+
+	static MaterialParameterType ParseParameterType(const std::string &type);
+	static std::string ParameterTypeToString(const MaterialParameterType &type);
 private:
 		
 	std::string name;	
 	Texture *textures[static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS)];
 	Technique *technique;
 	CullMode cullMode;
-	std::map<StringHash, Variant> parameters;
-	std::map<StringHash, std::string> parametersNames;
+	std::map<StringHash, MaterialParameter> parameters;
 };
 
 }

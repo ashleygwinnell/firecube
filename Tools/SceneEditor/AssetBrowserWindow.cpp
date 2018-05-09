@@ -380,11 +380,12 @@ void AssetBrowserWindow::Render()
 				std::ofstream f(targetPath, std::ofstream::trunc);
 				f << "<material name=\"" << materialName << "\">" << std::endl;
 				f << "\t<technique name=\"Techniques/NoTexture.xml\" />" << std::endl;
-				f << "\t<parameter name=\"materialDiffuse\" value=\"0.7 0.7 0.7\" />" << std::endl;
-				f << "\t<parameter name=\"materialSpecular\" value=\"0 0 0\" />" << std::endl;
-				f << "\t<parameter name=\"materialShininess\" value=\"0.000000\" />" << std::endl;
-				f << "\t<parameter name=\"uOffset\" value=\"1 0 0\" />" << std::endl;
-				f << "\t<parameter name=\"vOffset\" value=\"0 1 0\" />" << std::endl;
+				f << "\t<parameter name=\"materialDiffuse\" value=\"0.7 0.7 0.7\" type=\"rgb\" />" << std::endl;
+				f << "\t<parameter name=\"materialSpecular\" value=\"0 0 0\" type=\"rgb\" />" << std::endl;
+				f << "\t<parameter name=\"materialShininess\" value=\"0.0\" type=\"float\" />" << std::endl;
+				f << "\t<parameter name=\"materialOpacity\" value=\"1.0\" type=\"float\" />" << std::endl;
+				f << "\t<parameter name=\"uOffset\" value=\"1 0 0\" type=\"vec3\" />" << std::endl;
+				f << "\t<parameter name=\"vOffset\" value=\"0 1 0\" type=\"vec3\" />" << std::endl;
 				f << "</material>" << std::endl;
 
 				f.close();

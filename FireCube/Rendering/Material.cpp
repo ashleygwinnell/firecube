@@ -54,9 +54,15 @@ bool Material::Load(const std::string &filename)
 				continue;			
 			std::string parameterValue = element->Attribute("value");
 			if (parameterValue.empty())
-				continue;		
+				continue;
 
-			SetParameter(parameterName, Variant::FromString(parameterValue));			
+			MaterialParameterType type = MaterialParameterType::NONE;
+			if (element->Attribute("type")) 
+			{
+				type = Material::ParseParameterType(element->Attribute("type"));
+			}
+
+			SetParameter(parameterName, type, Variant::FromString(parameterValue));
 		}
 		else if (element->ValueStr() == "texture")
 		{			
@@ -122,12 +128,12 @@ Technique *Material::GetTechnique()
 	return technique;
 }
 
-std::map<StringHash, Variant> &Material::GetParameters()
+std::map<StringHash, MaterialParameter> &Material::GetParameters()
 {
 	return parameters;
 }
 
-const std::map<StringHash, Variant> &Material::GetParameters() const
+const std::map<StringHash, MaterialParameter> &Material::GetParameters() const
 {
 	return parameters;
 }
@@ -135,50 +141,82 @@ const std::map<StringHash, Variant> &Material::GetParameters() const
 void Material::SetParameter(const std::string &name, int value)
 {
 	StringHash nameHash(name);
-	parametersNames[nameHash] = name;
-	parameters[nameHash] = value;
+	MaterialParameter &param = parameters[nameHash];
+	param.name = name;
+	param.value = value;
+	param.type = MaterialParameterType::INT;
 }
 
 void Material::SetParameter(const std::string &name, float value)
 {
 	StringHash nameHash(name);
-	parametersNames[nameHash] = name;
-	parameters[nameHash] = value;
+	MaterialParameter &param = parameters[nameHash];
+	param.name = name;
+	param.value = value;
+	param.type = MaterialParameterType::FLOAT;
 }
 
 void Material::SetParameter(const std::string &name, bool value)
 {
 	StringHash nameHash(name);
-	parametersNames[nameHash] = name;
-	parameters[nameHash] = value;
+	MaterialParameter &param = parameters[nameHash];
+	param.name = name;
+	param.value = value;
+	param.type = MaterialParameterType::BOOL;
 }
 
 void Material::SetParameter(const std::string &name, const vec2 &value)
 {
 	StringHash nameHash(name);
-	parametersNames[nameHash] = name;
-	parameters[nameHash] = value;
+	MaterialParameter &param = parameters[nameHash];
+	param.name = name;
+	param.value = value;
+	param.type = MaterialParameterType::VEC2;
 }
 
 void Material::SetParameter(const std::string &name, const vec3 &value)
 {
 	StringHash nameHash(name);
-	parametersNames[nameHash] = name;
-	parameters[nameHash] = value;
+	MaterialParameter &param = parameters[nameHash];
+	param.name = name;
+	param.value = value;
+	param.type = MaterialParameterType::VEC3;
 }
 
 void Material::SetParameter(const std::string &name, const vec4 &value)
 {
 	StringHash nameHash(name);
-	parametersNames[nameHash] = name;
-	parameters[nameHash] = value;
+	MaterialParameter &param = parameters[nameHash];
+	param.name = name;
+	param.value = value;
+	param.type = MaterialParameterType::VEC4;
 }
 
-void Material::SetParameter(const std::string &name, const Variant &value)
+void Material::SetParameter(const std::string &name, MaterialParameterType type, const Variant &value)
 {
 	StringHash nameHash(name);
-	parametersNames[nameHash] = name;
-	parameters[nameHash] = value;
+	MaterialParameter &param = parameters[nameHash];
+	param.name = name;
+	param.value = value;
+	param.type = type;
+}
+
+void Material::SetRGBParameter(const std::string &name, const vec3 &value)
+{
+	StringHash nameHash(name);
+	MaterialParameter &param = parameters[nameHash];
+	param.name = name;
+	param.value = value;
+	param.type = MaterialParameterType::RGB;
+}
+
+void Material::SetRGBAParameter(const std::string &name, const vec4 &value)
+{
+	StringHash nameHash(name);
+	MaterialParameter &param = parameters[nameHash];
+	param.name = name;
+	param.value = value;
+	param.type = MaterialParameterType::RGBA;
 }
 
 Texture **Material::GetTextures()
@@ -237,10 +275,16 @@ bool Material::HasParameter(const StringHash &nameHash) const
 	return parameters.find(nameHash) != parameters.end();
 }
 
-Variant &Material::GetParameter(const StringHash &nameHash)
+MaterialParameter &Material::GetParameter(const StringHash &nameHash)
 {
 	auto i = parameters.find(nameHash);
-	return i->second;	
+	return i->second;
+}
+
+Variant &Material::GetParameterValue(const StringHash &nameHash)
+{
+	auto i = parameters.find(nameHash);
+	return i->second.value;
 }
 
 void Material::SetCullMode(CullMode cullMode)
@@ -255,24 +299,18 @@ CullMode Material::GetCullMode() const
 
 std::string Material::GetParameterName(StringHash nameHash) const
 {
-	auto i = parametersNames.find(nameHash);
-	if (i != parametersNames.end())
+	auto i = parameters.find(nameHash);
+	if (i != parameters.end())
 	{
-		return i->second;
+		return i->second.name;
 	}
 	
 	return "";
 }
 
-const std::map<StringHash, std::string> &Material::GetParametersNames() const
-{
-	return parametersNames;
-}
-
 void Material::RemoveParameter(const std::string &name)
 {
 	StringHash nameHash(name);
-	parametersNames.erase(nameHash);
 	parameters.erase(nameHash);
 }
 
@@ -287,4 +325,38 @@ FireCube::CullMode FireCube::Material::ParseCullMode(const std::string &cullMode
 		ret = CullMode::CCW;
 
 	return ret;
+}
+
+MaterialParameterType Material::ParseParameterType(const std::string &type)
+{
+	static std::map<std::string, MaterialParameterType> strToType =
+	{
+		{ "int", MaterialParameterType::INT },
+		{ "float", MaterialParameterType::FLOAT },
+		{ "bool", MaterialParameterType::BOOL },
+		{ "vec2", MaterialParameterType::VEC2 },
+		{ "vec3", MaterialParameterType::VEC3 },
+		{ "vec4", MaterialParameterType::VEC4 },
+		{ "rgb", MaterialParameterType::RGB },
+		{ "rgba", MaterialParameterType::RGBA }
+	};
+
+	return strToType[type];
+}
+
+std::string Material::ParameterTypeToString(const MaterialParameterType &type)
+{
+	static std::map<int, std::string> typeToStr =
+	{
+		{static_cast<int>(MaterialParameterType::INT), "int" },
+		{ static_cast<int>(MaterialParameterType::FLOAT), "float" },
+		{ static_cast<int>(MaterialParameterType::BOOL), "bool" },
+		{ static_cast<int>(MaterialParameterType::VEC2), "vec2" },
+		{ static_cast<int>(MaterialParameterType::VEC3), "vec3" },
+		{ static_cast<int>(MaterialParameterType::VEC4), "vec4" },
+		{ static_cast<int>(MaterialParameterType::RGB), "rgb" },
+		{ static_cast<int>(MaterialParameterType::RGBA), "rgba" }
+	};
+
+	return typeToStr[static_cast<int>(type)];
 }

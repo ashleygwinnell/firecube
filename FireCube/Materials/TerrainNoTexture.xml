@@ -1,6 +1,7 @@
 <material>
 	<technique name = "Techniques/NoTexture.xml" />	
-	<parameter name = "materialDiffuse" value = "0.7 0.7 0.7" />
-	<parameter name = "materialSpecular" value = "0.0 0.0 0.0" />
-	<parameter name = "materialShininess" value = "0.0" />
+	<parameter name = "materialDiffuse" value = "0.7 0.7 0.7" type = "rgb" />
+	<parameter name = "materialSpecular" value = "0.0 0.0 0.0" type = "rgb" />
+	<parameter name = "materialShininess" value = "0.0" type = "float" />
+	<parameter name = "materialOpacity" value = "1.0" type = "float" />
 </material>

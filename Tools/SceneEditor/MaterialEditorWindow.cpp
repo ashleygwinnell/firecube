@@ -8,13 +8,7 @@ using namespace FireCube;
 
 MaterialEditorWindow::MaterialEditorWindow(Engine *engine) : Object(engine), auxRenderWindow(engine), isOpen(false)
 {
-	standardParametersProperties = {
-		{ PARAM_MATERIAL_DIFFUSE, std::make_pair("Diffuse", PropertyType2::COLOR) },
-		{ PARAM_MATERIAL_SPECULAR, std::make_pair("Specular", PropertyType2::COLOR) },
-		{ PARAM_MATERIAL_SHININESS, std::make_pair("Shininess", PropertyType2::FLOAT) },
-		{ PARAM_MATERIAL_OPACITY, std::make_pair("Opacity", PropertyType2::FLOAT) },
-		{ PARAM_MATERIAL_U_OFFSET, std::make_pair("U Offset", PropertyType2::VEC3) },
-		{ PARAM_MATERIAL_V_OFFSET, std::make_pair("V Offset", PropertyType2::VEC3) } };
+
 }
 
 void MaterialEditorWindow::Render()
@@ -113,10 +107,12 @@ void MaterialEditorWindow::Render()
 		}
 
 		{
-			static PropertyType2 types[] = { PropertyType2::FLOAT, PropertyType2::VEC2, PropertyType2::VEC3, PropertyType2::VEC4 };
-			static char *typesStr[] = { "Float", "Vec2", "Vec3", "Vec4" };
+			static MaterialParameterType types[] = { MaterialParameterType::FLOAT, MaterialParameterType::INT, MaterialParameterType::BOOL, 
+													 MaterialParameterType::VEC2, MaterialParameterType::VEC3, MaterialParameterType::VEC4, 
+													 MaterialParameterType::RGB, MaterialParameterType::RGBA };
+			static char *typesStr[] = { "Float", "Int", "Bool", "Vec2", "Vec3", "Vec4", "RGB", "RGBA" };
 			
-			static PropertyType2 selectedType;			
+			static MaterialParameterType selectedType;
 			static char parameterName[256] = "";
 			bool selected = false;
 			if (ImGui::BeginPopup("Select Type"))
@@ -138,28 +134,47 @@ void MaterialEditorWindow::Render()
 				parameterName[0] = 0;
 				ImGui::OpenPopup("Add Parameter");
 			}
-
+			
 			if (ImGui::BeginPopupModal("Add Parameter", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 			{
-				ImGui::SetKeyboardFocusHere();
+				if (ImGui::IsWindowFocused() && !ImGui::IsAnyItemActive())
+				{
+					ImGui::SetKeyboardFocusHere();
+				}
 				bool textAccepted = ImGui::InputText("Parameter Name", parameterName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
 				if (ImGui::Button("OK", ImVec2(120, 0)) || textAccepted)
 				{
-					if (selectedType == PropertyType2::FLOAT)
+					if (selectedType == MaterialParameterType::FLOAT)
 					{
 						material->SetParameter(parameterName, 0.0f);						
 					}
-					else if (selectedType == PropertyType2::VEC2)
+					else if (selectedType == MaterialParameterType::INT)
+					{
+						material->SetParameter(parameterName, 0);
+					}
+					else if (selectedType == MaterialParameterType::BOOL)
+					{
+						material->SetParameter(parameterName, false);
+					}
+					else if (selectedType == MaterialParameterType::VEC2)
 					{
 						material->SetParameter(parameterName, vec2(0.0f));
 					}
-					else if (selectedType == PropertyType2::VEC3)
+					else if (selectedType == MaterialParameterType::VEC3)
 					{
 						material->SetParameter(parameterName, vec3(0.0f));
 					}
-					else if (selectedType == PropertyType2::VEC4)
+					else if (selectedType == MaterialParameterType::VEC4)
 					{
 						material->SetParameter(parameterName, vec4(0.0f));
+					}
+					else if (selectedType == MaterialParameterType::RGB)
+					{
+						material->SetRGBParameter(parameterName, vec3(0.0f));
+					}
+					else if (selectedType == MaterialParameterType::RGBA)
+					{
+						material->SetRGBAParameter(parameterName, vec4(0.0f));
 					}
 					ImGui::CloseCurrentPopup();
 				}
@@ -181,113 +196,115 @@ void MaterialEditorWindow::Render()
 				material->SetName(name);
 			}
 
-			std::map<StringHash, std::string> paramters = material->GetParametersNames();
+			std::map<StringHash, MaterialParameter> paramters = material->GetParameters();
 
 			for (auto &p : paramters)
 			{
-				std::string parameterName = p.second;
+				MaterialParameter &paramter = p.second;
+				std::string &parameterName = paramter.name;
 				StringHash nameHash(parameterName);
-				std::string label;
-				auto standardParamProperties = standardParametersProperties.find(nameHash);
-				PropertyType2 type;
-
-				if (standardParamProperties != standardParametersProperties.end())
+				MaterialParameterType type = p.second.type;
+				
+				if (type == MaterialParameterType::NONE)
 				{
-					label = standardParamProperties->second.first;
-					type = standardParamProperties->second.second;
-				}
-				else
-				{
-					label = parameterName;
-					switch (material->GetParameter(nameHash).GetType())
+					switch (material->GetParameter(nameHash).value.GetType())
 					{
 					case VariantType::FLOAT:
-						type = PropertyType2::FLOAT;
+						type = MaterialParameterType::FLOAT;
 						break;
 					case VariantType::VEC2:
-						type = PropertyType2::VEC2;
+						type = MaterialParameterType::VEC2;
 						break;
 					case VariantType::VEC3:
-						type = PropertyType2::VEC3;
+						type = MaterialParameterType::VEC3;
 						break;
 					case VariantType::VEC4:
-						type = PropertyType2::VEC4;
+						type = MaterialParameterType::VEC4;
+						break;
+					case VariantType::INT:
+						type = MaterialParameterType::INT;
+						break;
+					case VariantType::BOOL:
+						type = MaterialParameterType::BOOL;
 						break;
 					default:
 						break;
 					}
 				}
 			
-				if (type == PropertyType2::COLOR)
+				if (type == MaterialParameterType::RGB)
 				{
-					vec3 value = material->GetParameter(nameHash).GetVec3();
-					if (ImGui::ColorEdit3(label.c_str(), &value.x))
+					vec3 value = material->GetParameter(nameHash).value.GetVec3();
+					if (ImGui::ColorEdit3(parameterName.c_str(), &value.x))
+					{
+						material->SetRGBParameter(parameterName, value);
+					}
+				}
+				else if (type == MaterialParameterType::RGBA)
+				{
+					vec4 value = material->GetParameter(nameHash).value.GetVec4();
+					if (ImGui::ColorEdit4(parameterName.c_str(), &value.x))
+					{
+						material->SetRGBAParameter(parameterName, value);
+					}
+				}
+				else if (type == MaterialParameterType::FLOAT)
+				{
+					float value = material->GetParameter(nameHash).value.GetFloat();
+					if (ImGui::InputFloat(parameterName.c_str(), &value))
 					{
 						material->SetParameter(parameterName, value);
 					}
 				}
-				else if (type == PropertyType2::FLOAT)
+				else if (type == MaterialParameterType::VEC2)
 				{
-					float value = material->GetParameter(nameHash).GetFloat();
-					if (ImGui::InputFloat(label.c_str(), &value))
+					vec2 value = material->GetParameter(nameHash).value.GetVec2();
+					if (ImGui::InputFloat2(parameterName.c_str(), &value.x))
 					{
 						material->SetParameter(parameterName, value);
 					}
 				}
-				else if (type == PropertyType2::VEC2)
+				else if (type == MaterialParameterType::VEC3)
 				{
-					vec2 value = material->GetParameter(nameHash).GetVec2();
-					if (ImGui::InputFloat2(label.c_str(), &value.x))
+					vec3 value = material->GetParameter(nameHash).value.GetVec3();
+					if (ImGui::InputFloat3(parameterName.c_str(), &value.x))
 					{
 						material->SetParameter(parameterName, value);
 					}
 				}
-				else if (type == PropertyType2::VEC3)
+				else if (type == MaterialParameterType::VEC4)
 				{
-					vec3 value = material->GetParameter(nameHash).GetVec3();
-					if (ImGui::InputFloat3(label.c_str(), &value.x))
+					vec4 value = material->GetParameter(nameHash).value.GetVec4();
+					if (ImGui::InputFloat4(parameterName.c_str(), &value.x))
 					{
 						material->SetParameter(parameterName, value);
 					}
 				}
-				else if (type == PropertyType2::VEC4)
+				else if (type == MaterialParameterType::INT)
 				{
-					vec4 value = material->GetParameter(nameHash).GetVec4();
-					if (ImGui::InputFloat4(label.c_str(), &value.x))
+					int value = material->GetParameter(nameHash).value.GetInt();
+					if (ImGui::InputInt(parameterName.c_str(), &value))
+					{
+						material->SetParameter(parameterName, value);
+					}
+				}
+				else if (type == MaterialParameterType::BOOL)
+				{
+					bool value = material->GetParameter(nameHash).value.GetBool();
+					if (ImGui::Checkbox(parameterName.c_str(), &value))
 					{
 						material->SetParameter(parameterName, value);
 					}
 				}
 
 				ImGui::PushID(parameterName.c_str());
-				static float color[3];
-				bool showColorPicker = false;
 				if (ImGui::BeginPopupContextItem("item context menu"))
 				{
 					if (ImGui::Selectable("Remove"))
 					{
 						material->RemoveParameter(parameterName);
 					}
-					if (type == PropertyType2::VEC3 && ImGui::Selectable("Set From Color"))
-					{
-						vec3 value = material->GetParameter(nameHash).GetVec3();
-						color[0] = value.x;
-						color[1] = value.y;
-						color[2] = value.z;
-						showColorPicker = true;
-					}
-					ImGui::EndPopup();
-				}
-
-				if (showColorPicker)
-				{
-					ImGui::OpenPopup("Color Picker");
-				}
-
-				if (ImGui::BeginPopup("Color Picker"))
-				{
-					ImGui::ColorPicker3("##picker", (float*)&color, ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
-					material->SetParameter(parameterName, vec3(color[0], color[1], color[2]));
+					
 					ImGui::EndPopup();
 				}
 

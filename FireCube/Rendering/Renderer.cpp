@@ -228,10 +228,10 @@ void Renderer::UseMaterial(Material *material)
 		return;
 
 	currentMaterial = material;	
-	const std::map<StringHash, Variant> &parameters = material->GetParameters();
+	const std::map<StringHash, MaterialParameter> &parameters = material->GetParameters();
 	for (auto i = parameters.begin(); i != parameters.end(); ++i)
 	{
-		currentProgram->SetUniform(i->first, i->second);
+		currentProgram->SetUniform(i->first, i->second.value);
 	}
 
 	Texture **textures = material->GetTextures();
