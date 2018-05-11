@@ -15,6 +15,27 @@ StaticModel::StaticModel(const StaticModel &other) : Renderable(other), bounding
 {
 	renderableParts = other.renderableParts;
 	renderablePartsTransformations = other.renderablePartsTransformations;
+	
+	std::map<Material *, Material *> clonedMaterialsMap;
+	for (auto &mat : materials)
+	{
+		auto clonedMat = mat->Clone();
+		clonedMaterialsMap[mat] = clonedMat;
+		mat = clonedMat;
+	}
+
+	for (auto &renderablePart : renderableParts)
+	{
+		auto clonedMat = clonedMaterialsMap.find(renderablePart.material);
+		if (clonedMat != clonedMaterialsMap.end())
+		{
+			renderablePart.material = clonedMat->second;
+		}
+		else
+		{
+			renderablePart.material = renderablePart.material->Clone();
+		}
+	}
 }
 
 StaticModel::StaticModel(Engine *engine, Mesh *mesh) : StaticModel(engine)
