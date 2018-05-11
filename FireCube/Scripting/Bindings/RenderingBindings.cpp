@@ -18,7 +18,10 @@ void LuaBindings::InitRendering(sol::state &luaState)
 			sol::resolve<void(const std::string &, int)>(&Material::SetParameter),
 			sol::resolve<void(const std::string &, const vec2 &)>(&Material::SetParameter),
 			sol::resolve<void(const std::string &, const vec3 &)>(&Material::SetParameter),
-			sol::resolve<void(const std::string &, const vec4 &)>(&Material::SetParameter)),			
+			sol::resolve<void(const std::string &, const vec4 &)>(&Material::SetParameter)),
+		"GetParameterVec3", [](Material &self, const std::string &paramName) {
+			return self.GetParameterValue(paramName).GetVec3();
+		},
 		"Clone", &Material::Clone,
 		sol::base_classes, sol::bases<Resource, Object, RefCounted>());
 
