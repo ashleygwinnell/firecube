@@ -301,6 +301,10 @@ void LuaBindings::InitScene(sol::state &luaState)
 		"Clone", &Component::Clone,
 		sol::base_classes, sol::bases<Object, RefCounted>());
 
+	luaState.new_usertype<RenderablePart>("RenderablePart",
+		"material", &RenderablePart::material
+	);
+
 	luaState.new_usertype<Renderable>("Renderable",
 		"SetCollisionQueryMask", &Renderable::SetCollisionQueryMask,
 		"GetCollisionQueryMask", &Renderable::GetCollisionQueryMask,
@@ -314,6 +318,14 @@ void LuaBindings::InitScene(sol::state &luaState)
 		"SetLightMask", &Renderable::SetLightMask,
 		"GetLightMask", &Renderable::GetLightMask,
 		"lightMask", sol::property(&Renderable::GetLightMask, &Renderable::SetLightMask),
+		"renderableParts", sol::property([](Renderable &self) {
+			std::vector<const RenderablePart *> ret(self.GetRenderableParts().size());
+			auto &renderableParts = self.GetRenderableParts();
+			std::transform(renderableParts.begin(), renderableParts.end(), ret.begin(), [](const RenderablePart &part) {
+				return &part;
+			});
+			return ret;
+		}),
 		sol::base_classes, sol::bases<Component, Object, RefCounted>());
 
 	luaState.new_usertype<StaticModel>("StaticModel",
