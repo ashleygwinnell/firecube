@@ -76,6 +76,7 @@ void InspectorWindow::Render()
 			{
 				bool componentOpen = true;
 				bool isOpen = true;
+				ImGui::PushID(component);
 				if (ImGui::CollapsingHeader(componentTypeToLabel[component->GetType()].c_str(), &componentOpen, ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					if (component->GetType() == ComponentType::STATIC_MODEL)
@@ -123,6 +124,7 @@ void InspectorWindow::Render()
 						cameraWindow.Render(editorState, (CameraDescriptor *)component);
 					}
 				}
+				ImGui::PopID();
 
 				if (componentOpen == false)
 				{
