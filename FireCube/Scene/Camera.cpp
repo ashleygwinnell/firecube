@@ -53,7 +53,9 @@ mat4 Camera::GetViewMatrix()
 		viewMatrix.Inverse();
 	}
 	else
+	{
 		viewMatrix = mat4::IDENTITY;
+	}
 
 	viewMatrixChanged = false;
 	return viewMatrix;

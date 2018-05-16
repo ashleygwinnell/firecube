@@ -95,6 +95,7 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 	SubscribeToEvent(editorState->addPrefab, &EditorWindow::AddPrefab);
 	engine->GetInputManager()->AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "RotateCamera", KeyModifier::SHIFT);
 	engine->GetInputManager()->AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "LeftDown", KeyModifier::NONE);
+	engine->GetInputManager()->AddMapping(Key::MOUSE_RIGHT_BUTTON, InputMappingType::STATE, "PanCamera", KeyModifier::NONE);
 	engine->GetInputManager()->AddMapping(AnalogInput::MOUSE_AXIS_X_RELATIVE, "MouseXDelta");
 	engine->GetInputManager()->AddMapping(AnalogInput::MOUSE_AXIS_Y_RELATIVE, "MouseYDelta");
 	engine->GetInputManager()->AddMapping(AnalogInput::MOUSE_AXIS_X_ABSOLUTE, "MouseX");
@@ -107,6 +108,7 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 	engine->GetInputManager()->AddMapping(Key::SPACE, InputMappingType::ACTION, "Clone");
 	engine->GetInputManager()->AddMapping(Key::G, InputMappingType::ACTION, "MoveToGround");
 	engine->GetInputManager()->AddMapping(Key::Z, InputMappingType::ACTION, "OrbitSelection", KeyModifier::NONE);
+	engine->GetInputManager()->AddMapping(Key::R, InputMappingType::ACTION, "ResetCameraOrbit", KeyModifier::NONE);
 	engine->GetInputManager()->AddMapping(Key::DELETE, InputMappingType::ACTION, "Delete");
 
 	editorScene = new FireCube::Scene(engine);
@@ -181,6 +183,17 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 		float deltaY = input.GetValue("MouseYDelta");
 		defaultCamera->RotateX(-deltaY / 60.0f);
 		defaultCamera->RotateY(-deltaX / 60.0f);
+	}
+
+	if (mouseOverView && input.IsStateOn("PanCamera") && currentCamera == defaultCamera)
+	{
+		float deltaX = input.GetValue("MouseXDelta");
+		float deltaY = input.GetValue("MouseYDelta");
+		mat4 invViewMatrix = defaultCamera->GetViewMatrix();
+		invViewMatrix.Inverse();
+		vec3 right = vec3(1.0f, 0.0f, 0.0f).TransformNormal(invViewMatrix);
+		vec3 up = vec3(0.0f, 1.0f, 0.0f).TransformNormal(invViewMatrix);
+		cameraTarget->Move((right * -deltaX + up * deltaY) * dt);
 	}
 
 	if (mouseOverView && std::abs(input.GetValue("MouseWheelY")) > 0.0f)
@@ -340,6 +353,10 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 		{
 			cameraTarget->SetTranslation(editorState->GetSelectedNode()->GetNode()->GetWorldPosition());
 		}
+	}
+	else if (input.IsActionTriggered("ResetCameraOrbit") && currentCamera == defaultCamera && !ImGui::GetIO().WantCaptureKeyboard)
+	{
+		cameraTarget->SetTranslation(vec3(0.0f));
 	}
 	else if (input.IsActionTriggered("Delete") && !ImGui::GetIO().WantCaptureKeyboard)
 	{
