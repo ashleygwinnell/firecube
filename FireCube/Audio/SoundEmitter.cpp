@@ -439,11 +439,13 @@ void SoundEmitter::MixSilence(int *dest, int samples, unsigned int mixRate)
 	}
 	position += intSampleCount * sampleSize;
 
-	if (position > sound->GetEnd())
+	Sound *curSound = soundDecoder ? decodedSoundBuffer : sound;
+
+	if (position > curSound->GetEnd())
 	{
 		if (looped)
 		{
-			position = sound->GetStart();			
+			position = curSound->GetStart();
 		}
 		else
 		{
