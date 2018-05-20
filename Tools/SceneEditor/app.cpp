@@ -413,6 +413,7 @@ bool FireCubeApp::Prepare()
 	SubscribeToEvent(editorState, editorState->componentAdded, &FireCubeApp::ComponentAdded);
 	SubscribeToEvent(editorState, editorState->componentRemoved, &FireCubeApp::ComponentRemoved);
 	SubscribeToEvent(editorState, editorState->showMaterialEditor, &FireCubeApp::ShowMaterialEditor);
+	SubscribeToEvent(editorState, editorState->openScene, &FireCubeApp::OpenSceneFile);
 	GetInputManager().AddMapping(Key::Z, InputMappingType::ACTION, "Undo", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::Y, InputMappingType::ACTION, "Redo", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::N, InputMappingType::ACTION, "New", KeyModifier::CTRL);
@@ -498,8 +499,6 @@ void FireCubeApp::OpenSceneFile(const std::string &filename)
 {	
 	editorState->SetCurrentSceneFile(filename);
 
-	Filesystem::SetAssetsFolder(Filesystem::GetDirectoryName(Filesystem::GetDirectoryName(filename)));
-
 	::SceneReader sceneReader(engine);
 
 	Reset();
@@ -513,9 +512,16 @@ void FireCubeApp::OpenSceneFile(const std::string &filename)
 
 	SetTitle("SceneEditor - " + filename);
 
-	assetBrowserWindow->Reset();	
-
 	UpdateCamerasList();
+}
+
+void FireCubeApp::OpenProject(const std::string &path)
+{
+	Filesystem::SetAssetsFolder(Filesystem::JoinPath(path, "Assets"));	
+
+	Reset();
+	
+	assetBrowserWindow->Reset();
 }
 
 void FireCubeApp::Reset()
@@ -555,11 +561,11 @@ void FireCubeApp::LoadSettingsFile()
 		for (TiXmlElement *element = e->FirstChildElement("file"); element != nullptr; element = element->NextSiblingElement("file"))
 		{
 			std::string filename = element->Attribute("name");
-			if (!Filesystem::FileExists(filename))
+			if (!Filesystem::DirectoryExists(filename))
 			{
 				continue;
 			}
-			settings->recentSceneFiles.push_back(filename);
+			settings->recentProjectFiles.push_back(filename);
 		}
 	}
 }
@@ -577,11 +583,11 @@ void FireCubeApp::WriteSettingsFile()
 	TiXmlElement *recentFilesElement = new TiXmlElement("recent");
 	settingsElement->LinkEndChild(recentFilesElement);
 
-	for (auto &sceneFile : settings->recentSceneFiles)
+	for (auto &projectFile : settings->recentProjectFiles)
 	{
 		TiXmlElement *element = new TiXmlElement("file");
 		recentFilesElement->LinkEndChild(element);
-		element->SetAttribute("name", sceneFile);
+		element->SetAttribute("name", projectFile);
 	}
 
 	doc.SaveFile("settings.xml");
@@ -703,11 +709,11 @@ void FireCubeApp::RenderMenuBar()
 				showSaveAs = true;
 			}
 
-			if (settings->recentSceneFiles.empty() == false)
+			if (settings->recentProjectFiles.empty() == false)
 			{
 				ImGui::Separator();
 				std::string selectedFile;
-				for (auto &filename : settings->recentSceneFiles)
+				for (auto &filename : settings->recentProjectFiles)
 				{
 					if (ImGui::MenuItem(filename.c_str()))
 					{
@@ -717,10 +723,10 @@ void FireCubeApp::RenderMenuBar()
 
 				if (selectedFile.empty() == false && selectedFile != editorState->GetCurrentSceneFile())
 				{
-					settings->recentSceneFiles.erase(std::remove(settings->recentSceneFiles.begin(), settings->recentSceneFiles.end(), selectedFile), settings->recentSceneFiles.end());
-					settings->recentSceneFiles.insert(settings->recentSceneFiles.begin(), selectedFile);
+					settings->recentProjectFiles.erase(std::remove(settings->recentProjectFiles.begin(), settings->recentProjectFiles.end(), selectedFile), settings->recentProjectFiles.end());
+					settings->recentProjectFiles.insert(settings->recentProjectFiles.begin(), selectedFile);
 
-					OpenSceneFile(selectedFile);
+					OpenProject(selectedFile);
 				}
 			}
 
@@ -996,19 +1002,19 @@ void FireCubeApp::RenderToolbar()
 void FireCubeApp::RenderOpenDialog()
 {
 	static ImGuiFs::Dialog openDialog;
-	const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, nullptr, ".xml", "Open Scene file", ImVec2(600, 400), ImVec2(100, 100));
+	const char* chosenPath = openDialog.chooseFolderDialog(showFileOpen, nullptr, "Open Project Directory", ImVec2(600, 400), ImVec2(100, 100));
 	std::string path = chosenPath;
 	if (path.empty() == false)
 	{
 		std::replace(path.begin(), path.end(), '/', '\\');
-		OpenSceneFile(path);
+		OpenProject(path);
 
 		const unsigned int maxRecentFiles = 10;
-		settings->recentSceneFiles.erase(std::remove(settings->recentSceneFiles.begin(), settings->recentSceneFiles.end(), path), settings->recentSceneFiles.end());
-		settings->recentSceneFiles.insert(settings->recentSceneFiles.begin(), path);
-		if (settings->recentSceneFiles.size() > maxRecentFiles)
+		settings->recentProjectFiles.erase(std::remove(settings->recentProjectFiles.begin(), settings->recentProjectFiles.end(), path), settings->recentProjectFiles.end());
+		settings->recentProjectFiles.insert(settings->recentProjectFiles.begin(), path);
+		if (settings->recentProjectFiles.size() > maxRecentFiles)
 		{
-			settings->recentSceneFiles.pop_back();
+			settings->recentProjectFiles.pop_back();
 		}
 	}
 }

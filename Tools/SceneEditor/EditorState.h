@@ -15,7 +15,7 @@ enum class RenderingLoopState
 class Settings
 {
 public:
-	std::vector<std::string> recentSceneFiles;
+	std::vector<std::string> recentProjectFiles;
 	std::string externalCodeEditorPath;
 };
 
@@ -51,6 +51,7 @@ public:
 	FireCube::Event<const std::string &> addMesh;
 	FireCube::Event<const std::string &> showScriptEditor;
 	FireCube::Event<const std::string &> addPrefab;
+	FireCube::Event<const std::string &> openScene;
 	FireCube::Event<> switchedToTranslateGizmo;
 	FireCube::Event<> switchedToRotateGizmo;
 	FireCube::Event<> switchedToScaleGizmo;

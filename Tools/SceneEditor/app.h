@@ -57,6 +57,7 @@ private:
 	virtual bool Prepare() override;
 	void HandleInput(float dt, const FireCube::MappedInput &input);
 	void OpenSceneFile(const std::string &filename);
+	void OpenProject(const std::string &path);
 	void Reset();
 	void LoadSettingsFile();
 	void SavePrefabs(NodeDescriptor *node);
