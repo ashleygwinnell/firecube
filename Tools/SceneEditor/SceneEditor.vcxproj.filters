@@ -210,6 +210,9 @@
     <ClCompile Include="ThirdParty\imgui\imgui_dock.cpp">
       <Filter>ThirdParty\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Project.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -409,6 +412,9 @@
     </ClInclude>
     <ClInclude Include="ThirdParty\imgui\imgui_dock.h">
       <Filter>ThirdParty\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Project.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

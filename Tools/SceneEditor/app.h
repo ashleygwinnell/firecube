@@ -2,6 +2,7 @@
 
 #include "EditorState.h"
 #include "Descriptors/NodeDescriptor.h"
+#include "Project.h"
 
 class MainFrameImpl;
 class wxGLContext;
@@ -40,6 +41,9 @@ public:
 	FireCube::Texture2D *rotateTexture;
 	FireCube::Texture2D *translateTexture;
 	FireCube::Texture2D *scaleTexture;
+
+	CProject project;
+	std::string currentProjectPath;
 
 	bool showFileOpen;
 	bool showNewDialog;

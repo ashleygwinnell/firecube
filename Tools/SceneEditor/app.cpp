@@ -519,9 +519,17 @@ void FireCubeApp::OpenProject(const std::string &path)
 {
 	Filesystem::SetAssetsFolder(Filesystem::JoinPath(path, "Assets"));	
 
+	project.Load(Filesystem::JoinPath(path, ".project"));
+	currentProjectPath = path;
+
 	Reset();
 	
 	assetBrowserWindow->Reset();
+
+	if (project.lastSceneFile.empty() == false)
+	{
+		OpenSceneFile(project.lastSceneFile);
+	}
 }
 
 void FireCubeApp::Reset()
@@ -699,9 +707,14 @@ void FireCubeApp::RenderMenuBar()
 				else
 				{
 					SceneWriter sceneWriter;
-					sceneWriter.Serialize(&rootDesc, editorState->GetCurrentSceneFile());
+					sceneWriter.Serialize(&rootDesc, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), editorState->GetCurrentSceneFile()));
 					SavePrefabs(&rootDesc);
 				}
+			}
+
+			if (ImGui::MenuItem("Save Project"))
+			{
+				project.Save(editorState, Filesystem::JoinPath(currentProjectPath, ".project"));
 			}
 
 			if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
