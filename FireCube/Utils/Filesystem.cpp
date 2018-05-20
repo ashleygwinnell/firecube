@@ -31,6 +31,13 @@ bool Filesystem::FileExists(const std::string &filename)
 	return false;
 }
 
+bool Filesystem::DirectoryExists(const std::string &path)
+{
+	DWORD dwAttrib = GetFileAttributesA(path.c_str());
+
+	return (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+}
+
 void Filesystem::SetAssetsFolder(const std::string &folder)
 {
 	assetsFolder = Filesystem::RemoveLastSeparator(folder);

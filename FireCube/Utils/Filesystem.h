@@ -30,6 +30,13 @@ namespace Filesystem
 	*/
 	bool FIRECUBE_API FileExists(const std::string &filename);
 
+	/**
+	* Checks whether the given directory exists.
+	* @param path the path to check.
+	* @return True if the directory exists, false otherwise.
+	*/
+	bool FIRECUBE_API DirectoryExists(const std::string &path);
+
 	void FIRECUBE_API SetAssetsFolder(const std::string &folder);
 	std::string FIRECUBE_API GetAssetsFolder();
 
