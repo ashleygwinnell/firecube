@@ -46,6 +46,10 @@ int main(int argc, char *argv[])
 	ImGui::DestroyContext();
 
 	app.WriteSettingsFile();
+	if (app.currentProjectPath.empty() == false)
+	{
+		app.project.Save(app.editorState, Filesystem::JoinPath(app.currentProjectPath, ".project"));
+	}
 	return 0;
 }
 #else
@@ -63,6 +67,10 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	ImGui::DestroyContext();
 	
 	app.WriteSettingsFile();
+	if (app.currentProjectPath.empty() == false)
+	{
+		app.project.Save(app.editorState, Filesystem::JoinPath(app.currentProjectPath, ".project"));
+	}
 	return 0;
 }
 #endif
