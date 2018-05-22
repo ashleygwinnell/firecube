@@ -57,7 +57,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_STL;IMGUI_INCLUDE_IMGUI_USER_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;$(ProjectDir)\ThirdParty\imgui;$(SolutionDir)\FireCube\ThirdParty\SDL\include;$(SolutionDir)\FireCube\ThirdParty\glew;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;$(ProjectDir)\ThirdParty\imgui;$(SolutionDir)\FireCube\ThirdParty\SDL\include;$(SolutionDir)\FireCube\ThirdParty\glew;$(ProjectDir)\ThirdParty\IconFontCppHeaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -75,7 +75,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TIXML_USE_STL;IMGUI_INCLUDE_IMGUI_USER_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;$(ProjectDir)\ThirdParty\imgui;$(SolutionDir)\FireCube\ThirdParty\SDL\include;$(SolutionDir)\FireCube\ThirdParty\glew;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;$(ProjectDir)\ThirdParty\imgui;$(SolutionDir)\FireCube\ThirdParty\SDL\include;$(SolutionDir)\FireCube\ThirdParty\glew;$(ProjectDir)\ThirdParty\IconFontCppHeaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -144,6 +144,7 @@
     <ClCompile Include="ThirdParty\imgui\imgui.cpp" />
     <ClCompile Include="ThirdParty\imgui\imguifilesystem.cpp" />
     <ClCompile Include="ThirdParty\imgui\imguihelper.cpp" />
+    <ClCompile Include="ThirdParty\imgui\imgui_demo.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui_dock.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui_draw.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui_impl_sdl_gl3.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="SceneWriter.h" />
     <ClInclude Include="SphereWindow.h" />
     <ClInclude Include="StaticModelWindow.h" />
+    <ClInclude Include="ThirdParty\IconFontCppHeaders\IconsForkAwesome.h" />
     <ClInclude Include="ThirdParty\imgui\dirent_portable.h" />
     <ClInclude Include="ThirdParty\imgui\imconfig.h" />
     <ClInclude Include="ThirdParty\imgui\imgui.h" />

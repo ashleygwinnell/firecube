@@ -28,6 +28,7 @@
 #include "Descriptors/RigidBodyDescriptor.h"
 #include "Commands/AddComponentCommand.h"
 #include "MaterialEditorWindow.h"
+#include "IconsForkAwesome.h"
 
 using namespace FireCube;
 
@@ -113,11 +114,14 @@ void FireCubeApp::Render(float t)
 	RenderSaveDialog();
 
 	static char externalCodeEditorPath[1024];
+	static char gameExecutablePath[1024];
 	if (showSettingsPopup == true)
 	{
 		ImGui::OpenPopup("Settings");
 		std::copy(settings->externalCodeEditorPath.begin(), settings->externalCodeEditorPath.end(), externalCodeEditorPath);
+		std::copy(project.gameExecutablePath.begin(), project.gameExecutablePath.end(), gameExecutablePath);
 		externalCodeEditorPath[settings->externalCodeEditorPath.size()] = '\0';
+		gameExecutablePath[project.gameExecutablePath.size()] = '\0';
 		showSettingsPopup = false;
 	}
 
@@ -125,9 +129,12 @@ void FireCubeApp::Render(float t)
 	{
 		ImGui::InputText("External Code Editor", externalCodeEditorPath, 1024);
 		ImGui::Separator();
+		ImGui::InputText("Game Executable Path", gameExecutablePath, 1024);
+		ImGui::Separator();
 		if (ImGui::Button("Ok"))
 		{
 			settings->externalCodeEditorPath = externalCodeEditorPath;
+			project.gameExecutablePath = gameExecutablePath;
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::SameLine();
@@ -439,6 +446,17 @@ bool FireCubeApp::Prepare()
 	ImGui::CreateContext();
 	ImGui_ImplSdlGL3_Init(GetWindow());
 	ImGui::StyleColorsDark();
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.Fonts->AddFontDefault();
+
+	static const ImWchar iconsRanges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
+	ImFontConfig iconsConfig; 
+	iconsConfig.MergeMode = true; 
+	iconsConfig.PixelSnapH = true;
+	iconsConfig.GlyphOffset.y = 4.0f;
+	io.Fonts->AddFontFromFileTTF("Data\\Fonts\\" FONT_ICON_FILE_NAME_FA, 24.0f, &iconsConfig, iconsRanges);
+
 	scene = new FireCube::Scene(GetEngine());	
 		
 	editorWindow->SetScene(scene, &rootDesc, editorState);
@@ -1014,6 +1032,10 @@ void FireCubeApp::RenderToolbar()
 		if (ImGui::ToolbarButton((ImTextureID)scaleTexture->GetObjectId(), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Scale"))
 		{
 			editorWindow->UseScaleGizmo();
+		}
+		if (ImGui::ToolbarButton(ICON_FK_PLAY, "Play"))
+		{
+			ShellExecuteA(nullptr, nullptr, Filesystem::JoinPath(currentProjectPath, project.gameExecutablePath).c_str(), nullptr, currentProjectPath.c_str(), SW_SHOW);
 		}
 
 		ImGui::EndToolbar();

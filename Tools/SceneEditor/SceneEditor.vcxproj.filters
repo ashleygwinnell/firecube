@@ -31,6 +31,9 @@
     <Filter Include="ThirdParty\imgui">
       <UniqueIdentifier>{96341449-8992-44cb-9584-9e999cf695ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ThirdParty\IconFontCppHeaders">
+      <UniqueIdentifier>{8ec4e22f-252d-485a-9354-4f501b5b4d62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MathUtils.cpp">
@@ -212,6 +215,9 @@
     </ClCompile>
     <ClCompile Include="Project.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\imgui\imgui_demo.cpp">
+      <Filter>ThirdParty\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -415,6 +421,9 @@
     </ClInclude>
     <ClInclude Include="Project.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\IconFontCppHeaders\IconsForkAwesome.h">
+      <Filter>ThirdParty\IconFontCppHeaders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

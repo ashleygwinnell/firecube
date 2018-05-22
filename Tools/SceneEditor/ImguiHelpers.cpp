@@ -532,7 +532,31 @@ namespace ImGui
 		return ret;
 	}
 
+	bool ToolbarButton(const char *label, const char* tooltip)
+	{
+		auto frame_padding = ImGui::GetStyle().FramePadding;
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, frame_padding);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0);
 
+		bool ret = false;
+		ImGui::SameLine();
+		ImVec4 tint_color = ImGui::GetStyle().Colors[ImGuiCol_Text];
+		if (ImGui::Button(label, ImVec2(24, 24)))
+		{
+			ret = true;
+		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("%s", tooltip);
+		}
+		ImGui::PopStyleColor(3);
+		ImGui::PopStyleVar(3);
+		return ret;
+	}
 
 	bool BeginToolbar(const char* str_id, ImVec2 screen_pos, ImVec2 size)
 	{
