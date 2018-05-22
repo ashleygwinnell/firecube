@@ -1021,15 +1021,15 @@ void FireCubeApp::RenderToolbar()
 	ImVec2 pos = ImGui::GetCursorScreenPos();
 	if (ImGui::BeginToolbar("main_tool_bar", pos, ImVec2(0, 24)))
 	{
-		if (ImGui::ToolbarButton((ImTextureID)translateTexture->GetObjectId(), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Translate"))
+		if (ImGui::ToolbarButton(ICON_FK_ARROWS, "Translate"))
 		{
 			editorWindow->UseTranslateGizmo();
 		}
-		if (ImGui::ToolbarButton((ImTextureID)rotateTexture->GetObjectId(), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Rotate"))
+		if (ImGui::ToolbarButton(ICON_FK_REPEAT, "Rotate"))
 		{
 			editorWindow->UseRotateGizmo();
 		}
-		if (ImGui::ToolbarButton((ImTextureID)scaleTexture->GetObjectId(), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Scale"))
+		if (ImGui::ToolbarButton(ICON_FK_EXPAND, "Scale"))
 		{
 			editorWindow->UseScaleGizmo();
 		}
