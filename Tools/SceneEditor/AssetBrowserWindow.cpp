@@ -82,6 +82,13 @@ void AssetBrowserWindow::Render()
 							std::string sceneFilename = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), item.path);
 							editorState->openScene(editorState, sceneFilename);
 						}
+						else if (item.assetType == AssetType::SHADER)
+						{
+							if (editorState->GetSettings().externalCodeEditorPath.empty() == false)
+							{
+								ShellExecuteA(nullptr, nullptr, editorState->GetSettings().externalCodeEditorPath.c_str(), item.path.c_str(), nullptr, SW_SHOW);
+							}
+						}
 					}
 					else
 					{
