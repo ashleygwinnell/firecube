@@ -464,11 +464,7 @@ bool FireCubeApp::Prepare()
 	inspectorWindow->SetScene(&rootDesc, editorState);
 	assetBrowserWindow->SetScene(&rootDesc, editorState);
 	materialEditorWindow->SetScene(&rootDesc, editorState);
-
-	translateTexture = engine->GetResourceCache()->GetResource<Texture2D>("./Data/Icons/move.png");
-	rotateTexture = engine->GetResourceCache()->GetResource<Texture2D>("./Data/Icons/loop.png");
-	scaleTexture = engine->GetResourceCache()->GetResource<Texture2D>("./Data/Icons/resize.png");
-
+	
 	ImGui::LoadDock();
 
 	return true;

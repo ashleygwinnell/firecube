@@ -38,10 +38,6 @@ public:
 	AssetBrowserWindow *assetBrowserWindow;
 	MaterialEditorWindow *materialEditorWindow;
 
-	FireCube::Texture2D *rotateTexture;
-	FireCube::Texture2D *translateTexture;
-	FireCube::Texture2D *scaleTexture;
-
 	CProject project;
 	std::string currentProjectPath;
 
