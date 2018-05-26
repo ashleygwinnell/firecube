@@ -6,9 +6,13 @@ using namespace FireCube;
 bool RenderJobCompare(const RenderJob &job1, const RenderJob &job2)
 {
 	if (job1.sortKey != job2.sortKey)
+	{
 		return job1.sortKey < job2.sortKey;
+	}
 	else
-		return job1.distance < job2.distance;	
+	{
+		return job1.distance < job2.distance;
+	}
 }
 
 

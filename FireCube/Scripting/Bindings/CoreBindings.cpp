@@ -10,6 +10,7 @@
 #include "Audio/Sound.h"
 #include "Scene/Prefab.h"
 #include "Rendering/Renderer.h"
+#include "Application/Application.h"
 
 using namespace FireCube;
 
@@ -99,6 +100,9 @@ void LuaBindings::InitCore(sol::state &luaState, Engine *engine)
 	
 	luaState.new_usertype<ResourceCache>("ResourceCache",
 		"GetResource", &GetResource);
+
+	luaState.new_usertype<Application>("Application",
+		"SetTimeScale", &Application::SetTimeScale);
 	
 	luaState["engine"] = engine;
 }
