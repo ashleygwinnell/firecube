@@ -52,8 +52,16 @@ vec4 UIText::GetColor() const
 
 void UIText::UpdateData()
 {
-	if (!fontFace || text.empty())
+	if (!fontFace)
+	{
 		return;
+	}
+
+	if (text.empty())
+	{
+		vertexData.clear();
+		return;
+	}
 
 	vertexData.resize(text.size() * 6);
 
