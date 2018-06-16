@@ -5,6 +5,7 @@
 #include "Core/Engine.h"
 #include "Core/ResourceCache.h"
 #include "Rendering/Material.h"
+#include "Rendering/Technique.h"
 #include "Geometry/Mesh.h"
 #include "Scripting/LuaFile.h"
 #include "Audio/Sound.h"
@@ -65,10 +66,22 @@ sol::object GetResource(ResourceCache *resourceCache, const std::string &type, c
 		{
 			return sol::make_object(s, sol::nil);
 		}
-	}	
+	}
 	else if (type == "Prefab")
 	{
 		auto resource = resourceCache->GetResource<Prefab>(path);
+		if (resource)
+		{
+			return sol::object(lua, sol::in_place, resource);
+		}
+		else
+		{
+			return sol::make_object(s, sol::nil);
+		}
+	}
+	else if (type == "Technique")
+	{
+		auto resource = resourceCache->GetResource<Technique>(path);
 		if (resource)
 		{
 			return sol::object(lua, sol::in_place, resource);

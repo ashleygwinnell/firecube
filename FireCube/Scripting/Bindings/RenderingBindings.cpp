@@ -3,6 +3,7 @@
 #include "Scripting/LuaBindings.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Material.h"
+#include "Rendering/Technique.h"
 #include "Rendering/RenderingTypes.h"
 
 using namespace FireCube;
@@ -23,6 +24,9 @@ void LuaBindings::InitRendering(sol::state &luaState)
 			return self.GetParameterValue(paramName).GetVec3();
 		},
 		"Clone", &Material::Clone,
+		"technique", sol::property(&Material::GetTechnique, &Material::SetTechnique),
+		sol::base_classes, sol::bases<Resource, Object, RefCounted>());
+	luaState.new_usertype<Technique>("Technique",
 		sol::base_classes, sol::bases<Resource, Object, RefCounted>());
 
 	luaState["PARAM_MATERIAL_DIFFUSE"] = PARAM_MATERIAL_DIFFUSE;
