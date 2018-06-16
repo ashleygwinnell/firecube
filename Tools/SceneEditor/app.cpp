@@ -145,12 +145,11 @@ void FireCubeApp::Render(float t)
 		ImGui::EndPopup();
 	}
 
-	static char importAssetPath[1024] = "";
-
 	if (showImportMeshPopup == true)
 	{
 		ImGui::OpenPopup("Import Mesh");
 		importAssetPath[0] = '\0';
+		selectedMeshMaterials.clear();
 		showImportMeshPopup = false;
 	}
 
@@ -182,48 +181,7 @@ void FireCubeApp::Render(float t)
 		showImportTechniquePopup = false;
 	}
 
-	if (ImGui::BeginPopupModal("Import Mesh", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-	{
-		ImGui::Text("Path");
-		ImGui::SameLine();
-		ImGui::InputText("##Path", importAssetPath, 1024);
-		ImGui::SameLine();
-		if (ImGui::Button("..."))
-		{
-			OPENFILENAMEA ofn;
-			ZeroMemory(&ofn, sizeof(ofn));
-			ofn.lStructSize = sizeof(ofn);
-			ofn.hwndOwner = NULL;
-			ofn.lpstrFile = importAssetPath;
-			ofn.lpstrFile[0] = '\0';
-			ofn.nMaxFile = sizeof(importAssetPath);
-			ofn.lpstrFilter = "All\0*.*\0";
-			ofn.nFilterIndex = 1;
-			ofn.lpstrFileTitle = NULL;
-			ofn.nMaxFileTitle = 0;
-			ofn.lpstrInitialDir = NULL;
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-			GetOpenFileNameA(&ofn);
-		}
-		ImGui::Separator();
-		if (ImGui::Button("Import"))
-		{
-			std::string meshFileName = importAssetPath;
-			std::replace(meshFileName.begin(), meshFileName.end(), '/', '\\');
-
-			if (!Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), meshFileName))
-			{
-				AssetUtils::ImportMesh(engine, meshFileName);
-			}
-			ImGui::CloseCurrentPopup();
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Cancel"))
-		{
-			ImGui::CloseCurrentPopup();
-		}
-		ImGui::EndPopup();
-	}
+	RenderImportMeshDialog();
 
 	if (ImGui::BeginPopupModal("Import Script", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 	{
@@ -1101,5 +1059,83 @@ void FireCubeApp::RenderSaveDialog()
 		SavePrefabs(&rootDesc);
 		editorState->SetCurrentSceneFile(path);
 		SetTitle("SceneEditor - " + path);
+	}
+}
+
+void FireCubeApp::RenderImportMeshDialog()
+{
+	if (ImGui::BeginPopupModal("Import Mesh", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Path");
+		ImGui::SameLine();
+		ImGui::PushItemWidth(400);
+		ImGui::InputText("##Path", importAssetPath, 1024);
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		if (ImGui::Button("..."))
+		{
+			OPENFILENAMEA ofn;
+			ZeroMemory(&ofn, sizeof(ofn));
+			ofn.lStructSize = sizeof(ofn);
+			ofn.hwndOwner = NULL;
+			ofn.lpstrFile = importAssetPath;
+			ofn.lpstrFile[0] = '\0';
+			ofn.nMaxFile = sizeof(importAssetPath);
+			ofn.lpstrFilter = "All\0*.*\0";
+			ofn.nFilterIndex = 1;
+			ofn.lpstrFileTitle = NULL;
+			ofn.nMaxFileTitle = 0;
+			ofn.lpstrInitialDir = NULL;
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+			if (GetOpenFileNameA(&ofn))
+			{
+				selectedMeshMaterials.clear();
+				FireCube::Mesh mesh(engine);
+				mesh.Load(importAssetPath);
+				std::set<std::string> usedMaterials;
+				for (auto &material : mesh.GetMaterials())
+				{
+					usedMaterials.insert(material->GetName());
+				}
+
+				for (auto &material : usedMaterials)
+				{
+					std::string targetMaterialPath = Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Materials", material + ".xml");
+					selectedMeshMaterials.push_back(std::make_pair(material, Filesystem::FileExists(targetMaterialPath)));
+				}
+			}
+		}
+		ImGui::BeginChild("Info", ImVec2(0, 300), true, ImGuiWindowFlags_HorizontalScrollbar);
+		ImGui::Text("Summary:");
+		for (auto &material : selectedMeshMaterials)
+		{
+			if (material.second)
+			{				
+				ImGui::BulletText("Using existing material: %s", material.first.c_str());
+			}
+			else
+			{
+				ImGui::BulletText("Creating material: %s", material.first.c_str());
+			}
+		}
+		ImGui::EndChild();
+		//ImGui::Separator();
+		if (ImGui::Button("Import"))
+		{
+			std::string meshFileName = importAssetPath;
+			std::replace(meshFileName.begin(), meshFileName.end(), '/', '\\');
+
+			if (!Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), meshFileName))
+			{
+				AssetUtils::ImportMesh(engine, meshFileName);
+			}
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
 	}
 }

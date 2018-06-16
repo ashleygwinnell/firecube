@@ -72,6 +72,9 @@ private:
 	void RenderOpenDialog();
 	void RenderNewDialog();
 	void RenderSaveDialog();
+	void RenderImportMeshDialog();
 
 	Settings *settings;
+	std::vector<std::pair<std::string, bool>> selectedMeshMaterials;
+	char importAssetPath[1024];
 };
