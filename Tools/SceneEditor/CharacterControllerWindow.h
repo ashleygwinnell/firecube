@@ -2,7 +2,6 @@
 
 #include "FireCube.h"
 #include "ImguiHelpers.h"
-#include "imguifilesystem.h"
 
 class NodeDescriptor;
 class EditorState;

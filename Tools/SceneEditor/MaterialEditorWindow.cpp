@@ -31,33 +31,103 @@ void MaterialEditorWindow::Render()
 
 		ImGui::SameLine();
 		{
-			bool showFileOpen = ImGui::Button("Open");			
-			const char* chosenPath = openDialog.chooseFileDialog(showFileOpen, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Materials").c_str(), ".xml", "Select a file", ImVec2(600, 400), ImVec2(100, 100));
-			std::string filename = chosenPath;
-			if (filename.empty() == false)
+			if (ImGui::Button("Open"))
 			{
-				std::replace(filename.begin(), filename.end(), '/', '\\');
-
-				if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), filename))
+				char chosenPath[1024];
+				OPENFILENAMEA ofn;
+				ZeroMemory(&ofn, sizeof(ofn));
+				ofn.lStructSize = sizeof(ofn);
+				ofn.hwndOwner = NULL;
+				ofn.lpstrFile = chosenPath;
+				ofn.lpstrFile[0] = '\0';
+				ofn.nMaxFile = sizeof(chosenPath);
+				ofn.lpstrFilter = "Material\0*.xml\0";
+				ofn.nFilterIndex = 1;
+				ofn.lpstrFileTitle = NULL;
+				ofn.nMaxFileTitle = 0;
+				ofn.lpstrInitialDir = NULL;
+				ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+				if (GetOpenFileNameA(&ofn) != 0)
 				{
-					currentFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), filename);
-					std::replace(currentFileName.begin(), currentFileName.end(), '\\', '/');
-					material = engine->GetResourceCache()->GetResource<Material>(currentFileName);
-					UpdatePreview(material);
-				}
-				else
-				{
+					std::string filename = chosenPath;
+					if (filename.empty() == false)
+					{
+						std::replace(filename.begin(), filename.end(), '/', '\\');
 
+						if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), filename))
+						{
+							currentFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), filename);
+							std::replace(currentFileName.begin(), currentFileName.end(), '\\', '/');
+							material = engine->GetResourceCache()->GetResource<Material>(currentFileName);
+							UpdatePreview(material);
+						}
+						else
+						{
+
+						}
+					}
 				}
-			}			
+			}
 		}
 
 		ImGui::SameLine();
 		{
 			bool saveClicked = ImGui::Button("Save");
 			if (currentFileName.empty())
-			{				
-				const char* chosenPath = saveDialog.saveFileDialog(saveClicked, nullptr, nullptr, ".xml", "Save Material file", ImVec2(600, 400), ImVec2(100, 100));
+			{			
+				char chosenPath[1024];				
+				OPENFILENAMEA ofn;
+				ZeroMemory(&ofn, sizeof(ofn));
+				ofn.lStructSize = sizeof(ofn);
+				ofn.hwndOwner = NULL;
+				ofn.lpstrFile = chosenPath;
+				ofn.lpstrFile[0] = '\0';
+				ofn.nMaxFile = sizeof(chosenPath);
+				ofn.lpstrFilter = "Material\0*.xml\0";
+				ofn.nFilterIndex = 1;
+				ofn.lpstrFileTitle = NULL;
+				ofn.nMaxFileTitle = 0;
+				ofn.lpstrInitialDir = NULL;				
+				if (GetSaveFileNameA(&ofn) != 0)
+				{
+					std::string path = chosenPath;
+					if (path.empty() == false)
+					{
+						std::replace(path.begin(), path.end(), '/', '\\');
+						if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), path))
+						{
+							currentFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
+							std::replace(currentFileName.begin(), currentFileName.end(), '\\', '/');
+							AssetUtils::SerializeMaterial(material, Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentFileName);
+						}
+					}
+				}				
+			}
+			else if (saveClicked)
+			{
+				AssetUtils::SerializeMaterial(material, Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentFileName);
+			}
+		}		
+
+		ImGui::SameLine();
+		{
+			bool showSaveAs = ImGui::Button("Save As");
+					
+			char chosenPath[1024];
+			OPENFILENAMEA ofn;
+			ZeroMemory(&ofn, sizeof(ofn));
+			ofn.lStructSize = sizeof(ofn);
+			ofn.hwndOwner = NULL;
+			ofn.lpstrFile = chosenPath;
+			ofn.lpstrFile[0] = '\0';
+			ofn.nMaxFile = sizeof(chosenPath);
+			ofn.lpstrFilter = "Material\0*.xml\0";
+			ofn.nFilterIndex = 1;
+			ofn.lpstrFileTitle = NULL;
+			ofn.nMaxFileTitle = 0;
+			ofn.lpstrInitialDir = NULL;
+			if (GetSaveFileNameA(&ofn) != 0)
+			{
 				std::string path = chosenPath;
 				if (path.empty() == false)
 				{
@@ -69,29 +139,7 @@ void MaterialEditorWindow::Render()
 						AssetUtils::SerializeMaterial(material, Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentFileName);
 					}
 				}
-			}
-			else if (saveClicked)
-			{
-				AssetUtils::SerializeMaterial(material, Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentFileName);
-			}
-		}		
-
-		ImGui::SameLine();
-		{
-			bool showSaveAs = ImGui::Button("Save As");
-						
-			const char* chosenPath = saveDialog.saveFileDialog(showSaveAs, nullptr, nullptr, ".xml", "Save Material file", ImVec2(600, 400), ImVec2(100, 100));
-			std::string path = chosenPath;
-			if (path.empty() == false)
-			{
-				std::replace(path.begin(), path.end(), '/', '\\');
-				if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder(), path))
-				{
-					currentFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), path);
-					std::replace(currentFileName.begin(), currentFileName.end(), '\\', '/');
-					AssetUtils::SerializeMaterial(material, Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentFileName);
-				}
-			}
+			}						
 		}
 
 		ImGui::SameLine();

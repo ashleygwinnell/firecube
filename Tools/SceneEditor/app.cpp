@@ -6,7 +6,6 @@
 #include <imgui.h>
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
-#include "imguifilesystem.h"
 #include "HierarchyWindow.h"
 #include "EditorWindow.h"
 #include "InspectorWindow.h"
@@ -30,8 +29,11 @@
 #include "Commands/AddComponentCommand.h"
 #include "MaterialEditorWindow.h"
 #include "IconsForkAwesome.h"
+#include <shlobj.h>
 
 using namespace FireCube;
+
+std::string BrowseFolder(const std::string &title);
 
 #ifdef _DEBUG
 int main(int argc, char *argv[])
@@ -80,7 +82,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 #endif
 
 
-FireCubeApp::FireCubeApp() : showFileOpen(false), showNewDialog(false), showSaveAs(false), showSettingsPopup(false), showImportMeshPopup(false), 
+FireCubeApp::FireCubeApp() : showSettingsPopup(false), showImportMeshPopup(false), 
 	showImportScriptPopup(false), showImportMaterialPopup(false), showImportTexturePopup(false), showImportTechniquePopup(false)
 {
 
@@ -113,10 +115,6 @@ void FireCubeApp::Render(float t)
 		assetBrowserWindow->Render();
 		materialEditorWindow->Render();
 	}
-	
-	RenderOpenDialog();
-	RenderNewDialog();
-	RenderSaveDialog();
 
 	static char externalCodeEditorPath[1024];
 	static char gameExecutablePath[1024];
@@ -357,10 +355,6 @@ void FireCubeApp::Render(float t)
 	ImGui::EndDockspace();
 	ImGui::End();
 
-	showFileOpen = false;
-	showNewDialog = false;
-	showSaveAs = false;
-
 	for (unsigned int i = 0; i < MAX_RENDER_TARGETS; ++i)
 	{
 		renderer->SetRenderTarget(i, nullptr);
@@ -449,19 +443,19 @@ void FireCubeApp::HandleInput(float dt, const MappedInput &input)
 
 	if (input.IsActionTriggered("New"))
 	{
-		showNewDialog = true;
+		ShowNewDialog();
 	}
 
 	if (input.IsActionTriggered("Open"))
 	{
-		showFileOpen = true;
+		ShowOpenDialog();
 	}
 
 	if (input.IsActionTriggered("Save"))
 	{
 		if (editorState->GetCurrentSceneFile().empty())
 		{
-			showSaveAs = true;
+			ShowSaveDialog();
 		}
 		else
 		{
@@ -473,7 +467,7 @@ void FireCubeApp::HandleInput(float dt, const MappedInput &input)
 
 	if (input.IsActionTriggered("SaveAs"))
 	{
-		showSaveAs = true;
+		ShowSaveDialog();
 	}
 
 	if (input.IsActionTriggered("Exit"))
@@ -678,18 +672,18 @@ void FireCubeApp::RenderMenuBar()
 		{
 			if (ImGui::MenuItem("New", "Ctrl+N"))
 			{
-				showNewDialog = true;
+				ShowNewDialog();
 			}
 			if (ImGui::MenuItem("Open", "Ctrl+O"))
 			{
-				showFileOpen = true;
+				ShowOpenDialog();
 			}
 
 			if (ImGui::MenuItem("Save", "Ctrl+S"))
 			{
 				if (editorState->GetCurrentSceneFile().empty())
 				{
-					showSaveAs = true;
+					ShowSaveDialog();
 				}
 				else
 				{
@@ -706,7 +700,7 @@ void FireCubeApp::RenderMenuBar()
 
 			if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
 			{
-				showSaveAs = true;
+				ShowSaveDialog();
 			}
 
 			if (settings->recentProjectFiles.empty() == false)
@@ -1003,11 +997,9 @@ void FireCubeApp::RenderToolbar()
 	}
 }
 
-void FireCubeApp::RenderOpenDialog()
-{
-	static ImGuiFs::Dialog openDialog;
-	const char* chosenPath = openDialog.chooseFolderDialog(showFileOpen, nullptr, "Open Project Directory", ImVec2(600, 400), ImVec2(100, 100));
-	std::string path = chosenPath;
+void FireCubeApp::ShowOpenDialog()
+{	
+	std::string path = BrowseFolder("Open Project Directory");
 	if (path.empty() == false)
 	{
 		std::replace(path.begin(), path.end(), '/', '\\');
@@ -1023,11 +1015,9 @@ void FireCubeApp::RenderOpenDialog()
 	}
 }
 
-void FireCubeApp::RenderNewDialog()
-{
-	static ImGuiFs::Dialog newDialog;
-	const char* chosenPath = newDialog.chooseFolderDialog(showNewDialog, nullptr, "Choose root assets directory", ImVec2(600, 400), ImVec2(100, 100));
-	std::string path = chosenPath;
+void FireCubeApp::ShowNewDialog()
+{	
+	std::string path = BrowseFolder("Choose root assets directory");
 	if (path.empty() == false)
 	{
 		std::replace(path.begin(), path.end(), '/', '\\');
@@ -1054,19 +1044,33 @@ void FireCubeApp::RenderNewDialog()
 	}
 }
 
-void FireCubeApp::RenderSaveDialog()
+void FireCubeApp::ShowSaveDialog()
 {
-	static ImGuiFs::Dialog dialog;
-	const char* chosenPath = dialog.saveFileDialog(showSaveAs, nullptr, nullptr, ".xml", "Save Scene file", ImVec2(600, 400), ImVec2(100, 100));
-	std::string path = chosenPath;
-	if (path.empty() == false)
+	char chosenPath[1024];
+	OPENFILENAMEA ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFile = chosenPath;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(chosenPath);
+	ofn.lpstrFilter = "Scene\0*.xml\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	if (GetSaveFileNameA(&ofn) != 0)
 	{
-		SceneWriter sceneWriter;
-		sceneWriter.Serialize(&rootDesc, path);
-		SavePrefabs(&rootDesc);
-		editorState->SetCurrentSceneFile(path);
-		SetTitle("SceneEditor - " + path);
-	}
+		std::string path = chosenPath;
+		if (path.empty() == false)
+		{
+			SceneWriter sceneWriter;
+			sceneWriter.Serialize(&rootDesc, path);
+			SavePrefabs(&rootDesc);
+			editorState->SetCurrentSceneFile(path);
+			SetTitle("SceneEditor - " + path);
+		}
+	}	
 }
 
 void FireCubeApp::RenderImportMeshDialog()
@@ -1145,4 +1149,47 @@ void FireCubeApp::RenderImportMeshDialog()
 		}
 		ImGui::EndPopup();
 	}
+}
+
+static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
+{
+
+	if (uMsg == BFFM_INITIALIZED)
+	{
+		//std::string tmp = (const char *)lpData;
+		//std::cout << "path: " << tmp << std::endl;
+		SendMessage(hwnd, BFFM_SETSELECTION, TRUE, lpData);
+	}
+
+	return 0;
+}
+
+std::string BrowseFolder(const std::string &title)
+{
+	CHAR path[MAX_PATH];	
+
+	BROWSEINFOA bi = { 0 };
+	bi.lpszTitle = title.c_str();
+	bi.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE;
+	bi.lpfn = BrowseCallbackProc;	
+
+	LPITEMIDLIST pidl = SHBrowseForFolderA(&bi);
+
+	if (pidl != 0)
+	{
+		//get the name of the folder and put it in path
+		SHGetPathFromIDListA(pidl, path);
+
+		//free memory used
+		IMalloc * imalloc = 0;
+		if (SUCCEEDED(SHGetMalloc(&imalloc)))
+		{
+			imalloc->Free(pidl);
+			imalloc->Release();
+		}
+
+		return path;
+	}
+
+	return "";
 }

@@ -40,10 +40,7 @@ public:
 
 	CProject project;
 	std::string currentProjectPath;
-
-	bool showFileOpen;
-	bool showNewDialog;
-	bool showSaveAs;
+	
 	bool showSettingsPopup;
 	bool showImportMeshPopup;
 	bool showImportScriptPopup;
@@ -69,9 +66,9 @@ private:
 	void ShowMaterialEditor();
 	void RenderMenuBar();
 	void RenderToolbar();
-	void RenderOpenDialog();
-	void RenderNewDialog();
-	void RenderSaveDialog();
+	void ShowOpenDialog();
+	void ShowNewDialog();
+	void ShowSaveDialog();
 	void RenderImportMeshDialog();
 
 	Settings *settings;

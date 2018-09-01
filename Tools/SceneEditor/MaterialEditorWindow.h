@@ -2,7 +2,6 @@
 
 #include "FireCube.h"
 #include "AuxRenderWindow.h"
-#include "imguifilesystem.h"
 
 class EditorState;
 class NodeDescriptor;
@@ -24,9 +23,7 @@ private:
 	NodeDescriptor *rootDesc;
 	EditorState *editorState;
 	std::string currentFileName;
-	FireCube::SharedPtr<FireCube::Material> material;
-	ImGuiFs::Dialog openDialog;	
-	ImGuiFs::Dialog saveDialog;
+	FireCube::SharedPtr<FireCube::Material> material;	
 	AuxRenderWindow auxRenderWindow;
 	bool isOpen;
 };
