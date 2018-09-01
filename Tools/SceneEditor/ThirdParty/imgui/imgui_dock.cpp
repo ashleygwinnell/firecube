@@ -1124,8 +1124,8 @@ struct DockContext
         // parse ini file
         std::string fileName = "imgui_dock.ini";
 
-        int file_size;
-        char* file_data = (char*) ImFileLoadToMemory(fileName.c_str(), "rb", &file_size, 1);
+        size_t file_size;
+        char* file_data = (char*)ImFileLoadToMemory(fileName.c_str(), "rb", &file_size, 1);
         if(!file_data)
             return;
 

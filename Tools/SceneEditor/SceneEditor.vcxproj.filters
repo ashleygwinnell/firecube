@@ -141,15 +141,6 @@
     <ClCompile Include="Descriptors\CameraDescriptor.cpp">
       <Filter>Descriptors</Filter>
     </ClCompile>
-    <ClCompile Include="ThirdParty\imgui\imgui.cpp">
-      <Filter>ThirdParty\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="ThirdParty\imgui\imgui_draw.cpp">
-      <Filter>ThirdParty\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="ThirdParty\imgui\imgui_impl_sdl_gl3.cpp">
-      <Filter>ThirdParty\imgui</Filter>
-    </ClCompile>
     <ClCompile Include="EditorWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -216,7 +207,22 @@
     <ClCompile Include="Project.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ThirdParty\imgui\imgui.cpp">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClCompile>
     <ClCompile Include="ThirdParty\imgui\imgui_demo.cpp">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\imgui\imgui_draw.cpp">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\imgui\imgui_impl_opengl3.cpp">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\imgui\imgui_impl_sdl.cpp">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\imgui\imgui_widgets.cpp">
       <Filter>ThirdParty\imgui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -329,27 +335,6 @@
     <ClInclude Include="Descriptors\CameraDescriptor.h">
       <Filter>Descriptors</Filter>
     </ClInclude>
-    <ClInclude Include="ThirdParty\imgui\imconfig.h">
-      <Filter>ThirdParty\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\imgui\imgui.h">
-      <Filter>ThirdParty\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\imgui\imgui_impl_sdl_gl3.h">
-      <Filter>ThirdParty\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\imgui\imgui_internal.h">
-      <Filter>ThirdParty\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\imgui\stb_rect_pack.h">
-      <Filter>ThirdParty\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\imgui\stb_textedit.h">
-      <Filter>ThirdParty\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\imgui\stb_truetype.h">
-      <Filter>ThirdParty\imgui</Filter>
-    </ClInclude>
     <ClInclude Include="ThirdParty\imgui\imgui_user.h">
       <Filter>ThirdParty\imgui</Filter>
     </ClInclude>
@@ -424,6 +409,30 @@
     </ClInclude>
     <ClInclude Include="ThirdParty\IconFontCppHeaders\IconsForkAwesome.h">
       <Filter>ThirdParty\IconFontCppHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\imgui\imconfig.h">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\imgui\imgui.h">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\imgui\imgui_impl_opengl3.h">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\imgui\imgui_impl_sdl.h">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\imgui\imgui_internal.h">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\imgui\stb_rect_pack.h">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\imgui\stb_textedit.h">
+      <Filter>ThirdParty\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\imgui\stb_truetype.h">
+      <Filter>ThirdParty\imgui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

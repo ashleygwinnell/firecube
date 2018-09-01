@@ -563,7 +563,7 @@ void RenderTextVertical(const ImFont* font,ImDrawList* draw_list, float size, Im
                 while (s < text_end)
                 {
                     const char c = *s;
-                    if (ImCharIsSpace(c)) { s++; } else if (c == '\n') { s++; break; } else { break; }
+                    if (ImCharIsBlankW(c)) { s++; } else if (c == '\n') { s++; break; } else { break; }
                 }
                 continue;
             }

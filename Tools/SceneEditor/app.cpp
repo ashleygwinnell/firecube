@@ -4,7 +4,8 @@
 #include "Gizmos/ScaleGizmo.h"
 #include "app.h"
 #include <imgui.h>
-#include "imgui_impl_sdl_gl3.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl3.h"
 #include "imguifilesystem.h"
 #include "HierarchyWindow.h"
 #include "EditorWindow.h"
@@ -43,7 +44,8 @@ int main(int argc, char *argv[])
 
 	app.Run();
 
-	ImGui_ImplSdlGL3_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 
 	app.WriteSettingsFile();
@@ -85,7 +87,9 @@ FireCubeApp::FireCubeApp() : showFileOpen(false), showNewDialog(false), showSave
 
 void FireCubeApp::Render(float t)
 {
-	ImGui_ImplSdlGL3_NewFrame(GetWindow());
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame(GetWindow());
+	ImGui::NewFrame();
 	
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
@@ -365,12 +369,12 @@ void FireCubeApp::Render(float t)
 	glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);		
 	renderer->Clear(vec4(0.0f, 0.0f, 0.0f, 1.0f), 1.0, ClearBufferType::COLOR | ClearBufferType::DEPTH);
 	ImGui::Render();
-	ImGui_ImplSdlGL3_RenderDrawData(ImGui::GetDrawData());
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void FireCubeApp::HandleSDLEvent(SDL_Event &event)
 {
-	ImGui_ImplSdlGL3_ProcessEvent(&event);
+	ImGui_ImplSDL2_ProcessEvent(&event);
 }
 
 bool FireCubeApp::Prepare()
@@ -402,7 +406,9 @@ bool FireCubeApp::Prepare()
 	materialEditorWindow = new MaterialEditorWindow(engine);
 	
 	ImGui::CreateContext();
-	ImGui_ImplSdlGL3_Init(GetWindow());
+	const char* glslVersion = "#version 130";
+	ImGui_ImplSDL2_InitForOpenGL(GetWindow(), GetGLContext());
+	ImGui_ImplOpenGL3_Init(glslVersion);
 	ImGui::StyleColorsDark();
 
 	ImGuiIO& io = ImGui::GetIO();

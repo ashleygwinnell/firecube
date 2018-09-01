@@ -56,7 +56,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_STL;IMGUI_INCLUDE_IMGUI_USER_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_STL;IMGUI_INCLUDE_IMGUI_USER_H;IMGUI_IMPL_OPENGL_LOADER_GLEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;$(ProjectDir)\ThirdParty\imgui;$(SolutionDir)\FireCube\ThirdParty\SDL\include;$(SolutionDir)\FireCube\ThirdParty\glew;$(ProjectDir)\ThirdParty\IconFontCppHeaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -74,7 +74,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TIXML_USE_STL;IMGUI_INCLUDE_IMGUI_USER_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TIXML_USE_STL;IMGUI_INCLUDE_IMGUI_USER_H;IMGUI_IMPL_OPENGL_LOADER_GLEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)\FireCube;$(SolutionDir)\FireCube\ThirdParty\TinyXml;$(ProjectDir)\ThirdParty\imgui;$(SolutionDir)\FireCube\ThirdParty\SDL\include;$(SolutionDir)\FireCube\ThirdParty\glew;$(ProjectDir)\ThirdParty\IconFontCppHeaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -147,7 +147,9 @@
     <ClCompile Include="ThirdParty\imgui\imgui_demo.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui_dock.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui_draw.cpp" />
-    <ClCompile Include="ThirdParty\imgui\imgui_impl_sdl_gl3.cpp" />
+    <ClCompile Include="ThirdParty\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="ThirdParty\imgui\imgui_impl_sdl.cpp" />
+    <ClCompile Include="ThirdParty\imgui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\FireCube\ThirdParty\TinyXML\tinyxml.h" />
@@ -211,7 +213,8 @@
     <ClInclude Include="ThirdParty\imgui\imguifilesystem.h" />
     <ClInclude Include="ThirdParty\imgui\imguihelper.h" />
     <ClInclude Include="ThirdParty\imgui\imgui_dock.h" />
-    <ClInclude Include="ThirdParty\imgui\imgui_impl_sdl_gl3.h" />
+    <ClInclude Include="ThirdParty\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="ThirdParty\imgui\imgui_impl_sdl.h" />
     <ClInclude Include="ThirdParty\imgui\imgui_internal.h" />
     <ClInclude Include="ThirdParty\imgui\imgui_user.h" />
     <ClInclude Include="ThirdParty\imgui\stb_rect_pack.h" />
