@@ -545,3 +545,8 @@ void Application::RemoveGameController(int joystickId)
 	gameControllers.erase(newEnd, gameControllers.end());
 }
 
+SDL_GLContext *Application::GetGLContext() const
+{
+	return context;
+}
+

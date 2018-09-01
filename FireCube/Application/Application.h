@@ -131,6 +131,7 @@ public:
 	static void SetTimeScale(float timeScale);
 
 	SDL_Window *GetWindow() const;
+	SDL_GLContext *GetGLContext() const;
 
 	void InitGameControllers();
 
