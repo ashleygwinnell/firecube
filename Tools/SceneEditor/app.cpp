@@ -460,7 +460,7 @@ void FireCubeApp::HandleInput(float dt, const MappedInput &input)
 		else
 		{
 			SceneWriter sceneWriter;
-			sceneWriter.Serialize(&rootDesc, editorState->GetCurrentSceneFile());
+			sceneWriter.Serialize(&rootDesc, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), editorState->GetCurrentSceneFile()));
 			SavePrefabs(&rootDesc);
 		}
 	}
