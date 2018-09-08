@@ -70,6 +70,7 @@ private:
 	void ShowNewDialog();
 	void ShowSaveDialog();
 	void RenderImportMeshDialog();
+	void SaveCurrentSceneFile();
 
 	Settings *settings;
 	std::vector<std::pair<std::string, bool>> selectedMeshMaterials;

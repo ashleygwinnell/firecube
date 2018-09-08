@@ -453,16 +453,7 @@ void FireCubeApp::HandleInput(float dt, const MappedInput &input)
 
 	if (input.IsActionTriggered("Save"))
 	{
-		if (editorState->GetCurrentSceneFile().empty())
-		{
-			ShowSaveDialog();
-		}
-		else
-		{
-			SceneWriter sceneWriter;
-			sceneWriter.Serialize(&rootDesc, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), editorState->GetCurrentSceneFile()));
-			SavePrefabs(&rootDesc);
-		}
+		SaveCurrentSceneFile();
 	}
 
 	if (input.IsActionTriggered("SaveAs"))
@@ -681,16 +672,7 @@ void FireCubeApp::RenderMenuBar()
 
 			if (ImGui::MenuItem("Save", "Ctrl+S"))
 			{
-				if (editorState->GetCurrentSceneFile().empty())
-				{
-					ShowSaveDialog();
-				}
-				else
-				{
-					SceneWriter sceneWriter;
-					sceneWriter.Serialize(&rootDesc, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), editorState->GetCurrentSceneFile()));
-					SavePrefabs(&rootDesc);
-				}
+				SaveCurrentSceneFile();
 			}
 
 			if (ImGui::MenuItem("Save Project"))
@@ -1148,6 +1130,20 @@ void FireCubeApp::RenderImportMeshDialog()
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::EndPopup();
+	}
+}
+
+void FireCubeApp::SaveCurrentSceneFile()
+{
+	if (editorState->GetCurrentSceneFile().empty())
+	{
+		ShowSaveDialog();
+	}
+	else
+	{
+		SceneWriter sceneWriter;
+		sceneWriter.Serialize(&rootDesc, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), editorState->GetCurrentSceneFile()));
+		SavePrefabs(&rootDesc);
 	}
 }
 
