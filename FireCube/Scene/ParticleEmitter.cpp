@@ -299,7 +299,7 @@ void ParticleEmitter::SetNumberOfParticles(unsigned int numberOfParticles)
 	Reset();
 }
 
-void FireCube::ParticleEmitter::Prewarm()
+void ParticleEmitter::Prewarm()
 {
 	float timeStep = 0.1f;
 	float totalTime = maxLifeTime;
@@ -312,20 +312,28 @@ void FireCube::ParticleEmitter::Prewarm()
 	}
 }
 
-void FireCube::ParticleEmitter::UpdateBoundingBox()
+void ParticleEmitter::UpdateBoundingBox()
 {
-	float maxDistance = maxLifeTime * maxSpeed;
-
-	if (emitterShape == ParticleEmitterShape::BOX)
+	if (simulationSpace == ParticleEmitterSimulationSpace::LOCAL)
 	{
-		maxDistance += std::max(std::max(box.x * 0.5f, box.y * 0.5f), box.z * 0.5f);
-	}
-	else if (emitterShape == ParticleEmitterShape::SPHERE)
-	{
-		maxDistance += radius;
-	}
+		float maxDistance = maxLifeTime * maxSpeed;
 
-	SetBoundingBox(BoundingBox(vec3(-maxDistance), vec3(maxDistance)));
+		if (emitterShape == ParticleEmitterShape::BOX)
+		{
+			maxDistance += std::max(std::max(box.x * 0.5f, box.y * 0.5f), box.z * 0.5f);
+		}
+		else if (emitterShape == ParticleEmitterShape::SPHERE)
+		{
+			maxDistance += radius;
+		}
+
+		SetBoundingBox(BoundingBox(vec3(-maxDistance), vec3(maxDistance)));
+	}
+	else
+	{
+		SetBoundingBox(BoundingBox(vec3(-10e5), vec3(10e5)));
+	}
+	
 }
 
 void ParticleEmitter::UpdateParticles(float dt)
