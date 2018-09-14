@@ -264,6 +264,10 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 					for (auto &result : query.results)
 					{
 						auto node = result.renderable->GetNode();
+						if (node->GetComponents().size() == 1 && node->GetComponents().front()->GetType() == StringHash("TerrainPatch"))
+						{
+							node = node->GetParent();
+						}
 						if (node->GetName().substr(0, 7) != "Editor_")
 						{
 							editorState->SetSelectedNode(editorState->GetNodeMap()[node]);

@@ -15,6 +15,7 @@
 #include "Descriptors/SphereDescriptor.h"
 #include "Descriptors/ParticleEmitterDescriptor.h"
 #include "Descriptors/CameraDescriptor.h"
+#include "Descriptors/TerrainDescriptor.h"
 
 using namespace FireCube;
 
@@ -346,7 +347,27 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlNode *paren
 		element->SetDoubleAttribute("near", camera->GetNearPlane());
 		element->SetDoubleAttribute("far", camera->GetFarPlane());		
 	}
+	else if (componentDesc->GetType() == ComponentType::TERRAIN)
+	{
+		TiXmlElement *element = new TiXmlElement("component");
+		parent->LinkEndChild(element);
 
+		element->SetAttribute("type", componentDesc->GetTypeName());
+
+		auto terrain = static_cast<TerrainDescriptor *>(componentDesc);
+
+		element->SetAttribute("heightmap", terrain->GetHeightmapFilename());
+		element->SetAttribute("material", terrain->GetMaterialFileName());
+		element->SetAttribute("cast_shadow", terrain->GetCastShadow() ? "true" : "false");
+
+		std::stringstream ligtMaskStream;
+		ligtMaskStream << std::hex << terrain->GetLightMask();
+		element->SetAttribute("light_mask", ligtMaskStream.str());
+
+		std::stringstream collisionQueryMaskStream;
+		collisionQueryMaskStream << std::hex << terrain->GetCollisionQueryMask();
+		element->SetAttribute("collision_query_mask", collisionQueryMaskStream.str());
+	}
 }
 
 void SceneWriter::SerializeNodeTransformation(NodeDescriptor *nodeDesc, TiXmlNode *parent)

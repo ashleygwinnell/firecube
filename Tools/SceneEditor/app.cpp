@@ -26,6 +26,7 @@
 #include "Descriptors/LuaScriptDescriptor.h"
 #include "Descriptors/ParticleEmitterDescriptor.h"
 #include "Descriptors/RigidBodyDescriptor.h"
+#include "Descriptors/TerrainDescriptor.h"
 #include "Commands/AddComponentCommand.h"
 #include "MaterialEditorWindow.h"
 #include "IconsForkAwesome.h"
@@ -864,6 +865,14 @@ void FireCubeApp::RenderMenuBar()
 					cameraDescriptor->SetTopPlane(100.0f);
 					cameraDescriptor->SetBottomPlane(-100.0f);
 					auto addComponentCommand = new AddComponentCommand(editorState, "Add Camera", nodeDesc, cameraDescriptor, engine);
+
+					editorState->ExecuteCommand(addComponentCommand);
+				}
+				if (ImGui::MenuItem("Terrain", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					auto terrainDescriptor = new TerrainDescriptor();
+					auto addComponentCommand = new AddComponentCommand(editorState, "Add Terrain", nodeDesc, terrainDescriptor, engine);
 
 					editorState->ExecuteCommand(addComponentCommand);
 				}

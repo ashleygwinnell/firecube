@@ -219,6 +219,12 @@
     <ClCompile Include="ThirdParty\imgui\imgui_widgets.cpp">
       <Filter>ThirdParty\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Descriptors\TerrainDescriptor.cpp">
+      <Filter>Descriptors</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -418,6 +424,12 @@
     </ClInclude>
     <ClInclude Include="ThirdParty\imgui\imstb_truetype.h">
       <Filter>ThirdParty\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Descriptors\TerrainDescriptor.h">
+      <Filter>Descriptors</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainWindow.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

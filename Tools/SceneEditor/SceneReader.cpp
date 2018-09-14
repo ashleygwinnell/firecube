@@ -15,6 +15,7 @@
 #include "Descriptors/SphereDescriptor.h"
 #include "Descriptors/ParticleEmitterDescriptor.h"
 #include "Descriptors/CameraDescriptor.h"
+#include "Descriptors/TerrainDescriptor.h"
 
 using namespace FireCube;
 
@@ -437,6 +438,35 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 		{
 			cameraDescriptor->SetOrthographic(false);
 			cameraDescriptor->SetFOV(Variant::FromString(e->Attribute("fov")).GetFloat());			
+		}
+	}
+	else if (type == "Terrain")
+	{
+		TerrainDescriptor *terrainDescriptor = new TerrainDescriptor();
+		addedComponent = terrainDescriptor;
+		if (e->Attribute("heightmap"))
+		{
+			terrainDescriptor->SetHeightmapFilename(e->Attribute("heightmap"), engine);
+		}
+
+		if (e->Attribute("material"))
+		{
+			terrainDescriptor->SetMaterialFileName(e->Attribute("material"), engine);
+		}
+
+		if (e->Attribute("cast_shadow"))
+		{
+			terrainDescriptor->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
+		}
+
+		if (e->Attribute("light_mask"))
+		{
+			terrainDescriptor->SetLightMask(std::stoul(e->Attribute("light_mask"), 0, 16));
+		}
+
+		if (e->Attribute("collision_query_mask"))
+		{
+			terrainDescriptor->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
 		}
 	}
 	else
