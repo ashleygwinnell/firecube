@@ -271,9 +271,11 @@ void AssetBrowserWindow::Render()
 		static char folderName[256] = "";
 		static char scriptName[256] = "";
 		static char materialName[256] = "";
+		static char sceneName[256] = "";
 		bool showEnterFolderName = false;
 		bool showEnterScriptName = false;
 		bool showEnterMaterialName = false;
+		bool showEnterSceneName = false;
 		if (ImGui::BeginPopupContextItem("context menu"))
 		{
 			if (ImGui::Selectable("New Folder"))
@@ -294,6 +296,14 @@ void AssetBrowserWindow::Render()
 				if (ImGui::Selectable("New Material"))
 				{
 					showEnterMaterialName = true;
+				}
+			}
+
+			if (AssetUtils::GetAssetTypeByPath(selectedPath) == AssetType::SCENE)
+			{
+				if (ImGui::Selectable("New Scene"))
+				{
+					showEnterSceneName = true;
 				}
 			}
 
@@ -319,6 +329,13 @@ void AssetBrowserWindow::Render()
 			materialName[0] = 0;
 			firstShow = true;
 			ImGui::OpenPopup("New Material");
+		}
+
+		if (showEnterSceneName)
+		{
+			sceneName[0] = 0;
+			firstShow = true;
+			ImGui::OpenPopup("New Scene");
 		}
 
 		if (ImGui::BeginPopupModal("New Folder", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
@@ -403,6 +420,36 @@ void AssetBrowserWindow::Render()
 				f.close();
 				editorState->materialPicked(editorState, engine->GetResourceCache()->GetResource<Material>("Materials" + Filesystem::PATH_SEPARATOR + materialName + ".xml"));
 				editorState->showMaterialEditor(editorState);
+				itemsInSelectedPath = GetItemsInPath(selectedPath);
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+
+		if (ImGui::BeginPopupModal("New Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			if (firstShow)
+			{
+				ImGui::SetKeyboardFocusHere();
+				firstShow = false;
+			}
+			bool textAccepted = ImGui::InputText("Enter name of scene", sceneName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::Separator();
+			if (ImGui::Button("OK", ImVec2(120, 0)) || textAccepted)
+			{
+				std::string targetPath = Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Scenes", std::string(sceneName) + ".xml");
+				std::ofstream f(targetPath, std::ofstream::trunc);				
+				f << "<scene>" << std::endl;
+				f << "\t<node name=\"root\">" << std::endl;
+				f << "\t</node>" << std::endl;
+				f << "</scene>" << std::endl;				
+
+				f.close();				
 				itemsInSelectedPath = GetItemsInPath(selectedPath);
 				ImGui::CloseCurrentPopup();
 			}
