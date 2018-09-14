@@ -1008,18 +1008,22 @@ void FireCubeApp::ShowOpenDialog()
 
 void FireCubeApp::ShowNewDialog()
 {	
-	std::string path = BrowseFolder("Choose root assets directory");
+	std::string path = BrowseFolder("Choose project root directory");
 	if (path.empty() == false)
 	{
 		std::replace(path.begin(), path.end(), '/', '\\');
+		currentProjectPath = path;
 
-		Filesystem::SetAssetsFolder(path);
+		std::string assetsPath = Filesystem::JoinPath(path, "Assets");
+		Filesystem::CreateFolder(assetsPath);
 
-		Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Scenes");
-		Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Materials");
-		Filesystem::CreateFolder(Filesystem::RemoveLastSeparator(path) + Filesystem::PATH_SEPARATOR + "Prefabs");
+		Filesystem::SetAssetsFolder(assetsPath);		
 
-		std::string targetMaterialPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials" + Filesystem::PATH_SEPARATOR + "Default.xml";
+		Filesystem::CreateFolder(Filesystem::JoinPath(assetsPath, "Scenes"));
+		Filesystem::CreateFolder(Filesystem::JoinPath(assetsPath, "Materials"));
+		Filesystem::CreateFolder(Filesystem::JoinPath(assetsPath, "Prefabs"));		
+
+		std::string targetMaterialPath = Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Materials", "Default.xml");
 		SharedPtr<Material> defaultMaterial = new Material(engine);
 		defaultMaterial->SetName("Default");
 		defaultMaterial->SetTechnique(engine->GetResourceCache()->GetResource<Technique>("Techniques/NoTexture.xml"));
