@@ -10,7 +10,7 @@
 using namespace FireCube;
 
 Terrain::Terrain(Engine *engine) : Component(engine), patchSize(32), verticesSpacing(1.0f, 64.0f, 1.0f), smoothHeightMap(false), generateHardNormals(false),
-								   indexBuffer(nullptr), patchesCreated(false)
+								   indexBuffer(nullptr), patchesCreated(false), material(nullptr)
 {
 
 }
