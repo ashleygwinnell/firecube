@@ -9,6 +9,8 @@
 #include "Scene/Prefab.h"
 #include "Scene/ParticleEmitter.h"
 #include "Scene/Camera.h"
+#include "Scene/Terrain.h"
+#include "Utils/Image.h"
 #include "Utils/Filesystem.h"
 #include "Scripting/LuaScript.h"
 #include "Scripting/LuaFile.h"
@@ -451,6 +453,35 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		{
 			float fov = Variant::FromString(e->Attribute("fov")).GetFloat();
 			component->SetPerspectiveProjectionParameters(fov, 1.0f, nearPlane, farPlane);
+		}
+	}
+	else if (type == "Terrain")
+	{
+		auto component = node->CreateComponent<Terrain>();
+
+		if (e->Attribute("heightmap"))
+		{
+			component->CreateFromHeightMap(engine->GetResourceCache()->GetResource<Image>(e->Attribute("heightmap")));
+		}
+
+		if (e->Attribute("material"))
+		{
+			component->SetMaterial(engine->GetResourceCache()->GetResource<Material>(e->Attribute("material")));
+		}
+
+		if (e->Attribute("cast_shadow"))
+		{
+			component->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
+		}
+
+		if (e->Attribute("light_mask"))
+		{
+			component->SetLightMask(std::stoul(e->Attribute("light_mask"), 0, 16));
+		}
+
+		if (e->Attribute("collision_query_mask"))
+		{
+			component->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
 		}
 	}
 	else

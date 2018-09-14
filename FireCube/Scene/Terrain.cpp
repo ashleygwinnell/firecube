@@ -10,14 +10,15 @@
 using namespace FireCube;
 
 Terrain::Terrain(Engine *engine) : Component(engine), patchSize(32), verticesSpacing(1.0f, 64.0f, 1.0f), smoothHeightMap(false), generateHardNormals(false),
-								   indexBuffer(nullptr), patchesCreated(false), material(nullptr)
+								   indexBuffer(nullptr), patchesCreated(false), material(nullptr), collisionQueryMask(0xFFFFFFFF), castShadow(true), lightMask(0xFFFFFFFF)
 {
 
 }
 
 Terrain::Terrain(const Terrain &other) : Component(other), patchesCreated(false), heightData(other.heightData), patchSize(other.patchSize), numVerticesX(other.numVerticesX), 
 										 numVerticesY(other.numVerticesY), numPatchesX(other.numPatchesX), numPatchesY(other.numPatchesY), patchWorldSize(other.patchWorldSize), 
-										 verticesSpacing(other.verticesSpacing), smoothHeightMap(other.smoothHeightMap), generateHardNormals(other.generateHardNormals)
+										 verticesSpacing(other.verticesSpacing), smoothHeightMap(other.smoothHeightMap), generateHardNormals(other.generateHardNormals),
+										 collisionQueryMask(other.collisionQueryMask), castShadow(other.castShadow), lightMask(other.lightMask)
 {	
 	SetMaterial(other.material);
 	CreatePatches();
@@ -75,6 +76,9 @@ void Terrain::CreatePatches()
 			patchNode->SetTranslation(offset + vec3(x * patchWorldSize.x, 0, y * patchWorldSize.y));
 			GeneratePatchGeometry(patch, x, y);
 			patch->SetMaterial(material);
+			patch->SetCollisionQueryMask(collisionQueryMask);
+			patch->SetLightMask(lightMask);
+			patch->SetCastShadow(castShadow);
 		}
 	}
 
@@ -340,7 +344,9 @@ void Terrain::SetMaterial(Material *material)
 {
 	this->material = material;
 	for (auto terrainPatch : patches)
+	{
 		terrainPatch->SetMaterial(material);
+	}
 }
 
 void Terrain::SetSmoothHeightMap(bool smoothHeightMap)
@@ -378,6 +384,48 @@ Component *Terrain::Clone() const
 {
 	Terrain *clone = new Terrain(*this);
 	return clone;
+}
+
+void Terrain::SetCollisionQueryMask(unsigned int collisionQueryMask)
+{
+	this->collisionQueryMask = collisionQueryMask;
+	for (auto terrainPatch : patches)
+	{
+		terrainPatch->SetCollisionQueryMask(collisionQueryMask);
+	}
+}
+
+unsigned int Terrain::GetCollisionQueryMask() const
+{
+	return collisionQueryMask;
+}
+
+void Terrain::SetCastShadow(bool castShadow)
+{
+	this->castShadow = castShadow;
+	for (auto terrainPatch : patches)
+	{
+		terrainPatch->SetCastShadow(castShadow);
+	}
+}
+
+bool Terrain::GetCastShadow() const
+{
+	return castShadow;
+}
+
+void Terrain::SetLightMask(unsigned int lightMask)
+{
+	this->lightMask = lightMask;
+	for (auto terrainPatch : patches)
+	{
+		terrainPatch->SetLightMask(lightMask);
+	}
+}
+
+unsigned int Terrain::GetLightMask() const
+{
+	return lightMask;
 }
 
 TerrainPatch::TerrainPatch(Engine *engine) : Renderable(engine)

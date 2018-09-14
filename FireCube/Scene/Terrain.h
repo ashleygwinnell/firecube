@@ -93,6 +93,13 @@ public:
 	* @returns the world size of the terrain along its width and depth	
 	*/
 	vec2 GetWorldSize() const;
+
+	void SetCollisionQueryMask(unsigned int collisionQueryMask);
+	unsigned int GetCollisionQueryMask() const;
+	void SetCastShadow(bool castShadow);
+	bool GetCastShadow() const;
+	void SetLightMask(unsigned int lightMask);
+	unsigned int GetLightMask() const;
 	
 	/**
 	* Clones the terrain
@@ -124,6 +131,9 @@ private:
 	bool smoothHeightMap;
 	bool generateHardNormals;
 	bool patchesCreated;
+	unsigned int collisionQueryMask;
+	unsigned int lightMask;
+	bool castShadow;
 };
 
 }
