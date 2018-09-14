@@ -470,6 +470,11 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			component->SetVerticesSpacing(spacing);
 		}
 
+		if (e->Attribute("generate_hard_normals"))
+		{
+			component->SetGenerateHardNormals(Variant::FromString(e->Attribute("generate_hard_normals")).GetBool());
+		}
+
 		if (e->Attribute("cast_shadow"))
 		{
 			component->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
