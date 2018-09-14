@@ -459,6 +459,11 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 			terrainDescriptor->SetVerticesSpacing(Variant::FromString(e->Attribute("vertices_spacing")).GetVec3(), engine);
 		}
 
+		if (e->Attribute("generate_hard_normals"))
+		{
+			terrainDescriptor->SetGenerateHardNormals(Variant::FromString(e->Attribute("generate_hard_normals")).GetBool(), engine);
+		}
+
 		if (e->Attribute("cast_shadow"))
 		{
 			terrainDescriptor->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());

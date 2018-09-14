@@ -17,5 +17,6 @@ private:
 	HexInputHelper lightMaskInput;
 	HexInputHelper collisionQueryMaskInput;
 	CheckBoxHelper castShadowCheckBox;
+	CheckBoxHelper generateHardNormalsCheckBox;
 	Vec3InputHelper verticesSpacingInput;
 };

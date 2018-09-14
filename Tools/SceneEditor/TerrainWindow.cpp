@@ -109,6 +109,12 @@ void TerrainWindow::Render(EditorState *editorState, TerrainDescriptor *descript
 		descriptor->SetVerticesSpacing(newValue, engine);
 	});
 
+	generateHardNormalsCheckBox.Render("Hard Normals", editorState, "Change Hard Normals", [descriptor]() {
+		return descriptor->GetGenerateHardNormals();
+	}, [descriptor, this](bool value) {
+		descriptor->SetGenerateHardNormals(value, engine);
+	});
+
 	castShadowCheckBox.Render("Cast Shadow", editorState, "Change Cast Shadow", [descriptor]() {
 		return descriptor->GetCastShadow();
 	}, [descriptor](bool value) {

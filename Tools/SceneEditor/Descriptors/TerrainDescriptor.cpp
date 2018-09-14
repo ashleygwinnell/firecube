@@ -4,7 +4,7 @@
 using namespace FireCube;
 
 TerrainDescriptor::TerrainDescriptor() : ComponentDescriptor(ComponentType::TERRAIN), collisionQueryMask(0xFFFFFFFF), castShadow(true), lightMask(0xFFFFFFFF),
-verticesSpacing(1.0f, 64.0f, 1.0f)
+verticesSpacing(1.0f, 64.0f, 1.0f), generateHardNormals(false)
 {
 
 }
@@ -18,6 +18,7 @@ void TerrainDescriptor::CreateComponent(Node *node, Engine *engine)
 	}
 
 	terrain->SetVerticesSpacing(verticesSpacing);
+	terrain->SetGenerateHardNormals(generateHardNormals);
 
 	if (heightmapFilename.empty() == false)
 	{
@@ -124,4 +125,20 @@ void TerrainDescriptor::SetVerticesSpacing(vec3 spacing, Engine *engine)
 FireCube::vec3 TerrainDescriptor::GetVerticesSpacing() const
 {
 	return verticesSpacing;
+}
+
+void TerrainDescriptor::SetGenerateHardNormals(bool hardNormals, Engine *engine)
+{
+	this->generateHardNormals = hardNormals;
+
+	if (heightmapFilename.empty() == false && component)
+	{
+		((Terrain *)component)->SetGenerateHardNormals(hardNormals);
+		((Terrain *)component)->CreateFromHeightMap(engine->GetResourceCache()->GetResource<FireCube::Image>(heightmapFilename));
+	}
+}
+
+bool TerrainDescriptor::GetGenerateHardNormals() const
+{
+	return generateHardNormals;
 }

@@ -359,6 +359,7 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlNode *paren
 		element->SetAttribute("heightmap", terrain->GetHeightmapFilename());
 		element->SetAttribute("material", terrain->GetMaterialFileName());
 		element->SetAttribute("vertices_spacing", ToString(terrain->GetVerticesSpacing()));
+		element->SetAttribute("generate_hard_normals", terrain->GetGenerateHardNormals() ? "true" : "false");
 		element->SetAttribute("cast_shadow", terrain->GetCastShadow() ? "true" : "false");
 
 		std::stringstream ligtMaskStream;

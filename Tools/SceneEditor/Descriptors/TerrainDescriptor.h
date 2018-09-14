@@ -22,6 +22,8 @@ public:
 	std::string GetMaterialFileName();
 	void SetVerticesSpacing(FireCube::vec3 spacing, FireCube::Engine *engine);
 	FireCube::vec3 GetVerticesSpacing() const;
+	void SetGenerateHardNormals(bool hardNormals, FireCube::Engine *engine);
+	bool GetGenerateHardNormals() const;
 private:
 	std::string heightmapFilename;
 	bool castShadow;
@@ -29,4 +31,5 @@ private:
 	unsigned int collisionQueryMask;
 	std::string materialFileName;
 	FireCube::vec3 verticesSpacing;
+	bool generateHardNormals;
 };
