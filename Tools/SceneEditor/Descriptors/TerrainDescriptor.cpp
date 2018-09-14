@@ -3,22 +3,27 @@
 
 using namespace FireCube;
 
-TerrainDescriptor::TerrainDescriptor() : ComponentDescriptor(ComponentType::TERRAIN), collisionQueryMask(0xFFFFFFFF), castShadow(true), lightMask(0xFFFFFFFF)
+TerrainDescriptor::TerrainDescriptor() : ComponentDescriptor(ComponentType::TERRAIN), collisionQueryMask(0xFFFFFFFF), castShadow(true), lightMask(0xFFFFFFFF),
+verticesSpacing(1.0f, 64.0f, 1.0f)
 {
 
 }
 
 void TerrainDescriptor::CreateComponent(Node *node, Engine *engine)
 {
-	auto terrain = node->CreateComponent<Terrain>();	
-	if (heightmapFilename.empty() == false)
-	{
-		terrain->CreateFromHeightMap(engine->GetResourceCache()->GetResource<FireCube::Image>(heightmapFilename));
-	}
+	auto terrain = node->CreateComponent<Terrain>();
 	if (materialFileName.empty() == false)
 	{
 		terrain->SetMaterial(engine->GetResourceCache()->GetResource<Material>(materialFileName));
 	}
+
+	terrain->SetVerticesSpacing(verticesSpacing);
+
+	if (heightmapFilename.empty() == false)
+	{
+		terrain->CreateFromHeightMap(engine->GetResourceCache()->GetResource<FireCube::Image>(heightmapFilename));
+	}
+
 	terrain->SetCastShadow(castShadow);
 	terrain->SetLightMask(lightMask);
 	component = terrain;
@@ -103,4 +108,20 @@ void TerrainDescriptor::SetMaterialFileName(const std::string &materialFileName,
 std::string TerrainDescriptor::GetMaterialFileName()
 {
 	return materialFileName;
+}
+
+void TerrainDescriptor::SetVerticesSpacing(vec3 spacing, Engine *engine)
+{
+	this->verticesSpacing = spacing;
+
+	if (heightmapFilename.empty() == false && component)
+	{
+		((Terrain *) component)->SetVerticesSpacing(spacing);
+		((Terrain *) component)->CreateFromHeightMap(engine->GetResourceCache()->GetResource<FireCube::Image>(heightmapFilename));
+	}
+}
+
+FireCube::vec3 TerrainDescriptor::GetVerticesSpacing() const
+{
+	return verticesSpacing;
 }

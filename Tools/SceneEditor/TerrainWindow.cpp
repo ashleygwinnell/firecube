@@ -103,6 +103,12 @@ void TerrainWindow::Render(EditorState *editorState, TerrainDescriptor *descript
 		editorState->ExecuteCommand(command);
 	}
 
+	verticesSpacingInput.Render("Spacing", editorState, "Change Spacing", [descriptor]() {
+		return descriptor->GetVerticesSpacing();
+	}, [descriptor, this](vec3 newValue) {
+		descriptor->SetVerticesSpacing(newValue, engine);
+	});
+
 	castShadowCheckBox.Render("Cast Shadow", editorState, "Change Cast Shadow", [descriptor]() {
 		return descriptor->GetCastShadow();
 	}, [descriptor](bool value) {

@@ -20,10 +20,13 @@ public:
 	void SetCollisionQueryMask(unsigned int collisionQueryMask);
 	void SetMaterialFileName(const std::string &materialFileName, FireCube::Engine *engine);
 	std::string GetMaterialFileName();
+	void SetVerticesSpacing(FireCube::vec3 spacing, FireCube::Engine *engine);
+	FireCube::vec3 GetVerticesSpacing() const;
 private:
 	std::string heightmapFilename;
 	bool castShadow;
 	unsigned int lightMask;
 	unsigned int collisionQueryMask;
 	std::string materialFileName;
+	FireCube::vec3 verticesSpacing;
 };

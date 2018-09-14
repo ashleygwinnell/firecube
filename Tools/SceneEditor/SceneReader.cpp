@@ -454,6 +454,11 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 			terrainDescriptor->SetMaterialFileName(e->Attribute("material"), engine);
 		}
 
+		if (e->Attribute("vertices_spacing"))
+		{
+			terrainDescriptor->SetVerticesSpacing(Variant::FromString(e->Attribute("vertices_spacing")).GetVec3(), engine);
+		}
+
 		if (e->Attribute("cast_shadow"))
 		{
 			terrainDescriptor->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
