@@ -45,8 +45,16 @@ void Terrain::CreateFromHeightMap(Image *image)
 	}
 	if (smoothHeightMap)
 		SmoothHeightMap();
-	patchWorldSize = vec2(verticesSpacing.x, verticesSpacing.z) * (float) patchSize;	
-	if (!patchesCreated && heightData.empty() == false && node)
+	patchWorldSize = vec2(verticesSpacing.x, verticesSpacing.z) * (float) patchSize;
+
+	for (auto patch : patches)
+	{
+		patch->GetNode()->RemoveAllComponents();
+	}
+
+	patches.clear();
+
+	if (heightData.empty() == false && node)
 	{
 		CreatePatches();
 	}
@@ -70,9 +78,8 @@ void Terrain::CreatePatches()
 				patchNode = new Node(engine, nodeName);
 				node->AddChild(patchNode);
 			}
-			TerrainPatch *patch = new TerrainPatch(engine);
+			TerrainPatch *patch = patchNode->CreateComponent<TerrainPatch>();
 			patches.push_back(patch);
-			patchNode->AddComponent(patch);
 			patchNode->SetTranslation(offset + vec3(x * patchWorldSize.x, 0, y * patchWorldSize.y));
 			GeneratePatchGeometry(patch, x, y);
 			patch->SetMaterial(material);

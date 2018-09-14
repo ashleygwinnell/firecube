@@ -54,7 +54,7 @@ public:
 	void SetVerticesSpacing(vec3 spacing);
 	
 	/**
-	* Sets the patch size to use. The terrain is borken into rectangular patches of this size.
+	* Sets the patch size to use. The terrain is broken into rectangular patches of this size.
 	* @param patchSize The patch size to use
 	*/
 	void SetPatchSize(int patchSize);
@@ -67,7 +67,7 @@ public:
 	
 	/**
 	* Controls whether to apply a smoothing filter on the height map
-	* @param smoothHeightMap Whether tp smooth the height map
+	* @param smoothHeightMap Whether to smooth the height map
 	*/
 	void SetSmoothHeightMap(bool smoothHeightMap);
 	

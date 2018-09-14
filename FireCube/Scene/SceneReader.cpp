@@ -457,16 +457,17 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 	}
 	else if (type == "Terrain")
 	{
-		auto component = node->CreateComponent<Terrain>();
-
-		if (e->Attribute("heightmap"))
-		{
-			component->CreateFromHeightMap(engine->GetResourceCache()->GetResource<Image>(e->Attribute("heightmap")));
-		}
+		auto component = node->CreateComponent<Terrain>();		
 
 		if (e->Attribute("material"))
 		{
 			component->SetMaterial(engine->GetResourceCache()->GetResource<Material>(e->Attribute("material")));
+		}
+
+		if (e->Attribute("vertices_spacing"))
+		{
+			vec3 spacing = Variant::FromString(e->Attribute("vertices_spacing")).GetVec3();
+			component->SetVerticesSpacing(spacing);
 		}
 
 		if (e->Attribute("cast_shadow"))
@@ -482,6 +483,11 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 		if (e->Attribute("collision_query_mask"))
 		{
 			component->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
+		}
+
+		if (e->Attribute("heightmap"))
+		{
+			component->CreateFromHeightMap(engine->GetResourceCache()->GetResource<Image>(e->Attribute("heightmap")));
 		}
 	}
 	else
