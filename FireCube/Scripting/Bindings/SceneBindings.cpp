@@ -326,6 +326,7 @@ void LuaBindings::InitScene(sol::state &luaState)
 			});
 			return ret;
 		}),
+		"worldBoundingBox", sol::property(&Renderable::GetWorldBoundingBox),
 		sol::base_classes, sol::bases<Component, Object, RefCounted>());
 
 	luaState.new_usertype<StaticModel>("StaticModel",
