@@ -503,6 +503,8 @@ void FireCubeApp::OpenProject(const std::string &path)
 	{
 		OpenSceneFile(project.lastSceneFile);
 	}
+
+	engine->GetLuaState()->AddPackagePath(Filesystem::JoinPath(currentProjectPath, "Assets", "Scripts"));
 }
 
 void FireCubeApp::Reset()
@@ -1036,6 +1038,7 @@ void FireCubeApp::ShowNewDialog()
 		Reset();
 
 		editorState->SetCurrentSceneFile("");
+		engine->GetLuaState()->AddPackagePath(Filesystem::JoinPath(currentProjectPath, "Assets", "Scripts"));
 	}
 }
 
