@@ -270,8 +270,7 @@ Node *Node::Clone() const
 	ret->transformationChanged = transformationChanged;
 	ret->worldTransformation = worldTransformation;	
 	ret->worldRotation = worldRotation;
-	ret->scene = scene;
-
+	
 	for (auto component : components)
 	{
 		Component *clonedComponent = component->Clone();
