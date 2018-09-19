@@ -109,6 +109,7 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 	engine->GetInputManager()->AddMapping(Key::G, InputMappingType::ACTION, "MoveToGround");
 	engine->GetInputManager()->AddMapping(Key::Z, InputMappingType::ACTION, "OrbitSelection", KeyModifier::NONE);
 	engine->GetInputManager()->AddMapping(Key::R, InputMappingType::ACTION, "ResetCameraOrbit", KeyModifier::NONE);
+	engine->GetInputManager()->AddMapping(Key::O, InputMappingType::ACTION, "OrbitCursor", KeyModifier::NONE);
 	engine->GetInputManager()->AddMapping(Key::DELETE, InputMappingType::ACTION, "Delete");
 
 	editorScene = new FireCube::Scene(engine);
@@ -369,6 +370,27 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 			editorState->ExecuteCommand(new RemoveNodeCommand(editorState, "Remove Node", editorState->GetSelectedNode()));
 			editorState->SetSelectedNode(nullptr);
 		}
+	}
+	else if (input.IsActionTriggered("OrbitCursor") && currentCamera == defaultCamera && !ImGui::GetIO().WantCaptureKeyboard)
+	{
+		vec2 mousePos(input.GetValue("MouseX"), input.GetValue("MouseY"));
+		mousePos = mousePos - canvasPos;
+		Ray ray = currentCamera->GetPickingRay(vec2(mousePos.x, canvasSize.y - mousePos.y), canvasSize.x, canvasSize.y);
+		RayQuery query(ray, 10e4);
+
+		scene->IntersectRay(query);
+		if (query.results.empty() == false)
+		{
+			for (auto &result : query.results)
+			{
+				auto node = result.renderable->GetNode();
+				if (node->GetName().substr(0, 7) != "Editor_")
+				{
+					cameraTarget->SetTranslation(node->GetWorldPosition());
+					break;
+				}
+			}
+		}		
 	}
 }
 
