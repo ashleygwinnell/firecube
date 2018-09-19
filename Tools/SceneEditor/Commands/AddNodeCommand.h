@@ -17,5 +17,4 @@ private:
 	FireCube::SharedPtr<FireCube::Node> node;
 	NodeDescriptor *nodeDesc;
 	NodeDescriptor *parent;
-	bool shouldDelete;
 };
