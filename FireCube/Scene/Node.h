@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "Math/Math.h"
-#include "Math/BoundingBox.h"
 #include "Core/Component.h"
 
 namespace FireCube
