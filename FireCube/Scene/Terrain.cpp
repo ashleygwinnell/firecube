@@ -18,10 +18,9 @@ Terrain::Terrain(Engine *engine) : Component(engine), patchSize(32), verticesSpa
 Terrain::Terrain(const Terrain &other) : Component(other), patchesCreated(false), heightData(other.heightData), patchSize(other.patchSize), numVerticesX(other.numVerticesX), 
 										 numVerticesY(other.numVerticesY), numPatchesX(other.numPatchesX), numPatchesY(other.numPatchesY), patchWorldSize(other.patchWorldSize), 
 										 verticesSpacing(other.verticesSpacing), smoothHeightMap(other.smoothHeightMap), generateHardNormals(other.generateHardNormals),
-										 collisionQueryMask(other.collisionQueryMask), castShadow(other.castShadow), lightMask(other.lightMask)
+										 collisionQueryMask(other.collisionQueryMask), castShadow(other.castShadow), lightMask(other.lightMask), indexBuffer(nullptr)
 {	
 	SetMaterial(other.material);
-	CreatePatches();
 }
 
 Terrain::~Terrain()

@@ -274,7 +274,10 @@ Node *Node::Clone() const
 	for (auto component : components)
 	{
 		Component *clonedComponent = component->Clone();
-		ret->AddComponent(clonedComponent);
+		if (clonedComponent)
+		{
+			ret->AddComponent(clonedComponent);
+		}
 	}
 
 	for (auto i = children.begin(); i != children.end(); i++)
