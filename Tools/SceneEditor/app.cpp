@@ -387,6 +387,7 @@ bool FireCubeApp::Prepare()
 	SubscribeToEvent(editorState, editorState->componentRemoved, &FireCubeApp::ComponentRemoved);
 	SubscribeToEvent(editorState, editorState->showMaterialEditor, &FireCubeApp::ShowMaterialEditor);
 	SubscribeToEvent(editorState, editorState->openScene, &FireCubeApp::OpenSceneFile);
+	SubscribeToEvent(editorState, editorState->nodeRenamed, &FireCubeApp::NodeRenamed);
 	GetInputManager().AddMapping(Key::Z, InputMappingType::ACTION, "Undo", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::Y, InputMappingType::ACTION, "Redo", KeyModifier::CTRL);
 	GetInputManager().AddMapping(Key::N, InputMappingType::ACTION, "New", KeyModifier::CTRL);
@@ -622,7 +623,18 @@ void FireCubeApp::CollectCameras(NodeDescriptor *node)
 void FireCubeApp::UpdateCamerasList()
 {
 	cameras.clear();
-	CollectCameras(&rootDesc);	
+	CollectCameras(&rootDesc);
+
+	auto currentCamera = editorWindow->GetCurrentCamera();
+
+	bool found = std::find_if(cameras.begin(), cameras.end(), [currentCamera](const std::pair<std::string, CameraDescriptor *> &camera) {
+		return currentCamera == camera.second->GetComponent();
+	}) != cameras.end();
+
+	if (!found)
+	{
+		editorWindow->UseDefaultCamera();
+	}
 }
 
 void FireCubeApp::ComponentAdded(ComponentDescriptor *componentDesc)
@@ -1160,6 +1172,18 @@ void FireCubeApp::SaveCurrentSceneFile()
 		SceneWriter sceneWriter;
 		sceneWriter.Serialize(&rootDesc, Filesystem::JoinPath(Filesystem::GetAssetsFolder(), editorState->GetCurrentSceneFile()));
 		SavePrefabs(&rootDesc);
+	}
+}
+
+void FireCubeApp::NodeRenamed(NodeDescriptor *node)
+{
+	for (auto component : node->GetComponents())
+	{
+		if (component->GetType() == ComponentType::CAMERA)
+		{
+			UpdateCamerasList();
+			return;
+		}
 	}
 }
 

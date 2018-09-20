@@ -71,6 +71,7 @@ private:
 	void ShowSaveDialog();
 	void RenderImportMeshDialog();
 	void SaveCurrentSceneFile();
+	void NodeRenamed(NodeDescriptor *node);
 
 	Settings *settings;
 	std::vector<std::pair<std::string, bool>> selectedMeshMaterials;

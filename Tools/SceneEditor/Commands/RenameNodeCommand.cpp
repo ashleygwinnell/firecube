@@ -15,9 +15,11 @@ RenameNodeCommand::~RenameNodeCommand()
 void RenameNodeCommand::Do()
 {
 	nodeDesc->SetName(newName);
+	editorState->nodeRenamed(editorState, nodeDesc);
 }
 
 void RenameNodeCommand::Undo()
 {
 	nodeDesc->SetName(oldName);
+	editorState->nodeRenamed(editorState, nodeDesc);
 }

@@ -59,6 +59,7 @@ public:
 	FireCube::Event<> pauseRenderLoop;
 	FireCube::Event<> stopRenderLoop;
 	FireCube::Event<> resetParticleEmitters;
+	FireCube::Event<NodeDescriptor *> nodeRenamed;
 
 private:
 	Settings settings;
