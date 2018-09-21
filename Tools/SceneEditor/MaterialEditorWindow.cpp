@@ -110,9 +110,9 @@ void MaterialEditorWindow::Render()
 		}		
 
 		ImGui::SameLine();
+
+		if (ImGui::Button("Save As"))
 		{
-			bool showSaveAs = ImGui::Button("Save As");
-					
 			char chosenPath[1024];
 			OPENFILENAMEA ofn;
 			ZeroMemory(&ofn, sizeof(ofn));
