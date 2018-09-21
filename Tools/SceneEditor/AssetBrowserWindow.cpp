@@ -56,7 +56,6 @@ void AssetBrowserWindow::Render()
 						else if (item.assetType == AssetType::MATERIAL)
 						{
 							std::string materialFileName = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), item.path);
-							std::replace(materialFileName.begin(), materialFileName.end(), '\\', '/');
 							editorState->materialPicked(editorState, engine->GetResourceCache()->GetResource<Material>(materialFileName));
 							editorState->showMaterialEditor(editorState);
 						}
