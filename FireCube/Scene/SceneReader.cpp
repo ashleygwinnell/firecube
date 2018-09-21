@@ -495,6 +495,46 @@ void SceneReader::ReadComponent(TiXmlElement *e, Node *node)
 			component->CreateFromHeightMap(engine->GetResourceCache()->GetResource<Image>(e->Attribute("heightmap")));
 		}
 	}
+	else if (type == "Grid")
+	{
+		Material *material = nullptr;
+
+		if (e->Attribute("material"))
+		{
+			material = engine->GetResourceCache()->GetResource<Material>(e->Attribute("material"));
+		}
+
+		StaticModel *staticModel = nullptr;
+
+		if (e->Attribute("size") && e->Attribute("count_x") && e->Attribute("count_z") && material)
+		{
+			staticModel = node->CreateComponent<StaticModel>();
+			vec2 size = Variant::FromString(e->Attribute("size")).GetVec2();
+			unsigned int countX = std::stoul(e->Attribute("count_x"));
+			unsigned int countZ = std::stoul(e->Attribute("count_z"));
+			Mesh mesh(engine);
+			mesh.AddGeometry(GeometryGenerator::GenerateGrid(engine, size, countX, countZ), BoundingBox(-vec3(size.x, 1, size.y) * 0.5f, vec3(size.x, 1, size.y) * 0.5f), material);
+			staticModel->CreateFromMesh(&mesh);
+		}
+
+		if (staticModel)
+		{
+			if (e->Attribute("cast_shadow"))
+			{
+				staticModel->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
+			}
+
+			if (e->Attribute("light_mask"))
+			{
+				staticModel->SetLightMask(std::stoul(e->Attribute("light_mask"), 0, 16));
+			}
+
+			if (e->Attribute("collision_query_mask"))
+			{
+				staticModel->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
+			}
+		}
+	}
 	else
 	{
 		LOGERROR("Unknow component type: ", type);

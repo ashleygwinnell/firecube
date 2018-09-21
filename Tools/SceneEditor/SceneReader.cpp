@@ -16,6 +16,7 @@
 #include "Descriptors/ParticleEmitterDescriptor.h"
 #include "Descriptors/CameraDescriptor.h"
 #include "Descriptors/TerrainDescriptor.h"
+#include "Descriptors/GridDescriptor.h"
 
 using namespace FireCube;
 
@@ -240,7 +241,6 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 					luaScriptDescriptor->SetProperty(propertyElement->Attribute("name"), propertyElement->Attribute("value"));					
 				}
 			}
-
 		}
 		else
 		{
@@ -477,6 +477,47 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 		if (e->Attribute("collision_query_mask"))
 		{
 			terrainDescriptor->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
+		}
+	}
+	else if (type == "Grid")
+	{
+		GridDescriptor *gridDescriptor = new GridDescriptor();
+		addedComponent = gridDescriptor;
+
+		if (e->Attribute("size"))
+		{
+			vec2 size = Variant::FromString(e->Attribute("size")).GetVec2();
+			gridDescriptor->SetSize(size, engine);
+		}
+
+		if (e->Attribute("count_x"))
+		{
+			gridDescriptor->SetCountX(std::stoul(e->Attribute("count_x")), engine);
+		}
+
+		if (e->Attribute("count_z"))
+		{
+			gridDescriptor->SetCountZ(std::stoul(e->Attribute("count_z")), engine);
+		}
+
+		if (e->Attribute("material"))
+		{
+			gridDescriptor->SetMaterialFileName(e->Attribute("material"), engine);
+		}
+
+		if (e->Attribute("cast_shadow"))
+		{
+			gridDescriptor->SetCastShadow(Variant::FromString(e->Attribute("cast_shadow")).GetBool());
+		}
+
+		if (e->Attribute("light_mask"))
+		{
+			gridDescriptor->SetLightMask(std::stoul(e->Attribute("light_mask"), 0, 16));
+		}
+
+		if (e->Attribute("collision_query_mask"))
+		{
+			gridDescriptor->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));
 		}
 	}
 	else

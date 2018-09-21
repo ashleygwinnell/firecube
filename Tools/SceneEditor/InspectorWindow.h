@@ -14,6 +14,7 @@
 #include "ParticleEmitterWindow.h"
 #include "CameraWindow.h"
 #include "TerrainWindow.h"
+#include "GridWindow.h"
 #include "Descriptors/ComponentDescriptor.h"
 
 class NodeDescriptor;
@@ -49,6 +50,7 @@ private:
 	ParticleEmitterWindow particleEmitterWindow;
 	CameraWindow cameraWindow;
 	TerrainWindow terrainWindow;
+	GridWindow gridWindow;
 	bool isOpen;
 	std::map<ComponentType, std::string> componentTypeToLabel;
 };

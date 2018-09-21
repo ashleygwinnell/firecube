@@ -492,6 +492,67 @@ Geometry *GeometryGenerator::GeneratePolyline(Engine *engine, const std::vector<
 	return ret;
 }
 
+Geometry *GeometryGenerator::GenerateGrid(Engine *engine, const vec2 &size, unsigned int countX, unsigned int countZ)
+{
+	Geometry *ret = new Geometry(engine->GetRenderer());
+	VertexBuffer *vertexBuffer = new VertexBuffer(engine->GetRenderer());
+	IndexBuffer *indexBuffer = new IndexBuffer(engine->GetRenderer());
+	ret->SetVertexBuffer(vertexBuffer);
+	ret->SetIndexBuffer(indexBuffer);
+	vertexBuffer->SetShadowed(true);
+	indexBuffer->SetShadowed(true);
+
+	vec2 halfSize = size * 0.5f;
+	unsigned int vertexSize = 3 + 3 + 2 + 3;
+	unsigned int vertexCount = (countX + 1) * (countZ + 1);
+	float stepX = size.x / (float)countX;
+	float stepZ = size.y / (float)countZ;
+
+	std::vector<float> vertexData(vertexCount * vertexSize);
+	std::vector<unsigned int> indexData(countX * countZ * 2 * 3);
+	unsigned int currentVertex = 0;
+
+	for (unsigned int z = 0; z < countZ + 1; ++z)
+	{
+		for (unsigned int x = 0; x < countX + 1; ++x)
+		{
+			*((vec3 *)&vertexData[currentVertex * vertexSize + 0]) = vec3((float)x * stepX - halfSize.x, 0, (float)z * stepZ - halfSize.y);
+			*((vec3 *)&vertexData[currentVertex * vertexSize + 3]) = vec3(0, 1, 0);
+			*((vec2 *)&vertexData[currentVertex * vertexSize + 6]) = vec2((float) x / (float) countX, (float)z / (float)countZ);
+
+			currentVertex++;
+		}
+	}
+
+	unsigned int currentIndex = 0;
+
+	for (unsigned int z = 0; z < countZ; ++z)
+	{		
+		for (unsigned int x = 0; x < countX; ++x)
+		{
+			unsigned int baseIndex = z * (countX + 1) + x;
+			indexData[currentIndex++] = baseIndex;
+			indexData[currentIndex++] = baseIndex + countX + 1;
+			indexData[currentIndex++] = baseIndex + countX + 1 + 1;
+
+			indexData[currentIndex++] = baseIndex;
+			indexData[currentIndex++] = baseIndex + countX + 1 + 1;
+			indexData[currentIndex++] = baseIndex + 1;
+		}
+	}	
+
+	FillTangents(vertexData, indexData);
+
+	vertexBuffer->LoadData(&vertexData[0], vertexCount, VertexAttributeType::POSITION | VertexAttributeType::NORMAL | VertexAttributeType::TEXCOORD0 | VertexAttributeType::TANGENT, BufferType::STATIC);
+	indexBuffer->LoadData(&indexData[0], indexData.size(), BufferType::STATIC);
+
+	ret->SetPrimitiveType(PrimitiveType::TRIANGLES);
+	ret->SetPrimitiveCount(indexData.size() / 3);
+
+	ret->Update();
+	return ret;
+}
+
 void FillTangents(std::vector<float> &vertexData, const std::vector<unsigned int> &indices)
 {
 	unsigned int vertexSize = 3 + 3 + 2 + 3;

@@ -27,6 +27,7 @@
 #include "Descriptors/ParticleEmitterDescriptor.h"
 #include "Descriptors/RigidBodyDescriptor.h"
 #include "Descriptors/TerrainDescriptor.h"
+#include "Descriptors/GridDescriptor.h"
 #include "Commands/AddComponentCommand.h"
 #include "MaterialEditorWindow.h"
 #include "IconsForkAwesome.h"
@@ -887,6 +888,18 @@ void FireCubeApp::RenderMenuBar()
 					auto nodeDesc = editorState->GetSelectedNode();
 					auto terrainDescriptor = new TerrainDescriptor();
 					auto addComponentCommand = new AddComponentCommand(editorState, "Add Terrain", nodeDesc, terrainDescriptor, engine);
+
+					editorState->ExecuteCommand(addComponentCommand);
+				}
+				if (ImGui::MenuItem("Grid", nullptr, nullptr, editorState->GetSelectedNode() != nullptr))
+				{
+					auto nodeDesc = editorState->GetSelectedNode();
+					auto gridDescriptor = new GridDescriptor();
+					gridDescriptor->SetSize(vec2(1.0f), engine);
+					gridDescriptor->SetCountX(1, engine);
+					gridDescriptor->SetCountZ(1, engine);
+					gridDescriptor->SetMaterialFileName("Materials/Default.xml", engine);
+					auto addComponentCommand = new AddComponentCommand(editorState, "Add Grid", nodeDesc, gridDescriptor, engine);
 
 					editorState->ExecuteCommand(addComponentCommand);
 				}

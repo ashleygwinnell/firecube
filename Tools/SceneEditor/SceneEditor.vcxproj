@@ -111,6 +111,7 @@
     <ClCompile Include="Descriptors\CharacterControllerDescriptor.cpp" />
     <ClCompile Include="Descriptors\CollisionShapeDescriptor.cpp" />
     <ClCompile Include="Descriptors\ComponentDescriptor.cpp" />
+    <ClCompile Include="Descriptors\GridDescriptor.cpp" />
     <ClCompile Include="Descriptors\LightDescriptor.cpp" />
     <ClCompile Include="Descriptors\LuaScriptDescriptor.cpp" />
     <ClCompile Include="Descriptors\NodeDescriptor.cpp" />
@@ -127,6 +128,7 @@
     <ClCompile Include="Gizmos\ScaleGizmo.cpp" />
     <ClCompile Include="Gizmos\TranslateGizmo.cpp" />
     <ClCompile Include="app.cpp" />
+    <ClCompile Include="GridWindow.cpp" />
     <ClCompile Include="HierarchyWindow.cpp" />
     <ClCompile Include="ImguiHelpers.cpp" />
     <ClCompile Include="InspectorWindow.cpp" />
@@ -176,6 +178,7 @@
     <ClInclude Include="Descriptors\CharacterControllerDescriptor.h" />
     <ClInclude Include="Descriptors\CollisionShapeDescriptor.h" />
     <ClInclude Include="Descriptors\ComponentDescriptor.h" />
+    <ClInclude Include="Descriptors\GridDescriptor.h" />
     <ClInclude Include="Descriptors\LightDescriptor.h" />
     <ClInclude Include="Descriptors\LuaScriptDescriptor.h" />
     <ClInclude Include="Descriptors\NodeDescriptor.h" />
@@ -192,6 +195,7 @@
     <ClInclude Include="Gizmos\ScaleGizmo.h" />
     <ClInclude Include="Gizmos\TransformGizmo.h" />
     <ClInclude Include="Gizmos\TranslateGizmo.h" />
+    <ClInclude Include="GridWindow.h" />
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="ImguiHelpers.h" />
     <ClInclude Include="InspectorWindow.h" />

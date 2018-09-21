@@ -15,7 +15,7 @@ using namespace FireCube;
 
 InspectorWindow::InspectorWindow(Engine *engine) : Object(engine), staticModelWindow(engine), lightWindow(engine), luaScriptWindow(engine), collisionShapeWindow(engine),
 characterControllerWindow(engine), boxWindow(engine), rigidBodyWindow(engine), planeWindow(engine), sphereWindow(engine), particleEmitterWindow(engine), cameraWindow(engine),
-terrainWindow(engine), isOpen(true)
+terrainWindow(engine), gridWindow(engine), isOpen(true)
 {
 	componentTypeToLabel = { 
 		{ ComponentType::BOX, "Box"},
@@ -31,6 +31,7 @@ terrainWindow(engine), isOpen(true)
 		{ ComponentType::PHYSICS_WORLD, "PhysicsWorld" },
 		{ ComponentType::RIGID_BODY, "RigidBody" },
 		{ ComponentType::TERRAIN, "Terrain" },
+		{ ComponentType::GRID, "Grid" },
 	};
 }
 
@@ -128,6 +129,10 @@ void InspectorWindow::Render()
 					else if (component->GetType() == ComponentType::TERRAIN)
 					{
 						terrainWindow.Render(editorState, (TerrainDescriptor *)component);
+					}
+					else if (component->GetType() == ComponentType::GRID)
+					{
+						gridWindow.Render(editorState, (GridDescriptor *)component);
 					}
 				}
 				ImGui::PopID();

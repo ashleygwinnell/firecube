@@ -16,6 +16,7 @@
 #include "Descriptors/ParticleEmitterDescriptor.h"
 #include "Descriptors/CameraDescriptor.h"
 #include "Descriptors/TerrainDescriptor.h"
+#include "Descriptors/GridDescriptor.h"
 
 using namespace FireCube;
 
@@ -368,6 +369,29 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlNode *paren
 
 		std::stringstream collisionQueryMaskStream;
 		collisionQueryMaskStream << std::hex << terrain->GetCollisionQueryMask();
+		element->SetAttribute("collision_query_mask", collisionQueryMaskStream.str());
+	}
+	else if (componentDesc->GetType() == ComponentType::GRID)
+	{
+		TiXmlElement *element = new TiXmlElement("component");
+		parent->LinkEndChild(element);
+
+		element->SetAttribute("type", componentDesc->GetTypeName());
+
+		auto grid = static_cast<GridDescriptor *>(componentDesc);
+
+		element->SetAttribute("size", ToString(grid->GetSize()));
+		element->SetAttribute("count_x", grid->GetCountX());
+		element->SetAttribute("count_z", grid->GetCountZ());
+		element->SetAttribute("material", grid->GetMaterialFileName());
+		element->SetAttribute("cast_shadow", grid->GetCastShadow() ? "true" : "false");
+
+		std::stringstream ligtMaskStream;
+		ligtMaskStream << std::hex << grid->GetLightMask();
+		element->SetAttribute("light_mask", ligtMaskStream.str());
+
+		std::stringstream collisionQueryMaskStream;
+		collisionQueryMaskStream << std::hex << grid->GetCollisionQueryMask();
 		element->SetAttribute("collision_query_mask", collisionQueryMaskStream.str());
 	}
 }

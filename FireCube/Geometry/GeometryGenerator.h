@@ -64,6 +64,15 @@ Geometry *FIRECUBE_API GenerateCylinder(Engine *engine, float bottomRadius, floa
 */
 Geometry *FIRECUBE_API GeneratePolyline(Engine *engine, const std::vector<vec3> &polyline);
 
+/**
+* Generates a grid.
+* @param size The extents of the grid.
+* @param countX The number of subdivisions along the x axis
+* @param countZ The number of subdivisions along the z axis
+* @return The generated geometry.
+*/
+Geometry *FIRECUBE_API GenerateGrid(Engine *engine, const vec2 &size, unsigned int countX, unsigned int countZ);
+
 }
 }
 #pragma warning(pop)
