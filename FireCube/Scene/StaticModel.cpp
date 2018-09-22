@@ -4,6 +4,7 @@
 #include "Scene/Node.h"
 #include "Geometry/Geometry.h"
 #include "Geometry/Mesh.h"
+#include "Core/Events.h"
 using namespace FireCube;
 
 StaticModel::StaticModel(Engine *engine) : Renderable(engine), boundingBox(vec3(0), vec3(0))
@@ -45,6 +46,9 @@ StaticModel::StaticModel(Engine *engine, Mesh *mesh) : StaticModel(engine)
 
 void StaticModel::CreateFromMesh(Mesh *mesh)
 {
+	UnSubscribeFromEvent(Events::ResourceReloaded);
+	SubscribeToEvent(mesh, Events::ResourceReloaded, &StaticModel::MeshReloaded);
+
 	renderableParts.clear();
 	renderablePartsTransformations.clear();
 	geometries.clear();
@@ -179,4 +183,9 @@ Component *StaticModel::Clone() const
 {
 	StaticModel *clone = new StaticModel(*this);	
 	return clone;
+}
+
+void StaticModel::MeshReloaded(Resource *mesh)
+{
+	CreateFromMesh((Mesh *)mesh);
 }

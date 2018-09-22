@@ -55,7 +55,9 @@ protected:
 	void SetBoundingBox(BoundingBox boundingBox);
 	virtual void UpdateWorldBoundingBox();
 	void CreateRenderableParts(Mesh *mesh, SkeletonNode &skeletonNode, std::vector<RenderablePart> &renderableParts, mat4 transformation);
-	virtual void UpdateRenderableParts();	
+	virtual void UpdateRenderableParts();
+	void MeshReloaded(Resource *mesh);
+
 	BoundingBox boundingBox;
 	std::vector<SharedPtr<Geometry>> geometries;
 	std::vector<SharedPtr<Material>> materials;
