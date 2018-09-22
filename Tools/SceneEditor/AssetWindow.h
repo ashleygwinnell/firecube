@@ -16,9 +16,14 @@ public:
 	bool *GetIsOpenPtr();
 private:
 	void AssetSelected(const std::string &asset);
+	void RenderTextureAsset();
+	void RenderMeshAsset();
+
 	NodeDescriptor *rootDesc;
 	EditorState *editorState;
 	bool isOpen;
 	std::string currentAsset;
 	AssetType assetType;
+	FireCube::Texture2D *texture;
+	FireCube::Image *image;
 };
