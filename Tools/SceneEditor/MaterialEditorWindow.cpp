@@ -71,8 +71,8 @@ void MaterialEditorWindow::Render()
 		}
 
 		ImGui::SameLine();
+		if (ImGui::Button("Save"))
 		{
-			bool saveClicked = ImGui::Button("Save");
 			if (currentFileName.empty())
 			{			
 				char chosenPath[1024];				
@@ -103,7 +103,7 @@ void MaterialEditorWindow::Render()
 					}
 				}				
 			}
-			else if (saveClicked)
+			else
 			{
 				AssetUtils::SerializeMaterial(material, Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + currentFileName);
 			}
