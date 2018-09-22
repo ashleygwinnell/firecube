@@ -92,6 +92,7 @@
     <ClCompile Include="..\..\FireCube\ThirdParty\TinyXML\tinyxmlparser.cpp" />
     <ClCompile Include="AssetBrowserWindow.cpp" />
     <ClCompile Include="AssetUtils.cpp" />
+    <ClCompile Include="AssetWindow.cpp" />
     <ClCompile Include="AuxRenderWindow.cpp" />
     <ClCompile Include="BoxWindow.cpp" />
     <ClCompile Include="CameraWindow.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="app.h" />
     <ClInclude Include="AssetBrowserWindow.h" />
     <ClInclude Include="AssetUtils.h" />
+    <ClInclude Include="AssetWindow.h" />
     <ClInclude Include="AuxRenderWindow.h" />
     <ClInclude Include="BoxWindow.h" />
     <ClInclude Include="CameraWindow.h" />

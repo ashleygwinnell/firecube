@@ -9,6 +9,7 @@
 #include "HierarchyWindow.h"
 #include "EditorWindow.h"
 #include "InspectorWindow.h"
+#include "AssetWindow.h"
 #include "SceneReader.h"
 #include "tinyxml.h"
 #include "Commands/Command.h"
@@ -114,6 +115,7 @@ void FireCubeApp::Render(float t)
 		hierarchyWindow->Render();
 		editorWindow->Render();
 		inspectorWindow->Render();
+		assetWindow->Render();
 		assetBrowserWindow->Render();
 		materialEditorWindow->Render();
 	}
@@ -400,6 +402,7 @@ bool FireCubeApp::Prepare()
 	editorWindow = new EditorWindow(engine);
 	hierarchyWindow = new HierarchyWindow(engine);
 	inspectorWindow = new InspectorWindow(engine);
+	assetWindow = new AssetWindow(engine);
 	assetBrowserWindow = new AssetBrowserWindow(engine);
 	materialEditorWindow = new MaterialEditorWindow(engine);
 	
@@ -424,6 +427,7 @@ bool FireCubeApp::Prepare()
 	editorWindow->SetScene(scene, &rootDesc, editorState);
 	hierarchyWindow->SetScene(&rootDesc, editorState);
 	inspectorWindow->SetScene(&rootDesc, editorState);
+	assetWindow->SetScene(&rootDesc, editorState);
 	assetBrowserWindow->SetScene(&rootDesc, editorState);
 	materialEditorWindow->SetScene(&rootDesc, editorState);
 	
@@ -937,6 +941,7 @@ void FireCubeApp::RenderMenuBar()
 		{
 			ImGui::MenuItem("Scene Hierarchy", nullptr, hierarchyWindow->GetIsOpenPtr());
 			ImGui::MenuItem("Inspector", nullptr, inspectorWindow->GetIsOpenPtr());
+			ImGui::MenuItem("Asset", nullptr, assetWindow->GetIsOpenPtr());
 			ImGui::MenuItem("Material Editor", nullptr, materialEditorWindow->GetIsOpenPtr());
 			ImGui::MenuItem("Asset Browser", nullptr, assetBrowserWindow->GetIsOpenPtr());
 			if (ImGui::MenuItem("Settings"))

@@ -93,13 +93,14 @@ void AssetBrowserWindow::Render()
 					{
 						selectedItem = &item;
 						texturePreview = nullptr;
+						editorState->assetSelected(editorState, item.path);
 						if (item.assetType == AssetType::TEXTURE)
 						{
-							texturePreview = engine->GetResourceCache()->GetResource<Texture2D>(item.path);
+							texturePreview = engine->GetResourceCache()->GetResource<Texture2D>(item.pathRelToAssets);
 						}
 						else if (item.assetType == AssetType::MATERIAL)
 						{
-							std::string materialPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), item.path);
+							std::string materialPath = item.pathRelToAssets;
 
 							auxRenderWindow.Reset();
 							auto root = auxRenderWindow.GetRoot();
@@ -127,7 +128,7 @@ void AssetBrowserWindow::Render()
 						}
 						else if (item.assetType == AssetType::MESH)
 						{
-							std::string meshPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), item.path);
+							std::string meshPath = item.pathRelToAssets;
 
 							auxRenderWindow.Reset();
 							auto root = auxRenderWindow.GetRoot();
@@ -153,7 +154,7 @@ void AssetBrowserWindow::Render()
 						}
 						else if (item.assetType == AssetType::PREFAB)
 						{
-							std::string prefabPath = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), item.path);
+							std::string prefabPath = item.pathRelToAssets;
 
 							auxRenderWindow.Reset();
 							auto root = auxRenderWindow.GetRoot();
@@ -603,6 +604,7 @@ std::vector<AssetBrowserWindow::FileInfo> AssetBrowserWindow::GetItemsInPath(con
 			{
 				FileInfo item;
 				item.path = Filesystem::JoinPath(path, p);
+				item.pathRelToAssets = Filesystem::MakeRelativeTo(Filesystem::GetAssetsFolder(), item.path);
 				item.label = Filesystem::GetLastPathComponent(p);
 				item.isDirectory = data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
 				if (!item.isDirectory)

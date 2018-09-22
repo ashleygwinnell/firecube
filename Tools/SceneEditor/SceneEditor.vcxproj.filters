@@ -231,6 +231,9 @@
     <ClCompile Include="Descriptors\GridDescriptor.cpp">
       <Filter>Descriptors</Filter>
     </ClCompile>
+    <ClCompile Include="AssetWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -442,6 +445,9 @@
     </ClInclude>
     <ClInclude Include="Descriptors\GridDescriptor.h">
       <Filter>Descriptors</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetWindow.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

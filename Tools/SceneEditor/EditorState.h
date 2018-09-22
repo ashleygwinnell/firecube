@@ -60,6 +60,7 @@ public:
 	FireCube::Event<> stopRenderLoop;
 	FireCube::Event<> resetParticleEmitters;
 	FireCube::Event<NodeDescriptor *> nodeRenamed;
+	FireCube::Event<const std::string &> assetSelected;
 
 private:
 	Settings settings;

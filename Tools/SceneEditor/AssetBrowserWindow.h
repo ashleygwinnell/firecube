@@ -24,6 +24,7 @@ private:
 	{
 	public:
 		std::string path;
+		std::string pathRelToAssets;
 		std::string label;
 		bool isDirectory;
 		AssetType assetType;
