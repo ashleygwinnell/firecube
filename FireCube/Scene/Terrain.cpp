@@ -6,6 +6,7 @@
 #include "Scene/Node.h"
 #include "Geometry/Geometry.h"
 #include "Rendering/IndexBuffer.h"
+#include "Core/Events.h"
 
 using namespace FireCube;
 
@@ -30,6 +31,9 @@ Terrain::~Terrain()
 
 void Terrain::CreateFromHeightMap(Image *image)
 {
+	UnSubscribeFromEvent(Events::ResourceReloaded);
+	SubscribeToEvent(image, Events::ResourceReloaded, &Terrain::HeightmapReloaded);
+
 	numPatchesX = (image->GetWidth() - 1) / patchSize;
 	numPatchesY = (image->GetHeight() - 1) / patchSize;
 	numVerticesX = numPatchesX * patchSize + 1;
@@ -42,8 +46,12 @@ void Terrain::CreateFromHeightMap(Image *image)
 			heightData[y * numVerticesX + x] = image->GetPixel(x, y).y * verticesSpacing.y;
 		}
 	}
+
 	if (smoothHeightMap)
+	{
 		SmoothHeightMap();
+	}
+
 	patchWorldSize = vec2(verticesSpacing.x, verticesSpacing.z) * (float) patchSize;
 
 	for (auto patch : patches)
@@ -62,7 +70,10 @@ void Terrain::CreateFromHeightMap(Image *image)
 void Terrain::CreatePatches()
 {
 	if (!generateHardNormals)
+	{
 		GenerateIndexBuffer();
+	}
+
 	vec3 offset(patchWorldSize.x * numPatchesX * -0.5f, 0, patchWorldSize.y * numPatchesY * -0.5f);
 	for (int y = 0; y < numPatchesY; ++y)
 	{
@@ -130,7 +141,9 @@ void Terrain::GeneratePatchGeometry(TerrainPatch *patch, int patchX, int patchY)
 	vertexBuffer->SetShadowed(true);
 	geometry->SetVertexBuffer(vertexBuffer);
 	if (!generateHardNormals)
+	{
 		geometry->SetIndexBuffer(indexBuffer);
+	}
 	patch->SetMaterial(material);
 	BoundingBox boundingBox;	
 	unsigned int vertexSize = 3 + 3 + 2;
@@ -230,13 +243,23 @@ void Terrain::GeneratePatchGeometry(TerrainPatch *patch, int patchX, int patchY)
 float Terrain::GetHeightDiscrete(int x, int y)
 {
 	if (x < 0)
+	{
 		x = 0;
+	}
 	else if (x >= numVerticesX)
+	{
 		x = numVerticesX - 1;
+	}
+
 	if (y < 0)
+	{
 		y = 0;
+	}
 	else if (y >= numVerticesY)
+	{
 		y = numVerticesY - 1;
+	}
+
 	return heightData[y * numVerticesX + x];
 }
 
@@ -245,7 +268,9 @@ float Terrain::GetHeight(vec2 pos)
 	vec2 offset(patchWorldSize.x * numPatchesX * 0.5f, patchWorldSize.y * numPatchesY * 0.5f);
 	pos += offset;
 	if ((pos.x < 0) || (pos.x >= patchWorldSize.x * (float)numPatchesX) || (pos.y < 0) || (pos.y >= patchWorldSize.y * (float)numPatchesY))
+	{
 		return 0;
+	}
 	pos.x = pos.x / (patchWorldSize.x * (float)numPatchesX) * (float)(numVerticesX - 1);
 	pos.y = pos.y / (patchWorldSize.y * (float)numPatchesY) * (float)(numVerticesY - 1);
 	int ix = (int)pos.x, iy = (int)pos.y;
@@ -304,7 +329,9 @@ vec3 Terrain::GetNormal(vec2 pos)
 	vec2 offset(patchWorldSize.x * numPatchesX * 0.5f, patchWorldSize.y * numPatchesY * 0.5f);
 	pos += offset;
 	if ((pos.x < 0) || (pos.x >= patchWorldSize.x * (float)numPatchesX) || (pos.y < 0) || (pos.y >= patchWorldSize.y * (float)numPatchesY))
+	{
 		return vec3(0, 1, 0);
+	}
 
 	pos.x = pos.x / (patchWorldSize.x * (float)numPatchesX) * (float)(numVerticesX - 1);
 	pos.y = pos.y / (patchWorldSize.y * (float)numPatchesY) * (float)(numVerticesY - 1);
@@ -432,6 +459,11 @@ void Terrain::SetLightMask(unsigned int lightMask)
 unsigned int Terrain::GetLightMask() const
 {
 	return lightMask;
+}
+
+void Terrain::HeightmapReloaded(Resource *image)
+{
+	CreateFromHeightMap((Image *)image);
 }
 
 TerrainPatch::TerrainPatch(Engine *engine) : Renderable(engine)

@@ -26,6 +26,7 @@ public:
 private:
 	void SetBoundingBox(BoundingBox boundingBox);
 	virtual void UpdateWorldBoundingBox();
+
 	Geometry *geometry;
 	Material *material;
 	BoundingBox boundingBox;
@@ -118,6 +119,7 @@ private:
 	void GenerateIndexBuffer();
 	void SmoothHeightMap();
 	virtual void MarkedDirty() {}
+	void HeightmapReloaded(Resource *image);
 	
 	std::vector<float> heightData;
 	int patchSize;

@@ -19,15 +19,22 @@ public:
 	~ResourceCache();
 
 	/**
-	* Loads a resource from a path or fetches it from cache if the resource was previosly loaded
-	* @param filename The path to the resource (this path is also used as the kay to look up the resource in the cache)
-	* @returns A pointer to the loaded resource or null if the resource coundn't be loaded
+	* Loads a resource from a path or fetches it from cache if the resource was previously loaded
+	* @param filename The path to the resource (this path is also used as the key to look up the resource in the cache)
+	* @returns A pointer to the loaded resource or null if the resource couldn't be loaded
 	*/
 	template <class T> T *GetResource(const std::string &filename)
-	{	
-		auto i = resources.find(filename);
-		if (i != resources.end())
-			return (T *) i->second.Get();
+	{
+		StringHash typeHash = T::GetTypeStatic();
+		auto group = resources.find(typeHash);
+		if (group != resources.end())
+		{
+			auto i = group->second.find(filename);
+			if (i != group->second.end())
+			{
+				return (T *)i->second.Get();
+			}
+		}
 
 		SharedPtr<T> resource = SharedPtr<T>(new T(engine));
 		if (!resource->Load(filename))
@@ -36,12 +43,30 @@ public:
 		resource->SetFileName(filename);
 		SharedPtr<Resource> resourcePtr;
 		resourcePtr.StaticCast(resource);
-		resources[filename] = resourcePtr;
+		resources[typeHash][filename] = resourcePtr;
 		return resource;
 	}
 
+	template <class T> T *FindResource(const std::string &filename) const
+	{
+		StringHash typeHash = T::GetTypeStatic();
+		auto group = resources.find(typeHash);
+		if (group != resources.end())
+		{
+			auto i = group->second.find(filename);
+			if (i != group->second.end())
+			{
+				return (T *)i->second.Get();
+			}
+		}
+		
+		return nullptr;
+	}
+
+	bool ReloadResource(Resource *resource);
+
 private:
-	std::map<std::string, SharedPtr<Resource>> resources;
+	std::map<StringHash, std::map<std::string, SharedPtr<Resource>>> resources;
 };
 
 
