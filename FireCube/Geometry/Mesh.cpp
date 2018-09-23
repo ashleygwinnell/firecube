@@ -55,7 +55,18 @@ bool Mesh::Load(const std::string &filename)
 	{
 		LOGERROR("Failed loading model: ", filename, " Reason: ", importer.GetErrorString());		
 		return false;
-	}	
+	}
+
+	boundingBoxes.clear();
+	geometries.clear();
+	materials.clear();
+	skeletonRoot.transformation.Identity();
+	skeletonRoot.children.clear();	
+	meshBoneWeights.clear();
+	meshBones.clear();
+	animations.clear();
+	numberOfTreeNodes = 0;
+	boundingBox = BoundingBox();
 
 	ProcessAssimpScene(scene);
 
