@@ -236,3 +236,8 @@ void Camera::RenderDebugGeometry(DebugRenderer *debugRenderer)
 	frustum.Extract(GetViewMatrix(), GetProjectionMatrix());
 	debugRenderer->AddFrustum(frustum, vec3(0, 1, 0));
 }
+
+bool Camera::IsOrthographic() const
+{
+	return orthographic;
+}

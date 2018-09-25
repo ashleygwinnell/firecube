@@ -3,6 +3,7 @@
 #include "Scripting/LuaBindings.h"
 #include "Math/Math.h"
 #include "Math/Ray.h"
+#include "Math/Frustum.h"
 
 using namespace FireCube;
 
@@ -80,7 +81,8 @@ void LuaBindings::InitMath(sol::state &luaState)
 	luaState.new_usertype<Plane>("Plane",
 		sol::constructors<Plane(const vec3 &, float)>(),
 		"normal", sol::property(&Plane::GetNormal),
-		"distance", sol::property(sol::resolve<float() const>(&Plane::GetDistance)));
+		"distance", sol::property(sol::resolve<float() const>(&Plane::GetDistance)),
+		"GetDistance", sol::resolve<float(const vec3 &point) const>(&Plane::GetDistance));
 
 	luaState.new_usertype<BoundingBox>("BoundingBox",
 		sol::constructors<BoundingBox()>(),
@@ -127,5 +129,14 @@ void LuaBindings::InitMath(sol::state &luaState)
 		"w", &quat::w,
 		"FromEulerAngles", [](float x, float y, float z) { return quat(x, y, z); },
 		"FromAxisAngle", [](vec3 axis, float angle) { return quat(axis, angle); },
-		sol::meta_function::multiplication, sol::resolve<quat(const quat &, const quat &)>(::operator*));	
+		sol::meta_function::multiplication, sol::resolve<quat(const quat &, const quat &)>(::operator*));
+
+	luaState.new_usertype<Frustum>("Frustum",
+		sol::constructors<Frustum()>(),
+		"leftPlane", sol::property(&Frustum::GetLeftPlane),
+		"rightPlane", sol::property(&Frustum::GetRightPlane),
+		"topPlane", sol::property(&Frustum::GetTopPlane),
+		"bottomPlane", sol::property(&Frustum::GetBottomPlane),
+		"farPlane", sol::property(&Frustum::GetFarPlane),
+		"nearPlane", sol::property(&Frustum::GetNearPlane));
 }

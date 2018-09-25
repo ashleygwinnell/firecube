@@ -141,6 +141,11 @@ public:
 	float GetBottomPlane() const;
 
 	/**
+	 * @returns Whether this camera uses an orthographic projection
+	 */
+	bool IsOrthographic() const;
+
+	/**
 	* Renders debug geometry of this camera
 	* @param debugRenderer The debug renderer
 	*/

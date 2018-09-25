@@ -373,6 +373,8 @@ void LuaBindings::InitScene(sol::state &luaState)
 
 	luaState.new_usertype<Camera>("Camera",
 		"GetPickingRay", &Camera::GetPickingRay,
+		"frustum", sol::property(&Camera::GetFrustum),
+		"orthographic", sol::property(&Camera::IsOrthographic),
 		sol::base_classes, sol::bases<Component, Object, RefCounted>());
 
 	luaState.new_usertype<SceneReader>("SceneReader",
