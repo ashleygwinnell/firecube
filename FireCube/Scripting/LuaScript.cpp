@@ -149,7 +149,7 @@ void LuaScript::SubscribeToEventFromLua(const std::string &eventName, sol::objec
 
 void LuaScript::HandleInput(float dt, const MappedInput &input)
 {
-	if (awakeCalled)
+	if (awakeCalled && IsEnabled())
 	{
 		(*scriptFunctions[ScriptFunction::HANDLE_INPUT])(object, dt, input);		
 	}
@@ -157,7 +157,7 @@ void LuaScript::HandleInput(float dt, const MappedInput &input)
 
 void LuaScript::CharacterControllerCollision(CharacterController *characterController, CollisionShape *collisionShape)
 {
-	if (awakeCalled)
+	if (awakeCalled && IsEnabled())
 	{
 		(*scriptFunctions[ScriptFunction::CHARACTER_CONTROLLER_COLLISION])(object, characterController, collisionShape);		
 	}
