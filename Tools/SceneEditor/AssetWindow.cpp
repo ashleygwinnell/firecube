@@ -52,6 +52,16 @@ void AssetWindow::AssetSelected(const std::string &asset)
 		texture = engine->GetResourceCache()->FindResource<Texture2D>(currentAsset);
 		image = engine->GetResourceCache()->FindResource<Image>(currentAsset);
 	}
+	else if (assetType == AssetType::MESH)
+	{
+		FireCube::Mesh mesh(engine);
+		mesh.Load(currentAsset);
+		meshMaterials.clear();
+		for (auto &material : mesh.GetMaterials())
+		{
+			meshMaterials.insert(material);
+		}
+	}
 }
 
 void AssetWindow::RenderTextureAsset()
@@ -114,6 +124,18 @@ void AssetWindow::RenderMeshAsset()
 			if (mesh)
 			{
 				engine->GetResourceCache()->ReloadResource(mesh);
+			}
+		}
+
+		if (ImGui::CollapsingHeader("Materials", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			for (auto &material : meshMaterials)
+			{
+				if (ImGui::Selectable(material->GetName().c_str()))
+				{
+					editorState->materialPicked(editorState, material);
+					editorState->showMaterialEditor(editorState);
+				}
 			}
 		}
 	}

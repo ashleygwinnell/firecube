@@ -26,4 +26,5 @@ private:
 	AssetType assetType;
 	FireCube::Texture2D *texture;
 	FireCube::Image *image;
+	std::set<FireCube::Material *> meshMaterials;
 };
