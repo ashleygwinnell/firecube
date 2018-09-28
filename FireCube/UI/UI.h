@@ -42,6 +42,13 @@ public:
 	* @param renderer The renderer to use
 	*/
 	void Render(Renderer *renderer);
+
+	/**
+	* Renders the ui
+	* @param renderer The renderer to use
+	* @param root The root ui element
+	*/
+	void Render(Renderer *renderer, UIElement *root);
 	
 	/**
 	* @returns the root UI element

@@ -6,6 +6,7 @@
 #include "Core/Object.h"
 #include "Rendering/RenderPath.h"
 #include "Math/Octree.h"
+#include "UI/UIElement.h"
 
 namespace FireCube
 {
@@ -82,7 +83,9 @@ public:
 	/**
 	* @returns The ambient color of the scene
 	*/
-	vec3 GetAmbientColor() const;			
+	vec3 GetAmbientColor() const;
+
+	UIElement *GetUI();
 	
 private:	
 
@@ -129,6 +132,7 @@ private:
 
 	Octree<Renderable> octree;
 	std::vector<Node *> delayedRemoveNodes;
+	UIElement ui;
 };
 
 }

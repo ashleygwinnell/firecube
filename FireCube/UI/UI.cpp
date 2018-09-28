@@ -22,7 +22,7 @@ UI::~UI()
 	delete root;
 }
 
-void UI::Render(Renderer *renderer)
+void UI::Render(Renderer *renderer, UIElement *root)
 {
 	std::vector<UIPart> parts;
 	std::vector<UIVertex> vertexData;
@@ -69,6 +69,11 @@ void UI::Render(Renderer *renderer)
 			renderer->RenderStream(PrimitiveType::TRIANGLES, part.count, part.offset);
 		}
 	}
+}
+
+void UI::Render(Renderer *renderer)
+{
+	Render(renderer, root);
 }
 
 void UI::GetParts(std::vector<UIPart> &parts, std::vector<UIVertex> &vertexData, UIElement *element)

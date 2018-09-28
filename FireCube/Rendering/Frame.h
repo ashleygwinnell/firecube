@@ -45,7 +45,8 @@ private:
 	void SetRenderTargets(Renderer *renderer, const RenderPathCommand &command);
 	void SetTextures(Renderer *renderer, const RenderPathCommand &command);
 	void RenderDebugGeometry(DebugRenderer *debugRenderer, Node *node);
-	void RenderShadowMap(Renderer *renderer, Light *light, RenderQueue &queue);	
+	void RenderShadowMap(Renderer *renderer, Light *light, RenderQueue &queue);
+	void RenderUI(Renderer *renderer);
 
 	Scene *scene;
 	Camera *camera;

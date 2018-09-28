@@ -14,6 +14,7 @@
 #include "Scene/Scene.h"
 #include "Utils/Logger.h"
 #include "Core/Engine.h"
+#include "UI/UI.h"
 
 using namespace FireCube;
 
@@ -219,6 +220,8 @@ void Frame::Render(Renderer *renderer)
 			continue;
 		}
 	}
+
+	RenderUI(renderer);
 }
 
 void Frame::UpdateBaseQueue()
@@ -559,4 +562,9 @@ void Frame::RenderDebugGeometry(DebugRenderer *debugRenderer, Node *node)
 	{
 		RenderDebugGeometry(debugRenderer, child);
 	}
+}
+
+void Frame::RenderUI(Renderer *renderer)
+{
+	engine->GetUI()->Render(renderer, scene->GetUI());
 }

@@ -18,7 +18,7 @@
 
 using namespace FireCube;
 
-Scene::Scene(Engine *engine) : Object(engine), ambientColor(0.1f), fogEnabled(false), rootNode(engine), fogColor(1.0f), octree(engine, vec3(2000), 8)
+Scene::Scene(Engine *engine) : Object(engine), ambientColor(0.1f), fogEnabled(false), rootNode(engine), fogColor(1.0f), octree(engine, vec3(2000), 8), ui(engine)
 {
 	rootNode.scene = this;
 	SubscribeToEvent(Events::PostRender, &Scene::PostRender);
@@ -180,4 +180,9 @@ void Scene::PostRender(float deltaTime)
 void Scene::AddDelayedRemoveNode(Node *node)
 {
 	delayedRemoveNodes.push_back(node);
+}
+
+UIElement *Scene::GetUI()
+{
+	return &ui;
 }

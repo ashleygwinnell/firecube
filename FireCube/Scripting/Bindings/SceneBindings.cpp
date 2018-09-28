@@ -252,6 +252,7 @@ void LuaBindings::InitScene(sol::state &luaState)
 {
 	luaState.new_usertype<Scene>("Scene",
 		"root", sol::property(&Scene::GetRootNode),
+		"ui", sol::property(&Scene::GetUI),
 		"IntersectRay", &Scene::IntersectRay,
 		"GetRootNode", &Scene::GetRootNode,
 		sol::base_classes, sol::bases<Object, RefCounted>());
