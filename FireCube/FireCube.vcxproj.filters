@@ -378,6 +378,9 @@
     <ClCompile Include="UI\UIImage.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="Scripting\Bindings\UIBindings.cpp">
+      <Filter>Scripting\Bindings</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">

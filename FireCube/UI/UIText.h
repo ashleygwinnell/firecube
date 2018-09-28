@@ -22,12 +22,22 @@ public:
 	* @param fontFace The font face to use
 	*/
 	void SetFontFace(FontFace *fontFace);
+
+	/**	
+	* @returns The font face used to render the text
+	*/
+	FontFace *GetFontFace() const;
 	
 	/**
 	* Sets the text
 	* @param text The text
 	*/
 	void SetText(const std::string &text);
+
+	/**	
+	* @returns The text
+	*/
+	std::string GetText() const;
 	
 	/**
 	* Sets the color and transparency of the text

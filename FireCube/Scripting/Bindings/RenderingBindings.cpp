@@ -5,6 +5,7 @@
 #include "Rendering/Material.h"
 #include "Rendering/Technique.h"
 #include "Rendering/RenderingTypes.h"
+#include "Rendering/Font.h"
 
 using namespace FireCube;
 
@@ -32,5 +33,12 @@ void LuaBindings::InitRendering(sol::state &luaState)
 	luaState["PARAM_MATERIAL_DIFFUSE"] = PARAM_MATERIAL_DIFFUSE;
 	luaState["PARAM_MATERIAL_SPECULAR"] = PARAM_MATERIAL_SPECULAR;
 	luaState["PARAM_MATERIAL_SHININESS"] = PARAM_MATERIAL_SHININESS;
-	luaState["PARAM_MATERIAL_OPACITY"] = PARAM_MATERIAL_OPACITY;	
+	luaState["PARAM_MATERIAL_OPACITY"] = PARAM_MATERIAL_OPACITY;
+
+	luaState.new_usertype<Font>("Font",
+		"GenerateFontFace", &Font::GenerateFontFace,
+		sol::base_classes, sol::bases<Resource, Object, RefCounted>());
+
+	luaState.new_usertype<FontFace>("FontFace");
+
 }

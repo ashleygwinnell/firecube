@@ -12,6 +12,8 @@
 #include "Scene/Prefab.h"
 #include "Rendering/Renderer.h"
 #include "Application/Application.h"
+#include "UI/UI.h"
+#include "Rendering/Font.h"
 
 using namespace FireCube;
 
@@ -91,6 +93,18 @@ sol::object GetResource(ResourceCache *resourceCache, const std::string &type, c
 			return sol::make_object(s, sol::nil);
 		}
 	}
+	else if (type == "Font")
+	{
+		auto resource = resourceCache->GetResource<Font>(path);
+		if (resource)
+		{
+			return sol::object(lua, sol::in_place, resource);
+		}
+		else
+		{
+			return sol::make_object(s, sol::nil);
+		}
+	}
 	else
 	{
 		return sol::make_object(s, sol::nil);
@@ -106,7 +120,8 @@ void LuaBindings::InitCore(sol::state &luaState, Engine *engine)
 	
 	luaState.new_usertype<Engine>("Engine",
 		"renderer", sol::property(&Engine::GetRenderer),
-		"resourceCache", sol::property(&Engine::GetResourceCache));
+		"resourceCache", sol::property(&Engine::GetResourceCache),
+		"ui", sol::property(&Engine::GetUI));
 	
 	luaState.new_usertype<Resource>("Resource",
 		sol::base_classes, sol::bases<Object, RefCounted>());

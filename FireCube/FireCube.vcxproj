@@ -102,6 +102,7 @@
     <ClCompile Include="Scripting\Bindings\RenderingBindings.cpp" />
     <ClCompile Include="Scripting\Bindings\SceneBindings.cpp" />
     <ClCompile Include="Scripting\Bindings\ScriptingBindings.cpp" />
+    <ClCompile Include="Scripting\Bindings\UIBindings.cpp" />
     <ClCompile Include="Scripting\Bindings\UtilsBindings.cpp" />
     <ClCompile Include="Scripting\LuaBindings.cpp" />
     <ClCompile Include="Scripting\LuaFile.cpp" />

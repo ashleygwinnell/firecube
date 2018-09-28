@@ -63,3 +63,13 @@ void UIImage::SetSize(vec2 size)
 	this->size = size;
 }
 
+Texture2D *UIImage::GetImage() const
+{
+	return texture;
+}
+
+vec2 UIImage::GetSize() const
+{
+	return size;
+}
+

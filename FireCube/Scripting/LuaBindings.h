@@ -26,6 +26,7 @@ public:
 	static void InitGeometry(sol::state &luaState);
 	static void InitPhysics(sol::state &luaState);
 	static void InitAudio(sol::state &luaState);
+	static void InitUI(sol::state &luaState);
 };
 
 }

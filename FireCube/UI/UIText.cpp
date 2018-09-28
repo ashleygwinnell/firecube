@@ -31,6 +31,7 @@ void UIText::GetParts(std::vector<UIPart> &parts, std::vector<UIVertex> &data)
 void UIText::SetFontFace(FontFace *fontFace)
 {
 	this->fontFace = fontFace;
+	UpdateData();
 }
 
 void UIText::SetText(const std::string &text)
@@ -122,4 +123,14 @@ void UIText::UpdateData()
 	}
 
 	vertexData.resize(numTris * 3);
+}
+
+FontFace *UIText::GetFontFace() const
+{
+	return fontFace;
+}
+
+std::string UIText::GetText() const
+{
+	return text;
 }

@@ -23,11 +23,22 @@ namespace FireCube
 		*/
 		void SetImage(Texture2D *texture);
 
+		/**		
+		* @returns The texture used
+		*/
+		Texture2D *GetImage() const;
+
 		/**
 		* Sets the size
 		* @param size the new size
 		*/
 		void SetSize(vec2 size);
+
+		/**
+		* Sets the size
+		* @returns the size
+		*/
+		vec2 GetSize() const;
 
 	private:		
 
