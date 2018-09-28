@@ -780,6 +780,13 @@ bool ImGuiHelpers::AssetSelectionPopup(const std::string &title, AssetType type,
 				curPath = Filesystem::GetDirectoryName(curPath);
 			}
 		}
+
+		if (ImGui::Selectable("[None]"))
+		{
+			ret = true;
+			selectedPath = "";
+		}
+
 		for (auto &item : curItems)
 		{
 			if (item.isDirectory)
