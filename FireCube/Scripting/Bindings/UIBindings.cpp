@@ -16,7 +16,12 @@ UIElement *NewElement(Engine *engine)
 
 sol::object CreateChild(UIElement *element, const std::string &type, sol::this_state s)
 {
-	if (type == "UIText")
+	if (type == "UIElement")
+	{
+		auto child = element->CreateChild<UIElement>();
+		return sol::object(s, sol::in_place, child);
+	}
+	else if (type == "UIText")
 	{
 		auto child = element->CreateChild<UIText>();
 		return sol::object(s, sol::in_place, child);
