@@ -44,7 +44,7 @@ void SceneWriter::Serialize(NodeDescriptor *nodeDesc, bool prefabAsNode, TiXmlNo
 		parent->LinkEndChild(element);
 
 		element->SetAttribute("name", nodeDesc->GetName());
-		SerializeNodeTransformation(nodeDesc, element);
+		SerializeNodeTransformation(nodeDesc, element, nodeDesc->IsPrefab());
 
 		for (auto component : nodeDesc->GetComponents())
 		{
@@ -396,12 +396,12 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlNode *paren
 	}
 }
 
-void SceneWriter::SerializeNodeTransformation(NodeDescriptor *nodeDesc, TiXmlNode *parent)
+void SceneWriter::SerializeNodeTransformation(NodeDescriptor *nodeDesc, TiXmlNode *parent, bool zeroTranslation)
 {	
 	TiXmlElement *transformation = new TiXmlElement("transformation");
 	parent->LinkEndChild(transformation);	
 		
-	transformation->SetAttribute("translation", ToString(nodeDesc->GetTranslation()));
+	transformation->SetAttribute("translation", ToString(zeroTranslation ? vec3(0.0f) : nodeDesc->GetTranslation()));
 	transformation->SetAttribute("scale", ToString(nodeDesc->GetScale()));
 	transformation->SetAttribute("rotation", ToString(nodeDesc->GetRotation()));
 }
