@@ -14,6 +14,7 @@
 #include "Application/Application.h"
 #include "UI/UI.h"
 #include "Rendering/Font.h"
+#include "Rendering/Texture2D.h"
 
 using namespace FireCube;
 
@@ -96,6 +97,18 @@ sol::object GetResource(ResourceCache *resourceCache, const std::string &type, c
 	else if (type == "Font")
 	{
 		auto resource = resourceCache->GetResource<Font>(path);
+		if (resource)
+		{
+			return sol::object(lua, sol::in_place, resource);
+		}
+		else
+		{
+			return sol::make_object(s, sol::nil);
+		}
+	}
+	else if (type == "Texture2D")
+	{
+		auto resource = resourceCache->GetResource<Texture2D>(path);
 		if (resource)
 		{
 			return sol::object(lua, sol::in_place, resource);

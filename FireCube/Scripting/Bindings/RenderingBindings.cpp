@@ -6,6 +6,7 @@
 #include "Rendering/Technique.h"
 #include "Rendering/RenderingTypes.h"
 #include "Rendering/Font.h"
+#include "Rendering/Texture2D.h"
 
 using namespace FireCube;
 
@@ -40,5 +41,11 @@ void LuaBindings::InitRendering(sol::state &luaState)
 		sol::base_classes, sol::bases<Resource, Object, RefCounted>());
 
 	luaState.new_usertype<FontFace>("FontFace");
+
+	luaState.new_usertype<Texture>("Texture",
+		sol::base_classes, sol::bases<Resource, Object, RefCounted>());
+
+	luaState.new_usertype<Texture2D>("Texture2D",
+		sol::base_classes, sol::bases<Texture, Resource, Object, RefCounted>());
 
 }
