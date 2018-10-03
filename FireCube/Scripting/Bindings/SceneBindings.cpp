@@ -162,8 +162,8 @@ sol::object CreateComponent(Node *node, const std::string &type, sol::variadic_a
 {	
 	if (type == "ParticleEmitter")
 	{
-		sol::object param3 = va[1];
-		sol::object param4 = va[2];		
+		sol::object param3 = va[0];
+		sol::object param4 = va[1];
 		auto component = node->CreateComponent<ParticleEmitter>(param3.as<unsigned int>(), param4 == sol::nil ? nullptr : param4.as<Material *>());
 		return sol::object(s, sol::in_place, component);
 	}
