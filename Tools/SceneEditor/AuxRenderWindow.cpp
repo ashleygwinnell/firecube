@@ -49,6 +49,7 @@ void AuxRenderWindow::Render()
 
 	engine->GetRenderer()->RenderSceneView(sceneView);
 	renderSurface->GetLinkedTexture()->GenerateMipMaps();
+	ImGui::InvisibleButton("invisible", size);
 	ImGui::GetWindowDrawList()->AddImage(
 		(void *)renderSurface->GetLinkedTexture()->GetObjectId(), pos,
 		ImVec2(pos.x + renderSurface->GetWidth(), pos.y + renderSurface->GetHeight()), ImVec2(0, 1), ImVec2(1, 0));

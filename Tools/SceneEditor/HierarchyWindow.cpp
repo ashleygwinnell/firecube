@@ -14,8 +14,12 @@ HierarchyWindow::HierarchyWindow(Engine *engine) : Object(engine), rootDesc(null
 
 void HierarchyWindow::Render()
 {
-	ImGui::SetNextDock(ImGuiDockSlot_Left);	
-	if (ImGui::BeginDock("Hierarchy", &isOpen))
+	if (!isOpen)
+	{
+		return;
+	}
+
+	if (ImGui::Begin("Hierarchy", &isOpen))
 	{
 		ImGui::BeginChild("hierarchy_list");
 		RenderChildren(rootDesc);
@@ -35,7 +39,7 @@ void HierarchyWindow::Render()
 			ImGui::EndDragDropTarget();
 		}
 	}
-	ImGui::EndDock();
+	ImGui::End();
 
 	newSelectedNode = nullptr;
 }

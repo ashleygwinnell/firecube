@@ -49,6 +49,5 @@ FireCube.VC.VC.opendb
 .vs
 FireCube/ThirdParty/Release
 FireCube/ThirdParty/Debug
-/Tools/SceneEditor/imgui.ini
 /FireCube/ThirdParty/FreeType/freetype.vcxproj.user
 /FireCube/ThirdParty/Lua/Lua.vcxproj.user

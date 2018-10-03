@@ -195,9 +195,6 @@
     <ClCompile Include="MaterialEditorWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ThirdParty\imgui\imgui_dock.cpp">
-      <Filter>ThirdParty\imgui</Filter>
-    </ClCompile>
     <ClCompile Include="Project.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -400,9 +397,6 @@
     </ClInclude>
     <ClInclude Include="MaterialEditorWindow.h">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\imgui\imgui_dock.h">
-      <Filter>ThirdParty\imgui</Filter>
     </ClInclude>
     <ClInclude Include="Project.h">
       <Filter>Source Files</Filter>

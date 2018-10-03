@@ -148,7 +148,6 @@
     <ClCompile Include="TerrainWindow.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui_demo.cpp" />
-    <ClCompile Include="ThirdParty\imgui\imgui_dock.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui_draw.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui_impl_sdl.cpp" />
@@ -217,7 +216,6 @@
     <ClInclude Include="ThirdParty\IconFontCppHeaders\IconsForkAwesome.h" />
     <ClInclude Include="ThirdParty\imgui\imconfig.h" />
     <ClInclude Include="ThirdParty\imgui\imgui.h" />
-    <ClInclude Include="ThirdParty\imgui\imgui_dock.h" />
     <ClInclude Include="ThirdParty\imgui\imgui_impl_opengl3.h" />
     <ClInclude Include="ThirdParty\imgui\imgui_impl_sdl.h" />
     <ClInclude Include="ThirdParty\imgui\imgui_internal.h" />

@@ -35,18 +35,20 @@ void EditorWindow::Render()
 		}
 		engine->GetDebugRenderer()->Render(currentCamera);
 	}
-	ImGui::SetNextDock(ImGuiDockSlot_Right);
-	if (ImGui::BeginDock("Scene"))
+	
+	if (ImGui::Begin("Scene"))
 	{
 		ImGui::BeginChild("TT");
 		ImVec2 pos = ImGui::GetCursorScreenPos();
+		ImVec2 size = ImGui::GetContentRegionAvail();
 		canvasPos = vec2(pos.x, pos.y);
 		renderSurface->GetLinkedTexture()->GenerateMipMaps();
+
+		ImGui::InvisibleButton("invisible", size);
 		ImGui::GetWindowDrawList()->AddImage(
 			(void *)renderSurface->GetLinkedTexture()->GetObjectId(), pos,
 			ImVec2(pos.x + renderSurface->GetWidth(), pos.y + renderSurface->GetHeight()), ImVec2(0, 1), ImVec2(1, 0));
-
-		ImVec2 size = ImGui::GetContentRegionAvail();
+		
 		canvasSize = vec2(size.x, size.y);
 		mouseOverView = ImGui::IsMouseHoveringWindow();
 		if (size.x != renderSurface->GetWidth() || size.y != renderSurface->GetHeight())
@@ -57,7 +59,7 @@ void EditorWindow::Render()
 		}
 		ImGui::End();
 	}
-	ImGui::EndDock();
+	ImGui::End();
 
 	if (ImGui::BeginDragDropTarget())
 	{

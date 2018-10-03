@@ -18,8 +18,12 @@ void AssetBrowserWindow::Render()
 	static FileInfo itemToDelete;
 	NodeDescriptor *selectedNode = editorState->GetSelectedNode();
 
-	ImGui::SetNextDock(ImGuiDockSlot_Bottom);
-	if (ImGui::BeginDock("Asset Browser", &isOpen))
+	if (!isOpen)
+	{
+		return;
+	}
+
+	if (ImGui::Begin("Asset Browser", &isOpen))
 	{
 		ImGui::Columns(3, "assetBrowserColumns", true);
 
@@ -499,7 +503,7 @@ void AssetBrowserWindow::Render()
 			ImGui::EndChild();
 		}
 	}
-	ImGui::EndDock();
+	ImGui::End();
 
 	firstRender = false;
 }

@@ -12,8 +12,12 @@ AssetWindow::AssetWindow(Engine *engine) : Object(engine), isOpen(true)
 
 void AssetWindow::Render()
 {
-	ImGui::SetNextDock(ImGuiDockSlot_Right);
-	if (ImGui::BeginDock("Asset", &isOpen))
+	if (!isOpen)
+	{
+		return;
+	}
+
+	if (ImGui::Begin("Asset", &isOpen))
 	{
 		if (currentAsset.empty() == false)
 		{
@@ -27,7 +31,7 @@ void AssetWindow::Render()
 			}
 		}
 	}
-	ImGui::EndDock();
+	ImGui::End();
 }
 
 void AssetWindow::SetScene(NodeDescriptor *rootDesc, EditorState *editorState)

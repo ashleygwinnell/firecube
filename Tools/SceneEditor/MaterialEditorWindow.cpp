@@ -15,7 +15,12 @@ void MaterialEditorWindow::Render()
 {	
 	bool prevIsOpen = isOpen;
 
-	if (ImGui::BeginDock("Material Editor", &isOpen))
+	if (!isOpen)
+	{
+		return;
+	}
+
+	if (ImGui::Begin("Material Editor", &isOpen))
 	{
 		if (ImGui::Button("New"))
 		{
@@ -447,7 +452,7 @@ void MaterialEditorWindow::Render()
 
 		auxRenderWindow.Render();
 	}
-	ImGui::EndDock();
+	ImGui::End();
 
 	if (prevIsOpen && !isOpen)
 	{

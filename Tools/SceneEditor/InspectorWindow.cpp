@@ -39,8 +39,12 @@ void InspectorWindow::Render()
 {
 	NodeDescriptor *selectedNode = editorState->GetSelectedNode();
 
-	ImGui::SetNextDock(ImGuiDockSlot_Right);
-	if (ImGui::BeginDock("Inspector", &isOpen))
+	if (!isOpen)
+	{
+		return;
+	}
+
+	if (ImGui::Begin("Inspector", &isOpen))
 	{
 		if (selectedNode && ImGui::CollapsingHeader("Node", ImGuiTreeNodeFlags_DefaultOpen))
 		{
@@ -145,7 +149,7 @@ void InspectorWindow::Render()
 			}
 		}
 	}
-	ImGui::EndDock();
+	ImGui::End();
 	if (selectedNode && ImGui::BeginDragDropTarget())
 	{
 		const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("asset");

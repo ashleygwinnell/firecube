@@ -96,30 +96,41 @@ void FireCubeApp::Render(float t)
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(GetWindow());
 	ImGui::NewFrame();
+
+
+	ImGuiWindowFlags flags = ImGuiWindowFlags_MenuBar;
+	flags |= ImGuiWindowFlags_NoDocking;
 	
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
-	const ImGuiWindowFlags flags = (ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize | 
-									ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar);
-	const float oldWindowRounding = ImGui::GetStyle().WindowRounding; ImGui::GetStyle().WindowRounding = 0;	
-	const float oldWindowBorderSize = ImGui::GetStyle().WindowBorderSize; ImGui::GetStyle().WindowBorderSize = 0;
-	ImGui::Begin("MainWindow", nullptr, ImVec2(0, 0), 1.0f, flags);	
-	ImGui::GetStyle().WindowRounding = oldWindowRounding;	
-	ImGui::GetStyle().WindowBorderSize = oldWindowBorderSize;
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->Pos);
+	ImGui::SetNextWindowSize(viewport->Size);
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::Begin("MainWindow", nullptr, flags);
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
 
 	RenderMenuBar();
-	RenderToolbar();	
+	RenderToolbar();
+	
+	ImGuiID dockspaceId = ImGui::GetID("MainWindowDockspace");
+	ImGui::DockSpace(dockspaceId);
 
-	ImGui::BeginDockspace();	
-	{
-		hierarchyWindow->Render();
-		editorWindow->Render();
-		inspectorWindow->Render();
-		assetWindow->Render();
-		assetBrowserWindow->Render();
-		materialEditorWindow->Render();
-	}
+	ImGui::End();
+	ImGui::PopStyleVar();
 
+	hierarchyWindow->Render();
+	editorWindow->Render();
+	inspectorWindow->Render();
+	assetWindow->Render();
+	assetBrowserWindow->Render();
+	materialEditorWindow->Render();
+	
 	static char externalCodeEditorPath[1024];
 	static char gameExecutablePath[1024];
 	if (showSettingsPopup == true)
@@ -356,9 +367,6 @@ void FireCubeApp::Render(float t)
 		ImGui::EndPopup();
 	}
 
-	ImGui::EndDockspace();
-	ImGui::End();
-
 	for (unsigned int i = 0; i < MAX_RENDER_TARGETS; ++i)
 	{
 		renderer->SetRenderTarget(i, nullptr);
@@ -414,6 +422,8 @@ bool FireCubeApp::Prepare()
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontDefault();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigDockingWithShift = true;
 
 	static const ImWchar iconsRanges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
 	ImFontConfig iconsConfig; 
@@ -430,8 +440,6 @@ bool FireCubeApp::Prepare()
 	assetWindow->SetScene(&rootDesc, editorState);
 	assetBrowserWindow->SetScene(&rootDesc, editorState);
 	materialEditorWindow->SetScene(&rootDesc, editorState);
-	
-	ImGui::LoadDock();
 
 	return true;
 }
@@ -947,10 +955,6 @@ void FireCubeApp::RenderMenuBar()
 			if (ImGui::MenuItem("Settings"))
 			{
 				showSettingsPopup = true;
-			}
-			if (ImGui::MenuItem("Save Layout"))
-			{
-				ImGui::SaveDock();
 			}
 			ImGui::EndMenu();
 		}
