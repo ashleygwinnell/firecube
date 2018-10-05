@@ -17,7 +17,8 @@
 
 using namespace FireCube;
 
-EditorWindow::EditorWindow(Engine *engine) : Object(engine), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), currentOperation(Operation3::NONE), leftButtonDown(false), firstLeftDownOutside(true)
+EditorWindow::EditorWindow(Engine *engine) : Object(engine), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), currentOperation(Operation3::NONE),
+leftButtonDown(false), firstLeftDownOutside(true), orbitDistance(10.0f)
 {
 	
 }
@@ -97,7 +98,7 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 	SubscribeToEvent(editorState->addPrefab, &EditorWindow::AddPrefab);
 	engine->GetInputManager()->AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "RotateCamera", KeyModifier::SHIFT);
 	engine->GetInputManager()->AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "LeftDown", KeyModifier::NONE);
-	engine->GetInputManager()->AddMapping(Key::MOUSE_RIGHT_BUTTON, InputMappingType::STATE, "PanCamera", KeyModifier::NONE);
+	engine->GetInputManager()->AddMapping(Key::MOUSE_LEFT_BUTTON, InputMappingType::STATE, "PanCamera", KeyModifier::ALT);
 	engine->GetInputManager()->AddMapping(AnalogInput::MOUSE_AXIS_X_RELATIVE, "MouseXDelta");
 	engine->GetInputManager()->AddMapping(AnalogInput::MOUSE_AXIS_Y_RELATIVE, "MouseYDelta");
 	engine->GetInputManager()->AddMapping(AnalogInput::MOUSE_AXIS_X_ABSOLUTE, "MouseX");
@@ -109,8 +110,8 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 	engine->GetInputManager()->AddMapping(Key::ESCAPE, InputMappingType::ACTION, "Esc");
 	engine->GetInputManager()->AddMapping(Key::SPACE, InputMappingType::ACTION, "Clone");
 	engine->GetInputManager()->AddMapping(Key::G, InputMappingType::ACTION, "MoveToGround");
-	engine->GetInputManager()->AddMapping(Key::Z, InputMappingType::ACTION, "OrbitSelection", KeyModifier::NONE);
-	engine->GetInputManager()->AddMapping(Key::R, InputMappingType::ACTION, "ResetCameraOrbit", KeyModifier::NONE);
+	engine->GetInputManager()->AddMapping(Key::Z, InputMappingType::ACTION, "FocusSelection", KeyModifier::NONE);
+	engine->GetInputManager()->AddMapping(Key::R, InputMappingType::ACTION, "ResetCamera", KeyModifier::NONE);
 	engine->GetInputManager()->AddMapping(Key::O, InputMappingType::ACTION, "OrbitCursor", KeyModifier::NONE);
 	engine->GetInputManager()->AddMapping(Key::DELETE, InputMappingType::ACTION, "Delete");
 
@@ -126,13 +127,10 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 	editorState->GetNodeMap()[root]->AddComponent(physicsWorldDescriptor);
 	physicsWorldDescriptor->SetParent(editorState->GetNodeMap()[root]);
 	physicsWorldDescriptor->CreateComponent(root, engine);
-	
-	cameraTarget = root->CreateChild("Editor_CameraTarget");
-	Node *cameraNode = cameraTarget->CreateChild("Camera");
-	defaultCamera = cameraNode->CreateComponent<OrbitCamera>();
+		
+	Node *cameraNode = root->CreateChild("Camera");
+	defaultCamera = cameraNode->CreateComponent<Camera>();
 	defaultCamera->SetFarPlane(2000.0f);
-	defaultCamera->SetDistance(5.0f);
-	defaultCamera->SetMaxDistance(10000.0f);
 	currentCamera = defaultCamera;
 
 	scene->SetFogColor(vec3(0.2f, 0.2f, 0.2f));
@@ -180,12 +178,20 @@ void EditorWindow::CreateGrid(float size, unsigned int numberOfCells)
 
 void EditorWindow::HandleInput(float dt, const MappedInput &input)
 {
+	auto inputManager = engine->GetInputManager();
+
 	if (mouseOverView && input.IsStateOn("RotateCamera") && currentCamera == defaultCamera)
 	{
 		float deltaX = input.GetValue("MouseXDelta");
 		float deltaY = input.GetValue("MouseYDelta");
-		defaultCamera->RotateX(-deltaY / 60.0f);
-		defaultCamera->RotateY(-deltaX / 60.0f);
+		
+		quat rotX(-deltaY / 160.0f, 0.0f, 0.0f);
+		quat rotY(0.0f, -deltaX / 160.0f, 0.0f);
+		quat rot = rotY * defaultCamera->GetNode()->GetRotation() * rotX;
+		vec3 dir = rot * vec3(0, 0, -1);
+		
+		vec3 orbitPoint = defaultCamera->GetNode()->GetWorldPosition() + defaultCamera->GetNode()->GetWorldTransformation().GetDirection() * orbitDistance;;
+		defaultCamera->GetNode()->LookAt(orbitPoint - dir * orbitDistance, orbitPoint, vec3(0, 1.0f, 0));
 	}
 
 	if (mouseOverView && input.IsStateOn("PanCamera") && currentCamera == defaultCamera)
@@ -196,12 +202,13 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 		invViewMatrix.Inverse();
 		vec3 right = vec3(1.0f, 0.0f, 0.0f).TransformNormal(invViewMatrix);
 		vec3 up = vec3(0.0f, 1.0f, 0.0f).TransformNormal(invViewMatrix);
-		cameraTarget->Move((right * -deltaX + up * deltaY) * dt);
+		defaultCamera->GetNode()->Move((right * -deltaX + up * deltaY) * dt);
 	}
 
 	if (mouseOverView && std::abs(input.GetValue("MouseWheelY")) > 0.0f)
 	{
-		defaultCamera->Zoom(input.GetValue("MouseWheelY") * (engine->GetInputManager()->IsKeyDown(Key::LEFT_SHIFT) ? 20.0f : 80.0f));
+		defaultCamera->GetNode()->Move(defaultCamera->GetNode()->GetWorldTransformation().GetDirection()
+			* input.GetValue("MouseWheelY") * (inputManager->IsKeyDown(Key::LEFT_SHIFT) ? 20.0f : 80.0f));
 	}
 
 	if (input.IsStateOn("LeftDown"))
@@ -307,19 +314,59 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 		}
 	}
 
-	if (input.IsActionTriggered("UseTranslateGizmo") && !ImGui::GetIO().WantCaptureKeyboard)
+	if (mouseOverView && inputManager->IsKeyDown(Key::MOUSE_RIGHT_BUTTON) && currentCamera == defaultCamera)
 	{
-		UseTranslateGizmo();
+		float deltaX = input.GetValue("MouseXDelta");
+		float deltaY = input.GetValue("MouseYDelta");
+		quat rotX(-deltaY / 160.0f, 0.0f, 0.0f);
+		quat rotY(0.0f, -deltaX / 160.0f, 0.0f);
+
+		mat4 invViewMatrix = defaultCamera->GetViewMatrix();
+		invViewMatrix.Inverse();
+		vec3 right = vec3(1.0f, 0.0f, 0.0f).TransformNormal(invViewMatrix);
+		
+		defaultCamera->GetNode()->SetRotation(rotY * defaultCamera->GetNode()->GetRotation() * rotX);
+
+		float speed = inputManager->IsKeyDown(Key::LEFT_SHIFT) ? 2.0f : 1.0f;
+
+		if (engine->GetInputManager()->IsKeyDown(Key::W))
+		{
+			defaultCamera->GetNode()->Move(defaultCamera->GetNode()->GetWorldTransformation().GetDirection() * speed);
+		}
+
+		if (engine->GetInputManager()->IsKeyDown(Key::S))
+		{
+			defaultCamera->GetNode()->Move(-defaultCamera->GetNode()->GetWorldTransformation().GetDirection() * speed);
+		}
+
+		if (engine->GetInputManager()->IsKeyDown(Key::A))
+		{
+			defaultCamera->GetNode()->Move(-right * speed);
+		}
+
+		if (engine->GetInputManager()->IsKeyDown(Key::D))
+		{
+			defaultCamera->GetNode()->Move(right * speed);
+		}
 	}
-	else if (input.IsActionTriggered("UseRotateGizmo") && !ImGui::GetIO().WantCaptureKeyboard)
+
+	if (!inputManager->IsKeyDown(Key::MOUSE_RIGHT_BUTTON))
 	{
-		UseRotateGizmo();
+		if (input.IsActionTriggered("UseTranslateGizmo") && !ImGui::GetIO().WantCaptureKeyboard)
+		{
+			UseTranslateGizmo();
+		}
+		else if (input.IsActionTriggered("UseRotateGizmo") && !ImGui::GetIO().WantCaptureKeyboard)
+		{
+			UseRotateGizmo();
+		}
+		else if (input.IsActionTriggered("UseScaleGizmo") && !ImGui::GetIO().WantCaptureKeyboard)
+		{
+			UseScaleGizmo();
+		}
 	}
-	else if (input.IsActionTriggered("UseScaleGizmo") && !ImGui::GetIO().WantCaptureKeyboard)
-	{
-		UseScaleGizmo();
-	}
-	else if (input.IsActionTriggered("Esc"))
+	
+	if (input.IsActionTriggered("Esc"))
 	{
 		editorState->SetSelectedNode(nullptr);
 		currentOperation = Operation3::NONE;
@@ -354,16 +401,39 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 			}
 		}
 	}
-	else if (input.IsActionTriggered("OrbitSelection") && currentCamera == defaultCamera && !ImGui::GetIO().WantCaptureKeyboard)
+	else if (input.IsActionTriggered("FocusSelection") && currentCamera == defaultCamera && !ImGui::GetIO().WantCaptureKeyboard)
 	{
 		if (editorState->GetSelectedNode())
 		{
-			cameraTarget->SetTranslation(editorState->GetSelectedNode()->GetNode()->GetWorldPosition());
+			std::vector<StaticModel *> models;
+			editorState->GetSelectedNode()->GetNode()->GetComponents(models, true);
+			BoundingBox bbox;
+			bool bboxInitialized = false;
+			for (auto model : models)
+			{
+				bbox.Expand(model->GetWorldBoundingBox());
+				bboxInitialized = true;
+			}
+
+			if (bboxInitialized)
+			{
+				float length = bbox.GetSize().Length() * 2;
+				orbitDistance = length;
+				defaultCamera->GetNode()->SetTranslation(bbox.GetCenter() - defaultCamera->GetNode()->GetWorldTransformation().GetDirection() * length);
+			}
+			else
+			{
+				float length = 10.0f;
+				orbitDistance = length;
+				defaultCamera->GetNode()->SetTranslation(editorState->GetSelectedNode()->GetNode()->GetWorldPosition() - defaultCamera->GetNode()->GetWorldTransformation().GetDirection() * length);
+			}
 		}
 	}
-	else if (input.IsActionTriggered("ResetCameraOrbit") && currentCamera == defaultCamera && !ImGui::GetIO().WantCaptureKeyboard)
+	else if (input.IsActionTriggered("ResetCamera") && currentCamera == defaultCamera && !ImGui::GetIO().WantCaptureKeyboard)
 	{
-		cameraTarget->SetTranslation(vec3(0.0f));
+		orbitDistance = 10.0f;
+		defaultCamera->GetNode()->SetTranslation(vec3(0.0f));
+		defaultCamera->GetNode()->SetRotation(quat::IDENTITY);
 	}
 	else if (input.IsActionTriggered("Delete") && !ImGui::GetIO().WantCaptureKeyboard)
 	{
@@ -388,7 +458,8 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 				auto node = result.renderable->GetNode();
 				if (node->GetName().substr(0, 7) != "Editor_")
 				{
-					cameraTarget->SetTranslation(node->GetWorldPosition());
+					vec3 pos = ray.origin + ray.direction * result.distance;
+					defaultCamera->GetNode()->SetTranslation(pos - defaultCamera->GetNode()->GetWorldTransformation().GetDirection() * orbitDistance);
 					break;
 				}
 			}

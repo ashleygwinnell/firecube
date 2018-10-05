@@ -47,9 +47,9 @@ private:
 	NodeDescriptor *rootDesc;
 	FireCube::Node *root;
 
-	FireCube::OrbitCamera *defaultCamera;
+	FireCube::Camera *defaultCamera;
 	FireCube::Camera *currentCamera;
-	FireCube::Node *gridNode, *cameraTarget, *editorRoot;
+	FireCube::Node *gridNode, *editorRoot;
 	FireCube::SharedPtr<TranslateGizmo> translateGizmo;
 	FireCube::SharedPtr<RotateGizmo> rotateGizmo;
 	FireCube::SharedPtr<ScaleGizmo> scaleGizmo;
@@ -64,4 +64,5 @@ private:
 	FireCube::vec2 canvasPos, canvasSize;
 	bool leftButtonDown;
 	bool firstLeftDownOutside;
+	float orbitDistance;
 };
