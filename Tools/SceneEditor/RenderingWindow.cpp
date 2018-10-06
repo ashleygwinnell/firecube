@@ -17,17 +17,20 @@ void RenderingWindow::Render()
 
 	if (ImGui::Begin("Rendering", &isOpen))
 	{
-		fogColorInput.Render("Fog Color", editorState, "Change Fog Color", [this]() {
-			return scene->GetFogColor();
-		}, [this](vec3 color) {
-			scene->SetFogColor(color);
-		});
+		if (ImGui::CollapsingHeader("Scene", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			fogColorInput.Render("Fog Color", editorState, "Change Fog Color", [this]() {
+				return scene->GetFogColor();
+			}, [this](vec3 color) {
+				scene->SetFogColor(color);
+			});
 
-		ambientColorInput.Render("Ambient Color", editorState, "Change Ambient Color", [this]() {
-			return scene->GetAmbientColor();
-		}, [this](vec3 color) {
-			scene->SetAmbientColor(color);
-		});
+			ambientColorInput.Render("Ambient Color", editorState, "Change Ambient Color", [this]() {
+				return scene->GetAmbientColor();
+			}, [this](vec3 color) {
+				scene->SetAmbientColor(color);
+			});
+		}
 	}
 	ImGui::End();
 }

@@ -472,7 +472,7 @@ void FireCubeApp::HandleInput(float dt, const MappedInput &input)
 
 	if (input.IsActionTriggered("Save"))
 	{
-		SaveCurrentSceneFile();
+		Save();
 	}
 
 	if (input.IsActionTriggered("SaveAs"))
@@ -487,7 +487,9 @@ void FireCubeApp::HandleInput(float dt, const MappedInput &input)
 }
 
 void FireCubeApp::OpenSceneFile(const std::string &filename)
-{	
+{
+	SaveCurrentSceneFile();
+
 	editorState->SetCurrentSceneFile(filename);
 
 	::SceneReader sceneReader(engine);
@@ -704,12 +706,7 @@ void FireCubeApp::RenderMenuBar()
 
 			if (ImGui::MenuItem("Save", "Ctrl+S"))
 			{
-				SaveCurrentSceneFile();
-			}
-
-			if (ImGui::MenuItem("Save Project"))
-			{
-				project.Save(editorState, Filesystem::JoinPath(currentProjectPath, ".project"));
+				Save();
 			}
 
 			if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
@@ -1212,6 +1209,12 @@ void FireCubeApp::NodeRenamed(NodeDescriptor *node)
 			return;
 		}
 	}
+}
+
+void FireCubeApp::Save()
+{
+	project.Save(editorState, Filesystem::JoinPath(currentProjectPath, ".project"));
+	SaveCurrentSceneFile();
 }
 
 static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
