@@ -279,10 +279,16 @@ void AssetBrowserWindow::Render()
 		static char scriptName[256] = "";
 		static char materialName[256] = "";
 		static char sceneName[256] = "";
+		static char shaderName[256] = "";
+		static bool createVertexShader = false;
+		static bool createFragmentShader = false;
+
 		bool showEnterFolderName = false;
 		bool showEnterScriptName = false;
 		bool showEnterMaterialName = false;
 		bool showEnterSceneName = false;
+		bool showEnterShaderName = false;
+
 		if (ImGui::BeginPopupContextItem("context menu"))
 		{
 			if (ImGui::Selectable("New Folder"))
@@ -297,20 +303,41 @@ void AssetBrowserWindow::Render()
 					showEnterScriptName = true;
 				}
 			}
-
-			if (AssetUtils::GetAssetTypeByPath(selectedPath) == AssetType::MATERIAL)
+			else if (AssetUtils::GetAssetTypeByPath(selectedPath) == AssetType::MATERIAL)
 			{
 				if (ImGui::Selectable("New Material"))
 				{
 					showEnterMaterialName = true;
 				}
 			}
-
-			if (AssetUtils::GetAssetTypeByPath(selectedPath) == AssetType::SCENE)
+			else if (AssetUtils::GetAssetTypeByPath(selectedPath) == AssetType::SCENE)
 			{
 				if (ImGui::Selectable("New Scene"))
 				{
 					showEnterSceneName = true;
+				}
+			}
+			else if (AssetUtils::GetAssetTypeByPath(selectedPath) == AssetType::SHADER)
+			{
+				if (ImGui::Selectable("New Shader"))
+				{
+					showEnterShaderName = true;
+					createVertexShader = true;
+					createFragmentShader = true;
+				}
+
+				if (ImGui::Selectable("New Vertex Shader"))
+				{
+					showEnterShaderName = true;
+					createVertexShader = true;
+					createFragmentShader = false;
+				}
+
+				if (ImGui::Selectable("New Fragment Shader"))
+				{
+					showEnterSceneName = true;
+					createVertexShader = false;
+					createFragmentShader = true;
 				}
 			}
 
@@ -343,6 +370,13 @@ void AssetBrowserWindow::Render()
 			sceneName[0] = 0;
 			firstShow = true;
 			ImGui::OpenPopup("New Scene");
+		}
+
+		if (showEnterShaderName)
+		{
+			shaderName[0] = 0;
+			firstShow = true;
+			ImGui::OpenPopup("New Shader");
 		}
 
 		if (ImGui::BeginPopupModal("New Folder", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
@@ -467,6 +501,42 @@ void AssetBrowserWindow::Render()
 			}
 			ImGui::EndPopup();
 		}
+
+		if (ImGui::BeginPopupModal("New Shader", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			if (firstShow)
+			{
+				ImGui::SetKeyboardFocusHere();
+				firstShow = false;
+			}
+			bool textAccepted = ImGui::InputText("Enter name of shader", shaderName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::Separator();
+			if (ImGui::Button("OK", ImVec2(120, 0)) || textAccepted)
+			{
+				if (createVertexShader)
+				{
+					std::string targetPath = Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Shaders", std::string(shaderName) + ".vert");					
+					Filesystem::CopyPath(Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Shaders", "default.vert"), targetPath);
+				}
+
+				if (createFragmentShader)
+				{
+					std::string targetPath = Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Shaders", std::string(shaderName) + ".frag");
+					Filesystem::CopyPath(Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Shaders", "default.frag"), targetPath);
+				}
+
+				itemsInSelectedPath = GetItemsInPath(selectedPath);
+				
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+
 		ImGui::NextColumn();
 
 		if (selectedItem && selectedItem->isDirectory == false)

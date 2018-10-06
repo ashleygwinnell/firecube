@@ -1062,7 +1062,10 @@ void FireCubeApp::ShowNewDialog()
 
 		Filesystem::CreateFolder(Filesystem::JoinPath(assetsPath, "Scenes"));
 		Filesystem::CreateFolder(Filesystem::JoinPath(assetsPath, "Materials"));
-		Filesystem::CreateFolder(Filesystem::JoinPath(assetsPath, "Prefabs"));		
+		Filesystem::CreateFolder(Filesystem::JoinPath(assetsPath, "Prefabs"));
+		Filesystem::CreateFolder(Filesystem::JoinPath(assetsPath, "Shaders"));
+		Filesystem::CreateFolder(Filesystem::JoinPath(assetsPath, "Techniques"));
+		Filesystem::CreateFolder(Filesystem::JoinPath(assetsPath, "RenderPaths"));
 
 		std::string targetMaterialPath = Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Materials", "Default.xml");
 		SharedPtr<Material> defaultMaterial = new Material(engine);
