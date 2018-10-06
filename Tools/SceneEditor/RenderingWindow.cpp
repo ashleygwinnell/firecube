@@ -22,6 +22,12 @@ void RenderingWindow::Render()
 		}, [this](vec3 color) {
 			scene->SetFogColor(color);
 		});
+
+		ambientColorInput.Render("Ambient Color", editorState, "Change Ambient Color", [this]() {
+			return scene->GetAmbientColor();
+		}, [this](vec3 color) {
+			scene->SetAmbientColor(color);
+		});
 	}
 	ImGui::End();
 }

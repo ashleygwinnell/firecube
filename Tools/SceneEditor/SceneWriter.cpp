@@ -29,6 +29,7 @@ void SceneWriter::Serialize(NodeDescriptor *root, const std::string &filename)
 	doc.LinkEndChild(element);
 
 	element->SetAttribute("fogColor", ToString(scene->GetFogColor()));
+	element->SetAttribute("ambientColor", ToString(scene->GetAmbientColor()));
 
 	Serialize(root, false, element);
 	doc.SaveFile(filename);

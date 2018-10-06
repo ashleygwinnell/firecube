@@ -46,6 +46,11 @@ bool SceneReader::Read(Scene &scene, const std::string &filename)
 		scene.SetFogColor(Variant::FromString(e->Attribute("fogColor")).GetVec3());
 	}
 
+	if (e->Attribute("ambientColor"))
+	{
+		scene.SetAmbientColor(Variant::FromString(e->Attribute("ambientColor")).GetVec3());
+	}
+
 	e = e->FirstChildElement("node");
 	if (e == nullptr)
 		return false;

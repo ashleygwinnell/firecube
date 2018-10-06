@@ -25,4 +25,5 @@ private:
 	bool isOpen;
 
 	ColorInputHelper fogColorInput;
+	ColorInputHelper ambientColorInput;
 };
