@@ -54,7 +54,7 @@ void AssetBrowserWindow::Render()
 						{
 							selectedPath = item.path;
 							selectedItem = nullptr;
-							itemsInSelectedPath = GetItemsInPath(selectedPath);
+							RefreshItemsInCurrentPath();
 							break;
 						}
 						else if (item.assetType == AssetType::MATERIAL)
@@ -262,7 +262,7 @@ void AssetBrowserWindow::Render()
 				if (ImGui::Button("OK", ImVec2(120, 0)))
 				{
 					remove(itemToDelete.path.c_str());
-					itemsInSelectedPath = GetItemsInPath(selectedPath);
+					RefreshItemsInCurrentPath();
 					ImGui::CloseCurrentPopup();
 				}
 				ImGui::SameLine();
@@ -381,7 +381,7 @@ void AssetBrowserWindow::Render()
 			if (ImGui::Button("OK", ImVec2(120, 0)) || textAccepted)
 			{
 				Filesystem::CreateFolder(Filesystem::JoinPath(selectedPath, itemName));
-				itemsInSelectedPath = GetItemsInPath(selectedPath);
+				RefreshItemsInCurrentPath();
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
@@ -413,7 +413,7 @@ void AssetBrowserWindow::Render()
 				f << "end" << std::endl;
 				f.close();
 				editorState->showScriptEditor(editorState, "Scripts" + Filesystem::PATH_SEPARATOR + itemName + ".lua");
-				itemsInSelectedPath = GetItemsInPath(selectedPath);
+				RefreshItemsInCurrentPath();
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
@@ -449,7 +449,7 @@ void AssetBrowserWindow::Render()
 				f.close();
 				editorState->materialPicked(editorState, engine->GetResourceCache()->GetResource<Material>("Materials" + Filesystem::PATH_SEPARATOR + itemName + ".xml"));
 				editorState->showMaterialEditor(editorState);
-				itemsInSelectedPath = GetItemsInPath(selectedPath);
+				RefreshItemsInCurrentPath();
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
@@ -478,7 +478,7 @@ void AssetBrowserWindow::Render()
 				f << "</scene>" << std::endl;				
 
 				f.close();				
-				itemsInSelectedPath = GetItemsInPath(selectedPath);
+				RefreshItemsInCurrentPath();
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
@@ -511,8 +511,7 @@ void AssetBrowserWindow::Render()
 					Filesystem::CopyPath(Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Shaders", "default.frag"), targetPath);
 				}
 
-				itemsInSelectedPath = GetItemsInPath(selectedPath);
-				
+				RefreshItemsInCurrentPath();
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
@@ -617,6 +616,11 @@ void AssetBrowserWindow::Reset()
 bool *AssetBrowserWindow::GetIsOpenPtr()
 {
 	return &isOpen;
+}
+
+void AssetBrowserWindow::RefreshItemsInCurrentPath()
+{
+	itemsInSelectedPath = GetItemsInPath(selectedPath);
 }
 
 void AssetBrowserWindow::SetScene(NodeDescriptor *rootDesc, EditorState *editorState)

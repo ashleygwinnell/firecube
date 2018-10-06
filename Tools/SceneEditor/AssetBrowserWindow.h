@@ -18,6 +18,7 @@ public:
 	void RenderDirectoryTree(const std::string &path);
 	void Reset();
 	bool *GetIsOpenPtr();
+	void RefreshItemsInCurrentPath();
 
 private:
 	class FileInfo
