@@ -275,11 +275,7 @@ void AssetBrowserWindow::Render()
 		}
 		ImGui::EndChild();
 
-		static char folderName[256] = "";
-		static char scriptName[256] = "";
-		static char materialName[256] = "";
-		static char sceneName[256] = "";
-		static char shaderName[256] = "";
+		static char itemName[256] = "";
 		static bool createVertexShader = false;
 		static bool createFragmentShader = false;
 
@@ -343,54 +339,48 @@ void AssetBrowserWindow::Render()
 
 			ImGui::EndPopup();
 		}
-		static bool firstShow = false;
+		
 		if (showEnterFolderName)
 		{
-			folderName[0] = 0;
-			firstShow = true;
+			itemName[0] = 0;
 			ImGui::OpenPopup("New Folder");
 		}
 
 		if (showEnterScriptName)
 		{
-			scriptName[0] = 0;
-			firstShow = true;
+			itemName[0] = 0;
 			ImGui::OpenPopup("New Script");
 		}
 
 		if (showEnterMaterialName)
 		{
-			materialName[0] = 0;
-			firstShow = true;
+			itemName[0] = 0;
 			ImGui::OpenPopup("New Material");
 		}
 
 		if (showEnterSceneName)
 		{
-			sceneName[0] = 0;
-			firstShow = true;
+			itemName[0] = 0;
 			ImGui::OpenPopup("New Scene");
 		}
 
 		if (showEnterShaderName)
 		{
-			shaderName[0] = 0;
-			firstShow = true;
+			itemName[0] = 0;
 			ImGui::OpenPopup("New Shader");
 		}
 
 		if (ImGui::BeginPopupModal("New Folder", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			if (firstShow)
+			if (ImGui::IsWindowAppearing())
 			{
 				ImGui::SetKeyboardFocusHere();
-				firstShow = false;
 			}
-			bool textAccepted = ImGui::InputText("Enter Folder Name", folderName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
+			bool textAccepted = ImGui::InputText("Enter Folder Name", itemName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::Separator();
 			if (ImGui::Button("OK", ImVec2(120, 0)) || textAccepted)
 			{
-				Filesystem::CreateFolder(Filesystem::JoinPath(selectedPath, folderName));
+				Filesystem::CreateFolder(Filesystem::JoinPath(selectedPath, itemName));
 				itemsInSelectedPath = GetItemsInPath(selectedPath);
 				ImGui::CloseCurrentPopup();
 			}
@@ -404,26 +394,25 @@ void AssetBrowserWindow::Render()
 
 		if (ImGui::BeginPopupModal("New Script", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			if (firstShow)
+			if (ImGui::IsWindowAppearing())
 			{
 				ImGui::SetKeyboardFocusHere();
-				firstShow = false;
 			}
-			bool textAccepted = ImGui::InputText("Enter name of script object", scriptName, 256, ImGuiInputTextFlags_EnterReturnsTrue);			
+			bool textAccepted = ImGui::InputText("Enter name of script object", itemName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::Separator();			
 			if (ImGui::Button("OK", ImVec2(120, 0)) || textAccepted)
 			{
-				std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts" + Filesystem::PATH_SEPARATOR + scriptName + ".lua";
+				std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Scripts" + Filesystem::PATH_SEPARATOR + itemName + ".lua";
 				std::ofstream f(targetPath, std::ofstream::trunc);
-				f << scriptName << " = Script()" << std::endl << std::endl;
-				f << "function " << scriptName << ":Init()" << std::endl << std::endl;
+				f << itemName << " = Script()" << std::endl << std::endl;
+				f << "function " << itemName << ":Init()" << std::endl << std::endl;
 				f << "end" << std::endl << std::endl;
-				f << "function " << scriptName << ":Awake()" << std::endl << std::endl;
+				f << "function " << itemName << ":Awake()" << std::endl << std::endl;
 				f << "end" << std::endl << std::endl;
-				f << "function " << scriptName << ":Update(dt)" << std::endl << std::endl;
+				f << "function " << itemName << ":Update(dt)" << std::endl << std::endl;
 				f << "end" << std::endl;
 				f.close();
-				editorState->showScriptEditor(editorState, "Scripts" + Filesystem::PATH_SEPARATOR + scriptName + ".lua");
+				editorState->showScriptEditor(editorState, "Scripts" + Filesystem::PATH_SEPARATOR + itemName + ".lua");
 				itemsInSelectedPath = GetItemsInPath(selectedPath);
 				ImGui::CloseCurrentPopup();
 			}
@@ -437,18 +426,17 @@ void AssetBrowserWindow::Render()
 
 		if (ImGui::BeginPopupModal("New Material", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			if (firstShow)
+			if (ImGui::IsWindowAppearing())
 			{
 				ImGui::SetKeyboardFocusHere();
-				firstShow = false;
 			}
-			bool textAccepted = ImGui::InputText("Enter name of material", materialName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
+			bool textAccepted = ImGui::InputText("Enter name of material", itemName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::Separator();
 			if (ImGui::Button("OK", ImVec2(120, 0)) || textAccepted)
 			{
-				std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials" + Filesystem::PATH_SEPARATOR + materialName + ".xml";
+				std::string targetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials" + Filesystem::PATH_SEPARATOR + itemName + ".xml";
 				std::ofstream f(targetPath, std::ofstream::trunc);
-				f << "<material name=\"" << materialName << "\">" << std::endl;
+				f << "<material name=\"" << itemName << "\">" << std::endl;
 				f << "\t<technique name=\"Techniques/NoTexture.xml\" />" << std::endl;
 				f << "\t<parameter name=\"materialDiffuse\" value=\"0.7 0.7 0.7\" type=\"rgb\" />" << std::endl;
 				f << "\t<parameter name=\"materialSpecular\" value=\"0 0 0\" type=\"rgb\" />" << std::endl;
@@ -459,7 +447,7 @@ void AssetBrowserWindow::Render()
 				f << "</material>" << std::endl;
 
 				f.close();
-				editorState->materialPicked(editorState, engine->GetResourceCache()->GetResource<Material>("Materials" + Filesystem::PATH_SEPARATOR + materialName + ".xml"));
+				editorState->materialPicked(editorState, engine->GetResourceCache()->GetResource<Material>("Materials" + Filesystem::PATH_SEPARATOR + itemName + ".xml"));
 				editorState->showMaterialEditor(editorState);
 				itemsInSelectedPath = GetItemsInPath(selectedPath);
 				ImGui::CloseCurrentPopup();
@@ -474,16 +462,15 @@ void AssetBrowserWindow::Render()
 
 		if (ImGui::BeginPopupModal("New Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			if (firstShow)
+			if (ImGui::IsWindowAppearing())
 			{
 				ImGui::SetKeyboardFocusHere();
-				firstShow = false;
 			}
-			bool textAccepted = ImGui::InputText("Enter name of scene", sceneName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
+			bool textAccepted = ImGui::InputText("Enter name of scene", itemName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::Separator();
 			if (ImGui::Button("OK", ImVec2(120, 0)) || textAccepted)
 			{
-				std::string targetPath = Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Scenes", std::string(sceneName) + ".xml");
+				std::string targetPath = Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Scenes", std::string(itemName) + ".xml");
 				std::ofstream f(targetPath, std::ofstream::trunc);				
 				f << "<scene>" << std::endl;
 				f << "\t<node name=\"root\">" << std::endl;
@@ -504,24 +491,23 @@ void AssetBrowserWindow::Render()
 
 		if (ImGui::BeginPopupModal("New Shader", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			if (firstShow)
+			if (ImGui::IsWindowAppearing())
 			{
 				ImGui::SetKeyboardFocusHere();
-				firstShow = false;
 			}
-			bool textAccepted = ImGui::InputText("Enter name of shader", shaderName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
+			bool textAccepted = ImGui::InputText("Enter name of shader", itemName, 256, ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::Separator();
 			if (ImGui::Button("OK", ImVec2(120, 0)) || textAccepted)
 			{
 				if (createVertexShader)
 				{
-					std::string targetPath = Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Shaders", std::string(shaderName) + ".vert");					
+					std::string targetPath = Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Shaders", std::string(itemName) + ".vert");
 					Filesystem::CopyPath(Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Shaders", "default.vert"), targetPath);
 				}
 
 				if (createFragmentShader)
 				{
-					std::string targetPath = Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Shaders", std::string(shaderName) + ".frag");
+					std::string targetPath = Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Shaders", std::string(itemName) + ".frag");
 					Filesystem::CopyPath(Filesystem::JoinPath(Filesystem::GetCoreDataFolder(), "Shaders", "default.frag"), targetPath);
 				}
 
