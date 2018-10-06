@@ -16,6 +16,7 @@
 #include "Commands/AddNodeCommand.h"
 #include "SceneWriter.h"
 #include "AssetBrowserWindow.h"
+#include "RenderingWindow.h"
 #include "Descriptors/CameraDescriptor.h"
 #include "Descriptors/StaticModelDescriptor.h"
 #include "Descriptors/BoxDescriptor.h"
@@ -130,6 +131,7 @@ void FireCubeApp::Render(float t)
 	assetWindow->Render();
 	assetBrowserWindow->Render();
 	materialEditorWindow->Render();
+	renderingWindow->Render();
 	
 	static char externalCodeEditorPath[1024];
 	static char gameExecutablePath[1024];
@@ -413,6 +415,7 @@ bool FireCubeApp::Prepare()
 	assetWindow = new AssetWindow(engine);
 	assetBrowserWindow = new AssetBrowserWindow(engine);
 	materialEditorWindow = new MaterialEditorWindow(engine);
+	renderingWindow = new RenderingWindow(engine);
 	
 	ImGui::CreateContext();
 	const char* glslVersion = "#version 130";
@@ -440,6 +443,7 @@ bool FireCubeApp::Prepare()
 	assetWindow->SetScene(&rootDesc, editorState);
 	assetBrowserWindow->SetScene(&rootDesc, editorState);
 	materialEditorWindow->SetScene(&rootDesc, editorState);
+	renderingWindow->SetScene(scene, &rootDesc, editorState);
 
 	return true;
 }
@@ -952,6 +956,7 @@ void FireCubeApp::RenderMenuBar()
 			ImGui::MenuItem("Asset", nullptr, assetWindow->GetIsOpenPtr());
 			ImGui::MenuItem("Material Editor", nullptr, materialEditorWindow->GetIsOpenPtr());
 			ImGui::MenuItem("Asset Browser", nullptr, assetBrowserWindow->GetIsOpenPtr());
+			ImGui::MenuItem("Rendering", nullptr, renderingWindow->GetIsOpenPtr());
 			if (ImGui::MenuItem("Settings"))
 			{
 				showSettingsPopup = true;

@@ -21,10 +21,15 @@
 using namespace FireCube;
 
 void SceneWriter::Serialize(NodeDescriptor *root, const std::string &filename)
-{	
+{
+	Scene *scene = root->GetNode()->GetScene();
+
 	TiXmlDocument doc;	
-	TiXmlElement *element = new TiXmlElement("scene");	
+	TiXmlElement *element = new TiXmlElement("scene");
 	doc.LinkEndChild(element);
+
+	element->SetAttribute("fogColor", ToString(scene->GetFogColor()));
+
 	Serialize(root, false, element);
 	doc.SaveFile(filename);
 }

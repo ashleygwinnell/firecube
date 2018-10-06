@@ -21,6 +21,7 @@ class InspectorWindow;
 class AssetBrowserWindow;
 class MaterialEditorWindow;
 class AssetWindow;
+class RenderingWindow;
 
 class FireCubeApp : public FireCube::Application
 {
@@ -39,6 +40,7 @@ public:
 	AssetBrowserWindow *assetBrowserWindow;
 	MaterialEditorWindow *materialEditorWindow;
 	AssetWindow *assetWindow;
+	RenderingWindow *renderingWindow;
 
 	CProject project;
 	std::string currentProjectPath;

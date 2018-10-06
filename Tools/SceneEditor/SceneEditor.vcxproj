@@ -140,6 +140,7 @@
     <ClCompile Include="ParticleEmitterWindow.cpp" />
     <ClCompile Include="PlaneWindow.cpp" />
     <ClCompile Include="Project.cpp" />
+    <ClCompile Include="RenderingWindow.cpp" />
     <ClCompile Include="RigidBodyWindow.cpp" />
     <ClCompile Include="SceneReader.cpp" />
     <ClCompile Include="SceneWriter.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="ParticleEmitterWindow.h" />
     <ClInclude Include="PlaneWindow.h" />
     <ClInclude Include="Project.h" />
+    <ClInclude Include="RenderingWindow.h" />
     <ClInclude Include="RigidBodyWindow.h" />
     <ClInclude Include="SceneReader.h" />
     <ClInclude Include="SceneWriter.h" />

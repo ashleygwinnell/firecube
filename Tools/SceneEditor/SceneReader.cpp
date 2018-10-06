@@ -39,6 +39,12 @@ bool ::SceneReader::Read(NodeDescriptor *root, const std::string &filename)
 	if (e == nullptr)
 		return false;
 
+	Scene *scene = root->GetNode()->GetScene();
+	if (e->Attribute("fogColor"))
+	{
+		scene->SetFogColor(Variant::FromString(e->Attribute("fogColor")).GetVec3());
+	}
+
 	e = e->FirstChildElement("node");
 	if (e == nullptr)
 		return false;

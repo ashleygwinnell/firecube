@@ -40,6 +40,11 @@ bool SceneReader::Read(Scene &scene, const std::string &filename)
 	TiXmlElement *e = xmlDocument.FirstChildElement("scene");
 	if (e == nullptr)
 		return false;
+	
+	if (e->Attribute("fogColor"))
+	{
+		scene.SetFogColor(Variant::FromString(e->Attribute("fogColor")).GetVec3());
+	}
 
 	e = e->FirstChildElement("node");
 	if (e == nullptr)

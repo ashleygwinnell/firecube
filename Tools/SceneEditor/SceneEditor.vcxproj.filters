@@ -231,6 +231,9 @@
     <ClCompile Include="AssetWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RenderingWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h">
@@ -441,6 +444,9 @@
       <Filter>Descriptors</Filter>
     </ClInclude>
     <ClInclude Include="AssetWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingWindow.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
