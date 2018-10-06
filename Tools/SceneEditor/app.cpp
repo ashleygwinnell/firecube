@@ -488,7 +488,10 @@ void FireCubeApp::HandleInput(float dt, const MappedInput &input)
 
 void FireCubeApp::OpenSceneFile(const std::string &filename)
 {
-	SaveCurrentSceneFile();
+	if (!editorState->GetCurrentSceneFile().empty())
+	{
+		SaveCurrentSceneFile();
+	}
 
 	editorState->SetCurrentSceneFile(filename);
 
