@@ -40,6 +40,17 @@ namespace FireCube
 		*/
 		vec2 GetSize() const;
 
+		/**
+		* Sets the color
+		* @param color the new color
+		*/
+		void SetColor(vec4 color);
+
+		/**		
+		* @returns the color
+		*/
+		vec4 GetColor() const;
+
 	private:		
 
 		virtual void GetParts(std::vector<UIPart> &parts, std::vector<UIVertex> &vertexData) override;
@@ -47,6 +58,7 @@ namespace FireCube
 		SharedPtr<Texture2D> texture;
 		std::vector<UIVertex> vertexData;
 		vec2 size;
+		vec4 color;
 	};
 
 }

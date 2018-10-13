@@ -62,5 +62,6 @@ void LuaBindings::InitUI(sol::state &luaState)
 	luaState.new_usertype<UIImage>("UIImage",
 		"image", sol::property(&UIImage::GetImage, &UIImage::SetImage),
 		"size", sol::property(&UIImage::GetSize, &UIImage::SetSize),
+		"color", sol::property(&UIImage::GetColor, &UIImage::SetColor),
 		sol::base_classes, sol::bases<UIElement, Object, RefCounted>());
 }

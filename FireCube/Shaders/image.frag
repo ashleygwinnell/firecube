@@ -7,8 +7,8 @@ void main()
 {
 	vec4 color = texture(tex0, texcoord.st);
 	#ifdef ALPHA
-		outputColor = color;
+		outputColor = color * inColor;
 	#else
-		outputColor = vec4(color.rgb, 1.0);
+		outputColor = vec4(color.rgb * inColor.rgb, 1.0);
 	#endif
 }
