@@ -190,6 +190,11 @@ public:
 	* Removes all children of this node
 	*/
 	void RemoveAllChildren();
+
+	/**
+	* Delay removes all children of this node
+	*/
+	void DelayRemoveAllChildren();
 		
 	/**
 	* Clones the node.	
@@ -322,7 +327,7 @@ protected:
 	void SceneChanged(Scene *oldScene);
 	void UpdateWorldTransformation() const;
 	
-	std::vector<SharedPtr<Node>> children;	
+	std::vector<SharedPtr<Node>> children;
 
 	vec3 translation;
 	quat rotation;

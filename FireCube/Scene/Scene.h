@@ -131,7 +131,7 @@ private:
 	vec3 fogColor;		
 
 	Octree<Renderable> octree;
-	std::vector<Node *> delayedRemoveNodes;
+	std::vector<SharedPtr<Node>> delayedRemoveNodes;
 	UIElement ui;
 };
 
