@@ -51,6 +51,9 @@ void LuaBindings::InitUI(sol::state &luaState)
 		"CreateChild", &CreateChild,
 		"AddChild", &UIElement::AddChild,
 		"Remove", &UIElement::Remove,
+		"DelayRemove", &UIElement::DelayRemove,
+		"RemoveAllChildren", &UIElement::RemoveAllChildren,
+		"DelayRemoveAllChildren", &UIElement::DelayRemoveAllChildren,
 		sol::base_classes, sol::bases<Object, RefCounted>());
 
 	luaState.new_usertype<UIText>("UIText",

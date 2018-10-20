@@ -195,6 +195,7 @@ void Application::Run()
 		renderer->Render();
 		Render(deltaTime);
 		// Render UI
+		ui->DeleteDelayedRemoveElements();
 		ui->Render(renderer);
 		Events::PostRender(this, deltaTime);
 		SDL_GL_SwapWindow(mainWindow);

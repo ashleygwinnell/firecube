@@ -54,12 +54,16 @@ public:
 	* @returns the root UI element
 	*/
 	UIElement *GetRoot();
+
+	void AddDelayedRemoveElement(UIElement *element);
+	void DeleteDelayedRemoveElements();
 private:
 	
 	void GetParts(std::vector<UIPart> &parts, std::vector<UIVertex> &vertexData, UIElement *element);
 
 	UIElement *root;
 	VertexBuffer *vertexBuffer;
+	std::vector<UIElement *> delayedRemoveElements;
 };
 
 }

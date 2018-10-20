@@ -30,6 +30,9 @@ public:
 	void AddChild(UIElement *element);
 	UIElement *GetParent();
 	void SetParent(UIElement *parent);
+	void RemoveAllChildren();
+	void DelayRemove();
+	void DelayRemoveAllChildren();
 
 	template <class T, typename... Args> T* CreateChild(Args... args)
 	{

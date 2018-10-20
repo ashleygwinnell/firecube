@@ -90,3 +90,18 @@ UIElement *UI::GetRoot()
 {
 	return root;
 }
+
+void UI::AddDelayedRemoveElement(UIElement *element)
+{
+	delayedRemoveElements.push_back(element);
+}
+
+void FireCube::UI::DeleteDelayedRemoveElements()
+{
+	for (auto element : delayedRemoveElements)
+	{
+		delete element;
+	}
+
+	delayedRemoveElements.clear();
+}

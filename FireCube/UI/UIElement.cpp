@@ -1,4 +1,5 @@
 #include "UIElement.h"
+#include "Core/Engine.h"
 
 using namespace FireCube;
 
@@ -86,4 +87,35 @@ void UIElement::SetParent(UIElement *parent)
 	{
 		this->parent->children.push_back(this);
 	}
+}
+
+void UIElement::RemoveAllChildren()
+{
+	for (auto child : children)
+	{
+		delete child;
+	}
+
+	children.clear();
+}
+
+void UIElement::DelayRemove()
+{
+	if (parent)
+	{
+		parent->children.erase(std::remove(parent->children.begin(), parent->children.end(), this), parent->children.end());
+		parent = nullptr;
+		engine->GetUI()->AddDelayedRemoveElement(this);
+	}
+}
+
+void UIElement::DelayRemoveAllChildren()
+{
+	for (auto child : children)
+	{
+		child->parent = nullptr;
+		engine->GetUI()->AddDelayedRemoveElement(child);
+	}
+
+	children.clear();
 }
