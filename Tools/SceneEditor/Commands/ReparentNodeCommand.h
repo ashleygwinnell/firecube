@@ -16,4 +16,5 @@ private:
 	NodeDescriptor *nodeDesc;
 	NodeDescriptor *newParent;
 	NodeDescriptor *oldParent;
+	FireCube::vec3 oldTranslation;
 };
