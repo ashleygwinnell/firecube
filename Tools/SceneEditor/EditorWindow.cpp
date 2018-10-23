@@ -588,6 +588,9 @@ void EditorWindow::StartMaterialPick()
 void EditorWindow::AddMesh(const std::string &path)
 {
 	auto nodeDesc = new NodeDescriptor("Node");
+	vec3 position = currentCamera->GetNode()->GetWorldPosition() + currentCamera->GetNode()->GetWorldTransformation().GetDirection() * 50.0f;
+	nodeDesc->SetTranslation(position);
+
 	auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, rootDesc);
 	auto staticModelDescriptor = new StaticModelDescriptor();
 	staticModelDescriptor->SetMeshFilename(path, engine);
@@ -605,6 +608,8 @@ void EditorWindow::AddPrefab(const std::string &path)
 	if (prefab)
 	{
 		auto prefabInstance = prefab->Clone();
+		vec3 position = currentCamera->GetNode()->GetWorldPosition() + currentCamera->GetNode()->GetWorldTransformation().GetDirection() * 50.0f;
+		prefabInstance->SetTranslation(position);
 		auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", prefabInstance, rootDesc);
 		editorState->ExecuteCommand(addNodeCommand);
 	}

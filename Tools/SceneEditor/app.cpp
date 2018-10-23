@@ -783,6 +783,22 @@ void FireCubeApp::RenderMenuBar()
 			if (ImGui::MenuItem("Node"))
 			{
 				auto nodeDesc = new NodeDescriptor("Node");
+				vec3 position = editorWindow->GetCurrentCamera()->GetNode()->GetWorldPosition() + editorWindow->GetCurrentCamera()->GetNode()->GetWorldTransformation().GetDirection() * 50.0f;				
+				nodeDesc->SetTranslation(position);
+				auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, &rootDesc);
+				editorState->ExecuteCommand(addNodeCommand);
+			}
+			if (ImGui::MenuItem("Node As Child"))
+			{
+				auto nodeDesc = new NodeDescriptor("Node");
+				vec3 position = editorWindow->GetCurrentCamera()->GetNode()->GetWorldPosition() + editorWindow->GetCurrentCamera()->GetNode()->GetWorldTransformation().GetDirection() * 50.0f;
+				if (editorState->GetSelectedNode())
+				{
+					mat4 mat = editorState->GetSelectedNode()->GetNode()->GetWorldTransformation();
+					mat.Inverse();
+					position = mat * position;
+				}
+				nodeDesc->SetTranslation(position);
 				auto addNodeCommand = new AddNodeCommand(editorState, "Add Node", nodeDesc, editorState->GetSelectedNode() ? editorState->GetSelectedNode() : &rootDesc);
 				editorState->ExecuteCommand(addNodeCommand);
 			}
