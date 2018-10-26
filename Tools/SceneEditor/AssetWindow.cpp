@@ -28,6 +28,8 @@ void AssetWindow::Render()
 				break;
 			case AssetType::MESH:
 				RenderMeshAsset();
+			case AssetType::SHADER:
+				RenderShaderAsset();
 			}
 		}
 	}
@@ -140,6 +142,22 @@ void AssetWindow::RenderMeshAsset()
 					editorState->materialPicked(editorState, material);
 					editorState->showMaterialEditor(editorState);
 				}
+			}
+		}
+	}
+}
+
+void AssetWindow::RenderShaderAsset()
+{
+	if (ImGui::CollapsingHeader("Shader", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::Button("Reload"))
+		{
+			auto shader = engine->GetResourceCache()->FindResource<ShaderTemplate>(currentAsset);
+
+			if (shader)
+			{
+				engine->GetResourceCache()->ReloadResource(shader);
 			}
 		}
 	}

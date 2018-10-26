@@ -20,60 +20,6 @@ Shader::~Shader()
 	glDeleteShader(objectId);
 }
 
-bool Shader::Load(const std::string &filename)
-{
-	GLenum shaderType;
-	if (objectId != 0)
-		glDeleteShader(objectId);
-
-	// Determine shader type from file extension
-	std::string::size_type d;
-	d = filename.find_last_of(".");
-	if (d != std::string::npos)
-	{
-		std::string ext = ToLower(filename.substr(d + 1));
-		if (ext == "vert")
-			shaderType = GL_VERTEX_SHADER;
-		else if (ext == "frag")
-			shaderType = GL_FRAGMENT_SHADER;
-		else
-			return false;
-	}
-	else
-		return false;
-	
-	objectId = glCreateShader(shaderType);
-	std::ifstream f(filename.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
-	if (!f.is_open())
-	{
-		return false;
-	}
-	unsigned int l = (unsigned int) f.tellg();
-	char *buffer = new char[l + 1];
-	f.seekg(0, std::ios_base::beg);
-	f.read(buffer, l);
-	buffer[l] = 0;
-	glShaderSource(objectId, 1, (const char**)&buffer, nullptr);
-	glCompileShader(objectId);
-	delete [] buffer;
-
-	GLint status;
-	glGetShaderiv(objectId, GL_COMPILE_STATUS, &status);
-	if (status == GL_FALSE)
-	{
-		GLint infoLogLength;
-		glGetShaderiv(objectId, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-		GLchar *strInfoLog = new GLchar[infoLogLength + 1];
-		glGetShaderInfoLog(objectId, infoLogLength, nullptr, strInfoLog);
-
-		LOGERROR(strInfoLog);
-		delete[] strInfoLog;
-	}
-
-	return true;
-}
-
 bool Shader::Create(ShaderType type, const std::string &source)
 {
 	GLenum glShaderType;

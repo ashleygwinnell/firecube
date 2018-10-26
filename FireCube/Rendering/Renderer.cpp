@@ -22,6 +22,7 @@
 #include "Rendering/RenderSurface.h"
 #include "Rendering/Frame.h"
 #include "stb_image.h"
+#include "Core/Events.h"
 
 using namespace FireCube;
 
@@ -71,6 +72,8 @@ void Renderer::Initialize()
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	stbi_set_flip_vertically_on_load(true);
+
+	SubscribeToEvent(Events::ShaderReloaded, &Renderer::RemoveCachedPrograms);
 }
 
 void Renderer::Destroy()
@@ -749,5 +752,23 @@ void Renderer::GetRenderTargetSize(int &width, int &height)
 	{
 		width = this->width;
 		height = this->height;
+	}
+}
+
+void FireCube::Renderer::RemoveCachedPrograms(const std::set<Shader *> &shaders)
+{
+	auto oldPrograms = programs;
+	programs.clear();
+
+	for (auto programInfo : oldPrograms)
+	{
+		if (shaders.find(programInfo.first.first) == shaders.end() && shaders.find(programInfo.first.second) == shaders.end())
+		{
+			programs[programInfo.first] = programInfo.second;
+		}
+		else
+		{
+			delete programInfo.second;
+		}
 	}
 }

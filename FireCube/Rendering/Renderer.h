@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <set>
 
 #include "ThirdParty/GLEW/glew.h"
 #include "Utils/utils.h"
@@ -275,7 +276,7 @@ public:
 	void RemoveUnusedRenderSurfaces();
 
 	void GetRenderTargetSize(int &width, int &height);
-
+	
 private:
 
 	const float MAX_UNUSED_RENDERSURFACE_DURATION = 1.0f;
@@ -284,7 +285,9 @@ private:
 	* Uses a frame buffer.
 	* @param frameBuffer The frame buffer to use.
 	*/
-	void UseFrameBuffer(FrameBuffer *frameBuffer);	
+	void UseFrameBuffer(FrameBuffer *frameBuffer);
+
+	void RemoveCachedPrograms(const std::set<Shader *> &shaders);
 
 	VertexBuffer *quadVertexBuffer;	
 	GLuint quadVao, dummyVao;

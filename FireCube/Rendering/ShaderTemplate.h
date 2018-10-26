@@ -44,7 +44,7 @@ public:
 	Shader *GenerateShader(const std::string &defines);	
 
 private:	
-	std::map<StringHash, Shader *> shaders;
+	std::map<StringHash, std::pair<std::string, Shader *>> shaders;
 	std::string shaderCode;		
 	ShaderType type;
 };

@@ -7,6 +7,7 @@
 #include "Utils/Filesystem.h"
 #include "Rendering/Shader.h"
 #include "Core/Engine.h"
+#include "Core/Events.h"
 using namespace FireCube;
 
 
@@ -18,7 +19,9 @@ ShaderTemplate::ShaderTemplate(Engine *engine) : Resource(engine)
 ShaderTemplate::~ShaderTemplate()
 {
 	for (auto i : shaders)
-		delete i.second;
+	{
+		delete i.second.second;
+	}
 }
 
 bool ShaderTemplate::Load(const std::string &filename)
@@ -47,6 +50,20 @@ bool ShaderTemplate::Load(const std::string &filename)
 		return false;
 
 	shaderCode = std::string((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+
+	std::set<Shader *> modifiedShaders;
+	for (auto shaderInfo : shaders)
+	{
+		Shader *shader = shaderInfo.second.second;
+		
+		std::ostringstream shaderSource;
+		shaderSource << shaderInfo.second.first << shaderCode;
+		shader->Create(type, shaderSource.str());
+		modifiedShaders.insert(shader);
+	}
+
+	Events::ShaderReloaded(this, modifiedShaders);
+
 	return true;
 }
 
@@ -63,14 +80,14 @@ Shader *ShaderTemplate::GenerateShader(const std::string &defines)
 	std::stringstream ss(defines);
 	std::istream_iterator<std::string> begin(ss);
 	std::istream_iterator<std::string> end;
-	std::vector<std::string> definesList(begin, end);	
+	std::vector<std::string> definesList(begin, end);
 	std::sort(definesList.begin(), definesList.end());
 	std::string sortedDefines = std::accumulate(definesList.begin(), definesList.end(), std::string(""));
 	StringHash hash(sortedDefines);
 
-	std::map<StringHash, Shader *>::iterator i = shaders.find(hash);
+	auto i = shaders.find(hash);
 	if (i != shaders.end())
-		return i->second;
+		return i->second.second;
 
 	// Add defines to the shader source according to the shader properties
 	std::ostringstream definesPrefix;
@@ -83,6 +100,6 @@ Shader *ShaderTemplate::GenerateShader(const std::string &defines)
 	Shader *shader = new Shader(engine->GetRenderer());
 	shaderSource << definesPrefix.str() << shaderCode;
 	shader->Create(type, shaderSource.str());
-	shaders[hash] = shader;
+	shaders[hash] = std::make_pair(definesPrefix.str(), shader);
 	return shader;
 }

@@ -35,11 +35,6 @@ public:
 	~Shader();
 
 	/**
-	* Loads a shader from a file. The shader type is determined by the extension of the file: .vert for a vertex shader, .frag for a fragment shader.
-	* @param filename The file to load.
-	*/
-	bool Load(const std::string &filename);
-	/**
 	* Creates a shader from source.
 	* @param type The type of the shader.
 	* @param source The source of the shader.
