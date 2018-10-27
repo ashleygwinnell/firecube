@@ -1289,7 +1289,7 @@ void FireCubeApp::HandleFilesystemChanges()
 		for (auto file : changedFiles)
 		{
 			AssetType assetType = AssetUtils::GetAssetTypeByPath(Filesystem::JoinPath(Filesystem::GetAssetsFolder(), file));
-			if (assetType == AssetType::MESH || assetType == AssetType::TEXTURE || assetType == AssetType::SHADER)
+			if (assetType == AssetType::MESH || assetType == AssetType::TEXTURE || assetType == AssetType::SHADER || assetType == AssetType::TECHNIQUE)
 			{
 				auto resource = engine->GetResourceCache()->FindResource<Resource>(file);
 
@@ -1337,7 +1337,6 @@ void FireCubeApp::FilesystemThreadFunc()
 					break;
 				}
 			}
-
 
 			std::lock_guard<std::mutex> guard(changedFilesMutex);
 			this->changedFiles = changedFiles;
