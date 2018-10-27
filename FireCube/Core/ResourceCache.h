@@ -41,7 +41,9 @@ public:
 
 		SharedPtr<T> resource = SharedPtr<T>(new T(engine));
 		if (!resource->Load(normalizedFileName))
+		{
 			return nullptr;
+		}
 
 		resource->SetFileName(normalizedFileName);
 		SharedPtr<Resource> resourcePtr;
@@ -53,15 +55,31 @@ public:
 	template <class T> T *FindResource(const std::string &filename) const
 	{
 		StringHash typeHash = T::GetTypeStatic();
-		auto group = resources.find(typeHash);
-		if (group != resources.end())
+
+		std::string normalizedFileName = filename;
+		std::replace(normalizedFileName.begin(), normalizedFileName.end(), '/', Filesystem::PATH_SEPARATOR_CHAR);
+
+		if (typeHash == Resource::GetTypeNameStatic())
 		{
-			std::string normalizedFileName = filename;
-			std::replace(normalizedFileName.begin(), normalizedFileName.end(), '/', Filesystem::PATH_SEPARATOR_CHAR);
-			auto i = group->second.find(normalizedFileName);
-			if (i != group->second.end())
+			for (auto group : resources)
 			{
-				return (T *)i->second.Get();
+				auto i = group.second.find(normalizedFileName);
+				if (i != group.second.end())
+				{
+					return (T *)i->second.Get();
+				}
+			}
+		}
+		else
+		{
+			auto group = resources.find(typeHash);
+			if (group != resources.end())
+			{
+				auto i = group->second.find(normalizedFileName);
+				if (i != group->second.end())
+				{
+					return (T *)i->second.Get();
+				}
 			}
 		}
 		
