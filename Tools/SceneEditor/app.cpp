@@ -87,9 +87,20 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 
 FireCubeApp::FireCubeApp() : showSettingsPopup(false), showImportMeshPopup(false), 
-	showImportScriptPopup(false), showImportMaterialPopup(false), showImportTexturePopup(false), showImportTechniquePopup(false)
+	showImportScriptPopup(false), showImportMaterialPopup(false), showImportTexturePopup(false), showImportTechniquePopup(false), assetFolderDirHandle(0)
 {
 
+}
+
+FireCubeApp::~FireCubeApp()
+{
+	if (assetFolderDirHandle != 0)
+	{		
+		CancelIoEx(assetFolderDirHandle, nullptr);
+		CloseHandle(assetFolderDirHandle);
+
+		fileSystemWatcher.join();
+	}
 }
 
 void FireCubeApp::Render(float t)
@@ -381,6 +392,11 @@ void FireCubeApp::Render(float t)
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
+void FireCubeApp::Update(float t)
+{
+	HandleFilesystemChanges();
+}
+
 void FireCubeApp::HandleSDLEvent(SDL_Event &event)
 {
 	ImGui_ImplSDL2_ProcessEvent(&event);
@@ -513,7 +529,8 @@ void FireCubeApp::OpenSceneFile(const std::string &filename)
 
 void FireCubeApp::OpenProject(const std::string &path)
 {
-	Filesystem::SetAssetsFolder(Filesystem::JoinPath(path, "Assets"));	
+	Filesystem::SetAssetsFolder(Filesystem::JoinPath(path, "Assets"));
+	InitFilesystemWatcherThread();
 
 	project.Load(Filesystem::JoinPath(path, ".project"));
 	currentProjectPath = path;
@@ -1074,7 +1091,8 @@ void FireCubeApp::ShowNewDialog()
 		std::string assetsPath = Filesystem::JoinPath(path, "Assets");
 		Filesystem::CreateFolder(assetsPath);
 
-		Filesystem::SetAssetsFolder(assetsPath);		
+		Filesystem::SetAssetsFolder(assetsPath);
+		InitFilesystemWatcherThread();
 
 		Filesystem::CreateFolder(Filesystem::JoinPath(assetsPath, "Scenes"));
 		Filesystem::CreateFolder(Filesystem::JoinPath(assetsPath, "Materials"));
@@ -1237,6 +1255,94 @@ void FireCubeApp::Save()
 {
 	project.Save(editorState, Filesystem::JoinPath(currentProjectPath, ".project"));
 	SaveCurrentSceneFile();
+}
+
+void FireCubeApp::InitFilesystemWatcherThread()
+{
+	if (assetFolderDirHandle != 0)
+	{
+		CancelIoEx(assetFolderDirHandle, nullptr);
+		CloseHandle(assetFolderDirHandle);
+
+		fileSystemWatcher.join();
+	}
+
+	assetFolderDirHandle = CreateFileA(
+		Filesystem::GetAssetsFolder().c_str(),
+		FILE_LIST_DIRECTORY,
+		FILE_SHARE_WRITE | FILE_SHARE_READ | FILE_SHARE_DELETE,
+		NULL,
+		OPEN_EXISTING,
+		FILE_FLAG_BACKUP_SEMANTICS,
+		NULL);
+
+	fileSystemWatcher = std::thread([this]() {
+		this->FilesystemThreadFunc();
+	});
+}
+
+void FireCubeApp::HandleFilesystemChanges()
+{
+	std::lock_guard<std::mutex> guard(changedFilesMutex);
+	if (changedFiles.empty() == false)
+	{
+		for (auto file : changedFiles)
+		{
+			AssetType assetType = AssetUtils::GetAssetTypeByPath(Filesystem::JoinPath(Filesystem::GetAssetsFolder(), file));
+			if (assetType == AssetType::MESH || assetType == AssetType::TEXTURE || assetType == AssetType::SHADER)
+			{
+				auto resource = engine->GetResourceCache()->FindResource<Resource>(file);
+
+				if (resource)
+				{
+					engine->GetResourceCache()->ReloadResource(resource);
+				}
+			}
+		}
+
+		changedFiles.clear();
+	}
+}
+
+void FireCubeApp::FilesystemThreadFunc()
+{
+	std::vector<char> fileInfoBuffer(1024);
+	while (true)
+	{
+		DWORD bytesReturned = 0;
+		if (ReadDirectoryChangesW(assetFolderDirHandle, (LPVOID)fileInfoBuffer.data(), fileInfoBuffer.size(), TRUE, FILE_NOTIFY_CHANGE_LAST_WRITE, &bytesReturned, NULL, NULL) == 0)
+		{
+			break;
+		}
+		else
+		{
+			std::set<std::string> changedFiles;
+			size_t offset = 0;
+
+			while (true)
+			{
+				FILE_NOTIFY_INFORMATION *info = (FILE_NOTIFY_INFORMATION *)(fileInfoBuffer.data() + offset);
+				char filenameArr[1024];
+				size_t s;
+				wcstombs_s(&s, filenameArr, info->FileName, info->FileNameLength);
+				std::string filename = filenameArr;
+				changedFiles.insert(filename);
+
+				if (info->NextEntryOffset != 0)
+				{
+					offset += info->NextEntryOffset;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+
+			std::lock_guard<std::mutex> guard(changedFilesMutex);
+			this->changedFiles = changedFiles;
+		}
+	}
 }
 
 static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)

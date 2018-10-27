@@ -28,8 +28,6 @@ void AssetWindow::Render()
 				break;
 			case AssetType::MESH:
 				RenderMeshAsset();
-			case AssetType::SHADER:
-				RenderShaderAsset();
 			}
 		}
 	}
@@ -75,46 +73,33 @@ void AssetWindow::RenderTextureAsset()
 	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Text(currentAsset.c_str());
-		if (ImGui::Button("Reload"))
+		if (texture)
 		{
-			if (texture)
-			{
-				engine->GetResourceCache()->ReloadResource(texture);
-			}
+			ImVec2 size = ImGui::GetContentRegionAvail();
+			int width = texture->GetWidth();
+			int height = texture->GetHeight();
+			float maxDimension = std::min(size.x, size.y);
 
-			if (image)
+			if (width > maxDimension || height > maxDimension)
 			{
-				engine->GetResourceCache()->ReloadResource(image);
-			}
-		}
-	}
-
-	if (texture)
-	{
-		ImVec2 size = ImGui::GetContentRegionAvail();
-		int width = texture->GetWidth();
-		int height = texture->GetHeight();
-		float maxDimension = std::min(size.x, size.y);
-
-		if (width > maxDimension || height > maxDimension)
-		{
-			if (width > height)
-			{
-				size.x = maxDimension;
-				size.y = (float)height / (float)width * maxDimension;
+				if (width > height)
+				{
+					size.x = maxDimension;
+					size.y = (float)height / (float)width * maxDimension;
+				}
+				else
+				{
+					size.y = maxDimension;
+					size.x = (float)width / (float)height * maxDimension;
+				}
 			}
 			else
 			{
-				size.y = maxDimension;
-				size.x = (float)width / (float)height * maxDimension;
+				size = ImVec2((float)width, (float)height);
 			}
-		}
-		else
-		{
-			size = ImVec2((float)width, (float)height);
-		}
 
-		ImGui::Image((void *)(texture->GetObjectId()), size, ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::Image((void *)(texture->GetObjectId()), size, ImVec2(0, 1), ImVec2(1, 0));
+		}
 	}
 }
 
@@ -123,15 +108,6 @@ void AssetWindow::RenderMeshAsset()
 	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Text(currentAsset.c_str());
-		if (ImGui::Button("Reload"))
-		{
-			auto mesh = engine->GetResourceCache()->FindResource<Mesh>(currentAsset);
-
-			if (mesh)
-			{
-				engine->GetResourceCache()->ReloadResource(mesh);
-			}
-		}
 
 		if (ImGui::CollapsingHeader("Materials", ImGuiTreeNodeFlags_DefaultOpen))
 		{
@@ -142,22 +118,6 @@ void AssetWindow::RenderMeshAsset()
 					editorState->materialPicked(editorState, material);
 					editorState->showMaterialEditor(editorState);
 				}
-			}
-		}
-	}
-}
-
-void AssetWindow::RenderShaderAsset()
-{
-	if (ImGui::CollapsingHeader("Shader", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if (ImGui::Button("Reload"))
-		{
-			auto shader = engine->GetResourceCache()->FindResource<ShaderTemplate>(currentAsset);
-
-			if (shader)
-			{
-				engine->GetResourceCache()->ReloadResource(shader);
 			}
 		}
 	}

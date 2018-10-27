@@ -27,6 +27,7 @@ class FireCubeApp : public FireCube::Application
 {
 public:
 	FireCubeApp();
+	~FireCubeApp();
 	void WriteSettingsFile();
 
 	FireCube::Scene *scene;
@@ -53,7 +54,7 @@ public:
 	bool showImportTechniquePopup;
 private:
 	void Render(float t);
-	void Update(float t) {};
+	void Update(float t);
 	void HandleSDLEvent(SDL_Event &event);
 	virtual bool Prepare() override;
 	void HandleInput(float dt, const FireCube::MappedInput &input);
@@ -77,8 +78,15 @@ private:
 	void SaveCurrentSceneFile();
 	void NodeRenamed(NodeDescriptor *node);
 	void Save();
+	void InitFilesystemWatcherThread();
+	void HandleFilesystemChanges();
+	void FilesystemThreadFunc();
 
 	Settings *settings;
 	std::vector<std::pair<std::string, bool>> selectedMeshMaterials;
 	char importAssetPath[1024];
+	HANDLE assetFolderDirHandle;
+	std::thread fileSystemWatcher;
+	std::set<std::string> changedFiles;
+	std::mutex changedFilesMutex;
 };

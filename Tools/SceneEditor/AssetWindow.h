@@ -18,7 +18,6 @@ private:
 	void AssetSelected(const std::string &asset);
 	void RenderTextureAsset();
 	void RenderMeshAsset();
-	void RenderShaderAsset();
 
 	NodeDescriptor *rootDesc;
 	EditorState *editorState;
