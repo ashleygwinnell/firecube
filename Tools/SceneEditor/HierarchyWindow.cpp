@@ -4,10 +4,11 @@
 #include "EditorState.h"
 #include "SceneWriter.h"
 #include "Commands/ReparentNodeCommand.h"
+#include "Commands/RenameNodeCommand.h"
 
 using namespace FireCube;
 
-HierarchyWindow::HierarchyWindow(Engine *engine) : Object(engine), rootDesc(nullptr), isOpen(true), newSelectedNode(nullptr)
+HierarchyWindow::HierarchyWindow(Engine *engine) : Object(engine), rootDesc(nullptr), isOpen(true), newSelectedNode(nullptr), currentEditedNode(nullptr)
 {
 
 }
@@ -88,8 +89,45 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 		{
 			ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor(1.0f, 0.0f, 0.0));
 		}
-		
-		bool nodeOpen = ImGui::TreeNodeEx(child->GetName().c_str(), nodeFlags);
+
+		static char nodeName[1024];
+		std::string treeNodeLabel;
+
+		if (currentEditedNode == child)
+		{
+			treeNodeLabel = "##" + child->GetName();
+		}
+		else
+		{
+			treeNodeLabel = child->GetName();
+		}
+
+		bool nodeOpen = ImGui::TreeNodeEx(treeNodeLabel.c_str(), nodeFlags);
+		if (currentEditedNode == child)
+		{
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
+			ImGui::SameLine();
+			if (startRenaming)
+			{
+				ImGui::SetKeyboardFocusHere();
+				startRenaming = false;
+			}
+			
+			bool ret = ImGui::InputText("##edit_node_name", nodeName, 1024, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll);
+
+			if (ret || ImGui::IsItemDeactivated() == true)
+			{
+				if (std::string(nodeName) != child->GetName())
+				{
+					auto command = new RenameNodeCommand(editorState, "Rename", child, nodeName);
+					editorState->ExecuteCommand(command);
+				}
+				currentEditedNode = nullptr;
+			}
+
+			ImGui::PopStyleVar();
+		}
+
 		if (child->IsPrefab())
 		{
 			ImGui::PopStyleColor();
@@ -180,7 +218,18 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 		ImGui::PopID();
 		if (ImGui::IsItemClicked())
 		{
-			editorState->SetSelectedNode(child);
+			if (editorState->GetSelectedNode() == child)
+			{
+				strcpy_s(nodeName, 1024, child->GetName().c_str());
+				currentEditedNode = child;
+				startRenaming = true;
+			}
+			else
+			{
+				currentEditedNode = nullptr;
+				editorState->SetSelectedNode(child);
+			}
+
 		}
 
 		if (nodeOpen && childHasChildren)

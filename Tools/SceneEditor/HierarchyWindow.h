@@ -20,6 +20,8 @@ private:
 
 	NodeDescriptor *rootDesc;
 	NodeDescriptor *newSelectedNode;
+	NodeDescriptor *currentEditedNode;
 	EditorState *editorState;
 	bool isOpen;
+	bool startRenaming;
 };
