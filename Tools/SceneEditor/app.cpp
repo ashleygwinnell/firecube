@@ -1053,6 +1053,10 @@ void FireCubeApp::RenderToolbar()
 		{
 			editorWindow->UseScaleGizmo();
 		}
+		if (ImGui::ToolbarButton(ICON_FK_EYEDROPPER, "Pick Material"))
+		{
+			editorState->startMaterialPick(editorState);
+		}
 		if (ImGui::ToolbarButton(ICON_FK_PLAY, "Play"))
 		{
 			ShellExecuteA(nullptr, nullptr, Filesystem::JoinPath(currentProjectPath, project.gameExecutablePath).c_str(), nullptr, currentProjectPath.c_str(), SW_SHOW);

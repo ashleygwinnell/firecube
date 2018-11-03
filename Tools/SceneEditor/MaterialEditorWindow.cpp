@@ -513,6 +513,7 @@ void MaterialEditorWindow::Show()
 
 void MaterialEditorWindow::MaterialPicked(Material *material)
 {
+	isOpen = true;
 	this->material = material;
 	currentFileName = material->GetFileName();	
 	UpdatePreview(material);
