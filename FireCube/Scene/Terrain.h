@@ -21,6 +21,7 @@ public:
 	~TerrainPatch();
 	Geometry *GetGeometry();
 	void SetMaterial(Material *material);
+	Material *GetMaterial() const;
 	virtual void IntersectRay(RayQuery &rayQuery);
 	virtual Component *Clone() const;
 private:

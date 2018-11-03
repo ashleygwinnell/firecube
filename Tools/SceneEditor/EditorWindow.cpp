@@ -308,6 +308,12 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 						auto material = staticModel->GetMaterials()[0];
 						editorState->materialPicked(editorState, material);
 					}
+					else if (renderable->GetType() == TerrainPatch::GetTypeStatic())
+					{
+						auto terrainPatch = (TerrainPatch *)renderable;
+						auto material = terrainPatch->GetMaterial();
+						editorState->materialPicked(editorState, material);
+					}
 				}
 			}
 			currentOperation = Operation3::NONE;

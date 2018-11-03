@@ -502,6 +502,11 @@ void TerrainPatch::SetMaterial(Material *material)
 	renderableParts[0].material = material;
 }
 
+Material *TerrainPatch::GetMaterial() const
+{
+	return material;
+}
+
 void TerrainPatch::IntersectRay(RayQuery &rayQuery)
 {
 	float distance;
