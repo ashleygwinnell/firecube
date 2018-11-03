@@ -135,6 +135,7 @@ void StaticModel::IntersectRay(RayQuery &rayQuery)
 		vec3 normal, minNormal;
 		float minDistance;
 		bool found = false;
+		RenderablePart *minDistRenderablePart = nullptr;
 
 		for (unsigned int i = 0; i < renderableParts.size(); ++i)
 		{
@@ -154,6 +155,7 @@ void StaticModel::IntersectRay(RayQuery &rayQuery)
 					found = true;
 					minDistance = distance;
 					minNormal = normal.TransformNormal(worldTransform);
+					minDistRenderablePart = &renderableParts[i];
 				}
 			}			
 		}
@@ -164,6 +166,7 @@ void StaticModel::IntersectRay(RayQuery &rayQuery)
 			result.distance = minDistance;
 			result.renderable = this;
 			result.normal = minNormal;
+			result.renderablePart = minDistRenderablePart;
 			rayQuery.results.push_back(result);
 		}
 	}	

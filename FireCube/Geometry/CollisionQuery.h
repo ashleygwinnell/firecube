@@ -7,6 +7,7 @@ namespace FireCube
 {
 
 class Renderable;
+class RenderablePart;
 
 /**
 * Stores information about a ray query result
@@ -29,6 +30,11 @@ public:
 	* Renderable associated with this intersection
 	*/
 	Renderable *renderable;
+
+	/**
+	* RenderablePart associated with this intersection
+	*/
+	RenderablePart *renderablePart;
 };
 
 class FIRECUBE_API RayQuery

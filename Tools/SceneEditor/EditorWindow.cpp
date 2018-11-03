@@ -301,18 +301,26 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 				if (query.results.empty() == false)
 				{
 					auto &result = query.results.front();
-					auto renderable = result.renderable;
-					if (renderable->GetType() == StaticModel::GetTypeStatic())
+					if (result.renderablePart)
 					{
-						auto staticModel = (StaticModel *)renderable;
-						auto material = staticModel->GetMaterials()[0];
+						auto material = result.renderablePart->material;
 						editorState->materialPicked(editorState, material);
 					}
-					else if (renderable->GetType() == TerrainPatch::GetTypeStatic())
+					else
 					{
-						auto terrainPatch = (TerrainPatch *)renderable;
-						auto material = terrainPatch->GetMaterial();
-						editorState->materialPicked(editorState, material);
+						auto renderable = result.renderable;
+						if (renderable->GetType() == StaticModel::GetTypeStatic())
+						{
+							auto staticModel = (StaticModel *)renderable;
+							auto material = staticModel->GetMaterials()[0];
+							editorState->materialPicked(editorState, material);
+						}
+						else if (renderable->GetType() == TerrainPatch::GetTypeStatic())
+						{
+							auto terrainPatch = (TerrainPatch *)renderable;
+							auto material = terrainPatch->GetMaterial();
+							editorState->materialPicked(editorState, material);
+						}
 					}
 				}
 			}

@@ -522,6 +522,7 @@ void TerrainPatch::IntersectRay(RayQuery &rayQuery)
 			result.distance = distance;
 			result.renderable = this;
 			result.normal = normal;
+			result.renderablePart = &renderableParts[0];
 			rayQuery.results.push_back(result);
 		}		
 	}

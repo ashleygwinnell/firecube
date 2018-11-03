@@ -197,6 +197,7 @@ void AnimatedModel::IntersectRay(RayQuery &rayQuery)
 		result.distance = distance;
 		result.renderable = this;
 		result.normal = -rayQuery.ray.direction; // TODO: Return the normal of the intersected face of the bounding box?
+		result.renderablePart = nullptr;
 		rayQuery.results.push_back(result);
 	}
 }
