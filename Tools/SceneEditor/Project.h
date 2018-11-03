@@ -4,7 +4,7 @@
 
 class EditorState;
 
-class CProject
+class Project
 {
 public:
 	void Load(const std::string &filename);

@@ -43,7 +43,7 @@ public:
 	AssetWindow *assetWindow;
 	RenderingWindow *renderingWindow;
 
-	CProject project;
+	Project project;
 	std::string currentProjectPath;
 	
 	bool showSettingsPopup;

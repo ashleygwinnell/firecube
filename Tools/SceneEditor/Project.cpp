@@ -5,7 +5,7 @@
 
 using namespace FireCube;
 
-void CProject::Load(const std::string &filename)
+void Project::Load(const std::string &filename)
 {
 	TiXmlDocument xmlDocument;
 	if (!xmlDocument.LoadFile(filename))
@@ -28,7 +28,7 @@ void CProject::Load(const std::string &filename)
 	}	
 }
 
-void CProject::Save(EditorState *editorState, const std::string &filename)
+void Project::Save(EditorState *editorState, const std::string &filename)
 {
 	TiXmlDocument doc;
 	TiXmlElement *settingsElement = new TiXmlElement("settings");

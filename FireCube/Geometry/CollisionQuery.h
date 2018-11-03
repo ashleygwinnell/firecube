@@ -49,7 +49,7 @@ public:
 	RayQuery(const Ray &ray, float maxDistance);
 	
 	/**
-	* Retrusn the results of the intersection query
+	* Returns the results of the intersection query
 	*/
 	const std::vector<RayQueryResult> &GetResult() const;
 
