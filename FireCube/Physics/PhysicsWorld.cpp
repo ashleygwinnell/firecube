@@ -9,13 +9,13 @@
 
 using namespace FireCube;
 
-PhysicsWorld::PhysicsWorld(Engine *engine) : Component(engine), collisionShapesOctree(engine, vec3(2000), 8), rigidBodiesOctree(engine, vec3(2000), 8), narrowphase(this)
+PhysicsWorld::PhysicsWorld(Engine *engine) : Component(engine), collisionShapesOctree(engine, 100.0f, 8, 1.0f), rigidBodiesOctree(engine, 100.0f, 8, 1.0f), narrowphase(this)
 {
 	SubscribeToEvent(Events::Update, &PhysicsWorld::Update);
 	solver.SetSpookParams(1e7f, 3, 1.0f / 60.0f);
 }
 
-PhysicsWorld::PhysicsWorld(const PhysicsWorld &other) : Component(other), narrowphase(this), collisionShapes(other.collisionShapes), characterControllers(other.characterControllers), rigidBodies(other.rigidBodies), collisionShapesOctree(engine, vec3(2000), 8), rigidBodiesOctree(engine, vec3(2000), 8)
+PhysicsWorld::PhysicsWorld(const PhysicsWorld &other) : Component(other), narrowphase(this), collisionShapes(other.collisionShapes), characterControllers(other.characterControllers), rigidBodies(other.rigidBodies), collisionShapesOctree(engine, 100.0f, 8, 1.0f), rigidBodiesOctree(engine, 100.0f, 8, 1.0f)
 {
 	SubscribeToEvent(Events::Update, &PhysicsWorld::Update);
 	solver.SetSpookParams(1e7f, 3, 1.0f / 60.0f);

@@ -21,7 +21,7 @@ Skybox::Skybox(const Skybox &other) : Renderable(other)
 
 void Skybox::UpdateWorldBoundingBox()
 {
-	worldBoundingBox = BoundingBox(vec3(-1e6), vec3(1e6));
+	worldBoundingBox = BoundingBox(vec3(-0.5f), vec3(0.5f));
 }
 
 void Skybox::SetMaterial(Material *material)

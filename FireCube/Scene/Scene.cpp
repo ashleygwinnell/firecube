@@ -18,7 +18,7 @@
 
 using namespace FireCube;
 
-Scene::Scene(Engine *engine) : Object(engine), ambientColor(0.1f), fogEnabled(false), rootNode(engine), fogColor(1.0f), octree(engine, vec3(2000), 8), ui(engine)
+Scene::Scene(Engine *engine) : Object(engine), ambientColor(0.1f), fogEnabled(false), rootNode(engine), fogColor(1.0f), octree(engine, 100.0f, 8, 1.0f), ui(engine)
 {
 	rootNode.scene = this;
 	SubscribeToEvent(Events::PostRender, &Scene::PostRender);

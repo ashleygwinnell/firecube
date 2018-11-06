@@ -57,7 +57,7 @@ vec3 BoundingBox::GetCenter() const
 
 bool BoundingBox::Contains(const BoundingBox &bb) const
 {
-	if (bb.bmin.x >= bmin.x && bb.bmin.y >= bmin.y && bb.bmin.z >= bmin.z && bb.bmax.x <= bmax.x &&  bb.bmax.y <= bmax.y &&  bb.bmax.z <= bmax.z)
+	if (bb.bmin.x >= bmin.x && bb.bmin.y >= bmin.y && bb.bmin.z >= bmin.z && bb.bmax.x <= bmax.x && bb.bmax.y <= bmax.y && bb.bmax.z <= bmax.z)
 		return true;
 	return false;
 }
