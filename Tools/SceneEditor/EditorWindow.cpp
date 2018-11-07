@@ -130,7 +130,7 @@ void EditorWindow::SetScene(FireCube::Scene *scene, NodeDescriptor *rootDesc, Ed
 		
 	Node *cameraNode = root->CreateChild("Camera");
 	defaultCamera = cameraNode->CreateComponent<Camera>();
-	defaultCamera->SetFarPlane(2000.0f);
+	defaultCamera->SetFarPlane(8000.0f);
 	currentCamera = defaultCamera;
 
 	scene->SetFogColor(vec3(0.2f, 0.2f, 0.2f));
