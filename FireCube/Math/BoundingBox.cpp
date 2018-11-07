@@ -3,7 +3,7 @@
 
 using namespace FireCube;
 
-BoundingBox::BoundingBox() : bmin((std::numeric_limits<float>::max)(), (std::numeric_limits<float>::max)(), (std::numeric_limits<float>::max)()), bmax(-(std::numeric_limits<float>::max)(), -(std::numeric_limits<float>::max)(), -(std::numeric_limits<float>::max)())
+BoundingBox::BoundingBox() : bmin((std::numeric_limits<float>::max)()), bmax(-(std::numeric_limits<float>::max)())
 {
 }
 
@@ -116,7 +116,12 @@ void BoundingBox::Transform(const mat4 &mat)
 		Expand(v[i] * mat);
 }
 
-FireCube::vec3 FireCube::BoundingBox::GetSize() const
+vec3 BoundingBox::GetSize() const
 {
-	return bmax-bmin;
+	return bmax - bmin;
+}
+
+bool BoundingBox::Valid() const
+{
+	return bmin.x <= bmax.x && bmin.y <= bmax.y && bmin.z <= bmax.z;
 }

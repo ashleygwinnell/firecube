@@ -96,6 +96,11 @@ public:
 	*/
 	vec3 GetSize() const;
 
+	/**
+	* Returns whether this bounding box is valid
+	*/
+	bool Valid() const;
+
 private:
 	vec3 bmin, bmax;
 };

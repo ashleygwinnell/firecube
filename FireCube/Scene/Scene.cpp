@@ -44,7 +44,11 @@ Scene::~Scene()
 void Scene::AddRenderable(Renderable *renderable)
 {
 	renderables.push_back(renderable);
-	octree.Insert(renderable);
+	renderable->SetOctree(&octree);
+	if (renderable->GetWorldBoundingBox().Valid())
+	{
+		octree.Insert(renderable);
+	}
 }
 
 void Scene::RemoveRenderable(Renderable *renderable)
@@ -57,6 +61,7 @@ void Scene::RemoveRenderable(Renderable *renderable)
 			if (renderable->GetOctreeNode())
 			{
 				octree.Remove(renderable);
+				renderable->SetOctree(nullptr);
 			}
 			break;
 		}

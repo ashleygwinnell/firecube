@@ -236,9 +236,19 @@ class FIRECUBE_API OctreeItem
 {
 public:
 
-	OctreeItem() : octreeNode(nullptr), octreeNodeNeedsUpdate(false)
+	OctreeItem() : octree(nullptr), octreeNode(nullptr), octreeNodeNeedsUpdate(false)
 	{
 
+	}
+
+	Octree<T> *GetOctree()
+	{
+		return octree;
+	}
+
+	void SetOctree(Octree<T> *octree)
+	{
+		this->octree = octree;
 	}
 	
 	OctreeNode<T> *GetOctreeNode()
@@ -263,12 +273,13 @@ public:
 
 	void MarkForOctreeReinsertion()
 	{
-		if (!octreeNodeNeedsUpdate && octreeNode)
+		if (!octreeNodeNeedsUpdate && octree && static_cast<T *>(this)->GetWorldBoundingBox().Valid())
 		{
-			octreeNode->GetOctree()->QueueUpdate(this);
+			octree->QueueUpdate(this);
 		}
 	}
 
+	Octree<T> *octree;
 	OctreeNode<T> *octreeNode;
 	bool octreeNodeNeedsUpdate;
 };
