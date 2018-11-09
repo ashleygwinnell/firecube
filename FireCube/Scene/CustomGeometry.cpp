@@ -32,7 +32,10 @@ CustomGeometry::~CustomGeometry()
 void CustomGeometry::UpdateWorldBoundingBox()
 {
 	worldBoundingBox = boundingBox;
-	worldBoundingBox.Transform(node->GetWorldTransformation());
+	if (worldBoundingBox.Valid())
+	{
+		worldBoundingBox.Transform(node->GetWorldTransformation());
+	}
 }
 
 void CustomGeometry::SetPrimitiveType(PrimitiveType primitiveType)

@@ -67,7 +67,10 @@ void ParticleEmitter::SetBoundingBox(BoundingBox boundingBox)
 void ParticleEmitter::UpdateWorldBoundingBox()
 {
 	worldBoundingBox = boundingBox;
-	worldBoundingBox.Transform(node->GetWorldTransformation());
+	if (worldBoundingBox.Valid())
+	{
+		worldBoundingBox.Transform(node->GetWorldTransformation());
+	}
 }
 
 void ParticleEmitter::IntersectRay(RayQuery &rayQuery)

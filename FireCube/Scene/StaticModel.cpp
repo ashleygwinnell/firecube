@@ -124,7 +124,10 @@ std::vector<SharedPtr<Material>> &StaticModel::GetMaterials()
 void StaticModel::UpdateWorldBoundingBox()
 {
 	worldBoundingBox = boundingBox;
-	worldBoundingBox.Transform(node->GetWorldTransformation());
+	if (worldBoundingBox.Valid())
+	{
+		worldBoundingBox.Transform(node->GetWorldTransformation());
+	}
 }
 
 void StaticModel::IntersectRay(RayQuery &rayQuery)

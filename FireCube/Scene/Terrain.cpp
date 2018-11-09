@@ -488,7 +488,10 @@ Geometry *TerrainPatch::GetGeometry()
 void TerrainPatch::UpdateWorldBoundingBox()
 {
 	worldBoundingBox = boundingBox;
-	worldBoundingBox.Transform(node->GetWorldTransformation());
+	if (worldBoundingBox.Valid())
+	{
+		worldBoundingBox.Transform(node->GetWorldTransformation());
+	}
 }
 
 void TerrainPatch::SetBoundingBox(BoundingBox boundingBox)
