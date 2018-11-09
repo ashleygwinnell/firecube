@@ -334,7 +334,7 @@ void ParticleEmitter::UpdateBoundingBox()
 	}
 	else
 	{
-		SetBoundingBox(BoundingBox(vec3(-10e5), vec3(10e5)));
+		SetBoundingBox(BoundingBox(vec3(-100.0f), vec3(100.0f)));
 	}
 	
 }
