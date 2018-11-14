@@ -497,6 +497,8 @@ void TerrainPatch::UpdateWorldBoundingBox()
 void TerrainPatch::SetBoundingBox(BoundingBox boundingBox)
 {
 	this->boundingBox = boundingBox;
+
+	MarkedDirty();
 }
 
 void TerrainPatch::SetMaterial(Material *material)
