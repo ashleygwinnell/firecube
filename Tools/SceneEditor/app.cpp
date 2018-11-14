@@ -504,11 +504,6 @@ void FireCubeApp::HandleInput(float dt, const MappedInput &input)
 
 void FireCubeApp::OpenSceneFile(const std::string &filename)
 {
-	if (!editorState->GetCurrentSceneFile().empty())
-	{
-		SaveCurrentSceneFile();
-	}
-
 	editorState->SetCurrentSceneFile(filename);
 
 	::SceneReader sceneReader(engine);
@@ -529,6 +524,11 @@ void FireCubeApp::OpenSceneFile(const std::string &filename)
 
 void FireCubeApp::OpenProject(const std::string &path)
 {
+	if (!editorState->GetCurrentSceneFile().empty())
+	{
+		SaveCurrentSceneFile();
+	}
+
 	Filesystem::SetAssetsFolder(Filesystem::JoinPath(path, "Assets"));
 	InitFilesystemWatcherThread();
 
