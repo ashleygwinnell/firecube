@@ -221,13 +221,13 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 			ImGui::EndPopup();
 		}
 		ImGui::PopID();
-		if (ImGui::IsItemClicked())
+		if (ImGui::IsItemClicked() && currentEditedNode != child)
 		{
 			currentEditedNode = nullptr;
 			editorState->SetSelectedNode(child);
 		}
 		
- 		if (editorState->GetSelectedNode() == child && engine->GetInputManager()->IsKeyPressed(Key::F2))
+ 		if (ImGui::IsWindowFocused()&& editorState->GetSelectedNode() == child && engine->GetInputManager()->IsKeyPressed(Key::F2))
  		{
  			strcpy_s(nodeName, 1024, child->GetName().c_str());
  			currentEditedNode = child;
