@@ -22,6 +22,11 @@ void HierarchyWindow::Render()
 
 	if (ImGui::Begin("Hierarchy", &isOpen))
 	{
+		if (ImGui::IsWindowFocused() && engine->GetInputManager()->IsKeyPressed(Key::ESCAPE))
+		{
+			currentEditedNode = nullptr;
+		}
+
 		ImGui::BeginChild("hierarchy_list");
 		RenderChildren(rootDesc);
 		ImGui::EndChild();

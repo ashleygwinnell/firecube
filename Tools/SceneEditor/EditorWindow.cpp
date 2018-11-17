@@ -380,7 +380,7 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 		}
 	}
 	
-	if (input.IsActionTriggered("Esc"))
+	if (mouseOverView && input.IsActionTriggered("Esc"))
 	{
 		editorState->SetSelectedNode(nullptr);
 		currentOperation = Operation3::NONE;
