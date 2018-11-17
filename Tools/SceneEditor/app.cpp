@@ -620,9 +620,15 @@ void FireCubeApp::SavePrefabs(NodeDescriptor *node)
 {
 	if (node->IsPrefab())
 	{
+		::SceneReader sceneReader(engine);
+		NodeDescriptor *currentPrefab = sceneReader.ReadPrefab(node->GetPrefabPath());
+		vec3 currentRotation = currentPrefab->GetRotation();
+		vec3 currentScale = currentPrefab->GetScale();
+		delete currentPrefab;
+
 		std::string tragetPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + node->GetPrefabPath();
 		SceneWriter sceneWriter;
-		sceneWriter.SerializePrefab(node, tragetPath);
+		sceneWriter.SerializePrefab(node, tragetPath, currentRotation, currentScale);
 	}
 	else
 	{

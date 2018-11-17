@@ -42,6 +42,19 @@ void SceneWriter::SerializePrefab(NodeDescriptor *root, const std::string &filen
 	doc.SaveFile(filename);
 }
 
+void SceneWriter::SerializePrefab(NodeDescriptor *root, const std::string &filename, vec3 rootRotation, vec3 rootScale)
+{
+	TiXmlDocument doc;
+	Serialize(root, true, &doc);
+
+	TiXmlElement *rootElement = doc.FirstChildElement();
+	TiXmlElement *transformation = rootElement->FirstChildElement("transformation");
+	transformation->SetAttribute("scale", ToString(rootScale));
+	transformation->SetAttribute("rotation", ToString(rootRotation));
+
+	doc.SaveFile(filename);
+}
+
 void SceneWriter::Serialize(NodeDescriptor *nodeDesc, bool prefabAsNode, TiXmlNode *parent)
 {
 	if (nodeDesc->IsPrefab() == false || prefabAsNode)

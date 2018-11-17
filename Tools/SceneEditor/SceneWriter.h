@@ -13,6 +13,7 @@ class SceneWriter
 public:
 	void Serialize(NodeDescriptor *root, const std::string &filename);
 	void SerializePrefab(NodeDescriptor *root, const std::string &filename);
+	void SerializePrefab(NodeDescriptor *root, const std::string &filename, FireCube::vec3 rootRotation, FireCube::vec3 rootScale);
 private:
 	std::string ToString(FireCube::vec2 v) const;
 	std::string ToString(FireCube::vec3 v) const;
