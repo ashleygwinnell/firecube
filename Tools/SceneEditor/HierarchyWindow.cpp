@@ -218,19 +218,16 @@ void HierarchyWindow::RenderChildren(NodeDescriptor *root)
 		ImGui::PopID();
 		if (ImGui::IsItemClicked())
 		{
-			if (editorState->GetSelectedNode() == child)
-			{
-				strcpy_s(nodeName, 1024, child->GetName().c_str());
-				currentEditedNode = child;
-				startRenaming = true;
-			}
-			else
-			{
-				currentEditedNode = nullptr;
-				editorState->SetSelectedNode(child);
-			}
-
+			currentEditedNode = nullptr;
+			editorState->SetSelectedNode(child);
 		}
+		
+ 		if (editorState->GetSelectedNode() == child && engine->GetInputManager()->IsKeyPressed(Key::F2))
+ 		{
+ 			strcpy_s(nodeName, 1024, child->GetName().c_str());
+ 			currentEditedNode = child;
+ 			startRenaming = true;
+ 		}
 
 		if (nodeOpen && childHasChildren)
 		{
