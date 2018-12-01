@@ -133,7 +133,7 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 		{
 			for (TiXmlElement *material = materials->FirstChildElement("material"); material != nullptr; material = material->NextSiblingElement("material"))
 			{
-				unsigned int index = Variant::FromString(material->Attribute("index")).GetInt();
+				unsigned int index = std::stoi(material->Attribute("index"));
 				std::string matName = material->Attribute("name");
 				staticModelDescriptor->SetRenderablePartMaterial(index, matName);
 			}
