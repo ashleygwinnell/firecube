@@ -1,4 +1,7 @@
 #pragma once
+
+#include <set>
+
 #include "Utils/utils.h"
 #include "Core/Resource.h"
 #include "Math/BoundingBox.h"
@@ -16,6 +19,7 @@ namespace FireCube
 
 class Engine;
 class Geometry;
+class MeshMetadata;
 
 class SkeletonNode
 {
@@ -136,11 +140,13 @@ public:
 	* @returns The bounding box of this mesh
 	*/
 	BoundingBox GetBoundingBox() const;
+
+	const std::set<std::string> &GetMaterialNames() const;
 private:
 	void ReadAnimations(const aiScene *aScene);
 	void ReadSkeleton(const aiScene *aScene, const aiNode *aNode, SkeletonNode &node);
-	void ProcessAssimpScene(const aiScene *aScene);
-	SharedPtr<Material> ProcessAssimpMaterial(const aiMaterial *aMaterial);
+	void ProcessAssimpScene(const aiScene *aScene, MeshMetadata &metadata);
+	SharedPtr<Material> ProcessAssimpMaterial(const aiMaterial *aMaterial, MeshMetadata &metadata);
 	bool ProcessAssimpMaterialTexture(const aiMaterial *aMaterial, Material *material, const aiTextureType &textureType, TextureUnit unit);
 	SharedPtr<Geometry> ProcessAssimpMesh(const aiMesh *aMesh, unsigned int meshIndex);
 	unsigned int GetNodeIndex(SkeletonNode &node, const std::string name);
@@ -152,6 +158,7 @@ private:
 	std::vector<BoundingBox> boundingBoxes;
 	std::vector<SharedPtr<Geometry>> geometries;
 	std::vector<SharedPtr<Material>> materials;
+	std::set<std::string> materialNames;
 	SkeletonNode skeletonRoot;
 	
 	std::vector<std::vector<BoneWeights>> meshBoneWeights;

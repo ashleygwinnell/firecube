@@ -1298,6 +1298,11 @@ void FireCubeApp::HandleFilesystemChanges()
 	{
 		for (auto file : changedFiles)
 		{
+			if (Filesystem::GetFileExtension(file) == "metadata")
+			{
+				file = file.substr(0, file.size() - 9);
+			}
+
 			AssetType assetType = AssetUtils::GetAssetTypeByPath(Filesystem::JoinPath(Filesystem::GetAssetsFolder(), file));
 			if (assetType == AssetType::MESH || assetType == AssetType::TEXTURE || assetType == AssetType::SHADER || assetType == AssetType::TECHNIQUE)
 			{

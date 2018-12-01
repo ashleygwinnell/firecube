@@ -15,6 +15,7 @@
 #include "Geometry/Geometry.h"
 #include "Rendering/Material.h"
 #include "Rendering/RenderingTypes.h"
+#include "MeshMetadata.h"
 
 using namespace FireCube;
 
@@ -39,6 +40,9 @@ bool Mesh::Load(const std::string &filename)
 	std::string resolvedFileName = Filesystem::FindResourceByName(filename);
 	if (resolvedFileName.empty())
 		return false;
+
+	std::string metadataFilename = resolvedFileName + ".metadata";
+	MeshMetadata metadata(metadataFilename);
 	
 	this->filename = filename;
 
@@ -68,18 +72,18 @@ bool Mesh::Load(const std::string &filename)
 	numberOfTreeNodes = 0;
 	boundingBox = BoundingBox();
 
-	ProcessAssimpScene(scene);
+	ProcessAssimpScene(scene, metadata);
 
 	return true;
 }
 
-void Mesh::ProcessAssimpScene(const aiScene *aScene)
+void Mesh::ProcessAssimpScene(const aiScene *aScene, MeshMetadata &metadata)
 {
 	std::vector<SharedPtr<Material>> materialList;
 	for (unsigned int i = 0; i < aScene->mNumMaterials; ++i)
 	{
 		auto aMaterial = aScene->mMaterials[i];
-		auto material = ProcessAssimpMaterial(aMaterial);
+		auto material = ProcessAssimpMaterial(aMaterial, metadata);
 		materialList.push_back(material);
 	}
 
@@ -108,7 +112,7 @@ void Mesh::ProcessAssimpScene(const aiScene *aScene)
 	CalcBoundingBox(skeletonRoot, mat4::IDENTITY);
 }
 
-SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
+SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial, MeshMetadata &metadata)
 {
 	aiString materialName;
 	std::string matName;
@@ -117,12 +121,15 @@ SharedPtr<Material> Mesh::ProcessAssimpMaterial(const aiMaterial *aMaterial)
 	{
 		matName = materialName.C_Str();
 	}
-	
-	SharedPtr<Material> material = engine->GetResourceCache()->GetResource<Material>("Materials/" + matName + ".xml");
-	if (material)
-		return material;
 
-	material = new Material(engine);
+	materialNames.insert(matName);
+
+	if (metadata.HasMaterialMapping(matName))
+	{
+		return engine->GetResourceCache()->GetResource<Material>(metadata.GetMaterialMapping(matName));
+	}
+
+	SharedPtr<Material> material = new Material(engine);
 	material->SetName(matName);
 
 	aiColor3D aColor;
@@ -578,4 +585,9 @@ void Mesh::CalcBoundingBox(SkeletonNode &node, mat4 transformation)
 	{
 		CalcBoundingBox(c, modelTransformation);
 	}
+}
+
+const std::set<std::string> & Mesh::GetMaterialNames() const
+{
+	return materialNames;
 }

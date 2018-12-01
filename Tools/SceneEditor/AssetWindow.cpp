@@ -2,6 +2,7 @@
 #include "AssetWindow.h"
 #include "imgui.h"
 #include "EditorState.h"
+#include "ImguiHelpers.h"
 
 using namespace FireCube;
 
@@ -65,6 +66,8 @@ void AssetWindow::AssetSelected(const std::string &asset)
 		{
 			meshMaterials.insert(material);
 		}
+		meshMaterialNames = mesh.GetMaterialNames();
+		meshMetadata.Load(Filesystem::JoinPath(Filesystem::GetAssetsFolder(), currentAsset + ".metadata"));
 	}
 }
 
@@ -111,13 +114,63 @@ void AssetWindow::RenderMeshAsset()
 
 		if (ImGui::CollapsingHeader("Materials", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			for (auto &material : meshMaterials)
+			for (auto &materialName : meshMaterialNames)
 			{
-				if (ImGui::Selectable(material->GetName().c_str()))
+				ImGui::PushID(materialName.c_str());
+				ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - (meshMetadata.HasMaterialMapping(materialName) ? 150.0f : 220.0f));
+				ImGui::BeginGroup();
+				std::string selectedPath = "[None]";
+				if (meshMetadata.HasMaterialMapping(materialName))
 				{
-					editorState->materialPicked(editorState, material);
-					editorState->showMaterialEditor(editorState);
+					selectedPath = meshMetadata.GetMaterialMapping(materialName);
 				}
+
+				ImGui::Text(materialName.c_str());
+				ImGui::SameLine();
+				ImGui::InputText("", &selectedPath[0], selectedPath.size() + 1, ImGuiInputTextFlags_ReadOnly);
+				ImGui::SameLine();
+				if (ImGui::Button("..."))
+				{
+					ImGuiHelpers::ShowAssetSelectionPopup("Select Material");
+				}
+
+				if (!meshMetadata.HasMaterialMapping(materialName))
+				{
+					ImGui::SameLine();
+					if (ImGui::Button("Extract"))
+					{
+						for (auto mat : meshMaterials)
+						{
+							if (mat->GetName() == materialName)
+							{
+								std::string targetMaterialPath = Filesystem::JoinPath(Filesystem::GetAssetsFolder(), "Materials", mat->GetName() + ".xml");
+								AssetUtils::SerializeMaterial(mat, targetMaterialPath);
+								meshMetadata.SetMaterialMapping(materialName, Filesystem::JoinPath("Materials", mat->GetName() + ".xml"));
+								break;
+							}
+						}
+					}
+				}
+
+				if (ImGuiHelpers::AssetSelectionPopup("Select Material", AssetType::MATERIAL, selectedPath))
+				{
+					if (selectedPath.empty())
+					{
+						meshMetadata.RemoveMaterialMapping(materialName);
+					}
+					else
+					{
+						meshMetadata.SetMaterialMapping(materialName, selectedPath);
+					}
+				}
+				ImGui::EndGroup();
+				ImGui::PopItemWidth();
+				ImGui::PopID();
+			}
+
+			if (ImGui::Button("Save"))
+			{
+				meshMetadata.Save(Filesystem::JoinPath(Filesystem::GetAssetsFolder(), currentAsset + ".metadata"));
 			}
 		}
 	}

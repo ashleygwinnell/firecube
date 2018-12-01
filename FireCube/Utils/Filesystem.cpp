@@ -208,7 +208,7 @@ std::string Filesystem::RemoveFileExtension(const std::string &filename)
 	}
 }
 
-std::string FIRECUBE_API FireCube::Filesystem::AddPathSeparatorIfNeeded(const std::string &path)
+std::string Filesystem::AddPathSeparatorIfNeeded(const std::string &path)
 {
 	if (path.back() == PATH_SEPARATOR_CHAR)
 	{
@@ -217,5 +217,18 @@ std::string FIRECUBE_API FireCube::Filesystem::AddPathSeparatorIfNeeded(const st
 	else
 	{
 		return path + PATH_SEPARATOR;
+	}
+}
+
+std::string Filesystem::ReplaceFileExtension(const std::string &filename, const std::string &ext)
+{
+	unsigned int pos = filename.find_last_of('.');
+	if (pos != std::string::npos)
+	{
+		return filename.substr(0, pos) + "." + ext;
+	}
+	else
+	{
+		return filename + "." + ext;
 	}
 }

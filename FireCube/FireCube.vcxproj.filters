@@ -381,6 +381,9 @@
     <ClCompile Include="Scripting\Bindings\UIBindings.cpp">
       <Filter>Scripting\Bindings</Filter>
     </ClCompile>
+    <ClCompile Include="Geometry\MeshMetadata.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -686,6 +689,9 @@
     </ClInclude>
     <ClInclude Include="UI\UIImage.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\MeshMetadata.h">
+      <Filter>Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

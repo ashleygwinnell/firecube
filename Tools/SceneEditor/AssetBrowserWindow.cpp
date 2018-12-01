@@ -667,7 +667,7 @@ std::vector<AssetBrowserWindow::FileInfo> AssetBrowserWindow::GetItemsInPath(con
 		do
 		{
 			std::string p = data.cFileName;
-			if (p != "." && p != "..")
+			if (p != "." && p != ".." && Filesystem::GetFileExtension(p) != "metadata")
 			{
 				FileInfo item;
 				item.path = Filesystem::JoinPath(path, p);

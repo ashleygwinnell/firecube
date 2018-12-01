@@ -28,9 +28,6 @@ bool AssetUtils::ImportMesh(FireCube::Engine *engine, const std::string &path)
 
 	for (auto material : materialsSet)
 	{
-		std::string targetMaterialPath = Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "Materials" + Filesystem::PATH_SEPARATOR + material->GetName() + ".xml";
-		SerializeMaterial(material, targetMaterialPath);
-
 		for (int i = 0; i < static_cast<int>(TextureUnit::MAX_TEXTURE_UNITS); ++i)
 		{
 			TextureUnit unit = static_cast<TextureUnit>(i);

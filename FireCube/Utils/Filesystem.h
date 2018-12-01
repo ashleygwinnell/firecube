@@ -79,5 +79,7 @@ namespace Filesystem
 	{
 		return p0;
 	}
+
+	std::string FIRECUBE_API ReplaceFileExtension(const std::string &filename, const std::string &ext);
 }
 }

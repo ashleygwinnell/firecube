@@ -38,6 +38,7 @@
     <ClCompile Include="Geometry\Geometry.cpp" />
     <ClCompile Include="Geometry\GeometryGenerator.cpp" />
     <ClCompile Include="Geometry\CollisionQuery.cpp" />
+    <ClCompile Include="Geometry\MeshMetadata.cpp" />
     <ClCompile Include="Math\BoundingBox.cpp" />
     <ClCompile Include="Math\CollisionUtils.cpp" />
     <ClCompile Include="Math\Frustum.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\GeometryGenerator.h" />
     <ClInclude Include="Geometry\CollisionQuery.h" />
+    <ClInclude Include="Geometry\MeshMetadata.h" />
     <ClInclude Include="Math\BoundingBox.h" />
     <ClInclude Include="Math\CollisionUtils.h" />
     <ClInclude Include="Math\Frustum.h" />

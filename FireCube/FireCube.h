@@ -16,6 +16,7 @@
 #include "Geometry/Geometry.h"
 #include "Geometry/GeometryGenerator.h"
 #include "Geometry/Mesh.h"
+#include "Geometry/MeshMetadata.h"
 #include "Geometry/CollisionQuery.h"
 #include "Rendering/Material.h"
 #include "Rendering/Texture.h"
