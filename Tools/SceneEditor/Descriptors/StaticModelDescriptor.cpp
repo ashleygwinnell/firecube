@@ -11,8 +11,17 @@ StaticModelDescriptor::StaticModelDescriptor() : ComponentDescriptor(ComponentTy
 void StaticModelDescriptor::CreateComponent(Node *node, Engine *engine)
 {
 	auto staticModel = node->CreateComponent<StaticModel>(engine->GetResourceCache()->GetResource<Mesh>(meshFilename));
+	
 	staticModel->SetCastShadow(castShadow);
 	staticModel->SetLightMask(lightMask);
+	for (unsigned int i = 0; i < renderablePartsMaterials.size(); ++i)
+	{
+		const std::string &matName = renderablePartsMaterials[i];
+		if (matName.empty() == false)
+		{
+			staticModel->SetRenderablePartMaterial(i, engine->GetResourceCache()->GetResource<Material>(matName));
+		}
+	}
 	component = staticModel;
 }
 
@@ -81,4 +90,33 @@ unsigned int StaticModelDescriptor::GetCollisionQueryMask() const
 void StaticModelDescriptor::SetCollisionQueryMask(unsigned int collisionQueryMask)
 {
 	this->collisionQueryMask = collisionQueryMask;	
+}
+
+const std::vector<std::string> &StaticModelDescriptor::GetRenderablePartsMaterials() const
+{
+	return renderablePartsMaterials;
+}
+
+void StaticModelDescriptor::SetRenderablePartMaterial(unsigned int index, const std::string &material, Engine *engine)
+{
+	if (index >= renderablePartsMaterials.size())
+	{
+		renderablePartsMaterials.resize(index + 1);
+	}
+
+	renderablePartsMaterials[index] = material;
+
+	if (component && engine)
+	{
+		if (material.empty())
+		{
+			StaticModel *tempStaticModel = new StaticModel(engine, engine->GetResourceCache()->GetResource<Mesh>(meshFilename));
+			static_cast<StaticModel*>(component)->SetRenderablePartMaterial(index, tempStaticModel->GetRenderableParts()[index].material);
+			delete tempStaticModel;
+		}
+		else
+		{
+			static_cast<StaticModel*>(component)->SetRenderablePartMaterial(index, engine->GetResourceCache()->GetResource<Material>(material));
+		}
+	}
 }

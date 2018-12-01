@@ -18,9 +18,12 @@ public:
 	void SetLightMask(unsigned int lightMask);
 	unsigned int GetCollisionQueryMask() const;
 	void SetCollisionQueryMask(unsigned int collisionQueryMask);
+	const std::vector<std::string> &GetRenderablePartsMaterials() const;
+	void SetRenderablePartMaterial(unsigned int index, const std::string &material, FireCube::Engine *engine = nullptr);
 private:
 	std::string meshFilename;
 	bool castShadow;
 	unsigned int lightMask;
 	unsigned int collisionQueryMask;
+	std::vector<std::string> renderablePartsMaterials;
 };

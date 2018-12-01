@@ -126,7 +126,18 @@ void ::SceneReader::ReadComponent(TiXmlElement *e, NodeDescriptor *node)
 		if (e->Attribute("collision_query_mask"))
 		{
 			staticModelDescriptor->SetCollisionQueryMask(std::stoul(e->Attribute("collision_query_mask"), 0, 16));			
-		}		
+		}
+
+		TiXmlElement *materials = e->FirstChildElement("materials");
+		if (materials)
+		{
+			for (TiXmlElement *material = materials->FirstChildElement("material"); material != nullptr; material = material->NextSiblingElement("material"))
+			{
+				unsigned int index = Variant::FromString(material->Attribute("index")).GetInt();
+				std::string matName = material->Attribute("name");
+				staticModelDescriptor->SetRenderablePartMaterial(index, matName);
+			}
+		}
 	}
 	else if (type == "Box")
 	{

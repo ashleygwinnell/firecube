@@ -94,4 +94,52 @@ void StaticModelWindow::Render(EditorState *editorState, StaticModelDescriptor *
 	}, [descriptor](unsigned int value) {
 		descriptor->SetCollisionQueryMask(value);
 	});
+
+	if (ImGui::CollapsingHeader("Materials", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		StaticModel *staticModel = (StaticModel *)descriptor->GetComponent();
+		unsigned int renderablePartsCount = staticModel->GetRenderableParts().size();
+		auto renderablePartsMaterials = descriptor->GetRenderablePartsMaterials();
+		for (unsigned int i = 0; i < renderablePartsCount; ++i)
+		{
+			ImGui::PushID(i);
+			ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - 50.0f);
+			ImGui::BeginGroup();
+			std::string matName = "[None]";
+			if (i < renderablePartsMaterials.size())
+			{
+				if (renderablePartsMaterials[i].empty() == false)
+				{
+					matName = renderablePartsMaterials[i];
+				}
+			}
+
+			ImGui::Text(std::to_string(i).c_str());
+			ImGui::SameLine();
+			ImGui::InputText("", &matName[0], matName.size() + 1, ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine();
+			if (ImGui::Button("..."))
+			{
+				ImGuiHelpers::ShowAssetSelectionPopup("Select Material");
+			}
+
+			if (ImGuiHelpers::AssetSelectionPopup("Select Material", AssetType::MATERIAL, matName))
+			{
+				std::string oldMatName = descriptor->GetRenderablePartsMaterials().size() > i ? descriptor->GetRenderablePartsMaterials()[i] : "";
+				auto command = new CustomCommand(editorState, "Change Material", [descriptor, matName, i, this]()
+				{
+					descriptor->SetRenderablePartMaterial(i, matName, engine);
+				}, [descriptor, i, oldMatName, this]()
+				{
+					descriptor->SetRenderablePartMaterial(i, oldMatName, engine);
+				});
+
+				editorState->ExecuteCommand(command);
+			}
+
+			ImGui::EndGroup();
+			ImGui::PopItemWidth();
+			ImGui::PopID();
+		}
+	}
 }

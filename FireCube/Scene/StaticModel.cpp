@@ -195,3 +195,8 @@ void StaticModel::MeshReloaded(Resource *mesh)
 {
 	CreateFromMesh((Mesh *)mesh);
 }
+
+void StaticModel::SetRenderablePartMaterial(unsigned int index, Material *material)
+{
+	renderableParts[index].material = material;
+}

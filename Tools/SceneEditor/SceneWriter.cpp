@@ -104,7 +104,29 @@ void SceneWriter::Serialize(ComponentDescriptor *componentDesc, TiXmlNode *paren
 
 		std::stringstream collisionQueryMaskStream;
 		collisionQueryMaskStream << std::hex << staticModel->GetCollisionQueryMask();
-		element->SetAttribute("collision_query_mask", collisionQueryMaskStream.str());		
+		element->SetAttribute("collision_query_mask", collisionQueryMaskStream.str());
+
+		auto &renderablePartsMaterials = staticModel->GetRenderablePartsMaterials();
+		bool haveMaterialAssignments = std::find_if(renderablePartsMaterials.begin(), renderablePartsMaterials.end(), [](const std::string &m) {
+			return m.empty() == false;
+		}) != renderablePartsMaterials.end();
+
+		if (haveMaterialAssignments)
+		{
+			TiXmlElement *materials = new TiXmlElement("materials");
+			element->LinkEndChild(materials);
+
+			for (unsigned int i = 0; i < renderablePartsMaterials.size(); ++i)
+			{
+				if (renderablePartsMaterials[i].empty() == false)
+				{
+					TiXmlElement *material = new TiXmlElement("material");
+					material->SetAttribute("index", i);
+					material->SetAttribute("name", renderablePartsMaterials[i]);
+					materials->LinkEndChild(material);
+				}
+			}
+		}
 	}
 	else if (componentDesc->GetType() == ComponentType::LIGHT)
 	{

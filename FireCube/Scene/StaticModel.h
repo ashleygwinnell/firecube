@@ -48,6 +48,8 @@ public:
 	*/
 	void SetMaterial(Material *material);
 
+	void SetRenderablePartMaterial(unsigned int index, Material *material);
+
 protected:
 
 	StaticModel(const StaticModel &other);
