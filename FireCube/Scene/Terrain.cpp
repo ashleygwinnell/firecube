@@ -96,6 +96,7 @@ void Terrain::CreatePatches()
 			patch->SetCollisionQueryMask(collisionQueryMask);
 			patch->SetLightMask(lightMask);
 			patch->SetCastShadow(castShadow);
+			patch->MarkedDirty();
 		}
 	}
 
