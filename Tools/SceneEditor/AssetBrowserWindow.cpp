@@ -331,7 +331,7 @@ void AssetBrowserWindow::Render()
 
 				if (ImGui::Selectable("New Fragment Shader"))
 				{
-					showEnterSceneName = true;
+					showEnterShaderName = true;
 					createVertexShader = false;
 					createFragmentShader = true;
 				}
