@@ -234,6 +234,8 @@ std::string LuaScriptWindow::GetObjectNameFromScript(const std::string &filename
 
 void LuaScriptWindow::UpdateScriptProperties(const std::string &filename, const std::string &objectName)
 {
+	this->properties.clear();
+
 	if (filename.empty() || objectName.empty())
 	{
 		return;
@@ -245,7 +247,6 @@ void LuaScriptWindow::UpdateScriptProperties(const std::string &filename, const 
 	LuaFunction *getProperties = engine->GetLuaState()->GetFunction(objectName + ".GetProperties");
 	if (getProperties)
 	{
-		this->properties.clear();
 		auto propertiesObject = (*getProperties)();
 		sol::table properties = propertiesObject.as<sol::table>();
 		
