@@ -9,8 +9,7 @@ public:
 	virtual void CreateComponent(FireCube::Node *node, FireCube::Engine *engine);
 	virtual ComponentDescriptor *Clone();
 	virtual ~CollisionShapeDescriptor();
-
-	//void SetCollisionShapeType(FireCube::CollisionShapeType collisionShapeType, FireCube::Engine *engine);
+	
 	FireCube::CollisionShapeType GetShapeType() const;
 	void SetMesh(const std::string &meshFilename, FireCube::Engine *engine);
 	std::string GetMeshFilename() const;

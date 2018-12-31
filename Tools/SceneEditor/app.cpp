@@ -856,6 +856,7 @@ void FireCubeApp::RenderMenuBar()
 				{
 					auto nodeDesc = editorState->GetSelectedNode();
 					auto collisionShapeDescriptor = new CollisionShapeDescriptor();
+					collisionShapeDescriptor->SetSphere(1.0f);
 					collisionShapeDescriptor->SetBox(BoundingBox(vec3(-0.5f), vec3(0.5f)));
 					collisionShapeDescriptor->SetPlane(Plane(vec3(0.0f, 1.0f, 0.0f), 0.0f));
 					collisionShapeDescriptor->SetIsTrigger(false);
