@@ -190,7 +190,7 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 		quat rot = rotY * defaultCamera->GetNode()->GetRotation() * rotX;
 		vec3 dir = rot * vec3(0, 0, -1);
 		
-		vec3 orbitPoint = defaultCamera->GetNode()->GetWorldPosition() + defaultCamera->GetNode()->GetWorldTransformation().GetDirection() * orbitDistance;;
+		vec3 orbitPoint = defaultCamera->GetNode()->GetWorldPosition() + defaultCamera->GetNode()->GetWorldTransformation().GetDirection() * orbitDistance;
 		defaultCamera->GetNode()->LookAt(orbitPoint - dir * orbitDistance, orbitPoint, vec3(0, 1.0f, 0));
 	}
 
@@ -207,8 +207,10 @@ void EditorWindow::HandleInput(float dt, const MappedInput &input)
 
 	if (mouseOverView && std::abs(input.GetValue("MouseWheelY")) > 0.0f)
 	{
-		defaultCamera->GetNode()->Move(defaultCamera->GetNode()->GetWorldTransformation().GetDirection()
-			* input.GetValue("MouseWheelY") * (inputManager->IsKeyDown(Key::LEFT_SHIFT) ? 20.0f : 80.0f));
+		float distance = input.GetValue("MouseWheelY") * (inputManager->IsKeyDown(Key::LEFT_SHIFT) ? 20.0f : 80.0f);
+		defaultCamera->GetNode()->Move(defaultCamera->GetNode()->GetWorldTransformation().GetDirection() * distance);
+
+		orbitDistance -= distance;
 	}
 
 	if (input.IsStateOn("LeftDown"))
