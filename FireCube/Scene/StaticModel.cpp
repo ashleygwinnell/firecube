@@ -47,7 +47,6 @@ StaticModel::StaticModel(Engine *engine, Mesh *mesh) : StaticModel(engine)
 void StaticModel::CreateFromMesh(Mesh *mesh)
 {
 	UnSubscribeFromEvent(Events::ResourceReloaded);
-	SubscribeToEvent(mesh, Events::ResourceReloaded, &StaticModel::MeshReloaded);
 
 	renderableParts.clear();
 	renderablePartsTransformations.clear();
@@ -57,6 +56,11 @@ void StaticModel::CreateFromMesh(Mesh *mesh)
 
 	if (mesh)
 	{
+		if (mesh->GetFileName().empty() == false)
+		{
+			SubscribeToEvent(mesh, Events::ResourceReloaded, &StaticModel::MeshReloaded);
+		}
+
 		for (unsigned int i = 0; i < mesh->GetGeometries().size(); ++i)
 		{
 			Geometry *geometry = mesh->GetGeometries()[i];
