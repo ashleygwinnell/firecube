@@ -756,6 +756,10 @@ bool ImGuiHelpers::AssetSelectionPopup(const std::string &title, AssetType type,
 			}
 		}
 
+		curItems.erase(std::remove_if(curItems.begin(), curItems.end(), [](const ItemInfo &info) {
+			return info.isDirectory == false && Filesystem::GetFileExtension(info.absPath) == "metadata";
+		}), curItems.end());
+
 		std::sort(curItems.begin(), curItems.end(), [](const ItemInfo &first, const ItemInfo &second) {
 			if (first.isDirectory && !second.isDirectory)
 			{
