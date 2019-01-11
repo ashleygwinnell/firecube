@@ -16,6 +16,19 @@ LuaScriptWindow::LuaScriptWindow(Engine *engine) : Object(engine), lastDescripto
 
 void LuaScriptWindow::Render(EditorState *editorState, LuaScriptDescriptor *descriptor)
 {
+	if (lastDescriptor != descriptor)
+	{
+		lastDescriptor = descriptor;
+		UpdateScriptProperties(descriptor->GetScriptFilename(), descriptor->GetObjectName());
+		for (auto &property : properties)
+		{
+			if (!descriptor->HasProperty(property.name))
+			{
+				descriptor->SetProperty(property.name, property.defaultValue);
+			}
+		}
+	}
+
 	std::string selectedPath;
 	std::string scriptFileName = descriptor->GetScriptFilename();
 	ImGui::BeginGroup();
@@ -200,19 +213,6 @@ void LuaScriptWindow::Render(EditorState *editorState, LuaScriptDescriptor *desc
 	}
 
 	ImGui::Columns(1);
-
-	if (lastDescriptor != descriptor)
-	{
-		lastDescriptor = descriptor;
-		UpdateScriptProperties(descriptor->GetScriptFilename(), descriptor->GetObjectName());
-		for (auto &property : properties)
-		{
-			if (!descriptor->HasProperty(property.name))
-			{
-				descriptor->SetProperty(property.name, property.defaultValue);
-			}
-		}
-	}
 }
 
 std::string LuaScriptWindow::GetObjectNameFromScript(const std::string &filename)

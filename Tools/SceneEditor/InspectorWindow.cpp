@@ -82,7 +82,6 @@ void InspectorWindow::Render()
 			for (auto component : components)
 			{
 				bool componentOpen = true;
-				bool isOpen = true;
 				ImGui::PushID(component);
 				if (ImGui::CollapsingHeader(componentTypeToLabel[component->GetType()].c_str(), &componentOpen, ImGuiTreeNodeFlags_DefaultOpen))
 				{
