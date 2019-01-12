@@ -25,6 +25,7 @@ public:
 	Texture2D *texture;
 	unsigned int offset;
 	unsigned int count;
+	vec2 positionOffset;
 };
 
 /**

@@ -46,6 +46,7 @@ void UI::Render(Renderer *renderer, UIElement *root)
 			{
 				textProgram->SetUniform("tex0", 0);
 				textProgram->SetUniform("projectionMatrix", ortho);
+				textProgram->SetUniform("positionOffset", part.positionOffset);
 			}
 
 			renderer->UseTexture(0, part.texture);
@@ -63,6 +64,7 @@ void UI::Render(Renderer *renderer, UIElement *root)
 			{
 				program->SetUniform("tex0", 0);
 				program->SetUniform("projectionMatrix", ortho);
+				program->SetUniform("positionOffset", part.positionOffset);
 			}
 
 			renderer->UseTexture(0, part.texture);
@@ -78,7 +80,14 @@ void UI::Render(Renderer *renderer)
 
 void UI::GetParts(std::vector<UIPart> &parts, std::vector<UIVertex> &vertexData, UIElement *element)
 {
+	unsigned int startIndex = parts.size();
 	element->GetParts(parts, vertexData);
+
+	for (unsigned int i = startIndex; i < parts.size(); ++i)
+	{
+		parts[i].positionOffset = element->GetScreenPosition();
+	}
+
 	auto &children = element->GetChildren();
 	for (auto child : children)
 	{

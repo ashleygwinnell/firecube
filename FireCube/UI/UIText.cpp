@@ -67,9 +67,8 @@ void UIText::UpdateData()
 	vertexData.resize(text.size() * 6);
 
 	int numTris = 0;
-
-	vec2 initialPosition = GetScreenPosition();
-	vec2 curPos = initialPosition;
+	
+	vec2 curPos(0.0f);
 	char previous = 0;
 	for (std::string::const_iterator i = text.begin(); i != text.end(); i++)
 	{
@@ -83,7 +82,7 @@ void UIText::UpdateData()
 		else if (c == '\n')
 		{
 			// If current glyph is new line set the current position accordingly
-			curPos.x = initialPosition.x;
+			curPos.x = 0.0f;
 			curPos.y += fontFace->pointSize;
 			continue;
 		}
