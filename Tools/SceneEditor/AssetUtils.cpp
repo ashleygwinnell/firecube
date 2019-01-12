@@ -90,6 +90,10 @@ AssetType AssetUtils::GetAssetTypeByPath(const std::string &path)
 	{
 		return AssetType::PREFAB;
 	}
+	else if (Filesystem::IsSubPathOf(Filesystem::GetAssetsFolder() + Filesystem::PATH_SEPARATOR + "RenderPaths", path))
+	{
+		return AssetType::RENDER_PATH;
+	}
 
 	return AssetType::UNKNOWN;
 }

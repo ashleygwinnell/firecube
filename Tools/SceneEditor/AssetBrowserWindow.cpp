@@ -92,6 +92,20 @@ void AssetBrowserWindow::Render()
 								ShellExecuteA(nullptr, nullptr, editorState->GetSettings().externalCodeEditorPath.c_str(), item.path.c_str(), nullptr, SW_SHOW);
 							}
 						}
+						else if (item.assetType == AssetType::TECHNIQUE)
+						{
+							if (editorState->GetSettings().externalCodeEditorPath.empty() == false)
+							{
+								ShellExecuteA(nullptr, nullptr, editorState->GetSettings().externalCodeEditorPath.c_str(), item.path.c_str(), nullptr, SW_SHOW);
+							}
+						}
+						else if (item.assetType == AssetType::RENDER_PATH)
+						{
+							if (editorState->GetSettings().externalCodeEditorPath.empty() == false)
+							{
+								ShellExecuteA(nullptr, nullptr, editorState->GetSettings().externalCodeEditorPath.c_str(), item.path.c_str(), nullptr, SW_SHOW);
+							}
+						}
 					}
 					else
 					{
