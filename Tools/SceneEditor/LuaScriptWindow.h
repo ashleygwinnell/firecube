@@ -20,6 +20,7 @@ private:
 		std::string name;
 		FireCube::ScriptPropertyType type;
 		std::string defaultValue;
+		std::vector<std::string> options;
 		TextInputHelper stringInput;
 		FloatInputHelper floatInput;
 		Vec2InputHelper vec2Input;

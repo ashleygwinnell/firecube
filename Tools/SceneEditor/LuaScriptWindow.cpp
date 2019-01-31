@@ -129,11 +129,41 @@ void LuaScriptWindow::Render(EditorState *editorState, LuaScriptDescriptor *desc
 		switch (property.type)
 		{
 		case ScriptPropertyType::STRING:
-			property.stringInput.Render("", editorState, "Change Value", [curValue]() {
-				return curValue;
-			}, [propertyName, descriptor](const std::string &newValue) {
-				descriptor->SetProperty(propertyName, newValue);
-			});
+			if (property.options.empty())
+			{
+				property.stringInput.Render("", editorState, "Change Value", [curValue]() {
+					return curValue;
+				}, [propertyName, descriptor](const std::string &newValue) {
+					descriptor->SetProperty(propertyName, newValue);
+				});
+			}
+			else
+			{
+				if (ImGui::BeginCombo("", curValue.c_str()))
+				{
+					for (auto &option : property.options)
+					{
+						bool isSelected = curValue == option;
+						if (ImGui::Selectable(option.c_str(), isSelected))
+						{							
+							auto command = new CustomCommand(editorState, "Change Value", [option, descriptor, propertyName]()
+							{
+								descriptor->SetProperty(propertyName, option);
+							}, [curValue, descriptor, propertyName]()
+							{
+								descriptor->SetProperty(propertyName, curValue);
+							});
+
+							editorState->ExecuteCommand(command);
+						}
+						if (isSelected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+					ImGui::EndCombo();
+				}
+			}
 			break;
 		case ScriptPropertyType::BOOL:
 		{
@@ -290,6 +320,19 @@ void LuaScriptWindow::UpdateScriptProperties(const std::string &filename, const 
 					break;
 				default:
 					break;
+				}
+			}
+
+			sol::object options = property["options"];
+			if (options != sol::nil)
+			{
+				sol::table optionsTable = options.as<sol::table>();
+
+				std::size_t count = optionsTable.size();
+				for (std::size_t i = 1; i <= count; ++i)
+				{					
+					std::string option = optionsTable[i].get<std::string>();
+					prop.options.push_back(option);
 				}
 			}
 		}
