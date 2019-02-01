@@ -85,9 +85,9 @@ BoundingBox Renderable::GetWorldBoundingBox()
 }
 
 void Renderable::MarkedDirty()
-{	
-	MarkForOctreeReinsertion();
+{
 	worldBoundingBoxChanged = true;
+	MarkForOctreeReinsertion();
 }
 
 void Renderable::IntersectRay(RayQuery &rayQuery)
