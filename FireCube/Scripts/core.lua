@@ -48,10 +48,15 @@ function EventManager:UnSubscribeFromAllEvents(object)
 
 end
 
+function EventManager.CloneTable(org)
+	return {table.unpack(org)}
+end
+
 function EventManager:EmitEvent(event, ...)
 	local evt = self:_GetEvent(event)
-
-	for index, value in ipairs (evt.listeners) do
+	local originalListeners = EventManager.CloneTable(evt.listeners)
+	
+	for index, value in ipairs(originalListeners) do
 		local obj = value[1]
 		local func = value[2]
 
