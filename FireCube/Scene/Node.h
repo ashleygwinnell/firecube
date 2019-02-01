@@ -189,12 +189,12 @@ public:
 	/**
 	* Removes all children of this node
 	*/
-	void RemoveAllChildren();
+	void RemoveAllChildrenImmediately();
 
 	/**
 	* Delay removes all children of this node
 	*/
-	void DelayRemoveAllChildren();
+	void RemoveAllChildren();
 		
 	/**
 	* Clones the node.	
@@ -295,12 +295,12 @@ public:
 	/**
 	* Removes this node from its parent
 	*/
-	void Remove();
+	void RemoveImmediately();
 
 	/**
 	* Removes the node at the end of the current frame
 	*/
-	void DelayedRemove();
+	void Remove();
 
 protected:		
 

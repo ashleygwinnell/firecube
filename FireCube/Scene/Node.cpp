@@ -247,7 +247,7 @@ void Node::RemoveChild(const std::string &name)
 	}		
 }
 
-void Node::RemoveAllChildren()
+void Node::RemoveAllChildrenImmediately()
 {
 	children.clear();
 }
@@ -398,7 +398,7 @@ void Node::SceneChanged(Scene *oldScene)
 	}
 }
 
-void Node::Remove()
+void Node::RemoveImmediately()
 {
 	SetParent(nullptr);
 }
@@ -437,18 +437,18 @@ void Node::GetComponentsRecursive(const StringHash &type, std::vector<Component 
 	}
 }
 
-void Node::DelayedRemove()
+void Node::Remove()
 {
 	scene->AddDelayedRemoveNode(this);
 	SetParent(nullptr);
 }
 
-void Node::DelayRemoveAllChildren()
+void Node::RemoveAllChildren()
 {
 	auto curChildren = children;
 	for (auto child : curChildren)
 	{
-		child->DelayedRemove();
+		child->Remove();
 	}
 
 	children.clear();

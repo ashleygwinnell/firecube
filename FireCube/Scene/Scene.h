@@ -118,7 +118,7 @@ private:
 	std::vector<Renderable *> &GetRenderables();
 	std::vector<Light *> &GetLights();
 	void UpdateRenderables();
-	void PostRender(float deltaTime);
+	void PreRender(float deltaTime);
 
 	Octree<Renderable> &GetOctree();
 	

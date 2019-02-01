@@ -27,7 +27,7 @@ NodeDescriptor::~NodeDescriptor()
 
 	if (node.Expired() == false)
 	{
-		node->Remove();
+		node->RemoveImmediately();
 	}
 }
 
@@ -69,7 +69,7 @@ void NodeDescriptor::Remove()
 {
 	parent->children.erase(std::remove(parent->children.begin(), parent->children.end(), this), parent->children.end());
 	parent = nullptr;
-	node->Remove();
+	node->RemoveImmediately();
 }
 
 void NodeDescriptor::AddComponent(ComponentDescriptor *componentDesc)

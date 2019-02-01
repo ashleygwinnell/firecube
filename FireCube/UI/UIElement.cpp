@@ -55,7 +55,7 @@ vec2 UIElement::GetScreenPosition()
 	return screenPosition;
 }
 
-void UIElement::Remove()
+void UIElement::RemoveImmediately()
 {
 	if (parent)
 	{
@@ -66,7 +66,7 @@ void UIElement::Remove()
 
 void UIElement::AddChild(UIElement *element)
 {
-	element->Remove();
+	element->RemoveImmediately();
 
 	element->parent = this;
 	this->children.push_back(element);
@@ -79,7 +79,7 @@ UIElement *UIElement::GetParent()
 
 void UIElement::SetParent(UIElement *parent)
 {
-	Remove();
+	RemoveImmediately();
 	
 	this->parent = parent;
 
@@ -89,7 +89,7 @@ void UIElement::SetParent(UIElement *parent)
 	}
 }
 
-void UIElement::RemoveAllChildren()
+void UIElement::RemoveAllChildrenImmediately()
 {
 	for (auto child : children)
 	{
@@ -99,7 +99,7 @@ void UIElement::RemoveAllChildren()
 	children.clear();
 }
 
-void UIElement::DelayRemove()
+void UIElement::Remove()
 {
 	if (parent)
 	{
@@ -109,7 +109,7 @@ void UIElement::DelayRemove()
 	}
 }
 
-void UIElement::DelayRemoveAllChildren()
+void UIElement::RemoveAllChildren()
 {
 	for (auto child : children)
 	{

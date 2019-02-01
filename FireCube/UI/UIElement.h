@@ -26,13 +26,13 @@ public:
 	void SetPosition(vec2 position);
 	vec2 GetPosition() const;
 	vec2 GetScreenPosition();
-	void Remove();
+	void RemoveImmediately();
 	void AddChild(UIElement *element);
 	UIElement *GetParent();
 	void SetParent(UIElement *parent);
+	void RemoveAllChildrenImmediately();
+	void Remove();
 	void RemoveAllChildren();
-	void DelayRemove();
-	void DelayRemoveAllChildren();
 
 	template <class T, typename... Args> T* CreateChild(Args... args)
 	{

@@ -50,10 +50,10 @@ void LuaBindings::InitUI(sol::state &luaState)
 		"screenPosition", sol::property(&UIElement::GetScreenPosition),
 		"CreateChild", &CreateChild,
 		"AddChild", &UIElement::AddChild,
+		"RemoveImmediately", &UIElement::RemoveImmediately,
 		"Remove", &UIElement::Remove,
-		"DelayRemove", &UIElement::DelayRemove,
+		"RemoveAllChildrenImmediately", &UIElement::RemoveAllChildrenImmediately,
 		"RemoveAllChildren", &UIElement::RemoveAllChildren,
-		"DelayRemoveAllChildren", &UIElement::DelayRemoveAllChildren,
 		sol::base_classes, sol::bases<Object, RefCounted>());
 
 	luaState.new_usertype<UIText>("UIText",
