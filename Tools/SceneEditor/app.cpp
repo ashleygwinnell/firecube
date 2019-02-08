@@ -1068,9 +1068,8 @@ void FireCubeApp::RenderToolbar()
 		{
 			ShellExecuteA(nullptr, nullptr, Filesystem::JoinPath(currentProjectPath, project.gameExecutablePath).c_str(), nullptr, currentProjectPath.c_str(), SW_SHOW);
 		}
-
-		ImGui::EndToolbar();
 	}
+	ImGui::EndToolbar();
 }
 
 void FireCubeApp::ShowOpenDialog()
