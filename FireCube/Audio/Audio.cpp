@@ -33,7 +33,7 @@ void Audio::Init()
 	desired.callback = SDLAudioCallback;
 	desired.userdata = this;
 
-	deviceId = SDL_OpenAudioDevice(NULL, 0, &desired, &obtained, SDL_AUDIO_ALLOW_ANY_CHANGE);
+	deviceId = SDL_OpenAudioDevice(NULL, 0, &desired, &obtained, SDL_AUDIO_ALLOW_ANY_CHANGE & ~SDL_AUDIO_ALLOW_FORMAT_CHANGE);
 	if (deviceId == 0) 
 	{
 		LOGERROR("Failed to open audio: ", SDL_GetError());
