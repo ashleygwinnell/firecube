@@ -47,6 +47,7 @@ void LuaBindings::InitMath(sol::state &luaState)
 		"Length2", &vec3::Length2,
 		"Normalized", &vec3::Normalized,
 		"Normalize", &vec3::Normalize,
+		"TransformNormal", &vec3::TransformNormal,
 		"Dot", sol::resolve<float(const vec3&, const vec3&)>(&FireCube::Dot),
 		sol::meta_function::addition, sol::resolve<vec3(const vec3&, const vec3&)>(::operator+),
 		sol::meta_function::subtraction, sol::resolve<vec3(const vec3&, const vec3&)>(::operator-),		
