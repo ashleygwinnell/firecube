@@ -715,16 +715,18 @@ void ImGuiHelpers::ShowAssetSelectionPopup(const std::string &title)
 
 bool ImGuiHelpers::AssetSelectionPopup(const std::string &title, AssetType type, std::string &selectedPath)
 {
-	if (!ImGui::IsPopupOpen(title.c_str()))
-	{
-		return false;
-	}
-
 	static AssetType curType = AssetType::UNKNOWN;
 	static std::string curBasePath;
 	static std::string curPath;
 	static std::string lastPath;
 	static std::vector<ItemInfo> curItems;
+
+	if (!ImGui::IsPopupOpen(title.c_str()))
+	{
+		curType = AssetType::UNKNOWN;
+		return false;
+	}
+	
 	bool ret = false;
 	if (curType != type || lastPath != curPath)
 	{
