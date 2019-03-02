@@ -1001,6 +1001,7 @@ void FireCubeApp::RenderMenuBar()
 			{
 				showSettingsPopup = true;
 			}
+			ImGui::MenuItem("Grid", nullptr, editorWindow->GetRenderGridPtr());
 			ImGui::EndMenu();
 		}
 

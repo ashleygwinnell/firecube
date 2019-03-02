@@ -32,6 +32,7 @@ public:
 	void UseTranslateGizmo();
 	void UseRotateGizmo();
 	void UseScaleGizmo();
+	bool *GetRenderGridPtr();
 private:
 	void CreateGrid(float size, unsigned int numberOfCells);
 	void HandleInput(float t, const FireCube::MappedInput &input);
@@ -65,4 +66,5 @@ private:
 	bool leftButtonDown;
 	bool firstLeftDownOutside;
 	float orbitDistance;
+	bool renderGrid;
 };

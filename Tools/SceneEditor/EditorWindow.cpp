@@ -18,7 +18,7 @@
 using namespace FireCube;
 
 EditorWindow::EditorWindow(Engine *engine) : Object(engine), gridNode(nullptr), gridMaterial(nullptr), gridGeometry(nullptr), currentOperation(Operation3::NONE),
-leftButtonDown(false), firstLeftDownOutside(true), orbitDistance(10.0f)
+leftButtonDown(false), firstLeftDownOutside(true), orbitDistance(10.0f), renderGrid(true)
 {
 	
 }
@@ -26,6 +26,7 @@ leftButtonDown(false), firstLeftDownOutside(true), orbitDistance(10.0f)
 void EditorWindow::Render()
 {
 	UpdateGizmo();
+	gridGeometry->SetEnabled(renderGrid);
 	engine->GetRenderer()->SetRenderTarget(0, renderSurface);
 	engine->GetRenderer()->UpdateFrameBuffer();
 	if (editorState->GetSelectedNode())
@@ -527,6 +528,11 @@ void EditorWindow::UseScaleGizmo()
 
 		editorState->switchedToScaleGizmo(editorState);
 	}
+}
+
+bool *EditorWindow::GetRenderGridPtr()
+{
+	return &renderGrid;
 }
 
 void EditorWindow::UseDefaultCamera()
