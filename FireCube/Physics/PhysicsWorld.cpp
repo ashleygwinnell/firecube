@@ -24,7 +24,11 @@ PhysicsWorld::PhysicsWorld(const PhysicsWorld &other) : Component(other), narrow
 void PhysicsWorld::AddCollisionShape(CollisionShape *collisionShape)
 {
 	collisionShapes.push_back(collisionShape);
-	collisionShapesOctree.Insert(collisionShape);
+	collisionShape->SetOctree(&collisionShapesOctree);
+	if (collisionShape->GetWorldBoundingBox().Valid())
+	{
+		collisionShapesOctree.Insert(collisionShape);
+	}
 }
 
 void PhysicsWorld::RemoveCollisionShape(CollisionShape *collisionShape)
@@ -33,6 +37,7 @@ void PhysicsWorld::RemoveCollisionShape(CollisionShape *collisionShape)
 	if (collisionShape->GetOctreeNode())
 	{
 		collisionShapesOctree.Remove(collisionShape);
+		collisionShape->SetOctree(nullptr);
 	}
 }
 
@@ -49,7 +54,11 @@ void PhysicsWorld::RemoveCharacterController(CharacterController *characterContr
 void PhysicsWorld::AddRigidBody(RigidBody *rigidBody)
 {
 	rigidBodies.push_back(rigidBody);
-	rigidBodiesOctree.Insert(rigidBody);
+	rigidBody->SetOctree(&rigidBodiesOctree);
+	if (rigidBody->GetWorldBoundingBox().Valid())
+	{
+		rigidBodiesOctree.Insert(rigidBody);
+	}
 }
 
 void PhysicsWorld::RemoveRigidBody(RigidBody *rigidBody)
@@ -58,6 +67,7 @@ void PhysicsWorld::RemoveRigidBody(RigidBody *rigidBody)
 	if (rigidBody->GetOctreeNode())
 	{
 		rigidBodiesOctree.Remove(rigidBody);
+		rigidBody->SetOctree(nullptr);
 	}
 }
 
@@ -356,7 +366,7 @@ Component *PhysicsWorld::Clone() const
 	return clone;
 }
 
-std::vector<RigidBody *> & PhysicsWorld::GetRigitBodies()
+std::vector<RigidBody *> &PhysicsWorld::GetRigitBodies()
 {
 	return rigidBodies;
 }

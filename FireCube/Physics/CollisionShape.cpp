@@ -46,8 +46,8 @@ CollisionShapeType CollisionShape::GetShapeType() const
 
 void CollisionShape::MarkedDirty()
 {
-	MarkForOctreeReinsertion();
 	worldBoundingBoxChanged = true;
+	MarkForOctreeReinsertion();	
 }
 
 void CollisionShape::NodeChanged()
