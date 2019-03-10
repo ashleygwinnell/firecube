@@ -11,6 +11,7 @@
 #include "Scene/Camera.h"
 #include "Scene/AnimatedModel.h"
 #include "Physics/CollisionShape.h"
+#include "Physics/PhysicsWorld.h"
 #include "Scripting/LuaScript.h"
 #include "Audio/SoundEmitter.h"
 #include "Scene/SceneReader.h"
@@ -118,6 +119,18 @@ sol::object GetComponent(Node *node, const std::string &type, sol::this_state s)
 	else if (type == "Camera")
 	{
 		auto component = node->GetComponent<Camera>();
+		if (component)
+		{
+			return sol::object(s, sol::in_place, component);
+		}
+		else
+		{
+			return sol::make_object(s, sol::nil);
+		}
+	}
+	else if (type == "PhysicsWorld")
+	{
+		auto component = node->GetComponent<PhysicsWorld>();
 		if (component)
 		{
 			return sol::object(s, sol::in_place, component);
