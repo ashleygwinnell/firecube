@@ -56,6 +56,7 @@
 #include "Physics/CollisionShape.h"
 #include "Physics/PhysicsWorld.h"
 #include "Physics/RigidBody.h"
+#include "Physics/PhysicsCollisionQuery.h"
 #include "Application/Input.h"
 #include "Application/Application.h"
 #include "Application/WindowProperties.h"

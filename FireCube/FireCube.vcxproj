@@ -56,6 +56,7 @@
     <ClCompile Include="Physics\ContactConstraint.cpp" />
     <ClCompile Include="Physics\Constraint.cpp" />
     <ClCompile Include="Physics\FrictionConstraint.cpp" />
+    <ClCompile Include="Physics\PhysicsCollisionQuery.cpp" />
     <ClCompile Include="Physics\Solver.cpp" />
     <ClCompile Include="Physics\Jacobian.cpp" />
     <ClCompile Include="Physics\Narrowphase.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Physics\ContactConstraint.h" />
     <ClInclude Include="Physics\Constraint.h" />
     <ClInclude Include="Physics\FrictionConstraint.h" />
+    <ClInclude Include="Physics\PhysicsCollisionQuery.h" />
     <ClInclude Include="Physics\Solver.h" />
     <ClInclude Include="Physics\Jacobian.h" />
     <ClInclude Include="Physics\Narrowphase.h" />

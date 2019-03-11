@@ -384,6 +384,9 @@
     <ClCompile Include="Geometry\MeshMetadata.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\PhysicsCollisionQuery.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rendering\Font.h">
@@ -692,6 +695,9 @@
     </ClInclude>
     <ClInclude Include="Geometry\MeshMetadata.h">
       <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PhysicsCollisionQuery.h">
+      <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

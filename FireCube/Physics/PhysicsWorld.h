@@ -14,6 +14,7 @@ namespace FireCube
 {
 
 class CharacterController;
+class PhysicsRayQuery;
 
 class CollisionContact
 {
@@ -57,6 +58,9 @@ public:
 	float GetDeltaTime() const;
 
 	virtual void RenderDebugGeometry(DebugRenderer *debugRenderer);
+
+	void IntersectRay(PhysicsRayQuery &rayQuery);
+
 	virtual Component *Clone() const;
 private:
 

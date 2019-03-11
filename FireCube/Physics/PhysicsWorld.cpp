@@ -6,6 +6,7 @@
 #include "Core/Events.h"
 #include "Scene/Node.h"
 #include "Math/CollisionUtils.h"
+#include "Physics/PhysicsCollisionQuery.h"
 
 using namespace FireCube;
 
@@ -384,6 +385,88 @@ vec3 PhysicsWorld::GetGravity() const
 float PhysicsWorld::GetDeltaTime() const
 {
 	return deltaTime;
+}
+
+void PhysicsWorld::IntersectRay(PhysicsRayQuery &rayQuery)
+{
+	std::vector<CollisionShape *> collisionShapes;
+
+	collisionShapesOctree.GetObjects(rayQuery.ray, rayQuery.maxDistance, collisionShapes);
+	for (auto shape : collisionShapes)
+	{
+		mat4 worldTransform = shape->GetNode()->GetWorldTransformation();
+		mat4 modelTransform = worldTransform;
+		modelTransform.Inverse();
+		Ray localRay = rayQuery.ray.Transformed(modelTransform);
+
+		if (shape->GetShapeType() == CollisionShapeType::BOX)
+		{
+			float dist;
+			if (localRay.IntersectBoundingBox(shape->GetBox(), dist) && dist <= rayQuery.maxDistance)
+			{
+				PhysicsRayQueryResult result;
+				result.distance = dist;
+				result.shape = shape;
+				result.normal = localRay.origin.Normalized().TransformNormal(worldTransform);
+				rayQuery.results.push_back(result);
+			}
+		}
+		else if (shape->GetShapeType() == CollisionShapeType::SPHERE)
+		{
+			float dist;
+			if (CollisionUtils::IntersectRaySphere(localRay.origin, localRay.direction, rayQuery.maxDistance, vec3(0.0f), shape->GetRadius(), dist) && dist <= rayQuery.maxDistance)
+			{
+				PhysicsRayQueryResult result;
+				result.distance = dist;
+				result.shape = shape;
+				result.normal = localRay.origin.Normalized().TransformNormal(worldTransform);
+				rayQuery.results.push_back(result);
+			}
+		}
+		else if (shape->GetShapeType() == CollisionShapeType::PLANE)
+		{
+			float dist;
+			if (localRay.IntersectPlane(shape->GetPlane(), dist) && dist <= rayQuery.maxDistance)
+			{
+				PhysicsRayQueryResult result;
+				result.distance = dist;
+				result.shape = shape;
+				result.normal = shape->GetPlane().GetNormal().TransformNormal(worldTransform);
+				rayQuery.results.push_back(result);
+			}
+		}
+		else if (shape->GetShapeType() == CollisionShapeType::TRIANGLE_MESH)
+		{
+			float dist;
+			vec3 normal;
+			bool found = false;
+			CollisionMesh *mesh = shape->GetCollisionMesh();
+			for (auto &tri : mesh->triangles)
+			{
+				float u, v, t;
+				vec3 n = Cross(tri.p1 - tri.p0, tri.p2 - tri.p0);
+				if (n.Dot(localRay.direction) < 0)
+				{
+					bool intersect = localRay.IntersectTriangle(tri.p0, tri.p1, tri.p2, u, v, t);
+					if (intersect && (t > 0) && (!found || (t < dist && t <= rayQuery.maxDistance)))
+					{
+						found = true;
+						dist = t;
+						normal = n;
+					}
+				}
+			}
+
+			if (found)
+			{
+				PhysicsRayQueryResult result;
+				result.distance = dist;
+				result.shape = shape;
+				result.normal = normal;
+				rayQuery.results.push_back(result);
+			}
+		}
+	}
 }
 
 CollisionResult::CollisionResult() : collisionFound(false)
