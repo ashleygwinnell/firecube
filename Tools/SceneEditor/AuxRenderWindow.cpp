@@ -15,6 +15,7 @@ AuxRenderWindow::AuxRenderWindow(Engine *engine) : Object(engine), gridNode(null
 
 	scene = new Scene(engine);
 	root = scene->GetRootNode();
+	root->CreateComponent<PhysicsWorld>();
 	clientRoot = root->CreateChild();
 	CreateGrid(0.5f, 10);
 
