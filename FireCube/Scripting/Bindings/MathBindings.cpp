@@ -77,7 +77,12 @@ void LuaBindings::InitMath(sol::state &luaState)
 	luaState.new_usertype<Ray>("Ray",
 		sol::constructors<Ray(const vec3 &, const vec3 &)>(),
 		"origin", &Ray::origin,
-		"direction", &Ray::direction);
+		"direction", &Ray::direction,
+		"IntersectPlane", [](const Ray &self, const Plane &plane) {
+			float dist;
+			bool intersect = self.IntersectPlane(plane, dist);
+			return std::make_tuple(intersect, dist);
+	});
 
 	luaState.new_usertype<Plane>("Plane",
 		sol::constructors<Plane(const vec3 &, float)>(),
