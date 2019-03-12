@@ -145,6 +145,16 @@ void LuaScript::SubscribeToEventFromLua(const std::string &eventName, sol::objec
 		scriptFunctions[ScriptFunction::CHARACTER_CONTROLLER_COLLISION] = engine->GetLuaState()->GetFunction();
 		SubscribeToEvent(sender, Events::CharacterControllerCollision, &LuaScript::CharacterControllerCollision);
 	}
+	else if (eventName == "CollisionShapeEnterCollision")
+	{
+		scriptFunctions[ScriptFunction::COLLISION_SHAPE_ENTER_COLLISION] = engine->GetLuaState()->GetFunction();
+		SubscribeToEvent(sender, Events::CollisionShapeEnterCollision, &LuaScript::CollisionShapeEnterCollision);
+	}
+	else if (eventName == "CollisionShapeLeaveCollision")
+	{
+		scriptFunctions[ScriptFunction::COLLISION_SHAPE_LEAVE_COLLISION] = engine->GetLuaState()->GetFunction();
+		SubscribeToEvent(sender, Events::CollisionShapeLeaveCollision, &LuaScript::CollisionShapeLeaveCollision);
+	}
 }
 
 void LuaScript::HandleInput(float dt, const MappedInput &input)
@@ -160,6 +170,22 @@ void LuaScript::CharacterControllerCollision(CharacterController *characterContr
 	if (awakeCalled && IsEnabled())
 	{
 		(*scriptFunctions[ScriptFunction::CHARACTER_CONTROLLER_COLLISION])(object, characterController, collisionShape);		
+	}
+}
+
+void LuaScript::CollisionShapeEnterCollision(CollisionShape *triggerShape, CollisionShape *otherShape)
+{
+	if (awakeCalled && IsEnabled())
+	{
+		(*scriptFunctions[ScriptFunction::COLLISION_SHAPE_ENTER_COLLISION])(object, triggerShape, otherShape);
+	}
+}
+
+void LuaScript::CollisionShapeLeaveCollision(CollisionShape *triggerShape, CollisionShape *otherShape)
+{
+	if (awakeCalled && IsEnabled())
+	{
+		(*scriptFunctions[ScriptFunction::COLLISION_SHAPE_LEAVE_COLLISION])(object, triggerShape, otherShape);
 	}
 }
 

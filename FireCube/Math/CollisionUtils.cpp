@@ -7,6 +7,12 @@
 
 using namespace FireCube;
 
+class Interval
+{
+public:
+	float min, max;
+};
+
 void CollisionUtils::SweepEllipsoidMesh(vec3 transformedPosition, vec3 transformedVelocity, const CollisionMesh &collisionMesh, mat4 transform, CollisionResult &result)
 {
 	vec3 normalizedTransformedVelocity = transformedVelocity.Normalized();
@@ -1165,4 +1171,88 @@ bool CollisionUtils::SweepSphereCapsule(const vec3& sphereCenter, float sphereRa
 
 	result.collisionFound = false;
 	return false;
+}
+
+bool CollisionUtils::IntersectOBBOBB(const BoundingBox &box0, mat4 &box0Transform, const BoundingBox &box1, mat4 &box1Transform)
+{
+	vec3 box0Center = box0Transform * box0.GetCenter();
+	vec3 box0Axes[3] =
+	{
+		vec3(box0Transform.m[0], box0Transform.m[1], box0Transform.m[2]),
+		vec3(box0Transform.m[4], box0Transform.m[5], box0Transform.m[6]),
+		vec3(box0Transform.m[8], box0Transform.m[9], box0Transform.m[10])
+	};
+	vec3 box1Center = box1Transform * box1.GetCenter();
+	vec3 box1Axes[3] =
+	{
+		vec3(box1Transform.m[0], box1Transform.m[1], box1Transform.m[2]),
+		vec3(box1Transform.m[4], box1Transform.m[5], box1Transform.m[6]),
+		vec3(box1Transform.m[8], box1Transform.m[9], box1Transform.m[10])
+	};
+
+	return CollisionUtils::IntersectOBBOBB(box0Center, box0Axes, box0.GetSize() * 0.5f, box1Center, box1Axes, box1.GetSize() * 0.5f);
+}
+
+Interval GetInterval(const vec3 &boxCenter, const vec3 boxAxes[3], const vec3 &boxSize, const vec3 &axis)
+{
+	vec3 vertex[8];
+
+	vertex[0] = boxCenter + boxAxes[0] * boxSize[0] + boxAxes[1] * boxSize[1] + boxAxes[2] * boxSize[2];
+	vertex[1] = boxCenter - boxAxes[0] * boxSize[0] + boxAxes[1] * boxSize[1] + boxAxes[2] * boxSize[2];
+	vertex[2] = boxCenter + boxAxes[0] * boxSize[0] - boxAxes[1] * boxSize[1] + boxAxes[2] * boxSize[2];
+	vertex[3] = boxCenter + boxAxes[0] * boxSize[0] + boxAxes[1] * boxSize[1] - boxAxes[2] * boxSize[2];
+	vertex[4] = boxCenter - boxAxes[0] * boxSize[0] - boxAxes[1] * boxSize[1] - boxAxes[2] * boxSize[2];
+	vertex[5] = boxCenter + boxAxes[0] * boxSize[0] - boxAxes[1] * boxSize[1] - boxAxes[2] * boxSize[2];
+	vertex[6] = boxCenter - boxAxes[0] * boxSize[0] + boxAxes[1] * boxSize[1] - boxAxes[2] * boxSize[2];
+	vertex[7] = boxCenter - boxAxes[0] * boxSize[0] - boxAxes[1] * boxSize[1] + boxAxes[2] * boxSize[2];
+
+	Interval result;
+	result.min = result.max = Dot(axis, vertex[0]);
+
+	for (int i = 1; i < 8; ++i)
+	{
+		float projection = Dot(axis, vertex[i]);
+		result.min = std::min(projection, result.min);
+		result.max = std::max(projection, result.max);
+	}
+
+	return result;
+}
+
+bool OverlapOnAxis(const vec3 &box0Center, const vec3 box0Axes[3], const vec3 &box0Size, const vec3 &box1Center, const vec3 box1Axes[3], const vec3 &box1Size, const vec3 &axis)
+{
+	Interval a = GetInterval(box0Center, box0Axes, box0Size, axis);
+	Interval b = GetInterval(box1Center, box1Axes, box1Size, axis);
+	return ((b.min <= a.max) && (a.min <= b.max));
+}
+
+
+bool CollisionUtils::IntersectOBBOBB(const vec3 &box0Center, const vec3 box0Axes[3], const vec3 &box0Size, const vec3 &box1Center, const vec3 box1Axes[3], const vec3 &box1Size)
+{
+	vec3 test[15] =
+	{
+		box0Axes[0],
+		box0Axes[1],
+		box0Axes[2],
+		box1Axes[0],
+		box1Axes[1],
+		box1Axes[2]
+	};
+
+	for (int i = 0; i < 3; ++i)
+	{
+		test[6 + i * 3 + 0] = Cross(test[i], test[0]);
+		test[6 + i * 3 + 1] = Cross(test[i], test[1]);
+		test[6 + i * 3 + 2] = Cross(test[i], test[2]);
+	}
+
+	for (int i = 0; i < 15; ++i)
+	{
+		if (!OverlapOnAxis(box0Center, box0Axes, box0Size, box1Center, box1Axes, box1Size, test[i]))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }

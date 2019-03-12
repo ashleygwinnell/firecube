@@ -1,6 +1,7 @@
 #pragma once
 
 #include <set>
+#include <unordered_map>
 
 #include "Core/Component.h"
 #include "Math/Math.h"
@@ -35,6 +36,13 @@ public:
 	vec3 nearestNormal;
 	vec3 nearestIntersectionPoint;
 	vec3 nearestTriNormal;	
+};
+
+struct SimpleHash {
+	size_t operator()(const std::pair<CollisionShape *, CollisionShape *> &p) const
+	{		
+		return ((size_t) p.first) ^ ((size_t) p.second);
+	}
 };
 
 class FIRECUBE_API PhysicsWorld : public Component
@@ -75,6 +83,7 @@ private:
 	void MarkedDirty();
 	void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
+	void CheckCollisionShapesCollisions();
 
 	std::vector<CollisionShape *> collisionShapes;
 	std::vector<CharacterController *> characterControllers;
@@ -87,6 +96,7 @@ private:
 
 	Octree<CollisionShape> collisionShapesOctree;
 	Octree<RigidBody> rigidBodiesOctree;
+	std::unordered_map<std::pair<CollisionShape *, CollisionShape *>, bool, SimpleHash> collidingShapes;
 };
 
 }

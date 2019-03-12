@@ -10,6 +10,7 @@ class CollisionMesh;
 class CollisionTriangle;
 class CollisionResult;
 class Plane;
+class BoundingBox;
 
 namespace CollisionUtils
 {
@@ -23,6 +24,8 @@ bool SweepSpherePlane(vec3 position, vec3 velocity, float radius, const Plane &p
 int IntersectRayCapsule(vec3 origin, vec3 dir, vec3 capsuleP0, vec3 capsuleP1, float radius, float t[2]);
 bool IntersectRaySphere(const vec3 &origin, const vec3 &dir, float length, const vec3& center, float radius, float& dist);
 bool SweepSphereCapsule(const vec3& sphereCenter, float sphereRadius, const vec3& capusleP0, const vec3& capusleP1, float radius, const vec3& dir, float length, CollisionResult &result);
+bool IntersectOBBOBB(const BoundingBox &box0, mat4 &box0Transform, const BoundingBox &box1, mat4 &box1Transform);
+bool IntersectOBBOBB(const vec3 &box0Center, const vec3 box0Axes[3], const vec3 &box0Size, const vec3 &box1Center, const vec3 box1Axes[3], const vec3 &box1Size);
 
 }
 

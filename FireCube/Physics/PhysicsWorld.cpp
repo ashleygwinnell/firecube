@@ -328,7 +328,8 @@ void PhysicsWorld::Update(float deltaTime)
 	collisionShapesOctree.Update();
 	rigidBodiesOctree.Update();
 	UpdateCharacterControllers(deltaTime);	
-	UpdateRigidBodies(this->deltaTime);	
+	UpdateRigidBodies(this->deltaTime);
+	CheckCollisionShapesCollisions();
 }
 
 void PhysicsWorld::MarkedDirty()
@@ -467,6 +468,97 @@ void PhysicsWorld::IntersectRay(PhysicsRayQuery &rayQuery)
 			}
 		}
 	}
+}
+
+void PhysicsWorld::CheckCollisionShapesCollisions()
+{
+	std::unordered_map<std::pair<CollisionShape *, CollisionShape *>, bool, SimpleHash> newCollidingShapes;
+	for (auto *shape : collisionShapes)
+	{
+		if (shape->IsTrigger() == false)
+		{
+			continue;
+		}
+
+		BoundingBox worldBoundingBox = shape->GetWorldBoundingBox();
+		std::vector<CollisionShape *> potentialShapes;
+		collisionShapesOctree.GetObjects(worldBoundingBox, potentialShapes);
+		for (auto *otherShape : potentialShapes)
+		{
+			if (shape == otherShape)
+			{
+				continue;
+			}
+
+			if (shape->GetShapeType() == CollisionShapeType::BOX)
+			{
+				if (otherShape->GetShapeType() == CollisionShapeType::BOX)
+				{
+					if (CollisionUtils::IntersectOBBOBB(shape->GetBox(), shape->GetNode()->GetWorldTransformation(), otherShape->GetBox(), otherShape->GetNode()->GetWorldTransformation()))
+					{
+						auto key = std::make_pair(shape, otherShape);
+						newCollidingShapes[key] = true;
+						if (collidingShapes.find(key) == collidingShapes.end())
+						{							
+							Events::CollisionShapeEnterCollision(shape, shape, otherShape);
+						}
+					}
+				}
+				else if (otherShape->GetShapeType() == CollisionShapeType::SPHERE)
+				{
+
+				}
+				else if (otherShape->GetShapeType() == CollisionShapeType::PLANE)
+				{
+
+				}
+			}
+			else if (shape->GetShapeType() == CollisionShapeType::SPHERE)
+			{
+				if (otherShape->GetShapeType() == CollisionShapeType::BOX)
+				{
+
+				}
+				else if (otherShape->GetShapeType() == CollisionShapeType::SPHERE)
+				{
+
+				}
+				else if (otherShape->GetShapeType() == CollisionShapeType::PLANE)
+				{
+
+				}
+			}
+			else if (shape->GetShapeType() == CollisionShapeType::PLANE)
+			{
+				if (otherShape->GetShapeType() == CollisionShapeType::BOX)
+				{
+
+				}
+				else if (otherShape->GetShapeType() == CollisionShapeType::SPHERE)
+				{
+
+				}
+				else if (otherShape->GetShapeType() == CollisionShapeType::PLANE)
+				{
+
+				}
+			}
+			else if (shape->GetShapeType() == CollisionShapeType::TRIANGLE_MESH)
+			{
+				continue;
+			}
+		}
+	}
+
+	for (auto item : collidingShapes)
+	{		
+		if (newCollidingShapes.find(item.first) == newCollidingShapes.end())
+		{
+			Events::CollisionShapeLeaveCollision(item.first.first, item.first.first, item.first.second);
+		}
+	}
+
+	collidingShapes = newCollidingShapes;
 }
 
 CollisionResult::CollisionResult() : collisionFound(false)

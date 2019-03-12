@@ -21,6 +21,8 @@ extern Event<float, const MappedInput &> HandleInput;
 extern Event<CharacterController *, CollisionShape *> CharacterControllerCollision;
 extern Event<Resource *> ResourceReloaded;
 extern Event<const std::set<Shader *> &> ShaderReloaded;
+extern Event<CollisionShape *, CollisionShape *> CollisionShapeEnterCollision;
+extern Event<CollisionShape *, CollisionShape *> CollisionShapeLeaveCollision;
 
 }
 

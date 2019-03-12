@@ -18,7 +18,7 @@ class LuaBindings;
 
 enum class ScriptFunction
 {
-	INIT, UPDATE, AWAKE, HANDLE_INPUT, CHARACTER_CONTROLLER_COLLISION
+	INIT, UPDATE, AWAKE, HANDLE_INPUT, CHARACTER_CONTROLLER_COLLISION, COLLISION_SHAPE_ENTER_COLLISION, COLLISION_SHAPE_LEAVE_COLLISION
 };
 
 enum class ScriptPropertyType
@@ -146,6 +146,8 @@ private:
 	void Update(float dt);
 	void HandleInput(float dt, const MappedInput &input);
 	void CharacterControllerCollision(CharacterController *characterController, CollisionShape *collisionShape);
+	void CollisionShapeEnterCollision(CollisionShape *triggerShape, CollisionShape *otherShape);
+	void CollisionShapeLeaveCollision(CollisionShape *triggerShape, CollisionShape *otherShape);
 	virtual void MarkedDirty();
 	virtual void NodeChanged();
 	virtual void SceneChanged(Scene *oldScene);
