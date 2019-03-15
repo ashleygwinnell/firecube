@@ -518,16 +518,22 @@ void PhysicsWorld::CheckCollisionShapesCollisions()
 						}
 					}
 				}
-				else if (otherShape->GetShapeType() == CollisionShapeType::PLANE)
-				{
-
-				}
 			}
 			else if (shape->GetShapeType() == CollisionShapeType::SPHERE)
 			{
 				if (otherShape->GetShapeType() == CollisionShapeType::BOX)
 				{
-
+					vec3 scale = shape->GetNode()->GetWorldScale();
+					float scaledRadius = std::max(std::max(scale.x, scale.y), scale.z) * shape->GetRadius();
+					if (CollisionUtils::IntersectOBBSphere(otherShape->GetBox(), otherShape->GetNode()->GetWorldTransformation(), shape->GetNode()->GetWorldPosition(), scaledRadius))
+					{
+						auto key = std::make_pair(shape, otherShape);
+						newCollidingShapes[key] = true;
+						if (collidingShapes.find(key) == collidingShapes.end())
+						{
+							Events::CollisionShapeEnterCollision(shape, shape, otherShape);
+						}
+					}
 				}
 				else if (otherShape->GetShapeType() == CollisionShapeType::SPHERE)
 				{
