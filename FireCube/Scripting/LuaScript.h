@@ -144,6 +144,7 @@ private:
 	LuaScript(const LuaScript &other);
 
 	void Update(float dt);
+	void PreUpdate(float dt);
 	void HandleInput(float dt, const MappedInput &input);
 	void CharacterControllerCollision(CharacterController *characterController, CollisionShape *collisionShape);
 	void CollisionShapeEnterCollision(CollisionShape *triggerShape, CollisionShape *otherShape);

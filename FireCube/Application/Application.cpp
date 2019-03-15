@@ -188,6 +188,7 @@ void Application::Run()
 		// Dispatch input to all input listeners		
 		Events::HandleInput(this, deltaTime, inputManager.GetMappedInput());
 		// Update the scene
+		Events::PreUpdate(this, deltaTime);
 		Events::Update(this, deltaTime);
 		Update(deltaTime);
 		// Render the scene

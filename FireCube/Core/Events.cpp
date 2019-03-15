@@ -2,6 +2,7 @@
 
 using namespace FireCube;
 
+Event<float> Events::PreUpdate;
 Event<float> Events::Update;
 Event<float> Events::PostRender;
 Event<float> Events::PreRender;

@@ -26,20 +26,25 @@ LuaScript::~LuaScript()
 	(*GetFunction("EventManager.UnSubscribeFromAllEvents"))(engine->GetLuaState()->GetGlobal("EventManager"), object);
 }
 
-void LuaScript::Update(float dt)
-{	
+
+void LuaScript::PreUpdate(float dt)
+{
 	if (awakeCalled == false && scene)
-	{		
+	{
 		awakeCalled = true;
 
 		auto awakeFunction = scriptFunctions[ScriptFunction::AWAKE];
 		if (objectName.empty() == false && IsEnabled() && awakeFunction)
-		{				
+		{
 			// Call awake function	
-			(*awakeFunction)(object);			
+			(*awakeFunction)(object);
 		}
 	}
+}
 
+
+void LuaScript::Update(float dt)
+{
 	auto updateFunction = scriptFunctions[ScriptFunction::UPDATE];
 	if (awakeCalled && IsEnabled() && updateFunction)
 	{
@@ -71,11 +76,13 @@ void LuaScript::SceneChanged(Scene *oldScene)
 	if (!scene && oldScene)
 	{
 		UnSubscribeFromEvent(Events::Update);
+		UnSubscribeFromEvent(Events::PreUpdate);
 	}
 
 	if (scene && !oldScene)
 	{
 		SubscribeToEvent(Events::Update, &LuaScript::Update);
+		SubscribeToEvent(Events::PreUpdate, &LuaScript::PreUpdate);
 	}
 }
 

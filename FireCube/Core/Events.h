@@ -14,6 +14,7 @@ class Shader;
 namespace Events
 {
 
+extern Event<float> PreUpdate;
 extern Event<float> Update;
 extern Event<float> PostRender;
 extern Event<float> PreRender;
