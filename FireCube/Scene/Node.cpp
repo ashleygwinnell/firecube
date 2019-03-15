@@ -73,6 +73,16 @@ quat Node::GetWorldRotation() const
 	return worldRotation;
 }
 
+vec3 Node::GetWorldScale() const
+{
+	if (transformationChanged)
+	{
+		UpdateWorldTransformation();
+	}
+
+	return worldScale;
+}
+
 void Node::UpdateWorldTransformation() const
 {
 	transformationChanged = false;
@@ -80,11 +90,13 @@ void Node::UpdateWorldTransformation() const
 	{
 		worldTransformation = parent->GetWorldTransformation() * GetLocalTransformation();
 		worldRotation = parent->GetWorldRotation() * rotation;
+		worldScale = parent->GetScale() * scale;
 	}
 	else
 	{
 		worldTransformation = GetLocalTransformation();
 		worldRotation = rotation;
+		worldScale = scale;
 	}
 }
 

@@ -76,6 +76,11 @@ public:
 	quat GetWorldRotation() const;
 
 	/**
+	* @returns The world scale of this node
+	*/
+	vec3 GetWorldScale() const;
+
+	/**
 	* Sets the translation of this node.
 	* @param t The translation to assign to this node.
 	*/
@@ -336,6 +341,7 @@ protected:
 	mutable bool transformationChanged;	
 	mutable mat4 worldTransformation;	
 	mutable quat worldRotation;
+	mutable vec3 worldScale;
 	
 	Node *parent;
 	std::string name;
