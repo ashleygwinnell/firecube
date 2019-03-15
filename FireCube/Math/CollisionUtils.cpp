@@ -1316,3 +1316,9 @@ bool CollisionUtils::IntersectOBBSphere(const BoundingBox &box, const mat4 &boxT
 
 	return ::IntersectOBBSphere(boxCenter, boxAxes, box.GetSize() * 0.5f, sphereCenter, radius);
 }
+
+bool CollisionUtils::IntersectSphereSphere(const vec3 center0, float radius0, const vec3 &center1, float radius1)
+{
+	float radiiSum = radius0 + radius1;
+	return (center0 - center1).Length2() < radiiSum * radiiSum;
+}

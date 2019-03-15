@@ -28,7 +28,7 @@ bool IntersectOBBOBB(const BoundingBox &box0, mat4 &box0Transform, const Boundin
 bool IntersectOBBOBB(const vec3 &box0Center, const vec3 box0Axes[3], const vec3 &box0Size, const vec3 &box1Center, const vec3 box1Axes[3], const vec3 &box1Size);
 vec3 ClosestPoint(const BoundingBox &box0, const mat4 &box0Transform, const vec3 &point);
 bool IntersectOBBSphere(const BoundingBox &box, const mat4 &boxTransform, const vec3 &sphereCenter, float radius);
-
+bool IntersectSphereSphere(const vec3 center0, float radius0, const vec3 &center1, float radius1);
 }
 
 }

@@ -537,31 +537,22 @@ void PhysicsWorld::CheckCollisionShapesCollisions()
 				}
 				else if (otherShape->GetShapeType() == CollisionShapeType::SPHERE)
 				{
+					vec3 scale0 = shape->GetNode()->GetWorldScale();
+					float scaledRadius0 = std::max(std::max(scale0.x, scale0.y), scale0.z) * shape->GetRadius();
 
+					vec3 scale1 = otherShape->GetNode()->GetWorldScale();
+					float scaledRadius1 = std::max(std::max(scale1.x, scale1.y), scale1.z) * otherShape->GetRadius();
+					
+					if (CollisionUtils::IntersectSphereSphere(shape->GetNode()->GetWorldPosition(), scaledRadius0, otherShape->GetNode()->GetWorldPosition(), scaledRadius1))
+					{
+						auto key = std::make_pair(shape, otherShape);
+						newCollidingShapes[key] = true;
+						if (collidingShapes.find(key) == collidingShapes.end())
+						{
+							Events::CollisionShapeEnterCollision(shape, shape, otherShape);
+						}
+					}
 				}
-				else if (otherShape->GetShapeType() == CollisionShapeType::PLANE)
-				{
-
-				}
-			}
-			else if (shape->GetShapeType() == CollisionShapeType::PLANE)
-			{
-				if (otherShape->GetShapeType() == CollisionShapeType::BOX)
-				{
-
-				}
-				else if (otherShape->GetShapeType() == CollisionShapeType::SPHERE)
-				{
-
-				}
-				else if (otherShape->GetShapeType() == CollisionShapeType::PLANE)
-				{
-
-				}
-			}
-			else if (shape->GetShapeType() == CollisionShapeType::TRIANGLE_MESH)
-			{
-				continue;
 			}
 		}
 	}
