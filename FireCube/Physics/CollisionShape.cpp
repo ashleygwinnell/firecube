@@ -30,7 +30,7 @@ CollisionShape::CollisionShape(Engine *engine) : Component(engine), physicsWorld
 }
 
 CollisionShape::CollisionShape(const CollisionShape &other) : Component(other), worldBoundingBoxChanged(true), type(other.type), physicsWorld(other.physicsWorld), collisionMesh(other.collisionMesh), plane(other.plane),
-															  box(other.box), isTrigger(other.isTrigger), ownedByRigidBody(other.ownedByRigidBody)
+															  box(other.box), radius(other.radius), isTrigger(other.isTrigger), ownedByRigidBody(other.ownedByRigidBody)
 {
 	
 }
