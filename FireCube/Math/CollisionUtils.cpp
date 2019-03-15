@@ -1256,3 +1256,63 @@ bool CollisionUtils::IntersectOBBOBB(const vec3 &box0Center, const vec3 box0Axes
 
 	return true;
 }
+
+vec3 ClosestPoint(const vec3 &boxCenter, const vec3 boxAxes[3], const vec3 &boxSize, const vec3 &point)
+{
+	vec3 result = boxCenter;
+	vec3 dir = point - boxCenter;
+
+	for (int i = 0; i < 3; ++i)
+	{		
+		vec3 axis = boxAxes[i];
+
+		float distance = Dot(dir, axis);
+
+		if (distance > boxSize[i])
+		{
+			distance = boxSize[i];
+		}
+		if (distance < -boxSize[i])
+		{
+			distance = -boxSize[i];
+		}
+
+		result = result + (axis * distance);
+	}
+
+	return result;
+}
+
+vec3 CollisionUtils::ClosestPoint(const BoundingBox &box, const mat4 &boxTransform, const vec3 &point)
+{
+	vec3 boxCenter = boxTransform * box.GetCenter();
+	vec3 boxAxes[3] =
+	{
+		vec3(boxTransform.m[0], boxTransform.m[1], boxTransform.m[2]),
+		vec3(boxTransform.m[4], boxTransform.m[5], boxTransform.m[6]),
+		vec3(boxTransform.m[8], boxTransform.m[9], boxTransform.m[10])
+	};
+
+	return ::ClosestPoint(boxCenter, boxAxes, box.GetSize() * 0.5f, point);
+}
+
+bool IntersectOBBSphere(const vec3 &boxCenter, const vec3 boxAxes[3], const vec3 &boxSize, const vec3 &sphereCenter, float radius)
+{
+	vec3 closestPoint = ::ClosestPoint(boxCenter, boxAxes, boxSize, sphereCenter);
+	float distSq = (sphereCenter - closestPoint).Length2();
+	float radiusSq = radius * radius;
+	return distSq < radiusSq;
+}
+
+bool CollisionUtils::IntersectOBBSphere(const BoundingBox &box, const mat4 &boxTransform, const vec3 &sphereCenter, float radius)
+{	
+	vec3 boxCenter = boxTransform * box.GetCenter();
+	vec3 boxAxes[3] =
+	{
+		vec3(boxTransform.m[0], boxTransform.m[1], boxTransform.m[2]),
+		vec3(boxTransform.m[4], boxTransform.m[5], boxTransform.m[6]),
+		vec3(boxTransform.m[8], boxTransform.m[9], boxTransform.m[10])
+	};
+
+	return ::IntersectOBBSphere(boxCenter, boxAxes, box.GetSize() * 0.5f, sphereCenter, radius);
+}

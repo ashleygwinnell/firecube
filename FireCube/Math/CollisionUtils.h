@@ -26,6 +26,8 @@ bool IntersectRaySphere(const vec3 &origin, const vec3 &dir, float length, const
 bool SweepSphereCapsule(const vec3& sphereCenter, float sphereRadius, const vec3& capusleP0, const vec3& capusleP1, float radius, const vec3& dir, float length, CollisionResult &result);
 bool IntersectOBBOBB(const BoundingBox &box0, mat4 &box0Transform, const BoundingBox &box1, mat4 &box1Transform);
 bool IntersectOBBOBB(const vec3 &box0Center, const vec3 box0Axes[3], const vec3 &box0Size, const vec3 &box1Center, const vec3 box1Axes[3], const vec3 &box1Size);
+vec3 ClosestPoint(const BoundingBox &box0, const mat4 &box0Transform, const vec3 &point);
+bool IntersectOBBSphere(const BoundingBox &box, const mat4 &boxTransform, const vec3 &sphereCenter, float radius);
 
 }
 

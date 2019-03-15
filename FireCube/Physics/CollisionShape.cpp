@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include <sstream>
 
 #include "Physics/CollisionShape.h"
@@ -250,7 +251,9 @@ void CollisionShape::RenderDebugGeometry(DebugRenderer *debugRenderer)
 	}
 	else if (type == CollisionShapeType::SPHERE)
 	{
-		debugRenderer->AddSphere(node->GetWorldPosition(), radius, 16, 16, vec3(0.0f, 1.0f, 0.0f));
+		vec3 scale = node->GetWorldScale();
+		float scaledRadius = std::max(std::max(scale.x, scale.y), scale.z) * radius;
+		debugRenderer->AddSphere(node->GetWorldPosition(), scaledRadius, 16, 16, vec3(0.0f, 1.0f, 0.0f));
 	}
 }
 
