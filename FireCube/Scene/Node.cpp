@@ -12,6 +12,7 @@ Node::Node(Engine *engine) : Object(engine), parent(nullptr), scene(nullptr)
 {
 	rotation.Identity(); // Can't use mat4::IDENTITY since it might not be initialized yet.
 	worldRotation.Identity();
+	worldScale.Set(1.0f, 1.0f, 1.0f);
 	translation.Set(0, 0, 0);
 	scale.Set(1, 1, 1);
 	worldTransformation.Identity();
