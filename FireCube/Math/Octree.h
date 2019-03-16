@@ -356,8 +356,11 @@ public:
 	{
 		for (auto object : pendingUpdate)
 		{
-			Insert(object);
-			object->SetOctreeNodeNeedsUpdate(false);
+			if (object->GetOctreeNodeNeedsUpdate())
+			{
+				Insert(object);
+				object->SetOctreeNodeNeedsUpdate(false);
+			}
 		}
 
 		pendingUpdate.clear();

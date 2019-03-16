@@ -75,7 +75,7 @@ void CollisionShape::SceneChanged(Scene *oldScene)
 		if (physicsWorld.Expired() == false)
 		{
 			physicsWorld->RemoveCollisionShape(this);
-		}				
+		}
 	}
 
 	if (scene)
@@ -327,4 +327,24 @@ void CollisionShape::SetOwnedByRigidBody(bool ownedByRigidBody)
 bool CollisionShape::IsOwnedByRigidBody() const
 {
 	return ownedByRigidBody;
+}
+
+void CollisionShape::EnabledChanged()
+{
+	if (IsEnabled() && scene == nullptr)
+	{
+		scene = node->GetScene();
+		physicsWorld = scene->GetRootNode()->GetComponent<PhysicsWorld>();
+		physicsWorld->AddCollisionShape(this);
+		MarkForOctreeReinsertion();
+	}
+	else if (IsEnabled() == false && scene)
+	{
+		if (physicsWorld.Expired() == false)
+		{
+			this->SetOctreeNodeNeedsUpdate(false);
+			physicsWorld->RemoveCollisionShape(this);
+			scene = nullptr;
+		}
+	}
 }

@@ -142,6 +142,7 @@ private:
 	virtual void SceneChanged(Scene *oldScene);
 	void UpdateWorldBoundingBox();
 	void SetMesh(Mesh *mesh, SkeletonNode &skeletonNode, mat4 transformation);
+	virtual void EnabledChanged() override;
 
 	BoundingBox worldBoundingBox;
 	bool worldBoundingBoxChanged;
