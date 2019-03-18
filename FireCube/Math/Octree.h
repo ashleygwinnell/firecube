@@ -70,10 +70,10 @@ public:
 					child = CreateChild(childIndex);
 				}
 
-				if (child->cullingBox.Contains(boundingBox))
+				if (child->cullingBox.Contains(objectBoundingBox))
 				{
 					objects.erase(objects.begin() + i);
-					child->Insert(existingObject, boundingBox);
+					child->Insert(existingObject, objectBoundingBox);
 				}
 			}
 		}
