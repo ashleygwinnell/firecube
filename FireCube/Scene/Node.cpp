@@ -452,8 +452,11 @@ void Node::GetComponentsRecursive(const StringHash &type, std::vector<Component 
 
 void Node::Remove()
 {
-	scene->AddDelayedRemoveNode(this);
-	SetParent(nullptr);
+	if (parent && scene)
+	{
+		scene->AddDelayedRemoveNode(this);
+		SetParent(nullptr);
+	}
 }
 
 void Node::RemoveAllChildren()
