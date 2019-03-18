@@ -40,6 +40,25 @@ void PhysicsWorld::RemoveCollisionShape(CollisionShape *collisionShape)
 		collisionShapesOctree.Remove(collisionShape);
 		collisionShape->SetOctree(nullptr);
 	}
+
+	if (collisionShape->IsTrigger())
+	{
+		std::unordered_map<std::pair<CollisionShape *, CollisionShape *>, bool, SimpleHash> newCollidingShapes;
+
+		for (auto item : collidingShapes)
+		{
+			if (item.first.first == collisionShape || item.first.second == collisionShape)
+			{
+				Events::CollisionShapeLeaveCollision(item.first.first, item.first.first, item.first.second);
+			}
+			else
+			{
+				newCollidingShapes[item.first] = item.second;
+			}
+		}
+
+		collidingShapes = newCollidingShapes;
+	}
 }
 
 void PhysicsWorld::AddCharacterController(CharacterController *characterController)
