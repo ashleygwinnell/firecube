@@ -422,12 +422,13 @@ void PhysicsWorld::IntersectRay(PhysicsRayQuery &rayQuery)
 		if (shape->GetShapeType() == CollisionShapeType::BOX)
 		{
 			float dist;
-			if (localRay.IntersectBoundingBox(shape->GetBox(), dist) && dist <= rayQuery.maxDistance)
+			vec3 normal;
+			if (localRay.IntersectBoundingBox(shape->GetBox(), dist, normal) && dist <= rayQuery.maxDistance)
 			{
 				PhysicsRayQueryResult result;
 				result.distance = dist;
 				result.shape = shape;
-				result.normal = localRay.origin.Normalized().TransformNormal(worldTransform);
+				result.normal = normal.TransformNormal(worldTransform);
 				rayQuery.results.push_back(result);
 			}
 		}

@@ -1,4 +1,5 @@
 #include "Math/Ray.h"
+#include "MathUtils.h"
 
 using namespace FireCube;
 
@@ -121,6 +122,61 @@ bool Ray::IntersectBoundingBox(const BoundingBox &boundingBox, float &distance) 
 	distance = tmin;
 
 	return tmax > 0;
+}
+
+bool Ray::IntersectBoundingBox(const BoundingBox &boundingBox, float &distance, vec3 &normal) const
+{
+	vec3 min = boundingBox.GetMin();
+	vec3 max = boundingBox.GetMax();
+
+	float t1 = (min.x - origin.x) / (std::fabs(direction.x) < EPSILON ? EPSILON : direction.x);
+	float t2 = (max.x - origin.x) / (std::fabs(direction.x) < EPSILON ? EPSILON : direction.x);
+	float t3 = (min.y - origin.y) / (std::fabs(direction.y) < EPSILON ? EPSILON : direction.y);
+	float t4 = (max.y - origin.y) / (std::fabs(direction.y) < EPSILON ? EPSILON : direction.y);
+	float t5 = (min.z - origin.z) / (std::fabs(direction.z) < EPSILON ? EPSILON : direction.z);
+	float t6 = (max.z - origin.z) / (std::fabs(direction.z) < EPSILON ? EPSILON : direction.z);
+
+	float tmin = fmaxf(fmaxf(fminf(t1, t2), fminf(t3, t4)), fminf(t5, t6));
+	float tmax = fminf(fminf(fmaxf(t1, t2), fmaxf(t3, t4)), fmaxf(t5, t6));
+	
+	if (tmax < 0)
+	{
+		return false;
+	}
+
+	if (tmin > tmax)
+	{
+		return false;
+	}
+
+	float t_result = tmin;
+
+	if (tmin < 0.0f)
+	{
+		t_result = tmax;
+	}
+	
+	distance = t_result;
+
+	vec3 normals[] = {
+		vec3(-1, 0, 0),
+		vec3(1, 0, 0),
+		vec3(0, -1, 0),
+		vec3(0, 1, 0),
+		vec3(0, 0, -1),
+		vec3(0, 0, 1)
+	};
+	float t[] = { t1, t2, t3, t4, t5, t6 };
+
+	for (int i = 0; i < 6; ++i)
+	{
+		if (std::fabs(t_result - t[i]) < EPSILON)
+		{
+			normal = normals[i];
+		}
+	}
+
+	return true;
 }
 
 bool Ray::IntersectMesh(const char *vertexData, unsigned int vertexSize, const char *indexData, unsigned int indicesCount, float &distance, vec3 &normal) const
