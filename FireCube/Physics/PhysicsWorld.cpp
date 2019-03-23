@@ -35,6 +35,8 @@ void PhysicsWorld::AddCollisionShape(CollisionShape *collisionShape)
 void PhysicsWorld::RemoveCollisionShape(CollisionShape *collisionShape)
 {
 	collisionShapes.erase(std::remove(collisionShapes.begin(), collisionShapes.end(), collisionShape), collisionShapes.end());	
+
+	collisionShape->SetOctreeNodeNeedsUpdate(false);
 	if (collisionShape->GetOctreeNode())
 	{
 		collisionShapesOctree.Remove(collisionShape);
