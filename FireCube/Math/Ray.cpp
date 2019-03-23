@@ -126,6 +126,12 @@ bool Ray::IntersectBoundingBox(const BoundingBox &boundingBox, float &distance) 
 
 bool Ray::IntersectBoundingBox(const BoundingBox &boundingBox, float &distance, vec3 &normal) const
 {
+	if (Inside(boundingBox))
+	{
+		distance = 0;
+		return true;
+	}
+
 	vec3 min = boundingBox.GetMin();
 	vec3 max = boundingBox.GetMax();
 
@@ -149,14 +155,12 @@ bool Ray::IntersectBoundingBox(const BoundingBox &boundingBox, float &distance, 
 		return false;
 	}
 
-	float t_result = tmin;
+	distance = tmin;
 
 	if (tmin < 0.0f)
 	{
-		t_result = tmax;
+		distance = tmax;
 	}
-	
-	distance = t_result;
 
 	vec3 normals[] = {
 		vec3(-1, 0, 0),
@@ -170,7 +174,7 @@ bool Ray::IntersectBoundingBox(const BoundingBox &boundingBox, float &distance, 
 
 	for (int i = 0; i < 6; ++i)
 	{
-		if (std::fabs(t_result - t[i]) < EPSILON)
+		if (std::fabs(distance - t[i]) < EPSILON)
 		{
 			normal = normals[i];
 		}
