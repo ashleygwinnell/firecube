@@ -86,6 +86,8 @@ void PhysicsWorld::AddRigidBody(RigidBody *rigidBody)
 void PhysicsWorld::RemoveRigidBody(RigidBody *rigidBody)
 {
 	rigidBodies.erase(std::remove(rigidBodies.begin(), rigidBodies.end(), rigidBody), rigidBodies.end());
+
+	rigidBody->SetOctreeNodeNeedsUpdate(false);
 	if (rigidBody->GetOctreeNode())
 	{
 		rigidBodiesOctree.Remove(rigidBody);

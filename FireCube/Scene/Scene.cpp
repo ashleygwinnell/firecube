@@ -53,18 +53,13 @@ void Scene::AddRenderable(Renderable *renderable)
 
 void Scene::RemoveRenderable(Renderable *renderable)
 {
-	for (auto i = renderables.begin(); i != renderables.end(); ++i)
+	renderables.erase(std::remove(renderables.begin(), renderables.end(), renderable), renderables.end());
+
+	renderable->SetOctreeNodeNeedsUpdate(false);
+	if (renderable->GetOctreeNode())
 	{
-		if (*i == renderable)
-		{
-			renderables.erase(i);
-			if (renderable->GetOctreeNode())
-			{
-				octree.Remove(renderable);
-				renderable->SetOctree(nullptr);
-			}
-			break;
-		}
+		octree.Remove(renderable);
+		renderable->SetOctree(nullptr);
 	}
 }
 
